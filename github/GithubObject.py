@@ -12,7 +12,7 @@ class SimpleScalarAttributes:
             return rawValue
 
         def updateAttributes( self, obj ):
-            attributes = obj._github.rawRequest( "GET", "/test" )
+            attributes = obj._github.rawRequest( "GET", obj._baseUrl )
             for attributeName in self.__attributeNames:
                 if attributeName not in attributes:
                     attributes[ attributeName ] = None
@@ -43,7 +43,7 @@ class Editable:
             for argumentName in kwds:
                 if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                     raise TypeError()
-            attributes = self.__obj._github.rawRequest( "PATCH", "/test", kwds )
+            attributes = self.__obj._github.rawRequest( "PATCH", self.__obj._baseUrl, kwds )
             self.__obj._updateAttributes( attributes )
 
     class AttributeDefinition:
@@ -70,7 +70,7 @@ class Deletable:
             self.__obj = obj
 
         def __call__( self ):
-            self.__obj._github.rawRequest( "DELETE", "/test" )
+            self.__obj._github.rawRequest( "DELETE", self.__obj._baseUrl )
 
     class AttributeDefinition:
         def getValueFromRawValue( self, obj, rawValue ):
@@ -81,6 +81,23 @@ class Deletable:
 
     def getAttributeDefinitions( self ):
         yield "delete", Deletable.AttributeDefinition()
+
+class BaseUrl:
+    class AttributeDefinition:
+        def __init__( self, baseUrl ):
+            self.__baseUrl = baseUrl
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "_baseUrl": self.__baseUrl( obj ) } )
+
+    def __init__( self, baseUrl ):
+        self.__baseUrl = baseUrl
+
+    def getAttributeDefinitions( self ):
+        yield "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl )
 
 def GithubObject( className, *attributePolicies ):
     attributeDefinitions = dict()

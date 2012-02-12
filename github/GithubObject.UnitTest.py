@@ -1,7 +1,7 @@
 import unittest
 import MockMockMock
 
-from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes, Editable, Deletable
+from GithubObject import *
 
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
@@ -34,6 +34,7 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
 class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
         SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
     )
 
@@ -54,8 +55,6 @@ class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject )
         self.assertEqual( self.o.a4, None )
 
     def testUnknownAttribute( self ):
-        # A GithubObject:
-        # - does not have silly attributes
         self.assertRaises( AttributeError, lambda: self.o.foobar )
 
     def testNonLazyConstruction( self ):
@@ -67,9 +66,21 @@ class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject )
         self.assertEqual( o.a3, 3 )
         self.assertEqual( o.a4, None )
 
+class GithubObjectWithOtherBaseUrl( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/other/" + str( obj.a1 ) ),
+        SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
+    )
+
+    def testCompletion( self ):
+        self.expectGet( "/other/1" ).andReturn( { "a2": 22, "a3": 3 } )
+        self.assertEqual( self.o.a3, 3 )
+
 class EditableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
         SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
         Editable( [ "a1" ], [ "a2", "a4" ] ),
     )
@@ -134,6 +145,7 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
 class DeletableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
         SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
         Deletable(),
     )
