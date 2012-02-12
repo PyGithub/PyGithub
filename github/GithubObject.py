@@ -43,7 +43,8 @@ class Editable:
             for argumentName in kwds:
                 if argumentName not in itertools.chain( self.__mandatoryParamters, self.__optionalParameters ):
                     raise TypeError()
-            self.__obj._github.rawRequest( "PATCH", "/test", kwds )
+            attributes = self.__obj._github.rawRequest( "PATCH", "/test", kwds )
+            self.__obj._updateAttributes( attributes )
 
     class AttributeDefinition:
         def __init__( self, mandatoryParamters, optionalParameters ):
@@ -76,7 +77,7 @@ def GithubObject( className, *attributePolicies ):
         def __init__( self, github, attributes, lazy ):
             self._github = github
             self.__attributes = dict()
-            self.__updateAttributes( attributes )
+            self._updateAttributes( attributes )
             if not lazy:
                 for attributeName in attributeDefinitions:
                     if attributeName not in self.__attributes:
@@ -90,7 +91,7 @@ def GithubObject( className, *attributePolicies ):
             else:
                 raise AttributeError()
 
-        def __updateAttributes( self, attributes ):
+        def _updateAttributes( self, attributes ):
             for attributeName, attributeValue in attributes.iteritems():
                 attributeDefinition = attributeDefinitions[ attributeName ]
                 if attributeValue is None:
@@ -101,6 +102,6 @@ def GithubObject( className, *attributePolicies ):
 
         def __fetchAttribute( self, attributeName ):
             attributeDefinition = attributeDefinitions[ attributeName ]
-            self.__updateAttributes( attributeDefinition.fetchRawValues( self ) )
+            self._updateAttributes( attributeDefinition.fetchRawValues( self ) )
 
     return GithubObject

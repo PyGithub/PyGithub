@@ -100,5 +100,14 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
         self.o.edit( 11, a2 = 22, a4 = 44 )
         self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, 22, a4 = 44 )
+        # - acknowledges updates of attributes
+        self.expectPatch( "/test", { "a1": 11 } ).andReturn( { "a2": 22, "a3": 3 } )
+        self.o.edit( a1 = 11 )
+        self.assertEqual( self.o.a1, 1 )
+        self.assertEqual( self.o.a2, 22 )
+        self.assertEqual( self.o.a3, 3 )
+        # # - is completed even after 'edit's
+        # self.expectGet( "/test" ).andReturn( {} )
+        # self.assertEqual( self.o.a4, None )
 
 unittest.main()
