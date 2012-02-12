@@ -433,7 +433,7 @@
 
 /user/watched
 =============
- - GET: `` (TODO)
+ - GET: `AuthenticatedUser.get_watched()`: list of `Repository`
 
 /user/watched/:user/:repo
 =========================
@@ -487,4 +487,4 @@
 
 /users/:user/watched
 ====================
- - GET: `` (TODO)
+ - GET: `NamedUser.get_watched()`: list of `Repository`

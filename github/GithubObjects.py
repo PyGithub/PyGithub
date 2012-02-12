@@ -56,4 +56,7 @@ Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) 
 Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
+
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
+NamedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
