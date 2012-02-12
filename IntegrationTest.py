@@ -16,6 +16,8 @@ def dumpUser( u ):
         print
     print "  Watched:", ", ".join( r.name for r in u.get_watched() )
     print "  Organizations:", ", ".join( o.login for o in u.get_orgs() )
+    print "  Following:", ", ".join( f.login for f in u.get_following() )
+    print "  Followers:", ", ".join( f.login for f in u.get_followers() )
     print
 
 def dumpOrganization( o ):

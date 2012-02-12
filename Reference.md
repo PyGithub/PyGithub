@@ -399,11 +399,11 @@
 
 /user/followers
 ===============
- - GET: `` (TODO)
+ - GET: `AuthenticatedUser.get_followers()` : list of `NamedUser`
 
 /user/following
 ===============
- - GET: `` (TODO)
+ - GET: `AuthenticatedUser.get_following()` : list of `NamedUser`
 
 /user/following/:user
 =====================
@@ -459,11 +459,11 @@
 
 /users/:user/followers
 ======================
- - GET: `` (TODO)
+ - GET: `NamedUser.get_followers()` : list of `NamedUser`
 
 /users/:user/following
 ======================
- - GET: `` (TODO)
+ - GET: `NamedUser.get_following()` : list of `NamedUser`
 
 /users/:user/gists
 ==================

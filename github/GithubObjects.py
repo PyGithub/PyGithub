@@ -23,6 +23,11 @@ NamedUser = GithubObject(
     ),
 )
 
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
+NamedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
+NamedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
+
 Organization = GithubObject(
     "Organization",
     BaseUrl( lambda obj: "/orgs/" + obj.login ),
