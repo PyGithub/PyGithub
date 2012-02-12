@@ -11,12 +11,12 @@ class SimpleScalarAttributes:
         def getValueFromRawValue( self, obj, rawValue ):
             return rawValue
 
-        def fetchRawValues( self, obj ):
+        def updateAttributes( self, obj ):
             attributes = obj._github.rawRequest( "GET", "/test" )
             for attributeName in self.__attributeNames:
                 if attributeName not in attributes:
                     attributes[ attributeName ] = None
-            return attributes
+            obj._updateAttributes( attributes )
 
     def __init__( self, *attributeNames ):
         self.__attributeNames = attributeNames
@@ -30,39 +30,39 @@ class SimpleScalarAttributes:
 
 class Editable:
     class Editor:
-        def __init__( self, obj, mandatoryParamters, optionalParameters ):
+        def __init__( self, obj, mandatoryParameters, optionalParameters ):
             self.__obj = obj
-            self.__mandatoryParamters = mandatoryParamters
+            self.__mandatoryParameters = mandatoryParameters
             self.__optionalParameters = optionalParameters
 
         def __call__( self, *args, **kwds ):
             if len( args ) + len( kwds ) == 0:
                 raise TypeError()
-            for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParamters, self.__optionalParameters ) ):
+            for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
                 kwds[ argumentName ] = arg
             for argumentName in kwds:
-                if argumentName not in itertools.chain( self.__mandatoryParamters, self.__optionalParameters ):
+                if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                     raise TypeError()
             attributes = self.__obj._github.rawRequest( "PATCH", "/test", kwds )
             self.__obj._updateAttributes( attributes )
 
     class AttributeDefinition:
-        def __init__( self, mandatoryParamters, optionalParameters ):
-            self.__mandatoryParamters = mandatoryParamters
+        def __init__( self, mandatoryParameters, optionalParameters ):
+            self.__mandatoryParameters = mandatoryParameters
             self.__optionalParameters = optionalParameters
 
         def getValueFromRawValue( self, obj, rawValue ):
             return rawValue
 
-        def fetchRawValues( self, obj ):
-            return { "edit": Editable.Editor( obj, self.__mandatoryParamters, self.__optionalParameters ) }
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "edit": Editable.Editor( obj, self.__mandatoryParameters, self.__optionalParameters ) } )
 
-    def __init__( self, mandatoryParamters, optionalParameters ):
-        self.__mandatoryParamters = mandatoryParamters
+    def __init__( self, mandatoryParameters, optionalParameters ):
+        self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
 
     def getAttributeDefinitions( self ):
-        yield "edit", Editable.AttributeDefinition( self.__mandatoryParamters, self.__optionalParameters )
+        yield "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters )
 
 def GithubObject( className, *attributePolicies ):
     attributeDefinitions = dict()
@@ -102,6 +102,6 @@ def GithubObject( className, *attributePolicies ):
 
         def __fetchAttribute( self, attributeName ):
             attributeDefinition = attributeDefinitions[ attributeName ]
-            self._updateAttributes( attributeDefinition.fetchRawValues( self ) )
+            attributeDefinition.updateAttributes( self )
 
     return GithubObject
