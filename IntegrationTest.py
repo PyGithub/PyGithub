@@ -14,4 +14,9 @@ class TestCase( unittest.TestCase ):
         self.assertEqual( u.login, "jacquev6" )
         self.assertEqual( u.name, "Vincent Jacques" )
 
+    def testNamedUser( self ):
+        u = self.g.get_user( "nvie" )
+        self.assertEqual( u.login, "nvie" )
+        self.assertEqual( u.name, "Vincent Driessen" )
+
 unittest.main()

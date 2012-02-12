@@ -2,7 +2,7 @@ import urllib2
 import json
 import base64
 
-from User import AuthenticatedUser
+from User import AuthenticatedUser, NamedUser
 
 class Github:
     def __init__( self, login, password ):
@@ -31,5 +31,8 @@ class Github:
 
         return json.load( urllib2.urlopen( req ) )
 
-    def get_user( self ):
-        return AuthenticatedUser( self, {}, lazy = True )
+    def get_user( self, login = None ):
+        if login is None:
+            return AuthenticatedUser( self, {}, lazy = True )
+        else:
+            return NamedUser( self, { "login": login }, lazy = False )
