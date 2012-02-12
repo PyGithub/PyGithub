@@ -1,7 +1,7 @@
 import unittest
 import MockMockMock
 
-from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes, Editable
+from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes, Editable, Deletable
 
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
@@ -27,6 +27,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
 
     def expectPatch( self, url, data ):
         return self.g.expect.rawRequest( "PATCH", url, data )
+
+    def expectDelete( self, url ):
+        return self.g.expect.rawRequest( "DELETE", url )
 
 class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
@@ -127,5 +130,16 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.a3, 3 )
         self.expectGet( "/test" ).andReturn( {} )
         self.assertEqual( self.o.a4, None )
+
+class DeletableGithubObject( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
+        Deletable(),
+    )
+
+    def testDelete( self ):
+        self.expectDelete( "/test" )
+        self.o.delete()
 
 unittest.main()

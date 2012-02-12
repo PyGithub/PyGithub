@@ -64,6 +64,24 @@ class Editable:
     def getAttributeDefinitions( self ):
         yield "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters )
 
+class Deletable:
+    class Deletor:
+        def __init__( self, obj ):
+            self.__obj = obj
+
+        def __call__( self ):
+            self.__obj._github.rawRequest( "DELETE", "/test" )
+
+    class AttributeDefinition:
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "delete": Deletable.Deletor( obj ) } )
+
+    def getAttributeDefinitions( self ):
+        yield "delete", Deletable.AttributeDefinition()
+
 def GithubObject( className, *attributePolicies ):
     attributeDefinitions = dict()
     for attributePolicy in attributePolicies:
