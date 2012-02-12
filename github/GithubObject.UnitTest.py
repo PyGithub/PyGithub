@@ -41,6 +41,8 @@ class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.a1, 1 )
         # - acknowledges updates of attributes
         self.assertEqual( self.o.a2, 22 )
+        # - remembers that some attributes are absent even after an update
+        self.assertEqual( self.o.a4, None )
 
     def testUnknownAttribute( self ):
         # A GithubObject:
