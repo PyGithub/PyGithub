@@ -5,21 +5,21 @@ import GithubCredentials
 
 g = Github( GithubCredentials.login, GithubCredentials.password )
 
-u = g.get_user()
-print u.login, "(" + u.name + ")"
-for r in u.get_repos():
-    print " ", r.name,
-    if r.fork:
-        print "<-", r.parent.owner.login + "/" + r.parent.name,
-        print "<-", r.source.owner.login + "/" + r.source.name,
+def dumpUser( u ):
+    print u.login, "(" + u.name + ")"
+    for r in u.get_repos():
+        print " ", r.name,
+        if r.fork:
+            print "<-", r.parent.owner.login + "/" + r.parent.name,
+            print "<-", r.source.owner.login + "/" + r.source.name,
+        print
     print
-print
 
-u = g.get_user( "nvie" )
-print u.login, "(" + u.name + ")"
-print ", ".join( r.name for r in u.get_repos() )
-print
+def dumpOrganization( o ):
+    print o.login, "(" + o.name + ")"
+    print " ", ", ".join( u.login for u in o.get_public_members() )
+    print
 
-o = g.get_organization( "github" )
-print o.login, "(" + o.name + ")"
-print ", ".join( u.login for u in o.get_public_members() )
+dumpUser( g.get_user() )
+dumpUser( g.get_user( "nvie" ) )
+dumpOrganization( g.get_organization( "github" ) )
