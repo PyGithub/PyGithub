@@ -8,7 +8,7 @@ Documentation
  - api and how it is wrapped
  - rationale:
    - lazyness for objects returned by API, not for objects requested by user
-   - naming: get_xxx() to avoid clashes with attribute xxx (User.followers for example)
+   - naming: get_xxx() to avoid clashes with attribute xxx (User.followers for example), and to explicit api calls
    - lazy completion, but no caching
    - explicit edit instead of writeable attributes
    - data model (cf Design.md)

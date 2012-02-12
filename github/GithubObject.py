@@ -28,6 +28,37 @@ class SimpleScalarAttributes:
             for attributeName in self.__attributeNames
         ]
 
+class ExtendedListAttribute:
+    class Getter:
+        def __init__( self, obj, pluralName, type ):
+            self.__obj = obj
+            self.__pluralName = pluralName
+            self.__type = type
+
+        def __call__( self ):
+            return [
+                self.__type( self.__obj._github, attributes, lazy = True )
+                for attributes in self.__obj._github._rawRequest( "GET", self.__obj._baseUrl + "/" + self.__pluralName )
+            ]
+
+    class AttributeDefinition:
+        def __init__( self, pluralName, type ):
+            self.__pluralName = pluralName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "get_" + self.__pluralName: ExtendedListAttribute.Getter( obj, self.__pluralName, self.__type ) } )
+
+    def __init__( self, pluralName, type ):
+        self.__pluralName = pluralName
+        self.__type = type
+
+    def getAttributeDefinitions( self ):
+        yield "get_" + self.__pluralName, ExtendedListAttribute.AttributeDefinition( self.__pluralName, self.__type )
+
 class Editable:
     class Editor:
         def __init__( self, obj, mandatoryParameters, optionalParameters ):
