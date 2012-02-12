@@ -1,22 +1,14 @@
 #!/bin/env python
 
-import unittest
-
 from github import Github
 import GithubCredentials
 
-class TestCase( unittest.TestCase ):
-    def setUp( self ):
-        self.g = Github( GithubCredentials.login, GithubCredentials.password )
+g = Github( GithubCredentials.login, GithubCredentials.password )
 
-    def testAuthenticatedUser( self ):
-        u = self.g.get_user()
-        self.assertEqual( u.login, "jacquev6" )
-        self.assertEqual( u.name, "Vincent Jacques" )
+u = g.get_user()
+print u.login, u.name
+print
 
-    def testNamedUser( self ):
-        u = self.g.get_user( "nvie" )
-        self.assertEqual( u.login, "nvie" )
-        self.assertEqual( u.name, "Vincent Driessen" )
-
-unittest.main()
+u = g.get_user( "nvie" )
+print u.login, u.name
+print
