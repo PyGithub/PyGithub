@@ -30,6 +30,9 @@ Organization = GithubObject(
         "login", "id", "url", "avatar_url", "name", "company", "blog",
         "location", "email", "public_repos", "public_gists", "followers",
         "following", "html_url", "created_at", "type",
+        # Seen only by owners
+        "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
+        "total_private_repos", "owned_private_repos",
     ),
     ExtendedListAttribute( "public_members", NamedUser ),
     ExtendedListAttribute( "members", NamedUser ),
