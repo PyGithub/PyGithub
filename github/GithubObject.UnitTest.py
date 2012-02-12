@@ -23,13 +23,13 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         unittest.TestCase.tearDown( self )
 
     def expectGet( self, url ):
-        return self.g.expect.rawRequest( "GET", url )
+        return self.g.expect._rawRequest( "GET", url )
 
     def expectPatch( self, url, data ):
-        return self.g.expect.rawRequest( "PATCH", url, data )
+        return self.g.expect._rawRequest( "PATCH", url, data )
 
     def expectDelete( self, url ):
-        return self.g.expect.rawRequest( "DELETE", url )
+        return self.g.expect._rawRequest( "DELETE", url )
 
 class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
