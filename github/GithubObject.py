@@ -1,0 +1,2 @@
+def GithubObject( *attributes ):
+    pass
