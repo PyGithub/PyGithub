@@ -16,6 +16,10 @@ for r in u.get_repos():
 print
 
 u = g.get_user( "nvie" )
-print u.login, u.name
+print u.login, "(" + u.name + ")"
 print ", ".join( r.name for r in u.get_repos() )
 print
+
+o = g.get_organization( "github" )
+print o.login, "(" + o.name + ")"
+print ", ".join( u.login for u in o.get_public_members() )

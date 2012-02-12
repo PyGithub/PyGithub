@@ -23,6 +23,18 @@ NamedUser = GithubObject(
     ),
 )
 
+Organization = GithubObject(
+    "Organization",
+    BaseUrl( lambda obj: "/orgs/" + obj.login ),
+    SimpleScalarAttributes(
+        "login", "id", "url", "avatar_url", "name", "company", "blog",
+        "location", "email", "public_repos", "public_gists", "followers",
+        "following", "html_url", "created_at", "type",
+    ),
+    ExtendedListAttribute( "public_members", NamedUser ),
+    ExtendedListAttribute( "members", NamedUser ),
+)
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
