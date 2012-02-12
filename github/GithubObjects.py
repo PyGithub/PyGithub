@@ -30,13 +30,15 @@ Repository = GithubObject(
         "url", "html_url", "clone_url", "git_url", "ssh_url", "svn_url",
         "name", "description", "homepage", "language", "private",
         "fork", "forks", "watchers", "size", "master_branch", "open_issues",
-        "pushed_at", "created_at", "organization", "parent", "source",
+        "pushed_at", "created_at", "organization",
         "has_issues", "has_wiki", "has_downloads",
         # Not documented
         "mirror_url", "updated_at", "id",
     ),
     ExtendedScalarAttribute( "owner", NamedUser ),
 )
+Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) )
+Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )

@@ -2,7 +2,7 @@ import urllib2
 import json
 import base64
 
-from User import AuthenticatedUser, NamedUser
+from GithubObjects import *
 
 class Github:
     def __init__( self, login, password ):
