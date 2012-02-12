@@ -4,9 +4,11 @@ import MockMockMock
 from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes, Editable
 
 class GithubObjectTestCase( unittest.TestCase ):
-    def testDuplicatedAttribute( self ):
+    def testDuplicatedAttributeInOnePolicy( self ):
         with self.assertRaises( BadGithubObjectException ):
             GithubObject( "", SimpleScalarAttributes( "a", "a" ) )
+
+    def testDuplicatedAttributeInTwoPolicies( self ):
         with self.assertRaises( BadGithubObjectException ):
             GithubObject( "", SimpleScalarAttributes( "a" ), SimpleScalarAttributes( "a" ) )
 
@@ -69,45 +71,61 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
         Editable( [ "a1" ], [ "a2", "a4" ] ),
     )
 
-    def testEdit( self ):
-        # A GithubObject:
-        # - refuses a call to 'edit' with zero argument
+    def testEditWithoutArgument( self ):
         with self.assertRaises( TypeError ):
             self.o.edit()
-        # - refuses a call to 'edit' with silly argument
+
+    def testEditWithSillyArgument( self ):
         with self.assertRaises( TypeError ):
             self.o.edit( foobar = 42 )
-        # - accepts one or more argument to 'edit'
+
+    def testEditWithOneKeywordArgument( self ):
         self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
         self.o.edit( a1 = 11 )
+
+    def testEditWithTwoKeywordArguments( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( a1 = 11, a2 = 22 )
+
+    def testEditWithTwoKeywordArgumentsSkipingFirstOptionalArgument( self ):
         self.expectPatch( "/test", { "a1": 11, "a4": 44 } ).andReturn( {} )
         self.o.edit( a1 = 11, a4 = 44 )
+
+    def testEditWithThreeKeywordArguments( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( a1 = 11, a4 = 44, a2 = 22 )
-        # - accepts positional arguments
+
+    def testEditWithOnePositionalArgument( self ):
         self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
         self.o.edit( 11 )
+
+    def testEditWithTwoPositionalArguments( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( 11, 22 )
+
+    def testEditWithThreePositionalArguments( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, 22, 44 )
-        # - accepts a mix of positional and named arguments
+
+    def testEditWithMixedArguments_1( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( 11, a2 = 22 )
+
+    def testEditWithMixedArguments_2( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, a2 = 22, a4 = 44 )
+
+    def testEditWithMixedArguments_3( self ):
         self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, 22, a4 = 44 )
-        # - acknowledges updates of attributes
+
+    def testAcknoledgeUpdatesOfAttributes( self ):
         self.expectPatch( "/test", { "a1": 11 } ).andReturn( { "a2": 22, "a3": 3 } )
         self.o.edit( a1 = 11 )
         self.assertEqual( self.o.a1, 1 )
         self.assertEqual( self.o.a2, 22 )
         self.assertEqual( self.o.a3, 3 )
-        # # - is completed even after 'edit's
-        # self.expectGet( "/test" ).andReturn( {} )
-        # self.assertEqual( self.o.a4, None )
+        self.expectGet( "/test" ).andReturn( {} )
+        self.assertEqual( self.o.a4, None )
 
 unittest.main()
