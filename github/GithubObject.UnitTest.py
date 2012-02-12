@@ -38,6 +38,8 @@ class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject )
         SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
     )
 
+    def testInterface( self ):
+        self.assertEqual( [ e for e in dir( self.o ) if not e.startswith( "_" ) ], [ "a1", "a2", "a3", "a4"  ] )
 
     def testCompletion( self ):
         # A GithubObject:

@@ -135,6 +135,9 @@ def GithubObject( className, *attributePolicies ):
                 else:
                     self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
 
+        def __dir__( self ):
+            return attributeDefinitions.keys()
+
         def __fetchAttribute( self, attributeName ):
             attributeDefinition = attributeDefinitions[ attributeName ]
             attributeDefinition.updateAttributes( self )
