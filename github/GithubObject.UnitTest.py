@@ -20,6 +20,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         self.g.tearDown()
         unittest.TestCase.tearDown( self )
 
+    def expectGet( self, url ):
+        return self.g.expect.rawRequest( "GET", url )
+
 class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
@@ -44,8 +47,23 @@ class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
         # - remembers that some attributes are absent even after an update
         self.assertEqual( self.o.a4, None )
 
+    def testEdit( self ):
+        # A GithubObject:
+        # - does not have an 'edit' method
+        self.assertRaises( AttributeError, lambda: self.o.edit )
+
     def testUnknownAttribute( self ):
         # A GithubObject:
         # - does not have silly attributes
         self.assertRaises( AttributeError, lambda: self.o.foobar )
+
+    def testNonLazyConstruction( self ):
+        self.expectGet( "/test" ).andReturn( { "a2": 2, "a3": 3 } )
+        o = self.GithubTestObject( self.g.object, {}, lazy = False )
+        self.g.tearDown()
+        self.assertEqual( o.a1, None )
+        self.assertEqual( o.a2, 2 )
+        self.assertEqual( o.a3, 3 )
+        self.assertEqual( o.a4, None )
+
 unittest.main()

@@ -40,6 +40,10 @@ def GithubObject( className, *attributePolicies ):
             self._github = github
             self.__attributes = dict()
             self.__updateAttributes( attributes )
+            if not lazy:
+                for attributeName in attributeDefinitions:
+                    if attributeName not in self.__attributes:
+                        self.__fetchAttribute( attributeName )
 
         def __getattr__( self, attributeName ):
             if attributeName in attributeDefinitions:
