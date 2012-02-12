@@ -167,11 +167,7 @@ class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         SimpleScalarAttributes( "a1", "a2" ),
-        Deletable(),
-        ExtendedListAttribute(
-            pluralName = "a3s",
-            type = ContainedObject
-        )
+        ExtendedListAttribute( "a3s", ContainedObject )
     )
 
     def testGetList( self ):

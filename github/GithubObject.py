@@ -131,26 +131,28 @@ class BaseUrl:
         yield "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl )
 
 def GithubObject( className, *attributePolicies ):
-    attributeDefinitions = dict()
-    for attributePolicy in attributePolicies:
-        for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
-            if attributeName in attributeDefinitions:
-                raise BadGithubObjectException( "Same attribute defined by two policies" )
-            else:
-                attributeDefinitions[ attributeName ] = attributeDefinition
-
     class GithubObject:
+        attributeDefinitions = dict()
+
+        @staticmethod
+        def _addAttributePolicy( attributePolicy ):
+            for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
+                if attributeName in GithubObject.attributeDefinitions:
+                    raise BadGithubObjectException( "Same attribute defined by two policies" )
+                else:
+                    GithubObject.attributeDefinitions[ attributeName ] = attributeDefinition
+
         def __init__( self, github, attributes, lazy ):
             self._github = github
             self.__attributes = dict()
             self._updateAttributes( attributes )
             if not lazy:
-                for attributeName in attributeDefinitions:
+                for attributeName in GithubObject.attributeDefinitions:
                     if attributeName not in self.__attributes:
                         self.__fetchAttribute( attributeName )
 
         def __getattr__( self, attributeName ):
-            if attributeName in attributeDefinitions:
+            if attributeName in GithubObject.attributeDefinitions:
                 if attributeName not in self.__attributes:
                     self.__fetchAttribute( attributeName )
                 return self.__attributes[ attributeName ]
@@ -159,7 +161,7 @@ def GithubObject( className, *attributePolicies ):
 
         def _updateAttributes( self, attributes ):
             for attributeName, attributeValue in attributes.iteritems():
-                attributeDefinition = attributeDefinitions[ attributeName ]
+                attributeDefinition = GithubObject.attributeDefinitions[ attributeName ]
                 if attributeValue is None:
                     if attributeName not in self.__attributes:
                         self.__attributes[ attributeName ] = None
@@ -167,10 +169,15 @@ def GithubObject( className, *attributePolicies ):
                     self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
 
         def __dir__( self ):
-            return attributeDefinitions.keys()
+            return GithubObject.attributeDefinitions.keys()
 
         def __fetchAttribute( self, attributeName ):
-            attributeDefinition = attributeDefinitions[ attributeName ]
+            attributeDefinition = GithubObject.attributeDefinitions[ attributeName ]
             attributeDefinition.updateAttributes( self )
+
+    GithubObject.__name__ = className
+
+    for attributePolicy in attributePolicies:
+        GithubObject._addAttributePolicy( attributePolicy )
 
     return GithubObject
