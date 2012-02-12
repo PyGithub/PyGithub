@@ -34,6 +34,13 @@ class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
         # - knows the attributes given to its constructor
         self.assertEqual( self.o.a1, 1 )
         self.assertEqual( self.o.a2, 2 )
+        # - is completed the first time any unknown attribute is requested
+        self.expectGet( "/test" ).andReturn( { "a2": 22, "a3": 3 } )
+        self.assertEqual( self.o.a3, 3 )
+        # - remembers the attributes that were not updated
+        self.assertEqual( self.o.a1, 1 )
+        # - acknowledges updates of attributes
+        self.assertEqual( self.o.a2, 22 )
 
     def testUnknownAttribute( self ):
         # A GithubObject:
