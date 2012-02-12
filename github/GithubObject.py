@@ -1,3 +1,5 @@
+import itertools
+
 class BadGithubObjectException( Exception ):
     pass
 
@@ -34,6 +36,13 @@ class Editable:
             self.__optionalParameters = optionalParameters
 
         def __call__( self, *args, **kwds ):
+            if len( args ) + len( kwds ) == 0:
+                raise TypeError()
+            for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParamters, self.__optionalParameters ) ):
+                kwds[ argumentName ] = arg
+            for argumentName in kwds:
+                if argumentName not in itertools.chain( self.__mandatoryParamters, self.__optionalParameters ):
+                    raise TypeError()
             self.__obj._github.rawRequest( "PATCH", "/test", kwds )
 
     class AttributeDefinition:

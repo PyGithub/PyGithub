@@ -70,7 +70,35 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
     )
 
     def testEdit( self ):
+        # A GithubObject:
+        # - refuses a call to 'edit' with zero argument
+        with self.assertRaises( TypeError ):
+            self.o.edit()
+        # - refuses a call to 'edit' with silly argument
+        with self.assertRaises( TypeError ):
+            self.o.edit( foobar = 42 )
+        # - accepts one or more argument to 'edit'
+        self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
+        self.o.edit( a1 = 11 )
         self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( a1 = 11, a2 = 22 )
+        self.expectPatch( "/test", { "a1": 11, "a4": 44 } ).andReturn( {} )
+        self.o.edit( a1 = 11, a4 = 44 )
+        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.o.edit( a1 = 11, a4 = 44, a2 = 22 )
+        # - accepts positional arguments
+        self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
+        self.o.edit( 11 )
+        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.o.edit( 11, 22 )
+        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.o.edit( 11, 22, 44 )
+        # - accepts a mix of positional and named arguments
+        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.o.edit( 11, a2 = 22 )
+        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.o.edit( 11, a2 = 22, a4 = 44 )
+        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.o.edit( 11, 22, a4 = 44 )
 
 unittest.main()
