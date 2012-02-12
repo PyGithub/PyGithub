@@ -23,6 +23,7 @@ def dumpUser( u ):
 def dumpOrganization( o ):
     print o.login, "(", o.name, ")"
     print "  Members:", ", ".join( u.login for u in o.get_members() )
+    print "  Repos:", ", ".join( r.name for r in o.get_repos() )
     print
 
 dumpUser( g.get_user() )

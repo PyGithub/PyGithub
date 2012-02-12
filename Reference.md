@@ -91,7 +91,7 @@
 
 /orgs/:org/repos
 ================
- - GET: `` (TODO)
+ - GET: `Organization.get_repos()`: list of `Repository`
  - POST: `` (TODO)
 
 /orgs/:org/teams

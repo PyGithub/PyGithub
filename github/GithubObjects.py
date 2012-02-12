@@ -25,6 +25,7 @@ NamedUser = GithubObject(
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
+
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
 
@@ -64,7 +65,8 @@ Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) 
 Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
-
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
+Organization._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
+
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
