@@ -304,15 +304,15 @@
  - GET: `` (TODO)
  - POST: `` (TODO)
 
-/repos/:user/:repo/milestones/:id/labels
-========================================
- - GET: `` (TODO)
-
-/repos/:user/:repo/milestones/:number
-=====================================
+/repos/:user/:repo/milestones/:id
+=================================
  - GET: `` (TODO)
  - PATCH: `` (TODO)
  - DELETE: `` (TODO)
+
+/repos/:user/:repo/milestones/:id/labels
+========================================
+ - GET: `` (TODO)
 
 /repos/:user/:repo/pulls
 ========================
