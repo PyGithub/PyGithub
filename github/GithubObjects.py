@@ -20,6 +20,8 @@ NamedUser = GithubObject(
         "blog", "location", "email", "hireable", "bio", "public_repos",
         "public_gists", "followers", "following", "html_url", "created_at",
         "type",
+        # Only in Repository.get_contributors()
+        "contributions",
     ),
 )
 
@@ -60,9 +62,13 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     ExtendedScalarAttribute( "owner", NamedUser ),
+    ExtendedListAttribute( "collaborators", NamedUser ),
+    ExtendedListAttribute( "contributors", NamedUser ),
+    ExtendedListAttribute( "watchers", NamedUser ),
 )
 Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )
+Repository._addAttributePolicy( ExtendedListAttribute( "forks", Repository ) )
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )

@@ -110,7 +110,7 @@
 
 /repos/:user/:repo/collaborators
 ================================
- - GET: `` (TODO)
+ - GET: `Repository.get_collaborators()`: list of `NamedUser`
 
 /repos/:user/:repo/collaborators/:user
 ======================================
@@ -147,7 +147,7 @@
 
 /repos/:user/:repo/contributors
 ===============================
- - GET: `` (TODO)
+ - GET: `Repository.get_contributors`: list of `NamedUser`
 
 /repos/:user/:repo/downloads
 ============================
@@ -165,7 +165,7 @@
 
 /repos/:user/:repo/forks
 ========================
- - GET: `` (TODO)
+ - GET: `Repository.get_forks()`: list of `Repository`
  - POST: `` (TODO)
 
 /repos/:user/:repo/git/blobs
@@ -358,7 +358,7 @@
 
 /repos/:user/:repo/watchers
 ===========================
- - GET: `` (TODO)
+ - GET: `Repository.get_watchers()`: list of `NamedUser`
 
 /teams/:id
 ==========

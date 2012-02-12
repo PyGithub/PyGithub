@@ -26,7 +26,15 @@ def dumpOrganization( o ):
     print "  Repos:", ", ".join( r.name for r in o.get_repos() )
     print
 
+def dumpRepository( r ):
+    print r.owner.login + "/" + r.name
+    print "  Collaborators:", ", ".join( u.login for u in r.get_collaborators() )
+    print "  Contributors:", ", ".join( u.login for u in r.get_contributors() )
+    print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
+    print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
+
 dumpUser( g.get_user() )
 dumpUser( g.get_user( "nvie" ) )
 dumpOrganization( g.get_organization( "github" ) )
 dumpOrganization( g.get_organization( "BeaverSoftware" ) )
+dumpRepository( g.get_user( "nvie" ).get_repos()[ 0 ] )
