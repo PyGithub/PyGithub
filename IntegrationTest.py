@@ -15,6 +15,7 @@ def dumpUser( u ):
             print "<-", r.source.owner.login + "/" + r.source.name,
         print
     print "  Watched:", ", ".join( r.name for r in u.get_watched() )
+    print "  Organizations:", ", ".join( o.login for o in u.get_orgs() )
     print
 
 def dumpOrganization( o ):

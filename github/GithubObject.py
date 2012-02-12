@@ -9,6 +9,8 @@ class SimpleScalarAttributes:
             self.__attributeNames = attributeNames
 
         def getValueFromRawValue( self, obj, rawValue ):
+            # if isinstance( rawValue, dict ):
+                # print rawValue, "is a dict, you may want to use an extended attribute for it"
             return rawValue
 
         def updateAttributes( self, obj ):

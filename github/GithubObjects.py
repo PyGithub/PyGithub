@@ -38,6 +38,9 @@ Organization = GithubObject(
     ExtendedListAttribute( "members", NamedUser ),
 )
 
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )
+NamedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),

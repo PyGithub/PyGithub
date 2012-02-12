@@ -424,7 +424,7 @@
 
 /user/orgs
 ==========
- - GET: `` (TODO)
+ - GET: `AuthenticatedUser.get_orgs()` : list of `Organization`
 
 /user/repos
 ===========
@@ -471,7 +471,7 @@
 
 /users/:user/orgs
 =================
- - GET: `` (TODO)
+ - GET: `NamedUser.get_orgs()` : list of `Organization`
 
 /users/:user/received_events
 ============================
