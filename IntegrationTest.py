@@ -38,3 +38,8 @@ dumpUser( g.get_user( "nvie" ) )
 dumpOrganization( g.get_organization( "github" ) )
 dumpOrganization( g.get_organization( "BeaverSoftware" ) )
 dumpRepository( g.get_user( "nvie" ).get_repos()[ 0 ] )
+
+# u = g.get_user()
+# print "Bio before:", u.bio
+# u.edit( bio = u.bio + "(Edited by PyGithub)" )
+# print "Bio after:", u.bio

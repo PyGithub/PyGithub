@@ -10,6 +10,7 @@ AuthenticatedUser = GithubObject(
         "type", "total_private_repos", "owned_private_repos", "private_gists",
         "disk_usage", "collaborators", "plan",
     ),
+    Editable( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ),
 )
 
 NamedUser = GithubObject(

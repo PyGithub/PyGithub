@@ -389,7 +389,7 @@
 /user
 =====
  - GET: `Github.get_user()`: `AuthenticatedUser`
- - PATCH: `` (TODO)
+ - PATCH: `AuthenticatedUser.edit( ... )`
 
 /user/emails
 ============
