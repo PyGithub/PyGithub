@@ -1,7 +1,7 @@
 import unittest
 import MockMockMock
 
-from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes
+from GithubObject import BadGithubObjectException, GithubObject, SimpleScalarAttributes, Editable
 
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttribute( self ):
@@ -23,14 +23,15 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectGet( self, url ):
         return self.g.expect.rawRequest( "GET", url )
 
-class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
+    def expectPatch( self, url, data ):
+        return self.g.expect.rawRequest( "PATCH", url, data )
+
+class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
     )
 
-    def testConstruction( self ):
-        pass # Everything is done in setUp/tearDown
 
     def testCompletion( self ):
         # A GithubObject:
@@ -47,11 +48,6 @@ class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
         # - remembers that some attributes are absent even after an update
         self.assertEqual( self.o.a4, None )
 
-    def testEdit( self ):
-        # A GithubObject:
-        # - does not have an 'edit' method
-        self.assertRaises( AttributeError, lambda: self.o.edit )
-
     def testUnknownAttribute( self ):
         # A GithubObject:
         # - does not have silly attributes
@@ -65,5 +61,16 @@ class GithubObjectWithOnlySimpleAttributes( TestCaseWithGithubTestObject ):
         self.assertEqual( o.a2, 2 )
         self.assertEqual( o.a3, 3 )
         self.assertEqual( o.a4, None )
+
+class EditableGithubObject( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
+        Editable( [ "a1" ], [ "a2", "a4" ] ),
+    )
+
+    def testEdit( self ):
+        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.o.edit( a1 = 11, a2 = 22 )
 
 unittest.main()

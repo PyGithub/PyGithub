@@ -26,6 +26,34 @@ class SimpleScalarAttributes:
             for attributeName in self.__attributeNames
         ]
 
+class Editable:
+    class Editor:
+        def __init__( self, obj, mandatoryParamters, optionalParameters ):
+            self.__obj = obj
+            self.__mandatoryParamters = mandatoryParamters
+            self.__optionalParameters = optionalParameters
+
+        def __call__( self, *args, **kwds ):
+            self.__obj._github.rawRequest( "PATCH", "/test", kwds )
+
+    class AttributeDefinition:
+        def __init__( self, mandatoryParamters, optionalParameters ):
+            self.__mandatoryParamters = mandatoryParamters
+            self.__optionalParameters = optionalParameters
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def fetchRawValues( self, obj ):
+            return { "edit": Editable.Editor( obj, self.__mandatoryParamters, self.__optionalParameters ) }
+
+    def __init__( self, mandatoryParamters, optionalParameters ):
+        self.__mandatoryParamters = mandatoryParamters
+        self.__optionalParameters = optionalParameters
+
+    def getAttributeDefinitions( self ):
+        yield "edit", Editable.AttributeDefinition( self.__mandatoryParamters, self.__optionalParameters )
+
 def GithubObject( className, *attributePolicies ):
     attributeDefinitions = dict()
     for attributePolicy in attributePolicies:
