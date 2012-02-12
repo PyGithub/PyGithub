@@ -67,6 +67,7 @@ Repository = GithubObject(
     ExtendedListAttribute( "collaborators", NamedUser ),
     ExtendedListAttribute( "contributors", NamedUser ),
     ExtendedListAttribute( "watchers", NamedUser ),
+    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
 )
 Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )

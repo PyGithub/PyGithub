@@ -102,7 +102,7 @@
 /repos/:user/:repo
 ==================
  - GET: `` (TODO)
- - PATCH: `` (TODO)
+ - PATCH: `Repository.edit( ... )`
 
 /repos/:user/:repo/branches
 ===========================
