@@ -45,6 +45,7 @@ Organization = GithubObject(
     ),
     ExtendedListAttribute( "public_members", NamedUser ),
     ExtendedListAttribute( "members", NamedUser ),
+    Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )

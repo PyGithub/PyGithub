@@ -64,7 +64,7 @@
 /orgs/:org
 ==========
  - GET: `Github.get_organization( login )`: `Organization`
- - PATCH: `` (TODO)
+ - PATCH: `Organization.edit( ... )`
 
 /orgs/:org/events
 =================
