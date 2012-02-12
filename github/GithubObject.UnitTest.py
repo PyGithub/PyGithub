@@ -156,6 +156,27 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
         self.expectDelete( "/test" )
         self.o.delete()
 
+class GithubObjectWithExtendedScalarAttribute( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        SimpleScalarAttributes( "id", "name", "desc" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        SimpleScalarAttributes( "a1", "a2" ),
+        ExtendedScalarAttribute( "a3", ContainedObject )
+    )
+
+    def testCompletion( self ):
+        self.expectGet( "/test" ).andReturn( { "a3": { "id": "id1", "name": "name1" } } )
+        self.assertEqual( self.o.a3.id, "id1" )
+        self.assertEqual( self.o.a3.name, "name1" )
+        self.expectGet( "/test/a3s/id1" ).andReturn( { "desc": "desc1" } )
+        self.assertEqual( self.o.a3.desc, "desc1" )
+
 class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",

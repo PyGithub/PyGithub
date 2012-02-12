@@ -59,6 +59,30 @@ class ExtendedListAttribute:
     def getAttributeDefinitions( self ):
         yield "get_" + self.__pluralName, ExtendedListAttribute.AttributeDefinition( self.__pluralName, self.__type )
 
+class ExtendedScalarAttribute:
+    class AttributeDefinition:
+        def __init__( self, attributeName, type ):
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return self.__type( obj._github, rawValue, lazy = True )
+
+        def updateAttributes( self, obj ):
+            attributes = obj._github._rawRequest( "GET", obj._baseUrl )
+            # for attributeName in self.__attributeNames:
+                # if attributeName not in attributes:
+                    # attributes[ attributeName ] = None
+            obj._updateAttributes( attributes )
+
+    def __init__( self, attributeName, type ):
+        self.__attributeName = attributeName
+        self.__type = type
+
+    def getAttributeDefinitions( self ):
+        print ">>>", self.__attributeName
+        yield self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type )
+
 class Editable:
     class Editor:
         def __init__( self, obj, mandatoryParameters, optionalParameters ):
