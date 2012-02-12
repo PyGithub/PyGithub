@@ -1,9 +1,3 @@
-In this documentation:
-
- - `repository` is an instance of `Repository`
- - `name_or_User` is either a string (the name of the user) or an instance of `User`
- - `sha` is a string (the hash of the git object)
-
 /authorizations
 ===============
  - GET: `` (TODO)
@@ -69,7 +63,7 @@ In this documentation:
 
 /orgs/:org
 ==========
- - GET: `` (TODO)
+ - GET: `Github.get_organization( login )`: `Organization`
  - PATCH: `` (TODO)
 
 /orgs/:org/events
@@ -78,7 +72,7 @@ In this documentation:
 
 /orgs/:org/members
 ==================
- - GET: `` (TODO)
+ - GET: `Organization.get_members()`: list of `NamedUser`
 
 /orgs/:org/members/:user
 ========================
@@ -87,7 +81,7 @@ In this documentation:
 
 /orgs/:org/public_members
 =========================
- - GET: `` (TODO)
+ - GET: `Organization.get_public_members()`: list of `NamedUser`
 
 /orgs/:org/public_members/:user
 ===============================
@@ -394,7 +388,7 @@ In this documentation:
 
 /user
 =====
- - GET: `` (TODO)
+ - GET: `Github.get_user()`: `AuthenticatedUser`
  - PATCH: `` (TODO)
 
 /user/emails
@@ -434,7 +428,7 @@ In this documentation:
 
 /user/repos
 ===========
- - GET: `` (TODO)
+ - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
  - POST: `` (TODO)
 
 /user/watched
@@ -449,7 +443,7 @@ In this documentation:
 
 /users/:user
 ============
- - GET: `` (TODO)
+ - GET: `Github.get_user( login )`: `NamedUser`
 
 /users/:user/events
 ===================
@@ -489,7 +483,7 @@ In this documentation:
 
 /users/:user/repos
 ==================
- - GET: `` (TODO)
+ - GET: `NamedUser.get_repos()`: list of `Repository`
 
 /users/:user/watched
 ====================
