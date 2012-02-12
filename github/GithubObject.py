@@ -80,7 +80,6 @@ class ExtendedScalarAttribute:
         self.__type = type
 
     def getAttributeDefinitions( self ):
-        print ">>>", self.__attributeName
         yield self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type )
 
 class Editable:
