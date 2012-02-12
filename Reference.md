@@ -147,7 +147,7 @@
 
 /repos/:user/:repo/contributors
 ===============================
- - GET: `Repository.get_contributors`: list of `NamedUser`
+ - GET: `Repository.get_contributors()`: list of `NamedUser`
 
 /repos/:user/:repo/downloads
 ============================
