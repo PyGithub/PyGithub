@@ -1,2 +1,10 @@
+class SimpleScalarAttributes:
+    def __init__( self, *attributes ):
+        self.__attributes = attributes
+
 def GithubObject( *attributes ):
-    pass
+    class GithubObject:
+        def __init__( self, github, attributes, lazy ):
+            pass
+
+    return GithubObject
