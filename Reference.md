@@ -69,83 +69,83 @@ In this documentation:
 
 /orgs/:org
 ==========
- - GET: `Github.organization( name )`: `Organization`
- - PATCH: `Organization.edit( ... )` (TODO)
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
 
 /orgs/:org/events
 =================
- - GET: `Organization.events()`: list of `Event` (TODO)
+ - GET: `` (TODO)
 
 /orgs/:org/members
 ==================
- - GET: `Organization.members()`: list of `User`
+ - GET: `` (TODO)
 
 /orgs/:org/members/:user
 ========================
- - GET: `Organization.hasMember( name_or_User )`: `boolean` (TODO)
- - DELETE: `Organization.removeMember( name_or_User )` (TODO)
+ - GET: `` (TODO)
+ - DELETE: `` (TODO)
 
 /orgs/:org/public_members
 =========================
- - GET: `Organization.publicMembers()`: list of `User`
+ - GET: `` (TODO)
 
 /orgs/:org/public_members/:user
 ===============================
- - GET: `Organization.hasPublicMember( name_or_User )`: `boolean` (TODO)
- - PUT: `Organization.addPublicMember( name_or_User )` (TODO)
- - DELETE: `Organization.removePublicMember( name_or_User )` (TODO)
+ - GET: `` (TODO)
+ - PUT: `` (TODO)
+ - DELETE: `` (TODO)
 
 /orgs/:org/repos
 ================
- - GET: `Organization.repositories()`: list of `Repository`
- - POST: `Organization.createRepository( ... )`: `Repository`
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /orgs/:org/teams
 ================
- - GET: `Organization.teams()`: list of `Team` (TODO)
- - POST: `Organization.createTeam( ... )`: `Team` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo
 ==================
- - GET: `User.repository( name )`: `Repository`
- - PATCH: `Repository.edit( ... )`
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
 
 /repos/:user/:repo/branches
 ===========================
- - GET: `Repository.branches()`: list of `Branch` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/collaborators
 ================================
- - GET: `Repository.collaborators()`: list of `User`
+ - GET: `` (TODO)
 
 /repos/:user/:repo/collaborators/:user
 ======================================
- - GET: `Repository.hasCollaborator( name_or_User )`: `boolean` (TODO)
- - PUT: `Repository.addCollaborator( name_or_User )` (TODO)
- - DELETE: `Repository.removeCollaborator( name_or_User )` (TODO)
+ - GET: `` (TODO)
+ - PUT: `` (TODO)
+ - DELETE: `` (TODO)
 
 /repos/:user/:repo/comments
 ===========================
- - GET: `Repository.comments()`: list of `Comment` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/comments/:id
 ===============================
- - GET: `Repository.comment( id )`: `Comment` (TODO)
- - PATCH: `Comment.edit( ... )` (TODO)
- - DELETE: `Comment.delete()` (TODO)
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
+ - DELETE: `` (TODO)
 
 /repos/:user/:repo/commits
 ==========================
- - GET: `Repository.commits()`: list of `Commit` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/commits/:sha
 ===============================
- - GET: `Repository.commit( sha )`: `Commit` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/commits/:sha/comments
 ========================================
- - GET: `Commit.comments()`: list of `Comment` (TODO)
- - POST: `Commit.addComment( ... )`: `Comment` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/compare/:base...:head
 ========================================
@@ -153,68 +153,68 @@ In this documentation:
 
 /repos/:user/:repo/contributors
 ===============================
- - GET: `Repository.contributors()`: list of `User`
+ - GET: `` (TODO)
 
 /repos/:user/:repo/downloads
 ============================
- - GET: `Repository.downloads()`: list of `Download` (TODO)
- - POST: `Repository.createDownload( ... )`: `Download` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/downloads/:id
 ================================
- - GET: `Repository.download( id )`: `Download` (TODO)
- - DELETE: `Download.delete()` (TODO)
+ - GET: `` (TODO)
+ - DELETE: `` (TODO)
 
 /repos/:user/:repo/events
 =========================
- - GET: `Repository.events`: list of `Event` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/forks
 ========================
- - GET: `Repository.forks()`: list of `Repository`
- - POST: `User.createFork( repository )`: `Repository`
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/blobs
 ============================
- - POST: `Repository.createBlob( ... )`: `GitBlob` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/blobs/:sha
 =================================
- - GET: `Repository.gitBlob( sha )`: `GitBlob` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/git/commits
 ==============================
- - POST: `Repository.createCommit( ... )`: `GitCommit` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/commits/:sha
 ===================================
- - GET: `Repository.gitCommit( sha )`: `GitCommit` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/git/refs
 ===========================
- - GET: `Repository.gitReferences()`: list of `GitReference` (TODO)
- - POST: `Repository.createReference( ... )`: `GitReference` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/refs/:ref
 ================================
- - GET: `Repository.gitReference( ... )`: `GitReference` (TODO)
- - PATCH: `GitReference.edit( ... )` (TODO)
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
 
 /repos/:user/:repo/git/tags
 ===========================
- - POST: `Repository.gitTags()`: list of `GitTag` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/tags/:sha
 ================================
- - GET: `Repository.gitTag( sha )`: `GitTag` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/git/trees
 ============================
- - POST: `Repository.createTree( ... )`: `GitTree` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/git/trees/:sha
 =================================
- - GET: `Repository.gitTree( sha )`: `GitTree` (TODO)
+ - GET: `` (TODO)
 
 /repos/:user/:repo/git/trees/:sha?recursive=1
 =============================================
@@ -222,33 +222,33 @@ In this documentation:
 
 /repos/:user/:repo/hooks
 ========================
- - GET: `Repository.hooks()`: list of `Hook` (TODO)
- - POST: `Repository.addHook( ... )`: `Hook` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/hooks/:id
 ============================
- - GET: `Repository.Hook( id )`: `Hook` (TODO)
- - PATCH: `Hook.edit( ... )` (TODO)
- - DELETE: `Hook.delete()` (TODO)
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
+ - DELETE: `` (TODO)
 
 /repos/:user/:repo/hooks/:id/test
 =================================
- - POST: `Hook.test()` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/issues
 =========================
- - GET: `Repository.issues()`: list of `Issue` (TODO)
- - POST: `Repository.addIssue( ... )`: `Issue` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/issues/:id
 =============================
- - GET: `Repository.get_issue( id )`: `Issue` (TODO)
- - PATCH: `Issue.edit( ... )` (TODO)
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
 
 /repos/:user/:repo/issues/:id/comments
 ======================================
- - GET: `Issue.comments()`: list of `Comment` (TODO)
- - POST: `Issue.addComment( ... )`: `Comment` (TODO)
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /repos/:user/:repo/issues/:id/labels
 ====================================
@@ -364,7 +364,7 @@ In this documentation:
 
 /repos/:user/:repo/watchers
 ===========================
- - GET: `Repository.watchers()` : list of `User`
+ - GET: `` (TODO)
 
 /teams/:id
 ==========
@@ -394,8 +394,8 @@ In this documentation:
 
 /user
 =====
- - GET: `User` (TODO)
- - PATCH: `User.edit( ... )`
+ - GET: `` (TODO)
+ - PATCH: `` (TODO)
 
 /user/emails
 ============
@@ -405,17 +405,17 @@ In this documentation:
 
 /user/followers
 ===============
- - GET: `User.followers()`: list of `User`
+ - GET: `` (TODO)
 
 /user/following
 ===============
- - GET: `User.following()`: list of `User`
+ - GET: `` (TODO)
 
 /user/following/:user
 =====================
- - GET: `User.isFollowing( name_or_User )`: `boolean` (TODO)
- - PUT: `User.startFollowing( name_or_User )` (TODO)
- - DELETE: `User.stopFollowing( name_or_User )` (TODO)
+ - GET: `` (TODO)
+ - PUT: `` (TODO)
+ - DELETE: `` (TODO)
 
 /user/keys
 ==========
@@ -434,26 +434,26 @@ In this documentation:
 
 /user/repos
 ===========
- - GET: `User.repositories()`: list of `Repository`
- - POST: `User.createRepository( ... )`: `Repository`
+ - GET: `` (TODO)
+ - POST: `` (TODO)
 
 /user/watched
 =============
- - GET: `User.watched()`: list of `Repository`
+ - GET: `` (TODO)
 
 /user/watched/:user/:repo
 =========================
- - GET: `User.isWatching( repository )`: `boolean` (TODO)
- - PUT: `User.startWatching( repository )` (TODO)
- - DELETE: `User.stopWatching( repository )` (TODO)
+ - GET: `` (TODO)
+ - PUT: `` (TODO)
+ - DELETE: `` (TODO)
 
 /users/:user
 ============
- - GET: `Github.user()`: `User`
+ - GET: `` (TODO)
 
 /users/:user/events
 ===================
- - GET: `User.events()`: list of `Event` (TODO)
+ - GET: `` (TODO)
 
 /users/:user/events/orgs/:org
 =============================
@@ -465,11 +465,11 @@ In this documentation:
 
 /users/:user/followers
 ======================
- - GET: `User.followers()`: list of `User`
+ - GET: `` (TODO)
 
 /users/:user/following
 ======================
- - GET: `User.following()`: list of `User`
+ - GET: `` (TODO)
 
 /users/:user/gists
 ==================
@@ -489,8 +489,8 @@ In this documentation:
 
 /users/:user/repos
 ==================
- - GET: `User.repositories`: list of `Repository`
+ - GET: `` (TODO)
 
 /users/:user/watched
 ====================
- - GET: `User.watched()`: list of `Repository`
+ - GET: `` (TODO)
