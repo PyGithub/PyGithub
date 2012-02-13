@@ -25,6 +25,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectGet( self, url ):
         return self.g.expect._rawRequest( "GET", url )
 
+    def expectPut( self, url ):
+        return self.g.expect._rawRequest( "PUT", url )
+
     def expectPatch( self, url, data ):
         return self.g.expect._rawRequest( "PATCH", url, data )
 
@@ -198,5 +201,29 @@ class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
         self.assertEqual( a3s[ 0 ].id, "id1" )
         self.expectGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
         self.assertEqual( a3s[ 0 ].name, "name1" )
+
+class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        SimpleScalarAttributes( "id", "name" ),
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        SimpleScalarAttributes( "a1", "a2" ),
+        ExtendedListAttribute( "a3s", ContainedObject, addable = True, removable = True )
+    )
+
+    def testAddToList( self ):
+        a3ToAdd = self.ContainedObject( self.g.object, { "id": "idAdd", "name": "nameAdd" }, lazy = True )
+        self.expectPut( "/test/a3s/idAdd" ).andReturn( {} )
+        self.o.add_a3s( a3ToAdd )
+
+    def testRemoveFromList( self ):
+        a3ToRemove = self.ContainedObject( self.g.object, { "id": "idRemove", "name": "nameRemove" }, lazy = True )
+        self.expectDelete( "/test/a3s/idRemove" ).andReturn( {} )
+        self.o.remove_a3s( a3ToRemove )
 
 unittest.main()

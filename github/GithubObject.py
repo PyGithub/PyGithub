@@ -32,34 +32,92 @@ class SimpleScalarAttributes:
 
 class ExtendedListAttribute:
     class Getter:
-        def __init__( self, obj, pluralName, type ):
+        def __init__( self, obj, attributeName, type ):
             self.__obj = obj
-            self.__pluralName = pluralName
+            self.__attributeName = attributeName
             self.__type = type
 
         def __call__( self ):
             return [
                 self.__type( self.__obj._github, attributes, lazy = True )
-                for attributes in self.__obj._github._rawRequest( "GET", self.__obj._baseUrl + "/" + self.__pluralName )
+                for attributes in self.__obj._github._rawRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName )
             ]
 
-    class AttributeDefinition:
-        def __init__( self, pluralName, type ):
-            self.__pluralName = pluralName
+    class GetDefinition:
+        def __init__( self, attributeName, getName, type ):
+            self.__getName = getName
+            self.__attributeName = attributeName
             self.__type = type
 
         def getValueFromRawValue( self, obj, rawValue ):
             return rawValue
 
         def updateAttributes( self, obj ):
-            obj._updateAttributes( { "get_" + self.__pluralName: ExtendedListAttribute.Getter( obj, self.__pluralName, self.__type ) } )
+            obj._updateAttributes( { self.__getName: ExtendedListAttribute.Getter( obj, self.__attributeName, self.__type ) } )
 
-    def __init__( self, pluralName, type ):
-        self.__pluralName = pluralName
+    class Remover:
+        def __init__( self, obj, attributeName, type ):
+            self.__obj = obj
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def __call__( self, toBeDeleted ):
+            assert( isinstance( toBeDeleted, self.__type ) )
+            self.__obj._github._rawRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity() )
+
+    class RemoveDefinition:
+        def __init__( self, attributeName, removeName, type ):
+            self.__removeName = removeName
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { self.__removeName: ExtendedListAttribute.Remover( obj, self.__attributeName, self.__type ) } )
+
+    class Adder:
+        def __init__( self, obj, attributeName, type ):
+            self.__obj = obj
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def __call__( self, toBeAdded ):
+            assert( isinstance( toBeAdded, self.__type ) )
+            self.__obj._github._rawRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity() )
+
+    class AddDefinition:
+        def __init__( self, attributeName, addName, type ):
+            self.__addName = addName
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { self.__addName: ExtendedListAttribute.Adder( obj, self.__attributeName, self.__type ) } )
+
+    def __init__( self, attributeName, type, addable = False, removable = False ):
+        self.__attributeName = attributeName
         self.__type = type
+        self.__getName = "get_" + attributeName
+        if addable:
+            self.__addName = "add_" + attributeName
+        else:
+            self.__addName = None
+        if removable:
+            self.__removeName = "remove_" + attributeName
+        else:
+            self.__removeName = None
 
     def getAttributeDefinitions( self ):
-        yield "get_" + self.__pluralName, ExtendedListAttribute.AttributeDefinition( self.__pluralName, self.__type )
+        yield self.__getName, ExtendedListAttribute.GetDefinition( self.__attributeName, self.__getName, self.__type )
+        if self.__addName is not None:
+            yield self.__addName, ExtendedListAttribute.AddDefinition( self.__attributeName, self.__addName, self.__type )
+        if self.__removeName is not None:
+            yield self.__removeName, ExtendedListAttribute.RemoveDefinition( self.__attributeName, self.__removeName, self.__type )
 
 class ExtendedScalarAttribute:
     class AttributeDefinition:
@@ -121,7 +179,7 @@ class Editable:
         yield "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters )
 
 class Deletable:
-    class Deletor:
+    class Deleter:
         def __init__( self, obj ):
             self.__obj = obj
 
@@ -133,7 +191,7 @@ class Deletable:
             return rawValue
 
         def updateAttributes( self, obj ):
-            obj._updateAttributes( { "delete": Deletable.Deletor( obj ) } )
+            obj._updateAttributes( { "delete": Deletable.Deleter( obj ) } )
 
     def getAttributeDefinitions( self ):
         yield "delete", Deletable.AttributeDefinition()
@@ -157,27 +215,30 @@ class BaseUrl:
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
-        attributeDefinitions = dict()
+        __attributeDefinitions = dict()
+        __identityAttributeName = None
 
         @staticmethod
         def _addAttributePolicy( attributePolicy ):
             for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
-                if attributeName in GithubObject.attributeDefinitions:
+                if GithubObject.__identityAttributeName is None:
+                    GithubObject.__identityAttributeName = attributeName
+                if attributeName in GithubObject.__attributeDefinitions:
                     raise BadGithubObjectException( "Same attribute defined by two policies" )
                 else:
-                    GithubObject.attributeDefinitions[ attributeName ] = attributeDefinition
+                    GithubObject.__attributeDefinitions[ attributeName ] = attributeDefinition
 
         def __init__( self, github, attributes, lazy ):
             self._github = github
             self.__attributes = dict()
             self._updateAttributes( attributes )
             if not lazy:
-                for attributeName in GithubObject.attributeDefinitions:
+                for attributeName in GithubObject.__attributeDefinitions:
                     if attributeName not in self.__attributes:
                         self.__fetchAttribute( attributeName )
 
         def __getattr__( self, attributeName ):
-            if attributeName in GithubObject.attributeDefinitions:
+            if attributeName in GithubObject.__attributeDefinitions:
                 if attributeName not in self.__attributes:
                     self.__fetchAttribute( attributeName )
                 return self.__attributes[ attributeName ]
@@ -186,7 +247,7 @@ def GithubObject( className, *attributePolicies ):
 
         def _updateAttributes( self, attributes ):
             for attributeName, attributeValue in attributes.iteritems():
-                attributeDefinition = GithubObject.attributeDefinitions[ attributeName ]
+                attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
                 if attributeValue is None:
                     if attributeName not in self.__attributes:
                         self.__attributes[ attributeName ] = None
@@ -194,11 +255,14 @@ def GithubObject( className, *attributePolicies ):
                     self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
 
         def __dir__( self ):
-            return GithubObject.attributeDefinitions.keys()
+            return GithubObject.__attributeDefinitions.keys()
 
         def __fetchAttribute( self, attributeName ):
-            attributeDefinition = GithubObject.attributeDefinitions[ attributeName ]
+            attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
             attributeDefinition.updateAttributes( self )
+
+        def _identity( self ):
+            return self.__attributes[ GithubObject.__identityAttributeName ]
 
     GithubObject.__name__ = className
 
