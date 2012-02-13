@@ -26,7 +26,7 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         return self.g.expect._dataRequest( "GET", url )
 
     def expectPut( self, url ):
-        return self.g.expect._dataRequest( "PUT", url )
+        return self.g.expect._statusRequest( "PUT", url )
 
     def expectPatch( self, url, data ):
         return self.g.expect._dataRequest( "PATCH", url, data )
