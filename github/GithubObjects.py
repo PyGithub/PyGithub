@@ -46,8 +46,8 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    ExtendedListAttribute( "public_members", NamedUser ),
-    ExtendedListAttribute( "members", NamedUser ),
+    ExtendedListAttribute( "public_members", NamedUser, True, True ),
+    ExtendedListAttribute( "members", NamedUser, removable = True ),
     Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 

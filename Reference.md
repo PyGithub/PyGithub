@@ -77,7 +77,7 @@
 /orgs/:org/members/:user
 ========================
  - GET: `` (TODO SOON)
- - DELETE: `` (TODO SOON)
+ - DELETE: `Organization.remove_members( user )`
 
 /orgs/:org/public_members
 =========================
@@ -86,8 +86,8 @@
 /orgs/:org/public_members/:user
 ===============================
  - GET: `` (TODO SOON)
- - PUT: `` (TODO SOON)
- - DELETE: `` (TODO SOON)
+ - PUT: `Organization.add_public_members( user )`
+ - DELETE: `Organization.remove_public_members( user )`
 
 /orgs/:org/repos
 ================
