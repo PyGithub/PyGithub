@@ -81,5 +81,5 @@ AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repositor
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 Organization._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository, True, True ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )

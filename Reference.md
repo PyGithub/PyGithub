@@ -438,8 +438,8 @@
 /user/watched/:user/:repo
 =========================
  - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - PUT: `AuthenticatedUser.add_watched( repo )`
+ - DELETE: `AuthenticatedUser.remove_watched( repo )`
 
 /users/:user
 ============

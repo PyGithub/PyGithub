@@ -39,13 +39,17 @@ dumpOrganization( g.get_organization( "github" ) )
 dumpOrganization( g.get_organization( "BeaverSoftware" ) )
 dumpRepository( g.get_user( "nvie" ).get_repos()[ 0 ] )
 
-# u = g.get_user()
+u = g.get_user()
 # print "Bio before:", u.bio
 # u.edit( bio = u.bio + "(Edited by PyGithub)" )
 # print "Bio after:", u.bio
 
-# g.get_user().remove_following( g.get_user( "Lyloa" ) )
-# g.get_user().add_following( g.get_user( "Lyloa" ) )
+# u.remove_following( g.get_user( "Lyloa" ) )
+# u.add_following( g.get_user( "Lyloa" ) )
+
+# for r in g.get_user( "cjuniet" ).get_repos():
+    # u.add_watched( r )
+    # u.remove_watched( r )
 
 # o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )
