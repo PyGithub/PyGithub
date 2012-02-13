@@ -32,6 +32,7 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         return self.g.expect._dataRequest( "PATCH", url, data )
 
     def expectDelete( self, url ):
+        return self.g.expect._statusRequest( "DELETE", url )
         return self.g.expect._dataRequest( "DELETE", url )
 
 class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):

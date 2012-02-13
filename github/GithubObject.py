@@ -63,7 +63,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeDeleted ):
             assert( isinstance( toBeDeleted, self.__type ) )
-            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
+            self.__obj._github._statusRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
 
     class RemoveDefinition:
         def __init__( self, attributeName, removeName, type ):
@@ -184,7 +184,7 @@ class Deletable:
             self.__obj = obj
 
         def __call__( self ):
-            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl )
+            self.__obj._github._statusRequest( "DELETE", self.__obj._baseUrl )
 
     class AttributeDefinition:
         def getValueFromRawValue( self, obj, rawValue ):
@@ -257,7 +257,7 @@ def GithubObject( className, *attributePolicies ):
                     self.__fetchAttribute( attributeName )
                 return self.__attributes[ attributeName ]
             else:
-                raise AttributeError()
+                raise AttributeError( attributeName )
 
         def _updateAttributes( self, attributes ):
             for attributeName, attributeValue in attributes.iteritems():
