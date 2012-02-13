@@ -115,8 +115,8 @@
 /repos/:user/:repo/collaborators/:user
 ======================================
  - GET: `` (TODO SOON)
- - PUT: `` (TODO SOON)
- - DELETE: `` (TODO SOON)
+ - PUT: `Repository.add_collaborators( user )`
+ - DELETE: `Repository.remove_collaborators( user )`
 
 /repos/:user/:repo/comments
 ===========================

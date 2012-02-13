@@ -68,7 +68,7 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     ExtendedScalarAttribute( "owner", NamedUser ),
-    ExtendedListAttribute( "collaborators", NamedUser ),
+    ExtendedListAttribute( "collaborators", NamedUser, True, True ),
     ExtendedListAttribute( "contributors", NamedUser ),
     ExtendedListAttribute( "watchers", NamedUser ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
