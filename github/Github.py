@@ -1,4 +1,4 @@
-import urllib2
+import httplib
 import json
 import base64
 
@@ -9,40 +9,37 @@ class Github:
         self.__login = login
         self.__password = password
 
-    class _Request( urllib2.Request ):
-        def __init__( self, verb, url, data ):
-            urllib2.Request.__init__( self, url, data )
-            self.__verb = verb
-
-        def get_method( self ):
-            return self.__verb
-
     def _dataRequest( self, verb, url, data = None ):
-        return json.load( self.__rawRequest( verb, url, json.dumps( data ) ) )
+        status, headers, data = self.__rawRequest( verb, url, data )
+        return data
 
     def _statusRequest( self, verb, url, data = None ):
-        try:
-            print verb, url, data
-            self.__rawRequest( verb, url, json.dumps( data ) )
-            print "Got HTTP status 200"
-            return 200
-        except urllib2.HTTPError as e:
-            print "Got HTTP status", e.code
-            return e.code
+        status, headers, data = self.__rawRequest( verb, url, data )
+        return status
 
-    def __rawRequest( self, verb, url, data ):
+    def __rawRequest( self, verb, url, input ):
         assert( verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ] )
 
-        # print verb, url, data
-
-        req = Github._Request( verb, "https://api.github.com" + url, data )
         b64_userpass = base64.b64encode( '%s:%s' % ( self.__login, self.__password ) )
         b64_userpass = b64_userpass.replace( '\n', '' )
-        req.add_header(
-            "Authorization", "Basic %s" % b64_userpass
-        )
 
-        return urllib2.urlopen( req )
+        input = json.dumps( input )
+
+        cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
+        cnx.request( verb, url, input, { "Authorization" : "Basic " + b64_userpass } )
+        response = cnx.getresponse()
+
+        status = response.status
+        headers = response.getheaders()
+        output = response.read()
+        if len( output ) == 0:
+            output = None
+        else:
+            output = json.loads( output )
+        cnx.close()
+
+        # print verb, url, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
+        return status, headers, output
 
     def get_user( self, login = None ):
         if login is None:
