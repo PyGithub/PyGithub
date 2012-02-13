@@ -76,8 +76,8 @@
 
 /orgs/:org/members/:user
 ========================
- - GET: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: `` (TODO SOON)
+ - DELETE: `` (TODO SOON)
 
 /orgs/:org/public_members
 =========================
@@ -85,14 +85,14 @@
 
 /orgs/:org/public_members/:user
 ===============================
- - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: `` (TODO SOON)
+ - PUT: `` (TODO SOON)
+ - DELETE: `` (TODO SOON)
 
 /orgs/:org/repos
 ================
  - GET: `Organization.get_repos()`: list of `Repository`
- - POST: `` (TODO)
+ - POST: `` (TODO SOON)
 
 /orgs/:org/teams
 ================
@@ -101,7 +101,7 @@
 
 /repos/:user/:repo
 ==================
- - GET: `` (TODO)
+ - GET: `` (TODO SOON)
  - PATCH: `Repository.edit( ... )`
 
 /repos/:user/:repo/branches
@@ -114,9 +114,9 @@
 
 /repos/:user/:repo/collaborators/:user
 ======================================
- - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: `` (TODO SOON)
+ - PUT: `` (TODO SOON)
+ - DELETE: `` (TODO SOON)
 
 /repos/:user/:repo/comments
 ===========================
@@ -166,7 +166,7 @@
 /repos/:user/:repo/forks
 ========================
  - GET: `Repository.get_forks()`: list of `Repository`
- - POST: `` (TODO)
+ - POST: `` (TODO SOON)
 
 /repos/:user/:repo/git/blobs
 ============================
@@ -407,7 +407,7 @@
 
 /user/following/:user
 =====================
- - GET: `` (TODO)
+ - GET: `` (TODO SOON)
  - PUT: `AuthenticatedUser.add_following( user )`
  - DELETE: `AuthenticatedUser.remove_following( user )`
 
@@ -429,7 +429,7 @@
 /user/repos
 ===========
  - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
- - POST: `` (TODO)
+ - POST: `` (TODO SOON)
 
 /user/watched
 =============
@@ -437,7 +437,7 @@
 
 /user/watched/:user/:repo
 =========================
- - GET: `` (TODO)
+ - GET: `` (TODO SOON)
  - PUT: `AuthenticatedUser.add_watched( repo )`
  - DELETE: `AuthenticatedUser.remove_watched( repo )`
 
