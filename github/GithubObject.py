@@ -104,11 +104,11 @@ class ExtendedListAttribute:
         self.__type = type
         self.__getName = "get_" + attributeName
         if addable:
-            self.__addName = "add_" + attributeName
+            self.__addName = "add_to_" + attributeName
         else:
             self.__addName = None
         if removable:
-            self.__removeName = "remove_" + attributeName
+            self.__removeName = "remove_from_" + attributeName
         else:
             self.__removeName = None
 

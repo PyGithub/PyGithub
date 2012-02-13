@@ -77,7 +77,7 @@
 /orgs/:org/members/:user
 ========================
  - GET: `` (TODO SOON)
- - DELETE: `Organization.remove_members( user )`
+ - DELETE: `Organization.remove_from_members( user )`
 
 /orgs/:org/public_members
 =========================
@@ -86,8 +86,8 @@
 /orgs/:org/public_members/:user
 ===============================
  - GET: `` (TODO SOON)
- - PUT: `Organization.add_public_members( user )`
- - DELETE: `Organization.remove_public_members( user )`
+ - PUT: `Organization.add_to_public_members( user )`
+ - DELETE: `Organization.remove_from_public_members( user )`
 
 /orgs/:org/repos
 ================
@@ -115,8 +115,8 @@
 /repos/:user/:repo/collaborators/:user
 ======================================
  - GET: `` (TODO SOON)
- - PUT: `Repository.add_collaborators( user )`
- - DELETE: `Repository.remove_collaborators( user )`
+ - PUT: `Repository.add_to_collaborators( user )`
+ - DELETE: `Repository.remove_from_collaborators( user )`
 
 /repos/:user/:repo/comments
 ===========================
@@ -408,8 +408,8 @@
 /user/following/:user
 =====================
  - GET: `` (TODO SOON)
- - PUT: `AuthenticatedUser.add_following( user )`
- - DELETE: `AuthenticatedUser.remove_following( user )`
+ - PUT: `AuthenticatedUser.add_to_following( user )`
+ - DELETE: `AuthenticatedUser.remove_from_following( user )`
 
 /user/keys
 ==========
@@ -438,8 +438,8 @@
 /user/watched/:user/:repo
 =========================
  - GET: `` (TODO SOON)
- - PUT: `AuthenticatedUser.add_watched( repo )`
- - DELETE: `AuthenticatedUser.remove_watched( repo )`
+ - PUT: `AuthenticatedUser.add_to_watched( repo )`
+ - DELETE: `AuthenticatedUser.remove_from_watched( repo )`
 
 /users/:user
 ============

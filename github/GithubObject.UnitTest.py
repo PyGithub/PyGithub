@@ -220,11 +220,11 @@ class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObj
     def testAddToList( self ):
         a3ToAdd = self.ContainedObject( self.g.object, { "id": "idAdd", "name": "nameAdd" }, lazy = True )
         self.expectPut( "/test/a3s/idAdd" ).andReturn( {} )
-        self.o.add_a3s( a3ToAdd )
+        self.o.add_to_a3s( a3ToAdd )
 
     def testRemoveFromList( self ):
         a3ToRemove = self.ContainedObject( self.g.object, { "id": "idRemove", "name": "nameRemove" }, lazy = True )
         self.expectDelete( "/test/a3s/idRemove" ).andReturn( {} )
-        self.o.remove_a3s( a3ToRemove )
+        self.o.remove_from_a3s( a3ToRemove )
 
 unittest.main()

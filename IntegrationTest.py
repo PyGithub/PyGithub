@@ -44,12 +44,12 @@ u = g.get_user()
 # u.edit( bio = u.bio + "(Edited by PyGithub)" )
 # print "Bio after:", u.bio
 
-# u.remove_following( g.get_user( "Lyloa" ) )
-# u.add_following( g.get_user( "Lyloa" ) )
+# u.remove_from_following( g.get_user( "Lyloa" ) )
+# u.add_to_following( g.get_user( "Lyloa" ) )
 
 # for r in g.get_user( "cjuniet" ).get_repos():
-    # u.add_watched( r )
-    # u.remove_watched( r )
+    # u.add_to_watched( r )
+    # u.remove_from_watched( r )
 
 # o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )
