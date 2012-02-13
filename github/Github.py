@@ -18,18 +18,31 @@ class Github:
             return self.__verb
 
     def _dataRequest( self, verb, url, data = None ):
+        return json.load( self.__rawRequest( verb, url, json.dumps( data ) ) )
+
+    def _statusRequest( self, verb, url, data = None ):
+        try:
+            print verb, url, data
+            self.__rawRequest( verb, url, json.dumps( data ) )
+            print "Got HTTP status 200"
+            return 200
+        except urllib2.HTTPError as e:
+            print "Got HTTP status", e.code
+            return e.code
+
+    def __rawRequest( self, verb, url, data ):
         assert( verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ] )
 
         # print verb, url, data
 
-        req = Github._Request( verb, "https://api.github.com" + url, json.dumps( data ) )
+        req = Github._Request( verb, "https://api.github.com" + url, data )
         b64_userpass = base64.b64encode( '%s:%s' % ( self.__login, self.__password ) )
         b64_userpass = b64_userpass.replace( '\n', '' )
         req.add_header(
             "Authorization", "Basic %s" % b64_userpass
         )
 
-        return json.load( urllib2.urlopen( req ) )
+        return urllib2.urlopen( req )
 
     def get_user( self, login = None ):
         if login is None:

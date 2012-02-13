@@ -408,8 +408,8 @@
 /user/following/:user
 =====================
  - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - PUT: `AuthenticatedUser.add_following( user )`
+ - DELETE: `AuthenticatedUser.remove_following( user )`
 
 /user/keys
 ==========

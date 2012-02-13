@@ -85,7 +85,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeAdded ):
             assert( isinstance( toBeAdded, self.__type ) )
-            self.__obj._github._dataRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
+            self.__obj._github._statusRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
 
     class AddDefinition:
         def __init__( self, attributeName, addName, type ):

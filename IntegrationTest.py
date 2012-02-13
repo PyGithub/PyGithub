@@ -44,5 +44,8 @@ dumpRepository( g.get_user( "nvie" ).get_repos()[ 0 ] )
 # u.edit( bio = u.bio + "(Edited by PyGithub)" )
 # print "Bio after:", u.bio
 
+# g.get_user().remove_following( g.get_user( "Lyloa" ) )
+# g.get_user().add_following( g.get_user( "Lyloa" ) )
+
 # o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )

@@ -3,6 +3,7 @@ from GithubObject import *
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
     BaseUrl( lambda obj: "/user" ),
+    Identity( lambda obj: obj.login ),
     SimpleScalarAttributes(
         "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
         "blog", "location", "email", "hireable", "bio", "public_repos",
@@ -16,6 +17,7 @@ AuthenticatedUser = GithubObject(
 NamedUser = GithubObject(
     "NamedUser",
     BaseUrl( lambda obj: "/users/" + obj.login ),
+    Identity( lambda obj: obj.login ),
     SimpleScalarAttributes(
         "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
         "blog", "location", "email", "hireable", "bio", "public_repos",
@@ -29,12 +31,13 @@ NamedUser = GithubObject(
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser, True, True ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
 
 Organization = GithubObject(
     "Organization",
     BaseUrl( lambda obj: "/orgs/" + obj.login ),
+    Identity( lambda obj: obj.login ),
     SimpleScalarAttributes(
         "login", "id", "url", "avatar_url", "name", "company", "blog",
         "location", "email", "public_repos", "public_gists", "followers",
@@ -54,6 +57,7 @@ NamedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
+    Identity( lambda obj: obj.owner.login + "/" + obj.name ),
     SimpleScalarAttributes(
         "url", "html_url", "clone_url", "git_url", "ssh_url", "svn_url",
         "name", "description", "homepage", "language", "private",
