@@ -205,8 +205,9 @@ class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
 class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
-        SimpleScalarAttributes( "id", "name" ),
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        Identity( lambda obj: obj.id ),
+        SimpleScalarAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(

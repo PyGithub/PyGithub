@@ -63,7 +63,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeDeleted ):
             assert( isinstance( toBeDeleted, self.__type ) )
-            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity() )
+            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
 
     class RemoveDefinition:
         def __init__( self, attributeName, removeName, type ):
@@ -85,7 +85,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeAdded ):
             assert( isinstance( toBeAdded, self.__type ) )
-            self.__obj._github._dataRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity() )
+            self.__obj._github._dataRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
 
     class AddDefinition:
         def __init__( self, attributeName, addName, type ):
@@ -213,16 +213,30 @@ class BaseUrl:
     def getAttributeDefinitions( self ):
         yield "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl )
 
+class Identity:
+    class AttributeDefinition:
+        def __init__( self, identity ):
+            self.__identity = identity
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "_identity": self.__identity( obj ) } )
+
+    def __init__( self, identity ):
+        self.__identity = identity
+
+    def getAttributeDefinitions( self ):
+        yield "_identity", Identity.AttributeDefinition( self.__identity )
+
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
         __attributeDefinitions = dict()
-        __identityAttributeName = None
 
         @staticmethod
         def _addAttributePolicy( attributePolicy ):
             for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
-                if GithubObject.__identityAttributeName is None:
-                    GithubObject.__identityAttributeName = attributeName
                 if attributeName in GithubObject.__attributeDefinitions:
                     raise BadGithubObjectException( "Same attribute defined by two policies" )
                 else:
@@ -260,9 +274,6 @@ def GithubObject( className, *attributePolicies ):
         def __fetchAttribute( self, attributeName ):
             attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
             attributeDefinition.updateAttributes( self )
-
-        def _identity( self ):
-            return self.__attributes[ GithubObject.__identityAttributeName ]
 
     GithubObject.__name__ = className
 
