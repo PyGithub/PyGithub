@@ -17,7 +17,7 @@ class Github:
         def get_method( self ):
             return self.__verb
 
-    def _rawRequest( self, verb, url, data = None ):
+    def _dataRequest( self, verb, url, data = None ):
         assert( verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ] )
 
         # print verb, url, data

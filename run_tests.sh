@@ -15,6 +15,6 @@ echo
 
 for f in $(find -name "*IntegrationTest.py")
 do
-    # python $f
+    python $f
     echo
 done
