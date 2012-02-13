@@ -14,7 +14,7 @@ class SimpleScalarAttributes:
             return rawValue
 
         def updateAttributes( self, obj ):
-            attributes = obj._github._rawRequest( "GET", obj._baseUrl )
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
             for attributeName in self.__attributeNames:
                 if attributeName not in attributes:
                     attributes[ attributeName ] = None
@@ -40,7 +40,7 @@ class ExtendedListAttribute:
         def __call__( self ):
             return [
                 self.__type( self.__obj._github, attributes, lazy = True )
-                for attributes in self.__obj._github._rawRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName )
+                for attributes in self.__obj._github._dataRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName )
             ]
 
     class GetDefinition:
@@ -63,7 +63,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeDeleted ):
             assert( isinstance( toBeDeleted, self.__type ) )
-            self.__obj._github._rawRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity() )
+            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity() )
 
     class RemoveDefinition:
         def __init__( self, attributeName, removeName, type ):
@@ -85,7 +85,7 @@ class ExtendedListAttribute:
 
         def __call__( self, toBeAdded ):
             assert( isinstance( toBeAdded, self.__type ) )
-            self.__obj._github._rawRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity() )
+            self.__obj._github._dataRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity() )
 
     class AddDefinition:
         def __init__( self, attributeName, addName, type ):
@@ -129,7 +129,7 @@ class ExtendedScalarAttribute:
             return self.__type( obj._github, rawValue, lazy = True )
 
         def updateAttributes( self, obj ):
-            attributes = obj._github._rawRequest( "GET", obj._baseUrl )
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
             # for attributeName in self.__attributeNames:
                 # if attributeName not in attributes:
                     # attributes[ attributeName ] = None
@@ -157,7 +157,7 @@ class Editable:
             for argumentName in kwds:
                 if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                     raise TypeError()
-            attributes = self.__obj._github._rawRequest( "PATCH", self.__obj._baseUrl, kwds )
+            attributes = self.__obj._github._dataRequest( "PATCH", self.__obj._baseUrl, kwds )
             self.__obj._updateAttributes( attributes )
 
     class AttributeDefinition:
@@ -184,7 +184,7 @@ class Deletable:
             self.__obj = obj
 
         def __call__( self ):
-            self.__obj._github._rawRequest( "DELETE", self.__obj._baseUrl )
+            self.__obj._github._dataRequest( "DELETE", self.__obj._baseUrl )
 
     class AttributeDefinition:
         def getValueFromRawValue( self, obj, rawValue ):
