@@ -99,7 +99,29 @@ class ExtendedListAttribute:
         def updateAttributes( self, obj ):
             obj._updateAttributes( { self.__addName: ExtendedListAttribute.Adder( obj, self.__attributeName, self.__type ) } )
 
-    def __init__( self, attributeName, type, addable = False, removable = False ):
+    class Haser:
+        def __init__( self, obj, attributeName, type ):
+            self.__obj = obj
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def __call__( self, toBeQueried ):
+            assert( isinstance( toBeQueried, self.__type ) )
+            return self.__obj._github._statusRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
+
+    class HasDefinition:
+        def __init__( self, attributeName, hasName, type ):
+            self.__hasName = hasName
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { self.__hasName: ExtendedListAttribute.Haser( obj, self.__attributeName, self.__type ) } )
+
+    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
@@ -111,6 +133,10 @@ class ExtendedListAttribute:
             self.__removeName = "remove_from_" + attributeName
         else:
             self.__removeName = None
+        if hasable:
+            self.__hasName = "has_in_" + attributeName
+        else:
+            self.__hasName = None
 
     def getAttributeDefinitions( self ):
         yield self.__getName, ExtendedListAttribute.GetDefinition( self.__attributeName, self.__getName, self.__type )
@@ -118,6 +144,8 @@ class ExtendedListAttribute:
             yield self.__addName, ExtendedListAttribute.AddDefinition( self.__attributeName, self.__addName, self.__type )
         if self.__removeName is not None:
             yield self.__removeName, ExtendedListAttribute.RemoveDefinition( self.__attributeName, self.__removeName, self.__type )
+        if self.__hasName is not None:
+            yield self.__hasName, ExtendedListAttribute.HasDefinition( self.__attributeName, self.__hasName, self.__type )
 
 class ExtendedScalarAttribute:
     class AttributeDefinition:

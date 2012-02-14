@@ -28,6 +28,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectStatusPut( self, url ):
         return self.g.expect._statusRequest( "PUT", url )
 
+    def expectStatusGet( self, url ):
+        return self.g.expect._statusRequest( "GET", url )
+
     def expectDataPatch( self, url, data ):
         return self.g.expect._dataRequest( "PATCH", url, data )
 
@@ -214,7 +217,7 @@ class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObj
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         SimpleScalarAttributes( "a1", "a2" ),
-        ExtendedListAttribute( "a3s", ContainedObject, addable = True, removable = True )
+        ExtendedListAttribute( "a3s", ContainedObject, addable = True, removable = True, hasable = True )
     )
 
     def testAddToList( self ):
@@ -226,5 +229,12 @@ class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObj
         a3ToRemove = self.ContainedObject( self.g.object, { "id": "idRemove", "name": "nameRemove" }, lazy = True )
         self.expectStatusDelete( "/test/a3s/idRemove" ).andReturn( 204 )
         self.o.remove_from_a3s( a3ToRemove )
+
+    def testHasInList( self ):
+        a3ToQuery = self.ContainedObject( self.g.object, { "id": "idQuery", "name": "nameQuery" }, lazy = True )
+        self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 204 )
+        self.assertTrue( self.o.has_in_a3s( a3ToQuery ) )
+        self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 404 )
+        self.assertFalse( self.o.has_in_a3s( a3ToQuery ) )
 
 unittest.main()
