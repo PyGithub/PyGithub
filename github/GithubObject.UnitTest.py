@@ -22,16 +22,16 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         self.g.tearDown()
         unittest.TestCase.tearDown( self )
 
-    def expectGet( self, url ):
+    def expectDataGet( self, url ):
         return self.g.expect._dataRequest( "GET", url )
 
-    def expectPut( self, url ):
+    def expectStatusPut( self, url ):
         return self.g.expect._statusRequest( "PUT", url )
 
-    def expectPatch( self, url, data ):
+    def expectDataPatch( self, url, data ):
         return self.g.expect._dataRequest( "PATCH", url, data )
 
-    def expectDelete( self, url ):
+    def expectStatusDelete( self, url ):
         return self.g.expect._statusRequest( "DELETE", url )
 
 class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
@@ -50,7 +50,7 @@ class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject )
         self.assertEqual( self.o.a1, 1 )
         self.assertEqual( self.o.a2, 2 )
         # - is completed the first time any unknown attribute is requested
-        self.expectGet( "/test" ).andReturn( { "a2": 22, "a3": 3 } )
+        self.expectDataGet( "/test" ).andReturn( { "a2": 22, "a3": 3 } )
         self.assertEqual( self.o.a3, 3 )
         # - remembers the attributes that were not updated
         self.assertEqual( self.o.a1, 1 )
@@ -63,7 +63,7 @@ class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject )
         self.assertRaises( AttributeError, lambda: self.o.foobar )
 
     def testNonLazyConstruction( self ):
-        self.expectGet( "/test" ).andReturn( { "a2": 2, "a3": 3 } )
+        self.expectDataGet( "/test" ).andReturn( { "a2": 2, "a3": 3 } )
         o = self.GithubTestObject( self.g.object, {}, lazy = False )
         self.g.tearDown()
         self.assertEqual( o.a1, None )
@@ -79,7 +79,7 @@ class GithubObjectWithOtherBaseUrl( TestCaseWithGithubTestObject ):
     )
 
     def testCompletion( self ):
-        self.expectGet( "/other/1" ).andReturn( { "a2": 22, "a3": 3 } )
+        self.expectDataGet( "/other/1" ).andReturn( { "a2": 22, "a3": 3 } )
         self.assertEqual( self.o.a3, 3 )
 
 class EditableGithubObject( TestCaseWithGithubTestObject ):
@@ -99,52 +99,52 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
             self.o.edit( foobar = 42 )
 
     def testEditWithOneKeywordArgument( self ):
-        self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11 } ).andReturn( {} )
         self.o.edit( a1 = 11 )
 
     def testEditWithTwoKeywordArguments( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( a1 = 11, a2 = 22 )
 
     def testEditWithTwoKeywordArgumentsSkipingFirstOptionalArgument( self ):
-        self.expectPatch( "/test", { "a1": 11, "a4": 44 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a4": 44 } ).andReturn( {} )
         self.o.edit( a1 = 11, a4 = 44 )
 
     def testEditWithThreeKeywordArguments( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( a1 = 11, a4 = 44, a2 = 22 )
 
     def testEditWithOnePositionalArgument( self ):
-        self.expectPatch( "/test", { "a1": 11 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11 } ).andReturn( {} )
         self.o.edit( 11 )
 
     def testEditWithTwoPositionalArguments( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( 11, 22 )
 
     def testEditWithThreePositionalArguments( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, 22, 44 )
 
     def testEditWithMixedArguments_1( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
         self.o.edit( 11, a2 = 22 )
 
     def testEditWithMixedArguments_2( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, a2 = 22, a4 = 44 )
 
     def testEditWithMixedArguments_3( self ):
-        self.expectPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
+        self.expectDataPatch( "/test", { "a1": 11, "a2": 22, "a4": 44 } ).andReturn( {} )
         self.o.edit( 11, 22, a4 = 44 )
 
     def testAcknoledgeUpdatesOfAttributes( self ):
-        self.expectPatch( "/test", { "a1": 11 } ).andReturn( { "a2": 22, "a3": 3 } )
+        self.expectDataPatch( "/test", { "a1": 11 } ).andReturn( { "a2": 22, "a3": 3 } )
         self.o.edit( a1 = 11 )
         self.assertEqual( self.o.a1, 1 )
         self.assertEqual( self.o.a2, 22 )
         self.assertEqual( self.o.a3, 3 )
-        self.expectGet( "/test" ).andReturn( {} )
+        self.expectDataGet( "/test" ).andReturn( {} )
         self.assertEqual( self.o.a4, None )
 
 class DeletableGithubObject( TestCaseWithGithubTestObject ):
@@ -156,7 +156,7 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
     )
 
     def testDelete( self ):
-        self.expectDelete( "/test" )
+        self.expectStatusDelete( "/test" ).andReturn( 204 )
         self.o.delete()
 
 class GithubObjectWithExtendedScalarAttribute( TestCaseWithGithubTestObject ):
@@ -174,10 +174,10 @@ class GithubObjectWithExtendedScalarAttribute( TestCaseWithGithubTestObject ):
     )
 
     def testCompletion( self ):
-        self.expectGet( "/test" ).andReturn( { "a3": { "id": "id1", "name": "name1" } } )
+        self.expectDataGet( "/test" ).andReturn( { "a3": { "id": "id1", "name": "name1" } } )
         self.assertEqual( self.o.a3.id, "id1" )
         self.assertEqual( self.o.a3.name, "name1" )
-        self.expectGet( "/test/a3s/id1" ).andReturn( { "desc": "desc1" } )
+        self.expectDataGet( "/test/a3s/id1" ).andReturn( { "desc": "desc1" } )
         self.assertEqual( self.o.a3.desc, "desc1" )
 
 class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
@@ -195,11 +195,11 @@ class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
     )
 
     def testGetList( self ):
-        self.expectGet( "/test/a3s" ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        self.expectDataGet( "/test/a3s" ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
         a3s = self.o.get_a3s()
         self.assertEqual( len( a3s ), 3 )
         self.assertEqual( a3s[ 0 ].id, "id1" )
-        self.expectGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
+        self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
         self.assertEqual( a3s[ 0 ].name, "name1" )
 
 class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObject ):
@@ -219,12 +219,12 @@ class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObj
 
     def testAddToList( self ):
         a3ToAdd = self.ContainedObject( self.g.object, { "id": "idAdd", "name": "nameAdd" }, lazy = True )
-        self.expectPut( "/test/a3s/idAdd" ).andReturn( {} )
+        self.expectStatusPut( "/test/a3s/idAdd" ).andReturn( 204 )
         self.o.add_to_a3s( a3ToAdd )
 
     def testRemoveFromList( self ):
         a3ToRemove = self.ContainedObject( self.g.object, { "id": "idRemove", "name": "nameRemove" }, lazy = True )
-        self.expectDelete( "/test/a3s/idRemove" ).andReturn( {} )
+        self.expectStatusDelete( "/test/a3s/idRemove" ).andReturn( 204 )
         self.o.remove_from_a3s( a3ToRemove )
 
 unittest.main()
