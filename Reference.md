@@ -76,7 +76,7 @@
 
 /orgs/:org/members/:user
 ========================
- - GET: `` (TODO SOON)
+ - GET: `Organization.has_in_members( user )`: `bool`
  - DELETE: `Organization.remove_from_members( user )`
 
 /orgs/:org/public_members
@@ -85,7 +85,7 @@
 
 /orgs/:org/public_members/:user
 ===============================
- - GET: `` (TODO SOON)
+ - GET: `Organization.has_in_public_members( user )`: `bool`
  - PUT: `Organization.add_to_public_members( user )`
  - DELETE: `Organization.remove_from_public_members( user )`
 
@@ -114,7 +114,7 @@
 
 /repos/:user/:repo/collaborators/:user
 ======================================
- - GET: `` (TODO SOON)
+ - GET: `Repository.has_in_collaborators( user )`: `bool`
  - PUT: `Repository.add_to_collaborators( user )`
  - DELETE: `Repository.remove_from_collaborators( user )`
 
@@ -407,7 +407,7 @@
 
 /user/following/:user
 =====================
- - GET: `` (TODO SOON)
+ - GET: `AuthenticatedUser.has_in_following( user )`: `bool`
  - PUT: `AuthenticatedUser.add_to_following( user )`
  - DELETE: `AuthenticatedUser.remove_from_following( user )`
 
@@ -437,7 +437,7 @@
 
 /user/watched/:user/:repo
 =========================
- - GET: `` (TODO SOON)
+ - GET: `AuthenticatedUser.has_in_watched( repo )`: `bool`
  - PUT: `AuthenticatedUser.add_to_watched( repo )`
  - DELETE: `AuthenticatedUser.remove_from_watched( repo )`
 

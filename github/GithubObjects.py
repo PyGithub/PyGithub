@@ -31,7 +31,7 @@ NamedUser = GithubObject(
 AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser, True, True ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser, addable = True, removable = True, hasable = True ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
 
 Organization = GithubObject(
@@ -46,8 +46,8 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    ExtendedListAttribute( "public_members", NamedUser, True, True ),
-    ExtendedListAttribute( "members", NamedUser, removable = True ),
+    ExtendedListAttribute( "public_members", NamedUser, addable = True, removable = True, hasable = True ),
+    ExtendedListAttribute( "members", NamedUser, removable = True, hasable = True ),
     Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
@@ -68,7 +68,7 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     ExtendedScalarAttribute( "owner", NamedUser ),
-    ExtendedListAttribute( "collaborators", NamedUser, True, True ),
+    ExtendedListAttribute( "collaborators", NamedUser, addable = True, removable = True, hasable = True ),
     ExtendedListAttribute( "contributors", NamedUser ),
     ExtendedListAttribute( "watchers", NamedUser ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
@@ -81,5 +81,5 @@ AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repositor
 NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 Organization._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository, True, True ) )
+AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository, addable = True, removable = True, hasable = True ) )
 NamedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
