@@ -263,6 +263,11 @@ def GithubObject( className, *attributePolicies ):
         __attributeDefinitions = dict()
 
         @staticmethod
+        def _addAttributePolicies( attributePolicies ):
+            for attributePolicy in attributePolicies:
+                GithubObject._addAttributePolicy( attributePolicy )
+
+        @staticmethod
         def _addAttributePolicy( attributePolicy ):
             for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
                 if attributeName in GithubObject.__attributeDefinitions:
@@ -304,8 +309,6 @@ def GithubObject( className, *attributePolicies ):
             attributeDefinition.updateAttributes( self )
 
     GithubObject.__name__ = className
-
-    for attributePolicy in attributePolicies:
-        GithubObject._addAttributePolicy( attributePolicy )
+    GithubObject._addAttributePolicies( attributePolicies )
 
     return GithubObject
