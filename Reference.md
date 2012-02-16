@@ -1,65 +1,65 @@
 /authorizations
 ===============
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /authorizations/:id
 ===================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /events
 =======
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /gists
 ======
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /gists/:gist_id/comments
 ========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /gists/:id
 ==========
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /gists/:id/fork
 ===============
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /gists/:id/star
 ===============
- - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PUT: (TODO)
+ - DELETE: (TODO)
 
 /gists/comments/:id
 ===================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /gists/public
 =============
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /gists/starred
 ==============
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /issues
 =======
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /networks/:user/:repo/events
 ============================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /orgs/:org
 ==========
@@ -68,7 +68,7 @@
 
 /orgs/:org/events
 =================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /orgs/:org/members
 ==================
@@ -96,8 +96,8 @@
 
 /orgs/:org/teams
 ================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo
 ==================
@@ -106,7 +106,7 @@
 
 /repos/:user/:repo/branches
 ===========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/collaborators
 ================================
@@ -120,30 +120,30 @@
 
 /repos/:user/:repo/comments
 ===========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/comments/:id
 ===============================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/commits
 ==========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/commits/:sha
 ===============================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/commits/:sha/comments
 ========================================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/compare/:base...:head
 ========================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/contributors
 ===============================
@@ -151,17 +151,17 @@
 
 /repos/:user/:repo/downloads
 ============================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/downloads/:id
 ================================
- - GET: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/events
 =========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/forks
 ========================
@@ -170,191 +170,191 @@
 
 /repos/:user/:repo/git/blobs
 ============================
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/git/blobs/:sha
 =================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/git/commits
 ==============================
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/git/commits/:sha
 ===================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/git/refs
 ===========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/git/refs/:ref
 ================================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
 
 /repos/:user/:repo/git/tags
 ===========================
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/git/tags/:sha
 ================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/git/trees
 ============================
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/git/trees/:sha
 =================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/git/trees/:sha?recursive=1
 =============================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/hooks
 ========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/hooks/:id
 ============================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/hooks/:id/test
 =================================
- - POST: `` (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/issues
 =========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/issues/:id
 =============================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
 
 /repos/:user/:repo/issues/:id/comments
 ======================================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/issues/:id/labels
 ====================================
- - GET: `` (TODO)
- - POST: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
+ - PUT: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/issues/:id/labels/:id
 ========================================
- - DELETE: `` (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/issues/:issue_id/events
 ==========================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/issues/comments/:id
 ======================================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/issues/events
 ================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/issues/events/:id
 ====================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/keys
 =======================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/keys/:id
 ===========================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/labels
 =========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/labels/:id
 =============================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/languages
 ============================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/milestones
 =============================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/milestones/:id
 =================================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/milestones/:id/labels
 ========================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/pulls
 ========================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/pulls/:id
 ============================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
 
 /repos/:user/:repo/pulls/:id/comments
 =====================================
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /repos/:user/:repo/pulls/:id/commits
 ====================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/pulls/:id/files
 ==================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/pulls/:id/merge
 ==================================
- - GET: `` (TODO)
- - PUT: `` (TODO)
+ - GET: (TODO)
+ - PUT: (TODO)
 
 /repos/:user/:repo/pulls/comments/:id
 =====================================
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /repos/:user/:repo/tags
 =======================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/teams
 ========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /repos/:user/:repo/watchers
 ===========================
@@ -362,29 +362,29 @@
 
 /teams/:id
 ==========
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /teams/:id/members
 ==================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /teams/:id/members/:user
 ========================
- - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PUT: (TODO)
+ - DELETE: (TODO)
 
 /teams/:id/repos
 ================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /teams/:id/repos/:user/:repo
 ============================
- - GET: `` (TODO)
- - PUT: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PUT: (TODO)
+ - DELETE: (TODO)
 
 /user
 =====
@@ -393,9 +393,9 @@
 
 /user/emails
 ============
- - GET: `` (TODO)
- - POST: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
+ - DELETE: (TODO)
 
 /user/followers
 ===============
@@ -413,14 +413,14 @@
 
 /user/keys
 ==========
- - GET: `` (TODO)
- - POST: `` (TODO)
+ - GET: (TODO)
+ - POST: (TODO)
 
 /user/keys/:id
 ==============
- - GET: `` (TODO)
- - PATCH: `` (TODO)
- - DELETE: `` (TODO)
+ - GET: (TODO)
+ - PATCH: (TODO)
+ - DELETE: (TODO)
 
 /user/orgs
 ==========
@@ -447,15 +447,15 @@
 
 /users/:user/events
 ===================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/events/orgs/:org
 =============================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/events/public
 ==========================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/followers
 ======================
@@ -467,7 +467,7 @@
 
 /users/:user/gists
 ==================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/orgs
 =================
@@ -475,11 +475,11 @@
 
 /users/:user/received_events
 ============================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/received_events/public
 ===================================
- - GET: `` (TODO)
+ - GET: (TODO)
 
 /users/:user/repos
 ==================
