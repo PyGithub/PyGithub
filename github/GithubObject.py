@@ -51,39 +51,32 @@ class ComplexAttribute:
     def apply( self, cls ):
         cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
-class BaseUrl:
+class AttributeFromCallable:
     class AttributeDefinition:
-        def __init__( self, baseUrl ):
-            self.__baseUrl = baseUrl
+        def __init__( self, name, callable ):
+            self.__name = name
+            self.__callable = callable
 
         def getValueFromRawValue( self, obj, rawValue ):
             return rawValue
 
         def updateAttributes( self, obj ):
-            obj._updateAttributes( { "_baseUrl": self.__baseUrl( obj ) } )
+            obj._updateAttributes( { self.__name: self.__callable( obj ) } )
 
+    def __init__( self, name, callable ):
+        self.__name = name
+        self.__callable = callable
+
+    def apply( self, cls ):
+        cls._addAttribute( self.__name, AttributeFromCallable.AttributeDefinition( self.__name, self.__callable ) )
+
+class BaseUrl( AttributeFromCallable ):
     def __init__( self, baseUrl ):
-        self.__baseUrl = baseUrl
+        AttributeFromCallable.__init__( self, "_baseUrl", baseUrl )
 
-    def apply( self, cls ):
-        cls._addAttribute( "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl ) )
-
-class Identity:
-    class AttributeDefinition:
-        def __init__( self, identity ):
-            self.__identity = identity
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { "_identity": self.__identity( obj ) } )
-
+class Identity( AttributeFromCallable ):
     def __init__( self, identity ):
-        self.__identity = identity
-
-    def apply( self, cls ):
-        cls._addAttribute( "_identity", Identity.AttributeDefinition( self.__identity ) )
+        AttributeFromCallable.__init__( self, "_identity", identity )
 
 class ListOfReferences:
     def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
