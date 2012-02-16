@@ -170,12 +170,11 @@ class ExtendedScalarAttribute:
 
 class Editable:
     class Editor:
-        def __init__( self, obj, mandatoryParameters, optionalParameters ):
-            self.__obj = obj
+        def __init__( self, mandatoryParameters, optionalParameters ):
             self.__mandatoryParameters = mandatoryParameters
             self.__optionalParameters = optionalParameters
 
-        def __call__( self, *args, **kwds ):
+        def __call__( self, obj, *args, **kwds ):
             if len( args ) + len( kwds ) == 0:
                 raise TypeError()
             for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
@@ -183,26 +182,15 @@ class Editable:
             for argumentName in kwds:
                 if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                     raise TypeError()
-            attributes = self.__obj._github._dataRequest( "PATCH", self.__obj._baseUrl, kwds )
-            self.__obj._updateAttributes( attributes )
-
-    class AttributeDefinition:
-        def __init__( self, mandatoryParameters, optionalParameters ):
-            self.__mandatoryParameters = mandatoryParameters
-            self.__optionalParameters = optionalParameters
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { "edit": Editable.Editor( obj, self.__mandatoryParameters, self.__optionalParameters ) } )
+            attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, kwds )
+            obj._updateAttributes( attributes )
 
     def __init__( self, mandatoryParameters, optionalParameters ):
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
 
     def apply( self, cls ):
-        cls._addAttribute( "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters ) )
+        cls._addMethod( "edit", Editable.Editor( self.__mandatoryParameters, self.__optionalParameters ) )
 
 class Deletable:
     class Deleter:
@@ -259,6 +247,7 @@ class Identity:
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
         __attributeDefinitions = dict()
+        __methodDefinitions = dict()
 
         @staticmethod
         def _addAttributePolicies( attributePolicies ):
@@ -278,7 +267,10 @@ def GithubObject( className, *attributePolicies ):
 
         @staticmethod
         def _addMethod( methodName, methodDefinition ):
-            setattr( methodName, methodDefinition )
+            if methodName in GithubObject.__methodDefinitions:
+                raise BadGithubObjectException( "Same method defined by two policies" )
+            else:
+                GithubObject.__methodDefinitions[ methodName ] = methodDefinition
 
         def __init__( self, github, attributes, lazy ):
             self._github = github
@@ -290,7 +282,9 @@ def GithubObject( className, *attributePolicies ):
                         self.__fetchAttribute( attributeName )
 
         def __getattr__( self, attributeName ):
-            if attributeName in GithubObject.__attributeDefinitions:
+            if attributeName in GithubObject.__methodDefinitions:
+                return lambda *args, **kwds: GithubObject.__methodDefinitions[ attributeName ]( self, *args, **kwds )
+            elif attributeName in GithubObject.__attributeDefinitions:
                 if attributeName not in self.__attributes:
                     self.__fetchAttribute( attributeName )
                 return self.__attributes[ attributeName ]
