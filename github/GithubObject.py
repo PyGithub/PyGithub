@@ -169,46 +169,30 @@ class ExtendedScalarAttribute:
         cls._addAttribute( self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
 class Editable:
-    class Editor:
-        def __init__( self, mandatoryParameters, optionalParameters ):
-            self.__mandatoryParameters = mandatoryParameters
-            self.__optionalParameters = optionalParameters
-
-        def __call__( self, obj, *args, **kwds ):
-            if len( args ) + len( kwds ) == 0:
-                raise TypeError()
-            for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
-                kwds[ argumentName ] = arg
-            for argumentName in kwds:
-                if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
-                    raise TypeError()
-            attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, kwds )
-            obj._updateAttributes( attributes )
-
     def __init__( self, mandatoryParameters, optionalParameters ):
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
 
     def apply( self, cls ):
-        cls._addMethod( "edit", Editable.Editor( self.__mandatoryParameters, self.__optionalParameters ) )
+        cls._addMethod( "edit", self.__execute )
+
+    def __execute( self, obj, *args, **kwds ):
+        if len( args ) + len( kwds ) == 0:
+            raise TypeError()
+        for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
+            kwds[ argumentName ] = arg
+        for argumentName in kwds:
+            if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
+                raise TypeError()
+        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, kwds )
+        obj._updateAttributes( attributes )
 
 class Deletable:
-    class Deleter:
-        def __init__( self, obj ):
-            self.__obj = obj
-
-        def __call__( self ):
-            self.__obj._github._statusRequest( "DELETE", self.__obj._baseUrl )
-
-    class AttributeDefinition:
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { "delete": Deletable.Deleter( obj ) } )
-
     def apply( self, cls ):
-        cls._addAttribute( "delete", Deletable.AttributeDefinition() )
+        cls._addMethod( "delete", self.__execute )
+
+    def __execute( self, obj, *args, **kwds ):
+        obj._github._statusRequest( "DELETE", obj._baseUrl )
 
 class BaseUrl:
     class AttributeDefinition:
