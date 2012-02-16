@@ -1,9 +1,13 @@
 #!/bin/env python
 
 from github import Github
-import GithubCredentials
-
-g = Github( GithubCredentials.login, GithubCredentials.password )
+try:
+    import GithubCredentials
+except ImportError:
+    print "Please create a 'GithubCredentials.py' file containing:"
+    print "login = '<your github login>'"
+    print "password = '<your github password>'"
+    exit( 1 )
 
 def dumpUser( u ):
     print u.login, "(", u.name, ")"
@@ -34,30 +38,37 @@ def dumpRepository( r ):
     print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
     print
 
-dumpUser( g.get_user() )
-dumpUser( g.get_user( "nvie" ) )
-dumpOrganization( g.get_organization( "github" ) )
-dumpOrganization( g.get_organization( "BeaverSoftware" ) )
-dumpRepository( g.get_user().get_repo( "C4Planner" ) )
-dumpRepository( g.get_user( "nvie" ).get_repo( "gitflow" ) )
-dumpRepository( g.get_organization( "BeaverSoftware" ).get_repo( "FatherBeaver" ) )
+g = Github( GithubCredentials.login, GithubCredentials.password )
 
+# Reads
+# =====
 u = g.get_user()
-# print "Bio before:", u.bio
+# o = g.get_organization( "<some organization you are admin of>" )
+jacquev6 = g.get_user( "jacquev6" )
+PyGithub = jacquev6.get_repo( "PyGithub" )
+
+dumpUser( u )
+dumpUser( jacquev6 )
+dumpOrganization( g.get_organization( "github" ) )
+dumpRepository( PyGithub )
+
+# Writes (to user)
+# ================
 # u.edit( bio = u.bio + "(Edited by PyGithub)" )
-# print "Bio after:", u.bio
 
-# u.remove_from_following( g.get_user( "Lyloa" ) )
-# u.add_to_following( g.get_user( "Lyloa" ) )
+# u.remove_from_following( jacquev6 )
+# u.add_to_following( jacquev6 )
 
-# for r in g.get_user( "cjuniet" ).get_repos():
-    # u.add_to_watched( r )
-    # u.remove_from_watched( r )
+# u.remove_from_watched( PyGithub )
+# u.add_to_watched( PyGithub )
 
-o = g.get_organization( "BeaverSoftware" )
+# dumpRepository( u.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
+# dumpRepository( u.create_fork( PyGithub ) )
+
+
+# Writes (to organization)
+# ========================
 # o.edit( location = "Paris, France" )
 
-# dumpRepository( u.create_repo( name = "TestGithubApi" + str( len( u.get_repos() ) ), description = "Created by a Python script!", has_wiki = False ) )
-
-# dumpRepository( u.create_fork( g.get_organization( "BeaverSoftware" ).get_repo( "FatherBeaver" ) ) )
-# dumpRepository( o.create_fork( g.get_user().get_repo( "C4Planner" ) ) )
+# dumpRepository( o.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
+# dumpRepository( o.create_fork( PyGithub ) )
