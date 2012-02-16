@@ -25,6 +25,9 @@ NamedUser = GithubObject(
         "type",
         # Only in Repository.get_contributors()
         "contributions",
+        # Seen only by user herself
+        "disk_usage", "collaborators", "plan", "total_private_repos",
+        "owned_private_repos", "private_gists",
     ),
 )
 
