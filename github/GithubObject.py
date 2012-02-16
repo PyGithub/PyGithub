@@ -9,8 +9,6 @@ class BasicAttributes:
             self.__attributeNames = attributeNames
 
         def getValueFromRawValue( self, obj, rawValue ):
-            # if isinstance( rawValue, dict ):
-                # print rawValue, "is a dict, you may want to use an extended attribute for it"
             return rawValue
 
         def updateAttributes( self, obj ):
@@ -148,6 +146,14 @@ class Deletable:
 
     def __execute( self, obj, *args, **kwds ):
         obj._github._statusRequest( "DELETE", obj._baseUrl )
+
+class MethodFromCallable:
+    def __init__( self, name, callable ):
+        self.__name = name
+        self.__callable = callable
+
+    def apply( self, cls ):
+        cls._addMethod( self.__name, self.__callable )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:

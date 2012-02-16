@@ -237,4 +237,21 @@ class GithubObjectWithModifiableListOfReferences( TestCaseWithGithubTestObject )
         self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 404 )
         self.assertFalse( self.o.has_in_a3s( a3ToQuery ) )
 
+def myCallable( obj, mock, arg ):
+    return mock.call( arg )
+
+class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        MethodFromCallable( "myMethod", myCallable )
+    )
+
+    def testCallMethod( self ):
+        mock = MockMockMock.Mock( "myCallable" )
+        mock.expect.call( 42 ).andReturn( 72 )
+        self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
+        mock.tearDown()
+
 unittest.main()
