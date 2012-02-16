@@ -57,4 +57,4 @@ u = g.get_user()
 o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )
 
-# u.create_repos( name = "TestGithubApi" + str( len( u.get_repos() ) ), description = "Created by a Python script!" )
+# dumpRepository( u.create_repo( name = "TestGithubApi" + str( len( u.get_repos() ) ), description = "Created by a Python script!", has_wiki = False ) )

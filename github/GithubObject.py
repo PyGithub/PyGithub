@@ -122,12 +122,12 @@ class ListOfReferences:
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
 
 class ListOfObjects:
-    def __init__( self, attributeName, type, creatable = False ):
+    def __init__( self, attributeName, type, creatable = False, singularName = None ):
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
         if creatable:
-            self.__createName = "create_" + attributeName
+            self.__createName = "create_" + ( singularName or attributeName )
         else:
             self.__createName = None
 

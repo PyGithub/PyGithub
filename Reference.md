@@ -92,7 +92,7 @@
 /orgs/:org/repos
 ================
  - GET: `Organization.get_repos()`: list of `Repository`
- - POST: `Organization.create_repos( ... )`: `Repository`
+ - POST: `Organization.create_repo( ... )`: `Repository`
 
 /orgs/:org/teams
 ================
@@ -429,7 +429,7 @@
 /user/repos
 ===========
  - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
- - POST: `AuthenticatedUser.create_repos( ... )`: `Repository`
+ - POST: `AuthenticatedUser.create_repo( ... )`: `Repository`
 
 /user/watched
 =============

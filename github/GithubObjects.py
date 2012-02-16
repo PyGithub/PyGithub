@@ -77,9 +77,9 @@ Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
 Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True ) )
+AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True, singularName = "repo" ) )
 NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository ) )
-Organization._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True ) )
+Organization._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True, singularName = "repo" ) )
 
 def __repoFromUser( user, name ):
     return Repository( user._github, { "name": name, "owner": { "login": user.login } }, lazy = False )
