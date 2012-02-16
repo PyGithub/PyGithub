@@ -28,6 +28,63 @@ class BasicAttributes:
         for attributeName in self.__attributeNames:
             cls._addAttribute( attributeName, commonDefinition )
 
+class ComplexAttribute:
+    class AttributeDefinition:
+        def __init__( self, attributeName, type ):
+            self.__attributeName = attributeName
+            self.__type = type
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return self.__type( obj._github, rawValue, lazy = True )
+
+        def updateAttributes( self, obj ):
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
+            # for attributeName in self.__attributeNames:
+                # if attributeName not in attributes:
+                    # attributes[ attributeName ] = None
+            obj._updateAttributes( attributes )
+
+    def __init__( self, attributeName, type ):
+        self.__attributeName = attributeName
+        self.__type = type
+
+    def apply( self, cls ):
+        cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
+
+class BaseUrl:
+    class AttributeDefinition:
+        def __init__( self, baseUrl ):
+            self.__baseUrl = baseUrl
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "_baseUrl": self.__baseUrl( obj ) } )
+
+    def __init__( self, baseUrl ):
+        self.__baseUrl = baseUrl
+
+    def apply( self, cls ):
+        cls._addAttribute( "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl ) )
+
+class Identity:
+    class AttributeDefinition:
+        def __init__( self, identity ):
+            self.__identity = identity
+
+        def getValueFromRawValue( self, obj, rawValue ):
+            return rawValue
+
+        def updateAttributes( self, obj ):
+            obj._updateAttributes( { "_identity": self.__identity( obj ) } )
+
+    def __init__( self, identity ):
+        self.__identity = identity
+
+    def apply( self, cls ):
+        cls._addAttribute( "_identity", Identity.AttributeDefinition( self.__identity ) )
+
 class ListOfReferences:
     def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
         self.__attributeName = attributeName
@@ -72,29 +129,6 @@ class ListOfReferences:
             self.__type( obj._github, attributes, lazy = True )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
         ]
-            
-class ComplexAttribute:
-    class AttributeDefinition:
-        def __init__( self, attributeName, type ):
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return self.__type( obj._github, rawValue, lazy = True )
-
-        def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
-            # for attributeName in self.__attributeNames:
-                # if attributeName not in attributes:
-                    # attributes[ attributeName ] = None
-            obj._updateAttributes( attributes )
-
-    def __init__( self, attributeName, type ):
-        self.__attributeName = attributeName
-        self.__type = type
-
-    def apply( self, cls ):
-        cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
 class Editable:
     def __init__( self, mandatoryParameters, optionalParameters ):
@@ -121,40 +155,6 @@ class Deletable:
 
     def __execute( self, obj, *args, **kwds ):
         obj._github._statusRequest( "DELETE", obj._baseUrl )
-
-class BaseUrl:
-    class AttributeDefinition:
-        def __init__( self, baseUrl ):
-            self.__baseUrl = baseUrl
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { "_baseUrl": self.__baseUrl( obj ) } )
-
-    def __init__( self, baseUrl ):
-        self.__baseUrl = baseUrl
-
-    def apply( self, cls ):
-        cls._addAttribute( "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl ) )
-
-class Identity:
-    class AttributeDefinition:
-        def __init__( self, identity ):
-            self.__identity = identity
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { "_identity": self.__identity( obj ) } )
-
-    def __init__( self, identity ):
-        self.__identity = identity
-
-    def apply( self, cls ):
-        cls._addAttribute( "_identity", Identity.AttributeDefinition( self.__identity ) )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
