@@ -34,6 +34,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectDataPatch( self, url, data ):
         return self.g.expect._dataRequest( "PATCH", url, data )
 
+    def expectDataPost( self, url, data ):
+        return self.g.expect._dataRequest( "POST", url, data )
+
     def expectStatusDelete( self, url ):
         return self.g.expect._statusRequest( "DELETE", url )
 
@@ -205,6 +208,28 @@ class GithubObjectWithListOfReferences( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
         self.assertEqual( a3s[ 0 ].name, "name1" )
 
+class GithubObjectWithListOfObjects( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListOfObjects( "a3s", ContainedObject )
+    )
+
+    def testGetList( self ):
+        self.expectDataGet( "/test/a3s" ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        a3s = self.o.get_a3s()
+        self.assertEqual( len( a3s ), 3 )
+        self.assertEqual( a3s[ 0 ].id, "id1" )
+        self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
+        self.assertEqual( a3s[ 0 ].name, "name1" )
+
 class GithubObjectWithModifiableListOfReferences( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
@@ -236,6 +261,25 @@ class GithubObjectWithModifiableListOfReferences( TestCaseWithGithubTestObject )
         self.assertTrue( self.o.has_in_a3s( a3ToQuery ) )
         self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 404 )
         self.assertFalse( self.o.has_in_a3s( a3ToQuery ) )
+
+class GithubObjectWithModifiableListOfObjects( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        Identity( lambda obj: obj.id ),
+        BasicAttributes( "id", "name" ),
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListOfObjects( "a3s", ContainedObject, creatable = True )
+    )
+
+    def testCreate( self ):
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate" } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3s( name = "nameCreate" ).id, "idCreate" )
 
 def myCallable( obj, mock, arg ):
     return mock.call( arg )

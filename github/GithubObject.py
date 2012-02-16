@@ -103,6 +103,12 @@ class ListOfReferences:
         if self.__hasName is not None:
             cls._addMethod( self.__hasName, self.__executeHas )
 
+    def __executeGet( self, obj ):
+        return [
+            self.__type( obj._github, attributes, lazy = True )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
+        ]
+
     def __executeAdd( self, obj, toBeAdded ):
         assert( isinstance( toBeAdded, self.__type ) )
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
@@ -115,11 +121,29 @@ class ListOfReferences:
         assert( isinstance( toBeQueried, self.__type ) )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
 
+class ListOfObjects:
+    def __init__( self, attributeName, type, creatable = False ):
+        self.__attributeName = attributeName
+        self.__type = type
+        self.__getName = "get_" + attributeName
+        if creatable:
+            self.__createName = "create_" + attributeName
+        else:
+            self.__createName = None
+
+    def apply( self, cls ):
+        cls._addMethod( self.__getName, self.__executeGet )
+        if self.__createName is not None:
+            cls._addMethod( self.__createName, self.__executeCreate )
+
     def __executeGet( self, obj ):
         return [
             self.__type( obj._github, attributes, lazy = True )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
         ]
+
+    def __executeCreate( self, obj, **data ):
+        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, data ), lazy = True )
 
 class Editable:
     def __init__( self, mandatoryParameters, optionalParameters ):
