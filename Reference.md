@@ -92,7 +92,7 @@
 /orgs/:org/repos
 ================
  - GET: `Organization.get_repos()`: list of `Repository`
- - POST: `` (TODO SOON)
+ - POST: `Organization.create_repos( ... )`: `Repository`
 
 /orgs/:org/teams
 ================
@@ -166,7 +166,7 @@
 /repos/:user/:repo/forks
 ========================
  - GET: `Repository.get_forks()`: list of `Repository`
- - POST: `` (TODO SOON)
+ - POST: `AuthenticatedUser.create_fork( repo )` or `Organization.create_fork( repo )`: `Repository` (TODO SOON)
 
 /repos/:user/:repo/git/blobs
 ============================
@@ -429,7 +429,7 @@
 /user/repos
 ===========
  - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
- - POST: `` (TODO SOON)
+ - POST: `AuthenticatedUser.create_repos( ... )`: `Repository`
 
 /user/watched
 =============

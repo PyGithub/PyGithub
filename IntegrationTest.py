@@ -54,5 +54,7 @@ u = g.get_user()
     # u.add_to_watched( r )
     # u.remove_from_watched( r )
 
-# o = g.get_organization( "BeaverSoftware" )
+o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )
+
+# u.create_repos( name = "TestGithubApi" + str( len( u.get_repos() ) ), description = "Created by a Python script!" )
