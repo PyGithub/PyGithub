@@ -3,7 +3,7 @@ import itertools
 class BadGithubObjectException( Exception ):
     pass
 
-class SimpleScalarAttributes:
+class BasicAttributes:
     class AttributeDefinition:
         def __init__( self, attributeNames ):
             self.__attributeNames = attributeNames
@@ -24,11 +24,11 @@ class SimpleScalarAttributes:
         self.__attributeNames = attributeNames
 
     def apply( self, cls ):
-        commonDefinition = SimpleScalarAttributes.AttributeDefinition( self.__attributeNames )
+        commonDefinition = BasicAttributes.AttributeDefinition( self.__attributeNames )
         for attributeName in self.__attributeNames:
             cls._addAttribute( attributeName, commonDefinition )
 
-class ExtendedListAttribute:
+class ListOfReferences:
     def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
         self.__attributeName = attributeName
         self.__type = type
@@ -73,7 +73,7 @@ class ExtendedListAttribute:
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
         ]
             
-class ExtendedScalarAttribute:
+class ComplexAttribute:
     class AttributeDefinition:
         def __init__( self, attributeName, type ):
             self.__attributeName = attributeName
@@ -94,7 +94,7 @@ class ExtendedScalarAttribute:
         self.__type = type
 
     def apply( self, cls ):
-        cls._addAttribute( self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
+        cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
 class Editable:
     def __init__( self, mandatoryParameters, optionalParameters ):

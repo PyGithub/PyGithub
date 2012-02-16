@@ -6,11 +6,11 @@ from GithubObject import *
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", SimpleScalarAttributes( "a", "a" ) )
+            GithubObject( "", BasicAttributes( "a", "a" ) )
 
     def testDuplicatedAttributeInTwoPolicies( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", SimpleScalarAttributes( "a" ), SimpleScalarAttributes( "a" ) )
+            GithubObject( "", BasicAttributes( "a" ), BasicAttributes( "a" ) )
 
 class TestCaseWithGithubTestObject( unittest.TestCase ):
     def setUp( self ):
@@ -37,11 +37,11 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectStatusDelete( self, url ):
         return self.g.expect._statusRequest( "DELETE", url )
 
-class GithubObjectWithOnlySimpleScalarAttributes( TestCaseWithGithubTestObject ):
+class GithubObjectWithOnlyBasicAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
+        BasicAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testInterface( self ):
@@ -78,7 +78,7 @@ class GithubObjectWithOtherBaseUrl( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/other/" + str( obj.a1 ) ),
-        SimpleScalarAttributes( "a1", "a2", "a3", "a4" )
+        BasicAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testCompletion( self ):
@@ -89,7 +89,7 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
+        BasicAttributes( "a1", "a2", "a3", "a4" ),
         Editable( [ "a1" ], [ "a2", "a4" ] ),
     )
 
@@ -154,7 +154,7 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2", "a3", "a4" ),
+        BasicAttributes( "a1", "a2", "a3", "a4" ),
         Deletable(),
     )
 
@@ -162,18 +162,18 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test" ).andReturn( 204 )
         self.o.delete()
 
-class GithubObjectWithExtendedScalarAttribute( TestCaseWithGithubTestObject ):
+class GithubObjectWithComplexAttribute( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        SimpleScalarAttributes( "id", "name", "desc" )
+        BasicAttributes( "id", "name", "desc" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2" ),
-        ExtendedScalarAttribute( "a3", ContainedObject )
+        BasicAttributes( "a1", "a2" ),
+        ComplexAttribute( "a3", ContainedObject )
     )
 
     def testCompletion( self ):
@@ -183,18 +183,18 @@ class GithubObjectWithExtendedScalarAttribute( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test/a3s/id1" ).andReturn( { "desc": "desc1" } )
         self.assertEqual( self.o.a3.desc, "desc1" )
 
-class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
+class GithubObjectWithListOfReferences( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        SimpleScalarAttributes( "id", "name" )
+        BasicAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2" ),
-        ExtendedListAttribute( "a3s", ContainedObject )
+        BasicAttributes( "a1", "a2" ),
+        ListOfReferences( "a3s", ContainedObject )
     )
 
     def testGetList( self ):
@@ -205,19 +205,19 @@ class GithubObjectWithExtendedListAttribute( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
         self.assertEqual( a3s[ 0 ].name, "name1" )
 
-class GithubObjectWithModifiableExtendedListAttribute( TestCaseWithGithubTestObject ):
+class GithubObjectWithModifiableListOfReferences( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        SimpleScalarAttributes( "id", "name" ),
+        BasicAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        SimpleScalarAttributes( "a1", "a2" ),
-        ExtendedListAttribute( "a3s", ContainedObject, addable = True, removable = True, hasable = True )
+        BasicAttributes( "a1", "a2" ),
+        ListOfReferences( "a3s", ContainedObject, addable = True, removable = True, hasable = True )
     )
 
     def testAddToList( self ):

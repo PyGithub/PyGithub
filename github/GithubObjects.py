@@ -4,7 +4,7 @@ AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
     BaseUrl( lambda obj: "/user" ),
     Identity( lambda obj: obj.login ),
-    SimpleScalarAttributes(
+    BasicAttributes(
         "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
         "blog", "location", "email", "hireable", "bio", "public_repos",
         "public_gists", "followers", "following", "html_url", "created_at",
@@ -18,7 +18,7 @@ NamedUser = GithubObject(
     "NamedUser",
     BaseUrl( lambda obj: "/users/" + obj.login ),
     Identity( lambda obj: obj.login ),
-    SimpleScalarAttributes(
+    BasicAttributes(
         "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
         "blog", "location", "email", "hireable", "bio", "public_repos",
         "public_gists", "followers", "following", "html_url", "created_at",
@@ -28,17 +28,17 @@ NamedUser = GithubObject(
     ),
 )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
-NamedUser._addAttributePolicy( ExtendedListAttribute( "followers", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ListOfReferences( "followers", NamedUser ) )
+NamedUser._addAttributePolicy( ListOfReferences( "followers", NamedUser ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser, addable = True, removable = True, hasable = True ) )
-NamedUser._addAttributePolicy( ExtendedListAttribute( "following", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ListOfReferences( "following", NamedUser, addable = True, removable = True, hasable = True ) )
+NamedUser._addAttributePolicy( ListOfReferences( "following", NamedUser ) )
 
 Organization = GithubObject(
     "Organization",
     BaseUrl( lambda obj: "/orgs/" + obj.login ),
     Identity( lambda obj: obj.login ),
-    SimpleScalarAttributes(
+    BasicAttributes(
         "login", "id", "url", "avatar_url", "name", "company", "blog",
         "location", "email", "public_repos", "public_gists", "followers",
         "following", "html_url", "created_at", "type",
@@ -46,19 +46,19 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    ExtendedListAttribute( "public_members", NamedUser, addable = True, removable = True, hasable = True ),
-    ExtendedListAttribute( "members", NamedUser, removable = True, hasable = True ),
+    ListOfReferences( "public_members", NamedUser, addable = True, removable = True, hasable = True ),
+    ListOfReferences( "members", NamedUser, removable = True, hasable = True ),
     Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )
-NamedUser._addAttributePolicy( ExtendedListAttribute( "orgs", Organization ) )
+AuthenticatedUser._addAttributePolicy( ListOfReferences( "orgs", Organization ) )
+NamedUser._addAttributePolicy( ListOfReferences( "orgs", Organization ) )
 
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
     Identity( lambda obj: obj.owner.login + "/" + obj.name ),
-    SimpleScalarAttributes(
+    BasicAttributes(
         "url", "html_url", "clone_url", "git_url", "ssh_url", "svn_url",
         "name", "description", "homepage", "language", "private",
         "fork", "forks", "watchers", "size", "master_branch", "open_issues",
@@ -67,19 +67,19 @@ Repository = GithubObject(
         # Not documented
         "mirror_url", "updated_at", "id",
     ),
-    ExtendedScalarAttribute( "owner", NamedUser ),
-    ExtendedListAttribute( "collaborators", NamedUser, addable = True, removable = True, hasable = True ),
-    ExtendedListAttribute( "contributors", NamedUser ),
-    ExtendedListAttribute( "watchers", NamedUser ),
+    ComplexAttribute( "owner", NamedUser ),
+    ListOfReferences( "collaborators", NamedUser, addable = True, removable = True, hasable = True ),
+    ListOfReferences( "contributors", NamedUser ),
+    ListOfReferences( "watchers", NamedUser ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
 )
-Repository._addAttributePolicy( ExtendedScalarAttribute( "parent", Repository ) )
-Repository._addAttributePolicy( ExtendedScalarAttribute( "source", Repository ) )
-Repository._addAttributePolicy( ExtendedListAttribute( "forks", Repository ) )
+Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
+Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
+Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
-NamedUser._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
-Organization._addAttributePolicy( ExtendedListAttribute( "repos", Repository ) )
+AuthenticatedUser._addAttributePolicy( ListOfReferences( "repos", Repository ) )
+NamedUser._addAttributePolicy( ListOfReferences( "repos", Repository ) )
+Organization._addAttributePolicy( ListOfReferences( "repos", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository, addable = True, removable = True, hasable = True ) )
-NamedUser._addAttributePolicy( ExtendedListAttribute( "watched", Repository ) )
+AuthenticatedUser._addAttributePolicy( ListOfReferences( "watched", Repository, addable = True, removable = True, hasable = True ) )
+NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )
