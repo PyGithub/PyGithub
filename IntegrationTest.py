@@ -32,12 +32,15 @@ def dumpRepository( r ):
     print "  Contributors:", ", ".join( u.login for u in r.get_contributors() )
     print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
     print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
+    print
 
 dumpUser( g.get_user() )
 dumpUser( g.get_user( "nvie" ) )
 dumpOrganization( g.get_organization( "github" ) )
 dumpOrganization( g.get_organization( "BeaverSoftware" ) )
-dumpRepository( g.get_user( "nvie" ).get_repos()[ 0 ] )
+dumpRepository( g.get_user().get_repo( "C4Planner" ) )
+dumpRepository( g.get_user( "nvie" ).get_repo( "gitflow" ) )
+dumpRepository( g.get_organization( "BeaverSoftware" ).get_repo( "FatherBeaver" ) )
 
 u = g.get_user()
 # print "Bio before:", u.bio

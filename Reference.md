@@ -101,7 +101,7 @@
 
 /repos/:user/:repo
 ==================
- - GET: `` (TODO SOON)
+ - GET: `AuthenticatedUser.get_repo( name )`, `NamedUser.get_repo( name )` or `Organization.get_repo( name )`: `Repository`
  - PATCH: `Repository.edit( ... )`
 
 /repos/:user/:repo/branches

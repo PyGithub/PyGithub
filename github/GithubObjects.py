@@ -81,5 +81,11 @@ AuthenticatedUser._addAttributePolicy( ListOfReferences( "repos", Repository ) )
 NamedUser._addAttributePolicy( ListOfReferences( "repos", Repository ) )
 Organization._addAttributePolicy( ListOfReferences( "repos", Repository ) )
 
+def __repoFromUser( user, name ):
+    return Repository( user._github, { "name": name, "owner": { "login": user.login } }, lazy = False )
+AuthenticatedUser._addAttributePolicy( MethodFromCallable( "get_repo", __repoFromUser ) )
+NamedUser._addAttributePolicy( MethodFromCallable( "get_repo", __repoFromUser ) )
+Organization._addAttributePolicy( MethodFromCallable( "get_repo", __repoFromUser ) )
+
 AuthenticatedUser._addAttributePolicy( ListOfReferences( "watched", Repository, addable = True, removable = True, hasable = True ) )
 NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )
