@@ -166,7 +166,7 @@
 /repos/:user/:repo/forks
 ========================
  - GET: `Repository.get_forks()`: list of `Repository`
- - POST: `AuthenticatedUser.create_fork( repo )` or `Organization.create_fork( repo )`: `Repository` (TODO SOON)
+ - POST: `AuthenticatedUser.create_fork( repo )` or `Organization.create_fork( repo )`: `Repository`
 
 /repos/:user/:repo/git/blobs
 ============================

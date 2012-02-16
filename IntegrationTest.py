@@ -58,3 +58,6 @@ o = g.get_organization( "BeaverSoftware" )
 # o.edit( location = "Paris, France" )
 
 # dumpRepository( u.create_repo( name = "TestGithubApi" + str( len( u.get_repos() ) ), description = "Created by a Python script!", has_wiki = False ) )
+
+# dumpRepository( u.create_fork( g.get_organization( "BeaverSoftware" ).get_repo( "FatherBeaver" ) ) )
+# dumpRepository( o.create_fork( g.get_user().get_repo( "C4Planner" ) ) )

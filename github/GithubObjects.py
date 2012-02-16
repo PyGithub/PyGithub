@@ -89,3 +89,12 @@ Organization._addAttributePolicy( MethodFromCallable( "get_repo", __repoFromUser
 
 AuthenticatedUser._addAttributePolicy( ListOfReferences( "watched", Repository, addable = True, removable = True, hasable = True ) )
 NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )
+
+def __createForkForUser( user, repo ):
+    assert isinstance( repo, Repository )
+    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks" ), lazy = True )
+AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForUser ) )
+def __createForkForOrg( org, repo ):
+    assert isinstance( repo, Repository )
+    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks?org=" + org.login ), lazy = True )
+Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForOrg ) )
