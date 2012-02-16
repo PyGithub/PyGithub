@@ -18,7 +18,7 @@ class Github:
         return status
 
     def __rawRequest( self, verb, url, input ):
-        assert( verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ] )
+        assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
 
         b64_userpass = base64.b64encode( '%s:%s' % ( self.__login, self.__password ) )
         b64_userpass = b64_userpass.replace( '\n', '' )

@@ -110,15 +110,15 @@ class ListOfReferences:
         ]
 
     def __executeAdd( self, obj, toBeAdded ):
-        assert( isinstance( toBeAdded, self.__type ) )
+        assert isinstance( toBeAdded, self.__type )
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
 
     def __executeRemove( self, obj, toBeDeleted ):
-        assert( isinstance( toBeDeleted, self.__type ) )
+        assert isinstance( toBeDeleted, self.__type )
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
 
     def __executeHas( self, obj, toBeQueried ):
-        assert( isinstance( toBeQueried, self.__type ) )
+        assert isinstance( toBeQueried, self.__type )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
 
 class ListOfObjects:
