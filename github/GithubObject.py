@@ -29,96 +29,6 @@ class SimpleScalarAttributes:
             cls._addAttribute( attributeName, commonDefinition )
 
 class ExtendedListAttribute:
-    class Getter:
-        def __init__( self, obj, attributeName, type ):
-            self.__obj = obj
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def __call__( self ):
-            return [
-                self.__type( self.__obj._github, attributes, lazy = True )
-                for attributes in self.__obj._github._dataRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName )
-            ]
-
-    class GetDefinition:
-        def __init__( self, attributeName, getName, type ):
-            self.__getName = getName
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { self.__getName: ExtendedListAttribute.Getter( obj, self.__attributeName, self.__type ) } )
-
-    class Remover:
-        def __init__( self, obj, attributeName, type ):
-            self.__obj = obj
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def __call__( self, toBeDeleted ):
-            assert( isinstance( toBeDeleted, self.__type ) )
-            self.__obj._github._statusRequest( "DELETE", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
-
-    class RemoveDefinition:
-        def __init__( self, attributeName, removeName, type ):
-            self.__removeName = removeName
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { self.__removeName: ExtendedListAttribute.Remover( obj, self.__attributeName, self.__type ) } )
-
-    class Adder:
-        def __init__( self, obj, attributeName, type ):
-            self.__obj = obj
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def __call__( self, toBeAdded ):
-            assert( isinstance( toBeAdded, self.__type ) )
-            self.__obj._github._statusRequest( "PUT", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
-
-    class AddDefinition:
-        def __init__( self, attributeName, addName, type ):
-            self.__addName = addName
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { self.__addName: ExtendedListAttribute.Adder( obj, self.__attributeName, self.__type ) } )
-
-    class Haser:
-        def __init__( self, obj, attributeName, type ):
-            self.__obj = obj
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def __call__( self, toBeQueried ):
-            assert( isinstance( toBeQueried, self.__type ) )
-            return self.__obj._github._statusRequest( "GET", self.__obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
-
-    class HasDefinition:
-        def __init__( self, attributeName, hasName, type ):
-            self.__hasName = hasName
-            self.__attributeName = attributeName
-            self.__type = type
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { self.__hasName: ExtendedListAttribute.Haser( obj, self.__attributeName, self.__type ) } )
-
     def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
         self.__attributeName = attributeName
         self.__type = type
@@ -137,14 +47,32 @@ class ExtendedListAttribute:
             self.__hasName = None
 
     def apply( self, cls ):
-        cls._addAttribute( self.__getName, ExtendedListAttribute.GetDefinition( self.__attributeName, self.__getName, self.__type ) )
+        cls._addMethod( self.__getName, self.__executeGet )
         if self.__addName is not None:
-            cls._addAttribute( self.__addName, ExtendedListAttribute.AddDefinition( self.__attributeName, self.__addName, self.__type ) )
+            cls._addMethod( self.__addName, self.__executeAdd )
         if self.__removeName is not None:
-            cls._addAttribute( self.__removeName, ExtendedListAttribute.RemoveDefinition( self.__attributeName, self.__removeName, self.__type ) )
+            cls._addMethod( self.__removeName, self.__executeRemove )
         if self.__hasName is not None:
-            cls._addAttribute( self.__hasName, ExtendedListAttribute.HasDefinition( self.__attributeName, self.__hasName, self.__type ) )
+            cls._addMethod( self.__hasName, self.__executeHas )
 
+    def __executeAdd( self, obj, toBeAdded ):
+        assert( isinstance( toBeAdded, self.__type ) )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
+
+    def __executeRemove( self, obj, toBeDeleted ):
+        assert( isinstance( toBeDeleted, self.__type ) )
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
+
+    def __executeHas( self, obj, toBeQueried ):
+        assert( isinstance( toBeQueried, self.__type ) )
+        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
+
+    def __executeGet( self, obj ):
+        return [
+            self.__type( obj._github, attributes, lazy = True )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
+        ]
+            
 class ExtendedScalarAttribute:
     class AttributeDefinition:
         def __init__( self, attributeName, type ):
