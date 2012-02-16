@@ -23,12 +23,10 @@ class SimpleScalarAttributes:
     def __init__( self, *attributeNames ):
         self.__attributeNames = attributeNames
 
-    def getAttributeDefinitions( self ):
+    def apply( self, cls ):
         commonDefinition = SimpleScalarAttributes.AttributeDefinition( self.__attributeNames )
-        return [
-            ( attributeName, commonDefinition )
-            for attributeName in self.__attributeNames
-        ]
+        for attributeName in self.__attributeNames:
+            cls._addAttribute( attributeName, commonDefinition )
 
 class ExtendedListAttribute:
     class Getter:
@@ -138,14 +136,14 @@ class ExtendedListAttribute:
         else:
             self.__hasName = None
 
-    def getAttributeDefinitions( self ):
-        yield self.__getName, ExtendedListAttribute.GetDefinition( self.__attributeName, self.__getName, self.__type )
+    def apply( self, cls ):
+        cls._addAttribute( self.__getName, ExtendedListAttribute.GetDefinition( self.__attributeName, self.__getName, self.__type ) )
         if self.__addName is not None:
-            yield self.__addName, ExtendedListAttribute.AddDefinition( self.__attributeName, self.__addName, self.__type )
+            cls._addAttribute( self.__addName, ExtendedListAttribute.AddDefinition( self.__attributeName, self.__addName, self.__type ) )
         if self.__removeName is not None:
-            yield self.__removeName, ExtendedListAttribute.RemoveDefinition( self.__attributeName, self.__removeName, self.__type )
+            cls._addAttribute( self.__removeName, ExtendedListAttribute.RemoveDefinition( self.__attributeName, self.__removeName, self.__type ) )
         if self.__hasName is not None:
-            yield self.__hasName, ExtendedListAttribute.HasDefinition( self.__attributeName, self.__hasName, self.__type )
+            cls._addAttribute( self.__hasName, ExtendedListAttribute.HasDefinition( self.__attributeName, self.__hasName, self.__type ) )
 
 class ExtendedScalarAttribute:
     class AttributeDefinition:
@@ -167,8 +165,8 @@ class ExtendedScalarAttribute:
         self.__attributeName = attributeName
         self.__type = type
 
-    def getAttributeDefinitions( self ):
-        yield self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type )
+    def apply( self, cls ):
+        cls._addAttribute( self.__attributeName, ExtendedScalarAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
 class Editable:
     class Editor:
@@ -203,8 +201,8 @@ class Editable:
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
 
-    def getAttributeDefinitions( self ):
-        yield "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters )
+    def apply( self, cls ):
+        cls._addAttribute( "edit", Editable.AttributeDefinition( self.__mandatoryParameters, self.__optionalParameters ) )
 
 class Deletable:
     class Deleter:
@@ -221,8 +219,8 @@ class Deletable:
         def updateAttributes( self, obj ):
             obj._updateAttributes( { "delete": Deletable.Deleter( obj ) } )
 
-    def getAttributeDefinitions( self ):
-        yield "delete", Deletable.AttributeDefinition()
+    def apply( self, cls ):
+        cls._addAttribute( "delete", Deletable.AttributeDefinition() )
 
 class BaseUrl:
     class AttributeDefinition:
@@ -238,8 +236,8 @@ class BaseUrl:
     def __init__( self, baseUrl ):
         self.__baseUrl = baseUrl
 
-    def getAttributeDefinitions( self ):
-        yield "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl )
+    def apply( self, cls ):
+        cls._addAttribute( "_baseUrl", BaseUrl.AttributeDefinition( self.__baseUrl ) )
 
 class Identity:
     class AttributeDefinition:
@@ -255,8 +253,8 @@ class Identity:
     def __init__( self, identity ):
         self.__identity = identity
 
-    def getAttributeDefinitions( self ):
-        yield "_identity", Identity.AttributeDefinition( self.__identity )
+    def apply( self, cls ):
+        cls._addAttribute( "_identity", Identity.AttributeDefinition( self.__identity ) )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
@@ -269,11 +267,18 @@ def GithubObject( className, *attributePolicies ):
 
         @staticmethod
         def _addAttributePolicy( attributePolicy ):
-            for attributeName, attributeDefinition in attributePolicy.getAttributeDefinitions():
-                if attributeName in GithubObject.__attributeDefinitions:
-                    raise BadGithubObjectException( "Same attribute defined by two policies" )
-                else:
-                    GithubObject.__attributeDefinitions[ attributeName ] = attributeDefinition
+            attributePolicy.apply( GithubObject )
+
+        @staticmethod
+        def _addAttribute( attributeName, attributeDefinition ):
+            if attributeName in GithubObject.__attributeDefinitions:
+                raise BadGithubObjectException( "Same attribute defined by two policies" )
+            else:
+                GithubObject.__attributeDefinitions[ attributeName ] = attributeDefinition
+
+        @staticmethod
+        def _addMethod( methodName, methodDefinition ):
+            setattr( methodName, methodDefinition )
 
         def __init__( self, github, attributes, lazy ):
             self._github = github
