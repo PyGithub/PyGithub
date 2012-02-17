@@ -91,7 +91,7 @@
 
 /orgs/:org/repos
 ================
- - GET: `Organization.get_repos()`: list of `Repository`
+ - GET: `Organization.get_repos()`: list of `Repository` (TODO: add type parameter)
  - POST: `Organization.create_repo( ... )`: `Repository`
 
 /orgs/:org/teams
@@ -428,7 +428,7 @@
 
 /user/repos
 ===========
- - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
+ - GET: `AuthenticatedUser.get_repos()`: list of `Repository` (TODO: add type parameter)
  - POST: `AuthenticatedUser.create_repo( ... )`: `Repository`
 
 /user/watched
@@ -483,7 +483,7 @@
 
 /users/:user/repos
 ==================
- - GET: `NamedUser.get_repos()`: list of `Repository`
+ - GET: `NamedUser.get_repos()`: list of `Repository` (TODO: add type parameter)
 
 /users/:user/watched
 ====================

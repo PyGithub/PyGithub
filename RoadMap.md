@@ -16,12 +16,9 @@ Documentation
 Functional improvements
 =======================
  - implement the full API
- - add a full example creating your github graph (listing followers, following, co-contributors, watched repositories, organization co-members, etc.)
 
 Technical improvements
 ======================
- - Anything.edit shall read the response data and update the object's attributes
  - improve rawRequest
    - pagination
-   - http status
- - privatize private methods/hide them behind facade/do something
+   - raise if http status on dataRequest is not 2XX
