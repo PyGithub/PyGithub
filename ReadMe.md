@@ -1,4 +1,4 @@
-This is a Python library to access the [Gitub V3 API](http://developer.github.com/v3/).
+This is a Python library to access the [Gitub API v3](http://developer.github.com/v3).
 
 Tutorial
 ========
@@ -14,3 +14,8 @@ Then play with your Github objects:
     for repository in g.user().get_repositories():
         print repository.name
         repository.edit( has_wiki = False )
+
+Reference documentation
+=======================
+
+See file "Reference.md".
