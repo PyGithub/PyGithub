@@ -12,7 +12,7 @@ class BasicAttributes:
             return rawValue
 
         def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
             for attributeName in self.__attributeNames:
                 if attributeName not in attributes:
                     attributes[ attributeName ] = None
@@ -36,7 +36,7 @@ class ComplexAttribute:
             return self.__type( obj._github, rawValue, lazy = True )
 
         def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl )
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
             # for attributeName in self.__attributeNames:
                 # if attributeName not in attributes:
                     # attributes[ attributeName ] = None
@@ -106,20 +106,20 @@ class ListOfReferences:
     def __executeGet( self, obj ):
         return [
             self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
         ]
 
     def __executeAdd( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.__type )
-        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
 
     def __executeRemove( self, obj, toBeDeleted ):
         assert isinstance( toBeDeleted, self.__type )
-        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity )
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
 
     def __executeHas( self, obj, toBeQueried ):
         assert isinstance( toBeQueried, self.__type )
-        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity ) == 204
+        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
 class ListOfObjects:
     def __init__( self, attributeName, type, creatable = False, singularName = None ):
@@ -139,11 +139,11 @@ class ListOfObjects:
     def __executeGet( self, obj ):
         return [
             self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
         ]
 
     def __executeCreate( self, obj, **data ):
-        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, data ), lazy = True )
+        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 class Editable:
     def __init__( self, mandatoryParameters, optionalParameters ):
@@ -161,7 +161,7 @@ class Editable:
         for argumentName in kwds:
             if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                 raise TypeError()
-        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, kwds )
+        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, kwds )
         obj._updateAttributes( attributes )
 
 class Deletable:
@@ -169,7 +169,7 @@ class Deletable:
         cls._addMethod( "delete", self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        obj._github._statusRequest( "DELETE", obj._baseUrl )
+        obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
 
 class MethodFromCallable:
     def __init__( self, name, callable ):

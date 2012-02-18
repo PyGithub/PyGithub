@@ -23,22 +23,22 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         unittest.TestCase.tearDown( self )
 
     def expectDataGet( self, url ):
-        return self.g.expect._dataRequest( "GET", url )
+        return self.g.expect._dataRequest( "GET", url, None, None )
 
     def expectStatusPut( self, url ):
-        return self.g.expect._statusRequest( "PUT", url )
+        return self.g.expect._statusRequest( "PUT", url, None, None )
 
     def expectStatusGet( self, url ):
-        return self.g.expect._statusRequest( "GET", url )
+        return self.g.expect._statusRequest( "GET", url, None, None )
 
     def expectDataPatch( self, url, data ):
-        return self.g.expect._dataRequest( "PATCH", url, data )
+        return self.g.expect._dataRequest( "PATCH", url, None, data )
 
     def expectDataPost( self, url, data ):
-        return self.g.expect._dataRequest( "POST", url, data )
+        return self.g.expect._dataRequest( "POST", url, None, data )
 
     def expectStatusDelete( self, url ):
-        return self.g.expect._statusRequest( "DELETE", url )
+        return self.g.expect._statusRequest( "DELETE", url, None, None )
 
 class GithubObjectWithOnlyBasicAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(

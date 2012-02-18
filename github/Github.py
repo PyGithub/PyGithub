@@ -9,15 +9,15 @@ class Github:
         self.__login = login
         self.__password = password
 
-    def _dataRequest( self, verb, url, data = None ):
-        status, headers, data = self.__rawRequest( verb, url, data )
+    def _dataRequest( self, verb, url, parameters, data ):
+        status, headers, data = self.__rawRequest( verb, url, parameters, data )
         return data
 
-    def _statusRequest( self, verb, url, data = None ):
-        status, headers, data = self.__rawRequest( verb, url, data )
+    def _statusRequest( self, verb, url, parameters, data ):
+        status, headers, data = self.__rawRequest( verb, url, parameters, data )
         return status
 
-    def __rawRequest( self, verb, url, input ):
+    def __rawRequest( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
 
         b64_userpass = base64.b64encode( '%s:%s' % ( self.__login, self.__password ) )
@@ -30,7 +30,7 @@ class Github:
         response = cnx.getresponse()
 
         status = response.status
-        headers = response.getheaders()
+        headers = dict( response.getheaders() )
         output = response.read()
         if len( output ) == 0:
             output = None

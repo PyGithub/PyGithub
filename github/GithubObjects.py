@@ -95,9 +95,9 @@ NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )
 
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
-    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks" ), lazy = True )
+    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks", None, None ), lazy = True )
 AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForUser ) )
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
-    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks?org=" + org.login ), lazy = True )
+    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org=": org.login }, None ), lazy = True )
 Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForOrg ) )
