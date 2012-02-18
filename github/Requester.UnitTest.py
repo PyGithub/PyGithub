@@ -45,4 +45,8 @@ class TestCase( unittest.TestCase ):
         with self.assertRaises( UnknownGithubObject ):
             self.r._dataRequest( "GET", "/test", None, None )
 
+    def testDataWithParametersAndData( self ):
+        self.expect( "GET", "/test?tata=tutu&toto=titi", '{"xxx": 42}', 200, [], '{ "foo": "bar" }' )
+        self.assertEqual( self.r._dataRequest( "GET", "/test", { "toto" : "titi", "tata" : "tutu" }, { "xxx" : 42 } ), { "foo" : "bar" } )
+
 unittest.main()

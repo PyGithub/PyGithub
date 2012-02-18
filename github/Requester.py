@@ -27,6 +27,9 @@ class Requester:
         b64_userpass = base64.b64encode( '%s:%s' % ( self.__login, self.__password ) )
         b64_userpass = b64_userpass.replace( '\n', '' )
 
+        if parameters is not None:
+            url += "?" + "&".join( key + "=" + value for key, value in parameters.iteritems() )
+
         input = json.dumps( input )
 
         cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
