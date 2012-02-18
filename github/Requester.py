@@ -10,14 +10,14 @@ class Requester:
         self.__login = login
         self.__password = password
 
-    def _dataRequest( self, verb, url, parameters, data ):
+    def dataRequest( self, verb, url, parameters, data ):
         status, headers, data = self.__rawRequest( verb, url, parameters, data )
         if 200 <= status < 300:
             return data
         else:
             raise UnknownGithubObject()
 
-    def _statusRequest( self, verb, url, parameters, data ):
+    def statusRequest( self, verb, url, parameters, data ):
         status, headers, data = self.__rawRequest( verb, url, parameters, data )
         return status
 
