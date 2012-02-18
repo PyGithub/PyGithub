@@ -195,17 +195,18 @@ def GithubObject( className, *attributePolicies ):
 
         @staticmethod
         def _addAttribute( attributeName, attributeDefinition ):
-            if attributeName in GithubObject.__attributeDefinitions:
-                raise BadGithubObjectException( "Same attribute defined by two policies" )
-            else:
-                GithubObject.__attributeDefinitions[ attributeName ] = attributeDefinition
+            GithubObject.__checkAttributeName( attributeName )
+            GithubObject.__attributeDefinitions[ attributeName ] = attributeDefinition
 
         @staticmethod
         def _addMethod( methodName, methodDefinition ):
-            if methodName in GithubObject.__methodDefinitions:
-                raise BadGithubObjectException( "Same method defined by two policies" )
-            else:
-                GithubObject.__methodDefinitions[ methodName ] = methodDefinition
+            GithubObject.__checkAttributeName( methodName )
+            GithubObject.__methodDefinitions[ methodName ] = methodDefinition
+
+        @staticmethod
+        def __checkAttributeName( attributeName ):
+            if attributeName in GithubObject.__attributeDefinitions or attributeName in GithubObject.__methodDefinitions:
+                raise BadGithubObjectException( "Same attribute defined by two policies" )
 
         def __init__( self, github, attributes, lazy ):
             self._github = github
