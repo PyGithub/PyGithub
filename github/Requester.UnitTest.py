@@ -16,7 +16,7 @@ class TestCase( unittest.TestCase ):
         self.connectionFactory = MockMockMock.Mock( "httplib.HTTPSConnection" )
         self.connection = MockMockMock.Mock( "connection", self.connectionFactory )
         self.response = MockMockMock.Mock( "response", self.connectionFactory )
-        
+
         httplib.HTTPSConnection = self.connectionFactory.object
 
     def tearDown( self ):

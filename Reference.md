@@ -67,7 +67,7 @@ Class `NamedUser`
 ### Watching
 
  - `get_watched()`: list of `Repository`
- 
+
 ### Organizations
 
  - `get_orgs()` : list of `Organization`
@@ -90,7 +90,7 @@ Class `Organization`
  - `create_fork( repo )`: `Repository`
 
 ### Members
- 
+
  - `get_members()`: list of `NamedUser`
  - `has_in_members( user )`: `bool`
  - `remove_from_members( user )`
