@@ -20,6 +20,3 @@ Functional improvements
 
 Technical improvements
 ======================
- - improve rawRequest
-   - pagination
-   - raise if http status on dataRequest is not 2XX
