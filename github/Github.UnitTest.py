@@ -3,7 +3,7 @@ import MockMockMock
 import httplib
 import base64
 
-from Github import Github
+from Github import Github, UnknownGithubObject
 
 class TestCase( unittest.TestCase ):
     def setUp( self ):
@@ -39,5 +39,10 @@ class TestCase( unittest.TestCase ):
     def testSimpleData( self ):
         self.expect( "GET", "/test", "null", 200, [], '{ "foo": "bar" }' )
         self.assertEqual( self.g._dataRequest( "GET", "/test", None, None ), { "foo" : "bar" } )
+
+    def testDataOnBadStatus( self ):
+        self.expect( "GET", "/test", "null", 404, [], '{ "foo": "bar" }' )
+        with self.assertRaises( UnknownGithubObject ):
+            self.g._dataRequest( "GET", "/test", None, None )
 
 unittest.main()

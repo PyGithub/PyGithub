@@ -4,6 +4,9 @@ import base64
 
 from GithubObjects import *
 
+class UnknownGithubObject( Exception ):
+    pass
+
 class Github:
     def __init__( self, login, password ):
         self.__login = login
@@ -11,7 +14,10 @@ class Github:
 
     def _dataRequest( self, verb, url, parameters, data ):
         status, headers, data = self.__rawRequest( verb, url, parameters, data )
-        return data
+        if 200 <= status < 300:
+            return data
+        else:
+            raise UnknownGithubObject()
 
     def _statusRequest( self, verb, url, parameters, data ):
         status, headers, data = self.__rawRequest( verb, url, parameters, data )
