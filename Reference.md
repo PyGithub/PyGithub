@@ -7,8 +7,8 @@ Contents
 Classes
 =======
 
-One doesn't normaly create instances of any class but Github.
-One obtains instances through calls to `get_` and `create_` methods.
+You don't normaly create instances of any class but Github.
+You obtain instances through calls to `get_` and `create_` methods.
 
 In this documentation:
 
@@ -28,7 +28,8 @@ Class `Github`
 Class `AuthenticatedUser`
 -------------------------
 
- - `edit( ... )`
+ - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
 
 ### Repositories
 
@@ -59,6 +60,8 @@ Class `AuthenticatedUser`
 Class `NamedUser`
 -----------------
 
+ - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
+
 ### Repositories
 
  - `get_repos()`: list of `Repository` (TODO: add type parameter)
@@ -80,7 +83,8 @@ Class `NamedUser`
 Class `Organization`
 --------------------
 
- - `edit( ... )`
+ - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
 
 ### Repositories
 
@@ -102,7 +106,8 @@ Class `Organization`
 Class `Repository`
 ------------------
 
- - `edit( ... )`
+ - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
 
 ### Collaborators
 
