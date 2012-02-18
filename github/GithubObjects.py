@@ -99,5 +99,5 @@ def __createForkForUser( user, repo ):
 AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForUser ) )
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
-    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org=": org.login }, None ), lazy = True )
+    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org": org.login }, None ), lazy = True )
 Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForOrg ) )

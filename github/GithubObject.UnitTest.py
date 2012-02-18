@@ -298,4 +298,43 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
         mock.tearDown()
 
+class GithubObjectWithSeveralBasicAttributesAndComplexAttributes( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a2", "a4" ),
+        BasicAttributes( "a1", "a3" ),
+        ComplexAttribute( "a5", ContainedObject ),
+    )
+
+    def testCompletionInOneCall_1( self ):
+        self.expectDataGet( "/test" ).andReturn( {} )
+        self.assertIsNone( self.o.a3 )
+        self.assertIsNone( self.o.a4 )
+        self.assertIsNone( self.o.a5 )
+
+    def testCompletionInOneCall_2( self ):
+        self.expectDataGet( "/test" ).andReturn( {} )
+        self.assertIsNone( self.o.a4 )
+        self.assertIsNone( self.o.a3 )
+        self.assertIsNone( self.o.a5 )
+
+    def testCompletionInOneCall_3( self ):
+        self.expectDataGet( "/test" ).andReturn( {} )
+        self.assertIsNone( self.o.a5 )
+        self.assertIsNone( self.o.a3 )
+        self.assertIsNone( self.o.a4 )
+
+    def testCompletionInOneCall_4( self ):
+        self.expectDataGet( "/test" ).andReturn( {} )
+        self.assertIsNone( self.o.a5 )
+        self.assertIsNone( self.o.a4 )
+        self.assertIsNone( self.o.a3 )
+
 unittest.main()

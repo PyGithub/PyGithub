@@ -13,10 +13,11 @@ class BasicAttributes:
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
-            for attributeName in self.__attributeNames:
-                if attributeName not in attributes:
-                    attributes[ attributeName ] = None
             obj._updateAttributes( attributes )
+            obj._markAsCompleted()
+
+        def isLazy( self ):
+            return True
 
     def __init__( self, *attributeNames ):
         self.__attributeNames = attributeNames
@@ -37,10 +38,11 @@ class ComplexAttribute:
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
-            # for attributeName in self.__attributeNames:
-                # if attributeName not in attributes:
-                    # attributes[ attributeName ] = None
             obj._updateAttributes( attributes )
+            obj._markAsCompleted()
+
+        def isLazy( self ):
+            return True
 
     def __init__( self, attributeName, type ):
         self.__attributeName = attributeName
@@ -60,6 +62,9 @@ class AttributeFromCallable:
 
         def updateAttributes( self, obj ):
             obj._updateAttributes( { self.__name: self.__callable( obj ) } )
+
+        def isLazy( self ):
+            return False
 
     def __init__( self, name, callable ):
         self.__name = name
@@ -230,11 +235,12 @@ def GithubObject( className, *attributePolicies ):
         def _updateAttributes( self, attributes ):
             for attributeName, attributeValue in attributes.iteritems():
                 attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
-                if attributeValue is None:
-                    if attributeName not in self.__attributes:
-                        self.__attributes[ attributeName ] = None
-                else:
-                    self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
+                self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
+
+        def _markAsCompleted( self ):
+            for attributeName, attributeDefinition in GithubObject.__attributeDefinitions.iteritems():
+                if attributeDefinition.isLazy() and attributeName not in self.__attributes:
+                    self.__attributes[ attributeName ] = None
 
         def __dir__( self ):
             return GithubObject.__attributeDefinitions.keys()
