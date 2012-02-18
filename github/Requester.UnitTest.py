@@ -3,13 +3,13 @@ import MockMockMock
 import httplib
 import base64
 
-from Github import Github, UnknownGithubObject
+from Requester import Requester, UnknownGithubObject
 
 class TestCase( unittest.TestCase ):
     def setUp( self ):
         unittest.TestCase.setUp( self )
 
-        self.g = Github( "login", "password" )
+        self.r = Requester( "login", "password" )
         self.b64_userpass = base64.b64encode( "login:password" )
         self.b64_userpass = self.b64_userpass.replace( '\n', '' )
 
@@ -34,15 +34,15 @@ class TestCase( unittest.TestCase ):
 
     def testSimpleStatus( self ):
         self.expect( "GET", "/test", "null", 200, [], "" )
-        self.assertEqual( self.g._statusRequest( "GET", "/test", None, None ), 200 )
+        self.assertEqual( self.r._statusRequest( "GET", "/test", None, None ), 200 )
 
     def testSimpleData( self ):
         self.expect( "GET", "/test", "null", 200, [], '{ "foo": "bar" }' )
-        self.assertEqual( self.g._dataRequest( "GET", "/test", None, None ), { "foo" : "bar" } )
+        self.assertEqual( self.r._dataRequest( "GET", "/test", None, None ), { "foo" : "bar" } )
 
     def testDataOnBadStatus( self ):
         self.expect( "GET", "/test", "null", 404, [], '{ "foo": "bar" }' )
         with self.assertRaises( UnknownGithubObject ):
-            self.g._dataRequest( "GET", "/test", None, None )
+            self.r._dataRequest( "GET", "/test", None, None )
 
 unittest.main()
