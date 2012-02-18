@@ -34,19 +34,19 @@ class TestCase( unittest.TestCase ):
 
     def testSimpleStatus( self ):
         self.expect( "GET", "/test", "null", 200, [], "" )
-        self.assertEqual( self.r._statusRequest( "GET", "/test", None, None ), 200 )
+        self.assertEqual( self.r.statusRequest( "GET", "/test", None, None ), 200 )
 
     def testSimpleData( self ):
         self.expect( "GET", "/test", "null", 200, [], '{ "foo": "bar" }' )
-        self.assertEqual( self.r._dataRequest( "GET", "/test", None, None ), { "foo" : "bar" } )
+        self.assertEqual( self.r.dataRequest( "GET", "/test", None, None ), { "foo" : "bar" } )
 
     def testDataOnBadStatus( self ):
         self.expect( "GET", "/test", "null", 404, [], '{ "foo": "bar" }' )
         with self.assertRaises( UnknownGithubObject ):
-            self.r._dataRequest( "GET", "/test", None, None )
+            self.r.dataRequest( "GET", "/test", None, None )
 
     def testDataWithParametersAndData( self ):
         self.expect( "GET", "/test?tata=tutu&toto=titi", '{"xxx": 42}', 200, [], '{ "foo": "bar" }' )
-        self.assertEqual( self.r._dataRequest( "GET", "/test", { "toto" : "titi", "tata" : "tutu" }, { "xxx" : 42 } ), { "foo" : "bar" } )
+        self.assertEqual( self.r.dataRequest( "GET", "/test", { "toto" : "titi", "tata" : "tutu" }, { "xxx" : 42 } ), { "foo" : "bar" } )
 
 unittest.main()
