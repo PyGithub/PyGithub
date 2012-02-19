@@ -82,7 +82,7 @@ class Identity( AttributeFromCallable ):
         AttributeFromCallable.__init__( self, "_identity", identity )
 
 class ListOfReferences:
-    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False, getParameters = None ):
+    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False, getParameters = [] ):
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
