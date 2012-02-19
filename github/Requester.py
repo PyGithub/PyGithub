@@ -1,6 +1,7 @@
 import httplib
 import json
 import base64
+import urllib
 
 class UnknownGithubObject( Exception ):
     pass
@@ -59,8 +60,7 @@ class Requester:
         if parameters is None or len( parameters ) == 0:
             return url
         else:
-            ### @todo urlencode
-            return url + "?" + "&".join( str( key ) + "=" + str( value ) for key, value in parameters.iteritems() )
+            return url + "?" + urllib.urlencode( parameters )
 
     def __strucutredFromJson( self, data ):
         if len( data ) == 0:
