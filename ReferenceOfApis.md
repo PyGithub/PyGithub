@@ -96,8 +96,8 @@ API `/orgs/:org/repos`
 
 API `/orgs/:org/teams`
 ======================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Organization.get_teams()`: list of `Team` (TODO SOON)
+* POST: `Organization.create_team( ... ): `Team` (TODO SOON)
 
 API `/repos/:user/:repo`
 ========================
@@ -358,7 +358,7 @@ API `/repos/:user/:repo/tags`
 
 API `/repos/:user/:repo/teams`
 ==============================
-* GET: (TODO)
+* GET: `Repository.get_teams()`: list of `Team` (TODO SOON)
 
 API `/repos/:user/:repo/watchers`
 =================================
@@ -366,29 +366,29 @@ API `/repos/:user/:repo/watchers`
 
 API `/teams/:id`
 ================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: Lazy completion of `Team` (TODO SOON)
+* PATCH: `Team.edit( ... )` (TODO SOON)
+* DELETE: `Team.delete()` (TODO SOON)
 
 API `/teams/:id/members`
 ========================
-* GET: (TODO)
+* GET: `Team.get_members()`: list of `NamedUser` (TODO SOON)
 
 API `/teams/:id/members/:user`
 ==============================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Team.has_in_members( user )`: `bool` (TODO SOON)
+* PUT: `Team.add_to_members( user )` (TODO SOON)
+* DELETE: `Team.remove_from_members( user )` (TODO SOON)
 
 API `/teams/:id/repos`
 ======================
-* GET: (TODO)
+* GET: `Team.get_repos()`: list of `Repository` (TODO SOON)
 
 API `/teams/:id/repos/:user/:repo`
 ==================================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Team.has_in_repos( repo )`: `bool` (TODO SOON)
+* PUT: `Team.add_to_repos( repo )` (TODO SOON)
+* DELETE: `Team.remove_from_repos( repo )` (TODO SOON)
 
 API `/user`
 ===========
