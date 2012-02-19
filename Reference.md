@@ -33,7 +33,7 @@ Class `AuthenticatedUser`
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
+ - `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-your-repositories) for `type` parameter
  - `get_repo( name )`: `Repository`
  - `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
  - `create_fork( repo )`: `Repository`
@@ -64,7 +64,7 @@ Class `NamedUser`
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
+ - `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-user-repositories) for `type` parameter
  - `get_repo( name )`: `Repository`
 
 ### Watching
@@ -88,7 +88,7 @@ Class `Organization`
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
+ - `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-organization-repositories) for `type` parameter
  - `get_repo( name )`: `Repository`
  - `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
  - `create_fork( repo )`: `Repository`
@@ -224,7 +224,7 @@ API `/orgs/:org/public_members/:user`
 
 API `/orgs/:org/repos`
 ----------------------
- - GET: `Organization.get_repos()`: list of `Repository` (TODO: add type parameter)
+ - GET: `Organization.get_repos()`: list of `Repository`
  - POST: `Organization.create_repo( ... )`: `Repository`
 
 API `/orgs/:org/teams`
@@ -561,7 +561,7 @@ API `/user/orgs`
 
 API `/user/repos`
 -----------------
- - GET: `AuthenticatedUser.get_repos()`: list of `Repository` (TODO: add type parameter)
+ - GET: `AuthenticatedUser.get_repos()`: list of `Repository`
  - POST: `AuthenticatedUser.create_repo( ... )`: `Repository`
 
 API `/user/watched`
@@ -616,7 +616,7 @@ API `/users/:user/received_events/public`
 
 API `/users/:user/repos`
 ------------------------
- - GET: `NamedUser.get_repos()`: list of `Repository` (TODO: add type parameter)
+ - GET: `NamedUser.get_repos()`: list of `Repository`
 
 API `/users/:user/watched`
 --------------------------

@@ -82,10 +82,11 @@ class Identity( AttributeFromCallable ):
         AttributeFromCallable.__init__( self, "_identity", identity )
 
 class ListOfReferences:
-    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False ):
+    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False, getParameters = None ):
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
+        self.__getParameters = getParameters
         if addable:
             self.__addName = "add_to_" + attributeName
         else:
@@ -108,10 +109,12 @@ class ListOfReferences:
         if self.__hasName is not None:
             cls._addMethod( self.__hasName, self.__executeHas )
 
-    def __executeGet( self, obj ):
+    def __executeGet( self, obj, *args, **kwds ):
+        for arg, argumentName in itertools.izip( args, self.__getParameters ):
+            kwds[ argumentName ] = arg
         return [
             self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, kwds, None )
         ]
 
     def __executeAdd( self, obj, toBeAdded ):

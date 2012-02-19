@@ -22,8 +22,8 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         self.g.tearDown()
         unittest.TestCase.tearDown( self )
 
-    def expectDataGet( self, url ):
-        return self.g.expect._dataRequest( "GET", url, None, None )
+    def expectDataGet( self, url, arguments = None ):
+        return self.g.expect._dataRequest( "GET", url, arguments, None )
 
     def expectStatusPut( self, url ):
         return self.g.expect._statusRequest( "PUT", url, None, None )
@@ -197,16 +197,21 @@ class GithubObjectWithListOfReferences( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfReferences( "a3s", ContainedObject )
+        ListOfReferences( "a3s", ContainedObject, getParameters = [ "type" ] )
     )
 
     def testGetList( self ):
-        self.expectDataGet( "/test/a3s" ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        self.expectDataGet( "/test/a3s", {} ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
         a3s = self.o.get_a3s()
         self.assertEqual( len( a3s ), 3 )
         self.assertEqual( a3s[ 0 ].id, "id1" )
         self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
         self.assertEqual( a3s[ 0 ].name, "name1" )
+
+    def testGetListWithType( self ):
+        self.expectDataGet( "/test/a3s", { "type": "foobar" } ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        a3s = self.o.get_a3s( "foobar" )
+        self.assertEqual( len( a3s ), 3 )
 
 class GithubObjectWithListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
