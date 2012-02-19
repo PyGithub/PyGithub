@@ -93,7 +93,7 @@ Members
 Teams
 -----
 * `get_teams()`: list of `Team`
-* `create_team( ... )`: `Team`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_team( ... )`: `Team`: see [API](http://developer.github.com/v3/orgs/teams/#create-team) for parameters
 
 Class `Repository`
 ==================
@@ -139,8 +139,8 @@ Teams
 
 Class `Team`
 ============
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
-* `edit( ... )`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/orgs/teams/#get-team)
+* `edit( ... )`: see [API](http://developer.github.com/v3/orgs/teams/#edit-team) for parameters
 * `delete()`
 
 Members

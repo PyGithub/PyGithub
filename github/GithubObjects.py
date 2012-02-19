@@ -181,12 +181,12 @@ Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createFor
 
 Team = GithubObject(
     "Team",
-    BaseUrl( lambda obj: "/teams/" + obj.id ),
-    Identity( lambda obj: obj.id ),
+    BaseUrl( lambda obj: "/teams/" + str( obj.id ) ),
+    Identity( lambda obj: str( obj.id ) ),
     BasicAttributes(
-        ### @todo
+        "url", "name", "id", "permission", "members_count", "repos_count",
     ),
-    Editable( [], [] ), ### @todo
+    Editable( [ "name" ], [ "permission" ] ),
     Deletable(),
     ListOfReferences( "members", NamedUser, addable = True, removable = True, hasable = True ),
     ListOfReferences( "repos", Repository, addable = True, removable = True, hasable = True ),

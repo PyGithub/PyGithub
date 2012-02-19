@@ -174,6 +174,9 @@ class IntegrationTest:
         print o.login, "(", o.name, ")"
         print "  Members:", ", ".join( u.login for u in o.get_members() )
         print "  Repos:", ", ".join( r.name for r in o.get_repos() )
+        print "  Teams:"
+        for team in o.get_teams():
+            print "   ", team.name, "(" + team.permission + "):", ", ".join( u.login for u in team.get_members() ), "->", ", ".join( r.name for r in team.get_repos() )
         print
         sys.stdout.flush()
 
