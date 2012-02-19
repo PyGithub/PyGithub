@@ -170,49 +170,49 @@ API `/repos/:user/:repo/forks`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/git/blobs/:sha`
 =======================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/git/commits`
 ====================================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/git/commits/:sha`
 =========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/git/refs`
 =================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
 
 API `/repos/:user/:repo/git/tags`
 =================================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/git/tags/:sha`
 ======================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/git/trees`
 ==================================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/hooks`
 ==============================
