@@ -153,13 +153,19 @@ class ListOfObjects:
     def __executeCreate( self, obj, **data ):
         return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
-class Editable:
-    def __init__( self, mandatoryParameters, optionalParameters ):
-        self.__mandatoryParameters = mandatoryParameters
-        self.__optionalParameters = optionalParameters
+class MethodFromCallable:
+    def __init__( self, name, callable ):
+        self.__name = name
+        self.__callable = callable
 
     def apply( self, cls ):
-        cls._addMethod( "edit", self.__execute )
+        cls._addMethod( self.__name, self.__callable )
+
+class Editable( MethodFromCallable ):
+    def __init__( self, mandatoryParameters, optionalParameters ):
+        MethodFromCallable.__init__( self, "edit", self.__execute )
+        self.__mandatoryParameters = mandatoryParameters
+        self.__optionalParameters = optionalParameters
 
     def __execute( self, obj, *args, **kwds ):
         if len( args ) + len( kwds ) == 0:
@@ -172,20 +178,12 @@ class Editable:
         attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, kwds )
         obj._updateAttributes( attributes )
 
-class Deletable:
-    def apply( self, cls ):
-        cls._addMethod( "delete", self.__execute )
+class Deletable( MethodFromCallable ):
+    def __init__( self ):
+        MethodFromCallable.__init__( self, "delete", self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
-
-class MethodFromCallable:
-    def __init__( self, name, callable ):
-        self.__name = name
-        self.__callable = callable
-
-    def apply( self, cls ):
-        cls._addMethod( self.__name, self.__callable )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
