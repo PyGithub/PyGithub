@@ -28,14 +28,14 @@ Class `Github`
 Class `AuthenticatedUser`
 -------------------------
 
- - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
- - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
+ - Attributes: see [API](http://developer.github.com/v3/users/#get-the-authenticated-user)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/users/#update-the-authenticated-user) for parameters
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO: add type parameter)
+ - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
  - `get_repo( name )`: `Repository`
- - `create_repo( ... )`: `Repository`
+ - `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
  - `create_fork( repo )`: `Repository`
 
 ### Watching
@@ -60,11 +60,11 @@ Class `AuthenticatedUser`
 Class `NamedUser`
 -----------------
 
- - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
+ - Attributes: see [API](http://developer.github.com/v3/users/#get-a-single-user)
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO: add type parameter)
+ - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
  - `get_repo( name )`: `Repository`
 
 ### Watching
@@ -83,14 +83,14 @@ Class `NamedUser`
 Class `Organization`
 --------------------
 
- - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
- - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
+ - Attributes: see [API](http://developer.github.com/v3/orgs/#get)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/orgs/#edit) for parameters
 
 ### Repositories
 
- - `get_repos()`: list of `Repository` (TODO: add type parameter)
+ - `get_repos()`: list of `Repository` (TODO SOON: add type parameter)
  - `get_repo( name )`: `Repository`
- - `create_repo( ... )`: `Repository`
+ - `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
  - `create_fork( repo )`: `Repository`
 
 ### Members
@@ -106,8 +106,8 @@ Class `Organization`
 Class `Repository`
 ------------------
 
- - Attributes: see [API](http://developer.github.com/v3/...#...) (TODO)
- - `edit( ... )`: see [API](http://developer.github.com/v3/...#...) (TODO) for parameters
+ - Attributes: see [API](http://developer.github.com/v3/repos/#get)
+ - `edit( ... )`: see [API](http://developer.github.com/v3/repos/#edit) for parameters
 
 ### Collaborators
 
