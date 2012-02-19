@@ -113,3 +113,39 @@ Watching
 Forks
 -----
 * `get_forks()`: list of `Repository`
+
+Git objects
+-----------
+* `get_git_refs()`: list of `GitRef`
+* `get_git_ref( ref )`: `GitRef`
+* `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `get_git_blob( sha )`: `GitBlob`
+* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `get_git_commit( sha )`: `GitCommit`
+* `create_git_commit( ... )`: `GitCommit`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `get_git_tree( sha )`: `GitTree`
+* `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `get_git_tag( sha )`: `GitTag`
+* `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+
+Class `GitRef`
+==============
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* `edit( ... )`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+
+Class `GitBlob`
+===============
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+
+Class `GitCommit`
+=================
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+
+Class `GitTree`
+===============
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+
+Class `GitTag`
+==============
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+
