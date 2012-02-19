@@ -181,7 +181,7 @@ Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createFor
 
 Team = GithubObject(
     "Team",
-    BaseUrl( lambda obj: "/teams/" + obj.id )
+    BaseUrl( lambda obj: "/teams/" + obj.id ),
     Identity( lambda obj: obj.id ),
     BasicAttributes(
         ### @todo
@@ -192,5 +192,5 @@ Team = GithubObject(
     ListOfReferences( "repos", Repository, addable = True, removable = True, hasable = True ),
 )
 
-Organization._addAttributePolicy( ListOfObjects( "teams", Team, creatable = True ) )
+Organization._addAttributePolicy( ListOfObjects( "teams", Team, creatable = True, singularName = "team" ) )
 Repository._addAttributePolicy( ListOfReferences( "teams", Team ) )
