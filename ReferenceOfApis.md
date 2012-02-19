@@ -170,45 +170,45 @@ API `/repos/:user/:repo/forks`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
-* POST: (TODO SOON)
+* POST: `Repository.create_git_blob( ... )`: `GitBlob` (TODO SOON)
 
 API `/repos/:user/:repo/git/blobs/:sha`
 =======================================
-* GET: (TODO SOON)
+* GET: `Repository.get_git_blob( sha )`: `GitBlob` (TODO SOON)
 
 API `/repos/:user/:repo/git/commits`
 ====================================
-* POST: (TODO SOON)
+* POST: `Repository.create_git_commit( ... )`: `GitCommit` (TODO SOON)
 
 API `/repos/:user/:repo/git/commits/:sha`
 =========================================
-* GET: (TODO SOON)
+* GET: `Repository.get_git_commit( sha )`: `GitCommit` (TODO SOON)
 
 API `/repos/:user/:repo/git/refs`
 =================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_git_refs()`: list of `GitRef` (TODO SOON)
+* POST: `Repository.create_git_ref( ... )`: `GitRef` (TODO SOON)
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
+* GET: `Repository.get_git_ref( ref )`: `GitRef` (TODO SOON)
+* PATCH: `GitRef.edit( ... )` (TODO SOON)
 
 API `/repos/:user/:repo/git/tags`
 =================================
-* POST: (TODO SOON)
+* POST: `Repository.create_git_tag( ... )`: `GitTag` (TODO SOON)
 
 API `/repos/:user/:repo/git/tags/:sha`
 ======================================
-* GET: (TODO SOON)
+* GET: `Repository.get_git_tag( sha )`: `GitTag` (TODO SOON)
 
 API `/repos/:user/:repo/git/trees`
 ==================================
-* POST: (TODO SOON)
+* POST: `Repository.create_git_tree( ... )`: `GitTree` (TODO SOON)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
-* GET: (TODO SOON)
+* GET: `Repository.get_git_tree( sha )`: `GitTree` (TODO SOON)
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================
