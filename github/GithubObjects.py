@@ -178,3 +178,19 @@ def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
     return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org": org.login }, None ), lazy = True )
 Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForOrg ) )
+
+Team = GithubObject(
+    "Team",
+    BaseUrl( lambda obj: "/teams/" + obj.id )
+    Identity( lambda obj: obj.id ),
+    BasicAttributes(
+        ### @todo
+    ),
+    Editable( [], [] ), ### @todo
+    Deletable(),
+    ListOfReferences( "members", NamedUser, addable = True, removable = True, hasable = True ),
+    ListOfReferences( "repos", Repository, addable = True, removable = True, hasable = True ),
+)
+
+Organization._addAttributePolicy( ListOfObjects( "teams", Team, creatable = True ) )
+Repository._addAttributePolicy( ListOfReferences( "teams", Team ) )

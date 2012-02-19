@@ -90,6 +90,11 @@ Members
 * `add_to_public_members( user )`
 * `remove_from_public_members( user )`
 
+Teams
+-----
+* `get_teams()`: list of `Team`
+* `create_team( ... )`: `Team`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+
 Class `Repository`
 ==================
 * Attributes: see [API](http://developer.github.com/v3/repos/#get)
@@ -127,6 +132,30 @@ Git objects
 * `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/git/trees/#create-a-tree) for parameters
 * `get_git_tag( sha )`: `GitTag`
 * `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/git/tags/#create-a-tag-object) for parameters
+
+Teams
+-----
+* `get_teams()`: list of `Team`
+
+Class `Team`
+============
+* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* `edit( ... )`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `delete()`
+
+Members
+-------
+* `get_members()`: list of `NamedUser`
+* `has_in_members( user )`: `bool`
+* `add_to_members( user )`
+* `remove_from_members( user )`
+
+Repositories
+------------
+* `get_repos()`: list of `Repository`
+* `has_in_repos( user )`: `bool`
+* `add_to_repos( user )`
+* `remove_from_repos( user )`
 
 Class `GitRef`
 ==============
