@@ -57,6 +57,15 @@ Organization = GithubObject(
 AuthenticatedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
 NamedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
 
+GitRef = GithubObject(
+    "GitRef",
+    BasicAttributes(
+        "ref", "url",
+        "object", ### @todo Structure
+    ),
+    Editable( [ "sha" ], [ "force" ] ),
+)
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -75,6 +84,7 @@ Repository = GithubObject(
     ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
+    ListOfObjects( "git/refs", GitRef, creatable = True, singularName = "git_ref" ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )

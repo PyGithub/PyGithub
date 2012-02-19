@@ -118,7 +118,7 @@ Git objects
 -----------
 * `get_git_refs()`: list of `GitRef`
 * `get_git_ref( ref )`: `GitRef`
-* `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/git/refs/#create-a-reference) for parameters
 * `get_git_blob( sha )`: `GitBlob`
 * `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
 * `get_git_commit( sha )`: `GitCommit`
@@ -130,8 +130,8 @@ Git objects
 
 Class `GitRef`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
-* `edit( ... )`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/git/refs/#get-a-reference)
+* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters
 
 Class `GitBlob`
 ===============

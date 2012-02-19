@@ -186,13 +186,13 @@ API `/repos/:user/:repo/git/commits/:sha`
 
 API `/repos/:user/:repo/git/refs`
 =================================
-* GET: `Repository.get_git_refs()`: list of `GitRef` (TODO SOON)
-* POST: `Repository.create_git_ref( ... )`: `GitRef` (TODO SOON)
+* GET: `Repository.get_git_refs()`: list of `GitRef`
+* POST: `Repository.create_git_ref( ... )`: `GitRef`
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
 * GET: `Repository.get_git_ref( ref )`: `GitRef` (TODO SOON)
-* PATCH: `GitRef.edit( ... )` (TODO SOON)
+* PATCH: `GitRef.edit( ... )`
 
 API `/repos/:user/:repo/git/tags`
 =================================
