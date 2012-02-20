@@ -286,6 +286,24 @@ class GithubObjectWithModifiableListOfObjects( TestCaseWithGithubTestObject ):
         self.expectDataPost( "/test/a3s", { "name": "nameCreate" } ).andReturn( { "id": "idCreate" } )
         self.assertEqual( self.o.create_a3s( name = "nameCreate" ).id, "idCreate" )
 
+class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ObjectGetter( "a3", ContainedObject, lambda id : { "id": id } )
+    )
+
+    def testGetList( self ):
+        self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
+        self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
+
 def myCallable( obj, mock, arg ):
     return mock.call( arg )
 
