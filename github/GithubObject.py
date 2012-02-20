@@ -192,7 +192,7 @@ class ObjectGetter( MethodFromCallable ):
         self.__type = type
 
     def __execute( self, obj, *args, **kwds ):
-        return self.__type( obj._github, self.__attributes( *args, **kwds ), lazy = False )
+        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:

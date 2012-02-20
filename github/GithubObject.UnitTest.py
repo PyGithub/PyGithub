@@ -297,7 +297,7 @@ class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ObjectGetter( "a3", ContainedObject, lambda id : { "id": id } )
+        ObjectGetter( "a3", ContainedObject, lambda obj, id : { "id": id } )
     )
 
     def testGetList( self ):
