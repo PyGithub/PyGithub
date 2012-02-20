@@ -185,6 +185,15 @@ class Deletable( MethodFromCallable ):
     def __execute( self, obj, *args, **kwds ):
         obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
 
+class ObjectGetter( MethodFromCallable ):
+    def __init__( self, singularName, type, attributes ):
+        MethodFromCallable.__init__( self, "get_" + singularName, self.__execute )
+        self.__attributes = attributes
+        self.__type = type
+
+    def __execute( self, obj, *args, **kwds ):
+        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
+
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
         __attributeDefinitions = dict()
