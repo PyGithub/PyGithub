@@ -129,13 +129,20 @@ class ListOfReferences:
         assert isinstance( toBeQueried, self.__type )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
+class Creatable:
+    def __init__( self, singularName, mandatoryParameters, optionalParameters ):
+        self.singularName = singularName
+        self.mandatoryParameters = mandatoryParameters
+        self.optionalParameters = optionalParameters
+
 class ListOfObjects:
-    def __init__( self, attributeName, type, creatable = False, singularName = None ):
+    def __init__( self, attributeName, type, creatable = None ):
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
         if creatable:
-            self.__createName = "create_" + ( singularName or attributeName )
+            self.__createName = "create_" + creatable.singularName
+            self.__createArgumentsChecker = _ArgumentsChecker( creatable.mandatoryParameters, creatable.optionalParameters )
         else:
             self.__createName = None
 
@@ -150,7 +157,8 @@ class ListOfObjects:
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
         ]
 
-    def __executeCreate( self, obj, **data ):
+    def __executeCreate( self, obj, *args, **kwds ):
+        data = self.__createArgumentsChecker.check( args, kwds )
         return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 class MethodFromCallable:
@@ -161,21 +169,36 @@ class MethodFromCallable:
     def apply( self, cls ):
         cls._addMethod( self.__name, self.__callable )
 
-class Editable( MethodFromCallable ):
+class _ArgumentsChecker:
     def __init__( self, mandatoryParameters, optionalParameters ):
-        MethodFromCallable.__init__( self, "edit", self.__execute )
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
 
-    def __execute( self, obj, *args, **kwds ):
+    def check( self, args, kwds ):
+        data = dict( kwds )
         if len( args ) + len( kwds ) == 0:
             raise TypeError()
         for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
-            kwds[ argumentName ] = arg
-        for argumentName in kwds:
+            if argumentName in kwds:
+                raise TypeError()
+            else:
+                data[ argumentName ] = arg
+        for argumentName in data:
             if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
                 raise TypeError()
-        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, kwds )
+        for argumentName in self.__mandatoryParameters:
+            if argumentName not in data:
+                raise TypeError()
+        return data
+
+class Editable( MethodFromCallable ):
+    def __init__( self, mandatoryParameters, optionalParameters ):
+        MethodFromCallable.__init__( self, "edit", self.__execute )
+        self.__argumentsChecker = _ArgumentsChecker( mandatoryParameters, optionalParameters )
+
+    def __execute( self, obj, *args, **kwds ):
+        data = self.__argumentsChecker.check( args, kwds )
+        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, data )
         obj._updateAttributes( attributes )
 
 class Deletable( MethodFromCallable ):
