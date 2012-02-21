@@ -100,6 +100,10 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
         with self.assertRaises( TypeError ):
             self.o.edit()
 
+    def testEditWithoutMandatoryArgument( self ):
+        with self.assertRaises( TypeError ):
+            self.o.edit( a2 = 2, a4 = 3 )
+
     def testEditWithSillyArgument( self ):
         with self.assertRaises( TypeError ):
             self.o.edit( foobar = 42 )
@@ -123,6 +127,10 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
     def testEditWithOnePositionalArgument( self ):
         self.expectDataPatch( "/test", { "a1": 11 } ).andReturn( {} )
         self.o.edit( 11 )
+
+    def testEditWithRepeatedPositionalArgument( self ):
+        with self.assertRaises( TypeError ):
+            self.o.edit( 11, a1 = 11 )
 
     def testEditWithTwoPositionalArguments( self ):
         self.expectDataPatch( "/test", { "a1": 11, "a2": 22 } ).andReturn( {} )
@@ -279,12 +287,32 @@ class GithubObjectWithModifiableListOfObjects( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, creatable = True )
+        ListOfObjects( "a3s", ContainedObject, Creatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
         self.expectDataPost( "/test/a3s", { "name": "nameCreate" } ).andReturn( { "id": "idCreate" } )
-        self.assertEqual( self.o.create_a3s( name = "nameCreate" ).id, "idCreate" )
+        self.assertEqual( self.o.create_a3( name = "nameCreate" ).id, "idCreate" )
+
+    def testCreateWithOptionalArguments( self ):
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p1": 1 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( name = "nameCreate", p1 = 1 ).id, "idCreate" )
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p2": 2 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( name = "nameCreate", p2 = 2 ).id, "idCreate" )
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p1": 1, "p2": 2 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( name = "nameCreate", p2 = 2, p1 = 1 ).id, "idCreate" )
+
+    def testCreateWithPositionalArguments( self ):
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p1": 1 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( "nameCreate", 1 ).id, "idCreate" )
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p2": 2 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( "nameCreate", p2 = 2 ).id, "idCreate" )
+        self.expectDataPost( "/test/a3s", { "name": "nameCreate", "p1": 1, "p2": 2 } ).andReturn( { "id": "idCreate" } )
+        self.assertEqual( self.o.create_a3( "nameCreate", 1, 2 ).id, "idCreate" )
+
+    def testCreateWithSillyArgument( self ):
+        with self.assertRaises( TypeError ):
+            self.o.create_a3( foobar = 42 )
 
 class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(

@@ -80,9 +80,10 @@ Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
 Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
 
-AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True, singularName = "repo" ) )
+__repoCreatable = Creatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
+AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
 NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository ) )
-Organization._addAttributePolicy( ListOfObjects( "repos", Repository, creatable = True, singularName = "repo" ) )
+Organization._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
 
 AuthenticatedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
 NamedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
