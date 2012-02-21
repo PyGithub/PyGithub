@@ -172,10 +172,36 @@ class IntegrationTest:
 
 IntegrationTest().main()
 
+# Writes
+# ======
+# u = g.get_user()
+# o = g.get_organization( "<some organization you are admin of>" )
+# r = u.get_repo( "<some repository of yours>" )
+# r = u.get_repo( "PyGithub" )
+
+# To user
+# -------
+# u.edit( bio = u.bio + "(Edited by PyGithub)" )
+
+# u.remove_from_following( jacquev6 )
+# u.add_to_following( jacquev6 )
+
+# u.remove_from_watched( PyGithub )
+# u.add_to_watched( PyGithub )
+
+# dumpRepository( u.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
+# dumpRepository( u.create_fork( PyGithub ) )
 
 
-# Writes (to repository)
-# ======================
+# To organization
+# ---------------
+# o.edit( location = "Paris, France" )
 
-# m = PyGithub.get_git_ref( "heads/master" )
-# m.edit( sha = m.object.sha )
+# dumpRepository( o.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
+# dumpRepository( o.create_fork( PyGithub ) )
+
+
+# To repository
+# -------------
+# branch = PyGithub.create_git_ref( "refs/heads/test", PyGithub.get_git_ref( "heads/master" ).object[ "sha" ] )
+# branch.edit( sha = "9f868e490c79c3ec899dc450e7cb4f9b0fa9e88c", force = True )
