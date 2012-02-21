@@ -203,5 +203,6 @@ IntegrationTest().main()
 
 # To repository
 # -------------
-# branch = PyGithub.create_git_ref( "refs/heads/test", PyGithub.get_git_ref( "heads/master" ).object[ "sha" ] )
-# branch.edit( sha = "9f868e490c79c3ec899dc450e7cb4f9b0fa9e88c", force = True )
+# branch = r.create_git_ref( "refs/heads/test", r.get_git_ref( "heads/master" ).object[ "sha" ] )
+# branch.edit( "cf96b288a03daba509c0ec7e3e7384fe9e0f472d", force = True )
+# r.get_git_ref( "heads/test" ).edit( "9f868e490c79c3ec899dc450e7cb4f9b0fa9e88c", force = True )

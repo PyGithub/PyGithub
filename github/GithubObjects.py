@@ -86,7 +86,7 @@ Repository = GithubObject(
     ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ListOfObjects( "git/refs", GitRef, creatable = True, singularName = "git_ref" ),
+    ListOfObjects( "git/refs", GitRef, Creatable( "git_ref", [ "ref", "sha" ], [] ) ),
     ObjectGetter( "git_ref", GitRef, lambda repo, ref: { "_repo": repo, "ref": ref } ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
