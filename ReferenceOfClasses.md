@@ -131,7 +131,7 @@ Git objects
 Class `GitRef`
 ==============
 * Attributes: see [API](http://developer.github.com/v3/git/refs/#get-a-reference)
-* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters (TODO SOON: edit `GitRef`s returned but `get_git_refs` or `create_git_ref`)
+* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters
 
 Class `GitBlob`
 ===============

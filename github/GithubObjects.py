@@ -1,3 +1,5 @@
+import itertools
+
 from GithubObject import *
 
 AuthenticatedUser = GithubObject(
@@ -59,7 +61,7 @@ NamedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable(
 
 GitRef = GithubObject(
     "GitRef",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/refs/" + obj.ref ),
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/" + obj.ref ),
     BasicAttributes(
         "ref", "url",
         "object", ### @todo Structure,
@@ -86,7 +88,7 @@ Repository = GithubObject(
     ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ListOfObjects( "git/refs", GitRef, Creatable( "git_ref", [ "ref", "sha" ], [] ) ),
+    ListOfObjects( "git/refs", GitRef, Creatable( "git_ref", [ "ref", "sha" ], [] ), modifyAttributes = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) ) ),
     ObjectGetter( "git_ref", GitRef, lambda repo, ref: { "_repo": repo, "ref": ref } ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
