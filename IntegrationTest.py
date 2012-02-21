@@ -166,7 +166,16 @@ class IntegrationTest:
         print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
         print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
+        print "  Master:", r.get_git_ref( "heads/master" ).object[ "sha" ]
         print
         sys.stdout.flush()
 
 IntegrationTest().main()
+
+
+
+# Writes (to repository)
+# ======================
+
+# m = PyGithub.get_git_ref( "heads/master" )
+# m.edit( sha = m.object.sha )

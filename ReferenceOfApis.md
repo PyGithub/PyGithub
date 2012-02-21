@@ -191,7 +191,7 @@ API `/repos/:user/:repo/git/refs`
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
-* GET: `Repository.get_git_ref( ref )`: `GitRef` (TODO SOON)
+* GET: `Repository.get_git_ref( ref )`: `GitRef`
 * PATCH: `GitRef.edit( ... )`
 
 API `/repos/:user/:repo/git/tags`
