@@ -135,6 +135,8 @@ class Creatable:
         self.mandatoryParameters = mandatoryParameters
         self.optionalParameters = optionalParameters
 
+### @todo Merge ObjectGetter in ListOfObjects, with a SingleGettable similar to Creatable
+### @todo Add a ListGetable that couls be False for non-getable lists (repo/git/commits for example)
 class ListOfObjects:
     def __init__( self, attributeName, type, creatable = None ):
         self.__attributeName = attributeName
