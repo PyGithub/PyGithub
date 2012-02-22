@@ -188,9 +188,9 @@ Team = GithubObject(
     ),
     Editable( [ "name" ], [ "permission" ] ),
     Deletable(),
-    ListOfReferences( "members", NamedUser, addable = True, removable = True, hasable = True ),
-    ListOfReferences( "repos", Repository, addable = True, removable = True, hasable = True ),
+    ListAttribute( "members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ListAttribute( "repos", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
 )
 
-Organization._addAttributePolicy( ListOfObjects( "teams", Team, creatable = True, singularName = "team" ) )
-Repository._addAttributePolicy( ListOfReferences( "teams", Team ) )
+Organization._addAttributePolicy( ListAttribute( "teams", Team, ListGetable( [], [] ), ElementCreatable( "team", [ "name" ], [ "repo_names", "permission" ] ) ) )
+Repository._addAttributePolicy( ListAttribute( "teams", Team, ListGetable( [], [] ) ) )
