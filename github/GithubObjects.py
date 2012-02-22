@@ -83,6 +83,16 @@ GitCommit = GithubObject(
     ),
 )
 
+GitTree = GithubObject(
+    "GitTree",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/trees/" + obj.sha ),
+    BasicAttributes(
+        "sha", "url",
+        "tree", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
 __modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
@@ -110,6 +120,10 @@ Repository = GithubObject(
     ListAttribute( "git/commits", GitCommit,
         ElementGetable( "git_commit", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/trees", GitTree,
+        ElementGetable( "git_tree", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForGitObjects )
     ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )

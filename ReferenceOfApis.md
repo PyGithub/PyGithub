@@ -204,11 +204,15 @@ API `/repos/:user/:repo/git/tags/:sha`
 
 API `/repos/:user/:repo/git/trees`
 ==================================
-* POST: `Repository.create_git_tree( ... )`: `GitTree` (TODO SOON)
+* POST: `Repository.create_git_tree( ... )`: `GitTree`
+
+API `/repos/:user/:repo/git/trees?base_tree=`
+=============================================
+* POST: `GitTree.create_update( ... )`: `GitTree` (TODO SOON)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
-* GET: `Repository.get_git_tree( sha )`: `GitTree` (TODO SOON)
+* GET: `Repository.get_git_tree( sha )`: `GitTree`
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================

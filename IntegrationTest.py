@@ -167,7 +167,10 @@ class IntegrationTest:
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
         print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
         masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
-        print "  Master:", masterCommitSha, r.get_git_commit( masterCommitSha ).message
+        masterCommit = r.get_git_commit( masterCommitSha )
+        masterTreeSha = masterCommit.tree[ "sha" ]
+        masterTree = r.get_git_tree( masterTreeSha )
+        print "  Master:", masterCommitSha, masterCommit.message, ", ".join( element[ "path" ] + " (" + element[ "type" ] + ")" for element in masterTree.tree )
         print
         sys.stdout.flush()
 
