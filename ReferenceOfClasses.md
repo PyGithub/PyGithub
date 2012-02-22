@@ -120,13 +120,13 @@ Git objects
 * `get_git_ref( ref )`: `GitRef`
 * `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/git/refs/#create-a-reference) for parameters
 * `get_git_blob( sha )`: `GitBlob`
-* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/git/blobs/#create-a-blob) for parameters
 * `get_git_commit( sha )`: `GitCommit`
-* `create_git_commit( ... )`: `GitCommit`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_git_commit( ... )`: `GitCommit`: see [API](http://developer.github.com/v3/git/commits/#create-a-commit) for parameters
 * `get_git_tree( sha )`: `GitTree`
-* `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/git/trees/#create-a-tree) for parameters
 * `get_git_tag( sha )`: `GitTag`
-* `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/.../#...) for parameters (TODO SOON)
+* `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/git/tags/#create-a-tag-object) for parameters
 
 Class `GitRef`
 ==============
@@ -135,17 +135,17 @@ Class `GitRef`
 
 Class `GitBlob`
 ===============
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/git/blobs/#get-a-blob)
 
 Class `GitCommit`
 =================
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/git/commits/#get-a-commit)
 
 Class `GitTree`
 ===============
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/git/trees/#get-a-tree)
 
 Class `GitTag`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/.../#...) (TODO SOON)
+* Attributes: see [API](http://developer.github.com/v3/git/tags/#get-a-tag)
 
