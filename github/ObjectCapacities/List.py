@@ -8,8 +8,8 @@ class ListOfReferences:
         self.attributeName = attributeName
         self.type = type
         self.__capacities.append( ListGetable( [], getParameters ) )
-        # if addable:
-            # self.__capacities.append( ElementAddable() )
+        if addable:
+            self.__capacities.append( ElementAddable() )
         # if removable:
             # self.__capacities.append( ElementRemoveable() )
         # if hasable:
@@ -19,10 +19,6 @@ class ListOfReferences:
         self.__type = type
         self.__getName = "get_" + attributeName
         self.__getParameters = getParameters
-        if addable:
-            self.__addName = "add_to_" + attributeName
-        else:
-            self.__addName = None
         if removable:
             self.__removeName = "remove_from_" + attributeName
         else:
@@ -36,16 +32,10 @@ class ListOfReferences:
         for capacity in self.__capacities:
             capacity.apply( self, cls )
 
-        if self.__addName is not None:
-            cls._addMethod( self.__addName, self.__executeAdd )
         if self.__removeName is not None:
             cls._addMethod( self.__removeName, self.__executeRemove )
         if self.__hasName is not None:
             cls._addMethod( self.__hasName, self.__executeHas )
-
-    def __executeAdd( self, obj, toBeAdded ):
-        assert isinstance( toBeAdded, self.__type )
-        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
 
     def __executeRemove( self, obj, toBeDeleted ):
         assert isinstance( toBeDeleted, self.__type )
@@ -54,6 +44,16 @@ class ListOfReferences:
     def __executeHas( self, obj, toBeQueried ):
         assert isinstance( toBeQueried, self.__type )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
+
+class ElementAddable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "add_to_" + list.attributeName, self.__execute )
+
+    def __execute( self, obj, toBeAdded ):
+        assert isinstance( toBeAdded, self.__type )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
 
 class ElementCreatable:
     def __init__( self, singularName, mandatoryParameters, optionalParameters ):
