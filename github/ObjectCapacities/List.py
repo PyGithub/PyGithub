@@ -12,7 +12,7 @@ class ElementAddable:
         assert isinstance( toBeAdded, self.__type )
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
 
-class ElementRemoveable:
+class ElementRemovable:
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
@@ -93,7 +93,7 @@ class ListOfReferences( ListOfObjects ):
         if addable:
             capacities.append( ElementAddable() )
         if removable:
-            capacities.append( ElementRemoveable() )
+            capacities.append( ElementRemovable() )
         if hasable:
             capacities.append( ElementHasable() )
         ListOfObjects.__init__( self, attributeName, type, *capacities )

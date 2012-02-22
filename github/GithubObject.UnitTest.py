@@ -205,7 +205,7 @@ class GithubObjectWithListOfReferences( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfReferences( "a3s", ContainedObject, getParameters = [ "type" ] )
+        ListOfObjects( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
     def testGetList( self ):
@@ -255,7 +255,7 @@ class GithubObjectWithModifiableListOfReferences( TestCaseWithGithubTestObject )
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfReferences( "a3s", ContainedObject, addable = True, removable = True, hasable = True )
+        ListOfObjects( "a3s", ContainedObject, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() )
     )
 
     def testAddToList( self ):
