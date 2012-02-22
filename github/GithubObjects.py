@@ -70,6 +70,7 @@ GitRef = GithubObject(
     Editable( [ "sha" ], [ "force" ] ),
 )
 
+__modifyAttributesForGitRef = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -88,8 +89,11 @@ Repository = GithubObject(
     ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ListOfObjects( "git/refs", GitRef, Creatable( "git_ref", [ "ref", "sha" ], [] ), modifyAttributes = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) ) ),
-    ObjectGetter( "git_ref", GitRef, lambda repo, ref: { "_repo": repo, "ref": ref } ),
+    ListAttribute( "git/refs", GitRef,
+        ListGetable( [], [], __modifyAttributesForGitRef ),
+        ElementGetable( "git_ref", lambda repo, ref: { "_repo": repo, "ref": ref } ),
+        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForGitRef )
+    )
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )

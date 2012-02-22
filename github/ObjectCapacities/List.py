@@ -45,7 +45,7 @@ class ElementCreatable:
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
-        return self.__type( obj._github, self.__modifyAttributes( obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
+        return self.__type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
 
 class ListGetable:
     def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
@@ -60,7 +60,7 @@ class ListGetable:
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
         return [
-            self.__type( obj._github, self.__modifyAttributes( attributes ), lazy = True )
+            self.__type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
         ]
 
