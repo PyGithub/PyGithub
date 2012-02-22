@@ -232,11 +232,11 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ListGetable() )
+        ListOfObjects( "a3s", ContainedObject, ListGetable( [], [] ) )
     )
 
     def testGetList( self ):
-        self.expectDataGet( "/test/a3s" ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        self.expectDataGet( "/test/a3s", {} ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
         a3s = self.o.get_a3s()
         self.assertEqual( len( a3s ), 3 )
         self.assertEqual( a3s[ 0 ].id, "id1" )

@@ -4,6 +4,17 @@ import ArgumentsChecker
 
 class ListOfReferences:
     def __init__( self, attributeName, type, addable = False, removable = False, hasable = False, getParameters = [] ):
+        self.__capacities = list()
+        self.attributeName = attributeName
+        self.type = type
+        self.__capacities.append( ListGetable( [], getParameters ) )
+        # if addable:
+            # self.__capacities.append( ElementAddable() )
+        # if removable:
+            # self.__capacities.append( ElementRemoveable() )
+        # if hasable:
+            # self.__capacities.append( ElementHasable() )
+
         self.__attributeName = attributeName
         self.__type = type
         self.__getName = "get_" + attributeName
@@ -22,22 +33,15 @@ class ListOfReferences:
             self.__hasName = None
 
     def apply( self, cls ):
-        cls._addMethod( self.__getName, self.__executeGet )
+        for capacity in self.__capacities:
+            capacity.apply( self, cls )
+
         if self.__addName is not None:
             cls._addMethod( self.__addName, self.__executeAdd )
         if self.__removeName is not None:
             cls._addMethod( self.__removeName, self.__executeRemove )
         if self.__hasName is not None:
             cls._addMethod( self.__hasName, self.__executeHas )
-
-    def __executeGet( self, obj, *args, **kwds ):
-        ### @todo ArgumentsChecker?
-        for arg, argumentName in itertools.izip( args, self.__getParameters ):
-            kwds[ argumentName ] = arg
-        return [
-            self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, kwds, None )
-        ]
 
     def __executeAdd( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.__type )
@@ -66,15 +70,19 @@ class ElementCreatable:
         return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 class ListGetable:
+    def __init__( self, mandatoryParameters, optionalParameters ):
+        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
+
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
         cls._addMethod( "get_" + list.attributeName, self.__execute )
 
-    def __execute( self, obj ):
+    def __execute( self, obj, *args, **kwds ):
+        params = self.__argumentsChecker.check( args, kwds )
         return [
             self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
         ]
 
 class ElementGetable:

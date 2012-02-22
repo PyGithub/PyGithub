@@ -7,8 +7,6 @@ class ArgumentsChecker:
 
     def check( self, args, kwds ):
         data = dict( kwds )
-        if len( args ) + len( kwds ) == 0:
-            raise TypeError()
         for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
             if argumentName in kwds:
                 raise TypeError()
