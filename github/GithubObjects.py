@@ -80,7 +80,7 @@ Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
 Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
 
-__repoCreatable = Creatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
+__repoCreatable = ElementCreatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
 AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
 NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository ) )
 Organization._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )

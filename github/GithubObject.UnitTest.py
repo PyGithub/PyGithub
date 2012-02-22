@@ -287,7 +287,7 @@ class GithubObjectWithModifiableListOfObjects( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, Creatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
+        ListOfObjects( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
@@ -326,6 +326,24 @@ class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
         ObjectGetter( "a3", ContainedObject, lambda obj, id : { "id": id } )
+    )
+
+    def testGetList( self ):
+        self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
+        self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
+
+class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListOfObjects( "a3s", ContainedObject, ElementGetable( "a3" ) )
     )
 
     def testGetList( self ):

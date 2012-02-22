@@ -51,7 +51,7 @@ class ListOfReferences:
         assert isinstance( toBeQueried, self.__type )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
-class Creatable:
+class ElementCreatable:
     def __init__( self, singularName, mandatoryParameters, optionalParameters ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__createName = "create_" + singularName
@@ -77,8 +77,18 @@ class ListGetable:
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
         ]
 
-### @todo Merge ObjectGetter in ListOfObjects, with a SingleGettable similar to Creatable
-### @todo Add a ListGetable that couls be False for non-getable lists (repo/git/commits for example)
+class ElementGetable:
+    def __init__( self, singularName ):
+        self.__getName = "get_" + singularName
+
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( self.__getName, self.__execute )
+
+    def __execute( self, obj, identity ):
+        return self.__type( obj._github, obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + identity, None, None ), lazy = True )
+
 class ListOfObjects:
     def __init__( self, attributeName, type, *capacities ):
         self.attributeName = attributeName
