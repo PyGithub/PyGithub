@@ -31,11 +31,11 @@ NamedUser = GithubObject(
     ),
 )
 
-AuthenticatedUser._addAttributePolicy( ListOfReferences( "followers", NamedUser ) )
-NamedUser._addAttributePolicy( ListOfReferences( "followers", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ListAttribute( "followers", NamedUser, ListGetable( [], [] ) ) )
+NamedUser._addAttributePolicy( ListAttribute( "followers", NamedUser, ListGetable( [], [] ) ) )
 
-AuthenticatedUser._addAttributePolicy( ListOfReferences( "following", NamedUser, addable = True, removable = True, hasable = True ) )
-NamedUser._addAttributePolicy( ListOfReferences( "following", NamedUser ) )
+AuthenticatedUser._addAttributePolicy( ListAttribute( "following", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
+NamedUser._addAttributePolicy( ListAttribute( "following", NamedUser, ListGetable( [], [] ) ) )
 
 Organization = GithubObject(
     "Organization",
@@ -49,13 +49,13 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    ListOfReferences( "public_members", NamedUser, addable = True, removable = True, hasable = True ),
-    ListOfReferences( "members", NamedUser, removable = True, hasable = True ),
+    ListAttribute( "public_members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ListAttribute( "members", NamedUser, ListGetable( [], [] ), ElementRemovable(), ElementHasable() ),
     Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
-AuthenticatedUser._addAttributePolicy( ListOfReferences( "orgs", Organization ) )
-NamedUser._addAttributePolicy( ListOfReferences( "orgs", Organization ) )
+AuthenticatedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
+NamedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
 
 Repository = GithubObject(
     "Repository",
@@ -71,26 +71,24 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     ComplexAttribute( "owner", NamedUser ),
-    ListOfReferences( "collaborators", NamedUser, addable = True, removable = True, hasable = True ),
-    ListOfReferences( "contributors", NamedUser ),
-    ListOfReferences( "watchers", NamedUser ),
+    ListAttribute( "collaborators", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
+    ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
-Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
+Repository._addAttributePolicy( ListAttribute( "forks", Repository, ListGetable( [], [] ) ) )
 
-__repoCreatable = Creatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
-AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
-NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository ) )
-Organization._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
+__repoElementCreatable = ElementCreatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
+__repoElementGetable = ElementGetable( "repo", lambda obj, name: { "owner": { "login": obj.login }, "name": name } )
+__repoListGetable = ListGetable( [], [] )
+AuthenticatedUser._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
+NamedUser._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable ) )
+Organization._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
 
-AuthenticatedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
-NamedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
-Organization._addAttributePolicy( ObjectGetter( "repo", Repository, lambda organization, name: { "name": name, "owner": { "login": organization.login } } ) )
-
-AuthenticatedUser._addAttributePolicy( ListOfReferences( "watched", Repository, addable = True, removable = True, hasable = True ) )
-NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )
+AuthenticatedUser._addAttributePolicy( ListAttribute( "watched", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
+NamedUser._addAttributePolicy( ListAttribute( "watched", Repository, ListGetable( [], [] ) ) )
 
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
