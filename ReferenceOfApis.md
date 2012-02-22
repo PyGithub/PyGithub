@@ -170,11 +170,11 @@ API `/repos/:user/:repo/forks`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
-* POST: `Repository.create_git_blob( ... )`: `GitBlob` (TODO SOON)
+* POST: `Repository.create_git_blob( ... )`: `GitBlob`
 
 API `/repos/:user/:repo/git/blobs/:sha`
 =======================================
-* GET: `Repository.get_git_blob( sha )`: `GitBlob` (TODO SOON)
+* GET: `Repository.get_git_blob( sha )`: `GitBlob`
 
 API `/repos/:user/:repo/git/commits`
 ====================================

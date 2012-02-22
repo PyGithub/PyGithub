@@ -93,6 +93,16 @@ GitTree = GithubObject(
     ),
 )
 
+GitBlob = GithubObject(
+    "GitBlob",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/blobs/" + obj.sha ),
+    BasicAttributes(
+        "sha", "size", "url",
+        "content", "encoding",
+        "_repo", ### Ugly hack
+    ),
+)
+
 __modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
@@ -124,6 +134,10 @@ Repository = GithubObject(
     ListAttribute( "git/trees", GitTree,
         ElementGetable( "git_tree", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/blobs", GitBlob,
+        ElementGetable( "git_blob", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForGitObjects )
     ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )

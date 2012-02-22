@@ -2,6 +2,8 @@
 
 import sys
 import httplib
+import base64
+
 
 from github import Github
 
@@ -170,7 +172,16 @@ class IntegrationTest:
         masterCommit = r.get_git_commit( masterCommitSha )
         masterTreeSha = masterCommit.tree[ "sha" ]
         masterTree = r.get_git_tree( masterTreeSha )
+        for element in masterTree.tree:
+            if element[ "type" ] == "blob":
+                blobSha = element[ "sha" ]
+                break
+        blob = r.get_git_blob( blobSha )
         print "  Master:", masterCommitSha, masterCommit.message, ", ".join( element[ "path" ] + " (" + element[ "type" ] + ")" for element in masterTree.tree )
+        print "    blob:", blob.content, blob.encoding,
+        if blob.encoding == "base64":
+            print base64.b64decode( blob.content ),
+        print
         print
         sys.stdout.flush()
 
