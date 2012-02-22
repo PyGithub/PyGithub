@@ -131,37 +131,37 @@ class ListOfReferences:
 
 class Creatable:
     def __init__( self, singularName, mandatoryParameters, optionalParameters ):
-        self.singularName = singularName
-        self.mandatoryParameters = mandatoryParameters
-        self.optionalParameters = optionalParameters
+        self.__createArgumentsChecker = _ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__createName = "create_" + singularName
+
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( self.__createName, self.__executeCreate )
+
+    def __executeCreate( self, obj, *args, **kwds ):
+        data = self.__createArgumentsChecker.check( args, kwds )
+        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 ### @todo Merge ObjectGetter in ListOfObjects, with a SingleGettable similar to Creatable
 ### @todo Add a ListGetable that couls be False for non-getable lists (repo/git/commits for example)
 class ListOfObjects:
     def __init__( self, attributeName, type, creatable = None ):
-        self.__attributeName = attributeName
-        self.__type = type
+        self.attributeName = attributeName
+        self.type = type
         self.__getName = "get_" + attributeName
-        if creatable:
-            self.__createName = "create_" + creatable.singularName
-            self.__createArgumentsChecker = _ArgumentsChecker( creatable.mandatoryParameters, creatable.optionalParameters )
-        else:
-            self.__createName = None
+        self.creatable = creatable
 
     def apply( self, cls ):
         cls._addMethod( self.__getName, self.__executeGet )
-        if self.__createName is not None:
-            cls._addMethod( self.__createName, self.__executeCreate )
+        if self.creatable:
+            self.creatable.apply( self, cls )
 
     def __executeGet( self, obj ):
         return [
-            self.__type( obj._github, attributes, lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
+            self.type( obj._github, attributes, lazy = True )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.attributeName, None, None )
         ]
-
-    def __executeCreate( self, obj, *args, **kwds ):
-        data = self.__createArgumentsChecker.check( args, kwds )
-        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 class MethodFromCallable:
     def __init__( self, name, callable ):
