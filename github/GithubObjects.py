@@ -64,13 +64,26 @@ GitRef = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl + "/git/" + obj.ref ),
     BasicAttributes(
         "ref", "url",
-        "object", ### @todo Structure,
+        "object", ### @todo Structure
         "_repo", ### Ugly hack
     ),
     Editable( [ "sha" ], [ "force" ] ),
 )
 
-__modifyAttributesForGitRef = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
+GitCommit = GithubObject(
+    "GitCommit",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
+    BasicAttributes(
+        "sha", "url", "message",
+        "author", ### @todo Structure
+        "committer", ### @todo Structure
+        "tree", ### @todo Structure
+        "parents", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
+__modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -90,10 +103,14 @@ Repository = GithubObject(
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
     ListAttribute( "git/refs", GitRef,
-        ListGetable( [], [], __modifyAttributesForGitRef ),
+        ListGetable( [], [], __modifyAttributesForGitObjects ),
         ElementGetable( "git_ref", lambda repo, ref: { "_repo": repo, "ref": ref } ),
-        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForGitRef )
-    )
+        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/commits", GitCommit,
+        ElementGetable( "git_commit", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForGitObjects )
+    ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )

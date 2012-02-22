@@ -178,11 +178,11 @@ API `/repos/:user/:repo/git/blobs/:sha`
 
 API `/repos/:user/:repo/git/commits`
 ====================================
-* POST: `Repository.create_git_commit( ... )`: `GitCommit` (TODO SOON)
+* POST: `Repository.create_git_commit( ... )`: `GitCommit`
 
 API `/repos/:user/:repo/git/commits/:sha`
 =========================================
-* GET: `Repository.get_git_commit( sha )`: `GitCommit` (TODO SOON)
+* GET: `Repository.get_git_commit( sha )`: `GitCommit`
 
 API `/repos/:user/:repo/git/refs`
 =================================
