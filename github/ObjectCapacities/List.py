@@ -78,24 +78,24 @@ class ListGetable:
         ]
 
 class ElementGetable:
-    def __init__( self, singularName ):
+    def __init__( self, singularName, attributes ):
         self.__getName = "get_" + singularName
+        self.__attributes = attributes
 
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
         cls._addMethod( self.__getName, self.__execute )
 
-    def __execute( self, obj, identity ):
-        return self.__type( obj._github, obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + identity, None, None ), lazy = True )
+    def __execute( self, obj, *args, **kwds ):
+        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
 class ListOfObjects:
     def __init__( self, attributeName, type, *capacities ):
         self.attributeName = attributeName
         self.type = type
         self.__getName = "get_" + attributeName
-        self.__capacities = list( capacities )
-        self.__capacities.append( ListGetable() )
+        self.__capacities = capacities
 
     def apply( self, cls ):
         for capacity in self.__capacities:

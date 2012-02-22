@@ -81,13 +81,10 @@ Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )
 Repository._addAttributePolicy( ListOfReferences( "forks", Repository ) )
 
 __repoCreatable = ElementCreatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
-AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
-NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository ) )
-Organization._addAttributePolicy( ListOfObjects( "repos", Repository, __repoCreatable ) )
-
-AuthenticatedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
-NamedUser._addAttributePolicy( ObjectGetter( "repo", Repository, lambda user, name: { "name": name, "owner": { "login": user.login } } ) )
-Organization._addAttributePolicy( ObjectGetter( "repo", Repository, lambda organization, name: { "name": name, "owner": { "login": organization.login } } ) )
+__repoElementGetable = ElementGetable( "repo", lambda obj, name: { "owner": { "login": obj.login }, "name": name } )
+AuthenticatedUser._addAttributePolicy( ListOfObjects( "repos", Repository, ListGetable(), __repoElementGetable, __repoCreatable ) )
+NamedUser._addAttributePolicy( ListOfObjects( "repos", Repository, ListGetable(), __repoElementGetable ) )
+Organization._addAttributePolicy( ListOfObjects( "repos", Repository, ListGetable(), __repoElementGetable, __repoCreatable ) )
 
 AuthenticatedUser._addAttributePolicy( ListOfReferences( "watched", Repository, addable = True, removable = True, hasable = True ) )
 NamedUser._addAttributePolicy( ListOfReferences( "watched", Repository ) )

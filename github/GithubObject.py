@@ -1,6 +1,6 @@
 import itertools
 
-import ArgumentsChecker
+import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
 from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
 from ObjectCapacities.List import ListOfObjects, ListOfReferences, ListGetable, ElementCreatable, ElementGetable
 
