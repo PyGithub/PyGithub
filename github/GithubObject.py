@@ -1,5 +1,8 @@
 import itertools
 
+import ArgumentsChecker
+from BasicObjectCapacities import AttributeFromCallable, MethodFromCallable
+
 class BadGithubObjectException( Exception ):
     pass
 
@@ -51,28 +54,6 @@ class ComplexAttribute:
     def apply( self, cls ):
         cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
 
-class AttributeFromCallable:
-    class AttributeDefinition:
-        def __init__( self, name, callable ):
-            self.__name = name
-            self.__callable = callable
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            obj._updateAttributes( { self.__name: self.__callable( obj ) } )
-
-        def isLazy( self ):
-            return False
-
-    def __init__( self, name, callable ):
-        self.__name = name
-        self.__callable = callable
-
-    def apply( self, cls ):
-        cls._addAttribute( self.__name, AttributeFromCallable.AttributeDefinition( self.__name, self.__callable ) )
-
 class BaseUrl( AttributeFromCallable ):
     def __init__( self, baseUrl ):
         AttributeFromCallable.__init__( self, "_baseUrl", baseUrl )
@@ -110,6 +91,7 @@ class ListOfReferences:
             cls._addMethod( self.__hasName, self.__executeHas )
 
     def __executeGet( self, obj, *args, **kwds ):
+        ### @todo ArgumentsChecker?
         for arg, argumentName in itertools.izip( args, self.__getParameters ):
             kwds[ argumentName ] = arg
         return [
@@ -131,7 +113,7 @@ class ListOfReferences:
 
 class Creatable:
     def __init__( self, singularName, mandatoryParameters, optionalParameters ):
-        self.__createArgumentsChecker = _ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__createName = "create_" + singularName
 
     def apply( self, list, cls ):
@@ -140,7 +122,7 @@ class Creatable:
         cls._addMethod( self.__createName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        data = self.__createArgumentsChecker.check( args, kwds )
+        data = self.__argumentsChecker.check( args, kwds )
         return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
 
 class ListGetable:
@@ -169,40 +151,10 @@ class ListOfObjects:
         for capacity in self.__capacities:
             capacity.apply( self, cls )
 
-class MethodFromCallable:
-    def __init__( self, name, callable ):
-        self.__name = name
-        self.__callable = callable
-
-    def apply( self, cls ):
-        cls._addMethod( self.__name, self.__callable )
-
-class _ArgumentsChecker:
-    def __init__( self, mandatoryParameters, optionalParameters ):
-        self.__mandatoryParameters = mandatoryParameters
-        self.__optionalParameters = optionalParameters
-
-    def check( self, args, kwds ):
-        data = dict( kwds )
-        if len( args ) + len( kwds ) == 0:
-            raise TypeError()
-        for arg, argumentName in itertools.izip( args, itertools.chain( self.__mandatoryParameters, self.__optionalParameters ) ):
-            if argumentName in kwds:
-                raise TypeError()
-            else:
-                data[ argumentName ] = arg
-        for argumentName in data:
-            if argumentName not in itertools.chain( self.__mandatoryParameters, self.__optionalParameters ):
-                raise TypeError()
-        for argumentName in self.__mandatoryParameters:
-            if argumentName not in data:
-                raise TypeError()
-        return data
-
 class Editable( MethodFromCallable ):
     def __init__( self, mandatoryParameters, optionalParameters ):
         MethodFromCallable.__init__( self, "edit", self.__execute )
-        self.__argumentsChecker = _ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
