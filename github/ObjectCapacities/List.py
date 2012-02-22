@@ -85,15 +85,3 @@ class ListOfObjects:
     def apply( self, cls ):
         for capacity in self.__capacities:
             capacity.apply( self, cls )
-
-class ListOfReferences( ListOfObjects ):
-    def __init__( self, attributeName, type, addable = False, removable = False, hasable = False, getParameters = [] ):
-        capacities = list()
-        capacities.append( ListGetable( [], getParameters ) )
-        if addable:
-            capacities.append( ElementAddable() )
-        if removable:
-            capacities.append( ElementRemovable() )
-        if hasable:
-            capacities.append( ElementHasable() )
-        ListOfObjects.__init__( self, attributeName, type, *capacities )
