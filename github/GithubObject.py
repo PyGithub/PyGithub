@@ -1,7 +1,7 @@
 import itertools
 
 import ArgumentsChecker
-from BasicObjectCapacities import AttributeFromCallable, MethodFromCallable
+from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
 
 class BadGithubObjectException( Exception ):
     pass
