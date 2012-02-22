@@ -2,7 +2,7 @@ import itertools
 
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
 from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
-from ObjectCapacities.List import ListOfObjects, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable
+from ObjectCapacities.List import ListAttribute, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable
 
 class BadGithubObjectException( Exception ):
     pass

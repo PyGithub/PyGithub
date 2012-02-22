@@ -205,7 +205,7 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
+        ListAttribute( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
     def testGetList( self ):
@@ -233,7 +233,7 @@ class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ElementAddable() )
+        ListAttribute( "a3s", ContainedObject, ElementAddable() )
     )
 
     def testAddToList( self ):
@@ -253,7 +253,7 @@ class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ElementRemovable() )
+        ListAttribute( "a3s", ContainedObject, ElementRemovable() )
     )
 
     def testRemoveFromList( self ):
@@ -273,7 +273,7 @@ class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ElementHasable() )
+        ListAttribute( "a3s", ContainedObject, ElementHasable() )
     )
 
     def testHasInList( self ):
@@ -295,7 +295,7 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
+        ListAttribute( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
@@ -333,7 +333,7 @@ class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         BasicAttributes( "a1", "a2" ),
-        ListOfObjects( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
+        ListAttribute( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
     )
 
     def testGetList( self ):

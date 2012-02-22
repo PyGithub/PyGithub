@@ -75,7 +75,7 @@ class ElementGetable:
     def __execute( self, obj, *args, **kwds ):
         return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
-class ListOfObjects:
+class ListAttribute:
     def __init__( self, attributeName, type, *capacities ):
         self.attributeName = attributeName
         self.type = type
