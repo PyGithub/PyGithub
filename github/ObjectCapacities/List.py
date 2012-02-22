@@ -10,40 +10,14 @@ class ListOfReferences:
         self.__capacities.append( ListGetable( [], getParameters ) )
         if addable:
             self.__capacities.append( ElementAddable() )
-        # if removable:
-            # self.__capacities.append( ElementRemoveable() )
-        # if hasable:
-            # self.__capacities.append( ElementHasable() )
-
-        self.__attributeName = attributeName
-        self.__type = type
-        self.__getName = "get_" + attributeName
-        self.__getParameters = getParameters
         if removable:
-            self.__removeName = "remove_from_" + attributeName
-        else:
-            self.__removeName = None
+            self.__capacities.append( ElementRemoveable() )
         if hasable:
-            self.__hasName = "has_in_" + attributeName
-        else:
-            self.__hasName = None
+            self.__capacities.append( ElementHasable() )
 
     def apply( self, cls ):
         for capacity in self.__capacities:
             capacity.apply( self, cls )
-
-        if self.__removeName is not None:
-            cls._addMethod( self.__removeName, self.__executeRemove )
-        if self.__hasName is not None:
-            cls._addMethod( self.__hasName, self.__executeHas )
-
-    def __executeRemove( self, obj, toBeDeleted ):
-        assert isinstance( toBeDeleted, self.__type )
-        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
-
-    def __executeHas( self, obj, toBeQueried ):
-        assert isinstance( toBeQueried, self.__type )
-        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
 class ElementAddable:
     def apply( self, list, cls ):
@@ -54,6 +28,26 @@ class ElementAddable:
     def __execute( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.__type )
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
+
+class ElementRemoveable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "remove_from_" + list.attributeName, self.__execute )
+
+    def __execute( self, obj, toBeDeleted ):
+        assert isinstance( toBeDeleted, self.__type )
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
+
+class ElementHasable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "has_in_" + list.attributeName, self.__execute )
+
+    def __execute( self, obj, toBeQueried ):
+        assert isinstance( toBeQueried, self.__type )
+        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
 class ElementCreatable:
     def __init__( self, singularName, mandatoryParameters, optionalParameters ):
