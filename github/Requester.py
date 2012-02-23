@@ -28,6 +28,7 @@ class Requester:
     def __statusCheckedRequest( self, verb, url, parameters, input ):
         status, headers, output = self.__rawRequest( verb, url, parameters, input )
         if status < 200 or status >= 300:
+            ### @todo Be specific (403 is not the same thing as 404!)
             raise UnknownGithubObject()
         return headers, output
 
