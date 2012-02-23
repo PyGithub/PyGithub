@@ -191,8 +191,6 @@ IntegrationTest().main()
 # ======
 # u = g.get_user()
 # o = g.get_organization( "<some organization you are admin of>" )
-# r = u.get_repo( "<some repository of yours>" )
-# r = u.get_repo( "PyGithub" )
 
 # To user
 # -------
@@ -221,3 +219,14 @@ IntegrationTest().main()
 # branch = r.create_git_ref( "refs/heads/test", r.get_git_ref( "refs/heads/master" ).object[ "sha" ] )
 # branch.edit( "cf96b288a03daba509c0ec7e3e7384fe9e0f472d", force = True )
 # r.get_git_ref( "refs/heads/test" ).edit( "9f868e490c79c3ec899dc450e7cb4f9b0fa9e88c", force = True )
+
+r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
+b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
+t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
+c1 = r.create_git_commit( "This commit was created by PyGithub", t1.sha, [] )
+master = r.create_git_ref( "refs/heads/master", c1.sha )
+b2 = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
+t2 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b2.sha }, { "path": "old", "mode": "040000", "type": "tree", "sha": t1.sha } ] )
+c2 = r.create_git_commit( "This commit was also created by PyGithub", t2.sha, [ c1.sha ] )
+master.edit( c2.sha )
+dumpRepository( r )
