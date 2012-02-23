@@ -124,9 +124,10 @@ class IntegrationTest:
         self.dumpRepository( jacquev6.get_repo( "PyGithub" ) )
 
     def doSomeWrites( self ):
-        self.doSomeWritesTuUser()
+        self.doSomeWritesToUser()
+        self.doSomeWritesToRepository()
 
-    def doSomeWritesTuUser( self ):
+    def doSomeWritesToUser( self ):
         u = self.g.get_user()
         oldBio = u.bio
         u.edit( bio = oldBio + " (Edited by PyGithub)" )
@@ -137,6 +138,19 @@ class IntegrationTest:
         PyGithub = jacquev6.get_repo( "PyGithub" )
         u.remove_from_watched( PyGithub )
         u.add_to_watched( PyGithub )
+
+    def doSomeWritesToRepository( self ):
+        u = self.g.get_user()
+        r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
+        b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
+        t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
+        c1 = r.create_git_commit( "This commit was created by PyGithub", t1.sha, [] )
+        master = r.create_git_ref( "refs/heads/master", c1.sha )
+        b2 = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
+        t2 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b2.sha }, { "path": "old", "mode": "040000", "type": "tree", "sha": t1.sha } ] )
+        c2 = r.create_git_commit( "This commit was also created by PyGithub", t2.sha, [ c1.sha ] )
+        master.edit( c2.sha )
+        self.dumpRepository( r )
 
     def dumpUser( self, u ):
         print u.login, "(", u.name, ")"
@@ -186,41 +200,3 @@ class IntegrationTest:
         sys.stdout.flush()
 
 IntegrationTest().main()
-
-# Writes
-# ======
-# u = g.get_user()
-# o = g.get_organization( "<some organization you are admin of>" )
-
-# To user
-# -------
-# u.edit( bio = u.bio + "(Edited by PyGithub)" )
-
-# u.remove_from_following( jacquev6 )
-# u.add_to_following( jacquev6 )
-
-# u.remove_from_watched( PyGithub )
-# u.add_to_watched( PyGithub )
-
-# dumpRepository( u.create_fork( PyGithub ) )
-
-
-# To organization
-# ---------------
-# o.edit( location = "Paris, France" )
-
-# dumpRepository( o.create_fork( PyGithub ) )
-
-
-# To repository
-# -------------
-r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
-b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
-t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
-c1 = r.create_git_commit( "This commit was created by PyGithub", t1.sha, [] )
-master = r.create_git_ref( "refs/heads/master", c1.sha )
-b2 = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
-t2 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b2.sha }, { "path": "old", "mode": "040000", "type": "tree", "sha": t1.sha } ] )
-c2 = r.create_git_commit( "This commit was also created by PyGithub", t2.sha, [ c1.sha ] )
-master.edit( c2.sha )
-dumpRepository( r )
