@@ -320,37 +320,37 @@ API `/repos/:user/:repo/milestones/:number/labels`
 
 API `/repos/:user/:repo/pulls`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/:id`
 ==================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/:id/comments`
 ===========================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/:id/commits`
 ==========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/:id/files`
 ========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
-* GET: (TODO)
-* PUT: (TODO)
+* GET: (TODO SOON)
+* PUT: (TODO SOON)
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/tags`
 =============================
