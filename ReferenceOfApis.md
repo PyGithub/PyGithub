@@ -1,13 +1,13 @@
 API `/authorizations`
 =====================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/authorizations/:id`
 =========================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/events`
 =============
@@ -279,14 +279,14 @@ API `/repos/:user/:repo/issues/events/:id`
 
 API `/repos/:user/:repo/keys`
 =============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/keys/:id`
 =================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/labels`
 ===============================
@@ -417,14 +417,14 @@ API `/user/following/:user`
 
 API `/user/keys`
 ================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/user/keys/:id`
 ====================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/user/orgs`
 ================
