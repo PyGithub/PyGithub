@@ -31,7 +31,8 @@ setup(
 
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
-        'github'
+        'github',
+        'github.ObjectCapacities',
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
