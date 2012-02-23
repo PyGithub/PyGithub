@@ -120,7 +120,8 @@ class IntegrationTest:
         self.dumpUser( self.g.get_user() )
         jacquev6 = self.g.get_user( "jacquev6" )
         self.dumpUser( jacquev6 )
-        self.dumpOrganization( self.g.get_organization( "github" ) )
+        self.dumpOrganization( self.g.get_organization( "github" ), doTeams = False )
+        self.dumpOrganization( self.g.get_organization( "BeaverSoftware" ), doTeams = True )
         self.dumpRepository( jacquev6.get_repo( "PyGithub" ) )
 
     def doSomeWrites( self ):
@@ -170,10 +171,14 @@ class IntegrationTest:
         print
         sys.stdout.flush()
 
-    def dumpOrganization( self, o ):
+    def dumpOrganization( self, o, doTeams ):
         print o.login, "(", o.name, ")"
         print "  Members:", ", ".join( u.login for u in o.get_members() )
         print "  Repos:", ", ".join( r.name for r in o.get_repos() )
+        if doTeams:
+            print "  Teams:"
+            for team in o.get_teams():
+                print "   ", team.name, "(" + team.permission + "):", ", ".join( u.login for u in team.get_members() ), "->", ", ".join( r.name for r in team.get_repos() )
         print
         sys.stdout.flush()
 
