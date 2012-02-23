@@ -11,7 +11,7 @@ API `/authorizations/:id`
 
 API `/events`
 =============
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/gists`
 ============
@@ -59,7 +59,7 @@ API `/issues`
 
 API `/networks/:user/:repo/events`
 ==================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/orgs/:org`
 ================
@@ -68,7 +68,7 @@ API `/orgs/:org`
 
 API `/orgs/:org/events`
 =======================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/orgs/:org/members`
 ========================
@@ -161,7 +161,7 @@ API `/repos/:user/:repo/downloads/:id`
 
 API `/repos/:user/:repo/events`
 ===============================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/forks`
 ==============================
@@ -220,18 +220,18 @@ API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 
 API `/repos/:user/:repo/hooks`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/hooks/:id`
 ==================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/hooks/:id/test`
 =======================================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/issues`
 ===============================
@@ -261,7 +261,7 @@ API `/repos/:user/:repo/issues/:id/labels/:name`
 
 API `/repos/:user/:repo/issues/:id/events`
 ==========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -271,11 +271,11 @@ API `/repos/:user/:repo/issues/comments/:id`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/keys`
 =============================
@@ -451,15 +451,15 @@ API `/users/:user`
 
 API `/users/:user/events`
 =========================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/events/orgs/:org`
 ===================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/events/public`
 ================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/followers`
 ============================
@@ -479,11 +479,11 @@ API `/users/:user/orgs`
 
 API `/users/:user/received_events`
 ==================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/received_events/public`
 =========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/repos`
 ========================
