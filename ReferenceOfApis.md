@@ -106,7 +106,7 @@ API `/repos/:user/:repo`
 
 API `/repos/:user/:repo/branches`
 =================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/collaborators`
 ======================================
@@ -120,30 +120,30 @@ API `/repos/:user/:repo/collaborators/:user`
 
 API `/repos/:user/:repo/comments`
 =================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/comments/:id`
 =====================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/commits`
 ================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/commits/:sha`
 =====================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/commits/:sha/comments`
 ==============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/contributors`
 =====================================
@@ -151,13 +151,13 @@ API `/repos/:user/:repo/contributors`
 
 API `/repos/:user/:repo/downloads`
 ==================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/downloads/:id`
 ======================================
-* GET: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/events`
 ===============================
@@ -301,7 +301,7 @@ API `/repos/:user/:repo/labels/:id`
 
 API `/repos/:user/:repo/languages`
 ==================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/milestones`
 ===================================
@@ -354,7 +354,7 @@ API `/repos/:user/:repo/pulls/comments/:id`
 
 API `/repos/:user/:repo/tags`
 =============================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/teams`
 ==============================
