@@ -202,7 +202,6 @@ IntegrationTest().main()
 # u.remove_from_watched( PyGithub )
 # u.add_to_watched( PyGithub )
 
-# dumpRepository( u.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
 # dumpRepository( u.create_fork( PyGithub ) )
 
 
@@ -210,16 +209,11 @@ IntegrationTest().main()
 # ---------------
 # o.edit( location = "Paris, France" )
 
-# dumpRepository( o.create_repo( name = "TestGithubApi", description = "Created by a Python script!", has_wiki = False ) )
 # dumpRepository( o.create_fork( PyGithub ) )
 
 
 # To repository
 # -------------
-# branch = r.create_git_ref( "refs/heads/test", r.get_git_ref( "refs/heads/master" ).object[ "sha" ] )
-# branch.edit( "cf96b288a03daba509c0ec7e3e7384fe9e0f472d", force = True )
-# r.get_git_ref( "refs/heads/test" ).edit( "9f868e490c79c3ec899dc450e7cb4f9b0fa9e88c", force = True )
-
 r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
 b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
 t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
