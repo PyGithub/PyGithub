@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/networks/:user/:repo/events`
 ==================================
@@ -235,47 +235,47 @@ API `/repos/:user/:repo/hooks/:id/test`
 
 API `/repos/:user/:repo/issues`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/issues/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
 
 API `/repos/:user/:repo/issues/:id/comments`
 ============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/issues/:id/labels`
 ==========================================
-* GET: (TODO)
-* POST: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
+* PUT: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/issues/:id/labels/:id`
 ==============================================
-* DELETE: (TODO)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/issues/:issue_id/events`
 ================================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/keys`
 =============================
@@ -290,14 +290,14 @@ API `/repos/:user/:repo/keys/:id`
 
 API `/repos/:user/:repo/labels`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/labels/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/languages`
 ==================================
@@ -305,18 +305,18 @@ API `/repos/:user/:repo/languages`
 
 API `/repos/:user/:repo/milestones`
 ===================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/repos/:user/:repo/milestones/:id`
 =======================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/repos/:user/:repo/milestones/:id/labels`
 ==============================================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/repos/:user/:repo/pulls`
 ==============================
