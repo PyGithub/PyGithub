@@ -397,9 +397,9 @@ API `/user`
 
 API `/user/emails`
 ==================
-* GET: (TODO)
-* POST: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/user/followers`
 =====================
