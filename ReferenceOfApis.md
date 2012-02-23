@@ -15,43 +15,43 @@ API `/events`
 
 API `/gists`
 ============
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/gists/:gist_id/comments`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: (TODO SOON)
+* POST: (TODO SOON)
 
 API `/gists/:id`
 ================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/gists/:id/fork`
 =====================
-* POST: (TODO)
+* POST: (TODO SOON)
 
 API `/gists/:id/star`
 =====================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PUT: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/gists/comments/:id`
 =========================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: (TODO SOON)
+* PATCH: (TODO SOON)
+* DELETE: (TODO SOON)
 
 API `/gists/public`
 ===================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/gists/starred`
 ====================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/issues`
 =============
@@ -471,7 +471,7 @@ API `/users/:user/following`
 
 API `/users/:user/gists`
 ========================
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/users/:user/orgs`
 =======================
