@@ -96,8 +96,8 @@ API `/orgs/:org/repos`
 
 API `/orgs/:org/teams`
 ======================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Organization.get_teams()`: list of `Team`
+* POST: `Organization.create_team( ... ): `Team`
 
 API `/repos/:user/:repo`
 ========================
@@ -170,45 +170,49 @@ API `/repos/:user/:repo/forks`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
-* POST: (TODO)
+* POST: `Repository.create_git_blob( ... )`: `GitBlob`
 
 API `/repos/:user/:repo/git/blobs/:sha`
 =======================================
-* GET: (TODO)
+* GET: `Repository.get_git_blob( sha )`: `GitBlob`
 
 API `/repos/:user/:repo/git/commits`
 ====================================
-* POST: (TODO)
+* POST: `Repository.create_git_commit( ... )`: `GitCommit`
 
 API `/repos/:user/:repo/git/commits/:sha`
 =========================================
-* GET: (TODO)
+* GET: `Repository.get_git_commit( sha )`: `GitCommit`
 
 API `/repos/:user/:repo/git/refs`
 =================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_git_refs()`: list of `GitRef`
+* POST: `Repository.create_git_ref( ... )`: `GitRef`
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: `Repository.get_git_ref( ref )`: `GitRef`
+* PATCH: `GitRef.edit( ... )`
 
 API `/repos/:user/:repo/git/tags`
 =================================
-* POST: (TODO)
+* POST: `Repository.create_git_tag( ... )`: `GitTag`
 
 API `/repos/:user/:repo/git/tags/:sha`
 ======================================
-* GET: (TODO)
+* GET: `Repository.get_git_tag( sha )`: `GitTag`
 
 API `/repos/:user/:repo/git/trees`
 ==================================
-* POST: (TODO)
+* POST: `Repository.create_git_tree( ... )`: `GitTree`
+
+API `/repos/:user/:repo/git/trees?base_tree=`
+=============================================
+* POST: `GitTree.create_update( ... )`: `GitTree` (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
-* GET: (TODO)
+* GET: `Repository.get_git_tree( sha )`: `GitTree`
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================
@@ -354,7 +358,7 @@ API `/repos/:user/:repo/tags`
 
 API `/repos/:user/:repo/teams`
 ==============================
-* GET: (TODO)
+* GET: `Repository.get_teams()`: list of `Team`
 
 API `/repos/:user/:repo/watchers`
 =================================
@@ -362,29 +366,29 @@ API `/repos/:user/:repo/watchers`
 
 API `/teams/:id`
 ================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: Lazy completion of `Team`
+* PATCH: `Team.edit( ... )`
+* DELETE: `Team.delete()`
 
 API `/teams/:id/members`
 ========================
-* GET: (TODO)
+* GET: `Team.get_members()`: list of `NamedUser`
 
 API `/teams/:id/members/:user`
 ==============================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Team.has_in_members( user )`: `bool`
+* PUT: `Team.add_to_members( user )`
+* DELETE: `Team.remove_from_members( user )`
 
 API `/teams/:id/repos`
 ======================
-* GET: (TODO)
+* GET: `Team.get_repos()`: list of `Repository`
 
 API `/teams/:id/repos/:user/:repo`
 ==================================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Team.has_in_repos( repo )`: `bool`
+* PUT: `Team.add_to_repos( repo )`
+* DELETE: `Team.remove_from_repos( repo )`
 
 API `/user`
 ===========

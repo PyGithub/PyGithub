@@ -9,5 +9,8 @@ Planned releases
 * First full release (version 1.0, planned mid-March)
     * full coverage of the API
 
-* Next releases (versions 1.x)
-    * OAuth2 authentication
+Later evolutions
+================
+
+* OAuth2 authentication
+* Better use of http status (403, 404, etc. raising different exceptions)
