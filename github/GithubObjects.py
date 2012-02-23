@@ -103,6 +103,18 @@ GitBlob = GithubObject(
     ),
 )
 
+GitTag = GithubObject(
+    "GitTag",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/tags/" + obj.sha ),
+    BasicAttributes(
+        "tag", "sha", "url",
+        "message",
+        "tagger", ### @todo Structure
+        "object", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
 __modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
@@ -138,6 +150,10 @@ Repository = GithubObject(
     ListAttribute( "git/blobs", GitBlob,
         ElementGetable( "git_blob", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/tags", GitTag,
+        ElementGetable( "git_tag", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForGitObjects )
     ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )

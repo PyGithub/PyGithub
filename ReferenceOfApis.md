@@ -196,11 +196,11 @@ API `/repos/:user/:repo/git/refs/:ref`
 
 API `/repos/:user/:repo/git/tags`
 =================================
-* POST: `Repository.create_git_tag( ... )`: `GitTag` (TODO SOON)
+* POST: `Repository.create_git_tag( ... )`: `GitTag`
 
 API `/repos/:user/:repo/git/tags/:sha`
 ======================================
-* GET: `Repository.get_git_tag( sha )`: `GitTag` (TODO SOON)
+* GET: `Repository.get_git_tag( sha )`: `GitTag`
 
 API `/repos/:user/:repo/git/trees`
 ==================================

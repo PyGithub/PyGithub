@@ -150,6 +150,8 @@ class IntegrationTest:
         t2 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b2.sha }, { "path": "old", "mode": "040000", "type": "tree", "sha": t1.sha } ] )
         c2 = r.create_git_commit( "This commit was also created by PyGithub", t2.sha, [ c1.sha ] )
         master.edit( c2.sha )
+        tag = r.create_git_tag( "a_tag", "This tag was created by PyGithub", c2.sha, "commit" )
+        r.create_git_ref( "refs/tags/a_tag", tag.sha )
         self.dumpRepository( r )
 
     def dumpUser( self, u ):
