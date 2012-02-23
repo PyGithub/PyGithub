@@ -1,3 +1,5 @@
+import itertools
+
 from GithubObject import *
 
 AuthenticatedUser = GithubObject(
@@ -57,6 +59,63 @@ Organization = GithubObject(
 AuthenticatedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
 NamedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
 
+GitRef = GithubObject(
+    "GitRef",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/" + obj.ref ),
+    BasicAttributes(
+        "ref", "url",
+        "object", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+    Editable( [ "sha" ], [ "force" ] ),
+)
+
+GitCommit = GithubObject(
+    "GitCommit",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
+    BasicAttributes(
+        "sha", "url", "message",
+        "author", ### @todo Structure
+        "committer", ### @todo Structure
+        "tree", ### @todo Structure
+        "parents", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
+GitTree = GithubObject(
+    "GitTree",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/trees/" + obj.sha ),
+    BasicAttributes(
+        "sha", "url",
+        "tree", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
+GitBlob = GithubObject(
+    "GitBlob",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/blobs/" + obj.sha ),
+    BasicAttributes(
+        "sha", "size", "url",
+        "content", "encoding",
+        "_repo", ### Ugly hack
+    ),
+)
+
+GitTag = GithubObject(
+    "GitTag",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/tags/" + obj.sha ),
+    BasicAttributes(
+        "tag", "sha", "url",
+        "message",
+        "tagger", ### @todo Structure
+        "object", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+)
+
+__modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -75,6 +134,27 @@ Repository = GithubObject(
     ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
+    ListAttribute( "git/refs", GitRef,
+        ListGetable( [], [], __modifyAttributesForGitObjects ),
+        ElementGetable( "git_ref", lambda repo, ref: { "_repo": repo, "ref": ref } ),
+        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/commits", GitCommit,
+        ElementGetable( "git_commit", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/trees", GitTree,
+        ElementGetable( "git_tree", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/blobs", GitBlob,
+        ElementGetable( "git_blob", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForGitObjects )
+    ),
+    ListAttribute( "git/tags", GitTag,
+        ElementGetable( "git_tag", lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForGitObjects )
+    ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )

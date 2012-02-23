@@ -6,7 +6,7 @@ class ElementAddable:
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "add_to_" + list.attributeName, self.__execute )
+        cls._addMethod( "add_to_" + list.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.__type )
@@ -16,7 +16,7 @@ class ElementRemovable:
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "remove_from_" + list.attributeName, self.__execute )
+        cls._addMethod( "remove_from_" + list.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeDeleted ):
         assert isinstance( toBeDeleted, self.__type )
@@ -26,16 +26,17 @@ class ElementHasable:
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "has_in_" + list.attributeName, self.__execute )
+        cls._addMethod( "has_in_" + list.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeQueried ):
         assert isinstance( toBeQueried, self.__type )
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
 class ElementCreatable:
-    def __init__( self, singularName, mandatoryParameters, optionalParameters ):
+    def __init__( self, singularName, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__createName = "create_" + singularName
+        self.__modifyAttributes = modifyAttributes
 
     def apply( self, list, cls ):
         self.__type = list.type
@@ -44,21 +45,22 @@ class ElementCreatable:
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
-        return self.__type( obj._github, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ), lazy = True )
+        return self.__type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
 
 class ListGetable:
-    def __init__( self, mandatoryParameters, optionalParameters ):
+    def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__modifyAttributes = modifyAttributes
 
     def apply( self, list, cls ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "get_" + list.attributeName, self.__execute )
+        cls._addMethod( "get_" + list.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
         return [
-            self.__type( obj._github, attributes, lazy = True )
+            self.__type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
         ]
 
