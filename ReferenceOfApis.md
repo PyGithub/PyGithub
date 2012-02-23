@@ -208,7 +208,7 @@ API `/repos/:user/:repo/git/trees`
 
 API `/repos/:user/:repo/git/trees?base_tree=`
 =============================================
-* POST: `GitTree.create_update( ... )`: `GitTree` (TODO SOON)
+* POST: `GitTree.create_update( ... )`: `GitTree` (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
@@ -216,7 +216,7 @@ API `/repos/:user/:repo/git/trees/:sha`
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/repos/:user/:repo/hooks`
 ==============================
