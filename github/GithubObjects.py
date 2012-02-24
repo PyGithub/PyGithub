@@ -1,4 +1,5 @@
 import itertools
+import urllib
 
 from GithubObject import *
 
@@ -115,7 +116,72 @@ GitTag = GithubObject(
     ),
 )
 
-__modifyAttributesForGitObjects = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
+Label = GithubObject(
+    "Label",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/labels/" + obj._identity ),
+    Identity( lambda obj: urllib.quote( obj.name ) ),
+    BasicAttributes(
+        "url", "name", "color",
+        "_repo", ### Ugly hack
+    ),
+    Editable( [ "name", "color" ], [] ),
+    Deletable(),
+)
+
+Milestone = GithubObject(
+    "Milestone",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/milestones/" + str( obj.number ) ),
+    BasicAttributes(
+        "url", "number", "state", "title", "description", "open_issues",
+        "closed_issues", "created_at", "due_on",
+        "_repo", ### Ugly hack
+    ),
+    ComplexAttribute( "creator", NamedUser ),
+    Editable( [ "title" ], [ "state", "description", "due_on" ] ),
+    Deletable(),
+    ListAttribute( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
+)
+
+IssueComment = GithubObject(
+    "IssueComment",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/comment" + str( obj.id ) ),
+    BasicAttributes(
+        "url", "body", "created_at", "updated_at", "id",
+        "_repo", ### Ugly hack
+    ),
+    ComplexAttribute( "user", NamedUser ),
+    Editable( [ "body" ], [] ),
+    Deletable(),
+)
+
+Issue = GithubObject(
+    "Issue",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
+    BasicAttributes(
+        "url", "html_url", "number", "state", "title", "body", "labels",
+        "comments", "closed_at", "created_at", "updated_at", "id", "closed_by",
+        "pull_request", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+    ComplexAttribute( "user", NamedUser ),
+    ComplexAttribute( "assignee", NamedUser ),
+    ComplexAttribute( "milestone", Milestone ),
+    Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
+    ListAttribute( "labels", Label,
+        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ListAddable(),
+        ListSetable(),
+        ListDeletable(),
+        ElementRemovable(),
+    ),
+    ListAttribute( "comments", IssueComment,
+        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ElementGetable( "comment", lambda repo, id: { "_repo": repo, "id": id } ),
+        ElementCreatable( "comment", [ "body" ], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+    ),
+)
+
+__modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -135,25 +201,40 @@ Repository = GithubObject(
     ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
     ListAttribute( "git/refs", GitRef,
-        ListGetable( [], [], __modifyAttributesForGitObjects ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "git_ref", lambda repo, ref: { "_repo": repo, "ref": ref } ),
-        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForGitObjects )
+        ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ListAttribute( "git/commits", GitCommit,
         ElementGetable( "git_commit", lambda repo, sha: { "_repo": repo, "sha": sha } ),
-        ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForGitObjects )
+        ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ListAttribute( "git/trees", GitTree,
         ElementGetable( "git_tree", lambda repo, sha: { "_repo": repo, "sha": sha } ),
-        ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForGitObjects )
+        ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ListAttribute( "git/blobs", GitBlob,
         ElementGetable( "git_blob", lambda repo, sha: { "_repo": repo, "sha": sha } ),
-        ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForGitObjects )
+        ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ListAttribute( "git/tags", GitTag,
         ElementGetable( "git_tag", lambda repo, sha: { "_repo": repo, "sha": sha } ),
-        ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForGitObjects )
+        ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
+    ),
+    ListAttribute( "labels", Label,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "label", lambda repo, name: { "_repo": repo, "name": name } ),
+        ElementCreatable( "label", [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
+    ),
+    ListAttribute( "milestones", Milestone,
+        ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "milestone", lambda repo, number: { "_repo": repo, "number": number } ),
+        ElementCreatable( "milestone", [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
+    ),
+    ListAttribute( "issues", Issue,
+        ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "issue", lambda repo, number: { "_repo": repo, "number": number } ),
+        ElementCreatable( "issue", [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
     ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )

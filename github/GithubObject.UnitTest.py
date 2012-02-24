@@ -25,8 +25,8 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectDataGet( self, url, arguments = None ):
         return self.g.expect._dataRequest( "GET", url, arguments, None )
 
-    def expectStatusPut( self, url ):
-        return self.g.expect._statusRequest( "PUT", url, None, None )
+    def expectStatusPut( self, url, data = None ):
+        return self.g.expect._statusRequest( "PUT", url, None, data )
 
     def expectStatusGet( self, url ):
         return self.g.expect._statusRequest( "GET", url, None, None )
@@ -36,6 +36,9 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
 
     def expectDataPost( self, url, data ):
         return self.g.expect._dataRequest( "POST", url, None, data )
+
+    def expectStatusPost( self, url, data ):
+        return self.g.expect._statusRequest( "POST", url, None, data )
 
     def expectStatusDelete( self, url ):
         return self.g.expect._statusRequest( "DELETE", url, None, None )
@@ -194,6 +197,10 @@ class GithubObjectWithComplexAttribute( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test/a3s/id1" ).andReturn( { "desc": "desc1" } )
         self.assertEqual( self.o.a3.desc, "desc1" )
 
+    def testCompletionWithNone( self ):
+        self.expectDataGet( "/test" ).andReturn( { "a3": None } )
+        self.assertIsNone( self.o.a3 )
+
 class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
@@ -321,6 +328,62 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
     def testCreateWithSillyArgument( self ):
         with self.assertRaises( TypeError ):
             self.o.create_a3( foobar = 42 )
+
+class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        Identity( lambda obj: obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListAttribute( "a3s", ContainedObject, ListAddable() )
+    )
+
+    def testAddToList( self ):
+        self.expectStatusPost( "/test/a3s", [ "id1", "id2" ] )
+        self.o.add_to_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
+
+class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        Identity( lambda obj: obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListAttribute( "a3s", ContainedObject, ListSetable() )
+    )
+
+    def testSetList( self ):
+        self.expectStatusPut( "/test/a3s", [ "id1", "id2" ] )
+        self.o.set_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
+
+class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        BasicAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        BasicAttributes( "a1", "a2" ),
+        ListAttribute( "a3s", ContainedObject, ListDeletable() )
+    )
+
+    def testGetList( self ):
+        self.expectStatusDelete( "/test/a3s" )
+        self.o.delete_a3s()
 
 class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(

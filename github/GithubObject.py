@@ -2,7 +2,7 @@ import itertools
 
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
 from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
-from ObjectCapacities.List import ListAttribute, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable
+from ObjectCapacities.List import ListAttribute, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
 
 class BadGithubObjectException( Exception ):
     pass
@@ -38,7 +38,10 @@ class ComplexAttribute:
             self.__type = type
 
         def getValueFromRawValue( self, obj, rawValue ):
-            return self.__type( obj._github, rawValue, lazy = True )
+			if rawValue is None:
+				return None
+			else:
+				return self.__type( obj._github, rawValue, lazy = True )
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )

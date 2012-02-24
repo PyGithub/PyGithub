@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO)
+* GET: (TODO SOON)
 
 API `/networks/:user/:repo/events`
 ==================================
@@ -235,39 +235,39 @@ API `/repos/:user/:repo/hooks/:id/test`
 
 API `/repos/:user/:repo/issues`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_issues( ... )`: list of `Issue`
+* POST: `Repository.create_issue( ... )`: `Issue`
 
 API `/repos/:user/:repo/issues/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: `Repository.get_issue( id )`: `Issue`
+* PATCH: `Issue.edit( ... )`
 
 API `/repos/:user/:repo/issues/:id/comments`
 ============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Issue.get_comments()`: list of `IssueComment`
+* POST: `Issue.create_comment( ... )`: `IssueComment`
 
 API `/repos/:user/:repo/issues/:id/labels`
 ==========================================
-* GET: (TODO)
-* POST: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Issue.get_labels()`: list of `Label`
+* POST: `Issue.add_to_labels( ... )`
+* PUT: `Issue.set_labels( ... )`
+* DELETE: `Issue.delete_labels()`
 
-API `/repos/:user/:repo/issues/:id/labels/:id`
-==============================================
-* DELETE: (TODO)
-
-API `/repos/:user/:repo/issues/:issue_id/events`
+API `/repos/:user/:repo/issues/:id/labels/:name`
 ================================================
+* DELETE: `Issue.remove_from_labels( name )`
+
+API `/repos/:user/:repo/issues/:id/events`
+==========================================
 * GET: (TODO)
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Issue.get_comment( id )`: `IssueComment`
+* PATCH: `IssueComment.edit( ... )`
+* DELETE: `IssueComment.delete( ... )`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
@@ -290,14 +290,14 @@ API `/repos/:user/:repo/keys/:id`
 
 API `/repos/:user/:repo/labels`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_labels()`: list of `Label`
+* POST: `Repository.create_label( ... )`: `Label`
 
 API `/repos/:user/:repo/labels/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_label( id )`: `Label`
+* PATCH: `Label.edit( ... )`
+* DELETE: `Label.delete()`
 
 API `/repos/:user/:repo/languages`
 ==================================
@@ -305,18 +305,18 @@ API `/repos/:user/:repo/languages`
 
 API `/repos/:user/:repo/milestones`
 ===================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_milestones( ... )`: list of `Milestone`
+* POST: `Repository.create_milestone( ... )`: `Milestone`
 
-API `/repos/:user/:repo/milestones/:id`
+API `/repos/:user/:repo/milestones/:number`
 =======================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_milestone( number )`: `Milestone`
+* PATCH: `Milestone.edit( ... )`
+* DELETE: `Milestone.delete()`
 
-API `/repos/:user/:repo/milestones/:id/labels`
+API `/repos/:user/:repo/milestones/:number/labels`
 ==============================================
-* GET: (TODO)
+* GET: `Milestone.get_labels()`: list of `Label`
 
 API `/repos/:user/:repo/pulls`
 ==============================
