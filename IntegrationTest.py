@@ -163,6 +163,8 @@ class IntegrationTest:
         m.edit( title = m.title, description = "And the description was modified by PyGithub as well" )
         m = r.create_milestone( title = "This milestone was also created by PyGithub" )
         m.delete()
+        i = r.create_issue( "Issue created by PyGithub" )
+        i.edit( body = "Body edited by PyGithub" )
 
         self.dumpRepository( r )
 
@@ -215,6 +217,7 @@ class IntegrationTest:
             print base64.b64decode( blob.content ),
         print
         print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
+        print "  Issues:", ", ".join( i.title for i in r.get_issues() )
         print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
         print

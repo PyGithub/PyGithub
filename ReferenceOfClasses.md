@@ -142,15 +142,23 @@ Issues and milestones
 * `get_labels()`: list of `Label`
 * `create_label( ... )`: `Label`: see [API](http://developer.github.com/v3/issues/labels/#create-a-label) for parameters
 * `get_label( id )`: `Label`
+* `get_issues( ... )`: list of `Issue`: see [API](http://developer.github.com/v3/issues/#list-issues-for-a-repository) for parameters
+* `create_issue( ... )`: `Issue`: see [API](http://developer.github.com/v3/issues/#create-an-issue) for parameters
+* `get_issue( id )`: `Issue`
 * `get_milestones( ... )`: list of `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository) for parameters
 * `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
 * `get_milestone( number )`: `Milestone`
 
 Class `Label`
-================
+=============
 * Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)
 * `edit( ... )`: see [API](http://developer.github.com/v3/issues/labels/#update-a-label) for parameters
 * `delete()`
+
+Class `Issue`
+=============
+* Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
 
 Class `Milestone`
 ================

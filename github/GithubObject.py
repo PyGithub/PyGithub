@@ -38,7 +38,10 @@ class ComplexAttribute:
             self.__type = type
 
         def getValueFromRawValue( self, obj, rawValue ):
-            return self.__type( obj._github, rawValue, lazy = True )
+			if rawValue is None:
+				return None
+			else:
+				return self.__type( obj._github, rawValue, lazy = True )
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )

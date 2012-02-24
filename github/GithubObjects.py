@@ -141,6 +141,21 @@ Milestone = GithubObject(
     ListAttribute( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
 )
 
+Issue = GithubObject(
+    "Issue",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
+    BasicAttributes(
+        "url", "html_url", "number", "state", "title", "body", "labels",
+        "comments", "closed_at", "created_at", "updated_at", "id", "closed_by",
+        "pull_request", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+    ComplexAttribute( "user", NamedUser ),
+    ComplexAttribute( "assignee", NamedUser ),
+    ComplexAttribute( "milestone", Milestone ),
+    Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
+)
+
 __modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
@@ -190,7 +205,12 @@ Repository = GithubObject(
         ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "milestone", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "milestone", [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
-    )
+    ),
+    ListAttribute( "issues", Issue,
+        ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "issue", lambda repo, number: { "_repo": repo, "number": number } ),
+        ElementCreatable( "issue", [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
+    ),
 )
 Repository._addAttributePolicy( ComplexAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( ComplexAttribute( "source", Repository ) )

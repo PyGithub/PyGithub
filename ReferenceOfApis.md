@@ -235,13 +235,13 @@ API `/repos/:user/:repo/hooks/:id/test`
 
 API `/repos/:user/:repo/issues`
 ===============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_issues( ... )`: list of `Issue`
+* POST: `Repository.create_issue( ... )`: `Issue`
 
 API `/repos/:user/:repo/issues/:id`
 ===================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
+* GET: `Repository.get_issue( id )`: `Issue`
+* PATCH: `Issue.edit( ... )`
 
 API `/repos/:user/:repo/issues/:id/comments`
 ============================================
@@ -259,8 +259,8 @@ API `/repos/:user/:repo/issues/:id/labels/:id`
 ==============================================
 * DELETE: (TODO SOON)
 
-API `/repos/:user/:repo/issues/:issue_id/events`
-================================================
+API `/repos/:user/:repo/issues/:id/events`
+==========================================
 * GET: (TODO)
 
 API `/repos/:user/:repo/issues/comments/:id`
