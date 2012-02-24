@@ -174,6 +174,8 @@ class IntegrationTest:
         i.delete_labels()
         i.add_to_labels( lc )
 
+        i.create_comment( "Commented from PyGithub" )
+
         self.dumpRepository( r )
 
     def dumpUser( self, u ):
@@ -225,7 +227,7 @@ class IntegrationTest:
             print base64.b64decode( blob.content ),
         print
         print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
-        print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ")" for i in r.get_issues() )
+        print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ") (" + ", ".join( c.body for c in i.get_comments() ) + ")" for i in r.get_issues() )
         print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
         print

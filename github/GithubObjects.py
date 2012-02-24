@@ -142,6 +142,18 @@ Milestone = GithubObject(
     ListAttribute( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
 )
 
+IssueComment = GithubObject(
+    "IssueComment",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/comment" + str( obj.id ) ),
+    BasicAttributes(
+        "url", "body", "created_at", "updated_at", "id",
+        "_repo", ### Ugly hack
+    ),
+    ComplexAttribute( "user", NamedUser ),
+    Editable( [ "body" ], [] ),
+    Deletable(),
+)
+
 Issue = GithubObject(
     "Issue",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
@@ -161,6 +173,11 @@ Issue = GithubObject(
         ListSetable(),
         ListDeletable(),
         ElementRemovable(),
+    ),
+    ListAttribute( "comments", IssueComment,
+        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ElementGetable( "comment", lambda repo, id: { "_repo": repo, "id": id } ),
+        ElementCreatable( "comment", [ "body" ], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
     ),
 )
 

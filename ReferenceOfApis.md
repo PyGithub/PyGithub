@@ -245,8 +245,8 @@ API `/repos/:user/:repo/issues/:id`
 
 API `/repos/:user/:repo/issues/:id/comments`
 ============================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Issue.get_comments()`: list of `IssueComment`
+* POST: `Issue.create_comment( ... )`: `IssueComment`
 
 API `/repos/:user/:repo/issues/:id/labels`
 ==========================================
@@ -265,9 +265,9 @@ API `/repos/:user/:repo/issues/:id/events`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Issue.get_comment( id )`: `IssueComment`
+* PATCH: `IssueComment.edit( ... )`
+* DELETE: `IssueComment.delete( ... )`
 
 API `/repos/:user/:repo/issues/events`
 ======================================

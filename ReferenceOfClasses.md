@@ -164,6 +164,15 @@ Class `Issue`
 * `set_labels( label, ... )`
 * `delete_labels()`
 * `remove_from_labels( label )`
+* `get_comments()`: list of `IssueComment`
+* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
+* `get_comment( id )`: `IssueComment`
+
+Class `IssueComment`
+====================
+* Attributes: see [API](http://developer.github.com/v3/issues/comments/#get-a-single-comment)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/comments/#edit-a-comment) for parameters
+* `delete()`
 
 Class `Milestone`
 ================
