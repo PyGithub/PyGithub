@@ -215,7 +215,7 @@ class IntegrationTest:
             print base64.b64decode( blob.content ),
         print
         print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
-        print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ")" for m in r.get_milestones() )
+        print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
         print
         sys.stdout.flush()

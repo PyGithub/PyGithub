@@ -316,7 +316,7 @@ API `/repos/:user/:repo/milestones/:number`
 
 API `/repos/:user/:repo/milestones/:number/labels`
 ==============================================
-* GET: (TODO SOON)
+* GET: `Milestone.get_labels()`: list of `Label`
 
 API `/repos/:user/:repo/pulls`
 ==============================

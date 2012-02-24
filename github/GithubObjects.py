@@ -138,6 +138,7 @@ Milestone = GithubObject(
     ComplexAttribute( "creator", NamedUser ),
     Editable( [ "title" ], [ "state", "description", "due_on" ] ),
     Deletable(),
+    ListAttribute( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
 )
 
 __modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
@@ -181,12 +182,12 @@ Repository = GithubObject(
         ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ListAttribute( "labels", Label,
-        ListGetable( [], [] ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "label", lambda repo, name: { "_repo": repo, "name": name } ),
         ElementCreatable( "label", [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
     ListAttribute( "milestones", Milestone,
-        ListGetable( [], [ "state", "sort", "direction" ] ),
+        ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "milestone", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "milestone", [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
     )
