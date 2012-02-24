@@ -305,16 +305,16 @@ API `/repos/:user/:repo/languages`
 
 API `/repos/:user/:repo/milestones`
 ===================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_milestones( ... )`: list of `Milestone`
+* POST: `Repository.create_milestone( ... )`: `Milestone`
 
-API `/repos/:user/:repo/milestones/:id`
+API `/repos/:user/:repo/milestones/:number`
 =======================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_milestone( number )`: `Milestone`
+* PATCH: `Milestone.edit( ... )`
+* DELETE: `Milestone.delete()`
 
-API `/repos/:user/:repo/milestones/:id/labels`
+API `/repos/:user/:repo/milestones/:number/labels`
 ==============================================
 * GET: (TODO SOON)
 

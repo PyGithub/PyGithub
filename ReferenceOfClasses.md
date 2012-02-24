@@ -137,6 +137,18 @@ Teams
 -----
 * `get_teams()`: list of `Team`
 
+Issues and milestones
+---------------------
+* `get_milestones( ... )`: list of `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository) for parameters
+* `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
+* `get_milestone( number )`: `Milestone`
+
+Class `Milestone`
+================
+* Attributes: see [API](http://developer.github.com/v3/issues/milestones/#get-a-single-milestone)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/milestones/#update-a-milestone) for parameters
+* `delete()`
+
 Class `Team`
 ============
 * Attributes: see [API](http://developer.github.com/v3/orgs/teams/#get-team)
