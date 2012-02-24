@@ -290,14 +290,14 @@ API `/repos/:user/:repo/keys/:id`
 
 API `/repos/:user/:repo/labels`
 ===============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_labels()`: list of `Label`
+* POST: `Repository.create_label( ... )`: `Label`
 
 API `/repos/:user/:repo/labels/:id`
 ===================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_label( id )`: `Label`
+* PATCH: `Label.edit( ... )`
+* DELETE: `Label.delete()`
 
 API `/repos/:user/:repo/languages`
 ==================================

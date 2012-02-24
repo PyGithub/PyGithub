@@ -1,4 +1,5 @@
 import itertools
+import urllib
 
 from GithubObject import *
 
@@ -115,6 +116,17 @@ GitTag = GithubObject(
     ),
 )
 
+Label = GithubObject(
+    "Label",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/labels/" + urllib.quote( obj.name ) ),
+    BasicAttributes(
+        "url", "name", "color",
+        "_repo", ### Ugly hack
+    ),
+    Editable( [ "name", "color" ], [] ),
+    Deletable(),
+)
+
 Milestone = GithubObject(
     "Milestone",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/milestones/" + str( obj.number ) ),
@@ -167,6 +179,11 @@ Repository = GithubObject(
     ListAttribute( "git/tags", GitTag,
         ElementGetable( "git_tag", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
+    ),
+    ListAttribute( "labels", Label,
+        ListGetable( [], [] ),
+        ElementGetable( "label", lambda repo, name: { "_repo": repo, "name": name } ),
+        ElementCreatable( "label", [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
     ListAttribute( "milestones", Milestone,
         ListGetable( [], [ "state", "sort", "direction" ] ),

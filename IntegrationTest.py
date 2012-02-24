@@ -157,6 +157,8 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/a_tag", tag.sha )
 
         # Issues and milestones
+        l = r.create_label( "Label created by PyGithub", "00FF00" )
+        l.edit( "Label created and modified by PyGithub", "FFFF00" )
         m = r.create_milestone( title = "This milestone was created by PyGithub" )
         m.edit( title = m.title, description = "And the description was modified by PyGithub as well" )
         m = r.create_milestone( title = "This milestone was also created by PyGithub" )
@@ -212,6 +214,7 @@ class IntegrationTest:
         if blob.encoding == "base64":
             print base64.b64decode( blob.content ),
         print
+        print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
         print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
         print

@@ -139,9 +139,18 @@ Teams
 
 Issues and milestones
 ---------------------
+* `get_labels()`: list of `Label`
+* `create_label( ... )`: `Label`: see [API](http://developer.github.com/v3/issues/labels/#create-a-label) for parameters
+* `get_label( id )`: `Label`
 * `get_milestones( ... )`: list of `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository) for parameters
 * `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
 * `get_milestone( number )`: `Milestone`
+
+Class `Label`
+================
+* Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/labels/#update-a-label) for parameters
+* `delete()`
 
 Class `Milestone`
 ================
