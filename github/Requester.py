@@ -1,3 +1,5 @@
+### @todo Add a copyright and license notice in all files
+
 import httplib
 import json
 import base64

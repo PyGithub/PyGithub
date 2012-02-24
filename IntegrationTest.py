@@ -166,6 +166,14 @@ class IntegrationTest:
         i = r.create_issue( "Issue created by PyGithub" )
         i.edit( body = "Body edited by PyGithub" )
 
+        la = r.create_label( "a", "00FF00" )
+        lb = r.create_label( "b", "00FF00" )
+        lc = r.create_label( "c", "00FF00" )
+        i.set_labels( la, lb )
+        i.remove_from_labels( lb )
+        i.delete_labels()
+        i.add_to_labels( lc )
+
         self.dumpRepository( r )
 
     def dumpUser( self, u ):
@@ -217,7 +225,7 @@ class IntegrationTest:
             print base64.b64decode( blob.content ),
         print
         print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
-        print "  Issues:", ", ".join( i.title for i in r.get_issues() )
+        print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ")" for i in r.get_issues() )
         print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
         print

@@ -118,7 +118,8 @@ GitTag = GithubObject(
 
 Label = GithubObject(
     "Label",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/labels/" + urllib.quote( obj.name ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/labels/" + obj._identity ),
+    Identity( lambda obj: urllib.quote( obj.name ) ),
     BasicAttributes(
         "url", "name", "color",
         "_repo", ### Ugly hack
@@ -154,6 +155,13 @@ Issue = GithubObject(
     ComplexAttribute( "assignee", NamedUser ),
     ComplexAttribute( "milestone", Milestone ),
     Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
+    ListAttribute( "labels", Label,
+        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ListAddable(),
+        ListSetable(),
+        ListDeletable(),
+        ElementRemovable(),
+    ),
 )
 
 __modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )

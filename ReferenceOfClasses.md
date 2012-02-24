@@ -159,6 +159,11 @@ Class `Issue`
 =============
 * Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
 * `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
+* `get_labels()`: list of `Label`
+* `add_to_labels( label, ... )`
+* `set_labels( label, ... )`
+* `delete_labels()`
+* `remove_from_labels( label )`
 
 Class `Milestone`
 ================

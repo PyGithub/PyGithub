@@ -250,14 +250,14 @@ API `/repos/:user/:repo/issues/:id/comments`
 
 API `/repos/:user/:repo/issues/:id/labels`
 ==========================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
-* PUT: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Issue.get_labels()`: list of `Label`
+* POST: `Issue.add_to_labels( ... )`
+* PUT: `Issue.set_labels( ... )`
+* DELETE: `Issue.delete_labels()`
 
-API `/repos/:user/:repo/issues/:id/labels/:id`
-==============================================
-* DELETE: (TODO SOON)
+API `/repos/:user/:repo/issues/:id/labels/:name`
+================================================
+* DELETE: `Issue.remove_from_labels( name )`
 
 API `/repos/:user/:repo/issues/:id/events`
 ==========================================

@@ -77,6 +77,37 @@ class ElementGetable:
     def __execute( self, obj, *args, **kwds ):
         return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
+class ListAddable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "add_to_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def __execute( self, obj, *toBeAddeds ):
+        for toBeAdded in toBeAddeds:
+            assert isinstance( toBeAdded, self.__type )
+        obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, [ toBeAdded._identity for toBeAdded in toBeAddeds ] )
+
+class ListSetable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "set_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def __execute( self, obj, *toBeSets ):
+        for toBeSet in toBeSets:
+            assert isinstance( toBeSet, self.__type )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName, None, [ toBeSet._identity for toBeSet in toBeSets ] )
+
+class ListDeletable:
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( "delete_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def __execute( self, obj ):
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName, None, None )
+
 class ListAttribute:
     def __init__( self, attributeName, type, *capacities ):
         self.attributeName = attributeName
