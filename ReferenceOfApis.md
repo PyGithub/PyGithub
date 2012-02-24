@@ -261,7 +261,7 @@ API `/repos/:user/:repo/issues/:id/labels/:id`
 
 API `/repos/:user/:repo/issues/:issue_id/events`
 ================================================
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -271,11 +271,11 @@ API `/repos/:user/:repo/issues/comments/:id`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/repos/:user/:repo/keys`
 =============================
