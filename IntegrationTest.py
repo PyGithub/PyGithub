@@ -214,6 +214,7 @@ class IntegrationTest:
         print "  Contributors:", ", ".join( u.login for u in r.get_contributors() )
         print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
+        print "  Languages:", r.get_languages()
         print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
         masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
         masterCommit = r.get_git_commit( masterCommitSha )

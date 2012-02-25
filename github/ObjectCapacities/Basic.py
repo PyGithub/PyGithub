@@ -55,6 +55,20 @@ class InternalAttribute:
     def apply( self, cls ):
         cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
 
+class ExternalAttribute:
+    def __init__( self, attributeName, typePolicy ):
+        self.__attributeName = attributeName
+        self.__typePolicy = typePolicy
+
+    def apply( self, cls ):
+        cls._addMethod( "get_" + self.__attributeName, self.__execute )
+
+    def __execute( self, obj ):
+        return self.__typePolicy.createLazy(
+            obj,
+            obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
+        )
+
 class SeveralAttributePolicies:
     def __init__( self, attributePolicies ):
         self.__attributePolicies = attributePolicies

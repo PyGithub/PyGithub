@@ -301,7 +301,7 @@ API `/repos/:user/:repo/labels/:id`
 
 API `/repos/:user/:repo/languages`
 ==================================
-* GET: (TODO SOON)
+* GET: `Repository.get_languages()`: dictionary of strings to integers
 
 API `/repos/:user/:repo/milestones`
 ===================================

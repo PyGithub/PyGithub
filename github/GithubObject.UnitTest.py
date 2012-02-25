@@ -432,6 +432,18 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
 def myCallable( obj, mock, arg ):
     return mock.call( arg )
 
+class GithubObjectWithExternalSimpleAttribute( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalSimpleAttribute( "a3" )
+    )
+
+    def testCallMethod( self ):
+        self.expectDataGet( "/test/a3" ).andReturn( 72 )
+        self.assertEqual( self.o.get_a3(), 72 )
+
 class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",

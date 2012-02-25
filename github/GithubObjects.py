@@ -241,6 +241,7 @@ Repository = GithubObject(
         ElementGetable( "issue", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "issue", [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
     ),
+    ExternalSimpleAttribute( "languages" ),
 )
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )

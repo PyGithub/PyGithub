@@ -17,6 +17,9 @@ def InternalSimpleAttributes( *attributeNames ):
 def InternalObjectAttribute( attributeName, type ):
     return InternalAttribute( attributeName, ObjectTypePolicy( type ) )
 
+def ExternalSimpleAttribute( attributeName ):
+    return ExternalAttribute( attributeName, SimpleTypePolicy() )
+
 def BaseUrl( baseUrl ):
     return AttributeFromCallable( "_baseUrl", baseUrl )
 

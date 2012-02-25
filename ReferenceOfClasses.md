@@ -105,6 +105,7 @@ Class `Repository`
 ==================
 * Attributes: see [API](http://developer.github.com/v3/repos/#get)
 * `edit( ... )`: see [API](http://developer.github.com/v3/repos/#edit) for parameters
+* `get_languages()`: dictionary of strings to integers
 
 Collaborators
 -------------
