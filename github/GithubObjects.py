@@ -169,7 +169,7 @@ Issue = GithubObject(
     Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
     ExternalListOfObjects( "labels", Label,
         ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
-        ListAddable(),
+        SeveralElementsAddable(),
         ListSetable(),
         ListDeletable(),
         ElementRemovable(),

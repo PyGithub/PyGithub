@@ -1,9 +1,9 @@
 import itertools
 
-import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
-from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable, InternalAttribute, SeveralAttributePolicies
-from ObjectCapacities.List import ExternalListOfObjects, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
-from ObjectCapacities.TypePolicies import SimpleTypePolicy, ObjectTypePolicy
+from ObjectCapacities.ArgumentsChecker import ArgumentsChecker
+from ObjectCapacities.Basic import *
+from ObjectCapacities.List import *
+from ObjectCapacities.TypePolicies import *
 
 class BadGithubObjectException( Exception ):
     pass
@@ -26,7 +26,7 @@ def Identity( identity ):
 class Editable( MethodFromCallable ):
     def __init__( self, mandatoryParameters, optionalParameters ):
         MethodFromCallable.__init__( self, "edit", self.__execute )
-        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )

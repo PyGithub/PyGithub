@@ -55,6 +55,20 @@ class ElementGetable( ListCapacity ):
     def __execute( self, obj, *args, **kwds ):
         return self.typePolicy.createNonLazy( obj, self.__attributes( obj, *args, **kwds ) )
 
+class SeveralElementsAddable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj, *toBeAddeds ):
+        obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, [ self.typePolicy.getIdentity( toBeAdded ) for toBeAdded in toBeAddeds ] )
+
+class SeveralElementsRemovable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "remove_from_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj, *toBeDeleteds ):
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, [ self.typePolicy.getIdentity( toBeDeleted ) for toBeDeleted in toBeDeleteds ] )
+
 class ListGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
@@ -69,13 +83,6 @@ class ListGetable( ListCapacity ):
             self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, attributes ) )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.attributeName, params, None )
         ]
-
-class ListAddable( ListCapacity ):
-    def apply( self, cls ):
-        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
-
-    def __execute( self, obj, *toBeAddeds ):
-        obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, [ self.typePolicy.getIdentity( toBeAdded ) for toBeAdded in toBeAddeds ] )
 
 class ListSetable( ListCapacity ):
     def apply( self, cls ):
@@ -94,4 +101,9 @@ class ListDeletable( ListCapacity ):
 def ExternalListOfObjects( attributeName, type, *capacities ):
     for capacity in capacities:
         capacity.setList( attributeName, ObjectTypePolicy( type ) )
+    return SeveralAttributePolicies( capacities )
+
+def ExternalListOfSimpleTypes( attributeName, *capacities ):
+    for capacity in capacities:
+        capacity.setList( attributeName, SimpleTypePolicy() )
     return SeveralAttributePolicies( capacities )

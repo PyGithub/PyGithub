@@ -2,7 +2,7 @@ class SimpleTypePolicy:
     def createLazy( self, obj, value ):
         return value
 
-    def createNonLazy( self, obj, value ):
+    def getIdentity( self, value ):
         return value
 
 class ObjectTypePolicy:
