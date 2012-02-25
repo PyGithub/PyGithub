@@ -156,6 +156,17 @@ Issues and milestones
 * `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
 * `get_milestone( number )`: `Milestone`
 
+Downloads
+---------
+`Repository.get_downloads()` list of `Download`
+`Repository.create_download( ... )`: `Download`: see [API](http://developer.github.com/v3/repos/downloads/#create-a-new-download-part-1-create-the-resource)
+`Repository.get_download( id )`: `Download`
+
+Class `Download`
+================
+* Attributes: see [API](http://developer.github.com/v3/repos/downloads/#get-a-single-download)
+* `delete()`
+
 Class `Label`
 =============
 * Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)

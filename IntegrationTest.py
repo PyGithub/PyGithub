@@ -175,6 +175,9 @@ class IntegrationTest:
 
         i.create_comment( "Commented from PyGithub" )
 
+        # Downloads
+        r.create_download( "MyDownloadCreatedByPyGithub", 1000 )
+
         self.dumpRepository( r )
 
     def dumpUser( self, u, doPrivateThings ):
@@ -215,6 +218,7 @@ class IntegrationTest:
         print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
         print "  Languages:", r.get_languages()
+        print "  Downloads:", ", ".join( d.name for d in r.get_downloads() )
         print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
         masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
         masterCommit = r.get_git_commit( masterCommitSha )

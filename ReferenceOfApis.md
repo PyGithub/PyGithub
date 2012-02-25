@@ -151,13 +151,13 @@ API `/repos/:user/:repo/contributors`
 
 API `/repos/:user/:repo/downloads`
 ==================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_downloads()` list of `Download`
+* POST: `Repository.create_download( ... )`: `Download`
 
 API `/repos/:user/:repo/downloads/:id`
 ======================================
-* GET: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_download( id )`: `Download`
+* DELETE: `Download.delete()`
 
 API `/repos/:user/:repo/events`
 ===============================
