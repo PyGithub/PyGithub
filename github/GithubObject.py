@@ -1,46 +1,12 @@
 import itertools
 
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
-from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
+from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable, InternalAttribute, SeveralAttributes
 from ObjectCapacities.List import ExternalListOfObjects, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
 from TypePolicies import SimpleTypePolicy, ObjectTypePolicy
 
 class BadGithubObjectException( Exception ):
     pass
-
-class InternalAttribute:
-    class AttributeDefinition:
-        def __init__( self, typePolicy ):
-            self.__typePolicy = typePolicy
-
-        def getValueFromRawValue( self, obj, rawValue ):
-			if rawValue is None:
-				return None
-			else:
-				return self.__typePolicy.create( obj, rawValue )
-
-        def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
-            obj._updateAttributes( attributes )
-            obj._markAsCompleted()
-
-        def isLazy( self ):
-            return True
-
-    def __init__( self, attributeName, typePolicy ):
-        self.__attributeName = attributeName
-        self.__typePolicy = typePolicy
-
-    def apply( self, cls ):
-        cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
-
-class SeveralAttributes:
-    def __init__( self, attributePolicies ):
-        self.__attributePolicies = attributePolicies
-
-    def apply( self, cls ):
-        for attributePolicy in self.__attributePolicies:
-            attributePolicy.apply( cls )
 
 def InternalSimpleAttribute( attributeName ):
     return InternalAttribute( attributeName, SimpleTypePolicy() )
@@ -51,13 +17,11 @@ def InternalSimpleAttributes( *attributeNames ):
 def InternalObjectAttribute( attributeName, type ):
     return InternalAttribute( attributeName, ObjectTypePolicy( type ) )
 
-class BaseUrl( AttributeFromCallable ):
-    def __init__( self, baseUrl ):
-        AttributeFromCallable.__init__( self, "_baseUrl", baseUrl )
+def BaseUrl( baseUrl ):
+    return AttributeFromCallable( "_baseUrl", baseUrl )
 
-class Identity( AttributeFromCallable ):
-    def __init__( self, identity ):
-        AttributeFromCallable.__init__( self, "_identity", identity )
+def Identity( identity ):
+    return AttributeFromCallable( "_identity", identity )
 
 class Editable( MethodFromCallable ):
     def __init__( self, mandatoryParameters, optionalParameters ):
