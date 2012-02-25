@@ -3,20 +3,10 @@ import itertools
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
 from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable
 from ObjectCapacities.List import ListAttribute, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
+from TypePolicies import SimpleTypePolicy, ObjectTypePolicy
 
 class BadGithubObjectException( Exception ):
     pass
-
-class SimpleTypePolicy:
-    def create( self, obj, rawValue ):
-        return rawValue
-
-class ObjectTypePolicy:
-    def __init__( self, type ):
-        self.__type = type
-
-    def create( self, obj, rawValue ):
-        return self.__type( obj._github, rawValue, lazy = True )
 
 class InternalAttribute:
     class AttributeDefinition:

@@ -47,6 +47,19 @@ class ElementCreatable:
         data = self.__argumentsChecker.check( args, kwds )
         return self.__type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
 
+class ElementGetable:
+    def __init__( self, singularName, attributes ):
+        self.__getName = "get_" + singularName
+        self.__attributes = attributes
+
+    def apply( self, list, cls ):
+        self.__type = list.type
+        self.__attributeName = list.attributeName
+        cls._addMethod( self.__getName, self.__execute )
+
+    def __execute( self, obj, *args, **kwds ):
+        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
+
 class ListGetable:
     def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
@@ -63,19 +76,6 @@ class ListGetable:
             self.__type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
         ]
-
-class ElementGetable:
-    def __init__( self, singularName, attributes ):
-        self.__getName = "get_" + singularName
-        self.__attributes = attributes
-
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( self.__getName, self.__execute )
-
-    def __execute( self, obj, *args, **kwds ):
-        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
 class ListAddable:
     def apply( self, list, cls ):
