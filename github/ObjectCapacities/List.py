@@ -3,30 +3,36 @@ import itertools
 import ArgumentsChecker
 
 class ElementAddable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "add_to_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "add_to_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.__type )
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
 
 class ElementRemovable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "remove_from_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "remove_from_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeDeleted ):
         assert isinstance( toBeDeleted, self.__type )
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
 
 class ElementHasable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "has_in_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "has_in_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeQueried ):
         assert isinstance( toBeQueried, self.__type )
@@ -38,9 +44,11 @@ class ElementCreatable:
         self.__createName = "create_" + singularName
         self.__modifyAttributes = modifyAttributes
 
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
+
+    def apply( self, cls ):
         cls._addMethod( self.__createName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
@@ -52,9 +60,11 @@ class ElementGetable:
         self.__getName = "get_" + singularName
         self.__attributes = attributes
 
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
+
+    def apply( self, cls ):
         cls._addMethod( self.__getName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
@@ -65,10 +75,12 @@ class ListGetable:
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__modifyAttributes = modifyAttributes
 
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "get_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "get_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
@@ -78,10 +90,12 @@ class ListGetable:
         ]
 
 class ListAddable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "add_to_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "add_to_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *toBeAddeds ):
         for toBeAdded in toBeAddeds:
@@ -89,10 +103,12 @@ class ListAddable:
         obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, [ toBeAdded._identity for toBeAdded in toBeAddeds ] )
 
 class ListSetable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "set_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "set_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *toBeSets ):
         for toBeSet in toBeSets:
@@ -100,10 +116,12 @@ class ListSetable:
         obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName, None, [ toBeSet._identity for toBeSet in toBeSets ] )
 
 class ListDeletable:
-    def apply( self, list, cls ):
+    def setList( self, list ):
         self.__type = list.type
         self.__attributeName = list.attributeName
-        cls._addMethod( "delete_" + list.attributeName.replace( "/", "_" ), self.__execute )
+
+    def apply( self, cls ):
+        cls._addMethod( "delete_" + self.__attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName, None, None )
@@ -118,4 +136,5 @@ class ExternalListOfObjects:
 
     def apply( self, cls ):
         for capacity in self.__capacities:
-            capacity.apply( self, cls )
+            capacity.setList( self )
+            capacity.apply( cls )
