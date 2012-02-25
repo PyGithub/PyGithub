@@ -15,6 +15,11 @@ AuthenticatedUser = GithubObject(
         "disk_usage", "collaborators", "plan",
     ),
     Editable( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ),
+    ExternalListOfSimpleTypes( "emails",
+        ListGetable( [], [] ),
+        SeveralElementsAddable(),
+        SeveralElementsRemovable()
+    ),
 )
 
 NamedUser = GithubObject(
