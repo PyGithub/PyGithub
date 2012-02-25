@@ -20,6 +20,7 @@ class AttributeFromCallable:
     def apply( self, cls ):
         cls._addAttribute( self.__name, AttributeFromCallable.AttributeDefinition( self.__name, self.__callable ) )
 
+### @todo include the ArgumentsChecker
 class MethodFromCallable:
     def __init__( self, name, callable ):
         self.__name = name
