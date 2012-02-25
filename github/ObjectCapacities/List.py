@@ -6,10 +6,11 @@ class ListCapacity:
     def setList( self, list ):
         self.type = list.type
         self.attributeName = list.attributeName
+        self.safeAttributeName = list.attributeName.replace( "/", "_" )
 
 class ElementAddable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "add_to_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeAdded ):
         assert isinstance( toBeAdded, self.type )
@@ -17,7 +18,7 @@ class ElementAddable( ListCapacity ):
 
 class ElementRemovable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "remove_from_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "remove_from_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeDeleted ):
         assert isinstance( toBeDeleted, self.type )
@@ -25,7 +26,7 @@ class ElementRemovable( ListCapacity ):
 
 class ElementHasable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "has_in_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "has_in_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeQueried ):
         assert isinstance( toBeQueried, self.type )
@@ -61,7 +62,7 @@ class ListGetable( ListCapacity ):
         self.__modifyAttributes = modifyAttributes
 
     def apply( self, cls ):
-        cls._addMethod( "get_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "get_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
@@ -72,7 +73,7 @@ class ListGetable( ListCapacity ):
 
 class ListAddable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "add_to_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, *toBeAddeds ):
         for toBeAdded in toBeAddeds:
@@ -81,7 +82,7 @@ class ListAddable( ListCapacity ):
 
 class ListSetable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "set_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "set_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, *toBeSets ):
         for toBeSet in toBeSets:
@@ -90,7 +91,7 @@ class ListSetable( ListCapacity ):
 
 class ListDeletable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "delete_" + self.attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "delete_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, None )
