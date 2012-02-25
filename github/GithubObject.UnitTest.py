@@ -201,7 +201,7 @@ class GithubObjectWithInternalObjectAttribute( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test" ).andReturn( { "a3": None } )
         self.assertIsNone( self.o.a3 )
 
-class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListGetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -228,7 +228,7 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
         a3s = self.o.get_a3s( "foobar" )
         self.assertEqual( len( a3s ), 3 )
 
-class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementAddableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -248,7 +248,7 @@ class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
         self.expectStatusPut( "/test/a3s/idAdd" ).andReturn( 204 )
         self.o.add_to_a3s( a3ToAdd )
 
-class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementRemovableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -268,7 +268,7 @@ class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test/a3s/idRemove" ).andReturn( 204 )
         self.o.remove_from_a3s( a3ToRemove )
 
-class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementHasableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -290,7 +290,7 @@ class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
         self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 404 )
         self.assertFalse( self.o.has_in_a3s( a3ToQuery ) )
 
-class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementCreatableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -329,7 +329,7 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
         with self.assertRaises( TypeError ):
             self.o.create_a3( foobar = 42 )
 
-class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListAddableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -348,7 +348,7 @@ class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
         self.expectStatusPost( "/test/a3s", [ "id1", "id2" ] )
         self.o.add_to_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
 
-class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListSetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -367,7 +367,7 @@ class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
         self.expectStatusPut( "/test/a3s", [ "id1", "id2" ] )
         self.o.set_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
 
-class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListDeletableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
@@ -385,7 +385,7 @@ class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test/a3s" )
         self.o.delete_a3s()
 
-class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
