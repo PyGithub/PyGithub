@@ -403,24 +403,6 @@ class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
         self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
 
-class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
-    ContainedObject = GithubObject(
-        "ContainedObject",
-        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        InternalSimpleAttributes( "id", "name" )
-    )
-
-    GithubTestObject = GithubObject(
-        "GithubTestObject",
-        BaseUrl( lambda obj: "/test" ),
-        InternalSimpleAttributes( "a1", "a2" ),
-        ObjectGetter( "a3", ContainedObject, lambda obj, id : { "id": id } )
-    )
-
-    def testGetList( self ):
-        self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
-        self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
-
 def myCallable( obj, mock, arg ):
     return mock.call( arg )
 
