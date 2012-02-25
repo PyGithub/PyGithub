@@ -1,12 +1,13 @@
 import itertools
 
+from Basic import SeveralAttributes
 import ArgumentsChecker
 
 class ListCapacity:
-    def setList( self, list ):
-        self.type = list.type
-        self.attributeName = list.attributeName
-        self.safeAttributeName = list.attributeName.replace( "/", "_" )
+    def setList( self, attributeName, type ):
+        self.attributeName = attributeName
+        self.safeAttributeName = attributeName.replace( "/", "_" )
+        self.type = type
 
 class ElementAddable( ListCapacity ):
     def apply( self, cls ):
@@ -96,16 +97,7 @@ class ListDeletable( ListCapacity ):
     def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, None )
 
-### @todo use SeveralAttributes
-class ExternalListOfObjects:
-    def __init__( self, attributeName, type, *capacities ):
-        self.attributeName = attributeName
-        self.type = type
-        self.__getName = "get_" + attributeName
-        self.__capacities = capacities
-        for capacity in self.__capacities:
-            capacity.setList( self )
-
-    def apply( self, cls ):
-        for capacity in self.__capacities:
-            capacity.apply( cls )
+def ExternalListOfObjects( attributeName, type, *capacities ):
+    for capacity in capacities:
+        capacity.setList( attributeName, type )
+    return SeveralAttributes( capacities )
