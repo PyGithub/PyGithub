@@ -143,7 +143,7 @@ API `/repos/:user/:repo/commits/:sha/comments`
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/repos/:user/:repo/contributors`
 =====================================
