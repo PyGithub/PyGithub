@@ -46,11 +46,6 @@ def GithubObject( className, *attributePolicies ):
         __methodDefinitions = dict()
 
         @staticmethod
-        def _addAttributePolicies( attributePolicies ):
-            for attributePolicy in attributePolicies:
-                GithubObject._addAttributePolicy( attributePolicy )
-
-        @staticmethod
         def _addAttributePolicy( attributePolicy ):
             attributePolicy.apply( GithubObject )
 
@@ -106,6 +101,6 @@ def GithubObject( className, *attributePolicies ):
             attributeDefinition.updateAttributes( self )
 
     GithubObject.__name__ = className
-    GithubObject._addAttributePolicies( attributePolicies )
+    GithubObject._addAttributePolicy( SeveralAttributes( attributePolicies ) )
 
     return GithubObject
