@@ -46,6 +46,12 @@ Following
 * `add_to_following( user )`
 * `remove_from_following( user )`
 
+Emails
+------
+* `get_emails()` list of strings
+* `add_to_emails( email, ... )`
+* `remove_from_emails( email, ... )`
+
 Class `NamedUser`
 =================
 * Attributes: see [API](http://developer.github.com/v3/users/#get-a-single-user)

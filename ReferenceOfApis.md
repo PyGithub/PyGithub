@@ -397,9 +397,9 @@ API `/user`
 
 API `/user/emails`
 ==================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `AuthenticatedUser.get_emails()`: list of strings
+* POST: `AuthenticatedUser.add_to_emails( ... )`
+* DELETE: `AuthenticatedUser.remove_from_emails( ... )`
 
 API `/user/followers`
 =====================
