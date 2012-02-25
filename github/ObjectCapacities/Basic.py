@@ -55,7 +55,7 @@ class InternalAttribute:
     def apply( self, cls ):
         cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
 
-class SeveralAttributes:
+class SeveralAttributePolicies:
     def __init__( self, attributePolicies ):
         self.__attributePolicies = attributePolicies
 

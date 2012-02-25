@@ -1,7 +1,7 @@
 import itertools
 
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
-from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable, InternalAttribute, SeveralAttributes
+from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable, InternalAttribute, SeveralAttributePolicies
 from ObjectCapacities.List import ExternalListOfObjects, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
 from ObjectCapacities.TypePolicies import SimpleTypePolicy, ObjectTypePolicy
 
@@ -12,7 +12,7 @@ def InternalSimpleAttribute( attributeName ):
     return InternalAttribute( attributeName, SimpleTypePolicy() )
 
 def InternalSimpleAttributes( *attributeNames ):
-    return SeveralAttributes( [ InternalSimpleAttribute( attributeName ) for attributeName in attributeNames ] )
+    return SeveralAttributePolicies( [ InternalSimpleAttribute( attributeName ) for attributeName in attributeNames ] )
 
 def InternalObjectAttribute( attributeName, type ):
     return InternalAttribute( attributeName, ObjectTypePolicy( type ) )
@@ -101,6 +101,6 @@ def GithubObject( className, *attributePolicies ):
             attributeDefinition.updateAttributes( self )
 
     GithubObject.__name__ = className
-    GithubObject._addAttributePolicy( SeveralAttributes( attributePolicies ) )
+    GithubObject._addAttributePolicy( SeveralAttributePolicies( attributePolicies ) )
 
     return GithubObject

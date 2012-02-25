@@ -1,6 +1,6 @@
 import itertools
 
-from Basic import SeveralAttributes
+from Basic import SeveralAttributePolicies
 import ArgumentsChecker
 
 class ListCapacity:
@@ -100,4 +100,4 @@ class ListDeletable( ListCapacity ):
 def ExternalListOfObjects( attributeName, type, *capacities ):
     for capacity in capacities:
         capacity.setList( attributeName, type )
-    return SeveralAttributes( capacities )
+    return SeveralAttributePolicies( capacities )
