@@ -3,7 +3,7 @@ import itertools
 import ObjectCapacities.ArgumentsChecker as ArgumentsChecker
 from ObjectCapacities.Basic import AttributeFromCallable, MethodFromCallable, InternalAttribute, SeveralAttributes
 from ObjectCapacities.List import ExternalListOfObjects, ListGetable, ElementCreatable, ElementGetable, ElementAddable, ElementRemovable, ElementHasable, ListAddable, ListSetable, ListDeletable
-from TypePolicies import SimpleTypePolicy, ObjectTypePolicy
+from ObjectCapacities.TypePolicies import SimpleTypePolicy, ObjectTypePolicy
 
 class BadGithubObjectException( Exception ):
     pass
