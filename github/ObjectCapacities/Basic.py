@@ -38,7 +38,7 @@ class InternalAttribute:
 			if rawValue is None:
 				return None
 			else:
-				return self.__typePolicy.create( obj, rawValue )
+				return self.__typePolicy.createLazy( obj, rawValue )
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )

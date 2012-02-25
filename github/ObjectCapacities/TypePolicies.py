@@ -1,10 +1,20 @@
 class SimpleTypePolicy:
-    def create( self, obj, rawValue ):
-        return rawValue
+    def createLazy( self, obj, value ):
+        return value
+
+    def createNonLazy( self, obj, value ):
+        return value
 
 class ObjectTypePolicy:
     def __init__( self, type ):
         self.__type = type
 
-    def create( self, obj, rawValue ):
-        return self.__type( obj._github, rawValue, lazy = True )
+    def createLazy( self, obj, attributes ):
+        return self.__type( obj._github, attributes, lazy = True )
+
+    def createNonLazy( self, obj, attributes ):
+        return self.__type( obj._github, attributes, lazy = False )
+
+    def getIdentity( self, obj ):
+        assert isinstance( obj, self.__type )
+        return obj._identity
