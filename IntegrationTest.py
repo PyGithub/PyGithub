@@ -155,6 +155,9 @@ class IntegrationTest:
         tag = r.create_git_tag( "a_tag", "This tag was created by PyGithub", c2.sha, "commit" )
         r.create_git_ref( "refs/tags/a_tag", tag.sha )
 
+        c = r.get_commit( c2.sha )
+        c.create_comment( "Commented with PyGithub", c.sha, 1, "foo.bar", 1 )
+
         # Issues and milestones
         l = r.create_label( "Label created by PyGithub", "00FF00" )
         l.edit( "Label created and modified by PyGithub", "FFFF00" )
@@ -219,7 +222,10 @@ class IntegrationTest:
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
         print "  Languages:", r.get_languages()
         print "  Downloads:", ", ".join( d.name for d in r.get_downloads() )
-        print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
+        print "  Tags:", ", ".join( t.name + " (" + t.commit.sha + ")" for t in r.get_tags() )
+        print "  Branches:", ", ".join( b.name + " (" + b.commit.sha + ")" for b in r.get_branches() )
+        print "  Commits:", ", ".join( c.commit.message + " (" + str( c.stats ) + " ".join( comment.body for comment in c.get_comments() ) + ")" for c in r.get_commits()[ : 10 ] )
+        print "  Git references:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
         masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
         masterCommit = r.get_git_commit( masterCommitSha )
         masterTreeSha = masterCommit.tree[ "sha" ]

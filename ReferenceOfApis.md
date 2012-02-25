@@ -106,7 +106,7 @@ API `/repos/:user/:repo`
 
 API `/repos/:user/:repo/branches`
 =================================
-* GET: (TODO SOON)
+* GET: `Repository.get_branches()`: list of `Branch`
 
 API `/repos/:user/:repo/collaborators`
 ======================================
@@ -120,26 +120,26 @@ API `/repos/:user/:repo/collaborators/:user`
 
 API `/repos/:user/:repo/comments`
 =================================
-* GET: (TODO SOON)
+* GET: `Repository.get_comments()`: list of `CommitComment`
 
 API `/repos/:user/:repo/comments/:id`
 =====================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_comment( id )`: `CommitComment`
+* PATCH: `CommitComment.edit( ...)`
+* DELETE: `CommitComment.delete()`
 
 API `/repos/:user/:repo/commits`
 ================================
-* GET: (TODO SOON)
+* GET: `Repository.get_commits( ... )`: list of `Commit`
 
 API `/repos/:user/:repo/commits/:sha`
 =====================================
-* GET: (TODO SOON)
+* GET: `Repository.get_commit( sha )`: `Commit`
 
 API `/repos/:user/:repo/commits/:sha/comments`
 ==============================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Commit.get_comments()`: list of `CommitComment`
+* POST: `Commit.create_comment( ... )`: `CommitComment`
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
@@ -354,7 +354,7 @@ API `/repos/:user/:repo/pulls/comments/:id`
 
 API `/repos/:user/:repo/tags`
 =============================
-* GET: (TODO SOON)
+* GET: `Repository.get_tags()`: list of `Tag`
 
 API `/repos/:user/:repo/teams`
 ==============================

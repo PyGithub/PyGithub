@@ -140,6 +140,15 @@ Git objects
 * `get_git_tag( sha )`: `GitTag`
 * `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/git/tags/#create-a-tag-object) for parameters
 
+Tags, branches, commits
+-----------------------
+* `get_tags()`: list of `Tag`
+* `get_branches()`: list of `Branch`
+* `get_commits( ... )`: list of `Commit`: see [API](http://developer.github.com/v3/repos/commits/#list-commits-on-a-repository) for parameters
+* `get_commit( sha )`: `Commit`
+* `get_comments()`: list of `CommitComment`
+* `get_comment( id )`: `CommitComment`
+
 Teams
 -----
 * `get_teams()`: list of `Team`
@@ -161,6 +170,26 @@ Downloads
 `Repository.get_downloads()` list of `Download`
 `Repository.create_download( ... )`: `Download`: see [API](http://developer.github.com/v3/repos/downloads/#create-a-new-download-part-1-create-the-resource)
 `Repository.get_download( id )`: `Download`
+
+Class `Tag`
+===========
+* Attributes: see [API](http://developer.github.com/v3/repos/#list-tags)
+
+Class `Branch`
+==============
+* Attributes: see [API](http://developer.github.com/v3/repos/#list-branches)
+
+Class `Commit`
+==============
+* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit)
+* `get_comments()`: list of `CommitComment`
+* `create_comment( ... )`: `CommitComment`: see [API](http://developer.github.com/v3/repos/commits/#create-a-commit-comment) for parameters
+
+Class `CommitComment`
+=====================
+* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit-comment)
+* `edit( ... )`: see [API](http://developer.github.com/v3/repos/commits/#update-a-commit-comment) for parameters
+* `delete()`
 
 Class `Download`
 ================
