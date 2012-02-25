@@ -6,11 +6,11 @@ from GithubObject import *
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", BasicAttributes( "a", "a" ) )
+            GithubObject( "", InternalSimpleAttributes( "a", "a" ) )
 
     def testDuplicatedAttributeInTwoPolicies( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", BasicAttributes( "a" ), BasicAttributes( "a" ) )
+            GithubObject( "", InternalSimpleAttributes( "a" ), InternalSimpleAttributes( "a" ) )
 
 class TestCaseWithGithubTestObject( unittest.TestCase ):
     def setUp( self ):
@@ -43,11 +43,11 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectStatusDelete( self, url ):
         return self.g.expect._statusRequest( "DELETE", url, None, None )
 
-class GithubObjectWithOnlyBasicAttributes( TestCaseWithGithubTestObject ):
+class GithubObjectWithOnlyInternalSimpleAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" )
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testInterface( self ):
@@ -84,7 +84,7 @@ class GithubObjectWithOtherBaseUrl( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/other/" + str( obj.a1 ) ),
-        BasicAttributes( "a1", "a2", "a3", "a4" )
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testCompletion( self ):
@@ -95,7 +95,7 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" ),
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
         Editable( [ "a1" ], [ "a2", "a4" ] ),
     )
 
@@ -168,7 +168,7 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" ),
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
         Deletable(),
     )
 
@@ -176,18 +176,18 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test" ).andReturn( 204 )
         self.o.delete()
 
-class GithubObjectWithComplexAttribute( TestCaseWithGithubTestObject ):
+class GithubObjectWithInternalObjectAttribute( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name", "desc" )
+        InternalSimpleAttributes( "id", "name", "desc" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ComplexAttribute( "a3", ContainedObject )
+        InternalSimpleAttributes( "a1", "a2" ),
+        InternalObjectAttribute( "a3", ContainedObject )
     )
 
     def testCompletion( self ):
@@ -205,13 +205,13 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
@@ -233,13 +233,13 @@ class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ElementAddable() )
     )
 
@@ -253,13 +253,13 @@ class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ElementRemovable() )
     )
 
@@ -273,13 +273,13 @@ class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ElementHasable() )
     )
 
@@ -295,13 +295,13 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
@@ -334,13 +334,13 @@ class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ListAddable() )
     )
 
@@ -353,13 +353,13 @@ class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ListSetable() )
     )
 
@@ -371,13 +371,13 @@ class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ListDeletable() )
     )
 
@@ -389,13 +389,13 @@ class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ListAttribute( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
     )
 
@@ -407,13 +407,13 @@ class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         ObjectGetter( "a3", ContainedObject, lambda obj, id : { "id": id } )
     )
 
@@ -428,7 +428,7 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         MethodFromCallable( "myMethod", myCallable )
     )
 
@@ -438,19 +438,19 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
         mock.tearDown()
 
-class GithubObjectWithSeveralBasicAttributesAndComplexAttributes( TestCaseWithGithubTestObject ):
+class GithubObjectWithSeveralInternalSimpleAttributesAndInternalObjectAttributes( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a2", "a4" ),
-        BasicAttributes( "a1", "a3" ),
-        ComplexAttribute( "a5", ContainedObject ),
+        InternalSimpleAttributes( "a2", "a4" ),
+        InternalSimpleAttributes( "a1", "a3" ),
+        InternalObjectAttribute( "a5", ContainedObject ),
     )
 
     def testCompletionInOneCall_1( self ):

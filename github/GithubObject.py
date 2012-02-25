@@ -11,7 +11,7 @@ class SimpleTypePolicy:
     def create( self, obj, rawValue ):
         return rawValue
 
-class GithubObjectTypePolicy:
+class ObjectTypePolicy:
     def __init__( self, type ):
         self.__type = type
 
@@ -52,14 +52,14 @@ class SeveralAttributes:
         for attributePolicy in self.__attributePolicies:
             attributePolicy.apply( cls )
 
-def BasicAttribute( attributeName ):
+def InternalSimpleAttribute( attributeName ):
     return InternalAttribute( attributeName, SimpleTypePolicy() )
 
-def BasicAttributes( *attributeNames ):
-    return SeveralAttributes( [ BasicAttribute( attributeName ) for attributeName in attributeNames ] )
+def InternalSimpleAttributes( *attributeNames ):
+    return SeveralAttributes( [ InternalSimpleAttribute( attributeName ) for attributeName in attributeNames ] )
 
-def ComplexAttribute( attributeName, type ):
-    return InternalAttribute( attributeName, GithubObjectTypePolicy( type ) )
+def InternalObjectAttribute( attributeName, type ):
+    return InternalAttribute( attributeName, ObjectTypePolicy( type ) )
 
 class BaseUrl( AttributeFromCallable ):
     def __init__( self, baseUrl ):
