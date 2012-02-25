@@ -7,41 +7,27 @@ from ObjectCapacities.List import ListAttribute, ListGetable, ElementCreatable, 
 class BadGithubObjectException( Exception ):
     pass
 
-class BasicAttributes:
+class SimpleTypePolicy:
+    def create( self, obj, rawValue ):
+        return rawValue
+
+class GithubObjectTypePolicy:
+    def __init__( self, type ):
+        self.__type = type
+
+    def create( self, obj, rawValue ):
+        return self.__type( obj._github, rawValue, lazy = True )
+
+class InternalAttribute:
     class AttributeDefinition:
-        def __init__( self, attributeNames ):
-            self.__attributeNames = attributeNames
-
-        def getValueFromRawValue( self, obj, rawValue ):
-            return rawValue
-
-        def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
-            obj._updateAttributes( attributes )
-            obj._markAsCompleted()
-
-        def isLazy( self ):
-            return True
-
-    def __init__( self, *attributeNames ):
-        self.__attributeNames = attributeNames
-
-    def apply( self, cls ):
-        commonDefinition = BasicAttributes.AttributeDefinition( self.__attributeNames )
-        for attributeName in self.__attributeNames:
-            cls._addAttribute( attributeName, commonDefinition )
-
-class ComplexAttribute:
-    class AttributeDefinition:
-        def __init__( self, attributeName, type ):
-            self.__attributeName = attributeName
-            self.__type = type
+        def __init__( self, typePolicy ):
+            self.__typePolicy = typePolicy
 
         def getValueFromRawValue( self, obj, rawValue ):
 			if rawValue is None:
 				return None
 			else:
-				return self.__type( obj._github, rawValue, lazy = True )
+				return self.__typePolicy.create( obj, rawValue )
 
         def updateAttributes( self, obj ):
             attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
@@ -51,12 +37,29 @@ class ComplexAttribute:
         def isLazy( self ):
             return True
 
-    def __init__( self, attributeName, type ):
+    def __init__( self, attributeName, typePolicy ):
         self.__attributeName = attributeName
-        self.__type = type
+        self.__typePolicy = typePolicy
 
     def apply( self, cls ):
-        cls._addAttribute( self.__attributeName, ComplexAttribute.AttributeDefinition( self.__attributeName, self.__type ) )
+        cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
+
+class SeveralAttributes:
+    def __init__( self, attributePolicies ):
+        self.__attributePolicies = attributePolicies
+
+    def apply( self, cls ):
+        for attributePolicy in self.__attributePolicies:
+            attributePolicy.apply( cls )
+
+def BasicAttribute( attributeName ):
+    return InternalAttribute( attributeName, SimpleTypePolicy() )
+
+def BasicAttributes( *attributeNames ):
+    return SeveralAttributes( [ BasicAttribute( attributeName ) for attributeName in attributeNames ] )
+
+def ComplexAttribute( attributeName, type ):
+    return InternalAttribute( attributeName, GithubObjectTypePolicy( type ) )
 
 class BaseUrl( AttributeFromCallable ):
     def __init__( self, baseUrl ):
