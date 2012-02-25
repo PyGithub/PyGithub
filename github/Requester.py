@@ -18,12 +18,15 @@ class Requester:
 
         headers, output = self.__statusCheckedRequest( verb, url, parameters, input )
 
-        page = 2
         while "link" in headers and "next" in headers[ "link" ]:
-            parameters[ "page" ] = page
+            for link in headers[ "link" ].split( "," ):
+                if "next" in link:
+                    linkUrl = link.split( ";" )[ 0 ][ : -1 ]
+                    params = linkUrl.split( "?" )[ 1 ]
+                    parameters.update( dict( p.split( "=" ) for p in params.split( "&" ) ) )
+                    break
             headers, newOutput = self.__statusCheckedRequest( verb, url, parameters, input )
             output += newOutput
-            page += 1
 
         return output
 

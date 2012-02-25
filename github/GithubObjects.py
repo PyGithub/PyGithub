@@ -186,6 +186,69 @@ Issue = GithubObject(
     ),
 )
 
+Download = GithubObject(
+    "Download",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/downloads/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "html_url", "id", "name", "description", "size",
+        "download_count", "content_type", "policy", "signature", "bucket",
+        "accesskeyid", "path", "acl", "expirationdate", "prefix", "mime_type",
+        "redirect", "s3_url", "created_at",
+        "_repo", ### Ugly hack
+    ),
+    Deletable(),
+)
+
+CommitComment = GithubObject(
+    "CommitComment",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/comments/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "id", "body", "path", "position", "commit_id",
+        "created_at", "updated_at", "html_url", "line",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "user", NamedUser ),
+    Editable( [ "body" ], [] ),
+    Deletable(),
+)
+
+Commit = GithubObject(
+    "Commit",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/commits/" + str( obj.sha ) ),
+    InternalSimpleAttributes(
+        "sha", "url",
+        "parents", ### @todo Structure
+        "stats", ### @todo Structure
+        "files", ### @todo Structure
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "commit", GitCommit ),
+    InternalObjectAttribute( "author", NamedUser ),
+    InternalObjectAttribute( "committer", NamedUser ),
+    ExternalListOfObjects( "comments", CommitComment,
+        ListGetable( [], [] ),
+        ElementCreatable( "comment", [ "body", "commit_id", "line", "path", "position" ], [] ),
+    ),
+)
+
+Tag = GithubObject(
+    "Tag",
+    InternalSimpleAttributes(
+        "name", "zipball_url", "tarball_url",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "commit", Commit )
+)
+
+Branch = GithubObject(
+    "Branch",
+    InternalSimpleAttributes(
+        "name",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "commit", Commit )
+)
+
 __modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
 Repository = GithubObject(
     "Repository",
@@ -240,6 +303,26 @@ Repository = GithubObject(
         ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "issue", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "issue", [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
+    ),
+    ExternalSimpleAttribute( "languages" ),
+    ExternalListOfObjects( "downloads", Download,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "download", lambda repo, id : { "_repo": repo, "number": number } ),
+        ElementCreatable( "download", [ "name", "size" ], [ "description", "content_type" ], __modifyAttributesForObjectsReferingRepo ),
+    ),
+    ExternalListOfObjects( "comments", CommitComment,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "comment", lambda repo, id : { "_repo": repo, "id": id } ),
+    ),
+    ExternalListOfObjects( "commits", Commit,
+        ListGetable( [], [ "sha", "path" ], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( "commit", lambda repo, sha : { "_repo": repo, "sha": sha } ),
+    ),
+    ExternalListOfObjects( "tags", Tag,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+    ),
+    ExternalListOfObjects( "branches", Branch,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
     ),
 )
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )

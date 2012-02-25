@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/networks/:user/:repo/events`
 ==================================
@@ -106,7 +106,7 @@ API `/repos/:user/:repo`
 
 API `/repos/:user/:repo/branches`
 =================================
-* GET: (TODO)
+* GET: `Repository.get_branches()`: list of `Branch`
 
 API `/repos/:user/:repo/collaborators`
 ======================================
@@ -120,26 +120,26 @@ API `/repos/:user/:repo/collaborators/:user`
 
 API `/repos/:user/:repo/comments`
 =================================
-* GET: (TODO)
+* GET: `Repository.get_comments()`: list of `CommitComment`
 
 API `/repos/:user/:repo/comments/:id`
 =====================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_comment( id )`: `CommitComment`
+* PATCH: `CommitComment.edit( ...)`
+* DELETE: `CommitComment.delete()`
 
 API `/repos/:user/:repo/commits`
 ================================
-* GET: (TODO)
+* GET: `Repository.get_commits( ... )`: list of `Commit`
 
 API `/repos/:user/:repo/commits/:sha`
 =====================================
-* GET: (TODO)
+* GET: `Repository.get_commit( sha )`: `Commit`
 
 API `/repos/:user/:repo/commits/:sha/comments`
 ==============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Commit.get_comments()`: list of `CommitComment`
+* POST: `Commit.create_comment( ... )`: `CommitComment`
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
@@ -151,13 +151,13 @@ API `/repos/:user/:repo/contributors`
 
 API `/repos/:user/:repo/downloads`
 ==================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_downloads()` list of `Download`
+* POST: `Repository.create_download( ... )`: `Download`
 
 API `/repos/:user/:repo/downloads/:id`
 ======================================
-* GET: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_download( id )`: `Download`
+* DELETE: `Download.delete()`
 
 API `/repos/:user/:repo/events`
 ===============================
@@ -301,7 +301,7 @@ API `/repos/:user/:repo/labels/:id`
 
 API `/repos/:user/:repo/languages`
 ==================================
-* GET: (TODO)
+* GET: `Repository.get_languages()`: dictionary of strings to integers
 
 API `/repos/:user/:repo/milestones`
 ===================================
@@ -354,7 +354,7 @@ API `/repos/:user/:repo/pulls/comments/:id`
 
 API `/repos/:user/:repo/tags`
 =============================
-* GET: (TODO)
+* GET: `Repository.get_tags()`: list of `Tag`
 
 API `/repos/:user/:repo/teams`
 ==============================
