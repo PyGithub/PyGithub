@@ -108,7 +108,7 @@ class ListDeletable:
     def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName, None, None )
 
-class ListAttribute:
+class ExternalListOfObjects:
     def __init__( self, attributeName, type, *capacities ):
         self.attributeName = attributeName
         self.type = type

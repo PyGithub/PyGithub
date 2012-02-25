@@ -212,7 +212,7 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
+        ExternalListOfObjects( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
     def testGetList( self ):
@@ -240,7 +240,7 @@ class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementAddable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ElementAddable() )
     )
 
     def testAddToList( self ):
@@ -260,7 +260,7 @@ class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementRemovable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ElementRemovable() )
     )
 
     def testRemoveFromList( self ):
@@ -280,7 +280,7 @@ class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementHasable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ElementHasable() )
     )
 
     def testHasInList( self ):
@@ -302,7 +302,7 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
+        ExternalListOfObjects( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
@@ -341,7 +341,7 @@ class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListAddable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ListAddable() )
     )
 
     def testAddToList( self ):
@@ -360,7 +360,7 @@ class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListSetable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ListSetable() )
     )
 
     def testSetList( self ):
@@ -378,7 +378,7 @@ class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListDeletable() )
+        ExternalListOfObjects( "a3s", ContainedObject, ListDeletable() )
     )
 
     def testGetList( self ):
@@ -396,7 +396,7 @@ class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
+        ExternalListOfObjects( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
     )
 
     def testGetList( self ):

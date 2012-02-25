@@ -34,11 +34,11 @@ NamedUser = GithubObject(
     ),
 )
 
-AuthenticatedUser._addAttributePolicy( ListAttribute( "followers", NamedUser, ListGetable( [], [] ) ) )
-NamedUser._addAttributePolicy( ListAttribute( "followers", NamedUser, ListGetable( [], [] ) ) )
+AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "followers", NamedUser, ListGetable( [], [] ) ) )
+NamedUser._addAttributePolicy( ExternalListOfObjects( "followers", NamedUser, ListGetable( [], [] ) ) )
 
-AuthenticatedUser._addAttributePolicy( ListAttribute( "following", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
-NamedUser._addAttributePolicy( ListAttribute( "following", NamedUser, ListGetable( [], [] ) ) )
+AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "following", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
+NamedUser._addAttributePolicy( ExternalListOfObjects( "following", NamedUser, ListGetable( [], [] ) ) )
 
 Organization = GithubObject(
     "Organization",
@@ -52,13 +52,13 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    ListAttribute( "public_members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
-    ListAttribute( "members", NamedUser, ListGetable( [], [] ), ElementRemovable(), ElementHasable() ),
+    ExternalListOfObjects( "public_members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ExternalListOfObjects( "members", NamedUser, ListGetable( [], [] ), ElementRemovable(), ElementHasable() ),
     Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
-AuthenticatedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
-NamedUser._addAttributePolicy( ListAttribute( "orgs", Organization, ListGetable( [], [] ) ) )
+AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "orgs", Organization, ListGetable( [], [] ) ) )
+NamedUser._addAttributePolicy( ExternalListOfObjects( "orgs", Organization, ListGetable( [], [] ) ) )
 
 GitRef = GithubObject(
     "GitRef",
@@ -139,7 +139,7 @@ Milestone = GithubObject(
     InternalObjectAttribute( "creator", NamedUser ),
     Editable( [ "title" ], [ "state", "description", "due_on" ] ),
     Deletable(),
-    ListAttribute( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
+    ExternalListOfObjects( "labels", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
 )
 
 IssueComment = GithubObject(
@@ -167,14 +167,14 @@ Issue = GithubObject(
     InternalObjectAttribute( "assignee", NamedUser ),
     InternalObjectAttribute( "milestone", Milestone ),
     Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
-    ListAttribute( "labels", Label,
+    ExternalListOfObjects( "labels", Label,
         ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
         ListAddable(),
         ListSetable(),
         ListDeletable(),
         ElementRemovable(),
     ),
-    ListAttribute( "comments", IssueComment,
+    ExternalListOfObjects( "comments", IssueComment,
         ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
         ElementGetable( "comment", lambda repo, id: { "_repo": repo, "id": id } ),
         ElementCreatable( "comment", [ "body" ], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
@@ -196,42 +196,42 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     InternalObjectAttribute( "owner", NamedUser ),
-    ListAttribute( "collaborators", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
-    ListAttribute( "contributors", NamedUser, ListGetable( [], [] ) ),
-    ListAttribute( "watchers", NamedUser, ListGetable( [], [] ) ),
+    ExternalListOfObjects( "collaborators", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ExternalListOfObjects( "contributors", NamedUser, ListGetable( [], [] ) ),
+    ExternalListOfObjects( "watchers", NamedUser, ListGetable( [], [] ) ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ListAttribute( "git/refs", GitRef,
+    ExternalListOfObjects( "git/refs", GitRef,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "git_ref", lambda repo, ref: { "_repo": repo, "ref": ref } ),
         ElementCreatable( "git_ref", [ "ref", "sha" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "git/commits", GitCommit,
+    ExternalListOfObjects( "git/commits", GitCommit,
         ElementGetable( "git_commit", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_commit", [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "git/trees", GitTree,
+    ExternalListOfObjects( "git/trees", GitTree,
         ElementGetable( "git_tree", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_tree", [ "tree" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "git/blobs", GitBlob,
+    ExternalListOfObjects( "git/blobs", GitBlob,
         ElementGetable( "git_blob", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_blob", [ "content", "encoding" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "git/tags", GitTag,
+    ExternalListOfObjects( "git/tags", GitTag,
         ElementGetable( "git_tag", lambda repo, sha: { "_repo": repo, "sha": sha } ),
         ElementCreatable( "git_tag", [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "labels", Label,
+    ExternalListOfObjects( "labels", Label,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "label", lambda repo, name: { "_repo": repo, "name": name } ),
         ElementCreatable( "label", [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
-    ListAttribute( "milestones", Milestone,
+    ExternalListOfObjects( "milestones", Milestone,
         ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "milestone", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "milestone", [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
     ),
-    ListAttribute( "issues", Issue,
+    ExternalListOfObjects( "issues", Issue,
         ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( "issue", lambda repo, number: { "_repo": repo, "number": number } ),
         ElementCreatable( "issue", [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
@@ -239,17 +239,17 @@ Repository = GithubObject(
 )
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
-Repository._addAttributePolicy( ListAttribute( "forks", Repository, ListGetable( [], [] ) ) )
+Repository._addAttributePolicy( ExternalListOfObjects( "forks", Repository, ListGetable( [], [] ) ) )
 
 __repoElementCreatable = ElementCreatable( "repo", [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
 __repoElementGetable = ElementGetable( "repo", lambda obj, name: { "owner": { "login": obj.login }, "name": name } )
 __repoListGetable = ListGetable( [], [] )
-AuthenticatedUser._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
-NamedUser._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable ) )
-Organization._addAttributePolicy( ListAttribute( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
+AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
+NamedUser._addAttributePolicy( ExternalListOfObjects( "repos", Repository, __repoListGetable, __repoElementGetable ) )
+Organization._addAttributePolicy( ExternalListOfObjects( "repos", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
 
-AuthenticatedUser._addAttributePolicy( ListAttribute( "watched", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
-NamedUser._addAttributePolicy( ListAttribute( "watched", Repository, ListGetable( [], [] ) ) )
+AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "watched", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ) )
+NamedUser._addAttributePolicy( ExternalListOfObjects( "watched", Repository, ListGetable( [], [] ) ) )
 
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
@@ -269,9 +269,9 @@ Team = GithubObject(
     ),
     Editable( [ "name" ], [ "permission" ] ),
     Deletable(),
-    ListAttribute( "members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
-    ListAttribute( "repos", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ExternalListOfObjects( "members", NamedUser, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
+    ExternalListOfObjects( "repos", Repository, ListGetable( [], [] ), ElementAddable(), ElementRemovable(), ElementHasable() ),
 )
 
-Organization._addAttributePolicy( ListAttribute( "teams", Team, ListGetable( [], [] ), ElementCreatable( "team", [ "name" ], [ "repo_names", "permission" ] ) ) )
-Repository._addAttributePolicy( ListAttribute( "teams", Team, ListGetable( [], [] ) ) )
+Organization._addAttributePolicy( ExternalListOfObjects( "teams", Team, ListGetable( [], [] ), ElementCreatable( "team", [ "name" ], [ "repo_names", "permission" ] ) ) )
+Repository._addAttributePolicy( ExternalListOfObjects( "teams", Team, ListGetable( [], [] ) ) )
