@@ -59,7 +59,7 @@ class Requester:
 
         cnx.close()
 
-        # print verb, url, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
+        # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
         return status, headers, output
 
     def __completeUrl( self, url, parameters ):
