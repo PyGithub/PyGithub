@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO SOON)
+* GET: (TODO)
 
 API `/networks/:user/:repo/events`
 ==================================
