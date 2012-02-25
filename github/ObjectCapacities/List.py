@@ -2,129 +2,98 @@ import itertools
 
 import ArgumentsChecker
 
-class ElementAddable:
+class ListCapacity:
     def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
+        self.type = list.type
+        self.attributeName = list.attributeName
 
+class ElementAddable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "add_to_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "add_to_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeAdded ):
-        assert isinstance( toBeAdded, self.__type )
-        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
+        assert isinstance( toBeAdded, self.type )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.attributeName + "/" + toBeAdded._identity, None, None )
 
-class ElementRemovable:
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
+class ElementRemovable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "remove_from_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "remove_from_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeDeleted ):
-        assert isinstance( toBeDeleted, self.__type )
-        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
+        assert isinstance( toBeDeleted, self.type )
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName + "/" + toBeDeleted._identity, None, None )
 
-class ElementHasable:
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
+class ElementHasable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "has_in_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "has_in_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, toBeQueried ):
-        assert isinstance( toBeQueried, self.__type )
-        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
+        assert isinstance( toBeQueried, self.type )
+        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.attributeName + "/" + toBeQueried._identity, None, None ) == 204
 
-class ElementCreatable:
+class ElementCreatable( ListCapacity ):
     def __init__( self, singularName, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__createName = "create_" + singularName
         self.__modifyAttributes = modifyAttributes
-
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
 
     def apply( self, cls ):
         cls._addMethod( self.__createName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
-        return self.__type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
+        return self.type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data ) ), lazy = True )
 
-class ElementGetable:
+class ElementGetable( ListCapacity ):
     def __init__( self, singularName, attributes ):
         self.__getName = "get_" + singularName
         self.__attributes = attributes
-
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
 
     def apply( self, cls ):
         cls._addMethod( self.__getName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
+        return self.type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
 
-class ListGetable:
+class ListGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__modifyAttributes = modifyAttributes
 
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
     def apply( self, cls ):
-        cls._addMethod( "get_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "get_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
         return [
-            self.__type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
+            self.type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
+            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.attributeName, params, None )
         ]
 
-class ListAddable:
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
+class ListAddable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "add_to_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "add_to_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *toBeAddeds ):
         for toBeAdded in toBeAddeds:
-            assert isinstance( toBeAdded, self.__type )
-        obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, [ toBeAdded._identity for toBeAdded in toBeAddeds ] )
+            assert isinstance( toBeAdded, self.type )
+        obj._github._statusRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, [ toBeAdded._identity for toBeAdded in toBeAddeds ] )
 
-class ListSetable:
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
+class ListSetable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "set_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "set_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj, *toBeSets ):
         for toBeSet in toBeSets:
-            assert isinstance( toBeSet, self.__type )
-        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName, None, [ toBeSet._identity for toBeSet in toBeSets ] )
+            assert isinstance( toBeSet, self.type )
+        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.attributeName, None, [ toBeSet._identity for toBeSet in toBeSets ] )
 
-class ListDeletable:
-    def setList( self, list ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-
+class ListDeletable( ListCapacity ):
     def apply( self, cls ):
-        cls._addMethod( "delete_" + self.__attributeName.replace( "/", "_" ), self.__execute )
+        cls._addMethod( "delete_" + self.attributeName.replace( "/", "_" ), self.__execute )
 
     def __execute( self, obj ):
-        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName, None, None )
+        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, None )
 
 ### @todo use SeveralAttributes
 class ExternalListOfObjects:
@@ -133,8 +102,9 @@ class ExternalListOfObjects:
         self.type = type
         self.__getName = "get_" + attributeName
         self.__capacities = capacities
+        for capacity in self.__capacities:
+            capacity.setList( self )
 
     def apply( self, cls ):
         for capacity in self.__capacities:
-            capacity.setList( self )
             capacity.apply( cls )
