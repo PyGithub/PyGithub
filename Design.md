@@ -47,3 +47,15 @@ Explicit `edit` methods
 
 To modify objects, we have a single `edit` method (not several
 writable attributes) to be explicit about API calls.
+
+Typology of attributes
+======================
+* Internality
+	* Internal (received in the GET request about this object) => attribute (lazy completion if needed)
+	* External (needs another new GET request) => method
+* Type
+	* Simple type
+	* GithubObject
+	* List of simple type
+	* List of GithubObject
+	* Dict of...

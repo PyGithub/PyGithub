@@ -6,11 +6,11 @@ from GithubObject import *
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", BasicAttributes( "a", "a" ) )
+            GithubObject( "", InternalSimpleAttributes( "a", "a" ) )
 
     def testDuplicatedAttributeInTwoPolicies( self ):
         with self.assertRaises( BadGithubObjectException ):
-            GithubObject( "", BasicAttributes( "a" ), BasicAttributes( "a" ) )
+            GithubObject( "", InternalSimpleAttributes( "a" ), InternalSimpleAttributes( "a" ) )
 
 class TestCaseWithGithubTestObject( unittest.TestCase ):
     def setUp( self ):
@@ -25,29 +25,29 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
     def expectDataGet( self, url, arguments = None ):
         return self.g.expect._dataRequest( "GET", url, arguments, None )
 
-    def expectStatusPut( self, url, data = None ):
-        return self.g.expect._statusRequest( "PUT", url, None, data )
-
-    def expectStatusGet( self, url ):
-        return self.g.expect._statusRequest( "GET", url, None, None )
+    def expectDataPost( self, url, data ):
+        return self.g.expect._dataRequest( "POST", url, None, data )
 
     def expectDataPatch( self, url, data ):
         return self.g.expect._dataRequest( "PATCH", url, None, data )
 
-    def expectDataPost( self, url, data ):
-        return self.g.expect._dataRequest( "POST", url, None, data )
+    def expectStatusGet( self, url ):
+        return self.g.expect._statusRequest( "GET", url, None, None )
 
     def expectStatusPost( self, url, data ):
         return self.g.expect._statusRequest( "POST", url, None, data )
 
-    def expectStatusDelete( self, url ):
-        return self.g.expect._statusRequest( "DELETE", url, None, None )
+    def expectStatusPut( self, url, data = None ):
+        return self.g.expect._statusRequest( "PUT", url, None, data )
 
-class GithubObjectWithOnlyBasicAttributes( TestCaseWithGithubTestObject ):
+    def expectStatusDelete( self, url, data = None ):
+        return self.g.expect._statusRequest( "DELETE", url, None, data )
+
+class GithubObjectWithOnlyInternalSimpleAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" )
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testInterface( self ):
@@ -84,7 +84,7 @@ class GithubObjectWithOtherBaseUrl( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/other/" + str( obj.a1 ) ),
-        BasicAttributes( "a1", "a2", "a3", "a4" )
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" )
     )
 
     def testCompletion( self ):
@@ -95,7 +95,7 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" ),
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
         Editable( [ "a1" ], [ "a2", "a4" ] ),
     )
 
@@ -168,7 +168,7 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2", "a3", "a4" ),
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
         Deletable(),
     )
 
@@ -176,18 +176,18 @@ class DeletableGithubObject( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test" ).andReturn( 204 )
         self.o.delete()
 
-class GithubObjectWithComplexAttribute( TestCaseWithGithubTestObject ):
+class GithubObjectWithInternalObjectAttribute( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name", "desc" )
+        InternalSimpleAttributes( "id", "name", "desc" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ComplexAttribute( "a3", ContainedObject )
+        InternalSimpleAttributes( "a1", "a2" ),
+        InternalObjectAttribute( "a3", ContainedObject )
     )
 
     def testCompletion( self ):
@@ -201,18 +201,18 @@ class GithubObjectWithComplexAttribute( TestCaseWithGithubTestObject ):
         self.expectDataGet( "/test" ).andReturn( { "a3": None } )
         self.assertIsNone( self.o.a3 )
 
-class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListGetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
     def testGetList( self ):
@@ -228,19 +228,19 @@ class GithubObjectWithListGetableList( TestCaseWithGithubTestObject ):
         a3s = self.o.get_a3s( "foobar" )
         self.assertEqual( len( a3s ), 3 )
 
-class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementAddableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementAddable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ElementAddable() )
     )
 
     def testAddToList( self ):
@@ -248,19 +248,19 @@ class GithubObjectWithElementAddableList( TestCaseWithGithubTestObject ):
         self.expectStatusPut( "/test/a3s/idAdd" ).andReturn( 204 )
         self.o.add_to_a3s( a3ToAdd )
 
-class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementRemovableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementRemovable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ElementRemovable() )
     )
 
     def testRemoveFromList( self ):
@@ -268,19 +268,19 @@ class GithubObjectWithElementRemovableList( TestCaseWithGithubTestObject ):
         self.expectStatusDelete( "/test/a3s/idRemove" ).andReturn( 204 )
         self.o.remove_from_a3s( a3ToRemove )
 
-class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementHasableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementHasable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ElementHasable() )
     )
 
     def testHasInList( self ):
@@ -290,19 +290,19 @@ class GithubObjectWithElementHasableList( TestCaseWithGithubTestObject ):
         self.expectStatusGet( "/test/a3s/idQuery" ).andReturn( 404 )
         self.assertFalse( self.o.has_in_a3s( a3ToQuery ) )
 
-class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementCreatableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" ),
+        InternalSimpleAttributes( "id", "name" ),
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
@@ -329,97 +329,105 @@ class GithubObjectWithElementCreatableList( TestCaseWithGithubTestObject ):
         with self.assertRaises( TypeError ):
             self.o.create_a3( foobar = 42 )
 
-class GithubObjectWithListAddableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithSeveralElementsAddableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListAddable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, SeveralElementsAddable() )
     )
 
     def testAddToList( self ):
         self.expectStatusPost( "/test/a3s", [ "id1", "id2" ] )
         self.o.add_to_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
 
-class GithubObjectWithListSetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListSetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
         Identity( lambda obj: obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListSetable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ListSetable() )
     )
 
     def testSetList( self ):
         self.expectStatusPut( "/test/a3s", [ "id1", "id2" ] )
         self.o.set_a3s( self.ContainedObject( self.g, { "id": "id1" }, lazy = True ), self.ContainedObject( self.g, { "id": "id2" }, lazy = True ) )
 
-class GithubObjectWithListDeletableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithListDeletableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ListDeletable() )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ListDeletable() )
     )
 
     def testGetList( self ):
         self.expectStatusDelete( "/test/a3s" )
         self.o.delete_a3s()
 
-class GithubObjectWithElementGetableList( TestCaseWithGithubTestObject ):
+class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ListAttribute( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
     )
 
     def testGetList( self ):
         self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
         self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
 
-class GithubObjectWithObjectGetter( TestCaseWithGithubTestObject ):
-    ContainedObject = GithubObject(
-        "ContainedObject",
-        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
-    )
-
+class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
-        ObjectGetter( "a3", ContainedObject, lambda obj, id : { "id": id } )
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfSimpleTypes( "a3s",
+            ListGetable( [], [] ),
+            SeveralElementsAddable(),
+            SeveralElementsRemovable(),
+        )
     )
 
     def testGetList( self ):
-        self.expectDataGet( "/test/a3s/idGet" ).andReturn( { "id": "idGet" } )
-        self.assertEqual( self.o.get_a3( "idGet" ).id, "idGet" )
+        self.expectDataGet( "/test/a3s", {} ).andReturn( [ "a", "b", "c" ] )
+        a3s = self.o.get_a3s()
+        self.assertEqual( len( a3s ), 3 )
+        self.assertEqual( a3s[ 0 ], "a" )
+
+    def testAddToList( self ):
+        self.expectStatusPost( "/test/a3s", [ "a", "b", "c" ] ).andReturn( 204 )
+        a3s = self.o.add_to_a3s( "a", "b", "c" )
+
+    def testDeleteFromList( self ):
+        self.expectStatusDelete( "/test/a3s", [ "a", "b", "c" ] ).andReturn( 204 )
+        a3s = self.o.remove_from_a3s( "a", "b", "c" )
 
 def myCallable( obj, mock, arg ):
     return mock.call( arg )
@@ -428,7 +436,7 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a1", "a2" ),
+        InternalSimpleAttributes( "a1", "a2" ),
         MethodFromCallable( "myMethod", myCallable )
     )
 
@@ -438,19 +446,19 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
         mock.tearDown()
 
-class GithubObjectWithSeveralBasicAttributesAndComplexAttributes( TestCaseWithGithubTestObject ):
+class GithubObjectWithSeveralInternalSimpleAttributesAndInternalObjectAttributes( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
         BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
-        BasicAttributes( "id", "name" )
+        InternalSimpleAttributes( "id", "name" )
     )
 
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
-        BasicAttributes( "a2", "a4" ),
-        BasicAttributes( "a1", "a3" ),
-        ComplexAttribute( "a5", ContainedObject ),
+        InternalSimpleAttributes( "a2", "a4" ),
+        InternalSimpleAttributes( "a1", "a3" ),
+        InternalObjectAttribute( "a5", ContainedObject ),
     )
 
     def testCompletionInOneCall_1( self ):

@@ -4,7 +4,6 @@ import sys
 import httplib
 import base64
 
-
 from github import Github
 
 class RecordingHttpResponse( object ):
@@ -117,9 +116,9 @@ class IntegrationTest:
         self.doSomeWrites()
 
     def doSomeReads( self ):
-        self.dumpUser( self.g.get_user() )
+        self.dumpUser( self.g.get_user(), doHasInFollowing = True )
         jacquev6 = self.g.get_user( "jacquev6" )
-        self.dumpUser( jacquev6 )
+        self.dumpUser( jacquev6, doHasInFollowing = False )
         self.dumpOrganization( self.g.get_organization( "github" ), doTeams = False )
         self.dumpOrganization( self.g.get_organization( "BeaverSoftware" ), doTeams = True )
         self.dumpRepository( jacquev6.get_repo( "PyGithub" ) )
@@ -178,7 +177,7 @@ class IntegrationTest:
 
         self.dumpRepository( r )
 
-    def dumpUser( self, u ):
+    def dumpUser( self, u, doHasInFollowing ):
         print u.login, "(", u.name, ")"
         print "  Repos:"
         for r in u.get_repos():
@@ -190,6 +189,8 @@ class IntegrationTest:
         print "  Watched:", ", ".join( r.name for r in u.get_watched() )
         print "  Organizations:", ", ".join( o.login for o in u.get_orgs() )
         print "  Following:", ", ".join( f.login for f in u.get_following() )
+        if doHasInFollowing:
+            print "  Is following jacquev6:", u.has_in_following( self.g.get_user( "jacquev6" ) )
         print "  Followers:", ", ".join( f.login for f in u.get_followers() )
         print
         sys.stdout.flush()
