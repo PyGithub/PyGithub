@@ -396,7 +396,7 @@ class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( lambda obj, id: { "id": id } ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( [ "id" ], [] ) )
     )
 
     def testGetList( self ):

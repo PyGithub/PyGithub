@@ -181,7 +181,7 @@ Issue = GithubObject(
     ),
     ExternalListOfObjects( "comments", "comment", IssueComment,
         ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
-        ElementGetable( lambda repo, id: { "_repo": repo, "id": id } ),
+        ElementGetable( [ "id" ], [], "_repo" ),
         ElementCreatable( [ "body" ], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
     ),
 )
@@ -270,53 +270,53 @@ Repository = GithubObject(
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
     ExternalListOfObjects( "git/refs", "git_ref", GitRef,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, ref: { "_repo": repo, "ref": ref } ),
+        ElementGetable( [ "ref" ], [], "_repo" ),
         ElementCreatable( [ "ref", "sha" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/commits", "git_commit", GitCommit,
-        ElementGetable( lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementGetable( [ "sha" ], [], "_repo" ),
         ElementCreatable( [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
-        ElementGetable( lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementGetable( [ "sha" ], [], "_repo" ),
         ElementCreatable( [ "tree" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/blobs", "git_blob", GitBlob,
-        ElementGetable( lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementGetable( [ "sha" ], [], "_repo" ),
         ElementCreatable( [ "content", "encoding" ], [], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/tags", "git_tag", GitTag,
-        ElementGetable( lambda repo, sha: { "_repo": repo, "sha": sha } ),
+        ElementGetable( [ "sha" ], [], "_repo" ),
         ElementCreatable( [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "labels", "label", Label,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, name: { "_repo": repo, "name": name } ),
+        ElementGetable( [ "name" ], [], "_repo" ),
         ElementCreatable( [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "milestones", "milestone", Milestone,
         ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, number: { "_repo": repo, "number": number } ),
+        ElementGetable( [ "number" ], [], "_repo" ),
         ElementCreatable( [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "issues", "issue", Issue,
         ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, number: { "_repo": repo, "number": number } ),
+        ElementGetable( [ "number" ], [], "_repo" ),
         ElementCreatable( [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalSimpleAttribute( "languages" ),
     ExternalListOfObjects( "downloads", "download", Download,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, id : { "_repo": repo, "number": number } ),
+        ElementGetable( [ "id" ], [], "_repo" ),
         ElementCreatable( [ "name", "size" ], [ "description", "content_type" ], __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "comments", "comment", CommitComment,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, id : { "_repo": repo, "id": id } ),
+        ElementGetable( [ "id" ], [], "_repo" ),
     ),
     ExternalListOfObjects( "commits", "commit", Commit,
         ListGetable( [], [ "sha", "path" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( lambda repo, sha : { "_repo": repo, "sha": sha } ),
+        ElementGetable( [ "sha" ], [], "_repo" ),
     ),
     ExternalListOfObjects( "tags", "tag", Tag,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
@@ -330,7 +330,7 @@ Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) 
 Repository._addAttributePolicy( ExternalListOfObjects( "forks", "fork", Repository, ListGetable( [], [] ) ) )
 
 __repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
-__repoElementGetable = ElementGetable( lambda obj, name: { "owner": { "login": obj.login }, "name": name } )
+__repoElementGetable = ElementGetable( [ "name" ], [], "owner" )
 __repoListGetable = ListGetable( [], [] )
 AuthenticatedUser._addAttributePolicy( ExternalListOfObjects( "repos", "repo", Repository, __repoListGetable, __repoElementGetable, __repoElementCreatable ) )
 NamedUser._addAttributePolicy( ExternalListOfObjects( "repos", "repo", Repository, __repoListGetable, __repoElementGetable ) )

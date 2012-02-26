@@ -46,14 +46,18 @@ class ElementCreatable( ListCapacity ):
         return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data ) ) )
 
 class ElementGetable( ListCapacity ):
-    def __init__( self, attributes ):
-        self.__attributes = attributes
+    def __init__( self, mandatoryParameters, optionalParameters, objReferenceName = None ):
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__objReferenceName = objReferenceName
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.singularName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        return self.typePolicy.createNonLazy( obj, self.__attributes( obj, *args, **kwds ) )
+        attributes = self.__argumentsChecker.check( args, kwds )
+        if self.__objReferenceName is not None:
+            attributes[ self.__objReferenceName ] = obj
+        return self.typePolicy.createNonLazy( obj, attributes )
 
 class SeveralElementsAddable( ListCapacity ):
     def apply( self, cls ):
