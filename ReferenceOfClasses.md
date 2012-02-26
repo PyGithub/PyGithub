@@ -42,12 +42,12 @@ Following
 * `has_in_following( user )`: `bool`
     *
 
-Organizations
--------------
+Orgs
+----
 * `get_orgs()` : list of `Organization`
 
-Repositories
-------------
+Repos
+-----
 * `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-your-repositories) for `type` parameter
 * `get_repo( name )`: `Repository`
 * `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
@@ -56,9 +56,12 @@ Repositories
 Watched
 -------
 * `get_watched()`: list of `Repository`
-* `has_in_watched( repo )`: `bool`
 * `add_to_watched( repo )`
+    *
 * `remove_from_watched( repo )`
+    *
+* `has_in_watched( repo )`: `bool`
+    *
 
 Class `Branch`
 ==============
@@ -67,6 +70,9 @@ Class `Branch`
 Class `Commit`
 ==============
 * Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit)
+
+Comments
+--------
 * `get_comments()`: list of `CommitComment`
 * `create_comment( ... )`: `CommitComment`: see [API](http://developer.github.com/v3/repos/commits/#create-a-commit-comment) for parameters
 
@@ -106,14 +112,23 @@ Class `Issue`
 =============
 * Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
 * `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
+
+Labels
+------
 * `get_labels()`: list of `Label`
 * `add_to_labels( label, ... )`
+    *
 * `set_labels( label, ... )`
+    *
 * `delete_labels()`
 * `remove_from_labels( label )`
+    *
+
+Comments
+--------
 * `get_comments()`: list of `IssueComment`
-* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
 * `get_comment( id )`: `IssueComment`
+* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
 
 Class `IssueComment`
 ====================
@@ -138,45 +153,56 @@ Class `NamedUser`
 =================
 * Attributes: see [API](http://developer.github.com/v3/users/#get-a-single-user)
 
-Repositories
-------------
-* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-user-repositories) for `type` parameter
-* `get_repo( name )`: `Repository`
-
-Watching
---------
-* `get_watched()`: list of `Repository`
-
-Organizations
--------------
-* `get_orgs()` : list of `Organization`
+Followers
+---------
+* `get_followers()` : list of `NamedUser`
 
 Following
 ---------
-* `get_followers()` : list of `NamedUser`
 * `get_following()` : list of `NamedUser`
+
+Orgs
+----
+* `get_orgs()` : list of `Organization`
+
+Repos
+-----
+* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-user-repositories) for `type` parameter
+* `get_repo( name )`: `Repository`
+
+Watched
+-------
+* `get_watched()`: list of `Repository`
 
 Class `Organization`
 ====================
 * Attributes: see [API](http://developer.github.com/v3/orgs/#get)
 * `edit( ... )`: see [API](http://developer.github.com/v3/orgs/#edit) for parameters
 
-Repositories
-------------
-* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-organization-repositories) for `type` parameter
-* `get_repo( name )`: `Repository`
-* `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
-* `create_fork( repo )`: `Repository`
+Public members
+--------------
+* `get_public_members()`: list of `NamedUser`
+* `add_to_public_members( user )`
+    *
+* `remove_from_public_members( user )`
+    *
+* `has_in_public_members( user )`: `bool`
+    *
 
 Members
 -------
 * `get_members()`: list of `NamedUser`
-* `has_in_members( user )`: `bool`
 * `remove_from_members( user )`
-* `get_public_members()`: list of `NamedUser`
-* `has_in_public_members( user )`: `bool`
-* `add_to_public_members( user )`
-* `remove_from_public_members( user )`
+    *
+* `has_in_members( user )`: `bool`
+    *
+
+Repos
+-----
+* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-organization-repositories) for `type` parameter
+* `get_repo( name )`: `Repository`
+* `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
+* `create_fork( repo )`: `Repository`
 
 Teams
 -----
@@ -192,66 +218,96 @@ Class `Repository`
 Collaborators
 -------------
 * `get_collaborators()`: list of `NamedUser`
-* `has_in_collaborators( user )`: `bool`
 * `add_to_collaborators( user )`
+    *
 * `remove_from_collaborators( user )`
+    *
+* `has_in_collaborators( user )`: `bool`
+    *
 
 Contributors
 ------------
 * `get_contributors()`: list of `NamedUser`
 
-Watching
+Watchers
 --------
 * `get_watchers()`: list of `NamedUser`
 
-Forks
------
-* `get_forks()`: list of `Repository`
-
-Git objects
------------
+Git refs
+--------
 * `get_git_refs()`: list of `GitRef`
 * `get_git_ref( ref )`: `GitRef`
 * `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/git/refs/#create-a-reference) for parameters
-* `get_git_blob( sha )`: `GitBlob`
-* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/git/blobs/#create-a-blob) for parameters
+
+Git commits
+-----------
 * `get_git_commit( sha )`: `GitCommit`
 * `create_git_commit( ... )`: `GitCommit`: see [API](http://developer.github.com/v3/git/commits/#create-a-commit) for parameters
+
+Git trees
+---------
 * `get_git_tree( sha )`: `GitTree`
 * `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/git/trees/#create-a-tree) for parameters
+
+Git blobs
+---------
+* `get_git_blob( sha )`: `GitBlob`
+* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/git/blobs/#create-a-blob) for parameters
+
+Git tags
+--------
 * `get_git_tag( sha )`: `GitTag`
 * `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/git/tags/#create-a-tag-object) for parameters
 
-Tags, branches, commits
------------------------
-* `get_tags()`: list of `Tag`
-* `get_branches()`: list of `Branch`
-* `get_commits( ... )`: list of `Commit`: see [API](http://developer.github.com/v3/repos/commits/#list-commits-on-a-repository) for parameters
-* `get_commit( sha )`: `Commit`
-* `get_comments()`: list of `CommitComment`
-* `get_comment( id )`: `CommitComment`
-
-Teams
------
-* `get_teams()`: list of `Team`
-
-Issues and milestones
----------------------
+Labels
+------
 * `get_labels()`: list of `Label`
 * `create_label( ... )`: `Label`: see [API](http://developer.github.com/v3/issues/labels/#create-a-label) for parameters
 * `get_label( id )`: `Label`
-* `get_issues( ... )`: list of `Issue`: see [API](http://developer.github.com/v3/issues/#list-issues-for-a-repository) for parameters
-* `create_issue( ... )`: `Issue`: see [API](http://developer.github.com/v3/issues/#create-an-issue) for parameters
-* `get_issue( id )`: `Issue`
+
+Milestones
+----------
 * `get_milestones( ... )`: list of `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository) for parameters
 * `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
 * `get_milestone( number )`: `Milestone`
+
+Issues
+------
+* `get_issues( ... )`: list of `Issue`: see [API](http://developer.github.com/v3/issues/#list-issues-for-a-repository) for parameters
+* `create_issue( ... )`: `Issue`: see [API](http://developer.github.com/v3/issues/#create-an-issue) for parameters
+* `get_issue( id )`: `Issue`
 
 Downloads
 ---------
 `Repository.get_downloads()` list of `Download`
 `Repository.create_download( ... )`: `Download`: see [API](http://developer.github.com/v3/repos/downloads/#create-a-new-download-part-1-create-the-resource)
 `Repository.get_download( id )`: `Download`
+
+Comments
+--------
+* `get_comments()`: list of `CommitComment`
+* `get_comment( id )`: `CommitComment`
+
+Commits
+-------
+* `get_commits( ... )`: list of `Commit`: see [API](http://developer.github.com/v3/repos/commits/#list-commits-on-a-repository) for parameters
+* `get_commit( sha )`: `Commit`
+
+Tags
+----
+* `get_tags()`: list of `Tag`
+
+Branches
+--------
+* `get_branches()`: list of `Branch`
+
+Forks
+-----
+* `get_forks()`: list of `Repository`
+
+Teams
+-----
+* `get_teams()`: list of `Team`
 
 Class `Tag`
 ===========
@@ -266,13 +322,19 @@ Class `Team`
 Members
 -------
 * `get_members()`: list of `NamedUser`
-* `has_in_members( user )`: `bool`
 * `add_to_members( user )`
+    *
 * `remove_from_members( user )`
+    *
+* `has_in_members( user )`: `bool`
+    *
 
-Repositories
-------------
+Repos
+-----
 * `get_repos()`: list of `Repository`
-* `has_in_repos( user )`: `bool`
-* `add_to_repos( user )`
-* `remove_from_repos( user )`
+* `add_to_repos( repo )`
+    *
+* `remove_from_repos( repo )`
+    *
+* `has_in_repos( repo )`: `bool`
+    *

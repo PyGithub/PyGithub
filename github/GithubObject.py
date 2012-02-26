@@ -107,6 +107,7 @@ def GithubObject( className, *attributePolicies ):
         def _autoDocument( cls ):
             doc = "Class `" + cls.__name__ + "`\n"
             doc += "=" * ( len( cls.__name__ ) + 8 ) + "\n"
+            doc += "* Attributes: see [API]()\n"
             for attributePolicy in cls.__attributePolicies:
                 doc += attributePolicy.autoDocument()
             doc += "\n"

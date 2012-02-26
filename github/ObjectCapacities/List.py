@@ -215,9 +215,9 @@ class ListDeletable( ListCapacity ):
 def ExternalListOfObjects( attributeName, singularName, type, *capacities ):
     for capacity in capacities:
         capacity.setList( attributeName, singularName, ObjectTypePolicy( type ) )
-    return SeveralAttributePolicies( capacities, attributeName )
+    return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )
 
 def ExternalListOfSimpleTypes( attributeName, singularName, *capacities ):
     for capacity in capacities:
         capacity.setList( attributeName, singularName, SimpleTypePolicy() )
-    return SeveralAttributePolicies( capacities, attributeName )
+    return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )

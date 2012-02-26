@@ -76,6 +76,7 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
+    Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
     ExternalListOfObjects( "public_members", "public_member", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),
@@ -87,7 +88,6 @@ Organization = GithubObject(
         ElementRemovable(),
         ElementHasable()
     ),
-    Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
 )
 
 AuthenticatedUser._addAttributePolicy(
@@ -304,6 +304,8 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     InternalObjectAttribute( "owner", NamedUser ),
+    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
+    ExternalSimpleAttribute( "languages" ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),
@@ -316,7 +318,6 @@ Repository = GithubObject(
     ExternalListOfObjects( "watchers", "watcher", NamedUser,
         ListGetable( [], [] )
     ),
-    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
     ExternalListOfObjects( "git/refs", "git_ref", GitRef,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "ref" ], [], __modifyAttributesForObjectsReferingRepo ),
@@ -353,7 +354,6 @@ Repository = GithubObject(
         ElementGetable( [ "number" ], [], __modifyAttributesForObjectsReferingRepo ),
         ElementCreatable( [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
     ),
-    ExternalSimpleAttribute( "languages" ),
     ExternalListOfObjects( "downloads", "download", Download,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
@@ -384,7 +384,7 @@ Repository._addAttributePolicy(
 
 __repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
 __repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: user } )
-__repoListGetable = ListGetable( [], [] )
+__repoListGetable = ListGetable( [], [ "type" ] )
 AuthenticatedUser._addAttributePolicy(
     ExternalListOfObjects( "repos", "repo", Repository,
         __repoListGetable,
