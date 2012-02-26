@@ -423,11 +423,11 @@ NamedUser._addAttributePolicy(
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
     return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks", None, None ), lazy = True )
-AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForUser ) )
+AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForUser ) )
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
     return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org": org.login }, None ), lazy = True )
-Organization._addAttributePolicy( MethodFromCallable( "create_fork", __createForkForOrg ) )
+Organization._addAttributePolicy( MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg ) )
 
 Team = GithubObject(
     "Team",

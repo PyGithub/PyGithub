@@ -110,7 +110,7 @@ class ElementGetable( ListCapacity ):
         return attributes
 
     def autoDocument( self ):
-        return "* `get_" + self.singularName + "( ... )`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `get_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: `" + self.typePolicy.documentTypeName() + "`\n"
 
 class SeveralElementsAddable( ListCapacity ):
     def apply( self, cls ):
@@ -172,7 +172,7 @@ class ListGetable( ListCapacity ):
         ]
 
     def autoDocument( self ):
-        return "* `get_" + self.safeAttributeName + "()`: list of `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `get_" + self.safeAttributeName + "(" + self.__argumentsChecker.documentParameters() + ")`: list of `" + self.typePolicy.documentTypeName() + "`\n"
 
     def __modifyAttributes( self, obj, attributes ):
         for attributeName, attributeModifier in self.__attributeModifiers.iteritems():

@@ -1,3 +1,5 @@
+from ArgumentsChecker import *
+
 class AttributeFromCallable:
     class AttributeDefinition:
         def __init__( self, name, callable ):
@@ -26,15 +28,20 @@ class AttributeFromCallable:
 
 ### @todo include the ArgumentsChecker
 class MethodFromCallable:
-    def __init__( self, name, callable ):
+    def __init__( self, name, mandatoryParameters, optionalParameters, callable ):
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__name = name
         self.__callable = callable
 
     def apply( self, cls ):
-        cls._addMethod( self.__name, self.__callable )
+        cls._addMethod( self.__name, self.__execute )
+
+    def __execute( self, obj, *args, **kwds ):
+        data = self.__argumentsChecker.check( args, kwds )
+        return self.__callable( obj, **data )
 
     def autoDocument( self ):
-        return "* `" + self.__name + "( ... )`\n"
+        return "* `" + self.__name + "(" + self.__argumentsChecker.documentParameters() + ")`\n"
 
 class InternalAttribute:
     class AttributeDefinition:

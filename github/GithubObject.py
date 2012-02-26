@@ -1,6 +1,6 @@
 import itertools
 
-from ObjectCapacities.ArgumentsChecker import ArgumentsChecker
+from ObjectCapacities.ArgumentsChecker import *
 from ObjectCapacities.Basic import *
 from ObjectCapacities.List import *
 from ObjectCapacities.TypePolicies import *
@@ -28,19 +28,17 @@ def Identity( identity ):
 
 class Editable( MethodFromCallable ):
     def __init__( self, mandatoryParameters, optionalParameters ):
-        MethodFromCallable.__init__( self, "edit", self.__execute )
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        MethodFromCallable.__init__( self, "edit", mandatoryParameters, optionalParameters, self.__execute )
 
-    def __execute( self, obj, *args, **kwds ):
-        data = self.__argumentsChecker.check( args, kwds )
+    def __execute( self, obj, **data ):
         attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, data )
         obj._updateAttributes( attributes )
 
 class Deletable( MethodFromCallable ):
     def __init__( self ):
-        MethodFromCallable.__init__( self, "delete", self.__execute )
+        MethodFromCallable.__init__( self, "delete", [], [], self.__execute )
 
-    def __execute( self, obj, *args, **kwds ):
+    def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
 
 def GithubObject( className, *attributePolicies ):
