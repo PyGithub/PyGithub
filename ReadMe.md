@@ -1,6 +1,6 @@
 This is a Python library to access the [Gitub API v3](http://developer.github.com/v3).
 
-With it, you can manage your repositories, your organizations and your user profile from Python scripts.
+With it, you can manage your Github resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
 It is still a work in progress, but I'm sure I'll finish it soon. The aim is to cover the **full** API in version 1.0.
 
@@ -27,6 +27,18 @@ Then play with your Github objects:
 
 History
 =======
+
+Version 0.3 (February 26th, 2012)
+---------------------------------
+
+* More refactoring
+* Issues, milestones and their labels
+* NamedUser:
+    * emails
+* Repository:
+    * downloads
+    * tags, branches, commits and comments (not the same as "Git objects" of version 0.2)
+* Automatic generation of the reference documentation of classes, with less "see API"s, and less errors
 
 Version 0.2 (February 23rd, 2012)
 ---------------------------------
