@@ -52,6 +52,80 @@ Emails
 * `add_to_emails( email, ... )`
 * `remove_from_emails( email, ... )`
 
+Class `Branch`
+==============
+* Attributes: see [API](http://developer.github.com/v3/repos/#list-branches)
+
+Class `Commit`
+==============
+* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit)
+* `get_comments()`: list of `CommitComment`
+* `create_comment( ... )`: `CommitComment`: see [API](http://developer.github.com/v3/repos/commits/#create-a-commit-comment) for parameters
+
+Class `CommitComment`
+=====================
+* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit-comment)
+* `edit( ... )`: see [API](http://developer.github.com/v3/repos/commits/#update-a-commit-comment) for parameters
+* `delete()`
+
+Class `Download`
+================
+* Attributes: see [API](http://developer.github.com/v3/repos/downloads/#get-a-single-download)
+* `delete()`
+
+Class `GitBlob`
+===============
+* Attributes: see [API](http://developer.github.com/v3/git/blobs/#get-a-blob)
+
+Class `GitCommit`
+=================
+* Attributes: see [API](http://developer.github.com/v3/git/commits/#get-a-commit)
+
+Class `GitRef`
+==============
+* Attributes: see [API](http://developer.github.com/v3/git/refs/#get-a-reference)
+* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters
+
+Class `GitTag`
+==============
+* Attributes: see [API](http://developer.github.com/v3/git/tags/#get-a-tag)
+
+Class `GitTree`
+===============
+* Attributes: see [API](http://developer.github.com/v3/git/trees/#get-a-tree)
+
+Class `Issue`
+=============
+* Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
+* `get_labels()`: list of `Label`
+* `add_to_labels( label, ... )`
+* `set_labels( label, ... )`
+* `delete_labels()`
+* `remove_from_labels( label )`
+* `get_comments()`: list of `IssueComment`
+* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
+* `get_comment( id )`: `IssueComment`
+
+Class `IssueComment`
+====================
+* Attributes: see [API](http://developer.github.com/v3/issues/comments/#get-a-single-comment)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/comments/#edit-a-comment) for parameters
+* `delete()`
+
+Class `Label`
+=============
+* Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/labels/#update-a-label) for parameters
+* `delete()`
+
+Class `Milestone`
+=================
+* Attributes: see [API](http://developer.github.com/v3/issues/milestones/#get-a-single-milestone)
+* `edit( ... )`: see [API](http://developer.github.com/v3/issues/milestones/#update-a-milestone) for parameters
+* `delete()`
+* `get_labels()`: list of `Label`
+
 Class `NamedUser`
 =================
 * Attributes: see [API](http://developer.github.com/v3/users/#get-a-single-user)
@@ -175,59 +249,6 @@ Class `Tag`
 ===========
 * Attributes: see [API](http://developer.github.com/v3/repos/#list-tags)
 
-Class `Branch`
-==============
-* Attributes: see [API](http://developer.github.com/v3/repos/#list-branches)
-
-Class `Commit`
-==============
-* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit)
-* `get_comments()`: list of `CommitComment`
-* `create_comment( ... )`: `CommitComment`: see [API](http://developer.github.com/v3/repos/commits/#create-a-commit-comment) for parameters
-
-Class `CommitComment`
-=====================
-* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit-comment)
-* `edit( ... )`: see [API](http://developer.github.com/v3/repos/commits/#update-a-commit-comment) for parameters
-* `delete()`
-
-Class `Download`
-================
-* Attributes: see [API](http://developer.github.com/v3/repos/downloads/#get-a-single-download)
-* `delete()`
-
-Class `Label`
-=============
-* Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/labels/#update-a-label) for parameters
-* `delete()`
-
-Class `Issue`
-=============
-* Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
-* `get_labels()`: list of `Label`
-* `add_to_labels( label, ... )`
-* `set_labels( label, ... )`
-* `delete_labels()`
-* `remove_from_labels( label )`
-* `get_comments()`: list of `IssueComment`
-* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
-* `get_comment( id )`: `IssueComment`
-
-Class `IssueComment`
-====================
-* Attributes: see [API](http://developer.github.com/v3/issues/comments/#get-a-single-comment)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/comments/#edit-a-comment) for parameters
-* `delete()`
-
-Class `Milestone`
-================
-* Attributes: see [API](http://developer.github.com/v3/issues/milestones/#get-a-single-milestone)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/milestones/#update-a-milestone) for parameters
-* `delete()`
-* `get_labels()`: list of `Label`
-
 Class `Team`
 ============
 * Attributes: see [API](http://developer.github.com/v3/orgs/teams/#get-team)
@@ -247,25 +268,3 @@ Repositories
 * `has_in_repos( user )`: `bool`
 * `add_to_repos( user )`
 * `remove_from_repos( user )`
-
-Class `GitRef`
-==============
-* Attributes: see [API](http://developer.github.com/v3/git/refs/#get-a-reference)
-* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters
-
-Class `GitBlob`
-===============
-* Attributes: see [API](http://developer.github.com/v3/git/blobs/#get-a-blob)
-
-Class `GitCommit`
-=================
-* Attributes: see [API](http://developer.github.com/v3/git/commits/#get-a-commit)
-
-Class `GitTree`
-===============
-* Attributes: see [API](http://developer.github.com/v3/git/trees/#get-a-tree)
-
-Class `GitTag`
-==============
-* Attributes: see [API](http://developer.github.com/v3/git/tags/#get-a-tag)
-
