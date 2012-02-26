@@ -389,7 +389,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
 ] ) )
 
 __repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
-__repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: user } )
+__repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } )
 __repoListGetable = ListGetable( [], [ "type" ] )
 AuthenticatedUser._addAttributePolicy(
     ExternalListOfObjects( "repos", "repo", Repository,
