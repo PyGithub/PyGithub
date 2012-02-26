@@ -464,6 +464,93 @@ Teams
 * `get_teams()`: list of `Team`
 * `create_team( name, [repo_names, permission] )`: `Team`
 
+Class `PullRequest`
+===================
+
+Attributes
+----------
+* `id`
+* `url`
+* `html_url`
+* `diff_url`
+* `patch_url`
+* `issue_url`
+* `number`
+* `state`
+* `title`
+* `body`
+* `created_at`
+* `updated_at`
+* `closed_at`
+* `merged_at`
+* `merged`
+* `mergeable`
+* `comments`
+* `commits`
+* `additions`
+* `deletions`
+* `changed_files`
+* `head`
+* `base`
+
+Modification
+------------
+* `edit( [title, body, state] )`
+
+Commits
+-------
+* `get_commits()`: list of `Commit`
+
+Files
+-----
+* `get_files()`: list of `PullRequestFile`
+
+Comments
+--------
+* `get_comments()`: list of `PullRequestComment`
+* `get_comment( id )`: `PullRequestComment`
+* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+
+Class `PullRequestComment`
+==========================
+
+Attributes
+----------
+* `url`
+* `id`
+* `body`
+* `path`
+* `position`
+* `commit_id`
+* `created_at`
+* `updated_at`
+* `html_url`
+* `line`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( body )`
+
+Deletion
+--------
+* `delete()`
+
+Class `PullRequestFile`
+=======================
+
+Attributes
+----------
+* `sha`
+* `filename`
+* `status`
+* `additions`
+* `deletions`
+* `changes`
+* `blob_url`
+* `raw_url`
+* `patch`
+
 Class `Repository`
 ==================
 
@@ -596,6 +683,12 @@ Tags
 Branches
 --------
 * `get_branches()`: list of `Branch`
+
+Pulls
+-----
+* `get_pulls( [state] )`: list of `PullRequest`
+* `get_pull( id )`: `PullRequest`
+* `create_pull( title, body, base, head )`: `PullRequest`
 
 Teams
 -----

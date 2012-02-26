@@ -320,26 +320,26 @@ API `/repos/:user/:repo/milestones/:number/labels`
 
 API `/repos/:user/:repo/pulls`
 ==============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_pulls`
+* POST: `Repository.create_pull` (TODO: alternative input)
 
 API `/repos/:user/:repo/pulls/:id`
 ==================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
+* GET: `Repository.get_pull`
+* PATCH: `PullRequest.edit`
 
 API `/repos/:user/:repo/pulls/:id/comments`
 ===========================================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `PullRequest.get_comments`
+* POST: `PullRequest.create_comment` (TODO: alternative input)
 
 API `/repos/:user/:repo/pulls/:id/commits`
 ==========================================
-* GET: (TODO SOON)
+* GET: `PullRequest.get_commits`
 
 API `/repos/:user/:repo/pulls/:id/files`
 ========================================
-* GET: (TODO SOON)
+* GET: `PullRequest.get_files`
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
@@ -348,9 +348,9 @@ API `/repos/:user/:repo/pulls/:id/merge`
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `PullRequest.get_comment`
+* PATCH: `PullRequestComment.edit`
+* DELETE: `PullRequestComment.delete`
 
 API `/repos/:user/:repo/tags`
 =============================

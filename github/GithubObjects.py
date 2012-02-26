@@ -290,6 +290,53 @@ Branch = GithubObject(
 )
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
+PullRequestFile = GithubObject(
+    "PullRequestFile",
+    InternalSimpleAttributes(
+        "sha", "filename", "status", "additions", "deletions", "changes",
+        "blob_url", "raw_url", "patch",
+    ),
+)
+
+PullRequestComment = GithubObject(
+    "PullRequestComment",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/pulls/comments/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "id", "body", "path", "position", "commit_id",
+        "created_at", "updated_at", "html_url", "line",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "user", NamedUser ),
+    Editable( [ "body" ], [] ),
+    Deletable(),
+)
+
+PullRequest = GithubObject(
+    "PullRequest",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/pulls/" + str( obj.number ) ),
+    InternalSimpleAttributes(
+        "id", "url", "html_url", "diff_url", "patch_url", "issue_url", "number",
+        "state", "title", "body", "created_at", "updated_at", "closed_at",
+        "merged_at", "_links", "merged", "mergeable", "comments", "commits",
+        "additions", "deletions", "changed_files", "head", "base", "merged_by",
+        "review_comments",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "user", NamedUser ),
+    Editable( [], [ "title", "body", "state" ] ),
+    ExternalListOfObjects( "commits", "commit", Commit,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
+    ),
+    ExternalListOfObjects( "files", "file", PullRequestFile,
+        ListGetable( [], [] ),
+    ),
+    ExternalListOfObjects( "comments", "comment", PullRequestComment,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementCreatable( [ "body", "commit_id", "path", "position" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
+    ),
+)
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -385,6 +432,11 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ),
     ExternalListOfObjects( "branches", "branch", Branch,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+    ),
+    ExternalListOfObjects( "pulls", "pull", PullRequest,
+        ListGetable( [], [ "state" ], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( [ "title", "body", "base", "head" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
 ] ) )
 

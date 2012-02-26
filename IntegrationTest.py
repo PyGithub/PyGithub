@@ -195,6 +195,8 @@ class IntegrationTest:
         c3 = rf.create_git_commit( "This commit was ter created by PyGithub", t3.sha, [ c2.sha ] )
         rf.get_git_ref( "refs/heads/master" ).edit( c3.sha )
 
+        p = r.create_pull( "Pull request created by PyGithub", "", "jacquev6:master", "BeaverSoftware:master" )
+
         self.dumpRepository( r )
 
     def dumpUser( self, u, doPrivateThings ):
@@ -258,6 +260,7 @@ class IntegrationTest:
         print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ") (" + ", ".join( c.body for c in i.get_comments() ) + ")" for i in r.get_issues() )
         print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
         print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
+        print "  Merge requests:", ", ".join( p.title + "(" + ", ".join( f.filename for f in p.get_files() ) + ")" for p in r.get_pulls() )
         print
         sys.stdout.flush()
 
