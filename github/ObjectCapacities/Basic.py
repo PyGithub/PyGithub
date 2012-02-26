@@ -21,6 +21,7 @@ class AttributeFromCallable:
         cls._addAttribute( self.__name, AttributeFromCallable.AttributeDefinition( self.__name, self.__callable ) )
 
     def autoDocument( self ):
+        return ""
         return "* `" + self.__name + "`\n"
 
 ### @todo include the ArgumentsChecker
@@ -62,6 +63,7 @@ class InternalAttribute:
         cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
 
     def autoDocument( self ):
+        return ""
         return "* `" + self.__attributeName + "`: `" + self.__typePolicy.documentTypeName() + "`\n"
 
 class ExternalAttribute:
@@ -82,12 +84,19 @@ class ExternalAttribute:
         return "* `get_" + self.__attributeName + "()`: `" + self.__typePolicy.documentTypeName() + "`\n"
 
 class SeveralAttributePolicies:
-    def __init__( self, attributePolicies ):
+    def __init__( self, attributePolicies, documentationSection = None ):
         self.__attributePolicies = attributePolicies
+        self.__documentationSection = documentationSection
 
     def apply( self, cls ):
         for attributePolicy in self.__attributePolicies:
             attributePolicy.apply( cls )
 
     def autoDocument( self ):
-        return "".join( attributePolicy.autoDocument() for attributePolicy in self.__attributePolicies )
+        doc = ""
+        if self.__documentationSection is not None:
+            doc += "\n"
+            doc += self.__documentationSection + "\n"
+            doc += "-" * len( self.__documentationSection ) + "\n"
+        doc += "".join( attributePolicy.autoDocument() for attributePolicy in self.__attributePolicies )
+        return doc
