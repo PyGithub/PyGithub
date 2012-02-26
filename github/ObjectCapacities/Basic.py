@@ -28,10 +28,11 @@ class AttributeFromCallable:
 
 ### @todo include the ArgumentsChecker
 class MethodFromCallable:
-    def __init__( self, name, mandatoryParameters, optionalParameters, callable ):
+    def __init__( self, name, mandatoryParameters, optionalParameters, callable, returnTypePolicy ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
         self.__name = name
         self.__callable = callable
+        self.__returnTypePolicy = returnTypePolicy
 
     def apply( self, cls ):
         cls._addMethod( self.__name, self.__execute )
@@ -41,7 +42,11 @@ class MethodFromCallable:
         return self.__callable( obj, **data )
 
     def autoDocument( self ):
-        return "* `" + self.__name + "(" + self.__argumentsChecker.documentParameters() + ")`\n"
+        doc = "* `" + self.__name + "(" + self.__argumentsChecker.documentParameters() + ")`"
+        if self.__returnTypePolicy.hasMeaningfulDocumentation():
+            doc += ": " + self.__returnTypePolicy.documentTypeName()
+        doc += "\n"
+        return doc
 
 class InternalAttribute:
     class AttributeDefinition:

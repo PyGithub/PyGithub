@@ -195,7 +195,7 @@ class ListSetable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `set_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n"
+        return "* `set_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ListDeletable( ListCapacity ):
     def apply( self, cls ):

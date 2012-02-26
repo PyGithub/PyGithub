@@ -17,157 +17,381 @@ Class `Github`
 
 Class `AuthenticatedUser`
 =========================
-* Attributes: see [API](http://developer.github.com/v3/users/#get-the-authenticated-user)
-* `edit( ... )`: see [API](http://developer.github.com/v3/users/#update-the-authenticated-user) for parameters
+
+Attributes
+----------
+* `login`
+* `id`
+* `avatar_url`
+* `gravatar_id`
+* `url`
+* `name`
+* `company`
+* `blog`
+* `location`
+* `email`
+* `hireable`
+* `bio`
+* `public_repos`
+* `public_gists`
+* `followers`
+* `following`
+* `html_url`
+* `created_at`
+* `type`
+* `total_private_repos`
+* `owned_private_repos`
+* `private_gists`
+* `disk_usage`
+* `collaborators`
+* `plan`
+
+Modification
+------------
+* `edit( [name, email, blog, company, location, hireable, bio] )`
 
 Emails
 ------
-* `get_emails()`: list of strings
+* `get_emails()`: list of string
 * `add_to_emails( email, ... )`
-    *
+    * `email`: string
 * `remove_from_emails( email, ... )`
-    *
+    * `email`: string
 
 Followers
 ---------
-* `get_followers()` : list of `NamedUser`
+* `get_followers()`: list of `NamedUser`
 
 Following
 ---------
-* `get_following()` : list of `NamedUser`
-* `add_to_following( user )`
-    *
-* `remove_from_following( user )`
-    *
-* `has_in_following( user )`: `bool`
-    *
+* `get_following()`: list of `NamedUser`
+* `add_to_following( following )`
+    * `following`: `NamedUser`
+* `remove_from_following( following )`
+    * `following`: `NamedUser`
+* `has_in_following( following )`: `bool`
+    * `following`: `NamedUser`
 
 Orgs
 ----
-* `get_orgs()` : list of `Organization`
+* `get_orgs()`: list of `Organization`
 
 Repos
 -----
-* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-your-repositories) for `type` parameter
+* `get_repos( [type] )`: list of `Repository`
 * `get_repo( name )`: `Repository`
-* `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
-* `create_fork( repo )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
 
 Watched
 -------
 * `get_watched()`: list of `Repository`
-* `add_to_watched( repo )`
-    *
-* `remove_from_watched( repo )`
-    *
-* `has_in_watched( repo )`: `bool`
-    *
+* `add_to_watched( watched )`
+    * `watched`: `Repository`
+* `remove_from_watched( watched )`
+    * `watched`: `Repository`
+* `has_in_watched( watched )`: `bool`
+    * `watched`: `Repository`
+
+Forking
+-------
+* `create_fork( repo )`: `Repository`
 
 Class `Branch`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/repos/#list-branches)
+
+Attributes
+----------
+* `name`
+* `commit`: `Commit`
 
 Class `Commit`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit)
+
+Attributes
+----------
+* `sha`
+* `url`
+* `parents`
+* `stats`
+* `files`
+* `commit`: `GitCommit`
+* `author`: `NamedUser`
+* `committer`: `NamedUser`
 
 Comments
 --------
 * `get_comments()`: list of `CommitComment`
-* `create_comment( ... )`: `CommitComment`: see [API](http://developer.github.com/v3/repos/commits/#create-a-commit-comment) for parameters
+* `create_comment( body, commit_id, line, path, position )`: `CommitComment`
 
 Class `CommitComment`
 =====================
-* Attributes: see [API](http://developer.github.com/v3/repos/commits/#get-a-single-commit-comment)
-* `edit( ... )`: see [API](http://developer.github.com/v3/repos/commits/#update-a-commit-comment) for parameters
+
+Attributes
+----------
+* `url`
+* `id`
+* `body`
+* `path`
+* `position`
+* `commit_id`
+* `created_at`
+* `updated_at`
+* `html_url`
+* `line`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( body )`
+
+Deletion
+--------
 * `delete()`
 
 Class `Download`
 ================
-* Attributes: see [API](http://developer.github.com/v3/repos/downloads/#get-a-single-download)
+
+Attributes
+----------
+* `url`
+* `html_url`
+* `id`
+* `name`
+* `description`
+* `size`
+* `download_count`
+* `content_type`
+* `policy`
+* `signature`
+* `bucket`
+* `accesskeyid`
+* `path`
+* `acl`
+* `expirationdate`
+* `prefix`
+* `mime_type`
+* `redirect`
+* `s3_url`
+* `created_at`
+
+Deletion
+--------
 * `delete()`
 
 Class `GitBlob`
 ===============
-* Attributes: see [API](http://developer.github.com/v3/git/blobs/#get-a-blob)
+
+Attributes
+----------
+* `sha`
+* `size`
+* `url`
+* `content`
+* `encoding`
 
 Class `GitCommit`
 =================
-* Attributes: see [API](http://developer.github.com/v3/git/commits/#get-a-commit)
+
+Attributes
+----------
+* `sha`
+* `url`
+* `message`
+* `author`
+* `committer`
+* `tree`
+* `parents`
 
 Class `GitRef`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/git/refs/#get-a-reference)
-* `edit( ... )`: see [API](http://developer.github.com/v3/git/refs/#update-a-reference) for parameters
+
+Attributes
+----------
+* `ref`
+* `url`
+* `object`
+
+Modification
+------------
+* `edit( sha, [force] )`
 
 Class `GitTag`
 ==============
-* Attributes: see [API](http://developer.github.com/v3/git/tags/#get-a-tag)
+
+Attributes
+----------
+* `tag`
+* `sha`
+* `url`
+* `message`
+* `tagger`
+* `object`
 
 Class `GitTree`
 ===============
-* Attributes: see [API](http://developer.github.com/v3/git/trees/#get-a-tree)
+
+Attributes
+----------
+* `sha`
+* `url`
+* `tree`
 
 Class `Issue`
 =============
-* Attributes: see [API](http://developer.github.com/v3/issues/#get-a-single-issue)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/#edit-an-issue) for parameters
+
+Attributes
+----------
+* `url`
+* `html_url`
+* `number`
+* `state`
+* `title`
+* `body`
+* `labels`
+* `comments`
+* `closed_at`
+* `created_at`
+* `updated_at`
+* `id`
+* `closed_by`
+* `pull_request`
+* `user`: `NamedUser`
+* `assignee`: `NamedUser`
+* `milestone`: `Milestone`
+
+Modification
+------------
+* `edit( [title, body, assignee, state, milestone, labels] )`
 
 Labels
 ------
 * `get_labels()`: list of `Label`
 * `add_to_labels( label, ... )`
-    *
+    * `label`: `Label`
 * `set_labels( label, ... )`
-    *
+    * `label`: `Label`
 * `delete_labels()`
 * `remove_from_labels( label )`
-    *
+    * `label`: `Label`
 
 Comments
 --------
 * `get_comments()`: list of `IssueComment`
 * `get_comment( id )`: `IssueComment`
-* `create_comment( ... )`: `IssueComment`: see [API](http://developer.github.com/v3/issues/comments/#create-a-comment) for parameters
+* `create_comment( body )`: `IssueComment`
 
 Class `IssueComment`
 ====================
-* Attributes: see [API](http://developer.github.com/v3/issues/comments/#get-a-single-comment)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/comments/#edit-a-comment) for parameters
+
+Attributes
+----------
+* `url`
+* `body`
+* `created_at`
+* `updated_at`
+* `id`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( body )`
+
+Deletion
+--------
 * `delete()`
 
 Class `Label`
 =============
-* Attributes: see [API](http://developer.github.com/v3/issues/labels/#get-a-single-label)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/labels/#update-a-label) for parameters
+
+Attributes
+----------
+* `url`
+* `name`
+* `color`
+
+Modification
+------------
+* `edit( name, color )`
+
+Deletion
+--------
 * `delete()`
 
 Class `Milestone`
 =================
-* Attributes: see [API](http://developer.github.com/v3/issues/milestones/#get-a-single-milestone)
-* `edit( ... )`: see [API](http://developer.github.com/v3/issues/milestones/#update-a-milestone) for parameters
+
+Attributes
+----------
+* `url`
+* `number`
+* `state`
+* `title`
+* `description`
+* `open_issues`
+* `closed_issues`
+* `created_at`
+* `due_on`
+* `creator`: `NamedUser`
+
+Modification
+------------
+* `edit( title, [state, description, due_on] )`
+
+Deletion
+--------
 * `delete()`
+
+Labels
+------
 * `get_labels()`: list of `Label`
 
 Class `NamedUser`
 =================
-* Attributes: see [API](http://developer.github.com/v3/users/#get-a-single-user)
+
+Attributes
+----------
+* `login`
+* `id`
+* `avatar_url`
+* `gravatar_id`
+* `url`
+* `name`
+* `company`
+* `blog`
+* `location`
+* `email`
+* `hireable`
+* `bio`
+* `public_repos`
+* `public_gists`
+* `followers`
+* `following`
+* `html_url`
+* `created_at`
+* `type`
+* `contributions`
+* `disk_usage`
+* `collaborators`
+* `plan`
+* `total_private_repos`
+* `owned_private_repos`
+* `private_gists`
 
 Followers
 ---------
-* `get_followers()` : list of `NamedUser`
+* `get_followers()`: list of `NamedUser`
 
 Following
 ---------
-* `get_following()` : list of `NamedUser`
+* `get_following()`: list of `NamedUser`
 
 Orgs
 ----
-* `get_orgs()` : list of `Organization`
+* `get_orgs()`: list of `Organization`
 
 Repos
 -----
-* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-user-repositories) for `type` parameter
+* `get_repos( [type] )`: list of `Repository`
 * `get_repo( name )`: `Repository`
 
 Watched
@@ -176,54 +400,126 @@ Watched
 
 Class `Organization`
 ====================
-* Attributes: see [API](http://developer.github.com/v3/orgs/#get)
-* `edit( ... )`: see [API](http://developer.github.com/v3/orgs/#edit) for parameters
+
+Attributes
+----------
+* `login`
+* `id`
+* `url`
+* `avatar_url`
+* `name`
+* `company`
+* `blog`
+* `location`
+* `email`
+* `public_repos`
+* `public_gists`
+* `followers`
+* `following`
+* `html_url`
+* `created_at`
+* `type`
+* `disk_usage`
+* `collaborators`
+* `billing_email`
+* `plan`
+* `private_gists`
+* `total_private_repos`
+* `owned_private_repos`
+
+Modification
+------------
+* `edit( [billing_email, blog, company, email, location, name] )`
 
 Public members
 --------------
 * `get_public_members()`: list of `NamedUser`
-* `add_to_public_members( user )`
-    *
-* `remove_from_public_members( user )`
-    *
-* `has_in_public_members( user )`: `bool`
-    *
+* `add_to_public_members( public_member )`
+    * `public_member`: `NamedUser`
+* `remove_from_public_members( public_member )`
+    * `public_member`: `NamedUser`
+* `has_in_public_members( public_member )`: `bool`
+    * `public_member`: `NamedUser`
 
 Members
 -------
 * `get_members()`: list of `NamedUser`
-* `remove_from_members( user )`
-    *
-* `has_in_members( user )`: `bool`
-    *
+* `remove_from_members( member )`
+    * `member`: `NamedUser`
+* `has_in_members( member )`: `bool`
+    * `member`: `NamedUser`
 
 Repos
 -----
-* `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-organization-repositories) for `type` parameter
+* `get_repos( [type] )`: list of `Repository`
 * `get_repo( name )`: `Repository`
-* `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+
+Forking
+-------
 * `create_fork( repo )`: `Repository`
 
 Teams
 -----
 * `get_teams()`: list of `Team`
-* `create_team( ... )`: `Team`: see [API](http://developer.github.com/v3/orgs/teams/#create-team) for parameters
+* `create_team( name, [repo_names, permission] )`: `Team`
 
 Class `Repository`
 ==================
-* Attributes: see [API](http://developer.github.com/v3/repos/#get)
-* `edit( ... )`: see [API](http://developer.github.com/v3/repos/#edit) for parameters
+
+Attributes
+----------
+* `url`
+* `html_url`
+* `clone_url`
+* `git_url`
+* `ssh_url`
+* `svn_url`
+* `name`
+* `description`
+* `homepage`
+* `language`
+* `private`
+* `fork`
+* `forks`
+* `watchers`
+* `size`
+* `master_branch`
+* `open_issues`
+* `pushed_at`
+* `created_at`
+* `organization`
+* `has_issues`
+* `has_wiki`
+* `has_downloads`
+* `mirror_url`
+* `updated_at`
+* `id`
+* `owner`: `NamedUser`
+* `parent`: `Repository`
+* `source`: `Repository`
+
+Forks
+-----
+* `get_forks()`: list of `Repository`
+
+Modification
+------------
+* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
+
+Languages
+---------
 * `get_languages()`: dictionary of strings to integers
 
 Collaborators
 -------------
 * `get_collaborators()`: list of `NamedUser`
-* `add_to_collaborators( user )`
-    *
-* `remove_from_collaborators( user )`
-    *
-* `has_in_collaborators( user )`: `bool`
-    *
+* `add_to_collaborators( collaborator )`
+    * `collaborator`: `NamedUser`
+* `remove_from_collaborators( collaborator )`
+    * `collaborator`: `NamedUser`
+* `has_in_collaborators( collaborator )`: `bool`
+    * `collaborator`: `NamedUser`
 
 Contributors
 ------------
@@ -237,51 +533,51 @@ Git refs
 --------
 * `get_git_refs()`: list of `GitRef`
 * `get_git_ref( ref )`: `GitRef`
-* `create_git_ref( ... )`: `GitRef`: see [API](http://developer.github.com/v3/git/refs/#create-a-reference) for parameters
+* `create_git_ref( ref, sha )`: `GitRef`
 
 Git commits
 -----------
 * `get_git_commit( sha )`: `GitCommit`
-* `create_git_commit( ... )`: `GitCommit`: see [API](http://developer.github.com/v3/git/commits/#create-a-commit) for parameters
+* `create_git_commit( message, tree, parents, [author, commiter] )`: `GitCommit`
 
 Git trees
 ---------
 * `get_git_tree( sha )`: `GitTree`
-* `create_git_tree( ... )`: `GitTree`: see [API](http://developer.github.com/v3/git/trees/#create-a-tree) for parameters
+* `create_git_tree( tree )`: `GitTree`
 
 Git blobs
 ---------
 * `get_git_blob( sha )`: `GitBlob`
-* `create_git_blob( ... )`: `GitBlob`: see [API](http://developer.github.com/v3/git/blobs/#create-a-blob) for parameters
+* `create_git_blob( content, encoding )`: `GitBlob`
 
 Git tags
 --------
 * `get_git_tag( sha )`: `GitTag`
-* `create_git_tag( ... )`: `GitTag`: see [API](http://developer.github.com/v3/git/tags/#create-a-tag-object) for parameters
+* `create_git_tag( tag, message, object, type, [tagger] )`: `GitTag`
 
 Labels
 ------
 * `get_labels()`: list of `Label`
-* `create_label( ... )`: `Label`: see [API](http://developer.github.com/v3/issues/labels/#create-a-label) for parameters
-* `get_label( id )`: `Label`
+* `get_label( name )`: `Label`
+* `create_label( name, color )`: `Label`
 
 Milestones
 ----------
-* `get_milestones( ... )`: list of `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#list-milestones-for-a-repository) for parameters
-* `create_milestone( ... )`: `Milestone`: see [API](http://developer.github.com/v3/issues/milestones/#create-a-milestone) for parameters
+* `get_milestones( [state, sort, direction] )`: list of `Milestone`
 * `get_milestone( number )`: `Milestone`
+* `create_milestone( title, [state, description, due_on] )`: `Milestone`
 
 Issues
 ------
-* `get_issues( ... )`: list of `Issue`: see [API](http://developer.github.com/v3/issues/#list-issues-for-a-repository) for parameters
-* `create_issue( ... )`: `Issue`: see [API](http://developer.github.com/v3/issues/#create-an-issue) for parameters
-* `get_issue( id )`: `Issue`
+* `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
+* `get_issue( number )`: `Issue`
+* `create_issue( title, [body, assignee, milestone, labels] )`: `Issue`
 
 Downloads
 ---------
-`Repository.get_downloads()` list of `Download`
-`Repository.create_download( ... )`: `Download`: see [API](http://developer.github.com/v3/repos/downloads/#create-a-new-download-part-1-create-the-resource)
-`Repository.get_download( id )`: `Download`
+* `get_downloads()`: list of `Download`
+* `get_download( id )`: `Download`
+* `create_download( name, size, [description, content_type] )`: `Download`
 
 Comments
 --------
@@ -290,7 +586,7 @@ Comments
 
 Commits
 -------
-* `get_commits( ... )`: list of `Commit`: see [API](http://developer.github.com/v3/repos/commits/#list-commits-on-a-repository) for parameters
+* `get_commits( [sha, path] )`: list of `Commit`
 * `get_commit( sha )`: `Commit`
 
 Tags
@@ -301,40 +597,58 @@ Branches
 --------
 * `get_branches()`: list of `Branch`
 
-Forks
------
-* `get_forks()`: list of `Repository`
-
 Teams
 -----
 * `get_teams()`: list of `Team`
 
 Class `Tag`
 ===========
-* Attributes: see [API](http://developer.github.com/v3/repos/#list-tags)
+
+Attributes
+----------
+* `name`
+* `zipball_url`
+* `tarball_url`
+* `commit`: `Commit`
 
 Class `Team`
 ============
-* Attributes: see [API](http://developer.github.com/v3/orgs/teams/#get-team)
-* `edit( ... )`: see [API](http://developer.github.com/v3/orgs/teams/#edit-team) for parameters
+
+Attributes
+----------
+* `url`
+* `name`
+* `id`
+* `permission`
+* `members_count`
+* `repos_count`
+
+Modification
+------------
+* `edit( name, [permission] )`
+
+Deletion
+--------
 * `delete()`
 
 Members
 -------
 * `get_members()`: list of `NamedUser`
-* `add_to_members( user )`
-    *
-* `remove_from_members( user )`
-    *
-* `has_in_members( user )`: `bool`
-    *
+* `add_to_members( member )`
+    * `member`: `NamedUser`
+* `remove_from_members( member )`
+    * `member`: `NamedUser`
+* `has_in_members( member )`: `bool`
+    * `member`: `NamedUser`
 
 Repos
 -----
 * `get_repos()`: list of `Repository`
 * `add_to_repos( repo )`
-    *
+    * `repo`: `Repository`
 * `remove_from_repos( repo )`
-    *
+    * `repo`: `Repository`
 * `has_in_repos( repo )`: `bool`
-    *
+    * `repo`: `Repository`
+
+

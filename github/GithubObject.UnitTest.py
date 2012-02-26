@@ -449,7 +449,7 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], myCallable )
+        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], myCallable, SimpleTypePolicy( None ) )
     )
 
     def testCallMethod( self ):

@@ -304,8 +304,21 @@ Repository = GithubObject(
         "mirror_url", "updated_at", "id",
     ),
     InternalObjectAttribute( "owner", NamedUser ),
-    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ExternalSimpleAttribute( "languages", "dictionary from strings to integers" ),
+)
+Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
+Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
+Repository._addAttributePolicy(
+    ExternalListOfObjects( "forks", "fork", Repository,
+        ListGetable( [], [] )
+    )
+)
+Repository._addAttributePolicy(
+    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] )
+)
+Repository._addAttributePolicy(
+    SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
+)
+Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),
@@ -373,14 +386,7 @@ Repository = GithubObject(
     ExternalListOfObjects( "branches", "branch", Branch,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
     ),
-)
-Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
-Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
-Repository._addAttributePolicy(
-    ExternalListOfObjects( "forks", "fork", Repository,
-        ListGetable( [], [] )
-    )
-)
+] ) )
 
 __repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
 __repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: user } )
@@ -423,11 +429,11 @@ NamedUser._addAttributePolicy(
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
     return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks", None, None ), lazy = True )
-AuthenticatedUser._addAttributePolicy( MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForUser ) )
+AuthenticatedUser._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForUser, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
     return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org": org.login }, None ), lazy = True )
-Organization._addAttributePolicy( MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg ) )
+Organization._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
 
 Team = GithubObject(
     "Team",
