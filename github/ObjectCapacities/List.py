@@ -5,9 +5,11 @@ from TypePolicies import *
 from ArgumentsChecker import *
 
 class ListCapacity:
-    def setList( self, attributeName, typePolicy ):
+    def setList( self, attributeName, singularName, typePolicy ):
         self.attributeName = attributeName
+        self.singularName = singularName
         self.safeAttributeName = attributeName.replace( "/", "_" )
+        self.safeSingularName = singularName.replace( "/", "_" )
         self.typePolicy = typePolicy
 
 class ElementAddable( ListCapacity ):
@@ -32,25 +34,23 @@ class ElementHasable( ListCapacity ):
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeQueried ), None, None ) == 204
 
 class ElementCreatable( ListCapacity ):
-    def __init__( self, singularName, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
+    def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__createName = "create_" + singularName
         self.__modifyAttributes = modifyAttributes
 
     def apply( self, cls ):
-        cls._addMethod( self.__createName, self.__execute )
+        cls._addMethod( "create_" + self.singularName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
         return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data ) ) )
 
 class ElementGetable( ListCapacity ):
-    def __init__( self, singularName, attributes ):
-        self.__getName = "get_" + singularName
+    def __init__( self, attributes ):
         self.__attributes = attributes
 
     def apply( self, cls ):
-        cls._addMethod( self.__getName, self.__execute )
+        cls._addMethod( "get_" + self.singularName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         return self.typePolicy.createNonLazy( obj, self.__attributes( obj, *args, **kwds ) )
@@ -98,12 +98,12 @@ class ListDeletable( ListCapacity ):
     def __execute( self, obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, None )
 
-def ExternalListOfObjects( attributeName, type, *capacities ):
+def ExternalListOfObjects( attributeName, singularName, type, *capacities ):
     for capacity in capacities:
-        capacity.setList( attributeName, ObjectTypePolicy( type ) )
+        capacity.setList( attributeName, singularName, ObjectTypePolicy( type ) )
     return SeveralAttributePolicies( capacities )
 
-def ExternalListOfSimpleTypes( attributeName, *capacities ):
+def ExternalListOfSimpleTypes( attributeName, singularName, *capacities ):
     for capacity in capacities:
-        capacity.setList( attributeName, SimpleTypePolicy() )
+        capacity.setList( attributeName, singularName, SimpleTypePolicy() )
     return SeveralAttributePolicies( capacities )
