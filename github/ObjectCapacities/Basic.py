@@ -20,6 +20,9 @@ class AttributeFromCallable:
     def apply( self, cls ):
         cls._addAttribute( self.__name, AttributeFromCallable.AttributeDefinition( self.__name, self.__callable ) )
 
+    def autoDocument( self ):
+        return "* `" + self.__name + "`\n"
+
 ### @todo include the ArgumentsChecker
 class MethodFromCallable:
     def __init__( self, name, callable ):
@@ -28,6 +31,9 @@ class MethodFromCallable:
 
     def apply( self, cls ):
         cls._addMethod( self.__name, self.__callable )
+
+    def autoDocument( self ):
+        return "* `" + self.__name + "( ... )`\n"
 
 class InternalAttribute:
     class AttributeDefinition:
@@ -55,6 +61,9 @@ class InternalAttribute:
     def apply( self, cls ):
         cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
 
+    def autoDocument( self ):
+        return "* `" + self.__attributeName + "`: `" + self.__typePolicy.documentTypeName() + "`\n"
+
 class ExternalAttribute:
     def __init__( self, attributeName, typePolicy ):
         self.__attributeName = attributeName
@@ -69,6 +78,9 @@ class ExternalAttribute:
             obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
         )
 
+    def autoDocument( self ):
+        return "* `get_" + self.__attributeName + "()`: `" + self.__typePolicy.documentTypeName() + "`\n"
+
 class SeveralAttributePolicies:
     def __init__( self, attributePolicies ):
         self.__attributePolicies = attributePolicies
@@ -76,3 +88,6 @@ class SeveralAttributePolicies:
     def apply( self, cls ):
         for attributePolicy in self.__attributePolicies:
             attributePolicy.apply( cls )
+
+    def autoDocument( self ):
+        return "".join( attributePolicy.autoDocument() for attributePolicy in self.__attributePolicies )

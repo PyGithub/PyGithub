@@ -5,6 +5,10 @@ class SimpleTypePolicy:
     def getIdentity( self, value ):
         return value
 
+    def documentTypeName( self ):
+        ### @todo
+        return "SHIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT"
+
 class ObjectTypePolicy:
     def __init__( self, type ):
         self.__type = type
@@ -21,3 +25,6 @@ class ObjectTypePolicy:
     def getIdentity( self, obj ):
         assert isinstance( obj, self.__type )
         return obj._identity
+
+    def documentTypeName( self ):
+        return self.__type.__name__
