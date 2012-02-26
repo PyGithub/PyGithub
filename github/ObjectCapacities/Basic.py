@@ -70,8 +70,13 @@ class InternalAttribute:
         cls._addAttribute( self.__attributeName, InternalAttribute.AttributeDefinition( self.__typePolicy ) )
 
     def autoDocument( self ):
-        return ""
-        return "* `" + self.__attributeName + "`: `" + self.__typePolicy.documentTypeName() + "`\n"
+        if self.__attributeName.startswith( "_" ):
+            return ""
+        doc = "* `" + self.__attributeName + "`"
+        if self.__typePolicy.hasMeaningfulDocumentation():
+            doc += ": " + self.__typePolicy.documentTypeName()
+        doc += "\n"
+        return doc
 
 class ExternalAttribute:
     def __init__( self, attributeName, typePolicy ):
@@ -88,7 +93,7 @@ class ExternalAttribute:
         )
 
     def autoDocument( self ):
-        return "* `get_" + self.__attributeName + "()`: `" + self.__typePolicy.documentTypeName() + "`\n"
+        return "* `get_" + self.__attributeName + "()`: " + self.__typePolicy.documentTypeName() + "\n"
 
 class SeveralAttributePolicies:
     def __init__( self, attributePolicies, documentationSection = None ):

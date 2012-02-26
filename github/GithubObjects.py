@@ -15,7 +15,7 @@ AuthenticatedUser = GithubObject(
         "disk_usage", "collaborators", "plan",
     ),
     Editable( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ),
-    ExternalListOfSimpleTypes( "emails", "email",
+    ExternalListOfSimpleTypes( "emails", "email", "string",
         ListGetable( [], [] ),
         SeveralElementsAddable(),
         SeveralElementsRemovable()
@@ -305,7 +305,7 @@ Repository = GithubObject(
     ),
     InternalObjectAttribute( "owner", NamedUser ),
     Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ),
-    ExternalSimpleAttribute( "languages" ),
+    ExternalSimpleAttribute( "languages", "dictionary from strings to integers" ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),

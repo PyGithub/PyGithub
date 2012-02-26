@@ -409,7 +409,7 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfSimpleTypes( "a3s", "a3",
+        ExternalListOfSimpleTypes( "a3s", "a3", "",
             ListGetable( [], [] ),
             SeveralElementsAddable(),
             SeveralElementsRemovable(),
@@ -435,10 +435,10 @@ class GithubObjectWithExternalSimpleAttribute( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalSimpleAttribute( "a3" )
+        ExternalSimpleAttribute( "a3", "" )
     )
 
-    def testCallMethod( self ):
+    def testGetAttribute( self ):
         self.expectDataGet( "/test/a3" ).andReturn( 72 )
         self.assertEqual( self.o.get_a3(), 72 )
 

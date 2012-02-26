@@ -1,13 +1,18 @@
 class SimpleTypePolicy:
+    def __init__( self, type ):
+        self.__type = type
+
     def createLazy( self, obj, value ):
         return value
 
     def getIdentity( self, value ):
         return value
 
+    def hasMeaningfulDocumentation( self ):
+        return self.__type is not None
+
     def documentTypeName( self ):
-        ### @todo
-        return "SHIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIT"
+        return self.__type
 
 class ObjectTypePolicy:
     def __init__( self, type ):
@@ -26,5 +31,8 @@ class ObjectTypePolicy:
         assert isinstance( obj, self.__type )
         return obj._identity
 
+    def hasMeaningfulDocumentation( self ):
+        return True
+
     def documentTypeName( self ):
-        return self.__type.__name__
+        return "`" + self.__type.__name__ + "`"

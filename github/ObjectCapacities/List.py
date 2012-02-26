@@ -25,7 +25,7 @@ class ElementAddable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementRemovable( ListCapacity ):
     def apply( self, cls ):
@@ -40,7 +40,7 @@ class ElementRemovable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementHasable( ListCapacity ):
     def apply( self, cls ):
@@ -55,7 +55,7 @@ class ElementHasable( ListCapacity ):
         ) == 204
 
     def autoDocument( self ):
-        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementCreatable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
@@ -85,7 +85,7 @@ class ElementCreatable( ListCapacity ):
         return attributes
 
     def autoDocument( self ):
-        return "* `create_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `create_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
@@ -110,7 +110,7 @@ class ElementGetable( ListCapacity ):
         return attributes
 
     def autoDocument( self ):
-        return "* `get_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `get_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
 
 class SeveralElementsAddable( ListCapacity ):
     def apply( self, cls ):
@@ -128,7 +128,7 @@ class SeveralElementsAddable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + ", .... )`\n    * `" + self.singularName + "`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class SeveralElementsRemovable( ListCapacity ):
     def apply( self, cls ):
@@ -146,7 +146,7 @@ class SeveralElementsRemovable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + ", .... )`\n    * `" + self.singularName + "`: `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ListGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
@@ -172,7 +172,7 @@ class ListGetable( ListCapacity ):
         ]
 
     def autoDocument( self ):
-        return "* `get_" + self.safeAttributeName + "(" + self.__argumentsChecker.documentParameters() + ")`: list of `" + self.typePolicy.documentTypeName() + "`\n"
+        return "* `get_" + self.safeAttributeName + "(" + self.__argumentsChecker.documentParameters() + ")`: list of " + self.typePolicy.documentTypeName() + "\n"
 
     def __modifyAttributes( self, obj, attributes ):
         for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
@@ -195,7 +195,7 @@ class ListSetable( ListCapacity ):
         )
 
     def autoDocument( self ):
-        return "* `set_" + self.safeAttributeName + "( " + self.singularName + ", .... )`\n"
+        return "* `set_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n"
 
 class ListDeletable( ListCapacity ):
     def apply( self, cls ):
@@ -217,7 +217,7 @@ def ExternalListOfObjects( attributeName, singularName, type, *capacities ):
         capacity.setList( attributeName, singularName, ObjectTypePolicy( type ) )
     return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )
 
-def ExternalListOfSimpleTypes( attributeName, singularName, *capacities ):
+def ExternalListOfSimpleTypes( attributeName, singularName, type, *capacities ):
     for capacity in capacities:
-        capacity.setList( attributeName, singularName, SimpleTypePolicy() )
+        capacity.setList( attributeName, singularName, SimpleTypePolicy( type ) )
     return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )
