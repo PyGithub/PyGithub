@@ -326,6 +326,7 @@ class GithubObjectWithElementCreatableExternalListOfObjects( TestCaseWithGithubT
         self.assertEqual( self.o.create_a3( "nameCreate", 1, 2 ).id, "idCreate" )
 
     def testCreateWithSillyArgument( self ):
+        self.g.expect._dataRequest.andReturn( None )
         with self.assertRaises( TypeError ):
             self.o.create_a3( foobar = 42 )
 
@@ -396,7 +397,7 @@ class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( lambda obj, id: { "id": id } ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( [ "id" ], [] ) )
     )
 
     def testGetList( self ):
