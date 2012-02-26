@@ -19,3 +19,18 @@ class ArgumentsChecker:
             if argumentName not in data:
                 raise TypeError()
         return data
+
+    def documentParameters( self ):
+        mandatory = ", ".join( self.__mandatoryParameters )
+        optional = "[" + ", ".join( self.__optionalParameters ) + "]"
+
+        if len( self.__mandatoryParameters ) == 0:
+            if len( self.__optionalParameters ) == 0:
+                return ""
+            else:
+                return " " + optional + " "
+        else:
+            if len( self.__optionalParameters ) == 0:
+                return " " + mandatory + " "
+            else:
+                return " " + mandatory + ", " + optional + " "

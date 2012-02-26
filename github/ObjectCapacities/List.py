@@ -1,89 +1,223 @@
 import itertools
 
-import ArgumentsChecker
+from Basic import *
+from TypePolicies import *
+from ArgumentsChecker import *
 
-class ElementAddable:
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( "add_to_" + list.attributeName.replace( "/", "_" ), self.__execute )
+class ListCapacity:
+    def setList( self, attributeName, singularName, typePolicy ):
+        self.attributeName = attributeName
+        self.singularName = singularName
+        self.safeAttributeName = attributeName.replace( "/", "_" )
+        self.safeSingularName = singularName.replace( "/", "_" )
+        self.typePolicy = typePolicy
+
+class ElementAddable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeAdded ):
-        assert isinstance( toBeAdded, self.__type )
-        obj._github._statusRequest( "PUT", obj._baseUrl + "/" + self.__attributeName + "/" + toBeAdded._identity, None, None )
+        obj._github._statusRequest(
+            "PUT",
+            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeAdded ),
+            None,
+            None
+        )
 
-class ElementRemovable:
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( "remove_from_" + list.attributeName.replace( "/", "_" ), self.__execute )
+    def autoDocument( self ):
+        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+
+class ElementRemovable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "remove_from_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeDeleted ):
-        assert isinstance( toBeDeleted, self.__type )
-        obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.__attributeName + "/" + toBeDeleted._identity, None, None )
+        obj._github._statusRequest(
+            "DELETE",
+            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeDeleted ),
+            None,
+            None
+        )
 
-class ElementHasable:
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( "has_in_" + list.attributeName.replace( "/", "_" ), self.__execute )
+    def autoDocument( self ):
+        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + " )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+
+class ElementHasable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "has_in_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, toBeQueried ):
-        assert isinstance( toBeQueried, self.__type )
-        return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.__attributeName + "/" + toBeQueried._identity, None, None ) == 204
+        return obj._github._statusRequest(
+            "GET",
+            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeQueried ),
+            None,
+            None
+        ) == 204
 
-class ElementCreatable:
-    def __init__( self, singularName, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
-        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__createName = "create_" + singularName
-        self.__modifyAttributes = modifyAttributes
+    def autoDocument( self ):
+        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( self.__createName, self.__execute )
+class ElementCreatable( ListCapacity ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__attributeModifiers = attributeModifiers
+
+    def apply( self, cls ):
+        cls._addMethod( "create_" + self.singularName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        data = self.__argumentsChecker.check( args, kwds )
-        return self.__type( obj._github, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.__attributeName, None, data ) ), lazy = True )
+        return self.typePolicy.createLazy(
+            obj,
+            self.__modifyAttributes(
+                obj,
+                obj._github._dataRequest(
+                    "POST",
+                    obj._baseUrl + "/" + self.attributeName,
+                    None,
+                    self.__argumentsChecker.check( args, kwds )
+                )
+            )
+        )
 
-class ListGetable:
-    def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
-        self.__argumentsChecker = ArgumentsChecker.ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__modifyAttributes = modifyAttributes
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
 
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( "get_" + list.attributeName.replace( "/", "_" ), self.__execute )
+    def autoDocument( self ):
+        return "* `create_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
+
+class ElementGetable( ListCapacity ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__attributeModifiers = attributeModifiers
+
+    def apply( self, cls ):
+        cls._addMethod( "get_" + self.singularName, self.__execute )
+
+    def __execute( self, obj, *args, **kwds ):
+        return self.typePolicy.createNonLazy(
+            obj,
+            self.__modifyAttributes(
+                obj,
+                self.__argumentsChecker.check( args, kwds )
+            )
+        )
+
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
+
+    def autoDocument( self ):
+        return "* `get_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
+
+class SeveralElementsAddable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "add_to_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj, *toBeAddeds ):
+        obj._github._statusRequest(
+            "POST",
+            obj._baseUrl + "/" + self.attributeName,
+            None,
+            [
+                self.typePolicy.getIdentity( toBeAdded )
+                for toBeAdded in toBeAddeds
+            ]
+        )
+
+    def autoDocument( self ):
+        return "* `add_to_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+
+class SeveralElementsRemovable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "remove_from_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj, *toBeDeleteds ):
+        obj._github._statusRequest(
+            "DELETE",
+            obj._baseUrl + "/" + self.attributeName,
+            None,
+            [
+                self.typePolicy.getIdentity( toBeDeleted )
+                for toBeDeleted in toBeDeleteds
+            ]
+        )
+
+    def autoDocument( self ):
+        return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+
+class ListGetable( ListCapacity ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__attributeModifiers = attributeModifiers
+
+    def apply( self, cls ):
+        cls._addMethod( "get_" + self.safeAttributeName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
         params = self.__argumentsChecker.check( args, kwds )
         return [
-            self.__type( obj._github, self.__modifyAttributes( obj, attributes ), lazy = True )
-            for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, params, None )
+            self.typePolicy.createLazy(
+                obj,
+                self.__modifyAttributes( obj, attributes )
+            )
+            for attributes in obj._github._dataRequest(
+                "GET",
+                obj._baseUrl + "/" + self.attributeName,
+                params,
+                None
+            )
         ]
 
-class ElementGetable:
-    def __init__( self, singularName, attributes ):
-        self.__getName = "get_" + singularName
-        self.__attributes = attributes
+    def autoDocument( self ):
+        return "* `get_" + self.safeAttributeName + "(" + self.__argumentsChecker.documentParameters() + ")`: list of " + self.typePolicy.documentTypeName() + "\n"
 
-    def apply( self, list, cls ):
-        self.__type = list.type
-        self.__attributeName = list.attributeName
-        cls._addMethod( self.__getName, self.__execute )
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
 
-    def __execute( self, obj, *args, **kwds ):
-        return self.__type( obj._github, self.__attributes( obj, *args, **kwds ), lazy = False )
-
-class ListAttribute:
-    def __init__( self, attributeName, type, *capacities ):
-        self.attributeName = attributeName
-        self.type = type
-        self.__getName = "get_" + attributeName
-        self.__capacities = capacities
-
+class ListSetable( ListCapacity ):
     def apply( self, cls ):
-        for capacity in self.__capacities:
-            capacity.apply( self, cls )
+        cls._addMethod( "set_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj, *toBeSets ):
+        obj._github._statusRequest(
+            "PUT",
+            obj._baseUrl + "/" + self.attributeName,
+            None,
+            [
+                self.typePolicy.getIdentity( toBeSet )
+                for toBeSet in toBeSets
+            ]
+        )
+
+    def autoDocument( self ):
+        return "* `set_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+
+class ListDeletable( ListCapacity ):
+    def apply( self, cls ):
+        cls._addMethod( "delete_" + self.safeAttributeName, self.__execute )
+
+    def __execute( self, obj ):
+        obj._github._statusRequest(
+            "DELETE",
+            obj._baseUrl + "/" + self.attributeName,
+            None,
+            None
+        )
+
+    def autoDocument( self ):
+        return "* `delete_" + self.safeAttributeName + "()`\n"
+
+def ExternalListOfObjects( attributeName, singularName, type, *capacities ):
+    for capacity in capacities:
+        capacity.setList( attributeName, singularName, ObjectTypePolicy( type ) )
+    return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )
+
+def ExternalListOfSimpleTypes( attributeName, singularName, type, *capacities ):
+    for capacity in capacities:
+        capacity.setList( attributeName, singularName, SimpleTypePolicy( type ) )
+    return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )

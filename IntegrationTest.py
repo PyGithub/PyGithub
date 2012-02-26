@@ -1,9 +1,9 @@
 #!/bin/env python
 
+import time
 import sys
 import httplib
 import base64
-
 
 from github import Github
 
@@ -92,6 +92,7 @@ class IntegrationTest:
         self.playScenario()
 
     def prepareRecord( self ):
+        self.avoidError500FromGithub = lambda: time.sleep( 1 )
         try:
             import GithubCredentials
             self.g = Github( GithubCredentials.login, GithubCredentials.password )
@@ -104,6 +105,7 @@ class IntegrationTest:
             exit( 1 )
 
     def prepareReplay( self ):
+        self.avoidError500FromGithub = lambda: 0
         try:
             file = open( self.__fileName )
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
@@ -117,9 +119,9 @@ class IntegrationTest:
         self.doSomeWrites()
 
     def doSomeReads( self ):
-        self.dumpUser( self.g.get_user() )
+        self.dumpUser( self.g.get_user(), doPrivateThings = True )
         jacquev6 = self.g.get_user( "jacquev6" )
-        self.dumpUser( jacquev6 )
+        self.dumpUser( jacquev6, doPrivateThings = False )
         self.dumpOrganization( self.g.get_organization( "github" ), doTeams = False )
         self.dumpOrganization( self.g.get_organization( "BeaverSoftware" ), doTeams = True )
         self.dumpRepository( jacquev6.get_repo( "PyGithub" ) )
@@ -143,6 +145,9 @@ class IntegrationTest:
     def doSomeWritesToRepository( self ):
         u = self.g.get_user()
         r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
+        self.avoidError500FromGithub()
+
+        # Git objects
         b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
         t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
         c1 = r.create_git_commit( "This commit was created by PyGithub", t1.sha, [] )
@@ -153,9 +158,48 @@ class IntegrationTest:
         master.edit( c2.sha )
         tag = r.create_git_tag( "a_tag", "This tag was created by PyGithub", c2.sha, "commit" )
         r.create_git_ref( "refs/tags/a_tag", tag.sha )
+
+        c = r.get_commit( c2.sha )
+        c.create_comment( "Commented with PyGithub", c.sha, 1, "foo.bar", 1 )
+
+        # Issues and milestones
+        l = r.create_label( "Label created by PyGithub", "00FF00" )
+        l.edit( "Label created and modified by PyGithub", "FFFF00" )
+        m = r.create_milestone( title = "This milestone was created by PyGithub" )
+        m.edit( title = m.title, description = "And the description was modified by PyGithub as well" )
+        m = r.create_milestone( title = "This milestone was also created by PyGithub" )
+        m.delete()
+        i = r.create_issue( "Issue created by PyGithub" )
+        i.edit( body = "Body edited by PyGithub" )
+
+        la = r.create_label( "a", "00FF00" )
+        lb = r.create_label( "b", "00FF00" )
+        lc = r.create_label( "c", "00FF00" )
+        i.set_labels( la, lb )
+        i.remove_from_labels( lb )
+        i.delete_labels()
+        i.add_to_labels( lc )
+
+        i.create_comment( "Commented from PyGithub" )
+
+        # Downloads
+        r.create_download( "MyDownloadCreatedByPyGithub", 1000 )
+
+        # Forking, commiting and requesting merge
+        o = self.g.get_organization( "BeaverSoftware" )
+
+        rf = o.create_fork( r )
+        self.avoidError500FromGithub()
+        b3 = rf.create_git_blob( "This blob was ter created by PyGithub", encoding = "latin1" )
+        t3 = rf.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b3.sha } ] )
+        c3 = rf.create_git_commit( "This commit was ter created by PyGithub", t3.sha, [ c2.sha ] )
+        rf.get_git_ref( "refs/heads/master" ).edit( c3.sha )
+
+        p = r.create_pull( "Pull request created by PyGithub", "", "jacquev6:master", "BeaverSoftware:master" )
+
         self.dumpRepository( r )
 
-    def dumpUser( self, u ):
+    def dumpUser( self, u, doPrivateThings ):
         print u.login, "(", u.name, ")"
         print "  Repos:"
         for r in u.get_repos():
@@ -164,9 +208,13 @@ class IntegrationTest:
                 print "<-", r.parent.owner.login + "/" + r.parent.name,
                 print "<-", r.source.owner.login + "/" + r.source.name,
             print
+        if doPrivateThings:
+            print "  Emails:", ", ".join( u.get_emails() )
         print "  Watched:", ", ".join( r.name for r in u.get_watched() )
         print "  Organizations:", ", ".join( o.login for o in u.get_orgs() )
         print "  Following:", ", ".join( f.login for f in u.get_following() )
+        if doPrivateThings:
+            print "  Is following jacquev6:", u.has_in_following( self.g.get_user( "jacquev6" ) )
         print "  Followers:", ", ".join( f.login for f in u.get_followers() )
         print
         sys.stdout.flush()
@@ -188,7 +236,12 @@ class IntegrationTest:
         print "  Contributors:", ", ".join( u.login for u in r.get_contributors() )
         print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
         print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
-        print "  References:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
+        print "  Languages:", r.get_languages()
+        print "  Downloads:", ", ".join( d.name for d in r.get_downloads() )
+        print "  Tags:", ", ".join( t.name + " (" + t.commit.sha + ")" for t in r.get_tags() )
+        print "  Branches:", ", ".join( b.name + " (" + b.commit.sha + ")" for b in r.get_branches() )
+        print "  Commits:", ", ".join( c.commit.message + " (" + str( c.stats ) + " ".join( comment.body for comment in c.get_comments() ) + ")" for c in r.get_commits()[ : 10 ] )
+        print "  Git references:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
         masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
         masterCommit = r.get_git_commit( masterCommitSha )
         masterTreeSha = masterCommit.tree[ "sha" ]
@@ -203,6 +256,11 @@ class IntegrationTest:
         if blob.encoding == "base64":
             print base64.b64decode( blob.content ),
         print
+        print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
+        print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ") (" + ", ".join( c.body for c in i.get_comments() ) + ")" for i in r.get_issues() )
+        print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
+        print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
+        print "  Merge requests:", ", ".join( p.title + "(" + ", ".join( f.filename for f in p.get_files() ) + ")" for p in r.get_pulls() )
         print
         sys.stdout.flush()
 

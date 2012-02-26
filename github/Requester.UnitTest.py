@@ -50,8 +50,8 @@ class TestCase( unittest.TestCase ):
         self.assertEqual( self.r.dataRequest( "GET", "/test", { "toto" : "titi", "tata" : "tutu" }, { "xxx" : 42 } ), { "foo" : "bar" } )
 
     def testPagination( self ):
-        self.expect( "GET", "/test", 'null', 200, [ ( "link", "xxx; next, xxx; last" ) ], '[ 1, 2 ]' )
-        self.expect( "GET", "/test?page=2", 'null', 200, [ ( "link", "xxx; prev, xxx; first, xxx; next, xxx; last" ) ], '[ 3, 4 ]' )
+        self.expect( "GET", "/test", 'null', 200, [ ( "link", "<xxx?page=2>; next, xxx; last" ) ], '[ 1, 2 ]' )
+        self.expect( "GET", "/test?page=2", 'null', 200, [ ( "link", "xxx; prev, xxx; first, <xxx?page=3>; next, xxx; last" ) ], '[ 3, 4 ]' )
         self.expect( "GET", "/test?page=3", 'null', 200, [ ( "link", "xxx; prev, xxx; first" ) ], '[ 5, 6 ]' )
         self.assertEqual( self.r.dataRequest( "GET", "/test", None, None ), [ 1, 2, 3, 4, 5, 6 ] )
 

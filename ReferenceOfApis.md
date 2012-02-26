@@ -63,8 +63,8 @@ API `/networks/:user/:repo/events`
 
 API `/orgs/:org`
 ================
-* GET: `Github.get_organization( login )`: `Organization`
-* PATCH: `Organization.edit( ... )`
+* GET: `Github.get_organization`
+* PATCH: `Organization.edit`
 
 API `/orgs/:org/events`
 =======================
@@ -72,74 +72,74 @@ API `/orgs/:org/events`
 
 API `/orgs/:org/members`
 ========================
-* GET: `Organization.get_members()`: list of `NamedUser`
+* GET: `Organization.get_members`
 
 API `/orgs/:org/members/:user`
 ==============================
-* GET: `Organization.has_in_members( user )`: `bool`
-* DELETE: `Organization.remove_from_members( user )`
+* GET: `Organization.has_in_members`
+* DELETE: `Organization.remove_from_members`
 
 API `/orgs/:org/public_members`
 ===============================
-* GET: `Organization.get_public_members()`: list of `NamedUser`
+* GET: `Organization.get_public_members`
 
 API `/orgs/:org/public_members/:user`
 =====================================
-* GET: `Organization.has_in_public_members( user )`: `bool`
-* PUT: `Organization.add_to_public_members( user )`
-* DELETE: `Organization.remove_from_public_members( user )`
+* GET: `Organization.has_in_public_members`
+* PUT: `Organization.add_to_public_members`
+* DELETE: `Organization.remove_from_public_members`
 
 API `/orgs/:org/repos`
 ======================
-* GET: `Organization.get_repos()`: list of `Repository`
-* POST: `Organization.create_repo( ... )`: `Repository`
+* GET: `Organization.get_repos`
+* POST: `Organization.create_repo`
 
 API `/orgs/:org/teams`
 ======================
-* GET: `Organization.get_teams()`: list of `Team`
-* POST: `Organization.create_team( ... ): `Team`
+* GET: `Organization.get_teams`
+* POST: `Organization.create_team`
 
 API `/repos/:user/:repo`
 ========================
-* GET: `AuthenticatedUser.get_repo( name )`, `NamedUser.get_repo( name )` or `Organization.get_repo( name )`: `Repository`
-* PATCH: `Repository.edit( ... )`
+* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
+* PATCH: `Repository.edit`
 
 API `/repos/:user/:repo/branches`
 =================================
-* GET: (TODO)
+* GET: `Repository.get_branches`
 
 API `/repos/:user/:repo/collaborators`
 ======================================
-* GET: `Repository.get_collaborators()`: list of `NamedUser`
+* GET: `Repository.get_collaborators`
 
 API `/repos/:user/:repo/collaborators/:user`
 ============================================
-* GET: `Repository.has_in_collaborators( user )`: `bool`
-* PUT: `Repository.add_to_collaborators( user )`
-* DELETE: `Repository.remove_from_collaborators( user )`
+* GET: `Repository.has_in_collaborators`
+* PUT: `Repository.add_to_collaborators`
+* DELETE: `Repository.remove_from_collaborators`
 
 API `/repos/:user/:repo/comments`
 =================================
-* GET: (TODO)
+* GET: `Repository.get_comments`
 
 API `/repos/:user/:repo/comments/:id`
 =====================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_comment`
+* PATCH: `CommitComment.edit`
+* DELETE: `CommitComment.delete`
 
 API `/repos/:user/:repo/commits`
 ================================
-* GET: (TODO)
+* GET: `Repository.get_commits`
 
 API `/repos/:user/:repo/commits/:sha`
 =====================================
-* GET: (TODO)
+* GET: `Repository.get_commit`
 
 API `/repos/:user/:repo/commits/:sha/comments`
 ==============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Commit.get_comments`
+* POST: `Commit.create_comment`
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
@@ -147,17 +147,17 @@ API `/repos/:user/:repo/compare/:base...:head`
 
 API `/repos/:user/:repo/contributors`
 =====================================
-* GET: `Repository.get_contributors()`: list of `NamedUser`
+* GET: `Repository.get_contributors`
 
 API `/repos/:user/:repo/downloads`
 ==================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_downloads`
+* POST: `Repository.create_download`
 
 API `/repos/:user/:repo/downloads/:id`
 ======================================
-* GET: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_download`
+* DELETE: `Download.delete`
 
 API `/repos/:user/:repo/events`
 ===============================
@@ -165,54 +165,54 @@ API `/repos/:user/:repo/events`
 
 API `/repos/:user/:repo/forks`
 ==============================
-* GET: `Repository.get_forks()`: list of `Repository`
-* POST: `AuthenticatedUser.create_fork( repo )` or `Organization.create_fork( repo )`: `Repository`
+* GET: `Repository.get_forks`
+* POST: `AuthenticatedUser.create_fork`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
-* POST: `Repository.create_git_blob( ... )`: `GitBlob`
+* POST: `Repository.create_git_blob`
 
 API `/repos/:user/:repo/git/blobs/:sha`
 =======================================
-* GET: `Repository.get_git_blob( sha )`: `GitBlob`
+* GET: `Repository.get_git_blob`
 
 API `/repos/:user/:repo/git/commits`
 ====================================
-* POST: `Repository.create_git_commit( ... )`: `GitCommit`
+* POST: `Repository.create_git_commit`
 
 API `/repos/:user/:repo/git/commits/:sha`
 =========================================
-* GET: `Repository.get_git_commit( sha )`: `GitCommit`
+* GET: `Repository.get_git_commit`
 
 API `/repos/:user/:repo/git/refs`
 =================================
-* GET: `Repository.get_git_refs()`: list of `GitRef`
-* POST: `Repository.create_git_ref( ... )`: `GitRef`
+* GET: `Repository.get_git_refs`
+* POST: `Repository.create_git_ref`
 
 API `/repos/:user/:repo/git/refs/:ref`
 ======================================
-* GET: `Repository.get_git_ref( ref )`: `GitRef`
-* PATCH: `GitRef.edit( ... )`
+* GET: `Repository.get_git_ref`
+* PATCH: `GitRef.edit`
 
 API `/repos/:user/:repo/git/tags`
 =================================
-* POST: `Repository.create_git_tag( ... )`: `GitTag`
+* POST: `Repository.create_git_tag`
 
 API `/repos/:user/:repo/git/tags/:sha`
 ======================================
-* GET: `Repository.get_git_tag( sha )`: `GitTag`
+* GET: `Repository.get_git_tag`
 
 API `/repos/:user/:repo/git/trees`
 ==================================
-* POST: `Repository.create_git_tree( ... )`: `GitTree`
+* POST: `Repository.create_git_tree`
 
 API `/repos/:user/:repo/git/trees?base_tree=`
 =============================================
-* POST: `GitTree.create_update( ... )`: `GitTree` (TODO)
+* POST: `GitTree.create_update` (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
-* GET: `Repository.get_git_tree( sha )`: `GitTree`
+* GET: `Repository.get_git_tree`
 
 API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 ===================================================
@@ -235,39 +235,39 @@ API `/repos/:user/:repo/hooks/:id/test`
 
 API `/repos/:user/:repo/issues`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_issues`
+* POST: `Repository.create_issue`
 
 API `/repos/:user/:repo/issues/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: `Repository.get_issue`
+* PATCH: `Issue.edit`
 
 API `/repos/:user/:repo/issues/:id/comments`
 ============================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Issue.get_comments`
+* POST: `Issue.create_comment`
 
 API `/repos/:user/:repo/issues/:id/labels`
 ==========================================
-* GET: (TODO)
-* POST: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Issue.get_labels`
+* POST: `Issue.add_to_labels`
+* PUT: `Issue.set_labels`
+* DELETE: `Issue.delete_labels`
 
-API `/repos/:user/:repo/issues/:id/labels/:id`
-==============================================
-* DELETE: (TODO)
-
-API `/repos/:user/:repo/issues/:issue_id/events`
+API `/repos/:user/:repo/issues/:id/labels/:name`
 ================================================
+* DELETE: `Issue.remove_from_labels`
+
+API `/repos/:user/:repo/issues/:id/events`
+==========================================
 * GET: (TODO)
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Issue.get_comment`
+* PATCH: `IssueComment.edit`
+* DELETE: `IssueComment.delete`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
@@ -290,56 +290,56 @@ API `/repos/:user/:repo/keys/:id`
 
 API `/repos/:user/:repo/labels`
 ===============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_labels`
+* POST: `Repository.create_label`
 
 API `/repos/:user/:repo/labels/:id`
 ===================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_label`
+* PATCH: `Label.edit`
+* DELETE: `Label.delete`
 
 API `/repos/:user/:repo/languages`
 ==================================
-* GET: (TODO)
+* GET: `Repository.get_languages`
 
 API `/repos/:user/:repo/milestones`
 ===================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_milestones`
+* POST: `Repository.create_milestone`
 
-API `/repos/:user/:repo/milestones/:id`
+API `/repos/:user/:repo/milestones/:number`
 =======================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_milestone`
+* PATCH: `Milestone.edit`
+* DELETE: `Milestone.delete`
 
-API `/repos/:user/:repo/milestones/:id/labels`
+API `/repos/:user/:repo/milestones/:number/labels`
 ==============================================
-* GET: (TODO)
+* GET: `Milestone.get_labels`
 
 API `/repos/:user/:repo/pulls`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_pulls`
+* POST: `Repository.create_pull` (TODO: alternative input)
 
 API `/repos/:user/:repo/pulls/:id`
 ==================================
-* GET: (TODO)
-* PATCH: (TODO)
+* GET: `Repository.get_pull`
+* PATCH: `PullRequest.edit`
 
 API `/repos/:user/:repo/pulls/:id/comments`
 ===========================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `PullRequest.get_comments`
+* POST: `PullRequest.create_comment` (TODO: alternative input)
 
 API `/repos/:user/:repo/pulls/:id/commits`
 ==========================================
-* GET: (TODO)
+* GET: `PullRequest.get_commits`
 
 API `/repos/:user/:repo/pulls/:id/files`
 ========================================
-* GET: (TODO)
+* GET: `PullRequest.get_files`
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
@@ -348,72 +348,72 @@ API `/repos/:user/:repo/pulls/:id/merge`
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `PullRequest.get_comment`
+* PATCH: `PullRequestComment.edit`
+* DELETE: `PullRequestComment.delete`
 
 API `/repos/:user/:repo/tags`
 =============================
-* GET: (TODO)
+* GET: `Repository.get_tags`
 
 API `/repos/:user/:repo/teams`
 ==============================
-* GET: `Repository.get_teams()`: list of `Team`
+* GET: `Repository.get_teams`
 
 API `/repos/:user/:repo/watchers`
 =================================
-* GET: `Repository.get_watchers()`: list of `NamedUser`
+* GET: `Repository.get_watchers`
 
 API `/teams/:id`
 ================
 * GET: Lazy completion of `Team`
-* PATCH: `Team.edit( ... )`
-* DELETE: `Team.delete()`
+* PATCH: `Team.edit`
+* DELETE: `Team.delete`
 
 API `/teams/:id/members`
 ========================
-* GET: `Team.get_members()`: list of `NamedUser`
+* GET: `Team.get_members`
 
 API `/teams/:id/members/:user`
 ==============================
-* GET: `Team.has_in_members( user )`: `bool`
-* PUT: `Team.add_to_members( user )`
-* DELETE: `Team.remove_from_members( user )`
+* GET: `Team.has_in_members`
+* PUT: `Team.add_to_members`
+* DELETE: `Team.remove_from_members`
 
 API `/teams/:id/repos`
 ======================
-* GET: `Team.get_repos()`: list of `Repository`
+* GET: `Team.get_repos`
 
 API `/teams/:id/repos/:user/:repo`
 ==================================
-* GET: `Team.has_in_repos( repo )`: `bool`
-* PUT: `Team.add_to_repos( repo )`
-* DELETE: `Team.remove_from_repos( repo )`
+* GET: `Team.has_in_repos`
+* PUT: `Team.add_to_repos`
+* DELETE: `Team.remove_from_repos`
 
 API `/user`
 ===========
-* GET: `Github.get_user()`: `AuthenticatedUser`
-* PATCH: `AuthenticatedUser.edit( ... )`
+* GET: `Github.get_user`
+* PATCH: `AuthenticatedUser.edit`
 
 API `/user/emails`
 ==================
-* GET: (TODO)
-* POST: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.get_emails`
+* POST: `AuthenticatedUser.add_to_emails`
+* DELETE: `AuthenticatedUser.remove_from_emails`
 
 API `/user/followers`
 =====================
-* GET: `AuthenticatedUser.get_followers()` : list of `NamedUser`
+* GET: `AuthenticatedUser.get_followers`
 
 API `/user/following`
 =====================
-* GET: `AuthenticatedUser.get_following()` : list of `NamedUser`
+* GET: `AuthenticatedUser.get_following`
 
 API `/user/following/:user`
 ===========================
-* GET: `AuthenticatedUser.has_in_following( user )`: `bool`
-* PUT: `AuthenticatedUser.add_to_following( user )`
-* DELETE: `AuthenticatedUser.remove_from_following( user )`
+* GET: `AuthenticatedUser.has_in_following`
+* PUT: `AuthenticatedUser.add_to_following`
+* DELETE: `AuthenticatedUser.remove_from_following`
 
 API `/user/keys`
 ================
@@ -428,26 +428,26 @@ API `/user/keys/:id`
 
 API `/user/orgs`
 ================
-* GET: `AuthenticatedUser.get_orgs()` : list of `Organization`
+* GET: `AuthenticatedUser.get_orgs`
 
 API `/user/repos`
 =================
-* GET: `AuthenticatedUser.get_repos()`: list of `Repository`
-* POST: `AuthenticatedUser.create_repo( ... )`: `Repository`
+* GET: `AuthenticatedUser.get_repos`
+* POST: `AuthenticatedUser.create_repo`
 
 API `/user/watched`
 ===================
-* GET: `AuthenticatedUser.get_watched()`: list of `Repository`
+* GET: `AuthenticatedUser.get_watched`
 
 API `/user/watched/:user/:repo`
 ===============================
-* GET: `AuthenticatedUser.has_in_watched( repo )`: `bool`
-* PUT: `AuthenticatedUser.add_to_watched( repo )`
-* DELETE: `AuthenticatedUser.remove_from_watched( repo )`
+* GET: `AuthenticatedUser.has_in_watched`
+* PUT: `AuthenticatedUser.add_to_watched`
+* DELETE: `AuthenticatedUser.remove_from_watched`
 
 API `/users/:user`
 ==================
-* GET: `Github.get_user( login )`: `NamedUser`
+* GET: `Github.get_user`
 
 API `/users/:user/events`
 =========================
@@ -463,11 +463,11 @@ API `/users/:user/events/public`
 
 API `/users/:user/followers`
 ============================
-* GET: `NamedUser.get_followers()` : list of `NamedUser`
+* GET: `NamedUser.get_followers`
 
 API `/users/:user/following`
 ============================
-* GET: `NamedUser.get_following()` : list of `NamedUser`
+* GET: `NamedUser.get_following`
 
 API `/users/:user/gists`
 ========================
@@ -475,7 +475,7 @@ API `/users/:user/gists`
 
 API `/users/:user/orgs`
 =======================
-* GET: `NamedUser.get_orgs()` : list of `Organization`
+* GET: `NamedUser.get_orgs`
 
 API `/users/:user/received_events`
 ==================================
@@ -487,8 +487,8 @@ API `/users/:user/received_events/public`
 
 API `/users/:user/repos`
 ========================
-* GET: `NamedUser.get_repos()`: list of `Repository`
+* GET: `NamedUser.get_repos`
 
 API `/users/:user/watched`
 ==========================
-* GET: `NamedUser.get_watched()`: list of `Repository`
+* GET: `NamedUser.get_watched`
