@@ -34,9 +34,9 @@ class ElementHasable( ListCapacity ):
         return obj._github._statusRequest( "GET", obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeQueried ), None, None ) == 204
 
 class ElementCreatable( ListCapacity ):
-    def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__modifyAttributes = modifyAttributes
+        self.__attributeModifiers = attributeModifiers
 
     def apply( self, cls ):
         cls._addMethod( "create_" + self.singularName, self.__execute )
@@ -45,6 +45,11 @@ class ElementCreatable( ListCapacity ):
         data = self.__argumentsChecker.check( args, kwds )
         attributes = obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data )
         return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, attributes ) )
+
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
 
 class ElementGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, objReferenceName = None ):
@@ -75,9 +80,9 @@ class SeveralElementsRemovable( ListCapacity ):
         obj._github._statusRequest( "DELETE", obj._baseUrl + "/" + self.attributeName, None, [ self.typePolicy.getIdentity( toBeDeleted ) for toBeDeleted in toBeDeleteds ] )
 
 class ListGetable( ListCapacity ):
-    def __init__( self, mandatoryParameters, optionalParameters, modifyAttributes = lambda obj, attributes: attributes ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__modifyAttributes = modifyAttributes
+        self.__attributeModifiers = attributeModifiers
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.safeAttributeName, self.__execute )
@@ -88,6 +93,11 @@ class ListGetable( ListCapacity ):
             self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, attributes ) )
             for attributes in obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.attributeName, params, None )
         ]
+
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
 
 class ListSetable( ListCapacity ):
     def apply( self, cls ):

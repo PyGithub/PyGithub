@@ -133,7 +133,7 @@ Label = GithubObject(
     Deletable(),
 )
 
-__modifyAttributesForObjectsReferingReferedRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) )
+__modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 
 Milestone = GithubObject(
     "Milestone",
@@ -251,7 +251,7 @@ Branch = GithubObject(
     InternalObjectAttribute( "commit", Commit )
 )
 
-__modifyAttributesForObjectsReferingRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj }.iteritems() ) )
+__modifyAttributesForObjectsReferingRepo = { "_repo": lambda obj: obj }
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
