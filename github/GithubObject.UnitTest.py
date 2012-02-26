@@ -212,7 +212,7 @@ class GithubObjectWithListGetableExternalListOfObjects( TestCaseWithGithubTestOb
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ListGetable( [], [ "type" ] ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ] ) )
     )
 
     def testGetList( self ):
@@ -240,7 +240,7 @@ class GithubObjectWithElementAddableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ElementAddable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementAddable() )
     )
 
     def testAddToList( self ):
@@ -260,7 +260,7 @@ class GithubObjectWithElementRemovableExternalListOfObjects( TestCaseWithGithubT
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ElementRemovable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementRemovable() )
     )
 
     def testRemoveFromList( self ):
@@ -280,7 +280,7 @@ class GithubObjectWithElementHasableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ElementHasable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementHasable() )
     )
 
     def testHasInList( self ):
@@ -302,7 +302,7 @@ class GithubObjectWithElementCreatableExternalListOfObjects( TestCaseWithGithubT
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ElementCreatable( "a3", [ "name" ], [ "p1", "p2" ] ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementCreatable( [ "name" ], [ "p1", "p2" ] ) )
     )
 
     def testCreate( self ):
@@ -341,7 +341,7 @@ class GithubObjectWithSeveralElementsAddableExternalListOfObjects( TestCaseWithG
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, SeveralElementsAddable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, SeveralElementsAddable() )
     )
 
     def testAddToList( self ):
@@ -360,7 +360,7 @@ class GithubObjectWithListSetableExternalListOfObjects( TestCaseWithGithubTestOb
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ListSetable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListSetable() )
     )
 
     def testSetList( self ):
@@ -378,7 +378,7 @@ class GithubObjectWithListDeletableExternalListOfObjects( TestCaseWithGithubTest
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ListDeletable() )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListDeletable() )
     )
 
     def testGetList( self ):
@@ -396,7 +396,7 @@ class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", ContainedObject, ElementGetable( "a3", lambda obj, id: { "id": id } ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( lambda obj, id: { "id": id } ) )
     )
 
     def testGetList( self ):
@@ -408,7 +408,7 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfSimpleTypes( "a3s",
+        ExternalListOfSimpleTypes( "a3s", "a3",
             ListGetable( [], [] ),
             SeveralElementsAddable(),
             SeveralElementsRemovable(),
