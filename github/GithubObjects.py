@@ -133,6 +133,8 @@ Label = GithubObject(
     Deletable(),
 )
 
+__modifyAttributesForObjectsReferingReferedRepo = lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) )
+
 Milestone = GithubObject(
     "Milestone",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/milestones/" + str( obj.number ) ),
@@ -144,7 +146,7 @@ Milestone = GithubObject(
     InternalObjectAttribute( "creator", NamedUser ),
     Editable( [ "title" ], [ "state", "description", "due_on" ] ),
     Deletable(),
-    ExternalListOfObjects( "labels", "label", Label, ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ) ),
+    ExternalListOfObjects( "labels", "label", Label, ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ) ),
 )
 
 IssueComment = GithubObject(
@@ -173,16 +175,16 @@ Issue = GithubObject(
     InternalObjectAttribute( "milestone", Milestone ),
     Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
     ExternalListOfObjects( "labels", "label", Label,
-        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
         SeveralElementsAddable(),
         ListSetable(),
         ListDeletable(),
         ElementRemovable(),
     ),
     ExternalListOfObjects( "comments", "comment", IssueComment,
-        ListGetable( [], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementGetable( [ "id" ], [], "_repo" ),
-        ElementCreatable( [ "body" ], [], lambda obj, attributes: dict( itertools.chain( attributes.iteritems(), { "_repo": obj._repo }.iteritems() ) ) ),
+        ElementCreatable( [ "body" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
     ),
 )
 

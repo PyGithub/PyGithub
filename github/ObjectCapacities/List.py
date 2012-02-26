@@ -43,7 +43,8 @@ class ElementCreatable( ListCapacity ):
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
-        return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data ) ) )
+        attributes = obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data )
+        return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, attributes ) )
 
 class ElementGetable( ListCapacity ):
     def __init__( self, mandatoryParameters, optionalParameters, objReferenceName = None ):
