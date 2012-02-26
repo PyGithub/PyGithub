@@ -38,6 +38,7 @@ Version 0.3 (February 26th, 2012)
 * Repository:
     * downloads
     * tags, branches, commits and comments (not the same as "Git objects" of version 0.2)
+    * pull requests (no automatic merge yet)
 * Automatic generation of the reference documentation of classes, with less "see API"s, and less errors
 
 Version 0.2 (February 23rd, 2012)
