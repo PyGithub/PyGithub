@@ -1,6 +1,6 @@
 import itertools
 
-from ObjectCapacities.ArgumentsChecker import ArgumentsChecker
+from ObjectCapacities.ArgumentsChecker import *
 from ObjectCapacities.Basic import *
 from ObjectCapacities.List import *
 from ObjectCapacities.TypePolicies import *
@@ -9,16 +9,16 @@ class BadGithubObjectException( Exception ):
     pass
 
 def InternalSimpleAttribute( attributeName ):
-    return InternalAttribute( attributeName, SimpleTypePolicy() )
+    return InternalAttribute( attributeName, SimpleTypePolicy( None ) )
 
 def InternalSimpleAttributes( *attributeNames ):
-    return SeveralAttributePolicies( [ InternalSimpleAttribute( attributeName ) for attributeName in attributeNames ] )
+    return SeveralAttributePolicies( [ InternalSimpleAttribute( attributeName ) for attributeName in attributeNames ], "Attributes" )
 
 def InternalObjectAttribute( attributeName, type ):
     return InternalAttribute( attributeName, ObjectTypePolicy( type ) )
 
-def ExternalSimpleAttribute( attributeName ):
-    return ExternalAttribute( attributeName, SimpleTypePolicy() )
+def ExternalSimpleAttribute( attributeName, type ):
+    return ExternalAttribute( attributeName, SimpleTypePolicy( type ) )
 
 def BaseUrl( baseUrl ):
     return AttributeFromCallable( "_baseUrl", baseUrl )
@@ -26,30 +26,26 @@ def BaseUrl( baseUrl ):
 def Identity( identity ):
     return AttributeFromCallable( "_identity", identity )
 
-class Editable( MethodFromCallable ):
-    def __init__( self, mandatoryParameters, optionalParameters ):
-        MethodFromCallable.__init__( self, "edit", self.__execute )
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-
-    def __execute( self, obj, *args, **kwds ):
-        data = self.__argumentsChecker.check( args, kwds )
+def Editable( mandatoryParameters, optionalParameters ):
+    def __execute( obj, **data ):
         attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, data )
         obj._updateAttributes( attributes )
+    return SeveralAttributePolicies( [ MethodFromCallable( "edit", mandatoryParameters, optionalParameters, __execute, SimpleTypePolicy( None ) ) ], "Modification" )
 
-class Deletable( MethodFromCallable ):
-    def __init__( self ):
-        MethodFromCallable.__init__( self, "delete", self.__execute )
-
-    def __execute( self, obj, *args, **kwds ):
+def Deletable():
+    def __execute( obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
+    return SeveralAttributePolicies( [ MethodFromCallable( "delete", [], [], __execute, SimpleTypePolicy( None ) ) ], "Deletion" )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:
         __attributeDefinitions = dict()
         __methodDefinitions = dict()
+        __attributePolicies = list()
 
         @staticmethod
         def _addAttributePolicy( attributePolicy ):
+            GithubObject.__attributePolicies.append( attributePolicy )
             attributePolicy.apply( GithubObject )
 
         @staticmethod
@@ -102,6 +98,15 @@ def GithubObject( className, *attributePolicies ):
         def __fetchAttribute( self, attributeName ):
             attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
             attributeDefinition.updateAttributes( self )
+
+        @classmethod
+        def _autoDocument( cls ):
+            doc = "Class `" + cls.__name__ + "`\n"
+            doc += "=" * ( len( cls.__name__ ) + 8 ) + "\n"
+            for attributePolicy in cls.__attributePolicies:
+                doc += attributePolicy.autoDocument()
+            doc += "\n"
+            return doc
 
     GithubObject.__name__ = className
     GithubObject._addAttributePolicy( SeveralAttributePolicies( attributePolicies ) )

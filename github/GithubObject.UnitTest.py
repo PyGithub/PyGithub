@@ -409,7 +409,7 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfSimpleTypes( "a3s", "a3",
+        ExternalListOfSimpleTypes( "a3s", "a3", "",
             ListGetable( [], [] ),
             SeveralElementsAddable(),
             SeveralElementsRemovable(),
@@ -430,27 +430,26 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
         self.expectStatusDelete( "/test/a3s", [ "a", "b", "c" ] ).andReturn( 204 )
         a3s = self.o.remove_from_a3s( "a", "b", "c" )
 
-def myCallable( obj, mock, arg ):
-    return mock.call( arg )
-
 class GithubObjectWithExternalSimpleAttribute( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalSimpleAttribute( "a3" )
+        ExternalSimpleAttribute( "a3", "" )
     )
 
-    def testCallMethod( self ):
+    def testGetAttribute( self ):
         self.expectDataGet( "/test/a3" ).andReturn( 72 )
         self.assertEqual( self.o.get_a3(), 72 )
 
+def myCallable( obj, mock, arg ):
+    return mock.call( arg )
 class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        MethodFromCallable( "myMethod", myCallable )
+        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], myCallable, SimpleTypePolicy( None ) )
     )
 
     def testCallMethod( self ):
