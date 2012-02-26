@@ -92,6 +92,7 @@ class IntegrationTest:
         self.playScenario()
 
     def prepareRecord( self ):
+        self.avoidError500FromGithub = lambda: time.sleep( 1 )
         try:
             import GithubCredentials
             self.g = Github( GithubCredentials.login, GithubCredentials.password )
@@ -104,6 +105,7 @@ class IntegrationTest:
             exit( 1 )
 
     def prepareReplay( self ):
+        self.avoidError500FromGithub = lambda: 0
         try:
             file = open( self.__fileName )
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
@@ -143,7 +145,7 @@ class IntegrationTest:
     def doSomeWritesToRepository( self ):
         u = self.g.get_user()
         r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
-        time.sleep( 1 ) # Avoid error 500 from github :p
+        self.avoidError500FromGithub()
 
         # Git objects
         b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
@@ -187,7 +189,7 @@ class IntegrationTest:
         o = self.g.get_organization( "BeaverSoftware" )
 
         rf = o.create_fork( r )
-        time.sleep( 1 ) # Avoid error 500 from github :p
+        self.avoidError500FromGithub()
         b3 = rf.create_git_blob( "This blob was ter created by PyGithub", encoding = "latin1" )
         t3 = rf.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b3.sha } ] )
         c3 = rf.create_git_commit( "This commit was ter created by PyGithub", t3.sha, [ c2.sha ] )
