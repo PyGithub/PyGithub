@@ -20,6 +20,32 @@ Class `AuthenticatedUser`
 * Attributes: see [API](http://developer.github.com/v3/users/#get-the-authenticated-user)
 * `edit( ... )`: see [API](http://developer.github.com/v3/users/#update-the-authenticated-user) for parameters
 
+Emails
+------
+* `get_emails()`: list of strings
+* `add_to_emails( email, ... )`
+    *
+* `remove_from_emails( email, ... )`
+    *
+
+Followers
+---------
+* `get_followers()` : list of `NamedUser`
+
+Following
+---------
+* `get_following()` : list of `NamedUser`
+* `add_to_following( user )`
+    *
+* `remove_from_following( user )`
+    *
+* `has_in_following( user )`: `bool`
+    *
+
+Organizations
+-------------
+* `get_orgs()` : list of `Organization`
+
 Repositories
 ------------
 * `get_repos()`: list of `Repository`: see [API](http://developer.github.com/v3/repos/#list-your-repositories) for `type` parameter
@@ -27,30 +53,12 @@ Repositories
 * `create_repo( ... )`: `Repository`: see [API](http://developer.github.com/v3/repos/#create) for parameters
 * `create_fork( repo )`: `Repository`
 
-Watching
---------
+Watched
+-------
 * `get_watched()`: list of `Repository`
 * `has_in_watched( repo )`: `bool`
 * `add_to_watched( repo )`
 * `remove_from_watched( repo )`
-
-Organizations
--------------
-* `get_orgs()` : list of `Organization`
-
-Following
----------
-* `get_followers()` : list of `NamedUser`
-* `get_following()` : list of `NamedUser`
-* `has_in_following( user )`: `bool`
-* `add_to_following( user )`
-* `remove_from_following( user )`
-
-Emails
-------
-* `get_emails()` list of strings
-* `add_to_emails( email, ... )`
-* `remove_from_emails( email, ... )`
 
 Class `Branch`
 ==============
