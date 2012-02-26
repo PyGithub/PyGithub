@@ -43,8 +43,7 @@ class ElementCreatable( ListCapacity ):
 
     def __execute( self, obj, *args, **kwds ):
         data = self.__argumentsChecker.check( args, kwds )
-        attributes = obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data )
-        return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, attributes ) )
+        return self.typePolicy.createLazy( obj, self.__modifyAttributes( obj, obj._github._dataRequest( "POST", obj._baseUrl + "/" + self.attributeName, None, data ) ) )
 
     def __modifyAttributes( self, obj, attributes ):
         for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
@@ -52,18 +51,20 @@ class ElementCreatable( ListCapacity ):
         return attributes
 
 class ElementGetable( ListCapacity ):
-    def __init__( self, mandatoryParameters, optionalParameters, objReferenceName = None ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__objReferenceName = objReferenceName
+        self.__attributeModifiers = attributeModifiers
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.singularName, self.__execute )
 
     def __execute( self, obj, *args, **kwds ):
-        attributes = self.__argumentsChecker.check( args, kwds )
-        if self.__objReferenceName is not None:
-            attributes[ self.__objReferenceName ] = obj
-        return self.typePolicy.createNonLazy( obj, attributes )
+        return self.typePolicy.createNonLazy( obj, self.__modifyAttributes( obj, self.__argumentsChecker.check( args, kwds ) ) )
+
+    def __modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
 
 class SeveralElementsAddable( ListCapacity ):
     def apply( self, cls ):
