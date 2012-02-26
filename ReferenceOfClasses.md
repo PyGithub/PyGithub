@@ -492,6 +492,9 @@ Attributes
 * `changed_files`
 * `head`
 * `base`
+* `merged_by`
+* `review_comments`
+* `user`: `NamedUser`
 
 Modification
 ------------
@@ -625,7 +628,7 @@ Git refs
 Git commits
 -----------
 * `get_git_commit( sha )`: `GitCommit`
-* `create_git_commit( message, tree, parents, [author, commiter] )`: `GitCommit`
+* `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
 
 Git trees
 ---------

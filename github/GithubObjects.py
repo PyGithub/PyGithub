@@ -385,7 +385,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ),
     ExternalListOfObjects( "git/commits", "git_commit", GitCommit,
         ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "message", "tree", "parents" ], [ "author", "commiter" ], __modifyAttributesForObjectsReferingRepo )
+        ElementCreatable( [ "message", "tree", "parents" ], [ "author", "committer" ], __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
         ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
