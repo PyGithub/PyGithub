@@ -343,8 +343,8 @@ API `/repos/:user/:repo/pulls/:id/files`
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
-* GET: (TODO SOON)
-* PUT: (TODO SOON)
+* GET: (TODO)
+* PUT: (TODO)
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
