@@ -19,3 +19,6 @@ class Github:
 
     def get_organization( self, login ):
         return Organization( self, { "login": login }, lazy = False )
+
+    def get_gist( self, id ):
+        return Gist( self, { "id": id }, lazy = False )

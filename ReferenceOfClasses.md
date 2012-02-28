@@ -96,6 +96,12 @@ Forking
 -------
 * `create_fork( repo )`: `Repository`
 
+Gists
+-----
+* `get_gists()`: list of `Gist`
+* `create_gist( public, files, [description] )`: `Gist`
+* `get_starred_gists()`: list of `Gist`
+
 Class `Branch`
 ==============
 
@@ -173,6 +179,70 @@ Attributes
 * `redirect`
 * `s3_url`
 * `created_at`
+
+Deletion
+--------
+* `delete()`
+
+Class `Gist`
+============
+
+Attributes
+----------
+* `url`
+* `id`
+* `description`
+* `public`
+* `files`
+* `comments`
+* `html_url`
+* `git_pull_url`
+* `git_push_url`
+* `created_at`
+* `forks`
+* `history`
+* `updated_at`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( [description, files] )`
+
+Deletion
+--------
+* `delete()`
+
+Comments
+--------
+* `get_comments()`: list of `GistComment`
+* `get_comment( id )`: `GistComment`
+* `create_comment( body )`: `GistComment`
+
+Starring
+--------
+* `is_starred()`: bool
+* `set_starred()`
+* `reset_starred()`
+
+Forking
+-------
+* `create_fork()`: `Gist`
+
+Class `GistComment`
+===================
+
+Attributes
+----------
+* `id`
+* `url`
+* `body`
+* `created_at`
+* `updated_at`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( body )`
 
 Deletion
 --------
@@ -397,6 +467,10 @@ Repos
 Watched
 -------
 * `get_watched()`: list of `Repository`
+
+Gists
+-----
+* `get_gists()`: list of `Gist`
 
 Class `Organization`
 ====================

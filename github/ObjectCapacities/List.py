@@ -5,12 +5,19 @@ from TypePolicies import *
 from ArgumentsChecker import *
 
 class ListCapacity:
-    def setList( self, attributeName, singularName, typePolicy ):
+    def setList( self, attributeName, singularName, typePolicy, url = None ):
         self.attributeName = attributeName
         self.singularName = singularName
         self.safeAttributeName = attributeName.replace( "/", "_" )
         self.safeSingularName = singularName.replace( "/", "_" )
         self.typePolicy = typePolicy
+        self.__url = url
+
+    def baseUrl( self, obj ):
+        if self.__url is None:
+            return obj._baseUrl + "/" + self.attributeName
+        else:
+            return self.__url
 
 class ElementAddable( ListCapacity ):
     def apply( self, cls ):
@@ -19,7 +26,7 @@ class ElementAddable( ListCapacity ):
     def __execute( self, obj, toBeAdded ):
         obj._github._statusRequest(
             "PUT",
-            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeAdded ),
+            self.baseUrl( obj ) + "/" + self.typePolicy.getIdentity( toBeAdded ),
             None,
             None
         )
@@ -34,7 +41,7 @@ class ElementRemovable( ListCapacity ):
     def __execute( self, obj, toBeDeleted ):
         obj._github._statusRequest(
             "DELETE",
-            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeDeleted ),
+            self.baseUrl( obj ) + "/" + self.typePolicy.getIdentity( toBeDeleted ),
             None,
             None
         )
@@ -49,12 +56,13 @@ class ElementHasable( ListCapacity ):
     def __execute( self, obj, toBeQueried ):
         return obj._github._statusRequest(
             "GET",
-            obj._baseUrl + "/" + self.attributeName + "/" + self.typePolicy.getIdentity( toBeQueried ),
+            self.baseUrl( obj ) + "/" + self.typePolicy.getIdentity( toBeQueried ),
             None,
             None
         ) == 204
 
     def autoDocument( self ):
+        ### @todo `bool` -> bool
         return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementCreatable( ListCapacity ):
@@ -72,7 +80,7 @@ class ElementCreatable( ListCapacity ):
                 obj,
                 obj._github._dataRequest(
                     "POST",
-                    obj._baseUrl + "/" + self.attributeName,
+                    self.baseUrl( obj ),
                     None,
                     self.__argumentsChecker.check( args, kwds )
                 )
@@ -119,7 +127,7 @@ class SeveralElementsAddable( ListCapacity ):
     def __execute( self, obj, *toBeAddeds ):
         obj._github._statusRequest(
             "POST",
-            obj._baseUrl + "/" + self.attributeName,
+            self.baseUrl( obj ),
             None,
             [
                 self.typePolicy.getIdentity( toBeAdded )
@@ -137,7 +145,7 @@ class SeveralElementsRemovable( ListCapacity ):
     def __execute( self, obj, *toBeDeleteds ):
         obj._github._statusRequest(
             "DELETE",
-            obj._baseUrl + "/" + self.attributeName,
+            self.baseUrl( obj ),
             None,
             [
                 self.typePolicy.getIdentity( toBeDeleted )
@@ -165,7 +173,7 @@ class ListGetable( ListCapacity ):
             )
             for attributes in obj._github._dataRequest(
                 "GET",
-                obj._baseUrl + "/" + self.attributeName,
+                self.baseUrl( obj ),
                 params,
                 None
             )
@@ -186,7 +194,7 @@ class ListSetable( ListCapacity ):
     def __execute( self, obj, *toBeSets ):
         obj._github._statusRequest(
             "PUT",
-            obj._baseUrl + "/" + self.attributeName,
+            self.baseUrl( obj ),
             None,
             [
                 self.typePolicy.getIdentity( toBeSet )
@@ -204,7 +212,7 @@ class ListDeletable( ListCapacity ):
     def __execute( self, obj ):
         obj._github._statusRequest(
             "DELETE",
-            obj._baseUrl + "/" + self.attributeName,
+            self.baseUrl( obj ),
             None,
             None
         )
@@ -212,9 +220,9 @@ class ListDeletable( ListCapacity ):
     def autoDocument( self ):
         return "* `delete_" + self.safeAttributeName + "()`\n"
 
-def ExternalListOfObjects( attributeName, singularName, type, *capacities ):
+def ExternalListOfObjects( attributeName, singularName, type, *capacities, **kwds ):
     for capacity in capacities:
-        capacity.setList( attributeName, singularName, ObjectTypePolicy( type ) )
+        capacity.setList( attributeName, singularName, ObjectTypePolicy( type ), **kwds )
     return SeveralAttributePolicies( capacities, attributeName.capitalize().replace( "_", " " ).replace( "/", " " ) )
 
 def ExternalListOfSimpleTypes( attributeName, singularName, type, *capacities ):

@@ -15,43 +15,43 @@ API `/events`
 
 API `/gists`
 ============
-* GET: (TODO SOON)
-* POST: (TODO SOON)
-
-API `/gists/:gist_id/comments`
-==============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `AuthenticatedUser.get_gists`
+* POST: `AuthenticatedUser.create_gist`
 
 API `/gists/:id`
 ================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Github.get_gist`
+* PATCH: `Gist.edit`
+* DELETE: `Gist.delete`
+
+API `/gists/:id/comments`
+==============================
+* GET: `Gist.get_comments`
+* POST: `Gist.create_comment`
 
 API `/gists/:id/fork`
 =====================
-* POST: (TODO SOON)
+* POST: `Gist.create_fork`
 
 API `/gists/:id/star`
 =====================
-* GET: (TODO SOON)
-* PUT: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Gist.is_starred`
+* PUT: `Gist.set_starred`
+* DELETE: `Gist.reset_starred`
 
 API `/gists/comments/:id`
 =========================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Gist.get_comment`
+* PATCH: `GistComment.edit`
+* DELETE: `GistComment.delete`
 
 API `/gists/public`
 ===================
-* GET: (TODO SOON)
+* GET: (TODO) (Almost useless: huge fast-changing list, so I will have to re-re-implement pagination, with detection of duplicates caused by shifts, and a real iteration, not construction of the full list...)
 
 API `/gists/starred`
 ====================
-* GET: (TODO SOON)
+* GET: `AuthenticatedUser.get_starred_gists`
 
 API `/issues`
 =============
@@ -471,7 +471,7 @@ API `/users/:user/following`
 
 API `/users/:user/gists`
 ========================
-* GET: (TODO SOON)
+* GET: `NamedUser.get_gists`
 
 API `/users/:user/orgs`
 =======================
