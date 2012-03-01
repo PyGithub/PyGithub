@@ -174,16 +174,13 @@ class IntegrationTest:
             print
             print "Not covered:"
             print "\n".join( sorted( uncoveredMethods ) )
-            #print "\n".join( sorted( m for m in uncoveredMethods if m.startswith( "Org" ) ) )
 
     def testEditAuthenticatedUser( self ):
-        print "Changing your user name (and reseting it)"
         u = self.g.get_user()
         originalName = u.name
-        tmpName = u.name + " (edited by PyGithub)"
-        print u.name, "->",
-        u.edit( name = tmpName )
-        print u.name, "->",
+        print u.name
+        u.edit( name = u.name + " (edited by PyGithub)" )
+        print u.name
         u.edit( name = originalName )
         print u.name
 
@@ -198,6 +195,15 @@ class IntegrationTest:
         self.printList( "Public members", o.get_public_members(), lambda m: m.login )
         self.printList( "Members", o.get_members(), lambda m: m.login )
         self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def testEditOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        originalName = o.name
+        print o.name
+        o.edit( name = str( o.name ) + " (edited by PyGithub)" )
+        print o.name
+        o.edit( name = originalName )
+        print o.name
 
     def testEditOrganizationTeamAndMembers( self ):
         o = self.g.get_organization( self.cobayeOrganization )
