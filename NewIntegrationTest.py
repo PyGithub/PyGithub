@@ -80,18 +80,20 @@ class IntegrationTest:
     cobayeOrganization = "BeaverSoftware"
 
     def main( self, argv ):
+        record = False
         if len( argv ) >= 1:
             if argv[ 0 ] == "--record":
-                print "Record mode: this script is really going to do requests to github.com"
                 argv = argv[ 1: ]
                 record = True
             elif argv[ 0 ] == "--list":
                 print "List of available tests:"
                 print "\n".join( self.listTests() )
                 return
+
+        if record:
+            print "Record mode: this script is really going to do requests to github.com"
         else:
             print "Replay mode: this script will used requests to and replies from github.com recorded in previous runs in record mode"
-            record = False
 
         if len( argv ) == 0:
             tests = self.listTests()
@@ -183,6 +185,25 @@ class IntegrationTest:
         print u.name
         u.edit( name = originalName )
         print u.name
+
+    def testFollow( self ):
+        cobaye = self.g.get_user( self.cobayeUser )
+        u = self.g.get_user()
+        u.remove_from_following( cobaye )
+        assert not u.has_in_following( cobaye )
+        u.add_to_following( cobaye )
+        assert u.has_in_following( cobaye )
+        self.printList( "Following", u.get_following(), lambda f: f.login )
+        self.printList( "Followers", u.get_followers(), lambda f: f.login )
+
+    def testWatch( self ):
+        r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        u = self.g.get_user()
+        u.remove_from_watched( r )
+        assert not u.has_in_watched( r )
+        u.add_to_watched( r )
+        assert u.has_in_watched( r )
+        self.printList( "Watched", u.get_watched(), lambda r: r.name )
 
     def testNamedUserDetails( self ):
         u = self.g.get_user( self.cobayeUser )
