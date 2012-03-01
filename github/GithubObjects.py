@@ -20,7 +20,7 @@ UserKey = GithubObject(
     InternalSimpleAttributes(
         "url", "id", "title", "key",
     ),
-    Editable( [ "title", "key" ], [] ),
+    Editable( [], [ "title", "key" ] ),
     Deletable(),
 )
 
