@@ -368,6 +368,17 @@ PullRequest = GithubObject(
     ),
 )
 
+RepositoryKey = GithubObject(
+    "RepositoryKey",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/keys/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        ### @todo
+        "_repo", ### Ugly hack
+    ),
+    Editable( [], [] ), ### @todo
+    Deletable()
+)
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -397,6 +408,11 @@ Repository._addAttributePolicy(
     SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
+    ExternalListOfObjects( "keys", "key", RepositoryKey,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( [], [] ), ### @todo
+    ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),

@@ -279,14 +279,14 @@ API `/repos/:user/:repo/issues/events/:id`
 
 API `/repos/:user/:repo/keys`
 =============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_keys`
+* POST: `Repository.create_key`
 
 API `/repos/:user/:repo/keys/:id`
 =================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_key`
+* PATCH: `RepositoryKey.edit`
+* DELETE: `RepositoryKey.delete`
 
 API `/repos/:user/:repo/labels`
 ===============================

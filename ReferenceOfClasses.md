@@ -701,6 +701,12 @@ Languages
 ---------
 * `get_languages()`: dictionary of strings to integers
 
+Keys
+----
+* `get_keys()`: list of `RepositoryKey`
+* `get_key( id )`: `RepositoryKey`
+* `create_key()`: `RepositoryKey`
+
 Collaborators
 -------------
 * `get_collaborators()`: list of `NamedUser`
@@ -796,6 +802,20 @@ Pulls
 Teams
 -----
 * `get_teams()`: list of `Team`
+
+Class `RepositoryKey`
+=====================
+
+Attributes
+----------
+
+Modification
+------------
+* `edit()`
+
+Deletion
+--------
+* `delete()`
 
 Class `Tag`
 ===========
