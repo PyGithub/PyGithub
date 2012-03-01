@@ -1,13 +1,13 @@
 API `/authorizations`
 =====================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `AuthenticatedUser.get_authorizations`
+* POST: `AuthenticatedUser.create_authorization`
 
 API `/authorizations/:id`
 =========================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.get_authorization`
+* PATCH: `Authorization.edit`
+* DELETE: `Authorization.delete`
 
 API `/events`
 =============
@@ -279,14 +279,14 @@ API `/repos/:user/:repo/issues/events/:id`
 
 API `/repos/:user/:repo/keys`
 =============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_keys`
+* POST: `Repository.create_key`
 
 API `/repos/:user/:repo/keys/:id`
 =================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_key`
+* PATCH: `RepositoryKey.edit`
+* DELETE: `RepositoryKey.delete`
 
 API `/repos/:user/:repo/labels`
 ===============================
@@ -417,14 +417,14 @@ API `/user/following/:user`
 
 API `/user/keys`
 ================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `AuthenticatedUser.get_keys`
+* POST: `AuthenticatedUser.create_key`
 
 API `/user/keys/:id`
 ====================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.get_key`
+* PATCH: `UserKey.edit`
+* DELETE: `UserKey.delete`
 
 API `/user/orgs`
 ================

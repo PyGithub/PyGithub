@@ -58,6 +58,18 @@ Emails
 * `remove_from_emails( email, ... )`
     * `email`: string
 
+Authorizations
+--------------
+* `get_authorizations()`: list of `Authorization`
+* `get_authorization( id )`: `Authorization`
+* `create_authorization( [scopes, note, note_url] )`: `Authorization`
+
+Keys
+----
+* `get_keys()`: list of `UserKey`
+* `get_key( id )`: `UserKey`
+* `create_key( title, key )`: `UserKey`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -101,6 +113,29 @@ Gists
 * `get_gists()`: list of `Gist`
 * `create_gist( public, files, [description] )`: `Gist`
 * `get_starred_gists()`: list of `Gist`
+
+Class `Authorization`
+=====================
+
+Attributes
+----------
+* `id`
+* `url`
+* `scopes`
+* `token`
+* `app`
+* `note`
+* `note_url`
+* `updated_at`
+* `created_at`
+
+Modification
+------------
+* `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
+
+Deletion
+--------
+* `delete()`
 
 Class `Branch`
 ==============
@@ -675,6 +710,12 @@ Languages
 ---------
 * `get_languages()`: dictionary of strings to integers
 
+Keys
+----
+* `get_keys()`: list of `RepositoryKey`
+* `get_key( id )`: `RepositoryKey`
+* `create_key( title, key )`: `RepositoryKey`
+
 Collaborators
 -------------
 * `get_collaborators()`: list of `NamedUser`
@@ -771,6 +812,24 @@ Teams
 -----
 * `get_teams()`: list of `Team`
 
+Class `RepositoryKey`
+=====================
+
+Attributes
+----------
+* `url`
+* `id`
+* `title`
+* `key`
+
+Modification
+------------
+* `edit( title, key )`
+
+Deletion
+--------
+* `delete()`
+
 Class `Tag`
 ===========
 
@@ -820,5 +879,23 @@ Repos
     * `repo`: `Repository`
 * `has_in_repos( repo )`: `bool`
     * `repo`: `Repository`
+
+Class `UserKey`
+===============
+
+Attributes
+----------
+* `url`
+* `id`
+* `title`
+* `key`
+
+Modification
+------------
+* `edit( title, key )`
+
+Deletion
+--------
+* `delete()`
 
 

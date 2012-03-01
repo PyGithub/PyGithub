@@ -3,6 +3,27 @@ import urllib
 
 from GithubObject import *
 
+Authorization = GithubObject(
+    "Authorization",
+    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
+    InternalSimpleAttributes(
+        "id", "url", "scopes", "token", "app", "note", "note_url", "updated_at",
+        "created_at",
+    ),
+    Editable( [], [ "scopes", "add_scopes", "remove_scopes", "note", "note_url" ] ),
+    Deletable(),
+)
+
+UserKey = GithubObject(
+    "UserKey",
+    BaseUrl( lambda obj: "/user/keys/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "id", "title", "key",
+    ),
+    Editable( [ "title", "key" ], [] ),
+    Deletable(),
+)
+
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
     BaseUrl( lambda obj: "/user" ),
@@ -19,6 +40,17 @@ AuthenticatedUser = GithubObject(
         ListGetable( [], [] ),
         SeveralElementsAddable(),
         SeveralElementsRemovable()
+    ),
+    ExternalListOfObjects( "authorizations", "authorization", Authorization,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [] ),
+        ElementCreatable( [], [ "scopes", "note", "note_url" ] ),
+        url = "/authorizations",
+    ),
+    ExternalListOfObjects( "keys", "key", UserKey,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [] ),
+        ElementCreatable( [ "title", "key" ], [] ),
     ),
 )
 
@@ -337,6 +369,17 @@ PullRequest = GithubObject(
     ),
 )
 
+RepositoryKey = GithubObject(
+    "RepositoryKey",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/keys/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "id", "title", "key",
+        "_repo", ### Ugly hack
+    ),
+    Editable( [ "title", "key" ], [] ),
+    Deletable()
+)
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -366,6 +409,11 @@ Repository._addAttributePolicy(
     SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
+    ExternalListOfObjects( "keys", "key", RepositoryKey,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( [ "title", "key" ], [] ),
+    ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),
