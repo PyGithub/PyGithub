@@ -64,6 +64,12 @@ Authorizations
 * `get_authorization( id )`: `Authorization`
 * `create_authorization()`: `Authorization`
 
+Keys
+----
+* `get_keys()`: list of `UserKey`
+* `get_key( id )`: `UserKey`
+* `create_key()`: `UserKey`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -840,5 +846,19 @@ Repos
     * `repo`: `Repository`
 * `has_in_repos( repo )`: `bool`
     * `repo`: `Repository`
+
+Class `UserKey`
+===============
+
+Attributes
+----------
+
+Modification
+------------
+* `edit()`
+
+Deletion
+--------
+* `delete()`
 
 

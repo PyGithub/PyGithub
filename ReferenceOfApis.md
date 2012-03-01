@@ -417,14 +417,14 @@ API `/user/following/:user`
 
 API `/user/keys`
 ================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `AuthenticatedUser.get_keys`
+* POST: `AuthenticatedUser.create_key`
 
 API `/user/keys/:id`
 ====================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `AuthenticatedUser.get_key`
+* PATCH: `UserKey.edit`
+* DELETE: `UserKey.delete`
 
 API `/user/orgs`
 ================

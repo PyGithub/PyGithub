@@ -5,7 +5,17 @@ from GithubObject import *
 
 Authorization = GithubObject(
     "Authorization",
-    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ),
+    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
+    InternalSimpleAttributes(
+        ### @todo
+    ),
+    Editable( [], [] ), ### @todo
+    Deletable(),
+)
+
+UserKey = GithubObject(
+    "UserKey",
+    BaseUrl( lambda obj: "/user/keys/" + str( obj.id ) ),
     InternalSimpleAttributes(
         ### @todo
     ),
@@ -35,6 +45,11 @@ AuthenticatedUser = GithubObject(
         ElementGetable( [ "id" ], [] ),
         ElementCreatable( [], [] ), ### @todo
         ### url = "/authorizations", ### @todo
+    ),
+    ExternalListOfObjects( "keys", "key", UserKey,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [] ),
+        ElementCreatable( [], [] ), ### @todo
     ),
 )
 
