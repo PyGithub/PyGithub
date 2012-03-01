@@ -18,9 +18,9 @@ UserKey = GithubObject(
     "UserKey",
     BaseUrl( lambda obj: "/user/keys/" + str( obj.id ) ),
     InternalSimpleAttributes(
-        ### @todo
+        "url", "id", "title", "key",
     ),
-    Editable( [], [] ), ### @todo
+    Editable( [ "title", "key" ], [] ),
     Deletable(),
 )
 
@@ -50,7 +50,7 @@ AuthenticatedUser = GithubObject(
     ExternalListOfObjects( "keys", "key", UserKey,
         ListGetable( [], [] ),
         ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [], [] ), ### @todo
+        ElementCreatable( [ "title", "key" ], [] ),
     ),
 )
 
@@ -373,10 +373,10 @@ RepositoryKey = GithubObject(
     "RepositoryKey",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/keys/" + str( obj.id ) ),
     InternalSimpleAttributes(
-        ### @todo
+        "url", "id", "title", "key",
         "_repo", ### Ugly hack
     ),
-    Editable( [], [] ), ### @todo
+    Editable( [ "title", "key" ], [] ),
     Deletable()
 )
 
@@ -412,7 +412,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "keys", "key", RepositoryKey,
         ListGetable( [], [] ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [], [] ), ### @todo
+        ElementCreatable( [ "title", "key" ], [] ),
     ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),

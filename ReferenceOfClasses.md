@@ -68,7 +68,7 @@ Keys
 ----
 * `get_keys()`: list of `UserKey`
 * `get_key( id )`: `UserKey`
-* `create_key()`: `UserKey`
+* `create_key( title, key )`: `UserKey`
 
 Followers
 ---------
@@ -714,7 +714,7 @@ Keys
 ----
 * `get_keys()`: list of `RepositoryKey`
 * `get_key( id )`: `RepositoryKey`
-* `create_key()`: `RepositoryKey`
+* `create_key( title, key )`: `RepositoryKey`
 
 Collaborators
 -------------
@@ -817,10 +817,14 @@ Class `RepositoryKey`
 
 Attributes
 ----------
+* `url`
+* `id`
+* `title`
+* `key`
 
 Modification
 ------------
-* `edit()`
+* `edit( title, key )`
 
 Deletion
 --------
@@ -881,10 +885,14 @@ Class `UserKey`
 
 Attributes
 ----------
+* `url`
+* `id`
+* `title`
+* `key`
 
 Modification
 ------------
-* `edit()`
+* `edit( title, key )`
 
 Deletion
 --------
