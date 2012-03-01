@@ -7,6 +7,11 @@ import base64
 
 from github import Github
 
+### @todo From ReplayDataForIntegrationTest.*.txt files and ReferenceOfApis.md, build a coverage of the API by the integration test
+
+class RecordReplayException( Exception ):
+    pass
+
 class RecordingHttpsConnection:
     class HttpResponse( object ):
         def __init__( self, file, res ):
@@ -59,7 +64,8 @@ class ReplayingHttpsConnection:
 
     def request( self, verb, url, input, headers ):
         del headers[ "Authorization" ]
-        assert self.__file.readline().strip() == verb + " " + url + " " + str( headers ) + " " + input
+        if( self.__file.readline().strip() != verb + " " + url + " " + str( headers ) + " " + input ):
+            raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
 
     def getresponse( self ):
         return ReplayingHttpsConnection.HttpResponse( self.__file )
@@ -67,11 +73,9 @@ class ReplayingHttpsConnection:
     def close( self ):
         self.__file.readline()
 
-class RecordReplayException( Exception ):
-    pass
-
 class IntegrationTest:
-    cobayeNamedUserLogin = "cjuniet"
+    cobayeUser = "Lyloa"
+    cobayeOrganization = "BeaverSoftware"
 
     def main( self, argv ):
         if len( argv ) >= 1:
@@ -113,7 +117,7 @@ class IntegrationTest:
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
             self.g = Github( "login", "password" )
         except IOError:
-            raise RecordReplayException( "Please re-run this script with argument '--record' to be able to replay the integration tests based on recorded first execution" )
+            raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
 
     def __fileName( self, test ):
         return "ReplayDataForIntegrationTest." + test + ".txt"
@@ -136,7 +140,7 @@ class IntegrationTest:
                 print e
                 print "*" * len( str( e ) )
 
-    def testAuthenticatedUserEdition( self ):
+    def testEditAuthenticatedUser( self ):
         print "Changing your user name (and reseting it)"
         u = self.g.get_user()
         originalName = u.name
@@ -148,7 +152,7 @@ class IntegrationTest:
         print u.name
 
     def testNamedUserDetails( self ):
-        u = self.g.get_user( self.cobayeNamedUserLogin )
+        u = self.g.get_user( self.cobayeUser )
         print u.login, "(" + u.name + ") is from", u.location
         self.printList( "Repos", u.get_repos(), lambda r: r.name )
 
@@ -158,6 +162,24 @@ class IntegrationTest:
         self.printList( "Public members", o.get_public_members(), lambda m: m.login )
         self.printList( "Members", o.get_members(), lambda m: m.login )
         self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def testEditOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.create_repo( "TestPyGithub" )
+        t = o.create_team( "PyGithubTesters", permission = "push" )
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
+        u = self.g.get_user( self.cobayeUser )
+        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+        t.add_to_members( u )
+        t.add_to_repos( r )
+        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+        t.remove_from_members( u )
+        t.remove_from_repos( r )
+        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+        t.delete()
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
