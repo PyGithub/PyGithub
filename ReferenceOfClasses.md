@@ -341,6 +341,20 @@ Attributes
 * `url`
 * `tree`
 
+Class `Hook`
+============
+
+Attributes
+----------
+
+Modification
+------------
+* `edit()`
+
+Deletion
+--------
+* `delete()`
+
 Class `Issue`
 =============
 
@@ -709,6 +723,12 @@ Modification
 Languages
 ---------
 * `get_languages()`: dictionary of strings to integers
+
+Hooks
+-----
+* `get_hooks()`: list of `Hook`
+* `get_hook( id )`: `Hook`
+* `create_hook()`: `Hook`
 
 Keys
 ----

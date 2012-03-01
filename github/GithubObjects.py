@@ -3,6 +3,17 @@ import urllib
 
 from GithubObject import *
 
+Hook = GithubObject(
+    "Hook",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + obj.id ),
+    InternalSimpleAttributes(
+        ### @todo
+        "_repo", ### Ugly hack
+    ),
+    Editable( [], [] ), #### @todo
+    Deletable(),
+)
+
 Authorization = GithubObject(
     "Authorization",
     BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
@@ -408,6 +419,11 @@ Repository._addAttributePolicy(
     SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
+    ExternalListOfObjects( "hooks", "hook", Hook,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( [], [], __modifyAttributesForObjectsReferingReferedRepo ), ### @todo
+    ),
     ExternalListOfObjects( "keys", "key", RepositoryKey,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),

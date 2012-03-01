@@ -220,14 +220,14 @@ API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 
 API `/repos/:user/:repo/hooks`
 ==============================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `Repository.get_hooks`
+* POST: `Repository.create_hook`
 
 API `/repos/:user/:repo/hooks/:id`
 ==================================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `Repository.get_hook`
+* PATCH: `Hook.edit`
+* DELETE: `Hook.delete`
 
 API `/repos/:user/:repo/hooks/:id/test`
 =======================================
