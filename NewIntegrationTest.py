@@ -141,18 +141,25 @@ class IntegrationTest:
         u = self.g.get_user()
         originalName = u.name
         tmpName = u.name + " (edited by PyGithub)"
-        print self.g.get_user().name, "->",
+        print u.name, "->",
         u.edit( name = tmpName )
-        print self.g.get_user().name, "->",
+        print u.name, "->",
         u.edit( name = originalName )
-        print self.g.get_user().name
+        print u.name
 
     def testNamedUserDetails( self ):
         u = self.g.get_user( self.cobayeNamedUserLogin )
         print u.login, "(" + u.name + ") is from", u.location
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
 
     def testOrganizationDetails( self ):
         o = self.g.get_organization( "github" )
         print o.login, "(" + o.name + ") is in", o.location
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def printList( self, title, iterable, f = lambda x: x ):
+        print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
 IntegrationTest().main( sys.argv[ 1: ] )
