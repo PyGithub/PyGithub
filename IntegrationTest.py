@@ -115,8 +115,8 @@ class IntegrationTest:
             exit( 1 )
 
     def playScenario( self ):
-        self.doSomeReads()
         self.doSomeWrites()
+        self.doSomeReads()
 
     def doSomeReads( self ):
         self.dumpUser( self.g.get_user(), doPrivateThings = True )
@@ -129,6 +129,7 @@ class IntegrationTest:
     def doSomeWrites( self ):
         self.doSomeWritesToUser()
         self.doSomeWritesToRepository()
+        self.doSomeWritesToGist()
 
     def doSomeWritesToUser( self ):
         u = self.g.get_user()
@@ -199,8 +200,21 @@ class IntegrationTest:
 
         self.dumpRepository( r )
 
+    def doSomeWritesToGist( self ):
+        u = self.g.get_user()
+        g = u.create_gist( True, { "foobar.txt": { "content": "Gist created by PyGithub" } }, "Gist created by PyGithub" )
+        g.edit( "Gist edited by PyGithub" )
+        g.create_comment( "Gist comment created by PyGithub" )
+        g.set_starred()
+        assert g.is_starred()
+        g.reset_starred()
+        assert not g.is_starred()
+
     def dumpUser( self, u, doPrivateThings ):
         print u.login, "(", u.name, ")"
+        print "  Gists:", ", ".join( g.description + "(" + ", ".join( c.body for c in g.get_comments() ) + ")" for g in u.get_gists() )
+        if doPrivateThings:
+            print "  Starred gists:", ", ".join( g.description for g in u.get_starred_gists() )
         print "  Repos:"
         for r in u.get_repos():
             print "   ", r.name,
