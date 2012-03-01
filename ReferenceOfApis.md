@@ -1,13 +1,13 @@
 API `/authorizations`
 =====================
-* GET: (TODO SOON)
-* POST: (TODO SOON)
+* GET: `AuthenticatedUser.get_authorizations`
+* POST: `AuthenticatedUser.create_authorization`
 
 API `/authorizations/:id`
 =========================
-* GET: (TODO SOON)
-* PATCH: (TODO SOON)
-* DELETE: (TODO SOON)
+* GET: `AuthenticatedUser.get_authorization`
+* PATCH: `Authorization.edit`
+* DELETE: `Authorization.delete`
 
 API `/events`
 =============

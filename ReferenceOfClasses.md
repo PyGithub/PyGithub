@@ -58,6 +58,12 @@ Emails
 * `remove_from_emails( email, ... )`
     * `email`: string
 
+Authorizations
+--------------
+* `get_authorizations()`: list of `Authorization`
+* `get_authorization( id )`: `Authorization`
+* `create_authorization()`: `Authorization`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -101,6 +107,20 @@ Gists
 * `get_gists()`: list of `Gist`
 * `create_gist( public, files, [description] )`: `Gist`
 * `get_starred_gists()`: list of `Gist`
+
+Class `Authorization`
+=====================
+
+Attributes
+----------
+
+Modification
+------------
+* `edit()`
+
+Deletion
+--------
+* `delete()`
 
 Class `Branch`
 ==============

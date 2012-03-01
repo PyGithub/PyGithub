@@ -3,6 +3,16 @@ import urllib
 
 from GithubObject import *
 
+Authorization = GithubObject(
+    "Authorization",
+    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        ### @todo
+    ),
+    Editable( [], [] ), ### @todo
+    Deletable(),
+)
+
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
     BaseUrl( lambda obj: "/user" ),
@@ -19,6 +29,12 @@ AuthenticatedUser = GithubObject(
         ListGetable( [], [] ),
         SeveralElementsAddable(),
         SeveralElementsRemovable()
+    ),
+    ExternalListOfObjects( "authorizations", "authorization", Authorization,
+        ListGetable( [], [] ),
+        ElementGetable( [ "id" ], [] ),
+        ElementCreatable( [], [] ), ### @todo
+        ### url = "/authorizations", ### @todo
     ),
 )
 
