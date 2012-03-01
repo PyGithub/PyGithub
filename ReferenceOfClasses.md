@@ -62,7 +62,7 @@ Authorizations
 --------------
 * `get_authorizations()`: list of `Authorization`
 * `get_authorization( id )`: `Authorization`
-* `create_authorization()`: `Authorization`
+* `create_authorization( [scopes, note, note_url] )`: `Authorization`
 
 Keys
 ----
@@ -119,10 +119,19 @@ Class `Authorization`
 
 Attributes
 ----------
+* `id`
+* `url`
+* `scopes`
+* `token`
+* `app`
+* `note`
+* `note_url`
+* `updated_at`
+* `created_at`
 
 Modification
 ------------
-* `edit()`
+* `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
 
 Deletion
 --------

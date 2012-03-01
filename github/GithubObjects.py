@@ -7,9 +7,10 @@ Authorization = GithubObject(
     "Authorization",
     BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
     InternalSimpleAttributes(
-        ### @todo
+        "id", "url", "scopes", "token", "app", "note", "note_url", "updated_at",
+        "created_at",
     ),
-    Editable( [], [] ), ### @todo
+    Editable( [], [ "scopes", "add_scopes", "remove_scopes", "note", "note_url" ] ),
     Deletable(),
 )
 
@@ -43,8 +44,8 @@ AuthenticatedUser = GithubObject(
     ExternalListOfObjects( "authorizations", "authorization", Authorization,
         ListGetable( [], [] ),
         ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [], [] ), ### @todo
-        ### url = "/authorizations", ### @todo
+        ElementCreatable( [], [ "scopes", "note", "note_url" ] ),
+        url = "/authorizations",
     ),
     ExternalListOfObjects( "keys", "key", UserKey,
         ListGetable( [], [] ),
