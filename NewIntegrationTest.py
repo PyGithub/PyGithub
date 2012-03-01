@@ -67,6 +67,9 @@ class ReplayingHttpsConnection:
     def close( self ):
         self.__file.readline()
 
+class RecordReplayException( Exception ):
+    pass
+
 class IntegrationTest:
     cobayeNamedUserLogin = "cjuniet"
 
@@ -98,10 +101,10 @@ class IntegrationTest:
             file = open( self.__fileName( test ), "w" )
             httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( file, *args, **kwds )
         except ImportError:
-            print "Please create a 'GithubCredentials.py' file containing:"
-            print "login = '<your github login>'"
-            print "password = '<your github password>'"
-            exit( 1 )
+            raise RecordReplayException( textwrap.dedent( """\
+                Please create a 'GithubCredentials.py' file containing:"
+                login = '<your github login>'"
+                password = '<your github password>'""" ) )
 
     def prepareReplay( self, test ):
         self.avoidError500FromGithub = lambda: 0
@@ -110,8 +113,7 @@ class IntegrationTest:
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
             self.g = Github( "login", "password" )
         except IOError:
-            print "Please re-run this script with argument '--record' to be able to replay the integration tests based on recorded first execution"
-            exit( 1 )
+            raise RecordReplayException( "Please re-run this script with argument '--record' to be able to replay the integration tests based on recorded first execution" )
 
     def __fileName( self, test ):
         return "ReplayDataForIntegrationTest." + test + ".txt"
@@ -123,11 +125,16 @@ class IntegrationTest:
         for test in tests:
             print
             print test
-            if record:
-                self.prepareRecord( test )
-            else:
-                self.prepareReplay( test )
-            getattr( self, "test" + test )()
+            try:
+                if record:
+                    self.prepareRecord( test )
+                else:
+                    self.prepareReplay( test )
+                getattr( self, "test" + test )()
+            except RecordReplayException, e:
+                print "*" * len( str( e ) )
+                print e
+                print "*" * len( str( e ) )
 
     def testAuthenticatedUserEdition( self ):
         print "Changing your user name (and reseting it)"
@@ -143,5 +150,9 @@ class IntegrationTest:
     def testNamedUserDetails( self ):
         u = self.g.get_user( self.cobayeNamedUserLogin )
         print u.login, "(" + u.name + ") is from", u.location
+
+    def testOrganizationDetails( self ):
+        o = self.g.get_organization( "github" )
+        print o.login, "(" + o.name + ") is in", o.location
 
 IntegrationTest().main( sys.argv[ 1: ] )
