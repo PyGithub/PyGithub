@@ -1,5 +1,6 @@
 #!/bin/env python
 
+import re
 import time
 import sys
 import httplib
@@ -35,6 +36,7 @@ class RecordingHttpsConnection:
         self.__cnx = self.__realHttpsConnection( *args, **kwds )
 
     def request( self, verb, url, input, headers ):
+        print verb, url
         self.__cnx.request( verb, url, input, headers )
         del headers[ "Authorization" ] # Do not let sensitive info in git :-p
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
@@ -97,6 +99,8 @@ class IntegrationTest:
             tests = argv
         self.runTests( tests, record )
 
+        self.analyseCoverage()
+
     def prepareRecord( self, test ):
         self.avoidError500FromGithub = lambda: time.sleep( 1 )
         try:
@@ -140,6 +144,38 @@ class IntegrationTest:
                 print e
                 print "*" * len( str( e ) )
 
+    def analyseCoverage( self ):
+        coveredUrls = dict()
+        for test in self.listTests():
+            with open( self.__fileName( test ) ) as file:
+                requests = [ line.strip() for line in file.readlines() ][ 0 : : 5 ]
+                for request in requests:
+                    verb, url = request.split( " " )[ 0 : 2 ]
+                    if url not in coveredUrls:
+                        coveredUrls[ url ] = set()
+                    coveredUrls[ url ].add( verb )
+
+        uncoveredMethods = set()
+        with open( "ReferenceOfApis.md" ) as file:
+            for line in file.readlines():
+                line = line.strip()
+                if line.startswith( "API" ):
+                    currentApi = line[ 5 : -1 ]
+                    apiRegex = re.sub( ":\w+", "\w+", currentApi )
+                if line.startswith( "* " ) and line.endswith( "`" ):
+                    verb = line[ 2 : line.find( ":" ) ]
+                    for url, verbs in coveredUrls.iteritems():
+                        if re.match( apiRegex, url ) and verb in verbs:
+                            break
+                    else:
+                        uncoveredMethods.add( line[ line.find( "`" ) + 1 : -1 ] )
+
+        if len( uncoveredMethods ) != 0:
+            print
+            print "Not covered:"
+            print "\n".join( sorted( uncoveredMethods ) )
+            #print "\n".join( sorted( m for m in uncoveredMethods if m.startswith( "Org" ) ) )
+
     def testEditAuthenticatedUser( self ):
         print "Changing your user name (and reseting it)"
         u = self.g.get_user()
@@ -163,21 +199,50 @@ class IntegrationTest:
         self.printList( "Members", o.get_members(), lambda m: m.login )
         self.printList( "Repos", o.get_repos(), lambda r: r.name )
 
-    def testEditOrganization( self ):
+    def testEditOrganizationTeamAndMembers( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         r = o.create_repo( "TestPyGithub" )
+
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
         t = o.create_team( "PyGithubTesters", permission = "push" )
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
+
         u = self.g.get_user( self.cobayeUser )
-        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+        assert not t.has_in_repos( r )
+        assert not t.has_in_members( u )
         t.add_to_members( u )
         t.add_to_repos( r )
-        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+        assert t.has_in_repos( r )
+        assert t.has_in_members( u )
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        o.add_to_public_members( u )
+        assert o.has_in_public_members( u )
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        o.remove_from_public_members( u )
+        assert not o.has_in_public_members( u )
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+        assert o.has_in_members( u )
+        o.remove_from_members( u )
+        assert not o.has_in_members( u )
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+
         self.printList( "Team members", t.get_members(), lambda m: m.login )
         self.printList( "Team repos", t.get_repos(), lambda r: r.name )
         t.remove_from_members( u )
         t.remove_from_repos( r )
-        print t.name, t.has_in_repos( r ), t.has_in_members( u )
+        assert not t.has_in_repos( r )
+        assert not t.has_in_members( u )
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
