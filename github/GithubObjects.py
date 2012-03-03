@@ -3,6 +3,8 @@ import urllib
 
 from GithubObject import *
 
+def __testHook( hook ):
+    hook._github._statusRequest( "POST", hook._baseUrl + "/test", None, None )
 Hook = GithubObject(
     "Hook",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + str( obj.id ) ),
@@ -13,6 +15,7 @@ Hook = GithubObject(
     ),
     Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
     Deletable(),
+    SeveralAttributePolicies( [ MethodFromCallable( "test", [], [], __testHook, SimpleTypePolicy( None ) ) ], "Testing" )
 )
 
 Authorization = GithubObject(

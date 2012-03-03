@@ -302,10 +302,10 @@ Attributes
 * `sha`
 * `url`
 * `message`
+* `parents`
 * `author`
 * `committer`
-* `tree`
-* `parents`
+* `tree`: `GitTree`
 
 Class `GitRef`
 ==============
@@ -346,14 +346,27 @@ Class `Hook`
 
 Attributes
 ----------
+* `url`
+* `updated_at`
+* `created_at`
+* `name`
+* `events`
+* `active`
+* `config`
+* `id`
+* `last_response`
 
 Modification
 ------------
-* `edit()`
+* `edit( name, config, [events, add_events, remove_events, active] )`
 
 Deletion
 --------
 * `delete()`
+
+Testing
+-------
+* `test()`
 
 Class `Issue`
 =============
@@ -728,7 +741,7 @@ Hooks
 -----
 * `get_hooks()`: list of `Hook`
 * `get_hook( id )`: `Hook`
-* `create_hook()`: `Hook`
+* `create_hook( name, config, [events, active] )`: `Hook`
 
 Keys
 ----
@@ -912,7 +925,7 @@ Attributes
 
 Modification
 ------------
-* `edit( title, key )`
+* `edit( [title, key] )`
 
 Deletion
 --------

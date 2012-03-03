@@ -383,8 +383,7 @@ class IntegrationTest:
 
         sameHook = r.get_hook( h.id )
 
-        ### @todo Uncomment when API `/repos/:user/:repo/hooks/:id/test` is implemented
-        # h.test()
+        h.test()
 
         h.delete()
         self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
