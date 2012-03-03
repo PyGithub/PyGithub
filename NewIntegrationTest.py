@@ -178,6 +178,12 @@ class IntegrationTest:
             print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
             print "\n".join( sorted( uncoveredMethods ) )
 
+    def testCreateForkForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        rf = o.create_fork( r )
+        print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
+
     def testEditAuthenticatedUser( self ):
         u = self.g.get_user()
         originalName = u.name
@@ -187,37 +193,6 @@ class IntegrationTest:
         u.edit( name = originalName )
         print u.name
 
-    def testFollow( self ):
-        cobaye = self.g.get_user( self.cobayeUser )
-        u = self.g.get_user()
-        u.remove_from_following( cobaye )
-        assert not u.has_in_following( cobaye )
-        u.add_to_following( cobaye )
-        assert u.has_in_following( cobaye )
-        self.printList( "Following", u.get_following(), lambda f: f.login )
-        self.printList( "Followers", u.get_followers(), lambda f: f.login )
-
-    def testWatch( self ):
-        r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
-        u = self.g.get_user()
-        u.remove_from_watched( r )
-        assert not u.has_in_watched( r )
-        u.add_to_watched( r )
-        assert u.has_in_watched( r )
-        self.printList( "Watched", u.get_watched(), lambda r: r.name )
-
-    def testNamedUserDetails( self ):
-        u = self.g.get_user( self.cobayeUser )
-        print u.login, "(" + u.name + ") is from", u.location
-        self.printList( "Repos", u.get_repos(), lambda r: r.name )
-
-    def testOrganizationDetails( self ):
-        o = self.g.get_organization( "github" )
-        print o.login, "(" + o.name + ") is in", o.location
-        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
-        self.printList( "Members", o.get_members(), lambda m: m.login )
-        self.printList( "Repos", o.get_repos(), lambda r: r.name )
-
     def testEditOrganization( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         originalName = o.name
@@ -226,12 +201,6 @@ class IntegrationTest:
         print o.name
         o.edit( name = originalName )
         print o.name
-
-    def testCreateForkForOrganization( self ):
-        o = self.g.get_organization( self.cobayeOrganization )
-        r = self.g.get_user().get_repo( "TestPyGithub" )
-        rf = o.create_fork( r )
-        print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
 
     def testEditOrganizationTeamAndMembers( self ):
         o = self.g.get_organization( self.cobayeOrganization )
@@ -280,16 +249,15 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
-    def testKeys( self ):
+    def testFollow( self ):
+        cobaye = self.g.get_user( self.cobayeUser )
         u = self.g.get_user()
-        self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        k = u.create_key( u.login + "@PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
-        self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        k.edit( title = u.login + "@PyGithub2" )
-        k = u.get_key( k.id )
-        self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        k.delete()
-        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        u.remove_from_following( cobaye )
+        assert not u.has_in_following( cobaye )
+        u.add_to_following( cobaye )
+        assert u.has_in_following( cobaye )
+        self.printList( "Following", u.get_following(), lambda f: f.login )
+        self.printList( "Followers", u.get_followers(), lambda f: f.login )
 
     def testGitObjects( self ):
         o = self.g.get_organization( self.cobayeOrganization )
@@ -313,6 +281,38 @@ class IntegrationTest:
         tag = r.create_git_tag( "tagCreatedByPyGithub", "This tag was created by PyGithub", commit.sha, "commit" )
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
+
+    def testKeys( self ):
+        u = self.g.get_user()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k = u.create_key( u.login + "@PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.edit( title = u.login + "@PyGithub2" )
+        k = u.get_key( k.id )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.delete()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+
+    def testNamedUserDetails( self ):
+        u = self.g.get_user( self.cobayeUser )
+        print u.login, "(" + u.name + ") is from", u.location
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
+
+    def testOrganizationDetails( self ):
+        o = self.g.get_organization( "github" )
+        print o.login, "(" + o.name + ") is in", o.location
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def testWatch( self ):
+        r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        u = self.g.get_user()
+        u.remove_from_watched( r )
+        assert not u.has_in_watched( r )
+        u.add_to_watched( r )
+        assert u.has_in_watched( r )
+        self.printList( "Watched", u.get_watched(), lambda r: r.name )
 
     def testEmails( self ):
         u = self.g.get_user()
