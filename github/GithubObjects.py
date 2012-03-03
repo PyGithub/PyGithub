@@ -144,19 +144,6 @@ GitRef = GithubObject(
     Editable( [ "sha" ], [ "force" ] ),
 )
 
-GitCommit = GithubObject(
-    "GitCommit",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
-    InternalSimpleAttributes(
-        "sha", "url", "message",
-        "author", ### @todo Structure
-        "committer", ### @todo Structure
-        "tree", ### @todo Structure
-        "parents", ### @todo Structure
-        "_repo", ### Ugly hack
-    ),
-)
-
 GitTree = GithubObject(
     "GitTree",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/git/trees/" + obj.sha ),
@@ -165,6 +152,18 @@ GitTree = GithubObject(
         "tree", ### @todo Structure
         "_repo", ### Ugly hack
     ),
+)
+
+GitCommit = GithubObject(
+    "GitCommit",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
+    InternalSimpleAttributes(
+        "sha", "url", "message",
+        "parents", ### @todo Structure
+        "author", "committer",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "tree", GitTree ),
 )
 
 GitBlob = GithubObject(

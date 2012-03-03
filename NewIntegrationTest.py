@@ -291,6 +291,29 @@ class IntegrationTest:
         k.delete()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
 
+    def testGitObjects( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.get_repo( "TestPyGithub" )
+
+        masterRef = r.get_git_ref( "refs/heads/master" )
+        masterCommit = r.get_git_commit( masterRef.object[ "sha" ] )
+        masterTree = r.get_git_tree( masterCommit.tree.sha )
+        readmeBlob = None
+        for element in masterTree.tree:
+            if element[ "path" ] == "ReadMe.md":
+                readmeBlob = r.get_git_blob( element[ "sha" ] )
+                break
+
+        blob = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
+        tree = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": blob.sha }, { "path": "ReadMe.md", "mode": "100644", "type": "blob", "sha": readmeBlob.sha } ] )
+        commit = r.create_git_commit( "This commit was created by PyGithub", tree.sha, [ masterCommit.sha ] )
+        r.create_git_ref( "refs/heads/previous_master", masterRef.object[ "sha" ] )
+        masterRef.edit( commit.sha )
+
+        tag = r.create_git_tag( "tagCreatedByPyGithub", "This tag was created by PyGithub", commit.sha, "commit" )
+        r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
+        reTag = r.get_git_tag( tag.sha )
+
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
