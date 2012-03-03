@@ -183,6 +183,14 @@ class IntegrationTest:
         rf = o.create_fork( r )
         print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
 
+    def testCreateRepoForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
+
+    def testCreateRepoForUser( self ):
+        u = self.g.get_user()
+        r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
+
     def testEditAuthenticatedUser( self ):
         u = self.g.get_user()
         originalName = u.name
