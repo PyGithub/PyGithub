@@ -294,9 +294,14 @@ class IntegrationTest:
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
 
     def testNamedUserDetails( self ):
-        u = self.g.get_user( self.cobayeUser )
+        u = self.g.get_user( "jacquev6" )
         print u.login, "(" + u.name + ") is from", u.location
         self.printList( "Repos", u.get_repos(), lambda r: r.name )
+        self.printList( "Followers", u.get_followers(), lambda m: m.login )
+        self.printList( "Following", u.get_following(), lambda m: m.login )
+        self.printList( "Watched", u.get_watched(), lambda r: r.owner.login + "/" + r.name )
+        self.printList( "Organizations", u.get_orgs(), lambda o: o.login )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
     def testOrganizationDetails( self ):
         o = self.g.get_organization( "github" )
