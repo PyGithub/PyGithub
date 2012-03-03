@@ -314,6 +314,14 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
 
+    def testEmails( self ):
+        u = self.g.get_user()
+        self.printList( "Emails", u.get_emails() )
+        u.add_to_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
+        u.remove_from_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
+
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
