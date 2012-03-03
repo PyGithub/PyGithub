@@ -281,6 +281,62 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
 
+    def testIssuesAndMilestones( self ):
+        u = self.g.get_user()
+        r = u.get_repo( "TestPyGithub" )
+
+        self.printList( "Issues", r.get_issues(), lambda i: i.title )
+        i = r.create_issue( "Issue created by PyGithub" )
+        self.printList( "Issues", r.get_issues(), lambda i: i.title )
+        i.edit( body = "Issue edited by PyGithub" )
+
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c = i.create_comment( "Comment created by PyGithub" )
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c.edit( "Comment edited by PyGithub" )
+        sameComment = i.get_comment( c.id )
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c.delete()
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+        m = r.create_milestone( "Milestone created by PyGithub" )
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+        m.edit( title = "Milestone edited by PyGithub" )
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+
+        self.printList( "Issues of milestone", r.get_issues( milestone = m.number ), lambda i: i.title )
+        i.edit( milestone = m.number )
+        self.printList( "Issues of milestone", r.get_issues( milestone = m.number ), lambda i: i.title )
+
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        labelD = r.create_label( "D", "FF0000" )
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        ### @todo Uncomment after fixing bug about BaseUrl depending on editable attribute
+        # labelD.edit( "Dada", "00FF00" )
+        # self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        labelD.delete()
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+
+        labelA = r.get_label( "bug" )
+        labelB = r.get_label( "duplicate" )
+        labelC = r.get_label( "invalid" )
+
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.set_labels( labelA, labelB )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.remove_from_labels( labelB )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.delete_labels()
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.add_to_labels( labelB, labelC )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+
+        self.printList( "Milestone labels", r.get_milestone( m.number ).get_labels(), lambda l: l.name )
+
+        m.delete()
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+
     def testKeys( self ):
         u = self.g.get_user()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
