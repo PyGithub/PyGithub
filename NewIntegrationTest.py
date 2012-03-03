@@ -227,9 +227,15 @@ class IntegrationTest:
         o.edit( name = originalName )
         print o.name
 
+    def testCreateForkForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        rf = o.create_fork( r )
+        print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
+
     def testEditOrganizationTeamAndMembers( self ):
         o = self.g.get_organization( self.cobayeOrganization )
-        r = o.create_repo( "TestPyGithub" )
+        r = o.get_repo( "TestPyGithub" )
 
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
         t = o.create_team( "PyGithubTesters", permission = "push" )
