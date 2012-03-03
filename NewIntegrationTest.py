@@ -8,8 +8,6 @@ import base64
 
 from github import Github
 
-### @todo From ReplayDataForIntegrationTest.*.txt files and ReferenceOfApis.md, build a coverage of the API by the integration test
-
 class RecordReplayException( Exception ):
     pass
 
@@ -101,7 +99,8 @@ class IntegrationTest:
             tests = argv
         self.runTests( tests, record )
 
-        self.analyseCoverage()
+        if not record:
+            self.analyseCoverage()
 
     def prepareRecord( self, test ):
         self.avoidError500FromGithub = lambda: time.sleep( 1 )
