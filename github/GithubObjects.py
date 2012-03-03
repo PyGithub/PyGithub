@@ -20,7 +20,7 @@ UserKey = GithubObject(
     InternalSimpleAttributes(
         "url", "id", "title", "key",
     ),
-    Editable( [ "title", "key" ], [] ),
+    Editable( [], [ "title", "key" ] ),
     Deletable(),
 )
 
@@ -144,19 +144,6 @@ GitRef = GithubObject(
     Editable( [ "sha" ], [ "force" ] ),
 )
 
-GitCommit = GithubObject(
-    "GitCommit",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
-    InternalSimpleAttributes(
-        "sha", "url", "message",
-        "author", ### @todo Structure
-        "committer", ### @todo Structure
-        "tree", ### @todo Structure
-        "parents", ### @todo Structure
-        "_repo", ### Ugly hack
-    ),
-)
-
 GitTree = GithubObject(
     "GitTree",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/git/trees/" + obj.sha ),
@@ -165,6 +152,18 @@ GitTree = GithubObject(
         "tree", ### @todo Structure
         "_repo", ### Ugly hack
     ),
+)
+
+GitCommit = GithubObject(
+    "GitCommit",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
+    InternalSimpleAttributes(
+        "sha", "url", "message",
+        "parents", ### @todo Structure
+        "author", "committer",
+        "_repo", ### Ugly hack
+    ),
+    InternalObjectAttribute( "tree", GitTree ),
 )
 
 GitBlob = GithubObject(
@@ -221,7 +220,7 @@ Milestone = GithubObject(
 
 IssueComment = GithubObject(
     "IssueComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/comment" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/comments/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "body", "created_at", "updated_at", "id",
         "_repo", ### Ugly hack
@@ -611,7 +610,7 @@ Gist = GithubObject(
     ], "Starring" ),
 )
 def __createFork( gist ):
-    return Gist( gitst._github, gist._github._dataRequest( "POST", gist._baseUrl + "/fork", None, None ), lazy = True )
+    return Gist( gist._github, gist._github._dataRequest( "POST", gist._baseUrl + "/fork", None, None ), lazy = True )
 Gist._addAttributePolicy(    SeveralAttributePolicies( [
         MethodFromCallable( "create_fork", [], [], __createFork, ObjectTypePolicy( Gist ) ),
     ], "Forking" ),

@@ -1,5 +1,6 @@
 #!/bin/env python
 
+import re
 import time
 import sys
 import httplib
@@ -7,22 +8,25 @@ import base64
 
 from github import Github
 
-class RecordingHttpResponse( object ):
-    def __init__( self, file, res ):
-        self.status = res.status
-        self.__headers = res.getheaders()
-        self.__output = res.read()
-        file.write( str( self.status ) + "\n" )
-        file.write( str( self.__headers ) + "\n" )
-        file.write( str( self.__output ) + "\n" )
-
-    def getheaders( self ):
-        return self.__headers
-
-    def read( self ):
-        return self.__output
+class RecordReplayException( Exception ):
+    pass
 
 class RecordingHttpsConnection:
+    class HttpResponse( object ):
+        def __init__( self, file, res ):
+            self.status = res.status
+            self.__headers = res.getheaders()
+            self.__output = res.read()
+            file.write( str( self.status ) + "\n" )
+            file.write( str( self.__headers ) + "\n" )
+            file.write( str( self.__output ) + "\n" )
+
+        def getheaders( self ):
+            return self.__headers
+
+        def read( self ):
+            return self.__output
+
     __realHttpsConnection = httplib.HTTPSConnection
 
     def __init__( self, file, *args, **kwds ):
@@ -30,252 +34,395 @@ class RecordingHttpsConnection:
         self.__cnx = self.__realHttpsConnection( *args, **kwds )
 
     def request( self, verb, url, input, headers ):
+        print verb, url
         self.__cnx.request( verb, url, input, headers )
         del headers[ "Authorization" ] # Do not let sensitive info in git :-p
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
 
     def getresponse( self ):
-        return RecordingHttpResponse( self.__file, self.__cnx.getresponse() )
+        return RecordingHttpsConnection.HttpResponse( self.__file, self.__cnx.getresponse() )
 
     def close( self ):
         self.__file.write( "\n" )
         return self.__cnx.close()
 
-class ReplayingHttpResponse( object ):
-    def __init__( self, file ):
-        self.status = int( file.readline().strip() )
-        self.__headers = eval( file.readline().strip() )
-        self.__output = file.readline().strip()
-
-    def getheaders( self ):
-        return self.__headers
-
-    def read( self ):
-        return self.__output
-
 class ReplayingHttpsConnection:
+    class HttpResponse( object ):
+        def __init__( self, file ):
+            self.status = int( file.readline().strip() )
+            self.__headers = eval( file.readline().strip() )
+            self.__output = file.readline().strip()
+
+        def getheaders( self ):
+            return self.__headers
+
+        def read( self ):
+            return self.__output
+
     def __init__( self, file ):
         self.__file = file
 
     def request( self, verb, url, input, headers ):
         del headers[ "Authorization" ]
-        assert self.__file.readline().strip() == verb + " " + url + " " + str( headers ) + " " + input
+        if( self.__file.readline().strip() != verb + " " + url + " " + str( headers ) + " " + input ):
+            raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
 
     def getresponse( self ):
-        return ReplayingHttpResponse( self.__file )
+        return ReplayingHttpsConnection.HttpResponse( self.__file )
 
     def close( self ):
         self.__file.readline()
 
 class IntegrationTest:
-    __fileName = "ReplayDataForIntegrationTest.txt"
+    cobayeUser = "Lyloa"
+    cobayeOrganization = "BeaverSoftware"
 
-    def main( self ):
-        if len( sys.argv ) == 2 and sys.argv[ 1 ] == "--record":
-            print "Record mode: I'm really going to do requests to github.com. Please type 'yes' and return"
-            sys.stdout.flush()
-            confirm = sys.stdin.readline().strip()
-            if confirm != "yes":
-                exit( 1 )
-            self.record()
+    def main( self, argv ):
+        record = False
+        if len( argv ) >= 1:
+            if argv[ 0 ] == "--record":
+                argv = argv[ 1: ]
+                record = True
+            elif argv[ 0 ] == "--list":
+                print "List of available tests:"
+                print "\n".join( self.listTests() )
+                return
+
+        if record:
+            print "Record mode: this script is really going to do requests to github.com"
         else:
-            self.replay()
+            print "Replay mode: this script will used requests to and replies from github.com recorded in previous runs in record mode"
 
-        exit()
+        if len( argv ) == 0:
+            tests = self.listTests()
+        else:
+            tests = argv
+        self.runTests( tests, record )
 
-    def record( self ):
-        self.prepareRecord()
-        self.playScenario()
+        if not record:
+            self.analyseCoverage()
 
-    def replay( self ):
-        self.prepareReplay()
-        self.playScenario()
-
-    def prepareRecord( self ):
+    def prepareRecord( self, test ):
         self.avoidError500FromGithub = lambda: time.sleep( 1 )
         try:
             import GithubCredentials
             self.g = Github( GithubCredentials.login, GithubCredentials.password )
-            file = open( self.__fileName, "w" )
+            file = open( self.__fileName( test ), "w" )
             httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( file, *args, **kwds )
         except ImportError:
-            print "Please create a 'GithubCredentials.py' file containing:"
-            print "login = '<your github login>'"
-            print "password = '<your github password>'"
-            exit( 1 )
+            raise RecordReplayException( textwrap.dedent( """\
+                Please create a 'GithubCredentials.py' file containing:"
+                login = '<your github login>'"
+                password = '<your github password>'""" ) )
 
-    def prepareReplay( self ):
+    def prepareReplay( self, test ):
         self.avoidError500FromGithub = lambda: 0
         try:
-            file = open( self.__fileName )
+            file = open( self.__fileName( test ) )
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
             self.g = Github( "login", "password" )
         except IOError:
-            print "Please re-run this script with argument '--record' to be able to replay the integration tests based on recorded first execution"
-            exit( 1 )
+            raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
 
-    def playScenario( self ):
-        self.doSomeWrites()
-        self.doSomeReads()
+    def __fileName( self, test ):
+        return "ReplayDataForIntegrationTest." + test + ".txt"
 
-    def doSomeReads( self ):
-        self.dumpUser( self.g.get_user(), doPrivateThings = True )
-        jacquev6 = self.g.get_user( "jacquev6" )
-        self.dumpUser( jacquev6, doPrivateThings = False )
-        self.dumpOrganization( self.g.get_organization( "github" ), doTeams = False )
-        self.dumpOrganization( self.g.get_organization( "BeaverSoftware" ), doTeams = True )
-        self.dumpRepository( jacquev6.get_repo( "PyGithub" ) )
+    def listTests( self ):
+        return [ f[ 4: ] for f in dir( self ) if f.startswith( "test" ) ]
 
-    def doSomeWrites( self ):
-        self.doSomeWritesToUser()
-        self.doSomeWritesToRepository()
-        self.doSomeWritesToGist()
+    def runTests( self, tests, record ):
+        for test in tests:
+            print
+            print test
+            print "=" * len( test )
+            try:
+                if record:
+                    self.prepareRecord( test )
+                else:
+                    self.prepareReplay( test )
+                getattr( self, "test" + test )()
+            except RecordReplayException, e:
+                print "*" * len( str( e ) )
+                print e
+                print "*" * len( str( e ) )
 
-    def doSomeWritesToUser( self ):
-        u = self.g.get_user()
-        oldBio = u.bio
-        u.edit( bio = oldBio + " (Edited by PyGithub)" )
-        u.edit( bio = oldBio )
-        jacquev6 = self.g.get_user( "jacquev6" )
-        u.remove_from_following( jacquev6 )
-        u.add_to_following( jacquev6 )
-        PyGithub = jacquev6.get_repo( "PyGithub" )
-        u.remove_from_watched( PyGithub )
-        u.add_to_watched( PyGithub )
+    def analyseCoverage( self ):
+        coveredUrls = dict()
+        for test in self.listTests():
+            with open( self.__fileName( test ) ) as file:
+                requests = [ line.strip() for line in file.readlines() ][ 0 : : 5 ]
+                for request in requests:
+                    verb, url = request.split( " " )[ 0 : 2 ]
+                    if url not in coveredUrls:
+                        coveredUrls[ url ] = set()
+                    coveredUrls[ url ].add( verb )
 
-    def doSomeWritesToRepository( self ):
-        u = self.g.get_user()
-        r = u.create_repo( name = "TestPyGithub", description = "Created by PyGithub", has_wiki = False )
-        self.avoidError500FromGithub()
+        uncoveredMethods = set()
+        with open( "ReferenceOfApis.md" ) as file:
+            for line in file.readlines():
+                line = line.strip()
+                if line.startswith( "API" ):
+                    currentApi = line[ 5 : -1 ]
+                    apiRegex = re.sub( ":\w+", "\w+", currentApi )
+                if line.startswith( "* " ) and line.endswith( "`" ):
+                    verb = line[ 2 : line.find( ":" ) ]
+                    for url, verbs in coveredUrls.iteritems():
+                        if re.match( apiRegex, url ) and verb in verbs:
+                            break
+                    else:
+                        uncoveredMethods.add( line[ line.find( "`" ) + 1 : -1 ] )
 
-        # Git objects
-        b1 = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
-        t1 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b1.sha } ] )
-        c1 = r.create_git_commit( "This commit was created by PyGithub", t1.sha, [] )
-        master = r.create_git_ref( "refs/heads/master", c1.sha )
-        b2 = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
-        t2 = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b2.sha }, { "path": "old", "mode": "040000", "type": "tree", "sha": t1.sha } ] )
-        c2 = r.create_git_commit( "This commit was also created by PyGithub", t2.sha, [ c1.sha ] )
-        master.edit( c2.sha )
-        tag = r.create_git_tag( "a_tag", "This tag was created by PyGithub", c2.sha, "commit" )
-        r.create_git_ref( "refs/tags/a_tag", tag.sha )
+        if len( uncoveredMethods ) != 0:
+            print
+            print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
+            print "\n".join( sorted( uncoveredMethods ) )
 
-        c = r.get_commit( c2.sha )
-        c.create_comment( "Commented with PyGithub", c.sha, 1, "foo.bar", 1 )
-
-        # Issues and milestones
-        l = r.create_label( "Label created by PyGithub", "00FF00" )
-        l.edit( "Label created and modified by PyGithub", "FFFF00" )
-        m = r.create_milestone( title = "This milestone was created by PyGithub" )
-        m.edit( title = m.title, description = "And the description was modified by PyGithub as well" )
-        m = r.create_milestone( title = "This milestone was also created by PyGithub" )
-        m.delete()
-        i = r.create_issue( "Issue created by PyGithub" )
-        i.edit( body = "Body edited by PyGithub" )
-
-        la = r.create_label( "a", "00FF00" )
-        lb = r.create_label( "b", "00FF00" )
-        lc = r.create_label( "c", "00FF00" )
-        i.set_labels( la, lb )
-        i.remove_from_labels( lb )
-        i.delete_labels()
-        i.add_to_labels( lc )
-
-        i.create_comment( "Commented from PyGithub" )
-
-        # Downloads
-        r.create_download( "MyDownloadCreatedByPyGithub", 1000 )
-
-        # Forking, commiting and requesting merge
-        o = self.g.get_organization( "BeaverSoftware" )
-
+    def testCreateForkForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = self.g.get_user().get_repo( "TestPyGithub" )
         rf = o.create_fork( r )
-        self.avoidError500FromGithub()
-        b3 = rf.create_git_blob( "This blob was ter created by PyGithub", encoding = "latin1" )
-        t3 = rf.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": b3.sha } ] )
-        c3 = rf.create_git_commit( "This commit was ter created by PyGithub", t3.sha, [ c2.sha ] )
-        rf.get_git_ref( "refs/heads/master" ).edit( c3.sha )
+        print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
 
-        p = r.create_pull( "Pull request created by PyGithub", "", "jacquev6:master", "BeaverSoftware:master" )
+    def testCreateRepoForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
 
-        self.dumpRepository( r )
-
-    def doSomeWritesToGist( self ):
+    def testCreateRepoForUser( self ):
         u = self.g.get_user()
-        g = u.create_gist( True, { "foobar.txt": { "content": "Gist created by PyGithub" } }, "Gist created by PyGithub" )
-        g.edit( "Gist edited by PyGithub" )
-        g.create_comment( "Gist comment created by PyGithub" )
+        r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
+
+    def testEditAuthenticatedUser( self ):
+        u = self.g.get_user()
+        originalName = u.name
+        print u.name
+        u.edit( name = u.name + " (edited by PyGithub)" )
+        print u.name
+        u.edit( name = originalName )
+        print u.name
+
+    def testEditOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        originalName = o.name
+        print o.name
+        o.edit( name = str( o.name ) + " (edited by PyGithub)" )
+        print o.name
+        o.edit( name = originalName )
+        print o.name
+
+    def testEditOrganizationTeamAndMembers( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.get_repo( "TestPyGithub" )
+
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
+        t = o.create_team( "PyGithubTesters", permission = "push" )
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
+
+        u = self.g.get_user( self.cobayeUser )
+
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+        assert not t.has_in_repos( r )
+        assert not t.has_in_members( u )
+        t.add_to_members( u )
+        t.add_to_repos( r )
+        assert t.has_in_repos( r )
+        assert t.has_in_members( u )
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        o.add_to_public_members( u )
+        assert o.has_in_public_members( u )
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        o.remove_from_public_members( u )
+        assert not o.has_in_public_members( u )
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+        assert o.has_in_members( u )
+        o.remove_from_members( u )
+        assert not o.has_in_members( u )
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+        t.remove_from_members( u )
+        t.remove_from_repos( r )
+        assert not t.has_in_repos( r )
+        assert not t.has_in_members( u )
+        self.printList( "Team members", t.get_members(), lambda m: m.login )
+        self.printList( "Team repos", t.get_repos(), lambda r: r.name )
+
+        t.delete()
+        self.printList( "Teams", o.get_teams(), lambda t: t.name )
+
+    def testFollow( self ):
+        cobaye = self.g.get_user( self.cobayeUser )
+        u = self.g.get_user()
+        u.remove_from_following( cobaye )
+        assert not u.has_in_following( cobaye )
+        u.add_to_following( cobaye )
+        assert u.has_in_following( cobaye )
+        self.printList( "Following", u.get_following(), lambda f: f.login )
+        self.printList( "Followers", u.get_followers(), lambda f: f.login )
+
+    def testGists( self ):
+        u = self.g.get_user()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g = u.create_gist( public = True, description = "Gist created by PyGithub", files = { "foo.bar": { "content": "This gist was created by PyGithub" } } )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g.edit( description = "Gist edited by PyGithub" )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
         g.set_starred()
         assert g.is_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
         g.reset_starred()
-        assert not g.is_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
 
-    def dumpUser( self, u, doPrivateThings ):
-        print u.login, "(", u.name, ")"
-        print "  Gists:", ", ".join( g.description + "(" + ", ".join( c.body for c in g.get_comments() ) + ")" for g in u.get_gists() )
-        if doPrivateThings:
-            print "  Starred gists:", ", ".join( g.description for g in u.get_starred_gists() )
-        print "  Repos:"
-        for r in u.get_repos():
-            print "   ", r.name,
-            if r.fork:
-                print "<-", r.parent.owner.login + "/" + r.parent.name,
-                print "<-", r.source.owner.login + "/" + r.source.name,
-            print
-        if doPrivateThings:
-            print "  Emails:", ", ".join( u.get_emails() )
-        print "  Watched:", ", ".join( r.name for r in u.get_watched() )
-        print "  Organizations:", ", ".join( o.login for o in u.get_orgs() )
-        print "  Following:", ", ".join( f.login for f in u.get_following() )
-        if doPrivateThings:
-            print "  Is following jacquev6:", u.has_in_following( self.g.get_user( "jacquev6" ) )
-        print "  Followers:", ", ".join( f.login for f in u.get_followers() )
-        print
-        sys.stdout.flush()
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c = g.create_comment( "Comment created by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c.edit( "Comment edited by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        sameComment = g.get_comment( c.id )
+        c.delete()
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
 
-    def dumpOrganization( self, o, doTeams ):
-        print o.login, "(", o.name, ")"
-        print "  Members:", ", ".join( u.login for u in o.get_members() )
-        print "  Repos:", ", ".join( r.name for r in o.get_repos() )
-        if doTeams:
-            print "  Teams:"
-            for team in o.get_teams():
-                print "   ", team.name, "(" + team.permission + "):", ", ".join( u.login for u in team.get_members() ), "->", ", ".join( r.name for r in team.get_repos() )
-        print
-        sys.stdout.flush()
+        otherGist = self.g.get_gist( 1965703 ).create_fork() # Origin gist picked up randomly
+        self.printList( "Gists", u.get_gists(), lambda g: g.description or "None" )
+        otherGist.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
-    def dumpRepository( self, r ):
-        print r.owner.login + "/" + r.name
-        print "  Collaborators:", ", ".join( u.login for u in r.get_collaborators() )
-        print "  Contributors:", ", ".join( u.login for u in r.get_contributors() )
-        print "  Watchers:", ", ".join( u.login for u in r.get_watchers() )
-        print "  Forks:", ", ".join( f.owner.login + "/" + f.name for f in r.get_forks() )
-        print "  Languages:", r.get_languages()
-        print "  Downloads:", ", ".join( d.name for d in r.get_downloads() )
-        print "  Tags:", ", ".join( t.name + " (" + t.commit.sha + ")" for t in r.get_tags() )
-        print "  Branches:", ", ".join( b.name + " (" + b.commit.sha + ")" for b in r.get_branches() )
-        print "  Commits:", ", ".join( c.commit.message + " (" + str( c.stats ) + " ".join( comment.body for comment in c.get_comments() ) + ")" for c in r.get_commits()[ : 10 ] )
-        print "  Git references:", ", ".join( ref.ref + " (" + ref.object[ "sha" ][ :7 ] + ")" for ref in r.get_git_refs() )
-        masterCommitSha = r.get_git_ref( "refs/heads/master" ).object[ "sha" ]
-        masterCommit = r.get_git_commit( masterCommitSha )
-        masterTreeSha = masterCommit.tree[ "sha" ]
-        masterTree = r.get_git_tree( masterTreeSha )
+        g.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
+    def testGitObjects( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.get_repo( "TestPyGithub" )
+
+        masterRef = r.get_git_ref( "refs/heads/master" )
+        masterCommit = r.get_git_commit( masterRef.object[ "sha" ] )
+        masterTree = r.get_git_tree( masterCommit.tree.sha )
+        readmeBlob = None
         for element in masterTree.tree:
-            if element[ "type" ] == "blob":
-                blobSha = element[ "sha" ]
+            if element[ "path" ] == "ReadMe.md":
+                readmeBlob = r.get_git_blob( element[ "sha" ] )
                 break
-        blob = r.get_git_blob( blobSha )
-        print "  Master:", masterCommitSha, masterCommit.message, ", ".join( element[ "path" ] + " (" + element[ "type" ] + ")" for element in masterTree.tree )
-        print "    blob:", blob.content, blob.encoding,
-        if blob.encoding == "base64":
-            print base64.b64decode( blob.content ),
-        print
-        print "  Labels:", ", ".join( l.name + " (" + l.color + ")" for l in r.get_labels() )
-        print "  Issues:", ", ".join( i.title + " (" + ", ".join( l.name for l in i.get_labels() ) + ") (" + ", ".join( c.body for c in i.get_comments() ) + ")" for i in r.get_issues() )
-        print "  Milestones:", ", ".join( m.title + " (created by " + m.creator.login + ", " + ", ".join( l.name for l in m.get_labels() ) + ")" for m in r.get_milestones() )
-        print "  Closed milestones:", ", ".join( m.title for m in r.get_milestones( state = "closed" ) )
-        print "  Merge requests:", ", ".join( p.title + "(" + ", ".join( f.filename for f in p.get_files() ) + ")" for p in r.get_pulls() )
-        print
-        sys.stdout.flush()
 
-IntegrationTest().main()
+        blob = r.create_git_blob( "This blob was created by PyGithub", encoding = "latin1" )
+        tree = r.create_git_tree( [ { "path": "foo.bar", "mode": "100644", "type": "blob", "sha": blob.sha }, { "path": "ReadMe.md", "mode": "100644", "type": "blob", "sha": readmeBlob.sha } ] )
+        commit = r.create_git_commit( "This commit was created by PyGithub", tree.sha, [ masterCommit.sha ] )
+        r.create_git_ref( "refs/heads/previous_master", masterRef.object[ "sha" ] )
+        masterRef.edit( commit.sha )
+
+        tag = r.create_git_tag( "tagCreatedByPyGithub", "This tag was created by PyGithub", commit.sha, "commit" )
+        r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
+        reTag = r.get_git_tag( tag.sha )
+
+    def testIssuesAndMilestones( self ):
+        u = self.g.get_user()
+        r = u.get_repo( "TestPyGithub" )
+
+        self.printList( "Issues", r.get_issues(), lambda i: i.title )
+        i = r.create_issue( "Issue created by PyGithub" )
+        self.printList( "Issues", r.get_issues(), lambda i: i.title )
+        i.edit( body = "Issue edited by PyGithub" )
+
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c = i.create_comment( "Comment created by PyGithub" )
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c.edit( "Comment edited by PyGithub" )
+        sameComment = i.get_comment( c.id )
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+        c.delete()
+        self.printList( "Comments on issue", i.get_comments(), lambda c: c.body )
+
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+        m = r.create_milestone( "Milestone created by PyGithub" )
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+        m.edit( title = "Milestone edited by PyGithub" )
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+
+        self.printList( "Issues of milestone", r.get_issues( milestone = m.number ), lambda i: i.title )
+        i.edit( milestone = m.number )
+        self.printList( "Issues of milestone", r.get_issues( milestone = m.number ), lambda i: i.title )
+
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        labelD = r.create_label( "D", "FF0000" )
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        ### @todo Uncomment after fixing bug about BaseUrl depending on editable attribute
+        # labelD.edit( "Dada", "00FF00" )
+        # self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        labelD.delete()
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+
+        labelA = r.get_label( "bug" )
+        labelB = r.get_label( "duplicate" )
+        labelC = r.get_label( "invalid" )
+
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.set_labels( labelA, labelB )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.remove_from_labels( labelB )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.delete_labels()
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+        i.add_to_labels( labelB, labelC )
+        self.printList( "Labels", i.get_labels(), lambda l: l.name )
+
+        self.printList( "Milestone labels", r.get_milestone( m.number ).get_labels(), lambda l: l.name )
+
+        m.delete()
+        self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
+
+    def testKeys( self ):
+        u = self.g.get_user()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k = u.create_key( u.login + "@PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.edit( title = u.login + "@PyGithub2" )
+        k = u.get_key( k.id )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.delete()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+
+    def testNamedUserDetails( self ):
+        u = self.g.get_user( "jacquev6" )
+        print u.login, "(" + u.name + ") is from", u.location
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
+        self.printList( "Followers", u.get_followers(), lambda m: m.login )
+        self.printList( "Following", u.get_following(), lambda m: m.login )
+        self.printList( "Watched", u.get_watched(), lambda r: r.owner.login + "/" + r.name )
+        self.printList( "Organizations", u.get_orgs(), lambda o: o.login )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
+    def testOrganizationDetails( self ):
+        o = self.g.get_organization( "github" )
+        print o.login, "(" + o.name + ") is in", o.location
+        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
+        self.printList( "Members", o.get_members(), lambda m: m.login )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def testWatch( self ):
+        r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        u = self.g.get_user()
+        u.remove_from_watched( r )
+        assert not u.has_in_watched( r )
+        u.add_to_watched( r )
+        assert u.has_in_watched( r )
+        self.printList( "Watched", u.get_watched(), lambda r: r.name )
+
+    def testEmails( self ):
+        u = self.g.get_user()
+        self.printList( "Emails", u.get_emails() )
+        u.add_to_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
+        u.remove_from_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
+
+    def printList( self, title, iterable, f = lambda x: x ):
+        print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
+
+IntegrationTest().main( sys.argv[ 1: ] )
