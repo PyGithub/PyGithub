@@ -610,7 +610,7 @@ Gist = GithubObject(
     ], "Starring" ),
 )
 def __createFork( gist ):
-    return Gist( gitst._github, gist._github._dataRequest( "POST", gist._baseUrl + "/fork", None, None ), lazy = True )
+    return Gist( gist._github, gist._github._dataRequest( "POST", gist._baseUrl + "/fork", None, None ), lazy = True )
 Gist._addAttributePolicy(    SeveralAttributePolicies( [
         MethodFromCallable( "create_fork", [], [], __createFork, ObjectTypePolicy( Gist ) ),
     ], "Forking" ),

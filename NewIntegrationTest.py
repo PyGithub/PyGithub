@@ -266,6 +266,38 @@ class IntegrationTest:
         self.printList( "Following", u.get_following(), lambda f: f.login )
         self.printList( "Followers", u.get_followers(), lambda f: f.login )
 
+    def testGists( self ):
+        u = self.g.get_user()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g = u.create_gist( public = True, description = "Gist created by PyGithub", files = { "foo.bar": { "content": "This gist was created by PyGithub" } } )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g.edit( description = "Gist edited by PyGithub" )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+        g.set_starred()
+        assert g.is_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+        g.reset_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c = g.create_comment( "Comment created by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c.edit( "Comment edited by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        sameComment = g.get_comment( c.id )
+        c.delete()
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+
+        otherGist = self.g.get_gist( 1965703 ).create_fork() # Origin gist picked up randomly
+        self.printList( "Gists", u.get_gists(), lambda g: g.description or "None" )
+        otherGist.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
+        g.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+
     def testGitObjects( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         r = o.get_repo( "TestPyGithub" )
