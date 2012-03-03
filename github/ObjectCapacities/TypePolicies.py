@@ -19,10 +19,7 @@ class ObjectTypePolicy:
         self.__type = type
 
     def createLazy( self, obj, attributes ):
-        if isinstance( attributes, self.__type ):
-            return attributes
-        else:
-            return self.__type( obj._github, attributes, lazy = True )
+        return self.__type( obj._github, attributes, lazy = True )
 
     def createNonLazy( self, obj, attributes ):
         return self.__type( obj._github, attributes, lazy = False )

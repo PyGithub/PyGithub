@@ -21,6 +21,7 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
         unittest.TestCase.setUp( self )
         self.g = MockMockMock.Mock( "github" )
         self.o = self.GithubTestObject( self.g.object, { "a1": 1, "a2": 2 }, lazy = True )
+        self.GithubTestObject._autoDocument() # Only for coverage
 
     def tearDown( self ):
         self.g.tearDown()
@@ -46,6 +47,17 @@ class TestCaseWithGithubTestObject( unittest.TestCase ):
 
     def expectStatusDelete( self, url, data = None ):
         return self.g.expect._statusRequest( "DELETE", url, None, data )
+
+class GithubObjectWithDocumentationCoveringSpecialCases( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2", "_a3" ),
+        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], lambda obj: 42, ObjectTypePolicy( GithubObject ) )
+    )
+
+    def testNothing( self ):
+        pass
 
 class GithubObjectWithOnlyInternalSimpleAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
@@ -231,6 +243,51 @@ class GithubObjectWithListGetableExternalListOfObjects( TestCaseWithGithubTestOb
         self.expectDataGet( "/test/a3s", { "type": "foobar" } ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
         a3s = self.o.get_a3s( "foobar" )
         self.assertEqual( len( a3s ), 3 )
+
+class GithubObjectWithListGetableExternalListOfObjectsWithOtherUrl( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/other/" + obj.id ),
+        InternalSimpleAttributes( "id", "name" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ] ), url = "/other" )
+    )
+
+    def testGetList( self ):
+        self.expectDataGet( "/other", {} ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        a3s = self.o.get_a3s()
+        self.assertEqual( len( a3s ), 3 )
+        self.assertEqual( a3s[ 0 ].id, "id1" )
+        self.expectDataGet( "/other/id1" ).andReturn( { "name": "name1" } )
+        self.assertEqual( a3s[ 0 ].name, "name1" )
+
+class GithubObjectWithListGetableExternalListOfObjectsWithAttributeModifier( TestCaseWithGithubTestObject ):
+    ContainedObject = GithubObject(
+        "ContainedObject",
+        BaseUrl( lambda obj: "/test/a3s/" + obj.id ),
+        InternalSimpleAttributes( "id", "name", "_a" )
+    )
+
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2" ),
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ], { "_a": lambda obj: 42 } ) )
+    )
+
+    def testGetList( self ):
+        self.expectDataGet( "/test/a3s", {} ).andReturn( [ { "id": "id1" }, { "id": "id2" }, { "id": "id3" } ] )
+        a3s = self.o.get_a3s()
+        self.assertEqual( len( a3s ), 3 )
+        self.assertEqual( a3s[ 0 ].id, "id1" )
+        self.assertEqual( a3s[ 0 ]._a, 42 )
+        self.expectDataGet( "/test/a3s/id1" ).andReturn( { "name": "name1" } )
+        self.assertEqual( a3s[ 0 ].name, "name1" )
 
 class GithubObjectWithElementAddableExternalListOfObjects( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
