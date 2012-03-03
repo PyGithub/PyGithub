@@ -24,7 +24,6 @@ class AttributeFromCallable:
 
     def autoDocument( self ):
         return ""
-        return "* `" + self.__name + "`\n"
 
 ### @todo include the ArgumentsChecker
 class MethodFromCallable:

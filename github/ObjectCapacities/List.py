@@ -65,10 +65,19 @@ class ElementHasable( ListCapacity ):
         ### @todo `bool` -> bool
         return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
-class ElementCreatable( ListCapacity ):
-    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+class ListCapacityWithModifier( ListCapacity ):
+    def __init__( self, attributeModifiers ):
         self.__attributeModifiers = attributeModifiers
+
+    def _modifyAttributes( self, obj, attributes ):
+        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
+            attributes[ attributeName ] = attributeModifier( obj )
+        return attributes
+
+class ElementCreatable( ListCapacityWithModifier ):
+    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        ListCapacityWithModifier.__init__( self, attributeModifiers )
+        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
 
     def apply( self, cls ):
         cls._addMethod( "create_" + self.singularName, self.__execute )
@@ -76,7 +85,7 @@ class ElementCreatable( ListCapacity ):
     def __execute( self, obj, *args, **kwds ):
         return self.typePolicy.createLazy(
             obj,
-            self.__modifyAttributes(
+            self._modifyAttributes(
                 obj,
                 obj._github._dataRequest(
                     "POST",
@@ -87,18 +96,13 @@ class ElementCreatable( ListCapacity ):
             )
         )
 
-    def __modifyAttributes( self, obj, attributes ):
-        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
-            attributes[ attributeName ] = attributeModifier( obj )
-        return attributes
-
     def autoDocument( self ):
         return "* `create_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
 
-class ElementGetable( ListCapacity ):
+class ElementGetable( ListCapacityWithModifier ):
     def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        ListCapacityWithModifier.__init__( self, attributeModifiers )
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__attributeModifiers = attributeModifiers
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.singularName, self.__execute )
@@ -106,16 +110,11 @@ class ElementGetable( ListCapacity ):
     def __execute( self, obj, *args, **kwds ):
         return self.typePolicy.createNonLazy(
             obj,
-            self.__modifyAttributes(
+            self._modifyAttributes(
                 obj,
                 self.__argumentsChecker.check( args, kwds )
             )
         )
-
-    def __modifyAttributes( self, obj, attributes ):
-        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
-            attributes[ attributeName ] = attributeModifier( obj )
-        return attributes
 
     def autoDocument( self ):
         return "* `get_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
@@ -156,10 +155,10 @@ class SeveralElementsRemovable( ListCapacity ):
     def autoDocument( self ):
         return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
-class ListGetable( ListCapacity ):
+class ListGetable( ListCapacityWithModifier ):
     def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+        ListCapacityWithModifier.__init__( self, attributeModifiers )
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
-        self.__attributeModifiers = attributeModifiers
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.safeAttributeName, self.__execute )
@@ -169,7 +168,7 @@ class ListGetable( ListCapacity ):
         return [
             self.typePolicy.createLazy(
                 obj,
-                self.__modifyAttributes( obj, attributes )
+                self._modifyAttributes( obj, attributes )
             )
             for attributes in obj._github._dataRequest(
                 "GET",
@@ -181,11 +180,6 @@ class ListGetable( ListCapacity ):
 
     def autoDocument( self ):
         return "* `get_" + self.safeAttributeName + "(" + self.__argumentsChecker.documentParameters() + ")`: list of " + self.typePolicy.documentTypeName() + "\n"
-
-    def __modifyAttributes( self, obj, attributes ):
-        for attributeName, attributeModifier in self.__attributeModifiers.iteritems():
-            attributes[ attributeName ] = attributeModifier( obj )
-        return attributes
 
 class ListSetable( ListCapacity ):
     def apply( self, cls ):
