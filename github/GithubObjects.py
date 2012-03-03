@@ -5,12 +5,13 @@ from GithubObject import *
 
 Hook = GithubObject(
     "Hook",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + obj.id ),
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + str( obj.id ) ),
     InternalSimpleAttributes(
-        ### @todo
+        "url", "updated_at", "created_at", "name", "events", "active", "config",
+        "id", "last_response",
         "_repo", ### Ugly hack
     ),
-    Editable( [], [] ), #### @todo
+    Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
     Deletable(),
 )
 
@@ -422,7 +423,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "hooks", "hook", Hook,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [], [], __modifyAttributesForObjectsReferingReferedRepo ), ### @todo
+        ElementCreatable( [ "name", "config" ], [ "events", "active" ], __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "keys", "key", RepositoryKey,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),

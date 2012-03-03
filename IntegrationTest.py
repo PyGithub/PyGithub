@@ -371,6 +371,24 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
 
+    def testHooks( self ):
+        u = self.g.get_user()
+        r = u.get_repo( "TestPyGithub" )
+
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h = r.create_hook( "web", { "url": "http://www.invalid.org" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h.edit( "web", { "url": "http://www.postbin.org/w5cgjr" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+
+        sameHook = r.get_hook( h.id )
+
+        ### @todo Uncomment when API `/repos/:user/:repo/hooks/:id/test` is implemented
+        # h.test()
+
+        h.delete()
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+
     def testIssuesAndMilestones( self ):
         u = self.g.get_user()
         r = u.get_repo( "TestPyGithub" )
