@@ -99,7 +99,7 @@ class IntegrationTest:
             tests = argv
         self.runTests( tests, record )
 
-        if not record:
+        if self.succeeded:
             self.analyseCoverage()
 
     def prepareRecord( self, test ):
@@ -107,8 +107,8 @@ class IntegrationTest:
         try:
             import GithubCredentials
             self.g = Github( GithubCredentials.login, GithubCredentials.password )
-            file = open( self.__fileName( test ), "w" )
-            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( file, *args, **kwds )
+            self.__file = open( self.__fileName( test ), "w" )
+            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__file, *args, **kwds )
         except ImportError:
             raise RecordReplayException( textwrap.dedent( """\
                 Please create a 'GithubCredentials.py' file containing:"
@@ -118,8 +118,9 @@ class IntegrationTest:
     def prepareReplay( self, test ):
         self.avoidError500FromGithub = lambda: 0
         try:
-            file = open( self.__fileName( test ) )
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
+            self.__file = None
+            self.__file = open( self.__fileName( test ) )
+            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self.__file )
             self.g = Github( "login", "password" )
         except IOError:
             raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
@@ -131,6 +132,7 @@ class IntegrationTest:
         return [ f[ 4: ] for f in dir( self ) if f.startswith( "test" ) ]
 
     def runTests( self, tests, record ):
+        self.succeeded = True
         for test in tests:
             print
             print test
@@ -141,10 +143,17 @@ class IntegrationTest:
                 else:
                     self.prepareReplay( test )
                 getattr( self, "test" + test )()
+                if not record:
+                    if self.__file.readline():
+                        raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
             except RecordReplayException, e:
                 print "*" * len( str( e ) )
                 print e
                 print "*" * len( str( e ) )
+                self.succeeded = False
+            finally:
+                if self.__file is not None:
+                    self.__file.close()
 
     def analyseCoverage( self ):
         coveredUrls = dict()
@@ -177,6 +186,17 @@ class IntegrationTest:
             print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
             print "\n".join( sorted( uncoveredMethods ) )
 
+    def testColaborators( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        cobaye = self.g.get_user( self.cobayeUser )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.add_to_collaborators( cobaye )
+        assert r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.remove_from_collaborators( cobaye )
+        assert not r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+
     def testCreateForkForOrganization( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         r = self.g.get_user().get_repo( "TestPyGithub" )
@@ -185,11 +205,15 @@ class IntegrationTest:
 
     def testCreateRepoForOrganization( self ):
         o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
         r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
 
     def testCreateRepoForUser( self ):
         u = self.g.get_user()
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
         r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
 
     def testEditAuthenticatedUser( self ):
         u = self.g.get_user()
@@ -401,9 +425,6 @@ class IntegrationTest:
     def testOrganizationDetails( self ):
         o = self.g.get_organization( "github" )
         print o.login, "(" + o.name + ") is in", o.location
-        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
-        self.printList( "Members", o.get_members(), lambda m: m.login )
-        self.printList( "Repos", o.get_repos(), lambda r: r.name )
 
     def testWatch( self ):
         r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
