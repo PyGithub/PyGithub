@@ -231,7 +231,7 @@ API `/repos/:user/:repo/hooks/:id`
 
 API `/repos/:user/:repo/hooks/:id/test`
 =======================================
-* POST: (TODO SOON)
+* POST: `Hook.test`
 
 API `/repos/:user/:repo/issues`
 ===============================

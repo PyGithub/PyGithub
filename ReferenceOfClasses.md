@@ -162,7 +162,7 @@ Attributes
 Comments
 --------
 * `get_comments()`: list of `CommitComment`
-* `create_comment( body, commit_id, line, path, position )`: `CommitComment`
+* `create_comment( body, [commit_id, line, path, position] )`: `CommitComment`
 
 Class `CommitComment`
 =====================
