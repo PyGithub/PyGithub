@@ -99,7 +99,7 @@ class IntegrationTest:
             tests = argv
         self.runTests( tests, record )
 
-        if not record:
+        if self.succeeded:
             self.analyseCoverage()
 
     def prepareRecord( self, test ):
@@ -107,8 +107,8 @@ class IntegrationTest:
         try:
             import GithubCredentials
             self.g = Github( GithubCredentials.login, GithubCredentials.password )
-            file = open( self.__fileName( test ), "w" )
-            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( file, *args, **kwds )
+            self.__file = open( self.__fileName( test ), "w" )
+            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__file, *args, **kwds )
         except ImportError:
             raise RecordReplayException( textwrap.dedent( """\
                 Please create a 'GithubCredentials.py' file containing:"
@@ -118,8 +118,9 @@ class IntegrationTest:
     def prepareReplay( self, test ):
         self.avoidError500FromGithub = lambda: 0
         try:
-            file = open( self.__fileName( test ) )
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( file )
+            self.__file = None
+            self.__file = open( self.__fileName( test ) )
+            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self.__file )
             self.g = Github( "login", "password" )
         except IOError:
             raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
@@ -131,6 +132,7 @@ class IntegrationTest:
         return [ f[ 4: ] for f in dir( self ) if f.startswith( "test" ) ]
 
     def runTests( self, tests, record ):
+        self.succeeded = True
         for test in tests:
             print
             print test
@@ -141,10 +143,17 @@ class IntegrationTest:
                 else:
                     self.prepareReplay( test )
                 getattr( self, "test" + test )()
+                if not record:
+                    if self.__file.readline():
+                        raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
             except RecordReplayException, e:
                 print "*" * len( str( e ) )
                 print e
                 print "*" * len( str( e ) )
+                self.succeeded = False
+            finally:
+                if self.__file is not None:
+                    self.__file.close()
 
     def analyseCoverage( self ):
         coveredUrls = dict()
@@ -177,6 +186,33 @@ class IntegrationTest:
             print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
             print "\n".join( sorted( uncoveredMethods ) )
 
+    def testAuthenticatedUserDetails( self ):
+        u = self.g.get_user()
+        self.printList( "Organizations", u.get_orgs(), lambda o: o.login )
+
+    def testColaborators( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        cobaye = self.g.get_user( self.cobayeUser )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.add_to_collaborators( cobaye )
+        assert r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.remove_from_collaborators( cobaye )
+        assert not r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+
+    def testCommentCommit( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        c = r.get_commits()[ 0 ]
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com1 = c.create_comment( "Comment created by PyGithub" )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com2 = c.create_comment( "Comment also created by PyGithub", path = "ReadMe.md", line = 1 )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com2.delete()
+        com1.edit( body = "Comment edited by PyGithub" )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+
     def testCreateForkForOrganization( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         r = self.g.get_user().get_repo( "TestPyGithub" )
@@ -185,11 +221,24 @@ class IntegrationTest:
 
     def testCreateRepoForOrganization( self ):
         o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
         r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
 
     def testCreateRepoForUser( self ):
         u = self.g.get_user()
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
         r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
+
+    def testDownloads( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
+        d = r.create_download( "DownloadCreatedByPyGithub.txt", 1024 )
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
+        sameDownload = r.get_download( d.id )
+        sameDownload.delete()
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
 
     def testEditAuthenticatedUser( self ):
         u = self.g.get_user()
@@ -214,7 +263,8 @@ class IntegrationTest:
         r = o.get_repo( "TestPyGithub" )
 
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
-        t = o.create_team( "PyGithubTesters", permission = "push" )
+        t = o.create_team( "PyGithubTesters" )
+        t.edit( "PyGithubTesters", permission = "push" )
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
         u = self.g.get_user( self.cobayeUser )
@@ -401,9 +451,54 @@ class IntegrationTest:
     def testOrganizationDetails( self ):
         o = self.g.get_organization( "github" )
         print o.login, "(" + o.name + ") is in", o.location
-        self.printList( "Public members", o.get_public_members(), lambda m: m.login )
-        self.printList( "Members", o.get_members(), lambda m: m.login )
-        self.printList( "Repos", o.get_repos(), lambda r: r.name )
+
+    def testPullRequest( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p1 = r.create_pull( "Pull request created by PyGithub", "", "master", "BeaverSoftware:master" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p1.edit( state = "closed" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p2 = r.create_pull( "Pull request also created by PyGithub", "", "master", "BeaverSoftware:master" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        self.printList( "Files", p2.get_files(), lambda f: f.filename )
+        self.printList( "Commits", p2.get_commits(), lambda c: c.commit.message )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        com = p2.create_comment( "Comment created by PyGithub", "e4e84560cb5e87f3c0e9f710dae1ddab0eef487b", "foo.bar", 1 )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        com.edit( body = "Comment edited by PyGithub" )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        sameCom = p2.get_comment( com.id )
+        sameCom.delete()
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        p2.edit( state = "closed" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+
+    def testRepositoryDetails( self ):
+        r1 = self.g.get_user().get_repo( "PyGithub" )
+        r2 = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Branches", r1.get_branches(), lambda b: b.name )
+        self.printList( "Comments", r2.get_comments(), lambda c: c.body )
+        r2.get_comment( r2.get_comments()[ 0 ].id )
+        self.printList( "Contributors", r1.get_contributors(), lambda m: m.login )
+        self.printList( "Forks", r2.get_forks(), lambda r: r.owner.login )
+        print "Languages:", r1.get_languages()
+        self.printList( "Tags", r1.get_tags(), lambda t: t.name )
+        self.printList( "Watchers", r1.get_watchers(), lambda m: m.login )
+
+        r3 = self.g.get_organization( "BeaverSoftware" ).get_repo( "TestPyGithub" )
+        self.printList( "Teams", r3.get_teams(), lambda t: t.name )
+
+    def testRepositoryKeys( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        k = r.create_key( "Key created by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        k.edit( "Key edited by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        sameKey = r.get_key( k.id )
+        sameKey.delete()
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
 
     def testWatch( self ):
         r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )

@@ -297,8 +297,8 @@ Commit = GithubObject(
     InternalObjectAttribute( "author", NamedUser ),
     InternalObjectAttribute( "committer", NamedUser ),
     ExternalListOfObjects( "comments", "comment", CommitComment,
-        ListGetable( [], [] ),
-        ElementCreatable( [ "body", "commit_id", "line", "path", "position" ], [] ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementCreatable( [ "body" ], [ "commit_id", "line", "path", "position" ], __modifyAttributesForObjectsReferingReferedRepo ),
     ),
 )
 
@@ -409,9 +409,9 @@ Repository._addAttributePolicy(
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "keys", "key", RepositoryKey,
-        ListGetable( [], [] ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title", "key" ], [] ),
+        ElementCreatable( [ "title", "key" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
