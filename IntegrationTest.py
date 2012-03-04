@@ -306,6 +306,9 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
+    def testEvents( self ):
+        self.g.get_user().get_repo( "TestPyGithub" ).get_events()
+
     def testFollow( self ):
         cobaye = self.g.get_user( self.cobayeUser )
         u = self.g.get_user()

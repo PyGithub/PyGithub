@@ -11,7 +11,7 @@ API `/authorizations/:id`
 
 API `/events`
 =============
-* GET: (TODO SOON)
+* GET: `AuthenticatedUser.get_events`
 
 API `/gists`
 ============
@@ -59,7 +59,7 @@ API `/issues`
 
 API `/networks/:user/:repo/events`
 ==================================
-* GET: (TODO SOON)
+* GET: `Repository.get_network_events`
 
 API `/orgs/:org`
 ================
@@ -68,7 +68,7 @@ API `/orgs/:org`
 
 API `/orgs/:org/events`
 =======================
-* GET: (TODO SOON)
+* GET: `Organization.get_events`
 
 API `/orgs/:org/members`
 ========================
@@ -161,7 +161,7 @@ API `/repos/:user/:repo/downloads/:id`
 
 API `/repos/:user/:repo/events`
 ===============================
-* GET: (TODO SOON)
+* GET: `Repository.get_events`
 
 API `/repos/:user/:repo/forks`
 ==============================
@@ -261,7 +261,7 @@ API `/repos/:user/:repo/issues/:id/labels/:name`
 
 API `/repos/:user/:repo/issues/:id/events`
 ==========================================
-* GET: (TODO SOON)
+* GET: `Issue.get_events`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -271,7 +271,7 @@ API `/repos/:user/:repo/issues/comments/:id`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO SOON)
+* GET: `Repository.get_issues_events`
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
@@ -451,7 +451,7 @@ API `/users/:user`
 
 API `/users/:user/events`
 =========================
-* GET: (TODO SOON)
+* GET: `NamedUser.get_events`
 
 API `/users/:user/events/orgs/:org`
 ===================================
@@ -459,7 +459,7 @@ API `/users/:user/events/orgs/:org`
 
 API `/users/:user/events/public`
 ================================
-* GET: (TODO SOON)
+* GET: `NamedUser.get_public_events`
 
 API `/users/:user/followers`
 ============================
@@ -479,11 +479,11 @@ API `/users/:user/orgs`
 
 API `/users/:user/received_events`
 ==================================
-* GET: (TODO SOON)
+* GET: `NamedUser.get_received_events`
 
 API `/users/:user/received_events/public`
 =========================================
-* GET: (TODO SOON)
+* GET: `NamedUser.get_public_received_events`
 
 API `/users/:user/repos`
 ========================

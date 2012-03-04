@@ -70,6 +70,10 @@ Keys
 * `get_key( id )`: `UserKey`
 * `create_key( title, key )`: `UserKey`
 
+Events
+------
+* `get_events()`: list of `Event`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -218,6 +222,19 @@ Attributes
 Deletion
 --------
 * `delete()`
+
+Class `Event`
+=============
+
+Attributes
+----------
+* `type`
+* `public`
+* `payload`
+* `created_at`
+* `repo`: `Repository`
+* `actor`: `NamedUser`
+* `org`: `Organization`
 
 Class `Gist`
 ============
@@ -412,6 +429,10 @@ Comments
 * `get_comment( id )`: `IssueComment`
 * `create_comment( body )`: `IssueComment`
 
+Events
+------
+* `get_events()`: list of `Event`
+
 Class `IssueComment`
 ====================
 
@@ -517,6 +538,13 @@ Following
 ---------
 * `get_following()`: list of `NamedUser`
 
+Events
+------
+* `get_events()`: list of `Event`
+* `get_public_events()`: list of `Event`
+* `get_received_events()`: list of `Event`
+* `get_public_received_events()`: list of `Event`
+
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
@@ -584,6 +612,10 @@ Members
     * `member`: `NamedUser`
 * `has_in_members( member )`: `bool`
     * `member`: `NamedUser`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Repos
 -----
@@ -724,6 +756,12 @@ Attributes
 * `owner`: `NamedUser`
 * `parent`: `Repository`
 * `source`: `Repository`
+
+Events
+------
+* `get_events()`: list of `Event`
+* `get_network_events()`: list of `Event`
+* `get_issues_events()`: list of `Event`
 
 Forks
 -----

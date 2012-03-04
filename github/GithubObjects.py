@@ -3,6 +3,13 @@ import urllib
 
 from GithubObject import *
 
+Event = GithubObject(
+    "Event",
+    InternalSimpleAttributes(
+        "type", "public", "payload", "created_at", "id",
+    ),
+)
+
 def __testHook( hook ):
     hook._github._statusRequest( "POST", hook._baseUrl + "/test", None, None )
 Hook = GithubObject(
@@ -67,6 +74,10 @@ AuthenticatedUser = GithubObject(
         ElementGetable( [ "id" ], [] ),
         ElementCreatable( [ "title", "key" ], [] ),
     ),
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] ),
+        url = "/events"
+    ),
 )
 
 NamedUser = GithubObject(
@@ -110,6 +121,38 @@ NamedUser._addAttributePolicy(
         ListGetable( [], [] )
     )
 )
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
+)
+def __getPublicEvents( user ):
+    return [
+        Event( user._github, attributes )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl + "/events/public", None, None )
+    ]
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+def __getReceivedEvents( user ):
+    return [
+        Event( user._github, attributes )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl + "/received_events", None, None )
+    ]
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_received_events", [], [], __getReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+def __getPublicReceivedEvents( user ):
+    return [
+        Event( user._github, attributes )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl + "/received_events/public", None, None )
+    ]
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
 
 Organization = GithubObject(
     "Organization",
@@ -134,6 +177,9 @@ Organization = GithubObject(
         ListGetable( [], [] ),
         ElementRemovable(),
         ElementHasable()
+    ),
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
     ),
 )
 
@@ -269,6 +315,9 @@ Issue = GithubObject(
         ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementCreatable( [ "body" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
+    ),
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
     ),
 )
 
@@ -411,6 +460,29 @@ Repository = GithubObject(
 )
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
+Repository._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
+)
+def __getNetworkEvents( repo ):
+    return [
+        Event( repo._github, attributes )
+        for attributes
+        in repo._github._dataRequest( "GET", repo._baseUrl + "/events", None, None )
+    ]
+def __getIssuesEvents( repo ):
+    return [
+        Event( repo._github, attributes )
+        for attributes
+        in repo._github._dataRequest( "GET", repo._baseUrl + "/issues/events", None, None )
+    ]
+Repository._addAttributePolicy(
+    MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+Repository._addAttributePolicy(
+    MethodFromCallable( "get_issues_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
 Repository._addAttributePolicy(
     ExternalListOfObjects( "forks", "fork", Repository,
         ListGetable( [], [] )
@@ -656,4 +728,14 @@ def __getStaredGists( user ):
     ]
 AuthenticatedUser._addAttributePolicy(
     MethodFromCallable( "get_starred_gists", [], [], __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
+)
+
+Event._addAttributePolicy(
+    InternalObjectAttribute( "repo", Repository ),
+)
+Event._addAttributePolicy(
+    InternalObjectAttribute( "actor", NamedUser ),
+)
+Event._addAttributePolicy(
+    InternalObjectAttribute( "org", Organization ),
 )
