@@ -297,8 +297,8 @@ Commit = GithubObject(
     InternalObjectAttribute( "author", NamedUser ),
     InternalObjectAttribute( "committer", NamedUser ),
     ExternalListOfObjects( "comments", "comment", CommitComment,
-        ListGetable( [], [] ),
-        ElementCreatable( [ "body", "commit_id", "line", "path", "position" ], [] ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementCreatable( [ "body" ], [ "commit_id", "line", "path", "position" ], __modifyAttributesForObjectsReferingReferedRepo ),
     ),
 )
 
