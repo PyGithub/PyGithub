@@ -60,4 +60,12 @@ class TestCase( unittest.TestCase ):
         self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/milestones/1/labels", {}, None ).andReturn( [ { "name": "a" } ] )
         self.assertIs( r.get_milestone( 1 ).get_labels()[ 0 ]._repo, r )
 
+    def testHooks( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/hooks/1", None, None ).andReturn( { "name": "web", "id": 1 } )
+        h = self.g.get_user().get_repo( "yyy" ).get_hook( 1 )
+        self.requester.expect.statusRequest( "POST", "/repos/xxx/yyy/hooks/1/test", None, None ).andReturn( 204 )
+        h.test()
+
 unittest.main()
