@@ -250,7 +250,8 @@ class IntegrationTest:
         r = o.get_repo( "TestPyGithub" )
 
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
-        t = o.create_team( "PyGithubTesters", permission = "push" )
+        t = o.create_team( "PyGithubTesters" )
+        t.edit( "PyGithubTesters", permission = "push" )
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
         u = self.g.get_user( self.cobayeUser )
