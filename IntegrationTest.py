@@ -460,6 +460,17 @@ class IntegrationTest:
         p2.edit( state = "closed" )
         self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
 
+    def testRepositoryKeys( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        k = r.create_key( "Key created by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        k.edit( "Key edited by PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+        sameKey = r.get_key( k.id )
+        sameKey.delete()
+        self.printList( "Keys", r.get_keys(), lambda k: k.title )
+
     def testWatch( self ):
         r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
         u = self.g.get_user()

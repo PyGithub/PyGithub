@@ -409,9 +409,9 @@ Repository._addAttributePolicy(
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "keys", "key", RepositoryKey,
-        ListGetable( [], [] ),
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title", "key" ], [] ),
+        ElementCreatable( [ "title", "key" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
         ListGetable( [], [] ),
