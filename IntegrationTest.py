@@ -438,6 +438,28 @@ class IntegrationTest:
         o = self.g.get_organization( "github" )
         print o.login, "(" + o.name + ") is in", o.location
 
+    def testPullRequest( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p1 = r.create_pull( "Pull request created by PyGithub", "", "master", "BeaverSoftware:master" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p1.edit( state = "closed" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        p2 = r.create_pull( "Pull request also created by PyGithub", "", "master", "BeaverSoftware:master" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+        self.printList( "Files", p2.get_files(), lambda f: f.filename )
+        self.printList( "Commits", p2.get_commits(), lambda c: c.commit.message )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        com = p2.create_comment( "Comment created by PyGithub", "e4e84560cb5e87f3c0e9f710dae1ddab0eef487b", "foo.bar", 1 )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        com.edit( body = "Comment edited by PyGithub" )
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        sameCom = p2.get_comment( com.id )
+        sameCom.delete()
+        self.printList( "Comments", p2.get_comments(), lambda c: c.body )
+        p2.edit( state = "closed" )
+        self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+
     def testWatch( self ):
         r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
         u = self.g.get_user()
