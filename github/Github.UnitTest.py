@@ -68,4 +68,19 @@ class TestCase( unittest.TestCase ):
         self.requester.expect.statusRequest( "POST", "/repos/xxx/yyy/hooks/1/test", None, None ).andReturn( 204 )
         h.test()
 
+    def testUserEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/users/xxx", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/events/public", None, None ).andReturn( [] )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/received_events/public", None, None ).andReturn( [] )
+        u = self.g.get_user( "xxx" )
+        u.get_public_events()
+        u.get_public_received_events()
+
+    def testRepoEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/networks/xxx/yyy/events", None, None ).andReturn( [] )
+        r = self.g.get_user().get_repo( "yyy" )
+        r.get_network_events()
+
 unittest.main()
