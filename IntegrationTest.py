@@ -91,7 +91,7 @@ class IntegrationTest:
         if record:
             print "Record mode: this script is really going to do requests to github.com"
         else:
-            print "Replay mode: this script will used requests to and replies from github.com recorded in previous runs in record mode"
+            print "Replay mode: this script will use requests to and replies from github.com recorded in previous runs in record mode"
 
         if len( argv ) == 0:
             tests = self.listTests()
@@ -167,24 +167,29 @@ class IntegrationTest:
                     coveredUrls[ url ].add( verb )
 
         uncoveredMethods = set()
+        uncoveredApis = set()
         with open( "ReferenceOfApis.md" ) as file:
             for line in file.readlines():
                 line = line.strip()
                 if line.startswith( "API" ):
                     currentApi = line[ 5 : -1 ]
                     apiRegex = re.sub( ":\w+", "\w+", currentApi )
-                if line.startswith( "* " ) and line.endswith( "`" ):
+                if line.startswith( "* " ):
                     verb = line[ 2 : line.find( ":" ) ]
                     for url, verbs in coveredUrls.iteritems():
                         if re.match( apiRegex, url ) and verb in verbs:
                             break
                     else:
-                        uncoveredMethods.add( line[ line.find( "`" ) + 1 : -1 ] )
+                        if "`" in line:
+                            uncoveredMethods.add( line[ line.find( "`" ) + 1 : -1 ] )
+                        else:
+                            uncoveredApis.add( verb + " " + currentApi )
 
-        if len( uncoveredMethods ) != 0:
+        if len( uncoveredMethods ) != 0 or len( uncoveredApis ) != 0:
             print
-            print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
+            print "Not covered (" + str( len( uncoveredMethods ) + len( uncoveredApis ) ) + "):"
             print "\n".join( sorted( uncoveredMethods ) )
+            print "\n".join( sorted( uncoveredApis ) )
 
     def testAuthenticatedUserDetails( self ):
         u = self.g.get_user()
@@ -306,6 +311,25 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
+    def testEvents( self ):
+        self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
+        self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
+        self.printList( "User public received events", self.g.get_user( self.cobayeUser ).get_public_received_events(), lambda e: e.type )
+        self.printList( "User received events", self.g.get_user( self.cobayeUser ).get_received_events(), lambda e: e.type )
+
+        self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
+
+        self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
+        o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Organization events", self.g.get_user().get_organization_events( o ), lambda e: e.type )
+
+        self.printList( "Repo events", self.g.get_user().get_repo( "TestPyGithub" ).get_events(), lambda e: e.type )
+        self.printList( "Repo issues events", self.g.get_user().get_repo( "TestPyGithub" ).get_issues_events(), lambda e: e.event )
+        print self.g.get_user().get_repo( "TestPyGithub" ).get_issues_event( 10693379 ).event
+        self.printList( "Repo network events", self.g.get_user().get_repo( "TestPyGithub" ).get_network_events(), lambda e: e.type )
+
+        self.printList( "Issue events", self.g.get_user().get_repo( "TestPyGithub" ).get_issue( 23 ).get_events(), lambda e: e.event )
+
     def testFollow( self ):
         cobaye = self.g.get_user( self.cobayeUser )
         u = self.g.get_user()
@@ -370,6 +394,23 @@ class IntegrationTest:
         tag = r.create_git_tag( "tagCreatedByPyGithub", "This tag was created by PyGithub", commit.sha, "commit" )
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
+
+    def testHooks( self ):
+        u = self.g.get_user()
+        r = u.get_repo( "TestPyGithub" )
+
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h = r.create_hook( "web", { "url": "http://www.invalid.org" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h.edit( "web", { "url": "http://www.postbin.org/w5cgjr" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+
+        sameHook = r.get_hook( h.id )
+
+        h.test()
+
+        h.delete()
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
 
     def testIssuesAndMilestones( self ):
         u = self.g.get_user()
@@ -518,6 +559,6 @@ class IntegrationTest:
         self.printList( "Emails", u.get_emails() )
 
     def printList( self, title, iterable, f = lambda x: x ):
-        print title + ":", ", ".join( f( x ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
+        print title + ":", ", ".join( str( f( x ) ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
 IntegrationTest().main( sys.argv[ 1: ] )

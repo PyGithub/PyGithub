@@ -60,4 +60,35 @@ class TestCase( unittest.TestCase ):
         self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/milestones/1/labels", {}, None ).andReturn( [ { "name": "a" } ] )
         self.assertIs( r.get_milestone( 1 ).get_labels()[ 0 ]._repo, r )
 
+    def testHooks( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/hooks/1", None, None ).andReturn( { "name": "web", "id": 1 } )
+        h = self.g.get_user().get_repo( "yyy" ).get_hook( 1 )
+        self.requester.expect.statusRequest( "POST", "/repos/xxx/yyy/hooks/1/test", None, None ).andReturn( 204 )
+        h.test()
+
+    def testUserEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/users/xxx", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/events/public", None, None ).andReturn( [] )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/received_events/public", None, None ).andReturn( [] )
+        u = self.g.get_user( "xxx" )
+        u.get_public_events()
+        u.get_public_received_events()
+
+    def testRepoEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/networks/xxx/yyy/events", None, None ).andReturn( [] )
+        r = self.g.get_user().get_repo( "yyy" )
+        r.get_network_events()
+
+    def testOrgEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/orgs/ooo", None, None ).andReturn( { "login": "ooo" } )
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/events/orgs/ooo", None, None ).andReturn( [] )
+        u = self.g.get_user()
+        o = self.g.get_organization( "ooo" )
+        u.get_organization_events( o )
+
 unittest.main()

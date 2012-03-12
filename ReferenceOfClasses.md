@@ -70,6 +70,10 @@ Keys
 * `get_key( id )`: `UserKey`
 * `create_key( title, key )`: `UserKey`
 
+Events
+------
+* `get_events()`: list of `Event`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -162,7 +166,7 @@ Attributes
 Comments
 --------
 * `get_comments()`: list of `CommitComment`
-* `create_comment( body, commit_id, line, path, position )`: `CommitComment`
+* `create_comment( body, [commit_id, line, path, position] )`: `CommitComment`
 
 Class `CommitComment`
 =====================
@@ -218,6 +222,19 @@ Attributes
 Deletion
 --------
 * `delete()`
+
+Class `Event`
+=============
+
+Attributes
+----------
+* `type`
+* `public`
+* `payload`
+* `created_at`
+* `repo`: `Repository`
+* `actor`: `NamedUser`
+* `org`: `Organization`
 
 Class `Gist`
 ============
@@ -302,10 +319,10 @@ Attributes
 * `sha`
 * `url`
 * `message`
+* `parents`
 * `author`
 * `committer`
-* `tree`
-* `parents`
+* `tree`: `GitTree`
 
 Class `GitRef`
 ==============
@@ -340,6 +357,33 @@ Attributes
 * `sha`
 * `url`
 * `tree`
+
+Class `Hook`
+============
+
+Attributes
+----------
+* `url`
+* `updated_at`
+* `created_at`
+* `name`
+* `events`
+* `active`
+* `config`
+* `id`
+* `last_response`
+
+Modification
+------------
+* `edit( name, config, [events, add_events, remove_events, active] )`
+
+Deletion
+--------
+* `delete()`
+
+Testing
+-------
+* `test()`
 
 Class `Issue`
 =============
@@ -384,6 +428,10 @@ Comments
 * `get_comments()`: list of `IssueComment`
 * `get_comment( id )`: `IssueComment`
 * `create_comment( body )`: `IssueComment`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Class `IssueComment`
 ====================
@@ -490,6 +538,13 @@ Following
 ---------
 * `get_following()`: list of `NamedUser`
 
+Events
+------
+* `get_events()`: list of `Event`
+* `get_public_events()`: list of `Event`
+* `get_received_events()`: list of `Event`
+* `get_public_received_events()`: list of `Event`
+
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
@@ -557,6 +612,10 @@ Members
     * `member`: `NamedUser`
 * `has_in_members( member )`: `bool`
     * `member`: `NamedUser`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Repos
 -----
@@ -698,6 +757,12 @@ Attributes
 * `parent`: `Repository`
 * `source`: `Repository`
 
+Events
+------
+* `get_events()`: list of `Event`
+* `get_network_events()`: list of `Event`
+* `get_issues_events()`: list of `Event`
+
 Forks
 -----
 * `get_forks()`: list of `Repository`
@@ -709,6 +774,12 @@ Modification
 Languages
 ---------
 * `get_languages()`: dictionary of strings to integers
+
+Hooks
+-----
+* `get_hooks()`: list of `Hook`
+* `get_hook( id )`: `Hook`
+* `create_hook( name, config, [events, active] )`: `Hook`
 
 Keys
 ----
@@ -892,7 +963,7 @@ Attributes
 
 Modification
 ------------
-* `edit( title, key )`
+* `edit( [title, key] )`
 
 Deletion
 --------

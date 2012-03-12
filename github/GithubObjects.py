@@ -3,6 +3,29 @@ import urllib
 
 from GithubObject import *
 
+Event = GithubObject(
+    "Event",
+    InternalSimpleAttributes(
+        "type", "public", "payload", "created_at", "id", "commit_id", "url",
+        "event", "issue",
+    ),
+)
+
+def __testHook( hook ):
+    hook._github._statusRequest( "POST", hook._baseUrl + "/test", None, None )
+Hook = GithubObject(
+    "Hook",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "url", "updated_at", "created_at", "name", "events", "active", "config",
+        "id", "last_response",
+        "_repo", ### Ugly hack
+    ),
+    Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
+    Deletable(),
+    SeveralAttributePolicies( [ MethodFromCallable( "test", [], [], __testHook, SimpleTypePolicy( None ) ) ], "Testing" )
+)
+
 Authorization = GithubObject(
     "Authorization",
     BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
@@ -52,6 +75,10 @@ AuthenticatedUser = GithubObject(
         ElementGetable( [ "id" ], [] ),
         ElementCreatable( [ "title", "key" ], [] ),
     ),
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] ),
+        url = "/events"
+    ),
 )
 
 NamedUser = GithubObject(
@@ -95,6 +122,34 @@ NamedUser._addAttributePolicy(
         ListGetable( [], [] )
     )
 )
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
+)
+def __getPublicEvents( user ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl + "/events/public", None, None )
+    ]
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "received_events", "received_event", Event,
+        ListGetable( [], [] )
+    )
+)
+def __getPublicReceivedEvents( user ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl + "/received_events/public", None, None )
+    ]
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
 
 Organization = GithubObject(
     "Organization",
@@ -103,7 +158,7 @@ Organization = GithubObject(
     InternalSimpleAttributes(
         "login", "id", "url", "avatar_url", "name", "company", "blog",
         "location", "email", "public_repos", "public_gists", "followers",
-        "following", "html_url", "created_at", "type",
+        "following", "html_url", "created_at", "type", "gravatar_id",
         # Seen only by owners
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
@@ -120,6 +175,9 @@ Organization = GithubObject(
         ElementRemovable(),
         ElementHasable()
     ),
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
 )
 
 AuthenticatedUser._addAttributePolicy(
@@ -131,6 +189,16 @@ NamedUser._addAttributePolicy(
     ExternalListOfObjects( "orgs", "org", Organization,
         ListGetable( [], [] )
     )
+)
+
+def __getOrganizationEvents( user, org ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", "/users/" + user.login + "/events/orgs/" + org.login, None, None )
+    ]
+AuthenticatedUser._addAttributePolicy(
+    MethodFromCallable( "get_organization_events", [ "org" ], [], __getOrganizationEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 
 GitRef = GithubObject(
@@ -230,6 +298,16 @@ IssueComment = GithubObject(
     Deletable(),
 )
 
+IssueEvent = GithubObject(
+    "IssueEvent",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/events/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "id", "url", "created_at", "issue", "event", "commit_id",
+        "_repo", # Ugly hack
+    ),
+    InternalObjectAttribute( "actor", NamedUser ),
+)
+
 Issue = GithubObject(
     "Issue",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
@@ -254,6 +332,9 @@ Issue = GithubObject(
         ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementCreatable( [ "body" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
+    ),
+    ExternalListOfObjects( "events", "event", IssueEvent,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo )
     ),
 )
 
@@ -397,6 +478,26 @@ Repository = GithubObject(
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
 Repository._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
+)
+def __getNetworkEvents( repo ):
+    return [
+        Event( repo._github, attributes, lazy = True )
+        for attributes
+        in repo._github._dataRequest( "GET", "/networks/" + repo.owner.login + "/" + repo.name + "/events", None, None )
+    ]
+Repository._addAttributePolicy(
+    MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+Repository._addAttributePolicy(
+    ExternalListOfObjects( "issues/events", "issues_event", IssueEvent,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+    )
+)
+Repository._addAttributePolicy(
     ExternalListOfObjects( "forks", "fork", Repository,
         ListGetable( [], [] )
     )
@@ -408,6 +509,11 @@ Repository._addAttributePolicy(
     SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
+    ExternalListOfObjects( "hooks", "hook", Hook,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( [ "name", "config" ], [ "events", "active" ], __modifyAttributesForObjectsReferingRepo ),
+    ),
     ExternalListOfObjects( "keys", "key", RepositoryKey,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
@@ -636,4 +742,14 @@ def __getStaredGists( user ):
     ]
 AuthenticatedUser._addAttributePolicy(
     MethodFromCallable( "get_starred_gists", [], [], __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
+)
+
+Event._addAttributePolicy(
+    InternalObjectAttribute( "repo", Repository ),
+)
+Event._addAttributePolicy(
+    InternalObjectAttribute( "actor", NamedUser ),
+)
+Event._addAttributePolicy(
+    InternalObjectAttribute( "org", Organization ),
 )

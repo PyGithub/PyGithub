@@ -18,7 +18,8 @@ class Requester:
 
         headers, output = self.__statusCheckedRequest( verb, url, parameters, input )
 
-        while "link" in headers and "next" in headers[ "link" ]:
+        obviouslyFinished = False
+        while "link" in headers and "next" in headers[ "link" ] and not obviouslyFinished:
             for link in headers[ "link" ].split( "," ):
                 if "next" in link:
                     linkUrl = link.split( ";" )[ 0 ][ : -1 ]
@@ -26,6 +27,8 @@ class Requester:
                     parameters.update( dict( p.split( "=" ) for p in params.split( "&" ) ) )
                     break
             headers, newOutput = self.__statusCheckedRequest( verb, url, parameters, input )
+            if len( newOutput ) == 0:
+                obviouslyFinished = True
             output += newOutput
 
         return output

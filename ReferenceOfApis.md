@@ -11,7 +11,7 @@ API `/authorizations/:id`
 
 API `/events`
 =============
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_events`
 
 API `/gists`
 ============
@@ -59,7 +59,7 @@ API `/issues`
 
 API `/networks/:user/:repo/events`
 ==================================
-* GET: (TODO)
+* GET: `Repository.get_network_events`
 
 API `/orgs/:org`
 ================
@@ -68,7 +68,7 @@ API `/orgs/:org`
 
 API `/orgs/:org/events`
 =======================
-* GET: (TODO)
+* GET: `Organization.get_events`
 
 API `/orgs/:org/members`
 ========================
@@ -161,7 +161,7 @@ API `/repos/:user/:repo/downloads/:id`
 
 API `/repos/:user/:repo/events`
 ===============================
-* GET: (TODO)
+* GET: `Repository.get_events`
 
 API `/repos/:user/:repo/forks`
 ==============================
@@ -208,7 +208,7 @@ API `/repos/:user/:repo/git/trees`
 
 API `/repos/:user/:repo/git/trees?base_tree=`
 =============================================
-* POST: `GitTree.create_update` (TODO)
+* POST: (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
@@ -220,18 +220,18 @@ API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 
 API `/repos/:user/:repo/hooks`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_hooks`
+* POST: `Repository.create_hook`
 
 API `/repos/:user/:repo/hooks/:id`
 ==================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_hook`
+* PATCH: `Hook.edit`
+* DELETE: `Hook.delete`
 
 API `/repos/:user/:repo/hooks/:id/test`
 =======================================
-* POST: (TODO)
+* POST: `Hook.test`
 
 API `/repos/:user/:repo/issues`
 ===============================
@@ -261,7 +261,7 @@ API `/repos/:user/:repo/issues/:id/labels/:name`
 
 API `/repos/:user/:repo/issues/:id/events`
 ==========================================
-* GET: (TODO)
+* GET: `Issue.get_events`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -271,11 +271,11 @@ API `/repos/:user/:repo/issues/comments/:id`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO)
+* GET: `Repository.get_issues_events`
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO)
+* GET: `Repository.get_issues_event`
 
 API `/repos/:user/:repo/keys`
 =============================
@@ -451,15 +451,15 @@ API `/users/:user`
 
 API `/users/:user/events`
 =========================
-* GET: (TODO)
+* GET: `NamedUser.get_events`
 
 API `/users/:user/events/orgs/:org`
 ===================================
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_organization_events`
 
 API `/users/:user/events/public`
 ================================
-* GET: (TODO)
+* GET: `NamedUser.get_public_events`
 
 API `/users/:user/followers`
 ============================
@@ -479,11 +479,11 @@ API `/users/:user/orgs`
 
 API `/users/:user/received_events`
 ==================================
-* GET: (TODO)
+* GET: `NamedUser.get_received_events`
 
 API `/users/:user/received_events/public`
 =========================================
-* GET: (TODO)
+* GET: `NamedUser.get_public_received_events`
 
 API `/users/:user/repos`
 ========================
