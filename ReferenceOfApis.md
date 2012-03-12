@@ -1,57 +1,57 @@
 API `/authorizations`
 =====================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `AuthenticatedUser.get_authorizations`
+* POST: `AuthenticatedUser.create_authorization`
 
 API `/authorizations/:id`
 =========================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.get_authorization`
+* PATCH: `Authorization.edit`
+* DELETE: `Authorization.delete`
 
 API `/events`
 =============
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_events`
 
 API `/gists`
 ============
-* GET: (TODO)
-* POST: (TODO)
-
-API `/gists/:gist_id/comments`
-==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `AuthenticatedUser.get_gists`
+* POST: `AuthenticatedUser.create_gist`
 
 API `/gists/:id`
 ================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Github.get_gist`
+* PATCH: `Gist.edit`
+* DELETE: `Gist.delete`
+
+API `/gists/:id/comments`
+==============================
+* GET: `Gist.get_comments`
+* POST: `Gist.create_comment`
 
 API `/gists/:id/fork`
 =====================
-* POST: (TODO)
+* POST: `Gist.create_fork`
 
 API `/gists/:id/star`
 =====================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `Gist.is_starred`
+* PUT: `Gist.set_starred`
+* DELETE: `Gist.reset_starred`
 
 API `/gists/comments/:id`
 =========================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Gist.get_comment`
+* PATCH: `GistComment.edit`
+* DELETE: `GistComment.delete`
 
 API `/gists/public`
 ===================
-* GET: (TODO)
+* GET: (TODO) (Almost useless: huge fast-changing list, so I will have to re-re-implement pagination, with detection of duplicates caused by shifts, and a real iteration, not construction of the full list...)
 
 API `/gists/starred`
 ====================
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_starred_gists`
 
 API `/issues`
 =============
@@ -59,7 +59,7 @@ API `/issues`
 
 API `/networks/:user/:repo/events`
 ==================================
-* GET: (TODO)
+* GET: `Repository.get_network_events`
 
 API `/orgs/:org`
 ================
@@ -68,7 +68,7 @@ API `/orgs/:org`
 
 API `/orgs/:org/events`
 =======================
-* GET: (TODO)
+* GET: `Organization.get_events`
 
 API `/orgs/:org/members`
 ========================
@@ -161,7 +161,7 @@ API `/repos/:user/:repo/downloads/:id`
 
 API `/repos/:user/:repo/events`
 ===============================
-* GET: (TODO)
+* GET: `Repository.get_events`
 
 API `/repos/:user/:repo/forks`
 ==============================
@@ -208,7 +208,7 @@ API `/repos/:user/:repo/git/trees`
 
 API `/repos/:user/:repo/git/trees?base_tree=`
 =============================================
-* POST: `GitTree.create_update` (TODO)
+* POST: (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
@@ -220,18 +220,18 @@ API `/repos/:user/:repo/git/trees/:sha?recursive=1`
 
 API `/repos/:user/:repo/hooks`
 ==============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_hooks`
+* POST: `Repository.create_hook`
 
 API `/repos/:user/:repo/hooks/:id`
 ==================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_hook`
+* PATCH: `Hook.edit`
+* DELETE: `Hook.delete`
 
 API `/repos/:user/:repo/hooks/:id/test`
 =======================================
-* POST: (TODO)
+* POST: `Hook.test`
 
 API `/repos/:user/:repo/issues`
 ===============================
@@ -261,7 +261,7 @@ API `/repos/:user/:repo/issues/:id/labels/:name`
 
 API `/repos/:user/:repo/issues/:id/events`
 ==========================================
-* GET: (TODO)
+* GET: `Issue.get_events`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -271,22 +271,22 @@ API `/repos/:user/:repo/issues/comments/:id`
 
 API `/repos/:user/:repo/issues/events`
 ======================================
-* GET: (TODO)
+* GET: `Repository.get_issues_events`
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO)
+* GET: `Repository.get_issues_event`
 
 API `/repos/:user/:repo/keys`
 =============================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Repository.get_keys`
+* POST: `Repository.create_key`
 
 API `/repos/:user/:repo/keys/:id`
 =================================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `Repository.get_key`
+* PATCH: `RepositoryKey.edit`
+* DELETE: `RepositoryKey.delete`
 
 API `/repos/:user/:repo/labels`
 ===============================
@@ -343,8 +343,8 @@ API `/repos/:user/:repo/pulls/:id/files`
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
-* GET: (TODO)
-* PUT: (TODO)
+* GET: `PullRequest.is_merged`
+* PUT: `PullRequest.merge`
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
@@ -417,14 +417,14 @@ API `/user/following/:user`
 
 API `/user/keys`
 ================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `AuthenticatedUser.get_keys`
+* POST: `AuthenticatedUser.create_key`
 
 API `/user/keys/:id`
 ====================
-* GET: (TODO)
-* PATCH: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.get_key`
+* PATCH: `UserKey.edit`
+* DELETE: `UserKey.delete`
 
 API `/user/orgs`
 ================
@@ -451,15 +451,15 @@ API `/users/:user`
 
 API `/users/:user/events`
 =========================
-* GET: (TODO)
+* GET: `NamedUser.get_events`
 
 API `/users/:user/events/orgs/:org`
 ===================================
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_organization_events`
 
 API `/users/:user/events/public`
 ================================
-* GET: (TODO)
+* GET: `NamedUser.get_public_events`
 
 API `/users/:user/followers`
 ============================
@@ -471,7 +471,7 @@ API `/users/:user/following`
 
 API `/users/:user/gists`
 ========================
-* GET: (TODO)
+* GET: `NamedUser.get_gists`
 
 API `/users/:user/orgs`
 =======================
@@ -479,11 +479,11 @@ API `/users/:user/orgs`
 
 API `/users/:user/received_events`
 ==================================
-* GET: (TODO)
+* GET: `NamedUser.get_received_events`
 
 API `/users/:user/received_events/public`
 =========================================
-* GET: (TODO)
+* GET: `NamedUser.get_public_received_events`
 
 API `/users/:user/repos`
 ========================

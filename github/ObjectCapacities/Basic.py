@@ -24,7 +24,6 @@ class AttributeFromCallable:
 
     def autoDocument( self ):
         return ""
-        return "* `" + self.__name + "`\n"
 
 ### @todo include the ArgumentsChecker
 class MethodFromCallable:
@@ -60,7 +59,7 @@ class InternalAttribute:
 				return self.__typePolicy.createLazy( obj, rawValue )
 
         def updateAttributes( self, obj ):
-            attributes = obj._github._dataRequest( "GET", obj._baseUrl, None, None )
+            attributes = obj._github._dataRequest( "GET", obj._baseUrl(), None, None )
             obj._updateAttributes( attributes )
             obj._markAsCompleted()
 
@@ -94,7 +93,7 @@ class ExternalAttribute:
     def __execute( self, obj ):
         return self.__typePolicy.createLazy(
             obj,
-            obj._github._dataRequest( "GET", obj._baseUrl + "/" + self.__attributeName, None, None )
+            obj._github._dataRequest( "GET", obj._baseUrl() + "/" + self.__attributeName, None, None )
         )
 
     def autoDocument( self ):

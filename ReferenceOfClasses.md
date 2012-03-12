@@ -58,6 +58,22 @@ Emails
 * `remove_from_emails( email, ... )`
     * `email`: string
 
+Authorizations
+--------------
+* `get_authorizations()`: list of `Authorization`
+* `get_authorization( id )`: `Authorization`
+* `create_authorization( [scopes, note, note_url] )`: `Authorization`
+
+Keys
+----
+* `get_keys()`: list of `UserKey`
+* `get_key( id )`: `UserKey`
+* `create_key( title, key )`: `UserKey`
+
+Events
+------
+* `get_events()`: list of `Event`
+
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -96,6 +112,35 @@ Forking
 -------
 * `create_fork( repo )`: `Repository`
 
+Gists
+-----
+* `get_gists()`: list of `Gist`
+* `create_gist( public, files, [description] )`: `Gist`
+* `get_starred_gists()`: list of `Gist`
+
+Class `Authorization`
+=====================
+
+Attributes
+----------
+* `id`
+* `url`
+* `scopes`
+* `token`
+* `app`
+* `note`
+* `note_url`
+* `updated_at`
+* `created_at`
+
+Modification
+------------
+* `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
+
+Deletion
+--------
+* `delete()`
+
 Class `Branch`
 ==============
 
@@ -121,7 +166,7 @@ Attributes
 Comments
 --------
 * `get_comments()`: list of `CommitComment`
-* `create_comment( body, commit_id, line, path, position )`: `CommitComment`
+* `create_comment( body, [commit_id, line, path, position] )`: `CommitComment`
 
 Class `CommitComment`
 =====================
@@ -178,6 +223,83 @@ Deletion
 --------
 * `delete()`
 
+Class `Event`
+=============
+
+Attributes
+----------
+* `type`
+* `public`
+* `payload`
+* `created_at`
+* `repo`: `Repository`
+* `actor`: `NamedUser`
+* `org`: `Organization`
+
+Class `Gist`
+============
+
+Attributes
+----------
+* `url`
+* `id`
+* `description`
+* `public`
+* `files`
+* `comments`
+* `html_url`
+* `git_pull_url`
+* `git_push_url`
+* `created_at`
+* `forks`
+* `history`
+* `updated_at`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( [description, files] )`
+
+Deletion
+--------
+* `delete()`
+
+Comments
+--------
+* `get_comments()`: list of `GistComment`
+* `get_comment( id )`: `GistComment`
+* `create_comment( body )`: `GistComment`
+
+Starring
+--------
+* `is_starred()`: bool
+* `set_starred()`
+* `reset_starred()`
+
+Forking
+-------
+* `create_fork()`: `Gist`
+
+Class `GistComment`
+===================
+
+Attributes
+----------
+* `id`
+* `url`
+* `body`
+* `created_at`
+* `updated_at`
+* `user`: `NamedUser`
+
+Modification
+------------
+* `edit( body )`
+
+Deletion
+--------
+* `delete()`
+
 Class `GitBlob`
 ===============
 
@@ -197,10 +319,10 @@ Attributes
 * `sha`
 * `url`
 * `message`
+* `parents`
 * `author`
 * `committer`
-* `tree`
-* `parents`
+* `tree`: `GitTree`
 
 Class `GitRef`
 ==============
@@ -235,6 +357,33 @@ Attributes
 * `sha`
 * `url`
 * `tree`
+
+Class `Hook`
+============
+
+Attributes
+----------
+* `url`
+* `updated_at`
+* `created_at`
+* `name`
+* `events`
+* `active`
+* `config`
+* `id`
+* `last_response`
+
+Modification
+------------
+* `edit( name, config, [events, add_events, remove_events, active] )`
+
+Deletion
+--------
+* `delete()`
+
+Testing
+-------
+* `test()`
 
 Class `Issue`
 =============
@@ -279,6 +428,10 @@ Comments
 * `get_comments()`: list of `IssueComment`
 * `get_comment( id )`: `IssueComment`
 * `create_comment( body )`: `IssueComment`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Class `IssueComment`
 ====================
@@ -385,6 +538,13 @@ Following
 ---------
 * `get_following()`: list of `NamedUser`
 
+Events
+------
+* `get_events()`: list of `Event`
+* `get_public_events()`: list of `Event`
+* `get_received_events()`: list of `Event`
+* `get_public_received_events()`: list of `Event`
+
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
@@ -397,6 +557,10 @@ Repos
 Watched
 -------
 * `get_watched()`: list of `Repository`
+
+Gists
+-----
+* `get_gists()`: list of `Gist`
 
 Class `Organization`
 ====================
@@ -449,6 +613,10 @@ Members
 * `has_in_members( member )`: `bool`
     * `member`: `NamedUser`
 
+Events
+------
+* `get_events()`: list of `Event`
+
 Repos
 -----
 * `get_repos( [type] )`: list of `Repository`
@@ -492,6 +660,9 @@ Attributes
 * `changed_files`
 * `head`
 * `base`
+* `merged_by`
+* `review_comments`
+* `user`: `NamedUser`
 
 Modification
 ------------
@@ -586,6 +757,12 @@ Attributes
 * `parent`: `Repository`
 * `source`: `Repository`
 
+Events
+------
+* `get_events()`: list of `Event`
+* `get_network_events()`: list of `Event`
+* `get_issues_events()`: list of `Event`
+
 Forks
 -----
 * `get_forks()`: list of `Repository`
@@ -597,6 +774,18 @@ Modification
 Languages
 ---------
 * `get_languages()`: dictionary of strings to integers
+
+Hooks
+-----
+* `get_hooks()`: list of `Hook`
+* `get_hook( id )`: `Hook`
+* `create_hook( name, config, [events, active] )`: `Hook`
+
+Keys
+----
+* `get_keys()`: list of `RepositoryKey`
+* `get_key( id )`: `RepositoryKey`
+* `create_key( title, key )`: `RepositoryKey`
 
 Collaborators
 -------------
@@ -625,7 +814,7 @@ Git refs
 Git commits
 -----------
 * `get_git_commit( sha )`: `GitCommit`
-* `create_git_commit( message, tree, parents, [author, commiter] )`: `GitCommit`
+* `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
 
 Git trees
 ---------
@@ -694,6 +883,24 @@ Teams
 -----
 * `get_teams()`: list of `Team`
 
+Class `RepositoryKey`
+=====================
+
+Attributes
+----------
+* `url`
+* `id`
+* `title`
+* `key`
+
+Modification
+------------
+* `edit( title, key )`
+
+Deletion
+--------
+* `delete()`
+
 Class `Tag`
 ===========
 
@@ -743,5 +950,23 @@ Repos
     * `repo`: `Repository`
 * `has_in_repos( repo )`: `bool`
     * `repo`: `Repository`
+
+Class `UserKey`
+===============
+
+Attributes
+----------
+* `url`
+* `id`
+* `title`
+* `key`
+
+Modification
+------------
+* `edit( [title, key] )`
+
+Deletion
+--------
+* `delete()`
 
 
