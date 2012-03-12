@@ -3,10 +3,6 @@ import MockMockMock
 
 from GithubObject import *
 
-### @todo add a test where BaseUrl depends on some editable attribute.
-### Show that BaseUrl is faithfull to the edited attribute
-### (currently not the case for Label, whish has a BaseUrl depending on its name)
-
 class GithubObjectTestCase( unittest.TestCase ):
     def testDuplicatedAttributeInOnePolicy( self ):
         with self.assertRaises( BadGithubObjectException ):
@@ -59,6 +55,20 @@ class GithubObjectWithDocumentationCoveringSpecialCases( TestCaseWithGithubTestO
 
     def testNothing( self ):
         pass
+
+class GithubObjectWithBaseUrlDependingOnAttribute( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test/" + str( obj.a1 ) ),
+        InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
+        Editable( [ "a1" ], [] )
+    )
+
+    def test( self ):
+        self.expectDataPatch( "/test/1", { "a1": 11 } ).andReturn( { "a1": 110 } )
+        self.expectDataPatch( "/test/110", { "a1": 111 } ).andReturn( { "a1": 1110 } )
+        self.o.edit( 11 )
+        self.o.edit( 111 )
 
 class GithubObjectWithOnlyInternalSimpleAttributes( TestCaseWithGithubTestObject ):
     GithubTestObject = GithubObject(
