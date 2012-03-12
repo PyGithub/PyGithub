@@ -185,10 +185,12 @@ class IntegrationTest:
                         else:
                             uncoveredApis.add( verb + " " + currentApi )
 
-        if len( uncoveredMethods ) != 0 or len( uncoveredApis ) != 0:
-            print
-            print "Not covered (" + str( len( uncoveredMethods ) + len( uncoveredApis ) ) + "):"
+        print
+        if len( uncoveredMethods ) != 0:
+            print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
             print "\n".join( sorted( uncoveredMethods ) )
+        if len( uncoveredApis ) != 0:
+            print "Not implemented (" + str( len( uncoveredApis ) ) + "):"
             print "\n".join( sorted( uncoveredApis ) )
 
     def testAuthenticatedUserDetails( self ):
@@ -478,6 +480,13 @@ class IntegrationTest:
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
         k.delete()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
+
+    def testMergePullRequest( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        p = r.get_pull( 26 )
+        assert not p.is_merged()
+        p.merge()
+        assert p.is_merged()
 
     def testNamedUserDetails( self ):
         u = self.g.get_user( "jacquev6" )
