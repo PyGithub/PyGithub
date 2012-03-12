@@ -12,10 +12,10 @@ Event = GithubObject(
 )
 
 def __testHook( hook ):
-    hook._github._statusRequest( "POST", hook._baseUrl + "/test", None, None )
+    hook._github._statusRequest( "POST", hook._baseUrl() + "/test", None, None )
 Hook = GithubObject(
     "Hook",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/hooks/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/hooks/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "updated_at", "created_at", "name", "events", "active", "config",
         "id", "last_response",
@@ -131,7 +131,7 @@ def __getPublicEvents( user ):
     return [
         Event( user._github, attributes, lazy = True )
         for attributes
-        in user._github._dataRequest( "GET", user._baseUrl + "/events/public", None, None )
+        in user._github._dataRequest( "GET", user._baseUrl() + "/events/public", None, None )
     ]
 NamedUser._addAttributePolicy(
     MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
@@ -145,7 +145,7 @@ def __getPublicReceivedEvents( user ):
     return [
         Event( user._github, attributes, lazy = True )
         for attributes
-        in user._github._dataRequest( "GET", user._baseUrl + "/received_events/public", None, None )
+        in user._github._dataRequest( "GET", user._baseUrl() + "/received_events/public", None, None )
     ]
 NamedUser._addAttributePolicy(
     MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
@@ -203,7 +203,7 @@ AuthenticatedUser._addAttributePolicy(
 
 GitRef = GithubObject(
     "GitRef",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/" + obj.ref ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/" + obj.ref ),
     InternalSimpleAttributes(
         "ref", "url",
         "object", ### @todo Structure
@@ -214,7 +214,7 @@ GitRef = GithubObject(
 
 GitTree = GithubObject(
     "GitTree",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/trees/" + obj.sha ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/trees/" + obj.sha ),
     InternalSimpleAttributes(
         "sha", "url",
         "tree", ### @todo Structure
@@ -224,7 +224,7 @@ GitTree = GithubObject(
 
 GitCommit = GithubObject(
     "GitCommit",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/commits/" + obj.sha ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/commits/" + obj.sha ),
     InternalSimpleAttributes(
         "sha", "url", "message",
         "parents", ### @todo Structure
@@ -236,7 +236,7 @@ GitCommit = GithubObject(
 
 GitBlob = GithubObject(
     "GitBlob",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/blobs/" + obj.sha ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/blobs/" + obj.sha ),
     InternalSimpleAttributes(
         "sha", "size", "url",
         "content", "encoding",
@@ -246,7 +246,7 @@ GitBlob = GithubObject(
 
 GitTag = GithubObject(
     "GitTag",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/git/tags/" + obj.sha ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/tags/" + obj.sha ),
     InternalSimpleAttributes(
         "tag", "sha", "url",
         "message",
@@ -258,7 +258,7 @@ GitTag = GithubObject(
 
 Label = GithubObject(
     "Label",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/labels/" + obj._identity ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/labels/" + obj._identity ),
     Identity( lambda obj: urllib.quote( obj.name ) ),
     InternalSimpleAttributes(
         "url", "name", "color",
@@ -272,7 +272,7 @@ __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._re
 
 Milestone = GithubObject(
     "Milestone",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/milestones/" + str( obj.number ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/milestones/" + str( obj.number ) ),
     InternalSimpleAttributes(
         "url", "number", "state", "title", "description", "open_issues",
         "closed_issues", "created_at", "due_on",
@@ -288,7 +288,7 @@ Milestone = GithubObject(
 
 IssueComment = GithubObject(
     "IssueComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/comments/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/comments/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "body", "created_at", "updated_at", "id",
         "_repo", ### Ugly hack
@@ -300,7 +300,7 @@ IssueComment = GithubObject(
 
 IssueEvent = GithubObject(
     "IssueEvent",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/events/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/events/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "id", "url", "created_at", "issue", "event", "commit_id",
         "_repo", # Ugly hack
@@ -310,7 +310,7 @@ IssueEvent = GithubObject(
 
 Issue = GithubObject(
     "Issue",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/" + str( obj.number ) ),
     InternalSimpleAttributes(
         "url", "html_url", "number", "state", "title", "body", "labels",
         "comments", "closed_at", "created_at", "updated_at", "id", "closed_by",
@@ -340,7 +340,7 @@ Issue = GithubObject(
 
 Download = GithubObject(
     "Download",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/downloads/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/downloads/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "html_url", "id", "name", "description", "size",
         "download_count", "content_type", "policy", "signature", "bucket",
@@ -353,7 +353,7 @@ Download = GithubObject(
 
 CommitComment = GithubObject(
     "CommitComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/comments/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/comments/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "id", "body", "path", "position", "commit_id",
         "created_at", "updated_at", "html_url", "line",
@@ -366,7 +366,7 @@ CommitComment = GithubObject(
 
 Commit = GithubObject(
     "Commit",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/commits/" + str( obj.sha ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/commits/" + str( obj.sha ) ),
     InternalSimpleAttributes(
         "sha", "url",
         "parents", ### @todo Structure
@@ -412,7 +412,7 @@ PullRequestFile = GithubObject(
 
 PullRequestComment = GithubObject(
     "PullRequestComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/pulls/comments/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/pulls/comments/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "id", "body", "path", "position", "commit_id",
         "created_at", "updated_at", "html_url", "line",
@@ -424,12 +424,12 @@ PullRequestComment = GithubObject(
 )
 
 def __pullRequestIsMerged( r ):
-    return r._github._statusRequest( "GET", r._baseUrl + "/merge", None, None ) == 204
+    return r._github._statusRequest( "GET", r._baseUrl() + "/merge", None, None ) == 204
 def __mergePullRequest( r, **data ):
-    r._github._statusRequest( "PUT", r._baseUrl + "/merge", None, data )
+    r._github._statusRequest( "PUT", r._baseUrl() + "/merge", None, data )
 PullRequest = GithubObject(
     "PullRequest",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/pulls/" + str( obj.number ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/pulls/" + str( obj.number ) ),
     InternalSimpleAttributes(
         "id", "url", "html_url", "diff_url", "patch_url", "issue_url", "number",
         "state", "title", "body", "created_at", "updated_at", "closed_at",
@@ -457,7 +457,7 @@ PullRequest = GithubObject(
 
 RepositoryKey = GithubObject(
     "RepositoryKey",
-    BaseUrl( lambda obj: obj._repo._baseUrl + "/keys/" + str( obj.id ) ),
+    BaseUrl( lambda obj: obj._repo._baseUrl() + "/keys/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "id", "title", "key",
         "_repo", ### Ugly hack
@@ -639,11 +639,11 @@ NamedUser._addAttributePolicy(
 
 def __createForkForUser( user, repo ):
     assert isinstance( repo, Repository )
-    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl + "/forks", None, None ), lazy = True )
+    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl() + "/forks", None, None ), lazy = True )
 AuthenticatedUser._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForUser, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
-    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl + "/forks", { "org": org.login }, None ), lazy = True )
+    return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl() + "/forks", { "org": org.login }, None ), lazy = True )
 Organization._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
 
 Team = GithubObject(
@@ -694,11 +694,11 @@ GistComment = GithubObject(
 )
 
 def __isStarred( gist ):
-    return gist._github._statusRequest( "GET", gist._baseUrl + "/star", None, None ) == 204
+    return gist._github._statusRequest( "GET", gist._baseUrl() + "/star", None, None ) == 204
 def __setStarred( gist ):
-    gist._github._statusRequest( "PUT", gist._baseUrl + "/star", None, None )
+    gist._github._statusRequest( "PUT", gist._baseUrl() + "/star", None, None )
 def __resetStarred( gist ):
-    gist._github._statusRequest( "DELETE", gist._baseUrl + "/star", None, None )
+    gist._github._statusRequest( "DELETE", gist._baseUrl() + "/star", None, None )
 Gist = GithubObject(
     "Gist",
     BaseUrl( lambda obj: "/gists/" + str( obj.id ) ),
@@ -722,7 +722,7 @@ Gist = GithubObject(
     ], "Starring" ),
 )
 def __createFork( gist ):
-    return Gist( gist._github, gist._github._dataRequest( "POST", gist._baseUrl + "/fork", None, None ), lazy = True )
+    return Gist( gist._github, gist._github._dataRequest( "POST", gist._baseUrl() + "/fork", None, None ), lazy = True )
 Gist._addAttributePolicy(    SeveralAttributePolicies( [
         MethodFromCallable( "create_fork", [], [], __createFork, ObjectTypePolicy( Gist ) ),
     ], "Forking" ),

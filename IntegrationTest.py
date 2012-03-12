@@ -445,9 +445,8 @@ class IntegrationTest:
         self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
         labelD = r.create_label( "D", "FF0000" )
         self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
-        ### @todo Uncomment after fixing bug about BaseUrl depending on editable attribute
-        # labelD.edit( "Dada", "00FF00" )
-        # self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
+        labelD.edit( "Dada", "00FF00" )
+        self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
         labelD.delete()
         self.printList( "Repository labels", r.get_labels(), lambda l: l.name )
 

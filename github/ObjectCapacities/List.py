@@ -15,7 +15,7 @@ class ListCapacity:
 
     def baseUrl( self, obj ):
         if self.__url is None:
-            return obj._baseUrl + "/" + self.attributeName
+            return obj._baseUrl() + "/" + self.attributeName
         else:
             return self.__url
 
