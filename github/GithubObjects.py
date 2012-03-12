@@ -136,14 +136,10 @@ def __getPublicEvents( user ):
 NamedUser._addAttributePolicy(
     MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
-def __getReceivedEvents( user ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", user._baseUrl + "/received_events", None, None )
-    ]
 NamedUser._addAttributePolicy(
-    MethodFromCallable( "get_received_events", [], [], __getReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+    ExternalListOfObjects( "received_events", "received_event", Event,
+        ListGetable( [], [] )
+    )
 )
 def __getPublicReceivedEvents( user ):
     return [
@@ -472,17 +468,13 @@ def __getNetworkEvents( repo ):
         for attributes
         in repo._github._dataRequest( "GET", "/networks/" + repo.owner.login + "/" + repo.name + "/events", None, None )
     ]
-def __getIssuesEvents( repo ):
-    return [
-        Event( repo._github, attributes, lazy = True )
-        for attributes
-        in repo._github._dataRequest( "GET", repo._baseUrl + "/issues/events", None, None )
-    ]
 Repository._addAttributePolicy(
     MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 Repository._addAttributePolicy(
-    MethodFromCallable( "get_issues_events", [], [], __getIssuesEvents, SimpleTypePolicy( "list of `Event`" ) )
+    ExternalListOfObjects( "issues/events", "issues_event", Event,
+        ListGetable( [], [] )
+    )
 )
 Repository._addAttributePolicy(
     ExternalListOfObjects( "forks", "fork", Repository,
