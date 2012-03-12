@@ -91,4 +91,16 @@ class TestCase( unittest.TestCase ):
         o = self.g.get_organization( "ooo" )
         u.get_organization_events( o )
 
+    def testMergePullRequest( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/pulls/42", None, None ).andReturn( { "number": 42 } )
+        self.requester.expect.statusRequest( "GET", "/repos/xxx/yyy/pulls/42/merge", None, None ).andReturn( 404 )
+        self.requester.expect.statusRequest( "PUT", "/repos/xxx/yyy/pulls/42/merge", None, {} ).andReturn( 204 )
+        self.requester.expect.statusRequest( "GET", "/repos/xxx/yyy/pulls/42/merge", None, None ).andReturn( 204 )
+        p = self.g.get_user().get_repo( "yyy" ).get_pull( 42 )
+        self.assertFalse( p.is_merged() )
+        p.merge()
+        self.assertTrue( p.is_merged() )
+
 unittest.main()
