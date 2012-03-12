@@ -91,7 +91,7 @@ class IntegrationTest:
         if record:
             print "Record mode: this script is really going to do requests to github.com"
         else:
-            print "Replay mode: this script will used requests to and replies from github.com recorded in previous runs in record mode"
+            print "Replay mode: this script will use requests to and replies from github.com recorded in previous runs in record mode"
 
         if len( argv ) == 0:
             tests = self.listTests()
@@ -307,7 +307,20 @@ class IntegrationTest:
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
     def testEvents( self ):
-        self.g.get_user().get_repo( "TestPyGithub" ).get_events()
+        self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
+        self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
+        self.printList( "User public received events", self.g.get_user( self.cobayeUser ).get_public_received_events(), lambda e: e.type )
+        self.printList( "User received events", self.g.get_user( self.cobayeUser ).get_received_events(), lambda e: e.type )
+
+        self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
+
+        self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
+
+        self.printList( "Repo events", self.g.get_user().get_repo( "TestPyGithub" ).get_events(), lambda e: e.type )
+        self.printList( "Repo issues events", self.g.get_user().get_repo( "TestPyGithub" ).get_issues_events(), lambda e: e.event )
+        self.printList( "Repo network events", self.g.get_user().get_repo( "TestPyGithub" ).get_network_events(), lambda e: e.type )
+
+        self.printList( "Issue events", self.g.get_user().get_repo( "TestPyGithub" ).get_issue( 23 ).get_events(), lambda e: e.event )
 
     def testFollow( self ):
         cobaye = self.g.get_user( self.cobayeUser )

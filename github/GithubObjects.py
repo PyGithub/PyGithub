@@ -6,7 +6,8 @@ from GithubObject import *
 Event = GithubObject(
     "Event",
     InternalSimpleAttributes(
-        "type", "public", "payload", "created_at", "id",
+        "type", "public", "payload", "created_at", "id", "commit_id", "url",
+        "event", "issue",
     ),
 )
 
@@ -128,7 +129,7 @@ NamedUser._addAttributePolicy(
 )
 def __getPublicEvents( user ):
     return [
-        Event( user._github, attributes )
+        Event( user._github, attributes, lazy = True )
         for attributes
         in user._github._dataRequest( "GET", user._baseUrl + "/events/public", None, None )
     ]
@@ -137,7 +138,7 @@ NamedUser._addAttributePolicy(
 )
 def __getReceivedEvents( user ):
     return [
-        Event( user._github, attributes )
+        Event( user._github, attributes, lazy = True )
         for attributes
         in user._github._dataRequest( "GET", user._baseUrl + "/received_events", None, None )
     ]
@@ -146,7 +147,7 @@ NamedUser._addAttributePolicy(
 )
 def __getPublicReceivedEvents( user ):
     return [
-        Event( user._github, attributes )
+        Event( user._github, attributes, lazy = True )
         for attributes
         in user._github._dataRequest( "GET", user._baseUrl + "/received_events/public", None, None )
     ]
@@ -161,7 +162,7 @@ Organization = GithubObject(
     InternalSimpleAttributes(
         "login", "id", "url", "avatar_url", "name", "company", "blog",
         "location", "email", "public_repos", "public_gists", "followers",
-        "following", "html_url", "created_at", "type",
+        "following", "html_url", "created_at", "type", "gravatar_id",
         # Seen only by owners
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
@@ -467,13 +468,13 @@ Repository._addAttributePolicy(
 )
 def __getNetworkEvents( repo ):
     return [
-        Event( repo._github, attributes )
+        Event( repo._github, attributes, lazy = True )
         for attributes
-        in repo._github._dataRequest( "GET", repo._baseUrl + "/events", None, None )
+        in repo._github._dataRequest( "GET", "/networks/" + repo.owner.login + "/" + repo.name + "/events", None, None )
     ]
 def __getIssuesEvents( repo ):
     return [
-        Event( repo._github, attributes )
+        Event( repo._github, attributes, lazy = True )
         for attributes
         in repo._github._dataRequest( "GET", repo._baseUrl + "/issues/events", None, None )
     ]
@@ -481,7 +482,7 @@ Repository._addAttributePolicy(
     MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 Repository._addAttributePolicy(
-    MethodFromCallable( "get_issues_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+    MethodFromCallable( "get_issues_events", [], [], __getIssuesEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 Repository._addAttributePolicy(
     ExternalListOfObjects( "forks", "fork", Repository,
