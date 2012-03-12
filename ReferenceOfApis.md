@@ -455,7 +455,7 @@ API `/users/:user/events`
 
 API `/users/:user/events/orgs/:org`
 ===================================
-* GET: (TODO SOON)
+* GET: `AuthenticatedUser.get_organization_events`
 
 API `/users/:user/events/public`
 ================================

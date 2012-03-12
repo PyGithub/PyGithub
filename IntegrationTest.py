@@ -320,6 +320,8 @@ class IntegrationTest:
         self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
 
         self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
+        o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Organization events", self.g.get_user().get_organization_events( o ), lambda e: e.type )
 
         self.printList( "Repo events", self.g.get_user().get_repo( "TestPyGithub" ).get_events(), lambda e: e.type )
         self.printList( "Repo issues events", self.g.get_user().get_repo( "TestPyGithub" ).get_issues_events(), lambda e: e.event )

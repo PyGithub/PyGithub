@@ -83,4 +83,12 @@ class TestCase( unittest.TestCase ):
         r = self.g.get_user().get_repo( "yyy" )
         r.get_network_events()
 
+    def testOrgEvents( self ):
+        self.requester.expect.dataRequest( "GET", "/orgs/ooo", None, None ).andReturn( { "login": "ooo" } )
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/users/xxx/events/orgs/ooo", None, None ).andReturn( [] )
+        u = self.g.get_user()
+        o = self.g.get_organization( "ooo" )
+        u.get_organization_events( o )
+
 unittest.main()
