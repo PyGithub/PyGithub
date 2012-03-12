@@ -423,6 +423,10 @@ PullRequestComment = GithubObject(
     Deletable(),
 )
 
+def __pullRequestIsMerged( r ):
+    return r._github._statusRequest( "GET", r._baseUrl + "/merge", None, None ) == 204
+def __mergePullRequest( r, **data ):
+    r._github._statusRequest( "PUT", r._baseUrl + "/merge", None, data )
 PullRequest = GithubObject(
     "PullRequest",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/pulls/" + str( obj.number ) ),
@@ -447,6 +451,8 @@ PullRequest = GithubObject(
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementCreatable( [ "body", "commit_id", "path", "position" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
     ),
+    MethodFromCallable( "is_merged", [], [], __pullRequestIsMerged, SimpleTypePolicy( "bool" ) ),
+    MethodFromCallable( "merge", [], [ "commit_message" ], __mergePullRequest, SimpleTypePolicy( None ) ),
 )
 
 RepositoryKey = GithubObject(
@@ -588,7 +594,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ),
     ExternalListOfObjects( "pulls", "pull", PullRequest,
         ListGetable( [], [ "state" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "number" ], [], __modifyAttributesForObjectsReferingRepo ),
         ElementCreatable( [ "title", "body", "base", "head" ], [], __modifyAttributesForObjectsReferingRepo ),
     ),
 ] ) )

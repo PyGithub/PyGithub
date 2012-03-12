@@ -481,6 +481,13 @@ class IntegrationTest:
         k.delete()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
 
+    def testMergePullRequest( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        p = r.get_pull( 26 )
+        assert not p.is_merged()
+        p.merge()
+        assert p.is_merged()
+
     def testNamedUserDetails( self ):
         u = self.g.get_user( "jacquev6" )
         print u.login, "(" + u.name + ") is from", u.location

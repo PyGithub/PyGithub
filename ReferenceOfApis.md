@@ -343,8 +343,8 @@ API `/repos/:user/:repo/pulls/:id/files`
 
 API `/repos/:user/:repo/pulls/:id/merge`
 ========================================
-* GET: (TODO)
-* PUT: (TODO)
+* GET: `PullRequest.is_merged`
+* PUT: `PullRequest.merge`
 
 API `/repos/:user/:repo/pulls/comments/:id`
 ===========================================
