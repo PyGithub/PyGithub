@@ -53,7 +53,8 @@ class GithubObjectWithDocumentationCoveringSpecialCases( TestCaseWithGithubTestO
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2", "_a3" ),
-        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], lambda obj: 42, ObjectTypePolicy( GithubObject ) )
+        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], lambda obj: 42, ObjectTypePolicy( GithubObject ) ),
+        AttributeFromCallable( "myAttr", lambda obj: 42 )
     )
 
     def testNothing( self ):

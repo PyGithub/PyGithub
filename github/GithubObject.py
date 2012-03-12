@@ -21,20 +21,20 @@ def ExternalSimpleAttribute( attributeName, type ):
     return ExternalAttribute( attributeName, SimpleTypePolicy( type ) )
 
 def BaseUrl( baseUrl ):
-    return AttributeFromCallable( "_baseUrl", baseUrl )
+    return MethodFromCallable( "_baseUrl", [], [], baseUrl, SimpleTypePolicy( None ) )
 
 def Identity( identity ):
     return AttributeFromCallable( "_identity", identity )
 
 def Editable( mandatoryParameters, optionalParameters ):
     def __execute( obj, **data ):
-        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl, None, data )
+        attributes = obj._github._dataRequest( "PATCH", obj._baseUrl(), None, data )
         obj._updateAttributes( attributes )
     return SeveralAttributePolicies( [ MethodFromCallable( "edit", mandatoryParameters, optionalParameters, __execute, SimpleTypePolicy( None ) ) ], "Modification" )
 
 def Deletable():
     def __execute( obj ):
-        obj._github._statusRequest( "DELETE", obj._baseUrl, None, None )
+        obj._github._statusRequest( "DELETE", obj._baseUrl(), None, None )
     return SeveralAttributePolicies( [ MethodFromCallable( "delete", [], [], __execute, SimpleTypePolicy( None ) ) ], "Deletion" )
 
 def GithubObject( className, *attributePolicies ):
