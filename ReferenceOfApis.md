@@ -208,7 +208,7 @@ API `/repos/:user/:repo/git/trees`
 
 API `/repos/:user/:repo/git/trees?base_tree=`
 =============================================
-* POST: `GitTree.create_update` (TODO)
+* POST: (TODO)
 
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
@@ -275,7 +275,7 @@ API `/repos/:user/:repo/issues/events`
 
 API `/repos/:user/:repo/issues/events/:id`
 ==========================================
-* GET: (TODO SOON)
+* GET: `Repository.get_issues_event`
 
 API `/repos/:user/:repo/keys`
 =============================

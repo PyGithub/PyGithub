@@ -288,6 +288,16 @@ IssueComment = GithubObject(
     Deletable(),
 )
 
+IssueEvent = GithubObject(
+    "IssueEvent",
+    BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/events/" + str( obj.id ) ),
+    InternalSimpleAttributes(
+        "id", "url", "created_at", "issue", "event", "commit_id",
+        "_repo", # Ugly hack
+    ),
+    InternalObjectAttribute( "actor", NamedUser ),
+)
+
 Issue = GithubObject(
     "Issue",
     BaseUrl( lambda obj: obj._repo._baseUrl + "/issues/" + str( obj.number ) ),
@@ -313,8 +323,8 @@ Issue = GithubObject(
         ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
         ElementCreatable( [ "body" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
     ),
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
+    ExternalListOfObjects( "events", "event", IssueEvent,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo )
     ),
 )
 
@@ -472,8 +482,9 @@ Repository._addAttributePolicy(
     MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 Repository._addAttributePolicy(
-    ExternalListOfObjects( "issues/events", "issues_event", Event,
-        ListGetable( [], [] )
+    ExternalListOfObjects( "issues/events", "issues_event", IssueEvent,
+        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
     )
 )
 Repository._addAttributePolicy(
