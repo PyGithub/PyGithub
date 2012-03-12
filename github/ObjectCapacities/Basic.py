@@ -41,11 +41,14 @@ class MethodFromCallable:
         return self.__callable( obj, **data )
 
     def autoDocument( self ):
-        doc = "* `" + self.__name + "(" + self.__argumentsChecker.documentParameters() + ")`"
-        if self.__returnTypePolicy.hasMeaningfulDocumentation():
-            doc += ": " + self.__returnTypePolicy.documentTypeName()
-        doc += "\n"
-        return doc
+        if self.__name.startswith( "_" ):
+            return ""
+        else:
+            doc = "* `" + self.__name + "(" + self.__argumentsChecker.documentParameters() + ")`"
+            if self.__returnTypePolicy.hasMeaningfulDocumentation():
+                doc += ": " + self.__returnTypePolicy.documentTypeName()
+            doc += "\n"
+            return doc
 
 class InternalAttribute:
     class AttributeDefinition:

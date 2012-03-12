@@ -91,6 +91,7 @@ Following
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
+* `get_organization_events( org )`: list of `Event`
 
 Repos
 -----
@@ -232,6 +233,11 @@ Attributes
 * `public`
 * `payload`
 * `created_at`
+* `id`
+* `commit_id`
+* `url`
+* `event`
+* `issue`
 * `repo`: `Repository`
 * `actor`: `NamedUser`
 * `org`: `Organization`
@@ -431,7 +437,7 @@ Comments
 
 Events
 ------
-* `get_events()`: list of `Event`
+* `get_events()`: list of `IssueEvent`
 
 Class `IssueComment`
 ====================
@@ -452,6 +458,19 @@ Modification
 Deletion
 --------
 * `delete()`
+
+Class `IssueEvent`
+==================
+
+Attributes
+----------
+* `id`
+* `url`
+* `created_at`
+* `issue`
+* `event`
+* `commit_id`
+* `actor`: `NamedUser`
 
 Class `Label`
 =============
@@ -542,6 +561,9 @@ Events
 ------
 * `get_events()`: list of `Event`
 * `get_public_events()`: list of `Event`
+
+Received events
+---------------
 * `get_received_events()`: list of `Event`
 * `get_public_received_events()`: list of `Event`
 
@@ -583,6 +605,7 @@ Attributes
 * `html_url`
 * `created_at`
 * `type`
+* `gravatar_id`
 * `disk_usage`
 * `collaborators`
 * `billing_email`
@@ -681,6 +704,8 @@ Comments
 * `get_comments()`: list of `PullRequestComment`
 * `get_comment( id )`: `PullRequestComment`
 * `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+* `is_merged()`: bool
+* `merge( [commit_message] )`
 
 Class `PullRequestComment`
 ==========================
@@ -761,7 +786,11 @@ Events
 ------
 * `get_events()`: list of `Event`
 * `get_network_events()`: list of `Event`
-* `get_issues_events()`: list of `Event`
+
+Issues events
+-------------
+* `get_issues_events()`: list of `IssueEvent`
+* `get_issues_event( id )`: `IssueEvent`
 
 Forks
 -----
@@ -876,7 +905,7 @@ Branches
 Pulls
 -----
 * `get_pulls( [state] )`: list of `PullRequest`
-* `get_pull( id )`: `PullRequest`
+* `get_pull( number )`: `PullRequest`
 * `create_pull( title, body, base, head )`: `PullRequest`
 
 Teams

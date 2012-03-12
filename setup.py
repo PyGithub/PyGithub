@@ -5,7 +5,7 @@ import textwrap
 
 setup(
     name = 'PyGithub',
-    version = '0.3',
+    version = '0.4',
     description = 'Use the full Github API v3',
     author = 'Vincent Jacques',
     author_email = 'vincent@vincent-jacques.net',

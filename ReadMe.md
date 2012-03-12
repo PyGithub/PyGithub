@@ -28,6 +28,24 @@ Then play with your Github objects:
 History
 =======
 
+Version 0.4 (March 12th, 2012)
+------------------------------
+
+* The list of the not implemented APIS is shorter than the list of the implemented APIs
+* APIs *not implemented*:
+    * GET `/gists/public`
+    * GET `/issues`
+    * GET `/repos/:user/:repo/compare/:base...:head`
+    * GET `/repos/:user/:repo/git/trees/:sha?recursive=1`
+    * POST `/repos/:user/:repo/git/trees?base_tree=`
+* Gists
+* Autorizations
+* Keys
+* Hooks
+* Events
+* Merge pull requests
+* More refactoring, one more time
+
 Version 0.3 (February 26th, 2012)
 ---------------------------------
 
