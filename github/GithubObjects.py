@@ -1,5 +1,3 @@
-import urllib
-
 from GithubObject import *
 
 from Event import Event
@@ -9,13 +7,6 @@ from UserKey import UserKey
 from AuthenticatedUser import AuthenticatedUser
 from NamedUser import NamedUser
 from Organization import Organization
-
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "orgs", "org", Organization,
-        ListGetable( [], [] )
-    )
-)
-
 from GitRef import GitRef
 from GitTree import GitTree
 from GitCommit import GitCommit
@@ -36,6 +27,13 @@ from PullRequestComment import PullRequestComment
 from PullRequest import PullRequest
 from RepositoryKey import RepositoryKey
 from Repository import Repository
+from Team import Team
+
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "orgs", "org", Organization,
+        ListGetable( [], [] )
+    )
+)
 
 __repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
 __repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } )
@@ -83,29 +81,6 @@ def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
     return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl() + "/forks", { "org": org.login }, None ), lazy = True )
 Organization._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
-
-Team = GithubObject(
-    "Team",
-    BaseUrl( lambda obj: "/teams/" + str( obj.id ) ),
-    Identity( lambda obj: str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "name", "id", "permission", "members_count", "repos_count",
-    ),
-    Editable( [ "name" ], [ "permission" ] ),
-    Deletable(),
-    ExternalListOfObjects( "members", "member", NamedUser,
-        ListGetable( [], [] ),
-        ElementAddable(),
-        ElementRemovable(),
-        ElementHasable()
-    ),
-    ExternalListOfObjects( "repos", "repo", Repository,
-        ListGetable( [], [] ),
-        ElementAddable(),
-        ElementRemovable(),
-        ElementHasable()
-    ),
-)
 
 Organization._addAttributePolicy(
     ExternalListOfObjects( "teams", "team", Team,
