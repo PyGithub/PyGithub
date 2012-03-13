@@ -22,117 +22,21 @@ from GitCommit import GitCommit
 from GitBlob import GitBlob
 from GitTag import GitTag
 from Label import Label
-
-__modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
-
-Milestone = GithubObject(
-    "Milestone",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/milestones/" + str( obj.number ) ),
-    InternalSimpleAttributes(
-        "url", "number", "state", "title", "description", "open_issues",
-        "closed_issues", "created_at", "due_on",
-        "_repo",
-    ),
-    InternalObjectAttribute( "creator", NamedUser ),
-    Editable( [ "title" ], [ "state", "description", "due_on" ] ),
-    Deletable(),
-    ExternalListOfObjects( "labels", "label", Label,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo )
-    ),
-)
-
+from Milestone import Milestone
 from IssueComment import IssueComment
 from IssueEvent import IssueEvent
-
-Issue = GithubObject(
-    "Issue",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/" + str( obj.number ) ),
-    InternalSimpleAttributes(
-        "url", "html_url", "number", "state", "title", "body", "labels",
-        "comments", "closed_at", "created_at", "updated_at", "id", "closed_by",
-        "pull_request",
-        "_repo",
-    ),
-    InternalObjectAttribute( "user", NamedUser ),
-    InternalObjectAttribute( "assignee", NamedUser ),
-    InternalObjectAttribute( "milestone", Milestone ),
-    Editable( [], [ "title", "body", "assignee", "state", "milestone", "labels" ] ),
-    ExternalListOfObjects( "labels", "label", Label,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        SeveralElementsAddable(),
-        ListSetable(),
-        ListDeletable(),
-        ElementRemovable(),
-    ),
-    ExternalListOfObjects( "comments", "comment", IssueComment,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementCreatable( [ "body" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
-    ),
-    ExternalListOfObjects( "events", "event", IssueEvent,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo )
-    ),
-)
-
+from Issue import Issue
 from Download import Download
 from CommitComment import CommitComment
 from Commit import Commit
 from Tag import Tag
 from Branch import Branch
+from PullRequestFile import PullRequestFile
+from PullRequestComment import PullRequestComment
+from PullRequest import PullRequest
 
+__modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
-PullRequestFile = GithubObject(
-    "PullRequestFile",
-    InternalSimpleAttributes(
-        "sha", "filename", "status", "additions", "deletions", "changes",
-        "blob_url", "raw_url", "patch",
-    ),
-)
-
-PullRequestComment = GithubObject(
-    "PullRequestComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/pulls/comments/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "id", "body", "path", "position", "commit_id",
-        "created_at", "updated_at", "html_url", "line",
-        "_repo",
-    ),
-    InternalObjectAttribute( "user", NamedUser ),
-    Editable( [ "body" ], [] ),
-    Deletable(),
-)
-
-def __pullRequestIsMerged( r ):
-    return r._github._statusRequest( "GET", r._baseUrl() + "/merge", None, None ) == 204
-def __mergePullRequest( r, **data ):
-    r._github._statusRequest( "PUT", r._baseUrl() + "/merge", None, data )
-PullRequest = GithubObject(
-    "PullRequest",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/pulls/" + str( obj.number ) ),
-    InternalSimpleAttributes(
-        "id", "url", "html_url", "diff_url", "patch_url", "issue_url", "number",
-        "state", "title", "body", "created_at", "updated_at", "closed_at",
-        "merged_at", "_links", "merged", "mergeable", "comments", "commits",
-        "additions", "deletions", "changed_files", "head", "base", "merged_by",
-        "review_comments",
-        "_repo",
-    ),
-    InternalObjectAttribute( "user", NamedUser ),
-    Editable( [], [ "title", "body", "state" ] ),
-    ExternalListOfObjects( "commits", "commit", Commit,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-    ),
-    ExternalListOfObjects( "files", "file", PullRequestFile,
-        ListGetable( [], [] ),
-    ),
-    ExternalListOfObjects( "comments", "comment", PullRequestComment,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementCreatable( [ "body", "commit_id", "path", "position" ], [], __modifyAttributesForObjectsReferingReferedRepo ),
-    ),
-    MethodFromCallable( "is_merged", [], [], __pullRequestIsMerged, SimpleTypePolicy( "bool" ) ),
-    MethodFromCallable( "merge", [], [ "commit_message" ], __mergePullRequest, SimpleTypePolicy( None ) ),
-)
 
 RepositoryKey = GithubObject(
     "RepositoryKey",
