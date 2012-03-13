@@ -34,20 +34,10 @@ from Branch import Branch
 from PullRequestFile import PullRequestFile
 from PullRequestComment import PullRequestComment
 from PullRequest import PullRequest
+from RepositoryKey import RepositoryKey
 
 __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
-
-RepositoryKey = GithubObject(
-    "RepositoryKey",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/keys/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "id", "title", "key",
-        "_repo",
-    ),
-    Editable( [ "title", "key" ], [] ),
-    Deletable()
-)
 
 Repository = GithubObject(
     "Repository",
