@@ -1,30 +1,9 @@
-import itertools
 import urllib
 
 from GithubObject import *
 
-Event = GithubObject(
-    "Event",
-    InternalSimpleAttributes(
-        "type", "public", "payload", "created_at", "id", "commit_id", "url",
-        "event", "issue",
-    ),
-)
-
-def __testHook( hook ):
-    hook._github._statusRequest( "POST", hook._baseUrl() + "/test", None, None )
-Hook = GithubObject(
-    "Hook",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/hooks/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "updated_at", "created_at", "name", "events", "active", "config",
-        "id", "last_response",
-        "_repo",
-    ),
-    Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
-    Deletable(),
-    SeveralAttributePolicies( [ MethodFromCallable( "test", [], [], __testHook, SimpleTypePolicy( None ) ) ], "Testing" )
-)
+from Event import Event
+from Hook import Hook
 
 Authorization = GithubObject(
     "Authorization",
