@@ -1,3 +1,5 @@
+import urllib
+
 from GithubObject import *
 
 Label = GithubObject(
