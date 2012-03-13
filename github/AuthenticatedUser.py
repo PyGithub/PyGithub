@@ -4,6 +4,7 @@ from Authorization import Authorization
 from UserKey import UserKey
 from Event import Event
 from NamedUser import NamedUser
+from Organization import Organization
 
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
@@ -51,5 +52,11 @@ AuthenticatedUser._addAttributePolicy(
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
+    )
+)
+
+AuthenticatedUser._addAttributePolicy(
+    ExternalListOfObjects( "orgs", "org", Organization,
+        ListGetable( [], [] )
     )
 )
