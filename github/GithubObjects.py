@@ -21,18 +21,7 @@ from GitTree import GitTree
 from GitCommit import GitCommit
 from GitBlob import GitBlob
 from GitTag import GitTag
-
-Label = GithubObject(
-    "Label",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/labels/" + obj._identity ),
-    Identity( lambda obj: urllib.quote( obj.name ) ),
-    InternalSimpleAttributes(
-        "url", "name", "color",
-        "_repo",
-    ),
-    Editable( [ "name", "color" ], [] ),
-    Deletable(),
-)
+from Label import Label
 
 __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 
