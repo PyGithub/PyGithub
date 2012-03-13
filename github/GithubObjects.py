@@ -4,61 +4,9 @@ from GithubObject import *
 
 from Event import Event
 from Hook import Hook
-
-Authorization = GithubObject(
-    "Authorization",
-    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "id", "url", "scopes", "token", "app", "note", "note_url", "updated_at",
-        "created_at",
-    ),
-    Editable( [], [ "scopes", "add_scopes", "remove_scopes", "note", "note_url" ] ),
-    Deletable(),
-)
-
-UserKey = GithubObject(
-    "UserKey",
-    BaseUrl( lambda obj: "/user/keys/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "id", "title", "key",
-    ),
-    Editable( [], [ "title", "key" ] ),
-    Deletable(),
-)
-
-AuthenticatedUser = GithubObject(
-    "AuthenticatedUser",
-    BaseUrl( lambda obj: "/user" ),
-    Identity( lambda obj: obj.login ),
-    InternalSimpleAttributes(
-        "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
-        "blog", "location", "email", "hireable", "bio", "public_repos",
-        "public_gists", "followers", "following", "html_url", "created_at",
-        "type", "total_private_repos", "owned_private_repos", "private_gists",
-        "disk_usage", "collaborators", "plan",
-    ),
-    Editable( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ),
-    ExternalListOfSimpleTypes( "emails", "email", "string",
-        ListGetable( [], [] ),
-        SeveralElementsAddable(),
-        SeveralElementsRemovable()
-    ),
-    ExternalListOfObjects( "authorizations", "authorization", Authorization,
-        ListGetable( [], [] ),
-        ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [], [ "scopes", "note", "note_url" ] ),
-        url = "/authorizations",
-    ),
-    ExternalListOfObjects( "keys", "key", UserKey,
-        ListGetable( [], [] ),
-        ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [ "title", "key" ], [] ),
-    ),
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] ),
-        url = "/events"
-    ),
-)
+from Authorization import Authorization
+from UserKey import UserKey
+from AuthenticatedUser import AuthenticatedUser
 
 NamedUser = GithubObject(
     "NamedUser",
