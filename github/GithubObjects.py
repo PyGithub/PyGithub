@@ -41,27 +41,8 @@ Milestone = GithubObject(
     ),
 )
 
-IssueComment = GithubObject(
-    "IssueComment",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/comments/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "url", "body", "created_at", "updated_at", "id",
-        "_repo",
-    ),
-    InternalObjectAttribute( "user", NamedUser ),
-    Editable( [ "body" ], [] ),
-    Deletable(),
-)
-
-IssueEvent = GithubObject(
-    "IssueEvent",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/events/" + str( obj.id ) ),
-    InternalSimpleAttributes(
-        "id", "url", "created_at", "issue", "event", "commit_id",
-        "_repo",
-    ),
-    InternalObjectAttribute( "actor", NamedUser ),
-)
+from IssueComment import IssueComment
+from IssueEvent import IssueEvent
 
 Issue = GithubObject(
     "Issue",
