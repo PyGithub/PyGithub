@@ -38,25 +38,16 @@ AuthenticatedUser = GithubObject(
         ListGetable( [], [] ),
         url = "/events"
     ),
-)
-
-AuthenticatedUser._addAttributePolicy(
     ExternalListOfObjects( "followers", "follower", NamedUser,
         ListGetable( [], [] )
-    )
-)
-
-AuthenticatedUser._addAttributePolicy(
+    ),
     ExternalListOfObjects( "following", "following", NamedUser,
         ListGetable( [], [] ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
-    )
-)
-
-AuthenticatedUser._addAttributePolicy(
+    ),
     ExternalListOfObjects( "orgs", "org", Organization,
         ListGetable( [], [] )
-    )
+    ),
 )
