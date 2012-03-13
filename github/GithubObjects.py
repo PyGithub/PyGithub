@@ -16,60 +16,11 @@ NamedUser._addAttributePolicy(
     )
 )
 
-GitRef = GithubObject(
-    "GitRef",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/" + obj.ref ),
-    InternalSimpleAttributes(
-        "ref", "url",
-        "object",
-        "_repo",
-    ),
-    Editable( [ "sha" ], [ "force" ] ),
-)
-
-GitTree = GithubObject(
-    "GitTree",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/trees/" + obj.sha ),
-    InternalSimpleAttributes(
-        "sha", "url",
-        "tree",
-        "_repo",
-    ),
-)
-
-GitCommit = GithubObject(
-    "GitCommit",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/commits/" + obj.sha ),
-    InternalSimpleAttributes(
-        "sha", "url", "message",
-        "parents",
-        "author", "committer",
-        "_repo",
-    ),
-    InternalObjectAttribute( "tree", GitTree ),
-)
-
-GitBlob = GithubObject(
-    "GitBlob",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/blobs/" + obj.sha ),
-    InternalSimpleAttributes(
-        "sha", "size", "url",
-        "content", "encoding",
-        "_repo",
-    ),
-)
-
-GitTag = GithubObject(
-    "GitTag",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/tags/" + obj.sha ),
-    InternalSimpleAttributes(
-        "tag", "sha", "url",
-        "message",
-        "tagger",
-        "object",
-        "_repo",
-    ),
-)
+from GitRef import GitRef
+from GitTree import GitTree
+from GitCommit import GitCommit
+from GitBlob import GitBlob
+from GitTag import GitTag
 
 Label = GithubObject(
     "Label",
