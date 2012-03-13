@@ -549,14 +549,6 @@ Attributes
 * `owned_private_repos`
 * `private_gists`
 
-Followers
----------
-* `get_followers()`: list of `NamedUser`
-
-Following
----------
-* `get_following()`: list of `NamedUser`
-
 Events
 ------
 * `get_events()`: list of `Event`
@@ -566,6 +558,14 @@ Received events
 ---------------
 * `get_received_events()`: list of `Event`
 * `get_public_received_events()`: list of `Event`
+
+Followers
+---------
+* `get_followers()`: list of `NamedUser`
+
+Following
+---------
+* `get_following()`: list of `NamedUser`
 
 Orgs
 ----
