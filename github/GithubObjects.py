@@ -76,43 +76,9 @@ Issue = GithubObject(
 
 from Download import Download
 from CommitComment import CommitComment
-
-Commit = GithubObject(
-    "Commit",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/commits/" + str( obj.sha ) ),
-    InternalSimpleAttributes(
-        "sha", "url",
-        "parents",
-        "stats",
-        "files",
-        "_repo",
-    ),
-    InternalObjectAttribute( "commit", GitCommit ),
-    InternalObjectAttribute( "author", NamedUser ),
-    InternalObjectAttribute( "committer", NamedUser ),
-    ExternalListOfObjects( "comments", "comment", CommitComment,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementCreatable( [ "body" ], [ "commit_id", "line", "path", "position" ], __modifyAttributesForObjectsReferingReferedRepo ),
-    ),
-)
-
-Tag = GithubObject(
-    "Tag",
-    InternalSimpleAttributes(
-        "name", "zipball_url", "tarball_url",
-        "_repo",
-    ),
-    InternalObjectAttribute( "commit", Commit )
-)
-
-Branch = GithubObject(
-    "Branch",
-    InternalSimpleAttributes(
-        "name",
-        "_repo",
-    ),
-    InternalObjectAttribute( "commit", Commit )
-)
+from Commit import Commit
+from Tag import Tag
+from Branch import Branch
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
 PullRequestFile = GithubObject(
