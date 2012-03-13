@@ -62,8 +62,7 @@ class ElementHasable( ListCapacity ):
         ) == 204
 
     def autoDocument( self ):
-        ### @todo `bool` -> bool
-        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: bool\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ListCapacityWithModifier( ListCapacity ):
     def __init__( self, attributeModifiers ):

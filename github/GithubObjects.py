@@ -19,7 +19,7 @@ Hook = GithubObject(
     InternalSimpleAttributes(
         "url", "updated_at", "created_at", "name", "events", "active", "config",
         "id", "last_response",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
     Deletable(),
@@ -28,7 +28,7 @@ Hook = GithubObject(
 
 Authorization = GithubObject(
     "Authorization",
-    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ), ### @todo make the lambda return a tuple, and BaseUrl convert elements to strings and join them with "/"
+    BaseUrl( lambda obj: "/authorizations/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "id", "url", "scopes", "token", "app", "note", "note_url", "updated_at",
         "created_at",
@@ -206,8 +206,8 @@ GitRef = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/" + obj.ref ),
     InternalSimpleAttributes(
         "ref", "url",
-        "object", ### @todo Structure
-        "_repo", ### Ugly hack
+        "object",
+        "_repo",
     ),
     Editable( [ "sha" ], [ "force" ] ),
 )
@@ -217,8 +217,8 @@ GitTree = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/trees/" + obj.sha ),
     InternalSimpleAttributes(
         "sha", "url",
-        "tree", ### @todo Structure
-        "_repo", ### Ugly hack
+        "tree",
+        "_repo",
     ),
 )
 
@@ -227,9 +227,9 @@ GitCommit = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/commits/" + obj.sha ),
     InternalSimpleAttributes(
         "sha", "url", "message",
-        "parents", ### @todo Structure
+        "parents",
         "author", "committer",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "tree", GitTree ),
 )
@@ -240,7 +240,7 @@ GitBlob = GithubObject(
     InternalSimpleAttributes(
         "sha", "size", "url",
         "content", "encoding",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
 )
 
@@ -250,9 +250,9 @@ GitTag = GithubObject(
     InternalSimpleAttributes(
         "tag", "sha", "url",
         "message",
-        "tagger", ### @todo Structure
-        "object", ### @todo Structure
-        "_repo", ### Ugly hack
+        "tagger",
+        "object",
+        "_repo",
     ),
 )
 
@@ -262,7 +262,7 @@ Label = GithubObject(
     Identity( lambda obj: urllib.quote( obj.name ) ),
     InternalSimpleAttributes(
         "url", "name", "color",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     Editable( [ "name", "color" ], [] ),
     Deletable(),
@@ -276,7 +276,7 @@ Milestone = GithubObject(
     InternalSimpleAttributes(
         "url", "number", "state", "title", "description", "open_issues",
         "closed_issues", "created_at", "due_on",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "creator", NamedUser ),
     Editable( [ "title" ], [ "state", "description", "due_on" ] ),
@@ -291,7 +291,7 @@ IssueComment = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/comments/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "body", "created_at", "updated_at", "id",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
     Editable( [ "body" ], [] ),
@@ -303,7 +303,7 @@ IssueEvent = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/issues/events/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "id", "url", "created_at", "issue", "event", "commit_id",
-        "_repo", # Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "actor", NamedUser ),
 )
@@ -314,8 +314,8 @@ Issue = GithubObject(
     InternalSimpleAttributes(
         "url", "html_url", "number", "state", "title", "body", "labels",
         "comments", "closed_at", "created_at", "updated_at", "id", "closed_by",
-        "pull_request", ### @todo Structure
-        "_repo", ### Ugly hack
+        "pull_request",
+        "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
     InternalObjectAttribute( "assignee", NamedUser ),
@@ -346,7 +346,7 @@ Download = GithubObject(
         "download_count", "content_type", "policy", "signature", "bucket",
         "accesskeyid", "path", "acl", "expirationdate", "prefix", "mime_type",
         "redirect", "s3_url", "created_at",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     Deletable(),
 )
@@ -357,7 +357,7 @@ CommitComment = GithubObject(
     InternalSimpleAttributes(
         "url", "id", "body", "path", "position", "commit_id",
         "created_at", "updated_at", "html_url", "line",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
     Editable( [ "body" ], [] ),
@@ -369,10 +369,10 @@ Commit = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/commits/" + str( obj.sha ) ),
     InternalSimpleAttributes(
         "sha", "url",
-        "parents", ### @todo Structure
-        "stats", ### @todo Structure
-        "files", ### @todo Structure
-        "_repo", ### Ugly hack
+        "parents",
+        "stats",
+        "files",
+        "_repo",
     ),
     InternalObjectAttribute( "commit", GitCommit ),
     InternalObjectAttribute( "author", NamedUser ),
@@ -387,7 +387,7 @@ Tag = GithubObject(
     "Tag",
     InternalSimpleAttributes(
         "name", "zipball_url", "tarball_url",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "commit", Commit )
 )
@@ -396,7 +396,7 @@ Branch = GithubObject(
     "Branch",
     InternalSimpleAttributes(
         "name",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "commit", Commit )
 )
@@ -416,7 +416,7 @@ PullRequestComment = GithubObject(
     InternalSimpleAttributes(
         "url", "id", "body", "path", "position", "commit_id",
         "created_at", "updated_at", "html_url", "line",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
     Editable( [ "body" ], [] ),
@@ -436,7 +436,7 @@ PullRequest = GithubObject(
         "merged_at", "_links", "merged", "mergeable", "comments", "commits",
         "additions", "deletions", "changed_files", "head", "base", "merged_by",
         "review_comments",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
     Editable( [], [ "title", "body", "state" ] ),
@@ -460,7 +460,7 @@ RepositoryKey = GithubObject(
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/keys/" + str( obj.id ) ),
     InternalSimpleAttributes(
         "url", "id", "title", "key",
-        "_repo", ### Ugly hack
+        "_repo",
     ),
     Editable( [ "title", "key" ], [] ),
     Deletable()

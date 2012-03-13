@@ -25,7 +25,6 @@ class AttributeFromCallable:
     def autoDocument( self ):
         return ""
 
-### @todo include the ArgumentsChecker
 class MethodFromCallable:
     def __init__( self, name, mandatoryParameters, optionalParameters, callable, returnTypePolicy ):
         self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )

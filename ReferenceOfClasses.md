@@ -85,7 +85,7 @@ Following
     * `following`: `NamedUser`
 * `remove_from_following( following )`
     * `following`: `NamedUser`
-* `has_in_following( following )`: `bool`
+* `has_in_following( following )`: bool
     * `following`: `NamedUser`
 
 Orgs
@@ -106,7 +106,7 @@ Watched
     * `watched`: `Repository`
 * `remove_from_watched( watched )`
     * `watched`: `Repository`
-* `has_in_watched( watched )`: `bool`
+* `has_in_watched( watched )`: bool
     * `watched`: `Repository`
 
 Forking
@@ -625,7 +625,7 @@ Public members
     * `public_member`: `NamedUser`
 * `remove_from_public_members( public_member )`
     * `public_member`: `NamedUser`
-* `has_in_public_members( public_member )`: `bool`
+* `has_in_public_members( public_member )`: bool
     * `public_member`: `NamedUser`
 
 Members
@@ -633,7 +633,7 @@ Members
 * `get_members()`: list of `NamedUser`
 * `remove_from_members( member )`
     * `member`: `NamedUser`
-* `has_in_members( member )`: `bool`
+* `has_in_members( member )`: bool
     * `member`: `NamedUser`
 
 Events
@@ -823,7 +823,7 @@ Collaborators
     * `collaborator`: `NamedUser`
 * `remove_from_collaborators( collaborator )`
     * `collaborator`: `NamedUser`
-* `has_in_collaborators( collaborator )`: `bool`
+* `has_in_collaborators( collaborator )`: bool
     * `collaborator`: `NamedUser`
 
 Contributors
@@ -967,7 +967,7 @@ Members
     * `member`: `NamedUser`
 * `remove_from_members( member )`
     * `member`: `NamedUser`
-* `has_in_members( member )`: `bool`
+* `has_in_members( member )`: bool
     * `member`: `NamedUser`
 
 Repos
@@ -977,7 +977,7 @@ Repos
     * `repo`: `Repository`
 * `remove_from_repos( repo )`
     * `repo`: `Repository`
-* `has_in_repos( repo )`: `bool`
+* `has_in_repos( repo )`: bool
     * `repo`: `Repository`
 
 Class `UserKey`
