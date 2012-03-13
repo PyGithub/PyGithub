@@ -16,16 +16,6 @@ NamedUser._addAttributePolicy(
     )
 )
 
-def __getOrganizationEvents( user, org ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", "/users/" + user.login + "/events/orgs/" + org.login, None, None )
-    ]
-AuthenticatedUser._addAttributePolicy(
-    MethodFromCallable( "get_organization_events", [ "org" ], [], __getOrganizationEvents, SimpleTypePolicy( "list of `Event`" ) )
-)
-
 GitRef = GithubObject(
     "GitRef",
     BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/" + obj.ref ),

@@ -6,6 +6,13 @@ from Event import Event
 from NamedUser import NamedUser
 from Organization import Organization
 
+def __getOrganizationEvents( user, org ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", "/users/" + user.login + "/events/orgs/" + org.login, None, None )
+    ]
+
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
     BaseUrl( lambda obj: "/user" ),
@@ -50,4 +57,5 @@ AuthenticatedUser = GithubObject(
     ExternalListOfObjects( "orgs", "org", Organization,
         ListGetable( [], [] )
     ),
+    MethodFromCallable( "get_organization_events", [ "org" ], [], __getOrganizationEvents, SimpleTypePolicy( "list of `Event`" ) ),
 )
