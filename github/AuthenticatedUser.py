@@ -3,6 +3,7 @@ from GithubObject import *
 from Authorization import Authorization
 from UserKey import UserKey
 from Event import Event
+from NamedUser import NamedUser
 
 AuthenticatedUser = GithubObject(
     "AuthenticatedUser",
@@ -36,4 +37,19 @@ AuthenticatedUser = GithubObject(
         ListGetable( [], [] ),
         url = "/events"
     ),
+)
+
+AuthenticatedUser._addAttributePolicy(
+    ExternalListOfObjects( "followers", "follower", NamedUser,
+        ListGetable( [], [] )
+    )
+)
+
+AuthenticatedUser._addAttributePolicy(
+    ExternalListOfObjects( "following", "following", NamedUser,
+        ListGetable( [], [] ),
+        ElementAddable(),
+        ElementRemovable(),
+        ElementHasable()
+    )
 )

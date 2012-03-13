@@ -7,76 +7,7 @@ from Hook import Hook
 from Authorization import Authorization
 from UserKey import UserKey
 from AuthenticatedUser import AuthenticatedUser
-
-NamedUser = GithubObject(
-    "NamedUser",
-    BaseUrl( lambda obj: "/users/" + obj.login ),
-    Identity( lambda obj: obj.login ),
-    InternalSimpleAttributes(
-        "login", "id", "avatar_url", "gravatar_id", "url", "name", "company",
-        "blog", "location", "email", "hireable", "bio", "public_repos",
-        "public_gists", "followers", "following", "html_url", "created_at",
-        "type",
-        # Only in Repository.get_contributors()
-        "contributions",
-        # Seen only by user herself
-        "disk_usage", "collaborators", "plan", "total_private_repos",
-        "owned_private_repos", "private_gists",
-    ),
-)
-
-AuthenticatedUser._addAttributePolicy(
-    ExternalListOfObjects( "followers", "follower", NamedUser,
-        ListGetable( [], [] )
-    )
-)
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "followers", "follower", NamedUser,
-        ListGetable( [], [] )
-    )
-)
-
-AuthenticatedUser._addAttributePolicy(
-    ExternalListOfObjects( "following", "following", NamedUser,
-        ListGetable( [], [] ),
-        ElementAddable(),
-        ElementRemovable(),
-        ElementHasable()
-    )
-)
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "following", "following", NamedUser,
-        ListGetable( [], [] )
-    )
-)
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
-    ),
-)
-def __getPublicEvents( user ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", user._baseUrl() + "/events/public", None, None )
-    ]
-NamedUser._addAttributePolicy(
-    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
-)
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "received_events", "received_event", Event,
-        ListGetable( [], [] )
-    )
-)
-def __getPublicReceivedEvents( user ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", user._baseUrl() + "/received_events/public", None, None )
-    ]
-NamedUser._addAttributePolicy(
-    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
-)
+from NamedUser import NamedUser
 
 Organization = GithubObject(
     "Organization",
