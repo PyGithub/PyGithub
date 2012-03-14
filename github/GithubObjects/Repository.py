@@ -1,7 +1,6 @@
 from GithubObject import *
 
 from NamedUser import NamedUser
-from Event import Event
 from IssueEvent import IssueEvent
 from RepositoryKey import RepositoryKey
 from Hook import Hook
@@ -39,20 +38,6 @@ Repository = GithubObject(
 )
 Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) )
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
-Repository._addAttributePolicy(
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
-    ),
-)
-def __getNetworkEvents( repo ):
-    return [
-        Event( repo._github, attributes, lazy = True )
-        for attributes
-        in repo._github._dataRequest( "GET", "/networks/" + repo.owner.login + "/" + repo.name + "/events", None, None )
-    ]
-Repository._addAttributePolicy(
-    MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
-)
 Repository._addAttributePolicy(
     ExternalListOfObjects( "issues/events", "issues_event", IssueEvent,
         ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),

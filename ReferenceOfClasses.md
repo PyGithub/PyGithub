@@ -549,16 +549,6 @@ Attributes
 * `owned_private_repos`
 * `private_gists`
 
-Events
-------
-* `get_events()`: list of `Event`
-* `get_public_events()`: list of `Event`
-
-Received events
----------------
-* `get_received_events()`: list of `Event`
-* `get_public_received_events()`: list of `Event`
-
 Followers
 ---------
 * `get_followers()`: list of `NamedUser`
@@ -570,6 +560,16 @@ Following
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
+
+Events
+------
+* `get_events()`: list of `Event`
+* `get_public_events()`: list of `Event`
+
+Received events
+---------------
+* `get_received_events()`: list of `Event`
+* `get_public_received_events()`: list of `Event`
 
 Repos
 -----
@@ -636,10 +636,6 @@ Members
 * `has_in_members( member )`: bool
     * `member`: `NamedUser`
 
-Events
-------
-* `get_events()`: list of `Event`
-
 Repos
 -----
 * `get_repos( [type] )`: list of `Repository`
@@ -654,6 +650,10 @@ Teams
 -----
 * `get_teams()`: list of `Team`
 * `create_team( name, [repo_names, permission] )`: `Team`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Class `PullRequest`
 ===================
@@ -782,11 +782,6 @@ Attributes
 * `parent`: `Repository`
 * `source`: `Repository`
 
-Events
-------
-* `get_events()`: list of `Event`
-* `get_network_events()`: list of `Event`
-
 Issues events
 -------------
 * `get_issues_events()`: list of `IssueEvent`
@@ -911,6 +906,11 @@ Pulls
 Teams
 -----
 * `get_teams()`: list of `Team`
+
+Events
+------
+* `get_events()`: list of `Event`
+* `get_network_events()`: list of `Event`
 
 Class `RepositoryKey`
 =====================

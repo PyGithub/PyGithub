@@ -31,58 +31,109 @@ from Team import Team
 from GistComment import GistComment
 from Gist import Gist
 
+#### Complete NamedUser
+
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "orgs", "org", Organization,
         ListGetable( [], [] )
     )
 )
 
-__repoElementCreatable = ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
-__repoElementGetable = ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } )
-__repoListGetable = ListGetable( [], [ "type" ] )
-AuthenticatedUser._addAttributePolicy(
-    ExternalListOfObjects( "repos", "repo", Repository,
-        __repoListGetable,
-        __repoElementGetable,
-        __repoElementCreatable
-    )
-)
 NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "repos", "repo", Repository,
-        __repoListGetable,
-        __repoElementGetable
-    )
-)
-Organization._addAttributePolicy(
-    ExternalListOfObjects( "repos", "repo", Repository,
-        __repoListGetable,
-        __repoElementGetable,
-        __repoElementCreatable
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
     )
 )
 
-AuthenticatedUser._addAttributePolicy(
-    ExternalListOfObjects( "watched", "watched", Repository,
-        ListGetable( [], [] ),
-        ElementAddable(),
-        ElementRemovable(),
-        ElementHasable()
+def __getPublicEvents( user ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl() + "/events/public", None, None )
+    ]
+
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "received_events", "received_event", Event,
+        ListGetable( [], [] )
     )
 )
+
+def __getPublicReceivedEvents( user ):
+    return [
+        Event( user._github, attributes, lazy = True )
+        for attributes
+        in user._github._dataRequest( "GET", user._baseUrl() + "/received_events/public", None, None )
+    ]
+
+NamedUser._addAttributePolicy(
+    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "repos", "repo", Repository,
+        ListGetable( [], [ "type" ] ),
+        ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } )
+    )
+)
+
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "watched", "watched", Repository,
         ListGetable( [], [] )
     )
 )
 
-def __createForkForUser( user, repo ):
-    assert isinstance( repo, Repository )
-    return Repository( user._github, user._github._dataRequest( "POST", repo._baseUrl() + "/forks", None, None ), lazy = True )
-AuthenticatedUser._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForUser, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
+NamedUser._addAttributePolicy(
+    ExternalListOfObjects( "gists", "gist", Gist,
+        ListGetable( [], [] ),
+    )
+)
+
+#### Complete Repository
+
+Repository._addAttributePolicy(
+    ExternalListOfObjects( "teams", "team", Team,
+        ListGetable( [], [] )
+    )
+)
+
+Repository._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
+        ListGetable( [], [] )
+    ),
+)
+
+def __getNetworkEvents( repo ):
+    return [
+        Event( repo._github, attributes, lazy = True )
+        for attributes
+        in repo._github._dataRequest( "GET", "/networks/" + repo.owner.login + "/" + repo.name + "/events", None, None )
+    ]
+
+Repository._addAttributePolicy(
+    MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+)
+
+#### Complete Organization
+
+Organization._addAttributePolicy(
+    ExternalListOfObjects( "repos", "repo", Repository,
+        ListGetable( [], [ "type" ] ),
+        ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } ),
+        ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
+    )
+)
+
 def __createForkForOrg( org, repo ):
     assert isinstance( repo, Repository )
     return Repository( org._github, org._github._dataRequest( "POST", repo._baseUrl() + "/forks", { "org": org.login }, None ), lazy = True )
-Organization._addAttributePolicy( SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg, ObjectTypePolicy( Repository ) ) ], "Forking" ) )
+
+Organization._addAttributePolicy(
+    SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createForkForOrg, ObjectTypePolicy( Repository ) ) ], "Forking" )
+)
 
 Organization._addAttributePolicy(
     ExternalListOfObjects( "teams", "team", Team,
@@ -90,40 +141,9 @@ Organization._addAttributePolicy(
         ElementCreatable( [ "name" ], [ "repo_names", "permission" ] )
     )
 )
-Repository._addAttributePolicy(
-    ExternalListOfObjects( "teams", "team", Team,
+
+Organization._addAttributePolicy(
+    ExternalListOfObjects( "events", "event", Event,
         ListGetable( [], [] )
-    )
-)
-
-NamedUser._addAttributePolicy(
-    ExternalListOfObjects( "gists", "gist", Gist,
-        ListGetable( [], [] ),
-    )
-)
-
-AuthenticatedUser._addAttributePolicy(
-    ExternalListOfObjects( "gists", "gist", Gist,
-        ListGetable( [], [] ),
-        ElementCreatable( [ "public", "files", ], [ "description" ] ),
-        url = "/gists",
-    )
-)
-def __getStaredGists( user ):
-    return [
-        Gist( user._github, attributes, lazy = True )
-        for attributes in user._github._dataRequest( "GET", "/gists/starred", None, None )
-    ]
-AuthenticatedUser._addAttributePolicy(
-    MethodFromCallable( "get_starred_gists", [], [], __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
-)
-
-Event._addAttributePolicy(
-    InternalObjectAttribute( "repo", Repository ),
-)
-Event._addAttributePolicy(
-    InternalObjectAttribute( "actor", NamedUser ),
-)
-Event._addAttributePolicy(
-    InternalObjectAttribute( "org", Organization ),
+    ),
 )

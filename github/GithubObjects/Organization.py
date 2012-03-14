@@ -1,7 +1,6 @@
 from GithubObject import *
 
 from NamedUser import NamedUser
-from Event import Event
 
 Organization = GithubObject(
     "Organization",
@@ -26,8 +25,5 @@ Organization = GithubObject(
         ListGetable( [], [] ),
         ElementRemovable(),
         ElementHasable()
-    ),
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
     ),
 )

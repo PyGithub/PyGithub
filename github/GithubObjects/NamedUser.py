@@ -1,20 +1,5 @@
 from GithubObject import *
 
-from Event import Event
-
-def __getPublicEvents( user ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", user._baseUrl() + "/events/public", None, None )
-    ]
-
-def __getPublicReceivedEvents( user ):
-    return [
-        Event( user._github, attributes, lazy = True )
-        for attributes
-        in user._github._dataRequest( "GET", user._baseUrl() + "/received_events/public", None, None )
-    ]
 
 NamedUser = GithubObject(
     "NamedUser",
@@ -31,14 +16,6 @@ NamedUser = GithubObject(
         "disk_usage", "collaborators", "plan", "total_private_repos",
         "owned_private_repos", "private_gists",
     ),
-    ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
-    ),
-    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) ),
-    ExternalListOfObjects( "received_events", "received_event", Event,
-        ListGetable( [], [] )
-    ),
-    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) ),
 )
 
 NamedUser._addAttributePolicy(
