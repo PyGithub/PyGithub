@@ -1,35 +1,11 @@
 from GithubObject import *
 
-from Event import Event
-from Hook import Hook
-from Authorization import Authorization
-from UserKey import UserKey
-from AuthenticatedUser import AuthenticatedUser
-from NamedUser import NamedUser
-from Organization import Organization
-from GitRef import GitRef
-from GitTree import GitTree
-from GitCommit import GitCommit
-from GitBlob import GitBlob
-from GitTag import GitTag
-from Label import Label
-from Milestone import Milestone
-from IssueComment import IssueComment
-from IssueEvent import IssueEvent
-from Issue import Issue
-from Download import Download
-from CommitComment import CommitComment
-from Commit import Commit
-from Tag import Tag
-from Branch import Branch
-from PullRequestFile import PullRequestFile
-from PullRequestComment import PullRequestComment
-from PullRequest import PullRequest
-from RepositoryKey import RepositoryKey
-from Repository import Repository
-from Team import Team
-from GistComment import GistComment
-from Gist import Gist
+from AuthenticatedUser import *
+from NamedUser import *
+from Organization import *
+from Repository import *
+from Gist import *
+from Team import *
 
 #### Complete NamedUser
 

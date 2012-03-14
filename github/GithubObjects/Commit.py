@@ -1,8 +1,6 @@
-from GithubObject import *
-
-from GitCommit import GitCommit
-from NamedUser import NamedUser
-from CommitComment import CommitComment
+from GitCommit import *
+from NamedUser import *
+from CommitComment import *
 
 __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 

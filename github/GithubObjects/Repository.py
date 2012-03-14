@@ -1,23 +1,21 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
-from IssueEvent import IssueEvent
-from RepositoryKey import RepositoryKey
-from Hook import Hook
-from GitBlob import GitBlob
-from GitCommit import GitCommit
-from GitRef import GitRef
-from GitTag import GitTag
-from GitTree import GitTree
-from Label import Label
-from Milestone import Milestone
-from Issue import Issue
-from Download import Download
-from CommitComment import CommitComment
-from Commit import Commit
-from Tag import Tag
-from Branch import Branch
-from PullRequest import PullRequest
+from NamedUser import *
+from IssueEvent import *
+from RepositoryKey import *
+from Hook import *
+from GitBlob import *
+from GitCommit import *
+from GitRef import *
+from GitTag import *
+from GitTree import *
+from Label import *
+from Milestone import *
+from Issue import *
+from Download import *
+from CommitComment import *
+from Commit import *
+from Tag import *
+from Branch import *
+from PullRequest import *
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
 

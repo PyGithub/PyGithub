@@ -1,8 +1,6 @@
-from GithubObject import *
-
-from Repository import Repository
-from NamedUser import NamedUser
-from Organization import Organization
+from Repository import *
+from NamedUser import *
+from Organization import *
 
 Event = GithubObject(
     "Event",

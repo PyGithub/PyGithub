@@ -1,6 +1,5 @@
 from GithubObject import *
 
-
 NamedUser = GithubObject(
     "NamedUser",
     BaseUrl( lambda obj: "/users/" + obj.login ),

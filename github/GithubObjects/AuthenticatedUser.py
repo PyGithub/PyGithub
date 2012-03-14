@@ -1,12 +1,10 @@
-from GithubObject import *
-
-from Authorization import Authorization
-from UserKey import UserKey
-from Event import Event
-from NamedUser import NamedUser
-from Organization import Organization
-from Repository import Repository
-from Gist import Gist
+from Authorization import *
+from UserKey import *
+from Event import *
+from NamedUser import *
+from Organization import *
+from Repository import *
+from Gist import *
 
 def __getOrganizationEvents( user, org ):
     return [

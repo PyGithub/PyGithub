@@ -1,6 +1,4 @@
-from GithubObject import *
-
-from Commit import Commit
+from Commit import *
 
 Tag = GithubObject(
     "Tag",

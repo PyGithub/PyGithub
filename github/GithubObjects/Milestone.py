@@ -1,7 +1,5 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
-from Label import Label
+from NamedUser import *
+from Label import *
 
 __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 

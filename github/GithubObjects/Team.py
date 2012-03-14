@@ -1,7 +1,5 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
-from Repository import Repository
+from NamedUser import *
+from Repository import *
 
 Team = GithubObject(
     "Team",

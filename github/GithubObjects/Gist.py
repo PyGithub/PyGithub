@@ -1,7 +1,5 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
-from GistComment import GistComment
+from NamedUser import *
+from GistComment import *
 
 def __isStarred( gist ):
     return gist._github._statusRequest( "GET", gist._baseUrl() + "/star", None, None ) == 204

@@ -1,6 +1,4 @@
-from GithubObject import *
-
-from GitTree import GitTree
+from GitTree import *
 
 GitCommit = GithubObject(
     "GitCommit",
