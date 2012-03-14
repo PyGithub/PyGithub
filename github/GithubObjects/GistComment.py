@@ -1,6 +1,4 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
+from NamedUser import *
 
 GistComment = GithubObject(
     "GistComment",

@@ -1,10 +1,8 @@
-from GithubObject import *
-
-from NamedUser import NamedUser
-from Milestone import Milestone
-from Label import Label
-from IssueComment import IssueComment
-from IssueEvent import IssueEvent
+from NamedUser import *
+from Milestone import *
+from Label import *
+from IssueComment import *
+from IssueEvent import *
 
 __modifyAttributesForObjectsReferingReferedRepo = { "_repo": lambda obj: obj._repo }
 

@@ -1,6 +1,5 @@
 #!/bin/env python
 
-import GithubObject
 import GithubObjects
 
 def generateDocumentation():
