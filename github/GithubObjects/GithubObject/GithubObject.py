@@ -1,9 +1,9 @@
 import itertools
 
-from ObjectCapacities.ArgumentsChecker import *
-from ObjectCapacities.Basic import *
-from ObjectCapacities.List import *
-from ObjectCapacities.TypePolicies import *
+from ArgumentsChecker import *
+from Basic import *
+from List import *
+from TypePolicies import *
 
 class BadGithubObjectException( Exception ):
     pass
