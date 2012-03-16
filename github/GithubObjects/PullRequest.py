@@ -33,7 +33,7 @@ PullRequest = GithubObject(
     ExternalListOfObjects( "comments", "comment", PullRequestComment,
         ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingReferedRepo ),
         ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementCreatable( Parameters( [ "body", "commit_id", "path", "position" ], [] ), __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementCreatable( Alternative( Parameters( [ "body", "commit_id", "path", "position" ], [] ), Parameters( [ "body", "in_reply_to" ], [] ) ), __modifyAttributesForObjectsReferingReferedRepo ),
     ),
     MethodFromCallable( "is_merged", Parameters( [], [] ), __pullRequestIsMerged, SimpleTypePolicy( "bool" ) ),
     MethodFromCallable( "merge", Parameters( [], [ "commit_message" ] ), __mergePullRequest, SimpleTypePolicy( None ) ),

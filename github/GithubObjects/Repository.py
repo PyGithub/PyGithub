@@ -134,6 +134,6 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "pulls", "pull", PullRequest,
         ListGetable( Parameters( [], [ "state" ] ), __modifyAttributesForObjectsReferingRepo ),
         ElementGetable( Parameters( [ "number" ], [] ), __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( Parameters( [ "title", "body", "base", "head" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Alternative( Parameters( [ "title", "body", "base", "head" ], [] ), Parameters( [ "issue", "base", "head" ], [] ) ), __modifyAttributesForObjectsReferingRepo ),
     ),
 ] ) )

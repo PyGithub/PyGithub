@@ -321,7 +321,7 @@ API `/repos/:user/:repo/milestones/:number/labels`
 API `/repos/:user/:repo/pulls`
 ==============================
 * GET: `Repository.get_pulls`
-* POST: `Repository.create_pull` (TODO: alternative input)
+* POST: `Repository.create_pull`
 
 API `/repos/:user/:repo/pulls/:id`
 ==================================
@@ -331,7 +331,7 @@ API `/repos/:user/:repo/pulls/:id`
 API `/repos/:user/:repo/pulls/:id/comments`
 ===========================================
 * GET: `PullRequest.get_comments`
-* POST: `PullRequest.create_comment` (TODO: alternative input)
+* POST: `PullRequest.create_comment`
 
 API `/repos/:user/:repo/pulls/:id/commits`
 ==========================================
