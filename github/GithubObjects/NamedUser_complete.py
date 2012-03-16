@@ -7,13 +7,13 @@ from Gist import *
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "orgs", "org", Organization,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
@@ -25,12 +25,12 @@ def __getPublicEvents( user ):
     ]
 
 NamedUser._addAttributePolicy(
-    MethodFromCallable( "get_public_events", [], [], __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
+    MethodFromCallable( "get_public_events", Parameters( [], [] ), __getPublicEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "received_events", "received_event", Event,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
@@ -42,24 +42,24 @@ def __getPublicReceivedEvents( user ):
     ]
 
 NamedUser._addAttributePolicy(
-    MethodFromCallable( "get_public_received_events", [], [], __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
+    MethodFromCallable( "get_public_received_events", Parameters( [], [] ), __getPublicReceivedEvents, SimpleTypePolicy( "list of `Event`" ) )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "repos", "repo", Repository,
-        ListGetable( [], [ "type" ] ),
-        ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } )
+        ListGetable( Parameters( [], [ "type" ] ) ),
+        ElementGetable( Parameters( [ "name" ], [] ), { "owner" : lambda user: { "login": user.login } } )
     )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "watched", "watched", Repository,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "gists", "gist", Gist,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
     )
 )

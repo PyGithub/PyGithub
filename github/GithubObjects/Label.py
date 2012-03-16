@@ -10,6 +10,6 @@ Label = GithubObject(
         "url", "name", "color",
         "_repo",
     ),
-    Editable( [ "name", "color" ], [] ),
+    Editable( Parameters( [ "name", "color" ], [] ) ),
     Deletable(),
 )

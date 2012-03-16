@@ -1,6 +1,6 @@
 import itertools
 
-class ArgumentsChecker:
+class Parameters:
     def __init__( self, mandatoryParameters, optionalParameters ):
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
@@ -34,3 +34,6 @@ class ArgumentsChecker:
                 return " " + mandatory + " "
             else:
                 return " " + mandatory + ", " + optional + " "
+
+def NoParameters():
+    return Parameters( [], [] )

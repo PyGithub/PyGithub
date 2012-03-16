@@ -10,7 +10,7 @@ Hook = GithubObject(
         "id", "last_response",
         "_repo",
     ),
-    Editable( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ),
+    Editable( Parameters( [ "name", "config" ], [ "events", "add_events", "remove_events", "active" ] ) ),
     Deletable(),
-    SeveralAttributePolicies( [ MethodFromCallable( "test", [], [], __testHook, SimpleTypePolicy( None ) ) ], "Testing" )
+    SeveralAttributePolicies( [ MethodFromCallable( "test", Parameters( [], [] ), __testHook, SimpleTypePolicy( None ) ) ], "Testing" )
 )

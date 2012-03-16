@@ -8,16 +8,16 @@ Team = GithubObject(
     InternalSimpleAttributes(
         "url", "name", "id", "permission", "members_count", "repos_count",
     ),
-    Editable( [ "name" ], [ "permission" ] ),
+    Editable( Parameters( [ "name" ], [ "permission" ] ) ),
     Deletable(),
     ExternalListOfObjects( "members", "member", NamedUser,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
     ),
     ExternalListOfObjects( "repos", "repo", Repository,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()

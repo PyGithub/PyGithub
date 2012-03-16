@@ -12,15 +12,15 @@ Organization = GithubObject(
         "disk_usage", "collaborators", "billing_email", "plan", "private_gists",
         "total_private_repos", "owned_private_repos",
     ),
-    Editable( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ),
+    Editable( Parameters( [], [ "billing_email", "blog", "company", "email", "location", "name" ] ) ),
     ExternalListOfObjects( "public_members", "public_member", NamedUser,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
     ),
     ExternalListOfObjects( "members", "member", NamedUser,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementRemovable(),
         ElementHasable()
     ),

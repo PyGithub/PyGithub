@@ -19,12 +19,12 @@ NamedUser = GithubObject(
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "followers", "follower", NamedUser,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "following", "following", NamedUser,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
