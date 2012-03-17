@@ -206,10 +206,6 @@ API `/repos/:user/:repo/git/trees`
 ==================================
 * POST: `Repository.create_git_tree`
 
-API `/repos/:user/:repo/git/trees?base_tree=`
-=============================================
-* POST: (TODO)
-
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
 * GET: `Repository.get_git_tree`

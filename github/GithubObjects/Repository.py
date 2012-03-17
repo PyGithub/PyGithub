@@ -87,7 +87,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
         ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( Parameters( [ "tree" ], [] ), __modifyAttributesForObjectsReferingRepo )
+        ElementCreatable( Parameters( [ "tree" ], [ "base_tree" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/blobs", "git_blob", GitBlob,
         ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
