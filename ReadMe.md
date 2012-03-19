@@ -2,12 +2,16 @@ This is a Python library to access the [Github API v3](http://developer.github.c
 
 With it, you can manage your Github resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
-It is still a work in progress, but I'm sure I'll finish it soon. The aim is to cover the **full** API in version 1.0.
+It is still a work in progress, but it already covers the **full** API in version 0.5.
+
+Next version (1.0) will focus on creating a really homogeneous and meaningful public interface. See the [milestone on Github](https://github.com/jacquev6/PyGithub/issues?milestone=2).
+
+Should you have any question, or if you find a bug, please [open an issue on Github](https://github.com/jacquev6/PyGithub/issues).
 
 Download and install
 ====================
 
-This package is in the [Python Package Index](http://pypi.python.org/pypi/PyGithub).
+This package is in the [Python Package Index](http://pypi.python.org/pypi/PyGithub), so `easy_install PyGithub` or `pip install PyGithub` should be enough.
 You can also clone it on [Github](http://github.com/jacquev6/PyGithub).
 
 Tutorial
@@ -28,10 +32,16 @@ Then play with your Github objects:
 History
 =======
 
+Version 0.5 (March 19th, 2012)
+------------------------------
+
+* Major achievement: **all APIs are implemented**
+* More refactoring, of course
+
 Version 0.4 (March 12th, 2012)
 ------------------------------
 
-* The list of the not implemented APIS is shorter than the list of the implemented APIs
+* The list of the not implemented APIs is shorter than the list of the implemented APIs
 * APIs *not implemented*:
     * GET `/gists/public`
     * GET `/issues`

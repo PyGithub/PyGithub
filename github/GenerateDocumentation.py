@@ -21,5 +21,6 @@ Class `Github`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
+* `get_gists()`: list of `Gist`
 """
     print generateDocumentation()

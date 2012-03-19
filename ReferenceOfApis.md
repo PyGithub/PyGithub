@@ -47,7 +47,7 @@ API `/gists/comments/:id`
 
 API `/gists/public`
 ===================
-* GET: (TODO) (Almost useless: huge fast-changing list, so I will have to re-re-implement pagination, with detection of duplicates caused by shifts, and a real iteration, not construction of the full list...)
+* GET: `Github.get_gists`
 
 API `/gists/starred`
 ====================

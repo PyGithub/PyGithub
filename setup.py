@@ -5,7 +5,7 @@ import textwrap
 
 setup(
     name = 'PyGithub',
-    version = '0.4',
+    version = '0.5',
     description = 'Use the full Github API v3',
     author = 'Vincent Jacques',
     author_email = 'vincent@vincent-jacques.net',
@@ -32,7 +32,8 @@ setup(
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
         'github',
-        'github.ObjectCapacities',
+        'github.GithubObjects',
+        'github.GithubObjects.GithubObject',
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
