@@ -19,6 +19,9 @@ from PullRequest import *
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
 
+def __compare( repo, base, head ):
+    return repo._github._dataRequest( "GET", repo._baseUrl() + "/compare/" + base + "..." + head, None, None )
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -136,4 +139,5 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
         ElementGetable( Parameters( [ "number" ], [] ), __modifyAttributesForObjectsReferingRepo ),
         ElementCreatable( Alternative( Parameters( [ "title", "body", "base", "head" ], [] ), Parameters( [ "issue", "base", "head" ], [] ) ), __modifyAttributesForObjectsReferingRepo ),
     ),
+    MethodFromCallable( "compare", Parameters( [ "base", "head" ], [] ), __compare, SimpleTypePolicy( None ) ),
 ] ) )

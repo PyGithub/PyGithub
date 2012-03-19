@@ -907,6 +907,7 @@ Pulls
 * `get_pulls( [state] )`: list of `PullRequest`
 * `get_pull( number )`: `PullRequest`
 * `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
+* `compare( base, head )`
 
 Teams
 -----
