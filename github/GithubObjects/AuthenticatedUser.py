@@ -5,6 +5,7 @@ from NamedUser import *
 from Organization import *
 from Repository import *
 from Gist import *
+from Issue import *
 
 def __getOrganizationEvents( user, org ):
     return [
@@ -86,4 +87,8 @@ AuthenticatedUser = GithubObject(
         url = "/gists",
     ),
     MethodFromCallable( "get_starred_gists", Parameters( [], [] ), __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
+    ExternalListOfObjects( "issues", "issue", Issue,
+        ListGetable( Parameters( [], [] ) ),
+        url = "/issues",
+    ),
 )

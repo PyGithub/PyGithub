@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_issues`
 
 API `/networks/:user/:repo/events`
 ==================================

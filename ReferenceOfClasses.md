@@ -119,6 +119,10 @@ Gists
 * `create_gist( public, files, [description] )`: `Gist`
 * `get_starred_gists()`: list of `Gist`
 
+Issues
+------
+* `get_issues()`: list of `Issue`
+
 Class `Authorization`
 =====================
 
