@@ -1,0 +1,40 @@
+GET /user {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4952'), ('content-length', '801'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"af60c5219a9f43db638a8829ef34dd06"'), ('date', 'Sun, 04 Mar 2012 09:21:33 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"disk_usage":17432,"type":"User","gravatar_id":"b68de5ae38616c296fa345d2b9df2225","public_gists":1,"following":24,"html_url":"https://github.com/jacquev6","bio":"","login":"jacquev6","private_gists":2,"avatar_url":"https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png","collaborators":0,"plan":{"collaborators":1,"name":"micro","private_repos":5,"space":614400},"location":"Paris, France","company":"Criteo","blog":"http://vincent-jacques.net","url":"https://api.github.com/users/jacquev6","total_private_repos":5,"created_at":"2010-07-09T06:10:06Z","name":"Vincent Jacques","email":"vincent@vincent-jacques.net","public_repos":16,"id":327146,"owned_private_repos":5,"followers":12,"hireable":false}
+
+GET /repos/jacquev6/TestPyGithub {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4951'), ('content-length', '1067'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"affc476c2c09dd57c385f29030068b94"'), ('date', 'Sun, 04 Mar 2012 09:21:34 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"watchers":1,"pushed_at":"2012-03-03T07:43:16Z","homepage":"http://vincent-jacques.net/PyGithub","has_downloads":true,"has_issues":true,"master_branch":null,"updated_at":"2012-03-03T07:53:19Z","forks":2,"fork":false,"svn_url":"https://github.com/jacquev6/TestPyGithub","mirror_url":null,"language":null,"private":false,"git_url":"git://github.com/jacquev6/TestPyGithub.git","size":84,"has_wiki":true,"url":"https://api.github.com/repos/jacquev6/TestPyGithub","html_url":"https://github.com/jacquev6/TestPyGithub","created_at":"2012-03-03T07:41:19Z","owner":{"gravatar_id":"b68de5ae38616c296fa345d2b9df2225","login":"jacquev6","avatar_url":"https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png","url":"https://api.github.com/users/jacquev6","id":327146},"name":"TestPyGithub","clone_url":"https://github.com/jacquev6/TestPyGithub.git","id":3609314,"ssh_url":"git@github.com:jacquev6/TestPyGithub.git","description":"Guinea-pig for PyGithub testing","open_issues":16}
+
+GET /repos/jacquev6/TestPyGithub/downloads {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4950'), ('content-length', '2'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sun, 04 Mar 2012 09:21:35 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[]
+
+POST /repos/jacquev6/TestPyGithub/downloads {} {"name": "DownloadCreatedByPyGithub.txt", "size": 1024}
+201
+[('status', '201 Created'), ('x-ratelimit-remaining', '4949'), ('content-length', '1174'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"451d8bbe00a984a32935496084f0260a"'), ('date', 'Sun, 04 Mar 2012 09:21:35 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/jacquev6/TestPyGithub/downloads/199118')]
+{"s3_url":"https://github.s3.amazonaws.com/","signature":"4NbFHuOl1FCXyq0YDumbMQPlY9Q=","acl":"public-read","accesskeyid":"1DWESVTPGHQVTX38V182","redirect":false,"policy":"ewogICAgJ2V4cGlyYXRpb24nOiAnMjExMi0wMy0wNFQwOToyMTozNS4wMDBaJywKICAgICdjb25kaXRpb25zJzogWwogICAgICAgIHsnYnVja2V0JzogJ2dpdGh1Yid9LAogICAgICAgIHsna2V5JzogJ2Rvd25sb2Fkcy9qYWNxdWV2Ni9UZXN0UHlHaXRodWIvRG93bmxvYWRDcmVhdGVkQnlQeUdpdGh1Yi50eHQnfSwKICAgICAgICB7J2FjbCc6ICdwdWJsaWMtcmVhZCd9LAogICAgICAgIHsnc3VjY2Vzc19hY3Rpb25fc3RhdHVzJzogJzIwMSd9LAogICAgICAgIFsnc3RhcnRzLXdpdGgnLCAnJEZpbGVuYW1lJywgJyddLAogICAgICAgIFsnc3RhcnRzLXdpdGgnLCAnJENvbnRlbnQtVHlwZScsICcnXQogICAgXQp9","mime_type":"text/plain","prefix":"downloads/jacquev6/TestPyGithub","content_type":"text/plain","bucket":"github","size":1024,"html_url":"https://github.com/downloads/jacquev6/TestPyGithub/DownloadCreatedByPyGithub.txt","url":"https://api.github.com/repos/jacquev6/TestPyGithub/downloads/199118","expirationdate":"2112-03-04T09:21:35.000Z","created_at":"2012-03-04T09:21:35Z","name":"DownloadCreatedByPyGithub.txt","path":"downloads/jacquev6/TestPyGithub/DownloadCreatedByPyGithub.txt","id":199118,"download_count":0,"description":null}
+
+GET /repos/jacquev6/TestPyGithub/downloads {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4948'), ('content-length', '338'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"721bf9ef9c6c23a9d9535172e9166b22"'), ('date', 'Sun, 04 Mar 2012 09:21:36 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"download_count":0,"content_type":"text/plain","size":1024,"url":"https://api.github.com/repos/jacquev6/TestPyGithub/downloads/199118","created_at":"2012-03-04T09:21:35Z","name":"DownloadCreatedByPyGithub.txt","html_url":"https://github.com/downloads/jacquev6/TestPyGithub/DownloadCreatedByPyGithub.txt","id":199118,"description":null}]
+
+GET /repos/jacquev6/TestPyGithub/downloads/199118 {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4947'), ('content-length', '336'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d2bf872f9be7d3aa54527be83be3131a"'), ('date', 'Sun, 04 Mar 2012 09:21:36 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"download_count":0,"html_url":"https://github.com/downloads/jacquev6/TestPyGithub/DownloadCreatedByPyGithub.txt","content_type":"text/plain","size":1024,"url":"https://api.github.com/repos/jacquev6/TestPyGithub/downloads/199118","created_at":"2012-03-04T09:21:35Z","name":"DownloadCreatedByPyGithub.txt","id":199118,"description":null}
+
+DELETE /repos/jacquev6/TestPyGithub/downloads/199118 {} null
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4946'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 04 Mar 2012 09:21:39 GMT')]
+
+
+GET /repos/jacquev6/TestPyGithub/downloads {} null
+200
+[('status', '200 OK'), ('content-length', '2'), ('x-ratelimit-remaining', '4945'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d751713988987e9331980363e24189ce"'), ('date', 'Sun, 04 Mar 2012 09:21:40 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[]
+

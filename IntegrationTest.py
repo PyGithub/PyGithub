@@ -128,7 +128,7 @@ class IntegrationTest:
             raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
 
     def __fileName( self, test ):
-        return "ReplayDataForIntegrationTest." + test + ".txt"
+        return "ReplayDataForIntegrationTest/" + test + ".txt"
 
     def listTests( self ):
         return [ f[ 4: ] for f in dir( self ) if f.startswith( "test" ) ]
