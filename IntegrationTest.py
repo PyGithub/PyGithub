@@ -64,7 +64,9 @@ class ReplayingHttpsConnection:
 
     def request( self, verb, url, input, headers ):
         del headers[ "Authorization" ]
-        if( self.__file.readline().strip() != verb + " " + url + " " + str( headers ) + " " + input ):
+        expectation = self.__file.readline().strip()
+        if expectation != verb + " " + url + " " + str( headers ) + " " + input:
+            # print expectation, "!=", verb + " " + url + " " + str( headers ) + " " + input
             raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
 
     def getresponse( self ):
@@ -126,7 +128,7 @@ class IntegrationTest:
             raise RecordReplayException( "This test has never been recorded. Please re-run this script with argument '--record'" )
 
     def __fileName( self, test ):
-        return "ReplayDataForIntegrationTest." + test + ".txt"
+        return "ReplayDataForIntegrationTest/" + test + ".txt"
 
     def listTests( self ):
         return [ f[ 4: ] for f in dir( self ) if f.startswith( "test" ) ]
@@ -185,12 +187,18 @@ class IntegrationTest:
                         else:
                             uncoveredApis.add( verb + " " + currentApi )
 
-        print
         if len( uncoveredMethods ) != 0:
-            print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
+            print
+            header = "Not covered (" + str( len( uncoveredMethods ) ) + ")"
+            print header
+            print "=" * len( header )
             print "\n".join( sorted( uncoveredMethods ) )
+
         if len( uncoveredApis ) != 0:
-            print "Not implemented (" + str( len( uncoveredApis ) ) + "):"
+            print
+            header = "Not implemented (" + str( len( uncoveredApis ) ) + ")"
+            print header
+            print "=" * len( header )
             print "\n".join( sorted( uncoveredApis ) )
 
     def testAuthenticatedUserDetails( self ):
@@ -397,6 +405,17 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
 
+    def testGitObjectsAlternative( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.get_repo( "TestPyGithub" )
+
+        masterRef = r.get_git_ref( "refs/heads/master" )
+        masterCommit = r.get_git_commit( masterRef.object[ "sha" ] )
+        masterTree = r.get_git_tree( masterCommit.tree.sha, recursive = True )
+
+        blob = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
+        tree = r.create_git_tree( [ { "path": "new.bar", "mode": "100644", "type": "blob", "sha": blob.sha } ], base_tree = masterTree.sha )
+
     def testHooks( self ):
         u = self.g.get_user()
         r = u.get_repo( "TestPyGithub" )
@@ -469,6 +488,9 @@ class IntegrationTest:
         m.delete()
         self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
 
+    def testIssuesForAuthenticatedUser( self ):
+        self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
+
     def testKeys( self ):
         u = self.g.get_user()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
@@ -523,6 +545,10 @@ class IntegrationTest:
         p2.edit( state = "closed" )
         self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
 
+    def testRepositoryCompare( self ):
+        r = self.g.get_user().get_repo( "PyGithub" )
+        print str( r.compare( "master", "develop" ) )[ :100 ]
+
     def testRepositoryDetails( self ):
         r1 = self.g.get_user().get_repo( "PyGithub" )
         r2 = self.g.get_user().get_repo( "TestPyGithub" )
@@ -569,4 +595,5 @@ class IntegrationTest:
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( str( f( x ) ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
+sys.setrecursionlimit( 50 )
 IntegrationTest().main( sys.argv[ 1: ] )

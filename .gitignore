@@ -3,4 +3,3 @@ GithubCredentials.py
 .coverage
 /dist
 /MANIFEST
-ReplayDataForIntegrationTest*.txt

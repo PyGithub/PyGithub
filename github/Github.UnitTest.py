@@ -103,4 +103,10 @@ class TestCase( unittest.TestCase ):
         p.merge()
         self.assertTrue( p.is_merged() )
 
+    def testRepositoryCompare( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx" } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
+        self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/compare/foo...bar", None, None ).andReturn( { "gabu": "zomeuh" } )
+        self.assertEqual( self.g.get_user().get_repo( "yyy" ).compare( "foo", "bar" ), { "gabu": "zomeuh" } )
+
 unittest.main()

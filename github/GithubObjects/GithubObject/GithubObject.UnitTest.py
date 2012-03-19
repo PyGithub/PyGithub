@@ -49,7 +49,7 @@ class GithubObjectWithDocumentationCoveringSpecialCases( TestCaseWithGithubTestO
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2", "_a3" ),
-        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], lambda obj: 42, ObjectTypePolicy( GithubObject ) ),
+        MethodFromCallable( "myMethod", Parameters( [ "mock", "arg" ], [] ), lambda obj: 42, ObjectTypePolicy( GithubObject ) ),
         AttributeFromCallable( "myAttr", lambda obj: 42 )
     )
 
@@ -61,7 +61,7 @@ class GithubObjectWithBaseUrlDependingOnAttribute( TestCaseWithGithubTestObject 
         "GithubTestObject",
         BaseUrl( lambda obj: "/test/" + str( obj.a1 ) ),
         InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
-        Editable( [ "a1" ], [] )
+        Editable( Parameters( [ "a1" ], [] ) )
     )
 
     def test( self ):
@@ -123,7 +123,7 @@ class EditableGithubObject( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2", "a3", "a4" ),
-        Editable( [ "a1" ], [ "a2", "a4" ] ),
+        Editable( Parameters( [ "a1" ], [ "a2", "a4" ] ) ),
     )
 
     def testEditWithoutArgument( self ):
@@ -239,7 +239,7 @@ class GithubObjectWithListGetableExternalListOfObjects( TestCaseWithGithubTestOb
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ] ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( Parameters( [], [ "type" ] ) ) )
     )
 
     def testGetList( self ):
@@ -266,7 +266,7 @@ class GithubObjectWithListGetableExternalListOfObjectsWithOtherUrl( TestCaseWith
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ] ), url = "/other" )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( Parameters( [], [ "type" ] ) ), url = "/other" )
     )
 
     def testGetList( self ):
@@ -288,7 +288,7 @@ class GithubObjectWithListGetableExternalListOfObjectsWithAttributeModifier( Tes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( [], [ "type" ], { "_a": lambda obj: 42 } ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ListGetable( Parameters( [], [ "type" ] ), { "_a": lambda obj: 42 } ) )
     )
 
     def testGetList( self ):
@@ -374,7 +374,7 @@ class GithubObjectWithElementCreatableExternalListOfObjects( TestCaseWithGithubT
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementCreatable( [ "name" ], [ "p1", "p2" ] ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementCreatable( Parameters( [ "name" ], [ "p1", "p2" ] ) ) )
     )
 
     def testCreate( self ):
@@ -469,7 +469,7 @@ class GithubObjectWithElementGetableExternalListOfObjects( TestCaseWithGithubTes
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( [ "id" ], [] ) )
+        ExternalListOfObjects( "a3s", "a3", ContainedObject, ElementGetable( Parameters( [ "id" ], [] ) ) )
     )
 
     def testGetList( self ):
@@ -482,7 +482,7 @@ class GithubObjectWithMultiCapacityExternalListOfSimpleTypes( TestCaseWithGithub
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
         ExternalListOfSimpleTypes( "a3s", "a3", "",
-            ListGetable( [], [] ),
+            ListGetable( Parameters( [], [] ) ),
             SeveralElementsAddable(),
             SeveralElementsRemovable(),
         )
@@ -521,13 +521,33 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         "GithubTestObject",
         BaseUrl( lambda obj: "/test" ),
         InternalSimpleAttributes( "a1", "a2" ),
-        MethodFromCallable( "myMethod", [ "mock", "arg" ], [], myCallable, SimpleTypePolicy( None ) )
+        MethodFromCallable( "myMethod", Parameters( [ "mock", "arg" ], [] ), myCallable, SimpleTypePolicy( None ) )
     )
 
     def testCallMethod( self ):
         mock = MockMockMock.Mock( "myCallable" )
         mock.expect.call( 42 ).andReturn( 72 )
         self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
+        mock.tearDown()
+
+def myOtherCallable( obj, mock, **kwds ):
+    return mock.call( **kwds )
+class GithubObjectWithMethodFromCallableWithAlternative( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2" ),
+        MethodFromCallable( "myMethod", Alternative( Parameters( [ "mock", "x1", "x2" ], [ "x3" ] ), Parameters( [ "mock", "y1" ], [ "y2" ] ) ), myOtherCallable, SimpleTypePolicy( None ) )
+    )
+
+    def testCallMethod( self ):
+        mock = MockMockMock.Mock( "myOtherCallable" )
+        mock.expect.call( x1 = 1, x2 = 2, x3 = 3 ).andReturn( 72 )
+        self.assertEqual( self.o.myMethod( mock.object, 1, 2, 3 ), 72 )
+        mock.expect.call( x1 = 1, x2 = 2 ).andReturn( 73 )
+        self.assertEqual( self.o.myMethod( mock.object, 1, 2 ), 73 )
+        mock.expect.call( y1 = 1 ).andReturn( 42 )
+        self.assertEqual( self.o.myMethod( mock.object, 1 ), 42 )
         mock.tearDown()
 
 class GithubObjectWithSeveralInternalSimpleAttributesAndInternalObjectAttributes( TestCaseWithGithubTestObject ):
