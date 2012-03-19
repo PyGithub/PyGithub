@@ -1,19 +1,14 @@
 You don't normaly create instances of any class but `Github`.
 You obtain instances through calls to `get_` and `create_` methods.
 
-In this documentation:
-
-* `login` is a string containing a user's or organization's login
-* `user` is an instance of `AuthenticatedUser` or `NamedUser`
-* `name` is a string containing the name of a repository
-* `repo` is an instance of `Repository`
-
 Class `Github`
 ==============
 * Constructed from user's login and password
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
+* `get_gist( id )`: `Gist`
+* `get_gists()`: list of `Gist`
 
 Class `AuthenticatedUser`
 =========================
@@ -85,7 +80,7 @@ Following
     * `following`: `NamedUser`
 * `remove_from_following( following )`
     * `following`: `NamedUser`
-* `has_in_following( following )`: `bool`
+* `has_in_following( following )`: bool
     * `following`: `NamedUser`
 
 Orgs
@@ -106,7 +101,7 @@ Watched
     * `watched`: `Repository`
 * `remove_from_watched( watched )`
     * `watched`: `Repository`
-* `has_in_watched( watched )`: `bool`
+* `has_in_watched( watched )`: bool
     * `watched`: `Repository`
 
 Forking
@@ -118,6 +113,10 @@ Gists
 * `get_gists()`: list of `Gist`
 * `create_gist( public, files, [description] )`: `Gist`
 * `get_starred_gists()`: list of `Gist`
+
+Issues
+------
+* `get_issues()`: list of `Issue`
 
 Class `Authorization`
 =====================
@@ -363,6 +362,7 @@ Attributes
 * `sha`
 * `url`
 * `tree`
+* `recursive`
 
 Class `Hook`
 ============
@@ -557,6 +557,10 @@ Following
 ---------
 * `get_following()`: list of `NamedUser`
 
+Orgs
+----
+* `get_orgs()`: list of `Organization`
+
 Events
 ------
 * `get_events()`: list of `Event`
@@ -566,10 +570,6 @@ Received events
 ---------------
 * `get_received_events()`: list of `Event`
 * `get_public_received_events()`: list of `Event`
-
-Orgs
-----
-* `get_orgs()`: list of `Organization`
 
 Repos
 -----
@@ -625,7 +625,7 @@ Public members
     * `public_member`: `NamedUser`
 * `remove_from_public_members( public_member )`
     * `public_member`: `NamedUser`
-* `has_in_public_members( public_member )`: `bool`
+* `has_in_public_members( public_member )`: bool
     * `public_member`: `NamedUser`
 
 Members
@@ -633,12 +633,8 @@ Members
 * `get_members()`: list of `NamedUser`
 * `remove_from_members( member )`
     * `member`: `NamedUser`
-* `has_in_members( member )`: `bool`
+* `has_in_members( member )`: bool
     * `member`: `NamedUser`
-
-Events
-------
-* `get_events()`: list of `Event`
 
 Repos
 -----
@@ -654,6 +650,10 @@ Teams
 -----
 * `get_teams()`: list of `Team`
 * `create_team( name, [repo_names, permission] )`: `Team`
+
+Events
+------
+* `get_events()`: list of `Event`
 
 Class `PullRequest`
 ===================
@@ -703,7 +703,7 @@ Comments
 --------
 * `get_comments()`: list of `PullRequestComment`
 * `get_comment( id )`: `PullRequestComment`
-* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
 * `is_merged()`: bool
 * `merge( [commit_message] )`
 
@@ -782,11 +782,6 @@ Attributes
 * `parent`: `Repository`
 * `source`: `Repository`
 
-Events
-------
-* `get_events()`: list of `Event`
-* `get_network_events()`: list of `Event`
-
 Issues events
 -------------
 * `get_issues_events()`: list of `IssueEvent`
@@ -823,7 +818,7 @@ Collaborators
     * `collaborator`: `NamedUser`
 * `remove_from_collaborators( collaborator )`
     * `collaborator`: `NamedUser`
-* `has_in_collaborators( collaborator )`: `bool`
+* `has_in_collaborators( collaborator )`: bool
     * `collaborator`: `NamedUser`
 
 Contributors
@@ -847,8 +842,8 @@ Git commits
 
 Git trees
 ---------
-* `get_git_tree( sha )`: `GitTree`
-* `create_git_tree( tree )`: `GitTree`
+* `get_git_tree( sha, [recursive] )`: `GitTree`
+* `create_git_tree( tree, [base_tree] )`: `GitTree`
 
 Git blobs
 ---------
@@ -906,11 +901,17 @@ Pulls
 -----
 * `get_pulls( [state] )`: list of `PullRequest`
 * `get_pull( number )`: `PullRequest`
-* `create_pull( title, body, base, head )`: `PullRequest`
+* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
+* `compare( base, head )`
 
 Teams
 -----
 * `get_teams()`: list of `Team`
+
+Events
+------
+* `get_events()`: list of `Event`
+* `get_network_events()`: list of `Event`
 
 Class `RepositoryKey`
 =====================
@@ -967,7 +968,7 @@ Members
     * `member`: `NamedUser`
 * `remove_from_members( member )`
     * `member`: `NamedUser`
-* `has_in_members( member )`: `bool`
+* `has_in_members( member )`: bool
     * `member`: `NamedUser`
 
 Repos
@@ -977,7 +978,7 @@ Repos
     * `repo`: `Repository`
 * `remove_from_repos( repo )`
     * `repo`: `Repository`
-* `has_in_repos( repo )`: `bool`
+* `has_in_repos( repo )`: bool
     * `repo`: `Repository`
 
 Class `UserKey`

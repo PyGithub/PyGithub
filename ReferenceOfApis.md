@@ -47,7 +47,7 @@ API `/gists/comments/:id`
 
 API `/gists/public`
 ===================
-* GET: (TODO) (Almost useless: huge fast-changing list, so I will have to re-re-implement pagination, with detection of duplicates caused by shifts, and a real iteration, not construction of the full list...)
+* GET: `Github.get_gists`
 
 API `/gists/starred`
 ====================
@@ -55,7 +55,7 @@ API `/gists/starred`
 
 API `/issues`
 =============
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_issues`
 
 API `/networks/:user/:repo/events`
 ==================================
@@ -143,7 +143,7 @@ API `/repos/:user/:repo/commits/:sha/comments`
 
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
-* GET: (TODO)
+* GET: `Repository.compare`
 
 API `/repos/:user/:repo/contributors`
 =====================================
@@ -206,17 +206,9 @@ API `/repos/:user/:repo/git/trees`
 ==================================
 * POST: `Repository.create_git_tree`
 
-API `/repos/:user/:repo/git/trees?base_tree=`
-=============================================
-* POST: (TODO)
-
 API `/repos/:user/:repo/git/trees/:sha`
 =======================================
 * GET: `Repository.get_git_tree`
-
-API `/repos/:user/:repo/git/trees/:sha?recursive=1`
-===================================================
-* GET: (TODO)
 
 API `/repos/:user/:repo/hooks`
 ==============================
@@ -321,7 +313,7 @@ API `/repos/:user/:repo/milestones/:number/labels`
 API `/repos/:user/:repo/pulls`
 ==============================
 * GET: `Repository.get_pulls`
-* POST: `Repository.create_pull` (TODO: alternative input)
+* POST: `Repository.create_pull`
 
 API `/repos/:user/:repo/pulls/:id`
 ==================================
@@ -331,7 +323,7 @@ API `/repos/:user/:repo/pulls/:id`
 API `/repos/:user/:repo/pulls/:id/comments`
 ===========================================
 * GET: `PullRequest.get_comments`
-* POST: `PullRequest.create_comment` (TODO: alternative input)
+* POST: `PullRequest.create_comment`
 
 API `/repos/:user/:repo/pulls/:id/commits`
 ==========================================

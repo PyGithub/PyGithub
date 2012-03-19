@@ -1,9 +1,9 @@
 import itertools
 
-from ObjectCapacities.ArgumentsChecker import *
-from ObjectCapacities.Basic import *
-from ObjectCapacities.List import *
-from ObjectCapacities.TypePolicies import *
+from ArgumentsChecker import *
+from Basic import *
+from List import *
+from TypePolicies import *
 
 class BadGithubObjectException( Exception ):
     pass
@@ -21,21 +21,21 @@ def ExternalSimpleAttribute( attributeName, type ):
     return ExternalAttribute( attributeName, SimpleTypePolicy( type ) )
 
 def BaseUrl( baseUrl ):
-    return MethodFromCallable( "_baseUrl", [], [], baseUrl, SimpleTypePolicy( None ) )
+    return MethodFromCallable( "_baseUrl", NoParameters(), baseUrl, SimpleTypePolicy( None ) )
 
 def Identity( identity ):
     return AttributeFromCallable( "_identity", identity )
 
-def Editable( mandatoryParameters, optionalParameters ):
+def Editable( parameters ):
     def __execute( obj, **data ):
         attributes = obj._github._dataRequest( "PATCH", obj._baseUrl(), None, data )
         obj._updateAttributes( attributes )
-    return SeveralAttributePolicies( [ MethodFromCallable( "edit", mandatoryParameters, optionalParameters, __execute, SimpleTypePolicy( None ) ) ], "Modification" )
+    return SeveralAttributePolicies( [ MethodFromCallable( "edit", parameters, __execute, SimpleTypePolicy( None ) ) ], "Modification" )
 
 def Deletable():
     def __execute( obj ):
         obj._github._statusRequest( "DELETE", obj._baseUrl(), None, None )
-    return SeveralAttributePolicies( [ MethodFromCallable( "delete", [], [], __execute, SimpleTypePolicy( None ) ) ], "Deletion" )
+    return SeveralAttributePolicies( [ MethodFromCallable( "delete", NoParameters(), __execute, SimpleTypePolicy( None ) ) ], "Deletion" )
 
 def GithubObject( className, *attributePolicies ):
     class GithubObject:

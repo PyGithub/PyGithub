@@ -62,8 +62,7 @@ class ElementHasable( ListCapacity ):
         ) == 204
 
     def autoDocument( self ):
-        ### @todo `bool` -> bool
-        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: `bool`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
+        return "* `has_in_" + self.safeAttributeName + "( " + self.singularName + " )`: bool\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ListCapacityWithModifier( ListCapacity ):
     def __init__( self, attributeModifiers ):
@@ -75,9 +74,9 @@ class ListCapacityWithModifier( ListCapacity ):
         return attributes
 
 class ElementCreatable( ListCapacityWithModifier ):
-    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+    def __init__( self, parameters = NoParameters(), attributeModifiers = {} ):
         ListCapacityWithModifier.__init__( self, attributeModifiers )
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = parameters
 
     def apply( self, cls ):
         cls._addMethod( "create_" + self.singularName, self.__execute )
@@ -100,9 +99,9 @@ class ElementCreatable( ListCapacityWithModifier ):
         return "* `create_" + self.singularName + "(" + self.__argumentsChecker.documentParameters() + ")`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ElementGetable( ListCapacityWithModifier ):
-    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+    def __init__( self, parameters = NoParameters(), attributeModifiers = {} ):
         ListCapacityWithModifier.__init__( self, attributeModifiers )
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = parameters
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.singularName, self.__execute )
@@ -156,9 +155,9 @@ class SeveralElementsRemovable( ListCapacity ):
         return "* `remove_from_" + self.safeAttributeName + "( " + self.singularName + ", ... )`\n    * `" + self.singularName + "`: " + self.typePolicy.documentTypeName() + "\n"
 
 class ListGetable( ListCapacityWithModifier ):
-    def __init__( self, mandatoryParameters, optionalParameters, attributeModifiers = {} ):
+    def __init__( self, parameters = NoParameters(), attributeModifiers = {} ):
         ListCapacityWithModifier.__init__( self, attributeModifiers )
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+        self.__argumentsChecker = parameters
 
     def apply( self, cls ):
         cls._addMethod( "get_" + self.safeAttributeName, self.__execute )
