@@ -405,6 +405,17 @@ class IntegrationTest:
         r.create_git_ref( "refs/tags/tagCreatedByPyGithub", tag.sha )
         reTag = r.get_git_tag( tag.sha )
 
+    def testGitObjectsAlternative( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = o.get_repo( "TestPyGithub" )
+
+        masterRef = r.get_git_ref( "refs/heads/master" )
+        masterCommit = r.get_git_commit( masterRef.object[ "sha" ] )
+        masterTree = r.get_git_tree( masterCommit.tree.sha, recursive = True )
+
+        blob = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
+        tree = r.create_git_tree( [ { "path": "new.bar", "mode": "100644", "type": "blob", "sha": blob.sha } ], base_tree = masterTree.sha )
+
     def testHooks( self ):
         u = self.g.get_user()
         r = u.get_repo( "TestPyGithub" )
@@ -477,6 +488,9 @@ class IntegrationTest:
         m.delete()
         self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
 
+    def testIssuesForAuthenticatedUser( self ):
+        self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
+
     def testKeys( self ):
         u = self.g.get_user()
         self.printList( "Keys", u.get_keys(), lambda k: k.title )
@@ -530,6 +544,10 @@ class IntegrationTest:
         self.printList( "Comments", p2.get_comments(), lambda c: c.body )
         p2.edit( state = "closed" )
         self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
+
+    def testRepositoryCompare( self ):
+        r = self.g.get_user().get_repo( "PyGithub" )
+        print str( r.compare( "master", "develop" ) )[ :100 ]
 
     def testRepositoryDetails( self ):
         r1 = self.g.get_user().get_repo( "PyGithub" )
