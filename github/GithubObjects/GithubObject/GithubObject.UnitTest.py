@@ -530,6 +530,26 @@ class GithubObjectWithMethodFromCallable( TestCaseWithGithubTestObject ):
         self.assertEqual( self.o.myMethod( mock.object, 42 ), 72 )
         mock.tearDown()
 
+def myOtherCallable( obj, mock, **kwds ):
+    return mock.call( **kwds )
+class GithubObjectWithMethodFromCallableWithAlternative( TestCaseWithGithubTestObject ):
+    GithubTestObject = GithubObject(
+        "GithubTestObject",
+        BaseUrl( lambda obj: "/test" ),
+        InternalSimpleAttributes( "a1", "a2" ),
+        MethodFromCallable( "myMethod", Alternative( Parameters( [ "mock", "x1", "x2" ], [ "x3" ] ), Parameters( [ "mock", "y1" ], [ "y2" ] ) ), myOtherCallable, SimpleTypePolicy( None ) )
+    )
+
+    def testCallMethod( self ):
+        mock = MockMockMock.Mock( "myOtherCallable" )
+        mock.expect.call( x1 = 1, x2 = 2, x3 = 3 ).andReturn( 72 )
+        self.assertEqual( self.o.myMethod( mock.object, 1, 2, 3 ), 72 )
+        mock.expect.call( x1 = 1, x2 = 2 ).andReturn( 73 )
+        self.assertEqual( self.o.myMethod( mock.object, 1, 2 ), 73 )
+        mock.expect.call( y1 = 1 ).andReturn( 42 )
+        self.assertEqual( self.o.myMethod( mock.object, 1 ), 42 )
+        mock.tearDown()
+
 class GithubObjectWithSeveralInternalSimpleAttributesAndInternalObjectAttributes( TestCaseWithGithubTestObject ):
     ContainedObject = GithubObject(
         "ContainedObject",
