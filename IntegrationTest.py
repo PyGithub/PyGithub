@@ -187,12 +187,18 @@ class IntegrationTest:
                         else:
                             uncoveredApis.add( verb + " " + currentApi )
 
-        print
         if len( uncoveredMethods ) != 0:
-            print "Not covered (" + str( len( uncoveredMethods ) ) + "):"
+            print
+            header = "Not covered (" + str( len( uncoveredMethods ) ) + ")"
+            print header
+            print "=" * len( header )
             print "\n".join( sorted( uncoveredMethods ) )
+
         if len( uncoveredApis ) != 0:
-            print "Not implemented (" + str( len( uncoveredApis ) ) + "):"
+            print
+            header = "Not implemented (" + str( len( uncoveredApis ) ) + ")"
+            print header
+            print "=" * len( header )
             print "\n".join( sorted( uncoveredApis ) )
 
     def testAuthenticatedUserDetails( self ):
