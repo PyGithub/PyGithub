@@ -18,6 +18,7 @@ from Branch import *
 from PullRequest import *
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
+__modifyAttributesForGitTree = { "_repo": lambda repo: repo, "recursive": lambda repo: False }
 
 def __compare( repo, base, head ):
     return repo._github._dataRequest( "GET", repo._baseUrl() + "/compare/" + base + "..." + head, None, None )
@@ -89,8 +90,8 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
         ElementCreatable( Parameters( [ "message", "tree", "parents" ], [ "author", "committer" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
-        ElementGetable( Parameters( [ "sha" ], [ "recursive" ] ), __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( Parameters( [ "tree" ], [ "base_tree" ] ), __modifyAttributesForObjectsReferingRepo )
+        ElementGetable( Parameters( [ "sha" ], [ "recursive" ] ), __modifyAttributesForGitTree ),
+        ElementCreatable( Parameters( [ "tree" ], [ "base_tree" ] ), __modifyAttributesForGitTree )
     ),
     ExternalListOfObjects( "git/blobs", "git_blob", GitBlob,
         ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),

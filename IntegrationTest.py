@@ -64,7 +64,9 @@ class ReplayingHttpsConnection:
 
     def request( self, verb, url, input, headers ):
         del headers[ "Authorization" ]
-        if( self.__file.readline().strip() != verb + " " + url + " " + str( headers ) + " " + input ):
+        expectation = self.__file.readline().strip()
+        if expectation != verb + " " + url + " " + str( headers ) + " " + input:
+            # print expectation, "!=", verb + " " + url + " " + str( headers ) + " " + input
             raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
 
     def getresponse( self ):
@@ -569,4 +571,5 @@ class IntegrationTest:
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( str( f( x ) ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
 
+sys.setrecursionlimit( 50 )
 IntegrationTest().main( sys.argv[ 1: ] )
