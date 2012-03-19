@@ -19,6 +19,9 @@ from PullRequest import *
 
 __modifyAttributesForObjectsReferingRepo = { "_repo": lambda repo: repo }
 
+def __compare( repo, base, head ):
+    return repo._github._dataRequest( "GET", repo._baseUrl() + "/compare/" + base + "..." + head, None, None )
+
 Repository = GithubObject(
     "Repository",
     BaseUrl( lambda obj: "/repos/" + obj.owner.login + "/" + obj.name ),
@@ -38,102 +41,103 @@ Repository._addAttributePolicy( InternalObjectAttribute( "parent", Repository ) 
 Repository._addAttributePolicy( InternalObjectAttribute( "source", Repository ) )
 Repository._addAttributePolicy(
     ExternalListOfObjects( "issues/events", "issues_event", IssueEvent,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingRepo ),
     )
 )
 Repository._addAttributePolicy(
     ExternalListOfObjects( "forks", "fork", Repository,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 Repository._addAttributePolicy(
-    Editable( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] )
+    Editable( Parameters( [ "name" ], [ "description", "homepage", "public", "has_issues", "has_wiki", "has_downloads" ] ) )
 )
 Repository._addAttributePolicy(
     SeveralAttributePolicies( [ ExternalSimpleAttribute( "languages", "dictionary of strings to integers" ) ], "Languages" )
 )
 Repository._addAttributePolicy( SeveralAttributePolicies( [
     ExternalListOfObjects( "hooks", "hook", Hook,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "name", "config" ], [ "events", "active" ], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "name", "config" ], [ "events", "active" ] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "keys", "key", RepositoryKey,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title", "key" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "title", "key" ], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "collaborators", "collaborator", NamedUser,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
     ),
     ExternalListOfObjects( "contributors", "contributor", NamedUser,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     ),
     ExternalListOfObjects( "watchers", "watcher", NamedUser,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     ),
     ExternalListOfObjects( "git/refs", "git_ref", GitRef,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "ref" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "ref", "sha" ], [], __modifyAttributesForObjectsReferingRepo )
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "ref" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "ref", "sha" ], [] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/commits", "git_commit", GitCommit,
-        ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "message", "tree", "parents" ], [ "author", "committer" ], __modifyAttributesForObjectsReferingRepo )
+        ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "message", "tree", "parents" ], [ "author", "committer" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
-        ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "tree" ], [], __modifyAttributesForObjectsReferingRepo )
+        ElementGetable( Parameters( [ "sha" ], [ "recursive" ] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "tree" ], [ "base_tree" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/blobs", "git_blob", GitBlob,
-        ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "content", "encoding" ], [], __modifyAttributesForObjectsReferingRepo )
+        ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "content", "encoding" ], [] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/tags", "git_tag", GitTag,
-        ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "tag", "message", "object", "type" ], [ "tagger" ], __modifyAttributesForObjectsReferingRepo )
+        ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "tag", "message", "object", "type" ], [ "tagger" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "labels", "label", Label,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "name" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "name", "color" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "name" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "name", "color" ], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "milestones", "milestone", Milestone,
-        ListGetable( [], [ "state", "sort", "direction" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "number" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title" ], [ "state", "description", "due_on" ], __modifyAttributesForObjectsReferingRepo )
+        ListGetable( Parameters( [], [ "state", "sort", "direction" ] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "number" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "title" ], [ "state", "description", "due_on" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "issues", "issue", Issue,
-        ListGetable( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "number" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title" ], [ "body", "assignee", "milestone", "labels", ], __modifyAttributesForObjectsReferingRepo )
+        ListGetable( Parameters( [], [ "milestone", "state", "assignee", "mentioned", "labels", "sort", "direction", "since" ] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "number" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "title" ], [ "body", "assignee", "milestone", "labels", ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "downloads", "download", Download,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "name", "size" ], [ "description", "content_type" ], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Parameters( [ "name", "size" ], [ "description", "content_type" ] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "comments", "comment", CommitComment,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "id" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "id" ], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "commits", "commit", Commit,
-        ListGetable( [], [ "sha", "path" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "sha" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [ "sha", "path" ] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "tags", "tag", Tag,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "branches", "branch", Branch,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingRepo ),
     ),
     ExternalListOfObjects( "pulls", "pull", PullRequest,
-        ListGetable( [], [ "state" ], __modifyAttributesForObjectsReferingRepo ),
-        ElementGetable( [ "number" ], [], __modifyAttributesForObjectsReferingRepo ),
-        ElementCreatable( [ "title", "body", "base", "head" ], [], __modifyAttributesForObjectsReferingRepo ),
+        ListGetable( Parameters( [], [ "state" ] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "number" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementCreatable( Alternative( Parameters( [ "title", "body", "base", "head" ], [] ), Parameters( [ "issue", "base", "head" ], [] ) ), __modifyAttributesForObjectsReferingRepo ),
     ),
+    MethodFromCallable( "compare", Parameters( [ "base", "head" ], [] ), __compare, SimpleTypePolicy( None ) ),
 ] ) )

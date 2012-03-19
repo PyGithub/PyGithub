@@ -119,6 +119,10 @@ Gists
 * `create_gist( public, files, [description] )`: `Gist`
 * `get_starred_gists()`: list of `Gist`
 
+Issues
+------
+* `get_issues()`: list of `Issue`
+
 Class `Authorization`
 =====================
 
@@ -363,6 +367,7 @@ Attributes
 * `sha`
 * `url`
 * `tree`
+* `recursive`
 
 Class `Hook`
 ============
@@ -703,7 +708,7 @@ Comments
 --------
 * `get_comments()`: list of `PullRequestComment`
 * `get_comment( id )`: `PullRequestComment`
-* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
 * `is_merged()`: bool
 * `merge( [commit_message] )`
 
@@ -842,8 +847,8 @@ Git commits
 
 Git trees
 ---------
-* `get_git_tree( sha )`: `GitTree`
-* `create_git_tree( tree )`: `GitTree`
+* `get_git_tree( sha, [recursive] )`: `GitTree`
+* `create_git_tree( tree, [base_tree] )`: `GitTree`
 
 Git blobs
 ---------
@@ -901,7 +906,8 @@ Pulls
 -----
 * `get_pulls( [state] )`: list of `PullRequest`
 * `get_pull( number )`: `PullRequest`
-* `create_pull( title, body, base, head )`: `PullRequest`
+* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
+* `compare( base, head )`
 
 Teams
 -----

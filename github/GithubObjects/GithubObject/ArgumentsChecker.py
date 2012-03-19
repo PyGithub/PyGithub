@@ -1,6 +1,6 @@
 import itertools
 
-class ArgumentsChecker:
+class Parameters:
     def __init__( self, mandatoryParameters, optionalParameters ):
         self.__mandatoryParameters = mandatoryParameters
         self.__optionalParameters = optionalParameters
@@ -34,3 +34,24 @@ class ArgumentsChecker:
                 return " " + mandatory + " "
             else:
                 return " " + mandatory + ", " + optional + " "
+
+def NoParameters():
+    return Parameters( [], [] )
+
+class Alternative:
+    def __init__( self, *checkers ):
+        self.__checkers = checkers
+
+    def check( self, args, kwds ):
+        # Try the n - 1 first checkers
+        for checker in self.__checkers[ : -1 ]:
+            try:
+                return checker.check( args, kwds )
+            except TypeError:
+                pass
+        # Use the last checker
+        # This way, the call stack will point to an actual validation failure
+        return self.__checkers[ -1 ].check( args, kwds )
+
+    def documentParameters( self ):
+        return " <" + "> or <".join( checker.documentParameters() for checker in self.__checkers ) + "> "

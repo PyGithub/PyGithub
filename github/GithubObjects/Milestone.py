@@ -12,9 +12,9 @@ Milestone = GithubObject(
         "_repo",
     ),
     InternalObjectAttribute( "creator", NamedUser ),
-    Editable( [ "title" ], [ "state", "description", "due_on" ] ),
+    Editable( Parameters( [ "title" ], [ "state", "description", "due_on" ] ) ),
     Deletable(),
     ExternalListOfObjects( "labels", "label", Label,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo )
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingReferedRepo )
     ),
 )

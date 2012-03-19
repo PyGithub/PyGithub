@@ -7,6 +7,6 @@ RepositoryKey = GithubObject(
         "url", "id", "title", "key",
         "_repo",
     ),
-    Editable( [ "title", "key" ], [] ),
+    Editable( Parameters( [ "title", "key" ], [] ) ),
     Deletable()
 )

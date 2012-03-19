@@ -6,6 +6,6 @@ UserKey = GithubObject(
     InternalSimpleAttributes(
         "url", "id", "title", "key",
     ),
-    Editable( [], [ "title", "key" ] ),
+    Editable( Parameters( [], [ "title", "key" ] ) ),
     Deletable(),
 )

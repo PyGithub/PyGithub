@@ -5,13 +5,13 @@ from Event import *
 
 Repository._addAttributePolicy(
     ExternalListOfObjects( "teams", "team", Team,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     )
 )
 
 Repository._addAttributePolicy(
     ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     ),
 )
 
@@ -23,5 +23,5 @@ def __getNetworkEvents( repo ):
     ]
 
 Repository._addAttributePolicy(
-    MethodFromCallable( "get_network_events", [], [], __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
+    MethodFromCallable( "get_network_events", Parameters( [], [] ), __getNetworkEvents, SimpleTypePolicy( "list of `Event`" ) )
 )

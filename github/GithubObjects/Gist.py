@@ -16,22 +16,22 @@ Gist = GithubObject(
         "updated_at",
     ),
     InternalObjectAttribute( "user", NamedUser ),
-    Editable( [], [ "description", "files" ] ),
+    Editable( Parameters( [], [ "description", "files" ] ) ),
     Deletable(),
     ExternalListOfObjects( "comments", "comment", GistComment,
-        ListGetable( [], [] ),
-        ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [ "body" ], [] ),
+        ListGetable( Parameters( [], [] ) ),
+        ElementGetable( Parameters( [ "id" ], [] ) ),
+        ElementCreatable( Parameters( [ "body" ], [] ) ),
     ),
     SeveralAttributePolicies( [
-        MethodFromCallable( "is_starred", [], [], __isStarred, SimpleTypePolicy( "bool" ) ),
-        MethodFromCallable( "set_starred", [], [], __setStarred, SimpleTypePolicy( None ) ),
-        MethodFromCallable( "reset_starred", [], [], __resetStarred, SimpleTypePolicy( None ) ),
+        MethodFromCallable( "is_starred", Parameters( [], [] ), __isStarred, SimpleTypePolicy( "bool" ) ),
+        MethodFromCallable( "set_starred", Parameters( [], [] ), __setStarred, SimpleTypePolicy( None ) ),
+        MethodFromCallable( "reset_starred", Parameters( [], [] ), __resetStarred, SimpleTypePolicy( None ) ),
     ], "Starring" ),
 )
 def __createFork( gist ):
     return Gist( gist._github, gist._github._dataRequest( "POST", gist._baseUrl() + "/fork", None, None ), lazy = True )
 Gist._addAttributePolicy(    SeveralAttributePolicies( [
-        MethodFromCallable( "create_fork", [], [], __createFork, ObjectTypePolicy( Gist ) ),
+        MethodFromCallable( "create_fork", Parameters( [], [] ), __createFork, ObjectTypePolicy( Gist ) ),
     ], "Forking" ),
 )

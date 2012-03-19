@@ -9,6 +9,6 @@ PullRequestComment = GithubObject(
         "_repo",
     ),
     InternalObjectAttribute( "user", NamedUser ),
-    Editable( [ "body" ], [] ),
+    Editable( Parameters( [ "body" ], [] ) ),
     Deletable(),
 )

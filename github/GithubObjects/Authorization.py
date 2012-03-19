@@ -7,6 +7,6 @@ Authorization = GithubObject(
         "id", "url", "scopes", "token", "app", "note", "note_url", "updated_at",
         "created_at",
     ),
-    Editable( [], [ "scopes", "add_scopes", "remove_scopes", "note", "note_url" ] ),
+    Editable( Parameters( [], [ "scopes", "add_scopes", "remove_scopes", "note", "note_url" ] ) ),
     Deletable(),
 )

@@ -18,7 +18,7 @@ Commit = GithubObject(
     InternalObjectAttribute( "author", NamedUser ),
     InternalObjectAttribute( "committer", NamedUser ),
     ExternalListOfObjects( "comments", "comment", CommitComment,
-        ListGetable( [], [], __modifyAttributesForObjectsReferingReferedRepo ),
-        ElementCreatable( [ "body" ], [ "commit_id", "line", "path", "position" ], __modifyAttributesForObjectsReferingReferedRepo ),
+        ListGetable( Parameters( [], [] ), __modifyAttributesForObjectsReferingReferedRepo ),
+        ElementCreatable( Parameters( [ "body" ], [ "commit_id", "line", "path", "position" ] ), __modifyAttributesForObjectsReferingReferedRepo ),
     ),
 )

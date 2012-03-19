@@ -1,5 +1,3 @@
-from ArgumentsChecker import *
-
 class AttributeFromCallable:
     class AttributeDefinition:
         def __init__( self, name, callable ):
@@ -26,8 +24,8 @@ class AttributeFromCallable:
         return ""
 
 class MethodFromCallable:
-    def __init__( self, name, mandatoryParameters, optionalParameters, callable, returnTypePolicy ):
-        self.__argumentsChecker = ArgumentsChecker( mandatoryParameters, optionalParameters )
+    def __init__( self, name, parameters, callable, returnTypePolicy ):
+        self.__argumentsChecker = parameters
         self.__name = name
         self.__callable = callable
         self.__returnTypePolicy = returnTypePolicy

@@ -5,6 +5,7 @@ from NamedUser import *
 from Organization import *
 from Repository import *
 from Gist import *
+from Issue import *
 
 def __getOrganizationEvents( user, org ):
     return [
@@ -34,56 +35,60 @@ AuthenticatedUser = GithubObject(
         "type", "total_private_repos", "owned_private_repos", "private_gists",
         "disk_usage", "collaborators", "plan",
     ),
-    Editable( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ),
+    Editable( Parameters( [], [ "name", "email", "blog", "company", "location", "hireable", "bio" ] ) ),
     ExternalListOfSimpleTypes( "emails", "email", "string",
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         SeveralElementsAddable(),
         SeveralElementsRemovable()
     ),
     ExternalListOfObjects( "authorizations", "authorization", Authorization,
-        ListGetable( [], [] ),
-        ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [], [ "scopes", "note", "note_url" ] ),
+        ListGetable( Parameters( [], [] ) ),
+        ElementGetable( Parameters( [ "id" ], [] ) ),
+        ElementCreatable( Parameters( [], [ "scopes", "note", "note_url" ] ) ),
         url = "/authorizations",
     ),
     ExternalListOfObjects( "keys", "key", UserKey,
-        ListGetable( [], [] ),
-        ElementGetable( [ "id" ], [] ),
-        ElementCreatable( [ "title", "key" ], [] ),
+        ListGetable( Parameters( [], [] ) ),
+        ElementGetable( Parameters( [ "id" ], [] ) ),
+        ElementCreatable( Parameters( [ "title", "key" ], [] ) ),
     ),
     ExternalListOfObjects( "events", "event", Event,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         url = "/events"
     ),
     ExternalListOfObjects( "followers", "follower", NamedUser,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     ),
     ExternalListOfObjects( "following", "following", NamedUser,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
     ),
     ExternalListOfObjects( "orgs", "org", Organization,
-        ListGetable( [], [] )
+        ListGetable( Parameters( [], [] ) )
     ),
-    MethodFromCallable( "get_organization_events", [ "org" ], [], __getOrganizationEvents, SimpleTypePolicy( "list of `Event`" ) ),
+    MethodFromCallable( "get_organization_events", Parameters( [ "org" ], [] ), __getOrganizationEvents, SimpleTypePolicy( "list of `Event`" ) ),
     ExternalListOfObjects( "repos", "repo", Repository,
-        ListGetable( [], [ "type" ] ),
-        ElementGetable( [ "name" ], [], { "owner" : lambda user: { "login": user.login } } ),
-        ElementCreatable( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] )
+        ListGetable( Parameters( [], [ "type" ] ) ),
+        ElementGetable( Parameters( [ "name" ], [] ), { "owner" : lambda user: { "login": user.login } } ),
+        ElementCreatable( Parameters( [ "name" ], [ "description", "homepage", "private", "has_issues", "has_wiki", "has_downloads", "team_id", ] ) )
     ),
     ExternalListOfObjects( "watched", "watched", Repository,
-        ListGetable( [], [] ),
+        ListGetable( Parameters( [], [] ) ),
         ElementAddable(),
         ElementRemovable(),
         ElementHasable()
     ),
-    SeveralAttributePolicies( [ MethodFromCallable( "create_fork", [ "repo" ], [], __createFork, ObjectTypePolicy( Repository ) ) ], "Forking" ),
+    SeveralAttributePolicies( [ MethodFromCallable( "create_fork", Parameters( [ "repo" ], [] ), __createFork, ObjectTypePolicy( Repository ) ) ], "Forking" ),
     ExternalListOfObjects( "gists", "gist", Gist,
-        ListGetable( [], [] ),
-        ElementCreatable( [ "public", "files", ], [ "description" ] ),
+        ListGetable( Parameters( [], [] ) ),
+        ElementCreatable( Parameters( [ "public", "files", ], [ "description" ] ) ),
         url = "/gists",
     ),
-    MethodFromCallable( "get_starred_gists", [], [], __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
+    MethodFromCallable( "get_starred_gists", Parameters( [], [] ), __getStaredGists, SimpleTypePolicy( "list of `Gist`" ) ),
+    ExternalListOfObjects( "issues", "issue", Issue,
+        ListGetable( Parameters( [], [] ) ),
+        url = "/issues",
+    ),
 )

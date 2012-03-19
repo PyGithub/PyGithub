@@ -8,6 +8,6 @@ GistComment = GithubObject(
         "updated_at",
     ),
     InternalObjectAttribute( "user", NamedUser ),
-    Editable( [ "body" ], [] ),
+    Editable( Parameters( [ "body" ], [] ) ),
     Deletable(),
 )
