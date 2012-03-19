@@ -382,6 +382,9 @@ class IntegrationTest:
         g.delete()
         self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
+    def testGistsAll( self ):
+        self.printList( "Gists", self.g.get_gists(), lambda g: g.description )
+
     def testGitObjects( self ):
         o = self.g.get_organization( self.cobayeOrganization )
         r = o.get_repo( "TestPyGithub" )

@@ -22,3 +22,10 @@ class Github:
 
     def get_gist( self, id ):
         return Gist( self, { "id": id }, lazy = False )
+
+    def get_gists( self ):
+        return [
+            Gist( self, attributes, lazy = True )
+            for attributes
+            in self._dataRequest( "GET", "/gists/public", None, None )
+        ]
