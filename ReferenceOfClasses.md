@@ -363,6 +363,7 @@ Attributes
 * `sha`
 * `url`
 * `tree`
+* `recursive`
 
 Class `Hook`
 ============
@@ -842,8 +843,8 @@ Git commits
 
 Git trees
 ---------
-* `get_git_tree( sha )`: `GitTree`
-* `create_git_tree( tree )`: `GitTree`
+* `get_git_tree( sha, [recursive] )`: `GitTree`
+* `create_git_tree( tree, [base_tree] )`: `GitTree`
 
 Git blobs
 ---------

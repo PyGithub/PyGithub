@@ -86,7 +86,7 @@ Repository._addAttributePolicy( SeveralAttributePolicies( [
         ElementCreatable( Parameters( [ "message", "tree", "parents" ], [ "author", "committer" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/trees", "git_tree", GitTree,
-        ElementGetable( Parameters( [ "sha" ], [] ), __modifyAttributesForObjectsReferingRepo ),
+        ElementGetable( Parameters( [ "sha" ], [ "recursive" ] ), __modifyAttributesForObjectsReferingRepo ),
         ElementCreatable( Parameters( [ "tree" ], [ "base_tree" ] ), __modifyAttributesForObjectsReferingRepo )
     ),
     ExternalListOfObjects( "git/blobs", "git_blob", GitBlob,

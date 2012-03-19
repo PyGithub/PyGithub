@@ -210,10 +210,6 @@ API `/repos/:user/:repo/git/trees/:sha`
 =======================================
 * GET: `Repository.get_git_tree`
 
-API `/repos/:user/:repo/git/trees/:sha?recursive=1`
-===================================================
-* GET: (TODO)
-
 API `/repos/:user/:repo/hooks`
 ==============================
 * GET: `Repository.get_hooks`
