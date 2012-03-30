@@ -193,7 +193,7 @@ API `/repos/:user/:repo/git/refs/:ref`
 ======================================
 * GET: `Repository.get_git_ref`
 * PATCH: `GitRef.edit`
-* DELETE: (TODO)
+* DELETE: `GitRef.delete`
 
 API `/repos/:user/:repo/git/tags`
 =================================

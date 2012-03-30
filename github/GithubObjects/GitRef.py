@@ -9,4 +9,5 @@ GitRef = GithubObject(
         "_repo",
     ),
     Editable( Parameters( [ "sha" ], [ "force" ] ) ),
+    Deletable(),
 )

@@ -342,6 +342,10 @@ Modification
 ------------
 * `edit( sha, [force] )`
 
+Deletion
+--------
+* `delete()`
+
 Class `GitTag`
 ==============
 
