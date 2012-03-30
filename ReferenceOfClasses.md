@@ -342,6 +342,10 @@ Modification
 ------------
 * `edit( sha, [force] )`
 
+Deletion
+--------
+* `delete()`
+
 Class `GitTag`
 ==============
 
@@ -583,6 +587,7 @@ Watched
 Gists
 -----
 * `get_gists()`: list of `Gist`
+* `create_gist( public, files, [description] )`: `Gist`
 
 Class `Organization`
 ====================
