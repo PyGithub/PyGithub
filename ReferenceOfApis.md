@@ -465,7 +465,7 @@ API `/users/:user/following`
 API `/users/:user/gists`
 ========================
 * GET: `NamedUser.get_gists`
-* POST: (TODO)
+* POST: `NamedUser.create_gist`
 
 API `/users/:user/orgs`
 =======================
