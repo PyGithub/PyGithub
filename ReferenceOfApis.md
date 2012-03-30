@@ -25,7 +25,7 @@ API `/gists/:id`
 * DELETE: `Gist.delete`
 
 API `/gists/:id/comments`
-==============================
+=========================
 * GET: `Gist.get_comments`
 * POST: `Gist.create_comment`
 
@@ -193,6 +193,7 @@ API `/repos/:user/:repo/git/refs/:ref`
 ======================================
 * GET: `Repository.get_git_ref`
 * PATCH: `GitRef.edit`
+* DELETE: (TODO)
 
 API `/repos/:user/:repo/git/tags`
 =================================
@@ -230,30 +231,30 @@ API `/repos/:user/:repo/issues`
 * GET: `Repository.get_issues`
 * POST: `Repository.create_issue`
 
-API `/repos/:user/:repo/issues/:id`
-===================================
+API `/repos/:user/:repo/issues/:number`
+=======================================
 * GET: `Repository.get_issue`
 * PATCH: `Issue.edit`
 
-API `/repos/:user/:repo/issues/:id/comments`
-============================================
+API `/repos/:user/:repo/issues/:number/comments`
+================================================
 * GET: `Issue.get_comments`
 * POST: `Issue.create_comment`
 
-API `/repos/:user/:repo/issues/:id/labels`
-==========================================
+API `/repos/:user/:repo/issues/:number/events`
+==============================================
+* GET: `Issue.get_events`
+
+API `/repos/:user/:repo/issues/:number/labels`
+==============================================
 * GET: `Issue.get_labels`
 * POST: `Issue.add_to_labels`
 * PUT: `Issue.set_labels`
 * DELETE: `Issue.delete_labels`
 
-API `/repos/:user/:repo/issues/:id/labels/:name`
-================================================
+API `/repos/:user/:repo/issues/:number/labels/:name`
+====================================================
 * DELETE: `Issue.remove_from_labels`
-
-API `/repos/:user/:repo/issues/:id/events`
-==========================================
-* GET: `Issue.get_events`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
@@ -285,8 +286,8 @@ API `/repos/:user/:repo/labels`
 * GET: `Repository.get_labels`
 * POST: `Repository.create_label`
 
-API `/repos/:user/:repo/labels/:id`
-===================================
+API `/repos/:user/:repo/labels/:name`
+=====================================
 * GET: `Repository.get_label`
 * PATCH: `Label.edit`
 * DELETE: `Label.delete`
@@ -301,13 +302,13 @@ API `/repos/:user/:repo/milestones`
 * POST: `Repository.create_milestone`
 
 API `/repos/:user/:repo/milestones/:number`
-=======================================
+===========================================
 * GET: `Repository.get_milestone`
 * PATCH: `Milestone.edit`
 * DELETE: `Milestone.delete`
 
 API `/repos/:user/:repo/milestones/:number/labels`
-==============================================
+==================================================
 * GET: `Milestone.get_labels`
 
 API `/repos/:user/:repo/pulls`
@@ -315,31 +316,31 @@ API `/repos/:user/:repo/pulls`
 * GET: `Repository.get_pulls`
 * POST: `Repository.create_pull`
 
-API `/repos/:user/:repo/pulls/:id`
-==================================
+API `/repos/:user/:repo/pulls/:number`
+======================================
 * GET: `Repository.get_pull`
 * PATCH: `PullRequest.edit`
 
-API `/repos/:user/:repo/pulls/:id/comments`
-===========================================
+API `/repos/:user/:repo/pulls/:number/comments`
+===============================================
 * GET: `PullRequest.get_comments`
 * POST: `PullRequest.create_comment`
 
-API `/repos/:user/:repo/pulls/:id/commits`
-==========================================
+API `/repos/:user/:repo/pulls/:number/commits`
+==============================================
 * GET: `PullRequest.get_commits`
 
-API `/repos/:user/:repo/pulls/:id/files`
-========================================
+API `/repos/:user/:repo/pulls/:number/files`
+============================================
 * GET: `PullRequest.get_files`
 
-API `/repos/:user/:repo/pulls/:id/merge`
-========================================
+API `/repos/:user/:repo/pulls/:number/merge`
+============================================
 * GET: `PullRequest.is_merged`
 * PUT: `PullRequest.merge`
 
-API `/repos/:user/:repo/pulls/comments/:id`
-===========================================
+API `/repos/:user/:repo/pulls/comments/:number`
+===============================================
 * GET: `PullRequest.get_comment`
 * PATCH: `PullRequestComment.edit`
 * DELETE: `PullRequestComment.delete`
@@ -464,6 +465,7 @@ API `/users/:user/following`
 API `/users/:user/gists`
 ========================
 * GET: `NamedUser.get_gists`
+* POST: (TODO)
 
 API `/users/:user/orgs`
 =======================
@@ -484,3 +486,4 @@ API `/users/:user/repos`
 API `/users/:user/watched`
 ==========================
 * GET: `NamedUser.get_watched`
+
