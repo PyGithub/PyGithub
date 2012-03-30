@@ -193,6 +193,7 @@ API `/repos/:user/:repo/git/refs/:ref`
 ======================================
 * GET: `Repository.get_git_ref`
 * PATCH: `GitRef.edit`
+* DELETE: (TODO)
 
 API `/repos/:user/:repo/git/tags`
 =================================
@@ -464,6 +465,7 @@ API `/users/:user/following`
 API `/users/:user/gists`
 ========================
 * GET: `NamedUser.get_gists`
+* POST: (TODO)
 
 API `/users/:user/orgs`
 =======================
