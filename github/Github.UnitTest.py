@@ -7,9 +7,10 @@ class TestCase( unittest.TestCase ):
     def setUp( self ):
         unittest.TestCase.setUp( self )
 
-        self.g = Github( "login", "password" )
-
         self.requester = MockMockMock.Mock( "requester" )
+        self.debugFile = MockMockMock.Mock( "debugFile", self.requester )
+
+        self.g = Github( "login", "password", self.debugFile.object )
         self.g._Github__requester = self.requester.object
 
     def tearDown( self ):
@@ -108,5 +109,10 @@ class TestCase( unittest.TestCase ):
         self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy", None, None ).andReturn( { "name": "yyy", "owner": { "login": "xxx" } } )
         self.requester.expect.dataRequest( "GET", "/repos/xxx/yyy/compare/foo...bar", None, None ).andReturn( { "gabu": "zomeuh" } )
         self.assertEqual( self.g.get_user().get_repo( "yyy" ).compare( "foo", "bar" ), { "gabu": "zomeuh" } )
+
+    def testDebugPrint( self ):
+        self.requester.expect.dataRequest( "GET", "/user", None, None ).andReturn( { "login": "xxx", "unknownAttribute": 42 } )
+        self.debugFile.expect.write( "Missing definition of attribute unknownAttribute in class AuthenticatedUser\n" )
+        self.g.get_user().location
 
 unittest.main()

@@ -34,7 +34,7 @@ Repository = GithubObject(
         "pushed_at", "created_at", "organization",
         "has_issues", "has_wiki", "has_downloads",
         # Not documented
-        "mirror_url", "updated_at", "id",
+        "mirror_url", "updated_at", "id", "permissions",
     ),
     InternalObjectAttribute( "owner", NamedUser ),
 )

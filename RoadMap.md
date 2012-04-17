@@ -1,9 +1,7 @@
 Planned releases
 ================
 
-(updated March 19th, 2012)
-
-* First full release (version 1.0, planned around March 25th)
+* First full release (version 1.0)
     * review public interface
     * better use of http status (403, 404, etc. raising different exceptions)
 

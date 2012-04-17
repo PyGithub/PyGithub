@@ -61,5 +61,6 @@ NamedUser._addAttributePolicy(
 NamedUser._addAttributePolicy(
     ExternalListOfObjects( "gists", "gist", Gist,
         ListGetable( Parameters( [], [] ) ),
+        ElementCreatable( Parameters( [ "public", "files" ], [ "description" ] ) ),
     )
 )
