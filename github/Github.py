@@ -2,8 +2,9 @@ from Requester import Requester
 from GithubObjects import *
 
 class Github:
-    def __init__( self, login, password ):
+    def __init__( self, login, password, debugFile = None ):
         self.__requester = Requester( login, password )
+        self.__debugFile = debugFile
 
     def _dataRequest( self, verb, url, parameters, data ):
         return self.__requester.dataRequest( verb, url, parameters, data )
@@ -29,3 +30,7 @@ class Github:
             for attributes
             in self._dataRequest( "GET", "/gists/public", None, None )
         ]
+
+    def _printDebug( self, *args ):
+        if self.__debugFile is not None:
+            self.__debugFile.write( " ".join( str( arg ) for arg in args ) + "\n" )

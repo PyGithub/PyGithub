@@ -88,7 +88,7 @@ def GithubObject( className, *attributePolicies ):
                     attributeDefinition = GithubObject.__attributeDefinitions[ attributeName ]
                     self.__attributes[ attributeName ] = attributeDefinition.getValueFromRawValue( self, attributeValue )
                 except KeyError:
-                    pass
+                    self._github._printDebug( "Missing definition of attribute", attributeName, "in class", className )
 
         def _markAsCompleted( self ):
             for attributeName, attributeDefinition in GithubObject.__attributeDefinitions.iteritems():
