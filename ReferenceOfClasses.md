@@ -783,6 +783,7 @@ Attributes
 * `mirror_url`
 * `updated_at`
 * `id`
+* `permissions`
 * `owner`: `NamedUser`
 * `parent`: `Repository`
 * `source`: `Repository`

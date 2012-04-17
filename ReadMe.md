@@ -32,6 +32,13 @@ Then play with your Github objects:
 History
 =======
 
+Version 0.6 (April 17th, 2012)
+------------------------------
+
+* Fix [issue 21](https://github.com/jacquev6/PyGithub/issues/21) (KeyError when accessing repositories)
+* Re-completed the API with NamedUser.create_gist
+
+
 Version 0.5 (March 19th, 2012)
 ------------------------------
 
