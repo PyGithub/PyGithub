@@ -1344,17 +1344,17 @@
                 }, 
                 {
                     "type": {
-                        "simple": false, 
+                        "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "dict"
+                        "name": "@todo"
                     }, 
                     "name": "files"
                 }, 
                 {
                     "type": {
-                        "simple": false, 
+                        "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "list"
+                        "name": "@todo"
                     }, 
                     "name": "parents"
                 }, 
@@ -1368,9 +1368,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": false, 
+                        "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "dict"
+                        "name": "@todo"
                     }, 
                     "name": "stats"
                 }, 

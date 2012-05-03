@@ -1,6 +1,10 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import Team
+import Event
+import Repository
+import NamedUser
 
 class Organization( object ):
     def __init__( self, github, attributes, lazy ):

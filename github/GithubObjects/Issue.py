@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import IssueComment
+import IssueEvent
+import NamedUser
+import Milestone
+import Label
 
 class Issue( object ):
     def __init__( self, github, attributes, lazy ):

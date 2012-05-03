@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import NamedUser
+import Label
 
 class Milestone( object ):
     def __init__( self, github, attributes, lazy ):

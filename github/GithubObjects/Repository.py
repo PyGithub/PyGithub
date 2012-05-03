@@ -1,6 +1,27 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import GitCommit
+import Team
+import PullRequest
+import GitBlob
+import Repository
+import IssueEvent
+import Milestone
+import RepositoryKey
+import GitTag
+import CommitComment
+import Hook
+import Tag
+import Branch
+import GitRef
+import Download
+import Commit
+import NamedUser
+import Issue
+import Event
+import GitTree
+import Label
 
 class Repository( object ):
     def __init__( self, github, attributes, lazy ):

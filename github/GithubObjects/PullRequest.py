@@ -1,6 +1,10 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import Commit
+import NamedUser
+import PullRequestComment
+import PullRequestFile
 
 class PullRequest( object ):
     def __init__( self, github, attributes, lazy ):

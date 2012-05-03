@@ -1,3 +1,7 @@
+{% for dependency in class.dependencies %}
+import {{ dependency }}
+{% endfor %}
+
 class {{ class.name }}( object ):
     def __init__( self, github, attributes, lazy ):
         self.__github = github

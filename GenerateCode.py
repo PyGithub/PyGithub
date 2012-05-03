@@ -1,6 +1,7 @@
 #!/bin/env python
 
 import json
+import itertools
 
 import django.conf
 import django.template
@@ -13,6 +14,13 @@ django.conf.settings.configure(
 )
 
 description = json.load( open( "JsonDescriptionOfGithubApiV3/description.001.normalized.json" ) )
+
+for class_ in description[ "classes" ]:
+    dependencies = set()
+    for thing in itertools.chain( class_[ "methods" ], class_[ "attributes" ] ):
+        if not thing[ "type" ][ "simple" ]:
+            dependencies.add( thing[ "type" ][ "name" ] )
+    class_[ "dependencies" ] = list( dependencies )
 
 githubObjectTemplate = django.template.loader.get_template( "GithubObject.py" )
 for class_ in description[ "classes" ]:

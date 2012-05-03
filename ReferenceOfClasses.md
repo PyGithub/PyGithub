@@ -190,10 +190,10 @@ Attributes
 * `author`: `NamedUser`
 * `commit`: `GitCommit`
 * `committer`: `NamedUser`
-* `files`: `dict`
-* `parents`: `list`
+* `files`
+* `parents`
 * `sha`: string
-* `stats`: `dict`
+* `stats`
 * `url`: string
 
 Comments

@@ -249,10 +249,10 @@
         {
             "name": "Commit",
             "attributes": [
-                { "name": "files", "type": "dict", "@todo": "dict of what?" },
-                { "name": "parents", "type": "list", "@todo": "list of what?" },
+                { "name": "files", "type": "@todo" },
+                { "name": "parents", "type": "@todo" },
                 { "name": "sha", "type": "string" },
-                { "name": "stats", "type": "dict", "@todo": "dict of what?" },
+                { "name": "stats", "type": "@todo" },
                 { "name": "url", "type": "string" },
                 { "name": "author", "type": "NamedUser" },
                 { "name": "committer", "type": "NamedUser" },

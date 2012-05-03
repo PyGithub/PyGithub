@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import Commit
 
 class Tag( object ):
     def __init__( self, github, attributes, lazy ):

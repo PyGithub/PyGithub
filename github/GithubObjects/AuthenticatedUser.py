@@ -1,6 +1,14 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import Gist
+import Repository
+import NamedUser
+import Organization
+import UserKey
+import Issue
+import Event
+import Authorization
 
 class AuthenticatedUser( object ):
     def __init__( self, github, attributes, lazy ):
