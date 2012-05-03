@@ -645,9 +645,9 @@
                     "optional_parameters": [
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "enum"
+                                "name": "@todo"
                             }, 
                             "name": "type"
                         }
@@ -3991,9 +3991,9 @@
                     "optional_parameters": [
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "enum"
+                                "name": "@todo"
                             }, 
                             "name": "type"
                         }
@@ -4783,9 +4783,9 @@
                     "optional_parameters": [
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "enum"
+                                "name": "@todo"
                             }, 
                             "name": "type"
                         }
@@ -4828,9 +4828,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "enum"
+                                "name": "@todo"
                             }, 
                             "name": "permission"
                         }

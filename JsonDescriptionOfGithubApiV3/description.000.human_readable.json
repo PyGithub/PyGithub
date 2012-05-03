@@ -2,8 +2,6 @@
     "classes": [
         {
             "name": "AuthenticatedUser",
-            "identity": [ { "type": "attribute", "value": [ "login" ] } ],
-            "base_url": [ { "type": "constant", "value": "/user" } ],
             "edit": {
                 "optional_parameters": [
                     { "name": "name", "type": "string" },
@@ -31,7 +29,7 @@
                 { "name": "html_url", "type": "@todo" },
                 { "name": "id", "type": "@todo" },
                 { "name": "location", "type": "string" },
-                { "name": "login", "type": "string", "identifying": true },
+                { "name": "login", "type": "string" },
                 { "name": "name", "type": "string" },
                 { "name": "owned_private_repos", "type": "@todo" },
                 { "name": "plan", "type": "@todo" },
@@ -55,9 +53,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     },
                     "get_list": true
                 },
@@ -79,9 +75,7 @@
                     "type": "UserKey",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -96,16 +90,11 @@
                     "type": "Repository",
                     "get_list": {
                         "optional_parameters": [
-                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                            { "name": "type", "type": "@todo" }
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "name", "type": "string" }
-                        ],
-                        "automatic_parameters": [
-                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
-                        ]
+                        "parameter": { "name": "name", "type": "string" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -164,7 +153,6 @@
                     "name": "gists",
                     "singular_name": "gist",
                     "type": "Gist",
-                    "special_url": "/gists",
                     "get_list": true,
                     "create_element": {
                         "mandatory_parameters": [
@@ -240,7 +228,7 @@
         {
             "name": "Branch",
             "attributes": [
-                { "name": "name", "type": "string", "mandatory": true },
+                { "name": "name", "type": "string" },
                 { "name": "commit", "type": "Commit" }
             ],
             "collections": [
@@ -351,7 +339,6 @@
         },
         {
             "name": "Gist",
-            "base_url": [ { "type": "constant", "value": "/gists/" }, { "type": "attribute", "value": [ "id" ] } ],
             "edit": {
                 "optional_parameters": [
                     { "name": "description", "type": "string" },
@@ -369,7 +356,7 @@
                 { "name": "git_push_url", "type": "@todo" },
                 { "name": "history", "type": "@todo" },
                 { "name": "html_url", "type": "@todo" },
-                { "name": "id", "type": "integer", "mandatory": true },
+                { "name": "id", "type": "integer" },
                 { "name": "public", "type": "@todo" },
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" },
@@ -382,9 +369,7 @@
                     "type": "GistComment",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -474,7 +459,7 @@
             "delete": true,
             "attributes": [
                 { "name": "object", "type": "@todo" },
-                { "name": "ref", "type": "string", "mandatory": true },
+                { "name": "ref", "type": "string" },
                 { "name": "url", "type": "@todo" }
             ],
             "collections": [
@@ -578,9 +563,7 @@
                     "type": "IssueComment",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -692,8 +675,6 @@
         },
         {
             "name": "NamedUser",
-            "identity": [ { "type": "attribute", "value": [ "login" ] } ],
-            "base_url": [ { "type": "constant", "value": "/users/" }, { "type": "attribute", "value": [ "login" ] } ],
             "attributes": [
                 { "name": "avatar_url", "type": "@todo" },
                 { "name": "bio", "type": "@todo" },
@@ -711,7 +692,7 @@
                 { "name": "html_url", "type": "@todo" },
                 { "name": "id", "type": "@todo" },
                 { "name": "location", "type": "string" },
-                { "name": "login", "type": "string", "mandatory": true },
+                { "name": "login", "type": "string" },
                 { "name": "name", "type": "string" },
                 { "name": "owned_private_repos", "type": "@todo" },
                 { "name": "plan", "type": "@todo" },
@@ -747,16 +728,11 @@
                     "type": "Repository",
                     "get_list": {
                         "optional_parameters": [
-                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                            { "name": "type", "type": "@todo" }
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "name", "type": "string" }
-                        ],
-                        "automatic_parameters": [
-                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
-                        ]
+                        "parameter": { "name": "name", "type": "string" }
                     }
                 },
                 {
@@ -807,7 +783,6 @@
         },
         {
             "name": "Organization",
-            "base_url": [ { "type": "constant", "value": "/orgs/" }, { "type": "attribute", "value": [ "login" ] } ],
             "edit": {
                 "optional_parameters": [
                     { "name": "billing_email", "type": "@todo" },
@@ -833,7 +808,7 @@
                 { "name": "html_url", "type": "@todo" },
                 { "name": "id", "type": "@todo" },
                 { "name": "location", "type": "string" },
-                { "name": "login", "type": "string", "mandatory": true },
+                { "name": "login", "type": "string" },
                 { "name": "name", "type": "string" },
                 { "name": "owned_private_repos", "type": "@todo" },
                 { "name": "plan", "type": "@todo" },
@@ -874,16 +849,11 @@
                     "type": "Repository",
                     "get_list": {
                         "optional_parameters": [
-                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                            { "name": "type", "type": "@todo" }
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "name", "type": "string" }
-                        ],
-                        "automatic_parameters": [
-                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
-                        ]
+                        "parameter": { "name": "name", "type": "string" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -911,7 +881,7 @@
                         ],
                         "optional_parameters": [
                             { "name": "repo_names", "type": "list" },
-                            { "name": "permission", "type": "enum", "values": [ "@todo" ] }
+                            { "name": "permission", "type": "@todo" }
                         ]
                     }
                 }
@@ -971,9 +941,7 @@
                     "type": "PullRequestComment",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
@@ -1047,8 +1015,6 @@
         },
         {
             "name": "Repository",
-            "identity": [ { "type": "attribute", "value": [ "owner", "login" ] }, { "type": "constant", "value": "/" }, { "type": "attribute", "value": [ "name" ] } ],
-            "base_url": [ { "type": "constant", "value": "/repos/" }, { "type": "attribute", "value": [ "_identity" ] } ],
             "edit": {
                 "mandatory_parameters": [
                     { "name": "name", "type": "@todo" }
@@ -1078,10 +1044,10 @@
                 { "name": "language", "type": "@todo" },
                 { "name": "master_branch", "type": "@todo" },
                 { "name": "mirror_url", "type": "@todo" },
-                { "name": "name", "type": "string", "mandatory": true },
+                { "name": "name", "type": "string" },
                 { "name": "open_issues", "type": "@todo" },
                 { "name": "organization", "type": "@todo" },
-                { "name": "owner", "type": "NamedUser", "mandatory": true },
+                { "name": "owner", "type": "NamedUser" },
                 { "name": "parent", "type": "Repository" },
                 { "name": "permissions", "type": "@todo" },
                 { "name": "private", "type": "@todo" },
@@ -1116,9 +1082,7 @@
                     "type": "CommitComment",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
@@ -1132,9 +1096,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "sha", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "sha", "type": "@todo" }
                     }
                 },
                 {
@@ -1149,9 +1111,7 @@
                     "type": "Download",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -1181,9 +1141,7 @@
                     "singular_name": "git_blob",
                     "type": "GitBlob",
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "sha", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "sha", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -1197,9 +1155,7 @@
                     "singular_name": "git_commit",
                     "type": "GitCommit",
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "sha", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "sha", "type": "@todo" }
                     },
                     "create_element": {
                         "mandatory_parameters": [
@@ -1225,9 +1181,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "ref", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "ref", "type": "@todo" }
                     }
                 },
                 {
@@ -1246,9 +1200,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "sha", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "sha", "type": "@todo" }
                     }
                 },
                 {
@@ -1264,9 +1216,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "sha", "type": "@todo" }
-                        ],
+                        "parameter": { "name": "sha", "type": "@todo" },
                         "optional_parameters": [
                             { "name": "recursive", "type": "bool" }
                         ]
@@ -1288,9 +1238,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
@@ -1321,9 +1269,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "number", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {
@@ -1332,9 +1278,7 @@
                     "type": "IssueEvent",
                     "get_list": true,
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
@@ -1349,9 +1293,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "id", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
@@ -1366,9 +1308,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "name", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "name", "type": "@todo" }
                     }
                 },
                 {
@@ -1393,9 +1333,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "number", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {
@@ -1408,9 +1346,7 @@
                         ]
                     },
                     "get_element": {
-                        "mandatory_parameters": [
-                            { "name": "number", "type": "@todo" }
-                        ]
+                        "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {

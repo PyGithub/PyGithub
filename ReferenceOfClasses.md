@@ -134,7 +134,7 @@ Repos
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`: `enum`
+    * `type`
 
 Watched
 -------
@@ -652,7 +652,7 @@ Repos
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`: `enum`
+    * `type`
 
 Watched
 -------
@@ -739,14 +739,14 @@ Repos
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`: `enum`
+    * `type`
 
 Teams
 -----
 * `create_team( name, [repo_names, permission] )`: `Team`
     * `name`: string
     * `repo_names`: `list`
-    * `permission`: `enum`
+    * `permission`
 * `get_teams()`: list of `Team`
 
 Class `PullRequest`

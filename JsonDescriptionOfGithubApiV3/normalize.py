@@ -4,6 +4,10 @@ import os.path
 import json
 import itertools
 
+def checkKeys( d, mandatory_keys, optional_keys = [] ):
+    assert set( d.keys() ) >= set( mandatory_keys ), d.keys()
+    assert set( d.keys() ) <= set( mandatory_keys ) | set( optional_keys ) | set( [ "@todo" ] ), d.keys()
+
 class Type:
     def __init__( self, arg ):
         if isinstance( arg, ( str, unicode ) ):
@@ -23,11 +27,15 @@ class Type:
         self.name = name
 
     def __fromDesc( self, desc ):
+        checkKeys( desc, [ "cardinality", "name" ] )
+
         self.cardinality = desc[ "cardinality" ]
         self.name = desc[ "name" ]
 
 class Variable:
     def __init__( self, desc ):
+        checkKeys( desc, [ "name", "type" ] )
+
         self.name = desc[ "name" ]
         self.type = Type( desc[ "type" ] )
 
@@ -59,6 +67,8 @@ class Function:
     def __init__( self, desc, *additional_descs ):
         for additional_desc in additional_descs:
             desc.update( additional_desc )
+        checkKeys( desc, [ "name", "type", "group" ], [ "mandatory_parameters", "optional_parameters", "variadic_parameter", "parameter", "request" ] ) # @todo Move request to mandatory_keys
+
         self.name = desc[ "name" ]
         self.type = Type( desc[ "type" ] )
         self.group = desc[ "group" ]
@@ -95,6 +105,8 @@ class Function:
 
 class Collection:
     def __init__( self, desc ):
+        checkKeys( desc, [ "name", "singular_name", "type" ], [ "add_element", "add_several_elements", "create_element", "delete_list", "get_element", "get_list", "has_element", "remove_element", "remove_several_elements", "set_list" ] )
+
         name = desc[ "name" ] if isinstance( desc[ "name" ], list ) else [ desc[ "name" ] ]
         self.methods = list()
         if "add_element" in desc:
@@ -109,7 +121,7 @@ class Collection:
             assert desc[ "delete_list" ] is True
             self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
         if "get_element" in desc:
-            self.methods.append( Function( desc[ "get_element" ], { "name": [ "get", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ] } ) )
+            self.methods.append( Function( desc[ "get_element" ], { "name": [ "get", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatory_parameters": [ desc[ "get_element" ][ "parameter" ] ] } ) )
         if "get_list" in desc:
             self.methods.append( Function(
                 desc[ "get_list" ] if desc[ "get_list" ] is not True else dict(),
@@ -136,6 +148,8 @@ class Collection:
 
 class Class:
     def __init__( self, desc ):
+        checkKeys( desc, [ "name", "attributes", "collections" ], [ "edit", "delete", "additional_methods" ] )
+
         self.name = desc[ "name" ]
         self.attributes = sorted(
             [
@@ -173,6 +187,8 @@ class Class:
 
 class Description:
     def __init__( self, desc ):
+        checkKeys( desc, [ "classes" ] )
+
         self.classes = sorted(
             [
                 Class( class_ )
@@ -200,184 +216,3 @@ with open( os.path.join( os.path.dirname( __file__ ), "description.000.human_rea
     description = Description( json.load( f ) )
 
 description.save( "description.001.normalized.json" )
-
-# def normalizeTypes( description ):
-    # for class_ in description[ "classes" ]:
-        # for subObject in itertools.chain( class_[ "collections" ], class_[ "attributes" ] ):
-            # subObject[ "type" ] = normalizeType( subObject[ "type" ] )
-        # if "additional_methods" in class_:
-            # for subObject in class_[ "additional_methods" ]:
-                # subObject[ "type" ] = normalizeType( subObject[ "type" ] )
-
-# def normalizeType( type ):
-    # def isSimple( typeName ):
-        # return typeName in [ "string", "integer", "bool", "float", "@todo" ]
-    # if isinstance( type, ( str, unicode ) ):
-        # return {
-            # "cardinality": "scalar",
-            # "simple": isSimple( type ),
-            # "name": type,
-        # }
-    # else:
-        # type[ "simple" ] = isSimple( type[ "name" ] )
-        # return type
-
-# def normalizeFunction( function ):
-    # if "mandatory_parameters" not in function:
-        # function[ "mandatory_parameters" ] = []
-    # if "optional_parameters" not in function:
-        # function[ "optional_parameters" ] = []
-    # if "automatic_parameters" not in function:
-        # function[ "automatic_parameters" ] = []
-
-# def normalizeFunctions( description ):
-    # for class_ in description[ "classes" ]:
-        # if "edit" in class_:
-            # normalizeFunction( class_[ "edit" ] )
-        # if "delete" in class_:
-            # if class_[ "delete" ] is True:
-                # class_[ "delete" ] = {}
-            # normalizeFunction( class_[ "delete" ] )
-        # for collection in class_[ "collections" ]:
-            # def completeImplicitFunction( name, explicitDefinition ):
-                # if name in collection and collection[ name ] is True:
-                    # collection[ name ] = explicitDefinition
-
-            # completeImplicitFunction( "get_list",
-                # {}
-            # )
-            # completeImplicitFunction( "delete_list",
-                # {}
-            # )
-            # completeImplicitFunction( "add_element",
-                # { "mandatory_parameters": [ { "name": collection[ "singular_name" ], "type": collection[ "type" ][ "name" ] } ] }
-            # )
-            # completeImplicitFunction( "remove_element",
-                # { "mandatory_parameters": [ { "name": collection[ "singular_name" ], "type": collection[ "type" ][ "name" ] } ] }
-            # )
-            # completeImplicitFunction( "has_element",
-                # { "mandatory_parameters": [ { "name": collection[ "singular_name" ], "type": collection[ "type" ][ "name" ] } ] }
-            # )
-
-            # for function in [ "get_list", "delete_list", "has_element", "get_element", "add_element", "remove_element", "create_element" ]:
-                # if function in collection:
-                    # normalizeFunction( collection[ function ] )
-
-# def normalizeAttributes( description ):
-    # for class_ in description[ "classes" ]:
-        # for attribute in class_[ "attributes" ]:
-            # if "mandatory" not in attribute:
-                # attribute[ "mandatory" ] = False
-            # if "identifying" not in attribute:
-                # attribute[ "identifying" ] = False
-
-# def gatherDependencies( description ):
-    # for class_ in description[ "classes" ]:
-        # dependencies = set()
-        # for subObject in itertools.chain( class_[ "collections" ], class_[ "attributes" ] ):
-            # if not subObject[ "type" ][ "simple" ]:
-                # if subObject[ "type" ][ "name" ] != class_[ "name" ]:
-                    # dependencies.add( subObject[ "type" ][ "name" ] )
-        # class_[ "dependencies" ] = list( dependencies )
-
-# def generateMethodDescriptions( description ):
-    # for class_ in description[ "classes" ]:
-        # methods = list()
-        # if "additional_methods" in class_:
-            # for method in class_[ "additional_methods" ]:
-                # methods.append( method )
-        # for collection in class_[ "collections" ]:
-            # if "get_list" in collection:
-                # method = {
-                    # "name": [ "get", collection[ "name" ] ],
-                    # "group": collection[ "name" ],
-                    # "type": { "cardinality": "list", "base": collection[ "type" ] },
-                    # "request": {
-                        # "verb": "GET",
-                        # "url": [
-                            # { "type": "attribute", "value": [ "url" ] },
-                            # { "type": "constant", "value": "/" + collection[ "name" ] },
-                        # ],
-                    # },
-                # }
-            # methods.append( method )
-        # class_[ "methods" ] = methods
-
-# def checkDescription( description ):
-    # def checkKeys( d, mandatory_keys, optional_keys = [] ):
-        # assert set( d.keys() ) >= set( mandatory_keys ), d
-        # assert set( d.keys() ) <= set( mandatory_keys ) | set( optional_keys ) | set( [ "@todo" ] ), d
-
-    # def checkString( s ):
-        # assert isinstance( s, ( str, unicode ) )
-
-    # def checkBool( s ):
-        # assert isinstance( s, bool )
-
-    # def checkConcatenation( concatenation ):
-        # for part in concatenation:
-            # checkKeys( part, [ "type", "value" ] )
-            # assert part[ "type" ] in [ "constant", "attribute" ]
-            # if part[ "type" ] == "constant":
-                # checkString( part[ "value" ] )
-            # if part[ "type" ] == "attribute":
-                # for level in part[ "value" ]:
-                    # checkString( level )
-
-    # def checkType( type ):
-        # checkKeys( type, [ "simple", "name" ] )
-        # checkBool( type[ "simple" ] )
-        # checkString( type[ "name" ] )
-
-    # def checkParameter( parameter ):
-        # checkKeys( parameter, [ "name", "type" ], [ "values" ] )
-        # checkString( parameter[ "name" ] )
-        # checkString( parameter[ "type" ] )
-
-    # def checkFunction( function ):
-        # checkKeys( function, [ "mandatory_parameters", "optional_parameters" ], [ "automatic_parameters" ] )
-        # for parameter in itertools.chain( function[ "mandatory_parameters" ], function[ "optional_parameters" ] ):
-            # checkParameter( parameter )
-        # if "automatic_parameters" in function:
-            # for parameter in function[ "automatic_parameters" ]:
-                # checkKeys( parameter, [ "name", "source" ] )
-                # checkString( parameter[ "name" ] )
-                # checkConcatenation( parameter[ "source" ] )
-
-    # checkKeys( description, [ "classes" ] )
-    # for class_ in description[ "classes" ]:
-        # checkKeys( class_, [ "name", "dependencies", "collections", "attributes" ], [ "base_url", "identity", "edit", "delete" ] )
-        # checkString( class_[ "name" ] )
-        # for dependency in class_[ "dependencies" ]:
-            # checkString( dependency )
-        # for collection in class_[ "collections" ]:
-            # functions = [ "get_list", "delete_list", "has_element", "get_element", "add_element", "remove_element", "create_element" ]
-            # checkKeys( collection, [ "name", "singular_name", "type" ], [ "special_url", "add_several_elements", "remove_several_elements", "set_list" ] + functions )
-            # checkString( collection[ "name" ] )
-            # checkString( collection[ "singular_name" ] )
-            # checkType( collection[ "type" ] )
-            # if "special_url" in collection:
-                # checkString( collection[ "special_url" ] )
-            # for function in functions:
-                # if function in collection:
-                    # checkFunction( collection[ function ] )
-            # if "add_several_elements" in collection:
-                # checkBool( collection[ "add_several_elements" ] )
-            # if "remove_several_elements" in collection:
-                # checkBool( collection[ "remove_several_elements" ] )
-            # if "set_list" in collection:
-                # checkBool( collection[ "set_list" ] )
-        # for attribute in class_[ "attributes" ]:
-            # checkKeys( attribute, [ "name", "type", "mandatory", "identifying" ] )
-            # checkString( attribute[ "name" ] )
-            # checkType( attribute[ "type" ] )
-            # checkBool( attribute[ "mandatory" ] )
-            # checkBool( attribute[ "identifying" ] )
-        # if "base_url" in class_:
-            # checkConcatenation( class_[ "base_url" ] )
-        # if "identity" in class_:
-            # checkConcatenation( class_[ "identity" ] )
-        # if "edit" in class_:
-            # checkFunction( class_[ "edit" ] )
-        # if "delete" in class_:
-            # checkFunction( class_[ "delete" ] )
