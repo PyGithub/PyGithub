@@ -267,7 +267,28 @@ class Repository( object ):
         pass
 
     def edit( self, name, description = None, homepage = None, public = None, has_issues = None, has_wiki = None, has_downloads = None ):
-        pass
+        post_parameters = {
+            "name": name,
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if homepage is not None:
+            post_parameters[ "homepage" ] = homepage
+        if public is not None:
+            post_parameters[ "public" ] = public
+        if has_issues is not None:
+            post_parameters[ "has_issues" ] = has_issues
+        if has_wiki is not None:
+            post_parameters[ "has_wiki" ] = has_wiki
+        if has_downloads is not None:
+            post_parameters[ "has_downloads" ] = has_downloads
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_branches( self ):
         result = self.__github._dataRequest(

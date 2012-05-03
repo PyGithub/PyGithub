@@ -84,7 +84,25 @@ class Hook( object ):
         pass
 
     def edit( self, name, config, events = None, add_events = None, remove_events = None, active = None ):
-        pass
+        post_parameters = {
+            "name": name,
+            "config": config,
+        }
+        if events is not None:
+            post_parameters[ "events" ] = events
+        if add_events is not None:
+            post_parameters[ "add_events" ] = add_events
+        if remove_events is not None:
+            post_parameters[ "remove_events" ] = remove_events
+        if active is not None:
+            post_parameters[ "active" ] = active
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def test( self ):
         pass

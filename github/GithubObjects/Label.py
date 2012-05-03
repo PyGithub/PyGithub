@@ -48,7 +48,17 @@ class Label( object ):
         pass
 
     def edit( self, name, color ):
-        pass
+        post_parameters = {
+            "name": name,
+            "color": color,
+        }
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
         if "color" in attributes:

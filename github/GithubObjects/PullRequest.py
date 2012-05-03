@@ -187,7 +187,21 @@ class PullRequest( object ):
         self.__useAttributes( result )
 
     def edit( self, title = None, body = None, state = None ):
-        pass
+        post_parameters = {
+        }
+        if title is not None:
+            post_parameters[ "title" ] = title
+        if body is not None:
+            post_parameters[ "body" ] = body
+        if state is not None:
+            post_parameters[ "state" ] = state
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_comment( self, id ):
         pass

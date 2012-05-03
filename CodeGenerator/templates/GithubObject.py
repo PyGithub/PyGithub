@@ -39,12 +39,35 @@ class {{ class.name }}( object ):
 {% for method in class.methods|dictsort:"name" %}
     def {{ method.name|join:"_" }}( {% include "GithubObject.Parameters.py" with function=method only %} ):
 {% if method.request %}
+
+{% if method.request.post_parameters %}
+        post_parameters = {
+{% for parameter in method.mandatory_parameters %}
+            "{{ parameter.name }}": {{ parameter.name }},
+{% endfor %}
+        }
+
+{% for parameter in method.optional_parameters %}
+        if {{ parameter.name }} is not None:
+            post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
+{% endfor %}
+
+{% endif %}
+
         result = self.__github._dataRequest(
             "{{ method.request.verb }}",
             {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
             None,
+{% if method.request.post_parameters %}
+            post_parameters
+{% else %}
             None
+{% endif %}
         )
+
+{% if method.type.name == "void" %}
+        self.__useAttributes( result )
+{% else %}
 
 {% if method.type.cardinality == "scalar" %}
         return {{ method.type.name }}.{{ method.type.name }}( self.__github, result, lazy = True )
@@ -55,6 +78,8 @@ class {{ class.name }}( object ):
             {{ method.type.name }}.{{ method.type.name }}( self.__github, element, lazy = True )
             for element in result
         ]
+{% endif %}
+
 {% endif %}
 
 {% else %}

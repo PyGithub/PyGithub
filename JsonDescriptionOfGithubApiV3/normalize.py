@@ -114,9 +114,10 @@ class Collection:
             self.methods.append( Function(
                 desc[ "get_list" ] if desc[ "get_list" ] is not True else dict(),
                 { "name": [ "get" ] + name, "type": { "cardinality": "list", "name": desc[ "type" ] }, "group": desc[ "name" ] },
-                { "request": {
-                    "verb": "GET",
-                    "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
+                {
+                    "request": {
+                        "verb": "GET",
+                        "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
                     }
                 }
             ) )
@@ -145,7 +146,17 @@ class Class:
         )
         self.methods = []
         if "edit" in desc:
-            self.methods.append( Function( desc[ "edit" ], { "name": [ "edit" ], "type": "void", "group": "modification" } ) )
+            self.methods.append( Function(
+                desc[ "edit" ],
+                { "name": [ "edit" ], "type": "void", "group": "modification" },
+                {
+                    "request": {
+                        "verb": "PATCH",
+                        "url": [ { "type": "constant", "value": "https://api.github.com/user" } ], # @todo
+                        "post_parameters": True, # @todo
+                    },
+                }
+            ) )
         if "delete" in desc:
             self.methods.append( Function( { "name": [ "delete" ], "type": "void", "group": "deletion" } ) )
         for collection in [ Collection( collection ) for collection in desc[ "collections" ] ]:

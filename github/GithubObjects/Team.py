@@ -74,7 +74,18 @@ class Team( object ):
         pass
 
     def edit( self, name, permission = None ):
-        pass
+        post_parameters = {
+            "name": name,
+        }
+        if permission is not None:
+            post_parameters[ "permission" ] = permission
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_members( self ):
         result = self.__github._dataRequest(

@@ -143,7 +143,27 @@ class Issue( object ):
         pass
 
     def edit( self, title = None, body = None, assignee = None, state = None, milestone = None, labels = None ):
-        pass
+        post_parameters = {
+        }
+        if title is not None:
+            post_parameters[ "title" ] = title
+        if body is not None:
+            post_parameters[ "body" ] = body
+        if assignee is not None:
+            post_parameters[ "assignee" ] = assignee
+        if state is not None:
+            post_parameters[ "state" ] = state
+        if milestone is not None:
+            post_parameters[ "milestone" ] = milestone
+        if labels is not None:
+            post_parameters[ "labels" ] = labels
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_comment( self, id ):
         pass

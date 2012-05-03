@@ -187,7 +187,27 @@ class Organization( object ):
         pass
 
     def edit( self, billing_email = None, blog = None, company = None, email = None, location = None, name = None ):
-        pass
+        post_parameters = {
+        }
+        if billing_email is not None:
+            post_parameters[ "billing_email" ] = billing_email
+        if blog is not None:
+            post_parameters[ "blog" ] = blog
+        if company is not None:
+            post_parameters[ "company" ] = company
+        if email is not None:
+            post_parameters[ "email" ] = email
+        if location is not None:
+            post_parameters[ "location" ] = location
+        if name is not None:
+            post_parameters[ "name" ] = name
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_events( self ):
         result = self.__github._dataRequest(

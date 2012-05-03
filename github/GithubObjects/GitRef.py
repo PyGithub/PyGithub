@@ -48,7 +48,18 @@ class GitRef( object ):
         pass
 
     def edit( self, sha, force = None ):
-        pass
+        post_parameters = {
+            "sha": sha,
+        }
+        if force is not None:
+            post_parameters[ "force" ] = force
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
         if "object" in attributes:

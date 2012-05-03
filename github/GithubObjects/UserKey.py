@@ -54,7 +54,19 @@ class UserKey( object ):
         pass
 
     def edit( self, title = None, key = None ):
-        pass
+        post_parameters = {
+        }
+        if title is not None:
+            post_parameters[ "title" ] = title
+        if key is not None:
+            post_parameters[ "key" ] = key
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
         if "id" in attributes:

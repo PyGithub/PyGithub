@@ -208,14 +208,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -273,7 +278,12 @@
                             }, 
                             "name": "bio"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -1228,14 +1238,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -1277,7 +1292,12 @@
                             }, 
                             "name": "note_url"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -1577,15 +1597,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2004,14 +2034,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -2029,7 +2064,12 @@
                             }, 
                             "name": "files"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2242,15 +2282,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2416,14 +2466,19 @@
                         }
                     ], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -2433,7 +2488,12 @@
                             }, 
                             "name": "force"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2639,14 +2699,19 @@
                         }
                     ], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -2680,7 +2745,12 @@
                             }, 
                             "name": "active"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2854,14 +2924,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -2911,7 +2986,12 @@
                             }, 
                             "name": "labels"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [
@@ -3196,15 +3276,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3332,15 +3422,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3454,14 +3554,19 @@
                         }
                     ], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -3487,7 +3592,12 @@
                             }, 
                             "name": "due_on"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4269,14 +4379,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -4326,7 +4441,12 @@
                             }, 
                             "name": "name"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4986,14 +5106,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -5019,7 +5144,12 @@
                             }, 
                             "name": "state"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [
@@ -5274,15 +5404,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5634,14 +5774,19 @@
                         }
                     ], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -5691,7 +5836,12 @@
                             }, 
                             "name": "has_downloads"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7372,15 +7522,25 @@
                         }
                     ], 
                     "group": "modification", 
+                    "name": [
+                        "edit"
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }, 
-                    "name": [
-                        "edit"
-                    ], 
-                    "optional_parameters": []
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7500,14 +7660,19 @@
                         }
                     ], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7517,7 +7682,12 @@
                             }, 
                             "name": "permission"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7776,14 +7946,19 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "modification", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "edit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
+                            }
+                        ], 
+                        "post_parameters": true, 
+                        "verb": "PATCH"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7801,7 +7976,12 @@
                             }, 
                             "name": "key"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 

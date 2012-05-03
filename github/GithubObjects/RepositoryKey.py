@@ -54,7 +54,17 @@ class RepositoryKey( object ):
         pass
 
     def edit( self, title, key ):
-        pass
+        post_parameters = {
+            "title": title,
+            "key": key,
+        }
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
         if "id" in attributes:

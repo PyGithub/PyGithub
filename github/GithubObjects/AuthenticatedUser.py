@@ -215,7 +215,29 @@ class AuthenticatedUser( object ):
         pass
 
     def edit( self, name = None, email = None, blog = None, company = None, location = None, hireable = None, bio = None ):
-        pass
+        post_parameters = {
+        }
+        if name is not None:
+            post_parameters[ "name" ] = name
+        if email is not None:
+            post_parameters[ "email" ] = email
+        if blog is not None:
+            post_parameters[ "blog" ] = blog
+        if company is not None:
+            post_parameters[ "company" ] = company
+        if location is not None:
+            post_parameters[ "location" ] = location
+        if hireable is not None:
+            post_parameters[ "hireable" ] = hireable
+        if bio is not None:
+            post_parameters[ "bio" ] = bio
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_authorization( self, id ):
         pass

@@ -123,7 +123,19 @@ class Gist( object ):
         pass
 
     def edit( self, description = None, files = None ):
-        pass
+        post_parameters = {
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if files is not None:
+            post_parameters[ "files" ] = files
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_comment( self, id ):
         pass

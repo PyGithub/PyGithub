@@ -92,7 +92,22 @@ class Milestone( object ):
         pass
 
     def edit( self, title, state = None, description = None, due_on = None ):
-        pass
+        post_parameters = {
+            "title": title,
+        }
+        if state is not None:
+            post_parameters[ "state" ] = state
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if due_on is not None:
+            post_parameters[ "due_on" ] = due_on
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
 
     def get_labels( self ):
         result = self.__github._dataRequest(
