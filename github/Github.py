@@ -30,7 +30,11 @@ class Github:
             return GithubObjects.NamedUser.NamedUser( self, attributes, lazy = False )
 
     def get_organization( self, login ):
-        return GithubObjects.Organization.Organization( self, { "login": login }, lazy = False )
+        attributes = {
+                "url": "https://api.github.com/orgs/" + login,
+                "login": login,
+        }
+        return GithubObjects.Organization.Organization( self, attributes, lazy = False )
 
     def get_gist( self, id ):
         return GithubObjects.Gist.Gist( self, { "id": id }, lazy = False )
