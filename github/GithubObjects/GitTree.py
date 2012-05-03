@@ -11,26 +11,22 @@ class GitTree( object ):
 
     @property
     def recursive( self ):
-        if self.__recursive is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__recursive )
         return self.__recursive
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def tree( self ):
-        if self.__tree is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__tree )
         return self.__tree
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -39,8 +35,8 @@ class GitTree( object ):
         self.__tree = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

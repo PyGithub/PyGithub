@@ -12,38 +12,32 @@ class IssueComment( object ):
 
     @property
     def body( self ):
-        if self.__body is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__body )
         return self.__body
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     @property
     def user( self ):
-        if self.__user is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__user )
         return self.__user
 
     def __initAttributes( self ):
@@ -54,8 +48,8 @@ class IssueComment( object ):
         self.__url = None
         self.__user = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

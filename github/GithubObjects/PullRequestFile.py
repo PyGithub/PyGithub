@@ -11,56 +11,47 @@ class PullRequestFile( object ):
 
     @property
     def additions( self ):
-        if self.__additions is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__additions )
         return self.__additions
 
     @property
     def blob_url( self ):
-        if self.__blob_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__blob_url )
         return self.__blob_url
 
     @property
     def changes( self ):
-        if self.__changes is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__changes )
         return self.__changes
 
     @property
     def deletions( self ):
-        if self.__deletions is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__deletions )
         return self.__deletions
 
     @property
     def filename( self ):
-        if self.__filename is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__filename )
         return self.__filename
 
     @property
     def patch( self ):
-        if self.__patch is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__patch )
         return self.__patch
 
     @property
     def raw_url( self ):
-        if self.__raw_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__raw_url )
         return self.__raw_url
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def status( self ):
-        if self.__status is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__status )
         return self.__status
 
     def __initAttributes( self ):
@@ -74,8 +65,8 @@ class PullRequestFile( object ):
         self.__sha = None
         self.__status = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

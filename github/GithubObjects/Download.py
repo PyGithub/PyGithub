@@ -11,122 +11,102 @@ class Download( object ):
 
     @property
     def accesskeyid( self ):
-        if self.__accesskeyid is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__accesskeyid )
         return self.__accesskeyid
 
     @property
     def acl( self ):
-        if self.__acl is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__acl )
         return self.__acl
 
     @property
     def bucket( self ):
-        if self.__bucket is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__bucket )
         return self.__bucket
 
     @property
     def content_type( self ):
-        if self.__content_type is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__content_type )
         return self.__content_type
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def description( self ):
-        if self.__description is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__description )
         return self.__description
 
     @property
     def download_count( self ):
-        if self.__download_count is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__download_count )
         return self.__download_count
 
     @property
     def expirationdate( self ):
-        if self.__expirationdate is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__expirationdate )
         return self.__expirationdate
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def mime_type( self ):
-        if self.__mime_type is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__mime_type )
         return self.__mime_type
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def path( self ):
-        if self.__path is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__path )
         return self.__path
 
     @property
     def policy( self ):
-        if self.__policy is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__policy )
         return self.__policy
 
     @property
     def prefix( self ):
-        if self.__prefix is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__prefix )
         return self.__prefix
 
     @property
     def redirect( self ):
-        if self.__redirect is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__redirect )
         return self.__redirect
 
     @property
     def s3_url( self ):
-        if self.__s3_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__s3_url )
         return self.__s3_url
 
     @property
     def signature( self ):
-        if self.__signature is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__signature )
         return self.__signature
 
     @property
     def size( self ):
-        if self.__size is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__size )
         return self.__size
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -151,8 +131,8 @@ class Download( object ):
         self.__size = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

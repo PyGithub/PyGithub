@@ -11,56 +11,47 @@ class Hook( object ):
 
     @property
     def active( self ):
-        if self.__active is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__active )
         return self.__active
 
     @property
     def config( self ):
-        if self.__config is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__config )
         return self.__config
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def events( self ):
-        if self.__events is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__events )
         return self.__events
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def last_response( self ):
-        if self.__last_response is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__last_response )
         return self.__last_response
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -74,8 +65,8 @@ class Hook( object ):
         self.__updated_at = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

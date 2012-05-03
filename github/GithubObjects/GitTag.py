@@ -11,38 +11,32 @@ class GitTag( object ):
 
     @property
     def message( self ):
-        if self.__message is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__message )
         return self.__message
 
     @property
     def object( self ):
-        if self.__object is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__object )
         return self.__object
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def tag( self ):
-        if self.__tag is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__tag )
         return self.__tag
 
     @property
     def tagger( self ):
-        if self.__tagger is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__tagger )
         return self.__tagger
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -53,8 +47,8 @@ class GitTag( object ):
         self.__tagger = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

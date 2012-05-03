@@ -14,74 +14,62 @@ class Event( object ):
 
     @property
     def actor( self ):
-        if self.__actor is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__actor )
         return self.__actor
 
     @property
     def commit_id( self ):
-        if self.__commit_id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commit_id )
         return self.__commit_id
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def event( self ):
-        if self.__event is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__event )
         return self.__event
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def issue( self ):
-        if self.__issue is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__issue )
         return self.__issue
 
     @property
     def org( self ):
-        if self.__org is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__org )
         return self.__org
 
     @property
     def payload( self ):
-        if self.__payload is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__payload )
         return self.__payload
 
     @property
     def public( self ):
-        if self.__public is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__public )
         return self.__public
 
     @property
     def repo( self ):
-        if self.__repo is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__repo )
         return self.__repo
 
     @property
     def type( self ):
-        if self.__type is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__type )
         return self.__type
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -98,8 +86,8 @@ class Event( object ):
         self.__type = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

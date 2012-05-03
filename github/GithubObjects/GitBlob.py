@@ -11,32 +11,27 @@ class GitBlob( object ):
 
     @property
     def content( self ):
-        if self.__content is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__content )
         return self.__content
 
     @property
     def encoding( self ):
-        if self.__encoding is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__encoding )
         return self.__encoding
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def size( self ):
-        if self.__size is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__size )
         return self.__size
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -46,8 +41,8 @@ class GitBlob( object ):
         self.__size = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

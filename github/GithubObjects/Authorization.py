@@ -11,56 +11,47 @@ class Authorization( object ):
 
     @property
     def app( self ):
-        if self.__app is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__app )
         return self.__app
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def note( self ):
-        if self.__note is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__note )
         return self.__note
 
     @property
     def note_url( self ):
-        if self.__note_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__note_url )
         return self.__note_url
 
     @property
     def scopes( self ):
-        if self.__scopes is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__scopes )
         return self.__scopes
 
     @property
     def token( self ):
-        if self.__token is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__token )
         return self.__token
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -74,8 +65,8 @@ class Authorization( object ):
         self.__updated_at = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

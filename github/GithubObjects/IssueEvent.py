@@ -12,44 +12,37 @@ class IssueEvent( object ):
 
     @property
     def actor( self ):
-        if self.__actor is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__actor )
         return self.__actor
 
     @property
     def commit_id( self ):
-        if self.__commit_id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commit_id )
         return self.__commit_id
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def event( self ):
-        if self.__event is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__event )
         return self.__event
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def issue( self ):
-        if self.__issue is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__issue )
         return self.__issue
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -61,8 +54,8 @@ class IssueEvent( object ):
         self.__issue = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

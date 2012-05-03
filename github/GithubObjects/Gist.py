@@ -14,86 +14,72 @@ class Gist( object ):
 
     @property
     def comments( self ):
-        if self.__comments is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__comments )
         return self.__comments
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def description( self ):
-        if self.__description is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__description )
         return self.__description
 
     @property
     def files( self ):
-        if self.__files is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__files )
         return self.__files
 
     @property
     def forks( self ):
-        if self.__forks is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__forks )
         return self.__forks
 
     @property
     def git_pull_url( self ):
-        if self.__git_pull_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__git_pull_url )
         return self.__git_pull_url
 
     @property
     def git_push_url( self ):
-        if self.__git_push_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__git_push_url )
         return self.__git_push_url
 
     @property
     def history( self ):
-        if self.__history is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__history )
         return self.__history
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def public( self ):
-        if self.__public is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__public )
         return self.__public
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     @property
     def user( self ):
-        if self.__user is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__user )
         return self.__user
 
     def __initAttributes( self ):
@@ -112,8 +98,8 @@ class Gist( object ):
         self.__url = None
         self.__user = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

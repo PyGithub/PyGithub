@@ -12,8 +12,7 @@ class {{ class.name }}( object ):
 {% for attribute in class.attributes %}
     @property
     def {{ attribute.name }}( self ):
-        if self.__{{ attribute.name }} is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__{{ attribute.name }} )
         return self.__{{ attribute.name }}
 {% endfor %}
 
@@ -22,8 +21,8 @@ class {{ class.name }}( object ):
         self.__{{ attribute.name }} = None
 {% endfor %}
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

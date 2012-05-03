@@ -14,50 +14,42 @@ class Commit( object ):
 
     @property
     def author( self ):
-        if self.__author is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__author )
         return self.__author
 
     @property
     def commit( self ):
-        if self.__commit is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commit )
         return self.__commit
 
     @property
     def committer( self ):
-        if self.__committer is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__committer )
         return self.__committer
 
     @property
     def files( self ):
-        if self.__files is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__files )
         return self.__files
 
     @property
     def parents( self ):
-        if self.__parents is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__parents )
         return self.__parents
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def stats( self ):
-        if self.__stats is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__stats )
         return self.__stats
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -70,8 +62,8 @@ class Commit( object ):
         self.__stats = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

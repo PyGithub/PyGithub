@@ -32,182 +32,152 @@ class Repository( object ):
 
     @property
     def clone_url( self ):
-        if self.__clone_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__clone_url )
         return self.__clone_url
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def description( self ):
-        if self.__description is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__description )
         return self.__description
 
     @property
     def fork( self ):
-        if self.__fork is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__fork )
         return self.__fork
 
     @property
     def forks( self ):
-        if self.__forks is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__forks )
         return self.__forks
 
     @property
     def git_url( self ):
-        if self.__git_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__git_url )
         return self.__git_url
 
     @property
     def has_downloads( self ):
-        if self.__has_downloads is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__has_downloads )
         return self.__has_downloads
 
     @property
     def has_issues( self ):
-        if self.__has_issues is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__has_issues )
         return self.__has_issues
 
     @property
     def has_wiki( self ):
-        if self.__has_wiki is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__has_wiki )
         return self.__has_wiki
 
     @property
     def homepage( self ):
-        if self.__homepage is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__homepage )
         return self.__homepage
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def language( self ):
-        if self.__language is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__language )
         return self.__language
 
     @property
     def master_branch( self ):
-        if self.__master_branch is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__master_branch )
         return self.__master_branch
 
     @property
     def mirror_url( self ):
-        if self.__mirror_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__mirror_url )
         return self.__mirror_url
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def open_issues( self ):
-        if self.__open_issues is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__open_issues )
         return self.__open_issues
 
     @property
     def organization( self ):
-        if self.__organization is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__organization )
         return self.__organization
 
     @property
     def owner( self ):
-        if self.__owner is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__owner )
         return self.__owner
 
     @property
     def parent( self ):
-        if self.__parent is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__parent )
         return self.__parent
 
     @property
     def permissions( self ):
-        if self.__permissions is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__permissions )
         return self.__permissions
 
     @property
     def private( self ):
-        if self.__private is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__private )
         return self.__private
 
     @property
     def pushed_at( self ):
-        if self.__pushed_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__pushed_at )
         return self.__pushed_at
 
     @property
     def size( self ):
-        if self.__size is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__size )
         return self.__size
 
     @property
     def source( self ):
-        if self.__source is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__source )
         return self.__source
 
     @property
     def ssh_url( self ):
-        if self.__ssh_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__ssh_url )
         return self.__ssh_url
 
     @property
     def svn_url( self ):
-        if self.__svn_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__svn_url )
         return self.__svn_url
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     @property
     def watchers( self ):
-        if self.__watchers is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__watchers )
         return self.__watchers
 
     def __initAttributes( self ):
@@ -242,8 +212,8 @@ class Repository( object ):
         self.__url = None
         self.__watchers = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

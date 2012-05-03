@@ -11,20 +11,17 @@ class Label( object ):
 
     @property
     def color( self ):
-        if self.__color is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__color )
         return self.__color
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -32,8 +29,8 @@ class Label( object ):
         self.__name = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

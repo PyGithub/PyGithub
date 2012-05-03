@@ -11,20 +11,17 @@ class GitRef( object ):
 
     @property
     def object( self ):
-        if self.__object is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__object )
         return self.__object
 
     @property
     def ref( self ):
-        if self.__ref is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__ref )
         return self.__ref
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -32,8 +29,8 @@ class GitRef( object ):
         self.__ref = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

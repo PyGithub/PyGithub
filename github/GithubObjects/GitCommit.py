@@ -12,44 +12,37 @@ class GitCommit( object ):
 
     @property
     def author( self ):
-        if self.__author is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__author )
         return self.__author
 
     @property
     def committer( self ):
-        if self.__committer is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__committer )
         return self.__committer
 
     @property
     def message( self ):
-        if self.__message is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__message )
         return self.__message
 
     @property
     def parents( self ):
-        if self.__parents is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__parents )
         return self.__parents
 
     @property
     def sha( self ):
-        if self.__sha is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def tree( self ):
-        if self.__tree is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__tree )
         return self.__tree
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -61,8 +54,8 @@ class GitCommit( object ):
         self.__tree = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

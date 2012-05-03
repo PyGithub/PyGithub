@@ -13,38 +13,32 @@ class Team( object ):
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def members_count( self ):
-        if self.__members_count is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__members_count )
         return self.__members_count
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def permission( self ):
-        if self.__permission is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__permission )
         return self.__permission
 
     @property
     def repos_count( self ):
-        if self.__repos_count is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__repos_count )
         return self.__repos_count
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -55,8 +49,8 @@ class Team( object ):
         self.__repos_count = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

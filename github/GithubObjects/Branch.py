@@ -12,22 +12,20 @@ class Branch( object ):
 
     @property
     def commit( self ):
-        if self.__commit is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commit )
         return self.__commit
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     def __initAttributes( self ):
         self.__commit = None
         self.__name = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

@@ -15,146 +15,122 @@ class Organization( object ):
 
     @property
     def avatar_url( self ):
-        if self.__avatar_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__avatar_url )
         return self.__avatar_url
 
     @property
     def billing_email( self ):
-        if self.__billing_email is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__billing_email )
         return self.__billing_email
 
     @property
     def blog( self ):
-        if self.__blog is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__blog )
         return self.__blog
 
     @property
     def collaborators( self ):
-        if self.__collaborators is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__collaborators )
         return self.__collaborators
 
     @property
     def company( self ):
-        if self.__company is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__company )
         return self.__company
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def disk_usage( self ):
-        if self.__disk_usage is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__disk_usage )
         return self.__disk_usage
 
     @property
     def email( self ):
-        if self.__email is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__email )
         return self.__email
 
     @property
     def followers( self ):
-        if self.__followers is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__followers )
         return self.__followers
 
     @property
     def following( self ):
-        if self.__following is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__following )
         return self.__following
 
     @property
     def gravatar_id( self ):
-        if self.__gravatar_id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__gravatar_id )
         return self.__gravatar_id
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def location( self ):
-        if self.__location is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__location )
         return self.__location
 
     @property
     def login( self ):
-        if self.__login is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__login )
         return self.__login
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def owned_private_repos( self ):
-        if self.__owned_private_repos is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__owned_private_repos )
         return self.__owned_private_repos
 
     @property
     def plan( self ):
-        if self.__plan is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__plan )
         return self.__plan
 
     @property
     def private_gists( self ):
-        if self.__private_gists is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__private_gists )
         return self.__private_gists
 
     @property
     def public_gists( self ):
-        if self.__public_gists is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__public_gists )
         return self.__public_gists
 
     @property
     def public_repos( self ):
-        if self.__public_repos is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__public_repos )
         return self.__public_repos
 
     @property
     def total_private_repos( self ):
-        if self.__total_private_repos is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__total_private_repos )
         return self.__total_private_repos
 
     @property
     def type( self ):
-        if self.__type is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__type )
         return self.__type
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -183,8 +159,8 @@ class Organization( object ):
         self.__type = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

@@ -16,104 +16,87 @@ class Issue( object ):
 
     @property
     def assignee( self ):
-        if self.__assignee is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__assignee )
         return self.__assignee
 
     @property
     def body( self ):
-        if self.__body is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__body )
         return self.__body
 
     @property
     def closed_at( self ):
-        if self.__closed_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__closed_at )
         return self.__closed_at
 
     @property
     def closed_by( self ):
-        if self.__closed_by is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__closed_by )
         return self.__closed_by
 
     @property
     def comments( self ):
-        if self.__comments is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__comments )
         return self.__comments
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def labels( self ):
-        if self.__labels is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__labels )
         return self.__labels
 
     @property
     def milestone( self ):
-        if self.__milestone is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__milestone )
         return self.__milestone
 
     @property
     def number( self ):
-        if self.__number is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__number )
         return self.__number
 
     @property
     def pull_request( self ):
-        if self.__pull_request is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__pull_request )
         return self.__pull_request
 
     @property
     def state( self ):
-        if self.__state is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__state )
         return self.__state
 
     @property
     def title( self ):
-        if self.__title is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__title )
         return self.__title
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     @property
     def user( self ):
-        if self.__user is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__user )
         return self.__user
 
     def __initAttributes( self ):
@@ -135,8 +118,8 @@ class Issue( object ):
         self.__url = None
         self.__user = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

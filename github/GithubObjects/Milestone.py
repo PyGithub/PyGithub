@@ -13,62 +13,52 @@ class Milestone( object ):
 
     @property
     def closed_issues( self ):
-        if self.__closed_issues is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__closed_issues )
         return self.__closed_issues
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def creator( self ):
-        if self.__creator is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__creator )
         return self.__creator
 
     @property
     def description( self ):
-        if self.__description is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__description )
         return self.__description
 
     @property
     def due_on( self ):
-        if self.__due_on is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__due_on )
         return self.__due_on
 
     @property
     def number( self ):
-        if self.__number is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__number )
         return self.__number
 
     @property
     def open_issues( self ):
-        if self.__open_issues is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__open_issues )
         return self.__open_issues
 
     @property
     def state( self ):
-        if self.__state is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__state )
         return self.__state
 
     @property
     def title( self ):
-        if self.__title is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__title )
         return self.__title
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -83,8 +73,8 @@ class Milestone( object ):
         self.__title = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

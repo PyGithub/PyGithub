@@ -11,26 +11,22 @@ class UserKey( object ):
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def key( self ):
-        if self.__key is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__key )
         return self.__key
 
     @property
     def title( self ):
-        if self.__title is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__title )
         return self.__title
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
@@ -39,8 +35,8 @@ class UserKey( object ):
         self.__title = None
         self.__url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

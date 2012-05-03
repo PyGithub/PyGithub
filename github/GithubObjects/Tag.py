@@ -12,26 +12,22 @@ class Tag( object ):
 
     @property
     def commit( self ):
-        if self.__commit is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commit )
         return self.__commit
 
     @property
     def name( self ):
-        if self.__name is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def tarball_url( self ):
-        if self.__tarball_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__tarball_url )
         return self.__tarball_url
 
     @property
     def zipball_url( self ):
-        if self.__zipball_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__zipball_url )
         return self.__zipball_url
 
     def __initAttributes( self ):
@@ -40,8 +36,8 @@ class Tag( object ):
         self.__tarball_url = None
         self.__zipball_url = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 

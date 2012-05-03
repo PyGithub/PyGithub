@@ -15,158 +15,132 @@ class PullRequest( object ):
 
     @property
     def additions( self ):
-        if self.__additions is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__additions )
         return self.__additions
 
     @property
     def base( self ):
-        if self.__base is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__base )
         return self.__base
 
     @property
     def body( self ):
-        if self.__body is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__body )
         return self.__body
 
     @property
     def changed_files( self ):
-        if self.__changed_files is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__changed_files )
         return self.__changed_files
 
     @property
     def closed_at( self ):
-        if self.__closed_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__closed_at )
         return self.__closed_at
 
     @property
     def comments( self ):
-        if self.__comments is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__comments )
         return self.__comments
 
     @property
     def commits( self ):
-        if self.__commits is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__commits )
         return self.__commits
 
     @property
     def created_at( self ):
-        if self.__created_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__created_at )
         return self.__created_at
 
     @property
     def deletions( self ):
-        if self.__deletions is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__deletions )
         return self.__deletions
 
     @property
     def diff_url( self ):
-        if self.__diff_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__diff_url )
         return self.__diff_url
 
     @property
     def head( self ):
-        if self.__head is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__head )
         return self.__head
 
     @property
     def html_url( self ):
-        if self.__html_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__html_url )
         return self.__html_url
 
     @property
     def id( self ):
-        if self.__id is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
     def issue_url( self ):
-        if self.__issue_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__issue_url )
         return self.__issue_url
 
     @property
     def mergeable( self ):
-        if self.__mergeable is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__mergeable )
         return self.__mergeable
 
     @property
     def merged( self ):
-        if self.__merged is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__merged )
         return self.__merged
 
     @property
     def merged_at( self ):
-        if self.__merged_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__merged_at )
         return self.__merged_at
 
     @property
     def merged_by( self ):
-        if self.__merged_by is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__merged_by )
         return self.__merged_by
 
     @property
     def number( self ):
-        if self.__number is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__number )
         return self.__number
 
     @property
     def patch_url( self ):
-        if self.__patch_url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__patch_url )
         return self.__patch_url
 
     @property
     def review_comments( self ):
-        if self.__review_comments is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__review_comments )
         return self.__review_comments
 
     @property
     def state( self ):
-        if self.__state is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__state )
         return self.__state
 
     @property
     def title( self ):
-        if self.__title is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__title )
         return self.__title
 
     @property
     def updated_at( self ):
-        if self.__updated_at is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__updated_at )
         return self.__updated_at
 
     @property
     def url( self ):
-        if self.__url is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__url )
         return self.__url
 
     @property
     def user( self ):
-        if self.__user is None:
-            self.__completeIfNeeded()
+        self.__completeIfNeeded( self.__user )
         return self.__user
 
     def __initAttributes( self ):
@@ -197,8 +171,8 @@ class PullRequest( object ):
         self.__url = None
         self.__user = None
 
-    def __completeIfNeeded( self ):
-        if not self.__completed:
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
             self.__complete()
         self.__completed = True
 
