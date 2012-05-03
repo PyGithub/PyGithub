@@ -27,8 +27,15 @@ class {{ class.name }}( object ):
             self.__complete()
         self.__completed = True
 
+    # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        pass
+        result = self.__github._dataRequest(
+            "GET",
+            self.url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
 
 {% for method in class.methods|dictsort:"name" %}
     def {{ method.name|join:"_" }}( {% include "GithubObject.Parameters.py" with function=method only %} ):

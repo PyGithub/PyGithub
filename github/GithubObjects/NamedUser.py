@@ -203,8 +203,15 @@ class NamedUser( object ):
             self.__complete()
         self.__completed = True
 
+    # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        pass
+        result = self.__github._dataRequest(
+            "GET",
+            self.url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
 
     def create_gist( self, public, files, description = None ):
         pass
