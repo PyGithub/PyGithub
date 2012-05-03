@@ -8,6 +8,8 @@ class Download( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
+        if not lazy:
+            self.__complete()
 
     @property
     def accesskeyid( self ):
@@ -134,17 +136,17 @@ class Download( object ):
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
             self.__complete()
-        self.__completed = True
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
         result = self.__github._dataRequest(
             "GET",
-            self.url,
+            self.__url,
             None,
             None
         )
         self.__useAttributes( result )
+        self.__completed = True
 
     def delete( self ):
         pass

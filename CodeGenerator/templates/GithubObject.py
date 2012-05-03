@@ -8,6 +8,8 @@ class {{ class.name }}( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
+        if not lazy:
+            self.__complete()
 
 {% for attribute in class.attributes %}
     @property
@@ -24,17 +26,17 @@ class {{ class.name }}( object ):
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
             self.__complete()
-        self.__completed = True
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
         result = self.__github._dataRequest(
             "GET",
-            self.url,
+            self.__url,
             None,
             None
         )
         self.__useAttributes( result )
+        self.__completed = True
 
 {% for method in class.methods|dictsort:"name" %}
     def {{ method.name|join:"_" }}( {% include "GithubObject.Parameters.py" with function=method only %} ):
