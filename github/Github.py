@@ -1,5 +1,8 @@
 from Requester import Requester
-from GithubObjects import *
+import GithubObjects.AuthenticatedUser
+import GithubObjects.NamedUser
+import GithubObjects.Organization
+import GithubObjects.Gist
 
 class Github:
     def __init__( self, login, password, debugFile = None ):
@@ -14,19 +17,20 @@ class Github:
 
     def get_user( self, login = None ):
         if login is None:
-            return AuthenticatedUser( self, {}, lazy = True )
+            attributes = { "url": "https://api.github.com/user" }
+            return GithubObjects.AuthenticatedUser.AuthenticatedUser( self, attributes, lazy = True )
         else:
-            return NamedUser( self, { "login": login }, lazy = False )
+            return GithubObjects.NamedUser.NamedUser( self, { "login": login }, lazy = False )
 
     def get_organization( self, login ):
-        return Organization( self, { "login": login }, lazy = False )
+        return GithubObjects.Organization.Organization( self, { "login": login }, lazy = False )
 
     def get_gist( self, id ):
-        return Gist( self, { "id": id }, lazy = False )
+        return GithubObjects.Gist.Gist( self, { "id": id }, lazy = False )
 
     def get_gists( self ):
         return [
-            Gist( self, attributes, lazy = True )
+            GithubObjects.Gist.Gist( self, attributes, lazy = True )
             for attributes
             in self._dataRequest( "GET", "/gists/public", None, None )
         ]

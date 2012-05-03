@@ -1,11 +1,58 @@
-from GithubObject import *
+# WARNING: this file is generated automaticaly.
+# Do not modify it manually, your work would be lost.
 
-GitTree = GithubObject(
-    "GitTree",
-    BaseUrl( lambda obj: obj._repo._baseUrl() + "/git/trees/" + obj.sha + ( "?recursive=1" if obj.recursive else "" ) ),
-    InternalSimpleAttributes(
-        "sha", "url",
-        "tree",
-        "_repo", "recursive",
-    ),
-)
+
+class GitTree( object ):
+    def __init__( self, github, attributes, lazy ):
+        self.__github = github
+        self.__completed = False
+        self.__initAttributes()
+        self.__useAttributes( attributes )
+
+    @property
+    def recursive( self ):
+        if self.__recursive is None:
+            self.__completeIfNeeded()
+        return self.__recursive
+
+    @property
+    def sha( self ):
+        if self.__sha is None:
+            self.__completeIfNeeded()
+        return self.__sha
+
+    @property
+    def tree( self ):
+        if self.__tree is None:
+            self.__completeIfNeeded()
+        return self.__tree
+
+    @property
+    def url( self ):
+        if self.__url is None:
+            self.__completeIfNeeded()
+        return self.__url
+
+    def __initAttributes( self ):
+        self.__recursive = None
+        self.__sha = None
+        self.__tree = None
+        self.__url = None
+
+    def __completeIfNeeded( self ):
+        if not self.__completed:
+            self.__complete()
+        self.__completed = True
+
+    def __complete( self ):
+        pass
+
+    def __useAttributes( self, attributes ):
+        if "recursive" in attributes:
+            self.__recursive = attributes[ "recursive" ]
+        if "sha" in attributes:
+            self.__sha = attributes[ "sha" ]
+        if "tree" in attributes:
+            self.__tree = attributes[ "tree" ]
+        if "url" in attributes:
+            self.__url = attributes[ "url" ]

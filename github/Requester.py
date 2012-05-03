@@ -45,6 +45,8 @@ class Requester:
 
     def __rawRequest( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
+        assert url.startswith( "https://api.github.com" )
+        url = url[ len( "https://api.github.com" ) : ]
 
         cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
         cnx.request(

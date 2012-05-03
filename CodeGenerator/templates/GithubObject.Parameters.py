@@ -1,0 +1,1 @@
+self{% for parameter in function.mandatory_parameters %}, {{ parameter.name }}{% endfor %}{% for parameter in function.optional_parameters %}, {{ parameter.name }} = None{% endfor %}{% if function.variadic_parameter %}, *{{ function.variadic_parameter.name }}s{% endif %}

@@ -1,0 +1,1545 @@
+{
+    "classes": [
+        {
+            "name": "AuthenticatedUser",
+            "identity": [ { "type": "attribute", "value": [ "login" ] } ],
+            "base_url": [ { "type": "constant", "value": "/user" } ],
+            "edit": {
+                "optional_parameters": [
+                    { "name": "name", "type": "string" },
+                    { "name": "email", "type": "string" },
+                    { "name": "blog", "type": "string" },
+                    { "name": "company", "type": "string" },
+                    { "name": "location", "type": "string" },
+                    { "name": "hireable", "type": "bool" },
+                    { "name": "bio", "type": "string" }
+                ]
+            },
+            "attributes": [
+                { "name": "avatar_url", "type": "@todo" },
+                { "name": "bio", "type": "@todo" },
+                { "name": "blog", "type": "@todo" },
+                { "name": "collaborators", "type": "@todo" },
+                { "name": "company", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "disk_usage", "type": "@todo" },
+                { "name": "email", "type": "@todo" },
+                { "name": "followers", "type": "@todo" },
+                { "name": "following", "type": "@todo" },
+                { "name": "gravatar_id", "type": "@todo" },
+                { "name": "hireable", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "location", "type": "string" },
+                { "name": "login", "type": "string", "identifying": true },
+                { "name": "name", "type": "string" },
+                { "name": "owned_private_repos", "type": "@todo" },
+                { "name": "plan", "type": "@todo" },
+                { "name": "private_gists", "type": "@todo" },
+                { "name": "public_gists", "type": "@todo" },
+                { "name": "public_repos", "type": "@todo" },
+                { "name": "total_private_repos", "type": "@todo" },
+                { "name": "type", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+                {
+                    "name": "authorizations",
+                    "singular_name": "authorization",
+                    "type": "Authorization",
+                    "create_element": {
+                        "optional_parameters": [
+                            { "name": "scopes", "type": "@todo" },
+                            { "name": "note", "type": "@todo" },
+                            { "name": "note_url", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    },
+                    "get_list": true
+                },
+                {
+                    "name": "events",
+                    "singular_name": "event",
+                    "type": "Event",
+                    "get_list": true
+                },
+                {
+                    "name": "issues",
+                    "singular_name": "issue",
+                    "type": "Issue",
+                    "get_list": true
+                },
+                {
+                    "name": "keys",
+                    "singular_name": "key",
+                    "type": "UserKey",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "title", "type": "@todo" },
+                            { "name": "key", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "repos",
+                    "singular_name": "repo",
+                    "type": "Repository",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "automatic_parameters": [
+                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "description", "type": "string" },
+                            { "name": "homepage", "type": "string" },
+                            { "name": "private", "type": "bool" },
+                            { "name": "has_issues", "type": "bool" },
+                            { "name": "has_wiki", "type": "bool" },
+                            { "name": "has_downloads", "type": "bool" },
+                            { "name": "team_id", "type": "int", "@todo": "Use Team" }
+                        ]
+                    }
+                },
+                {
+                    "name": "emails",
+                    "singular_name": "email",
+                    "type": "string",
+                    "get_list": true,
+                    "add_several_elements": true,
+                    "remove_several_elements": true
+                },
+                {
+                    "name": "watched",
+                    "singular_name": "watched",
+                    "type": "Repository",
+                    "get_list": true,
+                    "has_element": true,
+                    "add_element": true,
+                    "remove_element": true
+                },
+                {
+                    "name": "following",
+                    "singular_name": "following",
+                    "type": "NamedUser",
+                    "get_list": true,
+                    "remove_element": true,
+                    "has_element": true,
+                    "add_element": true
+                },
+                {
+                    "name": "followers",
+                    "singular_name": "follower",
+                    "type": "NamedUser",
+                    "get_list": true
+                },
+                {
+                    "name": "orgs",
+                    "singular_name": "org",
+                    "type": "Organization",
+                    "get_list": true
+                },
+                {
+                    "name": "gists",
+                    "singular_name": "gist",
+                    "type": "Gist",
+                    "special_url": "/gists",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "public", "type": "bool" },
+                            { "name": "files", "type": "dict" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "description", "type": "string" }
+                        ]
+                    }
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "create", "fork" ],
+                    "group": "forking",
+                    "type": "Repository",
+                    "mandatory_parameters": [
+                        { "name": "repo", "type": "Repository" }
+                    ],
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "constant", "value": "/repos/" },
+                            { "type": "argument", "value": [ "repo", "owner", "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "repo", "name" ] },
+                            { "type": "constant", "value": "/forks" }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "get", "organization", "events" ],
+                    "group": "events",
+                    "type": { "cardinality": "list", "name": "Event" },
+                    "mandatory_parameters": [
+                        { "name": "org", "type": "@todo" }
+                    ]
+                },
+                {
+                    "name": [ "get", "starred", "gists" ],
+                    "group": "gists",
+                    "type": { "cardinality": "list", "name": "Gist" }
+                }
+            ]
+        },
+        {
+            "name": "Authorization",
+            "edit": {
+                "optional_parameters": [
+                    { "name": "scopes", "type": "@todo" },
+                    { "name": "add_scopes", "type": "@todo" },
+                    { "name": "remove_scopes", "type": "@todo" },
+                    { "name": "note", "type": "@todo" },
+                    { "name": "note_url", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "app", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "note_url", "type": "@todo" },
+                { "name": "note", "type": "@todo" },
+                { "name": "scopes", "type": "@todo" },
+                { "name": "token", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Branch",
+            "attributes": [
+                { "name": "name", "type": "string", "mandatory": true },
+                { "name": "commit", "type": "Commit" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Commit",
+            "attributes": [
+                { "name": "files", "type": "dict", "@todo": "dict of what?" },
+                { "name": "parents", "type": "list", "@todo": "list of what?" },
+                { "name": "sha", "type": "string" },
+                { "name": "stats", "type": "dict", "@todo": "dict of what?" },
+                { "name": "url", "type": "string" },
+                { "name": "author", "type": "NamedUser" },
+                { "name": "committer", "type": "NamedUser" },
+                { "name": "commit", "type": "GitCommit" }
+            ],
+            "collections": [
+                {
+                    "name": "comments",
+                    "singular_name": "comment",
+                    "type": "CommitComment",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "body", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "commit_id", "type": "@todo" },
+                            { "name": "line", "type": "@todo" },
+                            { "name": "path", "type": "@todo" },
+                            { "name": "position", "type": "@todo" }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "CommitComment",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "body", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "body", "type": "@todo" },
+                { "name": "commit_id", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "line", "type": "@todo" },
+                { "name": "path", "type": "@todo" },
+                { "name": "position", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Download",
+            "delete": true,
+            "attributes": [
+                { "name": "accesskeyid", "type": "@todo" },
+                { "name": "acl", "type": "@todo" },
+                { "name": "bucket", "type": "@todo" },
+                { "name": "content_type", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "description", "type": "@todo" },
+                { "name": "download_count", "type": "@todo" },
+                { "name": "expirationdate", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "mime_type", "type": "@todo" },
+                { "name": "name", "type": "@todo" },
+                { "name": "path", "type": "@todo" },
+                { "name": "policy", "type": "@todo" },
+                { "name": "prefix", "type": "@todo" },
+                { "name": "redirect", "type": "@todo" },
+                { "name": "s3_url", "type": "@todo" },
+                { "name": "signature", "type": "@todo" },
+                { "name": "size", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Event",
+            "attributes": [
+                { "name": "commit_id", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "event", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "issue", "type": "@todo" },
+                { "name": "payload", "type": "@todo" },
+                { "name": "public", "type": "@todo" },
+                { "name": "type", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "actor", "type": "NamedUser" },
+                { "name": "org", "type": "Organization" },
+                { "name": "repo", "type": "Repository" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Gist",
+            "base_url": [ { "type": "constant", "value": "/gists/" }, { "type": "attribute", "value": [ "id" ] } ],
+            "edit": {
+                "optional_parameters": [
+                    { "name": "description", "type": "string" },
+                    { "name": "files", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "comments", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "description", "type": "string" },
+                { "name": "files", "type": "@todo" },
+                { "name": "forks", "type": "@todo" },
+                { "name": "git_pull_url", "type": "@todo" },
+                { "name": "git_push_url", "type": "@todo" },
+                { "name": "history", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "integer", "mandatory": true },
+                { "name": "public", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+                {
+                    "name": "comments",
+                    "singular_name": "comment",
+                    "type": "GistComment",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "body", "type": "@todo" }
+                        ]
+                    }
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "is", "starred" ],
+                    "group": "starring",
+                    "type": "bool"
+                },
+                {
+                    "name": [ "reset", "starred" ],
+                    "group": "starring",
+                    "type": "void"
+                },
+                {
+                    "name": [ "set", "starred" ],
+                    "group": "starring",
+                    "type": "void"
+                },
+                {
+                    "name": [ "create", "fork" ],
+                    "group": "forking",
+                    "type": "Gist"
+                }
+            ]
+        },
+        {
+            "name": "GistComment",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "body", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "body", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitBlob",
+            "attributes": [
+                { "name": "content", "type": "@todo" },
+                { "name": "encoding", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "size", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitCommit",
+            "attributes": [
+                { "name": "author", "type": "@todo" },
+                { "name": "committer", "type": "@todo" },
+                { "name": "message", "type": "@todo" },
+                { "name": "parents", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "tree", "type": "GitTree" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitRef",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "sha", "type": "@todo" }
+                ],
+                "optional_parameters": [
+                    { "name": "force", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "object", "type": "@todo" },
+                { "name": "ref", "type": "string", "mandatory": true },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitTag",
+            "attributes": [
+                { "name": "message", "type": "@todo" },
+                { "name": "object", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "tag", "type": "@todo" },
+                { "name": "tagger", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitTree",
+            "attributes": [
+                { "name": "recursive", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "tree", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Hook",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "name", "type": "@todo" },
+                    { "name": "config", "type": "@todo" }
+                ],
+                "optional_parameters": [
+                    { "name": "events", "type": "@todo" },
+                    { "name": "add_events", "type": "@todo" },
+                    { "name": "remove_events", "type": "@todo" },
+                    { "name": "active", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "active", "type": "@todo" },
+                { "name": "config", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "events", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "last_response", "type": "@todo" },
+                { "name": "name", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "test" ],
+                    "group": "testing",
+                    "type": "void"
+                }
+            ]
+        },
+        {
+            "name": "Issue",
+            "edit": {
+                "optional_parameters": [
+                    { "name": "title", "type": "@todo" },
+                    { "name": "body", "type": "@todo" },
+                    { "name": "assignee", "type": "@todo" },
+                    { "name": "state", "type": "@todo" },
+                    { "name": "milestone", "type": "@todo" },
+                    { "name": "labels", "type": "@todo" }
+                ]
+            },
+            "attributes": [
+                { "name": "assignee", "type": "NamedUser" },
+                { "name": "body", "type": "@todo" },
+                { "name": "closed_at", "type": "@todo" },
+                { "name": "closed_by", "type": "@todo" },
+                { "name": "comments", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "labels", "type": "@todo" },
+                { "name": "milestone", "type": "Milestone" },
+                { "name": "number", "type": "@todo" },
+                { "name": "pull_request", "type": "@todo" },
+                { "name": "state", "type": "@todo" },
+                { "name": "title", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+                {
+                    "name": "comments",
+                    "singular_name": "comment",
+                    "type": "IssueComment",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "body", "type": "string" }
+                        ]
+                    }
+                },
+                {
+                    "name": "events",
+                    "singular_name": "event",
+                    "type": "IssueEvent",
+                    "get_list": true
+                },
+                {
+                    "name": "labels",
+                    "singular_name": "label",
+                    "type": "Label",
+                    "get_list": true,
+                    "add_several_elements": true,
+                    "remove_element": true,
+                    "set_list": true,
+                    "delete_list": true
+                }
+            ]
+        },
+        {
+            "name": "IssueComment",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "body", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "body", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "IssueEvent",
+            "attributes": [
+                { "name": "commit_id", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "event", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "issue", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "actor", "type": "NamedUser" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Label",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "name", "type": "@todo" },
+                    { "name": "color", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "color", "type": "@todo" },
+                { "name": "name", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Milestone",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "title", "type": "@todo" }
+                ],
+                "optional_parameters": [
+                    { "name": "state", "type": "@todo" },
+                    { "name": "description", "type": "@todo" },
+                    { "name": "due_on", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "closed_issues", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "description", "type": "@todo" },
+                { "name": "due_on", "type": "@todo" },
+                { "name": "number", "type": "@todo" },
+                { "name": "open_issues", "type": "@todo" },
+                { "name": "state", "type": "@todo" },
+                { "name": "title", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "creator", "type": "NamedUser" }
+            ],
+            "collections": [
+                {
+                    "name": "labels",
+                    "singular_name": "label",
+                    "type": "Label",
+                    "get_list": true
+                }
+            ]
+        },
+        {
+            "name": "NamedUser",
+            "identity": [ { "type": "attribute", "value": [ "login" ] } ],
+            "base_url": [ { "type": "constant", "value": "/users/" }, { "type": "attribute", "value": [ "login" ] } ],
+            "attributes": [
+                { "name": "avatar_url", "type": "@todo" },
+                { "name": "bio", "type": "@todo" },
+                { "name": "blog", "type": "@todo" },
+                { "name": "collaborators", "type": "@todo" },
+                { "name": "company", "type": "@todo" },
+                { "name": "contributions", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "disk_usage", "type": "@todo" },
+                { "name": "email", "type": "@todo" },
+                { "name": "followers", "type": "integer" },
+                { "name": "following", "type": "@todo" },
+                { "name": "gravatar_id", "type": "@todo" },
+                { "name": "hireable", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "location", "type": "string" },
+                { "name": "login", "type": "string", "mandatory": true },
+                { "name": "name", "type": "string" },
+                { "name": "owned_private_repos", "type": "@todo" },
+                { "name": "plan", "type": "@todo" },
+                { "name": "private_gists", "type": "@todo" },
+                { "name": "public_gists", "type": "@todo" },
+                { "name": "public_repos", "type": "@todo" },
+                { "name": "total_private_repos", "type": "@todo" },
+                { "name": "type", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+                {
+                    "name": "events",
+                    "singular_name": "event",
+                    "type": "Event",
+                    "get_list": true
+                },
+                {
+                    "name": "followers",
+                    "singular_name": "follower",
+                    "type": "NamedUser",
+                    "get_list": true
+                },
+                {
+                    "name": "following",
+                    "singular_name": "following",
+                    "type": "NamedUser",
+                    "get_list": true
+                },
+                {
+                    "name": "repos",
+                    "singular_name": "repo",
+                    "type": "Repository",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "automatic_parameters": [
+                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
+                        ]
+                    }
+                },
+                {
+                    "name": "watched",
+                    "singular_name": "watched",
+                    "type": "Repository",
+                    "get_list": true
+                },
+                {
+                    "name": "orgs",
+                    "singular_name": "org",
+                    "type": "Organization",
+                    "get_list": true
+                },
+                {
+                    "name": "gists",
+                    "singular_name": "gist",
+                    "type": "Gist",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "public", "type": "bool" },
+                            { "name": "files", "type": "dict" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "description", "type": "string" }
+                        ]
+                    }
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "get", "public", "events" ],
+                    "group": "events",
+                    "type": { "cardinality": "list", "name": "Event" }
+                },
+                {
+                    "name": [ "get", "received", "events" ],
+                    "group": "events",
+                    "type": { "cardinality": "list", "name": "Event" }
+                },
+                {
+                    "name": [ "get", "public", "received", "events" ],
+                    "group": "events",
+                    "type": { "cardinality": "list", "name": "Event" }
+                }
+            ]
+        },
+        {
+            "name": "Organization",
+            "base_url": [ { "type": "constant", "value": "/orgs/" }, { "type": "attribute", "value": [ "login" ] } ],
+            "edit": {
+                "optional_parameters": [
+                    { "name": "billing_email", "type": "@todo" },
+                    { "name": "blog", "type": "@todo" },
+                    { "name": "company", "type": "@todo" },
+                    { "name": "email", "type": "@todo" },
+                    { "name": "location", "type": "@todo" },
+                    { "name": "name", "type": "@todo" }
+                ]
+            },
+            "attributes": [
+                { "name": "avatar_url", "type": "@todo" },
+                { "name": "billing_email", "type": "@todo" },
+                { "name": "blog", "type": "@todo" },
+                { "name": "collaborators", "type": "@todo" },
+                { "name": "company", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "disk_usage", "type": "@todo" },
+                { "name": "email", "type": "@todo" },
+                { "name": "followers", "type": "@todo" },
+                { "name": "following", "type": "@todo" },
+                { "name": "gravatar_id", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "location", "type": "string" },
+                { "name": "login", "type": "string", "mandatory": true },
+                { "name": "name", "type": "string" },
+                { "name": "owned_private_repos", "type": "@todo" },
+                { "name": "plan", "type": "@todo" },
+                { "name": "private_gists", "type": "@todo" },
+                { "name": "public_gists", "type": "@todo" },
+                { "name": "public_repos", "type": "@todo" },
+                { "name": "total_private_repos", "type": "@todo" },
+                { "name": "type", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+                {
+                    "name": "events",
+                    "singular_name": "event",
+                    "type": "Event",
+                    "get_list": true
+                },
+                {
+                    "name": "members",
+                    "singular_name": "member",
+                    "type": "NamedUser",
+                    "get_list": true,
+                    "has_element": true,
+                    "remove_element": true
+                },
+                {
+                    "name": "public_members",
+                    "singular_name": "public_member",
+                    "type": "NamedUser",
+                    "get_list": true,
+                    "has_element": true,
+                    "add_element": true,
+                    "remove_element": true
+                },
+                {
+                    "name": "repos",
+                    "singular_name": "repo",
+                    "type": "Repository",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "type", "type": "enum", "values": [ "@todo" ] }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "automatic_parameters": [
+                            { "name": "owner", "source": [ { "type": "attribute", "value": [] } ] }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "description", "type": "string" },
+                            { "name": "homepage", "type": "string" },
+                            { "name": "private", "type": "bool" },
+                            { "name": "has_issues", "type": "bool" },
+                            { "name": "has_wiki", "type": "bool" },
+                            { "name": "has_downloads", "type": "bool" },
+                            { "name": "team_id", "type": "int", "@todo": "Use Team" }
+                        ]
+                    }
+                },
+                {
+                    "name": "teams",
+                    "singular_name": "team",
+                    "type": "Team",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "string" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "repo_names", "type": "list" },
+                            { "name": "permission", "type": "enum", "values": [ "@todo" ] }
+                        ]
+                    }
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "create", "fork" ],
+                    "group": "forking",
+                    "type": "Repository",
+                    "mandatory_parameters": [
+                        { "name": "repo", "type": "Repository" }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "PullRequest",
+            "edit": {
+                "optional_parameters": [
+                    { "name": "title", "type": "@todo" },
+                    { "name": "body", "type": "@todo" },
+                    { "name": "state", "type": "@todo" }
+                ]
+            },
+            "attributes": [
+                { "name": "additions", "type": "@todo" },
+                { "name": "base", "type": "@todo" },
+                { "name": "body", "type": "@todo" },
+                { "name": "changed_files", "type": "@todo" },
+                { "name": "closed_at", "type": "@todo" },
+                { "name": "comments", "type": "@todo" },
+                { "name": "commits", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "deletions", "type": "@todo" },
+                { "name": "diff_url", "type": "@todo" },
+                { "name": "head", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "issue_url", "type": "@todo" },
+                { "name": "mergeable", "type": "@todo" },
+                { "name": "merged_at", "type": "@todo" },
+                { "name": "merged_by", "type": "@todo" },
+                { "name": "merged", "type": "@todo" },
+                { "name": "number", "type": "@todo" },
+                { "name": "patch_url", "type": "@todo" },
+                { "name": "review_comments", "type": "@todo" },
+                { "name": "state", "type": "@todo" },
+                { "name": "title", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+                {
+                    "name": "comments",
+                    "singular_name": "comment",
+                    "type": "PullRequestComment",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "commits",
+                    "singular_name": "commit",
+                    "type": "Commit",
+                    "get_list": true
+                },
+                {
+                    "name": "files",
+                    "singular_name": "file",
+                    "type": "PullRequestFile",
+                    "get_list": true
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "is", "merged" ],
+                    "type": "bool",
+                    "group": "merging"
+                },
+                {
+                    "name": [ "merge" ],
+                    "type": "void",
+                    "group": "merging",
+                    "optional_parameters": [
+                        { "name": "commit_message", "type": "string" }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "PullRequestComment",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "body", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "body", "type": "@todo" },
+                { "name": "commit_id", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "line", "type": "@todo" },
+                { "name": "path", "type": "@todo" },
+                { "name": "position", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "user", "type": "NamedUser" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "PullRequestFile",
+            "attributes": [
+                { "name": "additions", "type": "@todo" },
+                { "name": "blob_url", "type": "@todo" },
+                { "name": "changes", "type": "@todo" },
+                { "name": "deletions", "type": "@todo" },
+                { "name": "filename", "type": "@todo" },
+                { "name": "patch", "type": "@todo" },
+                { "name": "raw_url", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "status", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Repository",
+            "identity": [ { "type": "attribute", "value": [ "owner", "login" ] }, { "type": "constant", "value": "/" }, { "type": "attribute", "value": [ "name" ] } ],
+            "base_url": [ { "type": "constant", "value": "/repos/" }, { "type": "attribute", "value": [ "_identity" ] } ],
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "name", "type": "@todo" }
+                ],
+                "optional_parameters": [
+                    { "name": "description", "type": "@todo" },
+                    { "name": "homepage", "type": "@todo" },
+                    { "name": "public", "type": "@todo" },
+                    { "name": "has_issues", "type": "@todo" },
+                    { "name": "has_wiki", "type": "@todo" },
+                    { "name": "has_downloads", "type": "@todo" }
+                ]
+            },
+            "attributes": [
+                { "name": "clone_url", "type": "@todo" },
+                { "name": "created_at", "type": "@todo" },
+                { "name": "description", "type": "@todo" },
+                { "name": "fork", "type": "@todo" },
+                { "name": "forks", "type": "@todo" },
+                { "name": "git_url", "type": "@todo" },
+                { "name": "has_downloads", "type": "@todo" },
+                { "name": "has_issues", "type": "@todo" },
+                { "name": "has_wiki", "type": "@todo" },
+                { "name": "homepage", "type": "@todo" },
+                { "name": "html_url", "type": "@todo" },
+                { "name": "id", "type": "@todo" },
+                { "name": "language", "type": "@todo" },
+                { "name": "master_branch", "type": "@todo" },
+                { "name": "mirror_url", "type": "@todo" },
+                { "name": "name", "type": "string", "mandatory": true },
+                { "name": "open_issues", "type": "@todo" },
+                { "name": "organization", "type": "@todo" },
+                { "name": "owner", "type": "NamedUser", "mandatory": true },
+                { "name": "parent", "type": "Repository" },
+                { "name": "permissions", "type": "@todo" },
+                { "name": "private", "type": "@todo" },
+                { "name": "pushed_at", "type": "@todo" },
+                { "name": "size", "type": "@todo" },
+                { "name": "source", "type": "Repository" },
+                { "name": "ssh_url", "type": "@todo" },
+                { "name": "svn_url", "type": "@todo" },
+                { "name": "updated_at", "type": "@todo" },
+                { "name": "url", "type": "@todo" },
+                { "name": "watchers", "type": "@todo" }
+            ],
+            "collections": [
+                {
+                    "name": "branches",
+                    "singular_name": "branch",
+                    "type": "Branch",
+                    "get_list": true
+                },
+                {
+                    "name": "collaborators",
+                    "singular_name": "collaborator",
+                    "type": "NamedUser",
+                    "get_list": true,
+                    "has_element": true,
+                    "add_element": true,
+                    "remove_element": true
+                },
+                {
+                    "name": "comments",
+                    "singular_name": "comment",
+                    "type": "CommitComment",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "commits",
+                    "singular_name": "commit",
+                    "type": "Commit",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "sha", "type": "@todo" },
+                            { "name": "path", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "sha", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "contributors",
+                    "singular_name": "contributor",
+                    "type": "NamedUser",
+                    "get_list": true
+                },
+                {
+                    "name": "downloads",
+                    "singular_name": "download",
+                    "type": "Download",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "@todo" },
+                            { "name": "size", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "description", "type": "@todo" },
+                            { "name": "content_type", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "events",
+                    "singular_name": "event",
+                    "type": "Event",
+                    "get_list": true
+                },
+                {
+                    "name": "forks",
+                    "singular_name": "fork",
+                    "type": "Repository",
+                    "get_list": true
+                },
+                {
+                    "name": "git_blobs",
+                    "singular_name": "git_blob",
+                    "type": "GitBlob",
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "sha", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "content", "type": "@todo" },
+                            { "name": "encoding", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "git_commits",
+                    "singular_name": "git_commit",
+                    "type": "GitCommit",
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "sha", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "message", "type": "@todo" },
+                            { "name": "tree", "type": "@todo" },
+                            { "name": "parents", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "author", "type": "@todo" },
+                            { "name": "committer", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "git_refs",
+                    "singular_name": "git_ref",
+                    "type": "GitRef",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "ref", "type": "@todo" },
+                            { "name": "sha", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "ref", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "git_tags",
+                    "singular_name": "git_tag",
+                    "type": "GitTag",
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "tag", "type": "@todo" },
+                            { "name": "message", "type": "@todo" },
+                            { "name": "object", "type": "@todo" },
+                            { "name": "type", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "tagger", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "sha", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "git_trees",
+                    "singular_name": "git_tree",
+                    "type": "GitTree",
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "tree", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "base_tree", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "sha", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "recursive", "type": "bool" }
+                        ]
+                    }
+                },
+                {
+                    "name": "hooks",
+                    "singular_name": "hook",
+                    "type": "Hook",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "@todo" },
+                            { "name": "config", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "events", "type": "@todo" },
+                            { "name": "active", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "issues",
+                    "singular_name": "issue",
+                    "type": "Issue",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "milestone", "type": "@todo" },
+                            { "name": "state", "type": "@todo" },
+                            { "name": "assignee", "type": "@todo" },
+                            { "name": "mentioned", "type": "@todo" },
+                            { "name": "labels", "type": "@todo" },
+                            { "name": "sort", "type": "@todo" },
+                            { "name": "direction", "type": "@todo" },
+                            { "name": "since", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "title", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "body", "type": "@todo" },
+                            { "name": "assignee", "type": "@todo" },
+                            { "name": "milestone", "type": "@todo" },
+                            { "name": "labels", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "number", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "issues_events",
+                    "singular_name": "issues_event",
+                    "type": "IssueEvent",
+                    "get_list": true,
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "keys",
+                    "singular_name": "key",
+                    "type": "RepositoryKey",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "title", "type": "@todo" },
+                            { "name": "key", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "id", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "labels",
+                    "singular_name": "label",
+                    "type": "Label",
+                    "get_list": true,
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "@todo" },
+                            { "name": "color", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "name", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "milestones",
+                    "singular_name": "milestone",
+                    "type": "Milestone",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "state", "type": "@todo" },
+                            { "name": "sort", "type": "@todo" },
+                            { "name": "direction", "type": "@todo" }
+                        ]
+                    },
+                    "create_element": {
+                        "mandatory_parameters": [
+                            { "name": "title", "type": "@todo" }
+                        ],
+                        "optional_parameters": [
+                            { "name": "state", "type": "@todo" },
+                            { "name": "description", "type": "@todo" },
+                            { "name": "due_on", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "number", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "pulls",
+                    "singular_name": "pull",
+                    "type": "PullRequest",
+                    "get_list": {
+                        "optional_parameters": [
+                            { "name": "state", "type": "@todo" }
+                        ]
+                    },
+                    "get_element": {
+                        "mandatory_parameters": [
+                            { "name": "number", "type": "@todo" }
+                        ]
+                    }
+                },
+                {
+                    "name": "tags",
+                    "singular_name": "tag",
+                    "type": "Tag",
+                    "get_list": true
+                },
+                {
+                    "name": "teams",
+                    "singular_name": "team",
+                    "type": "Team",
+                    "get_list": true
+                },
+                {
+                    "name": "watchers",
+                    "singular_name": "watcher",
+                    "type": "NamedUser",
+                    "get_list": true
+                }
+            ],
+            "additional_methods": [
+                {
+                    "name": [ "get", "network", "events" ],
+                    "type": { "cardinality": "list", "name": "Event" },
+                    "group": "events"
+                },
+                {
+                    "name": [ "get", "languages" ],
+                    "type": "@todo",
+                    "group": "languages"
+                },
+                {
+                    "name": [ "compare" ],
+                    "type": "@todo",
+                    "group": "Comparison",
+                    "mandatory_parameters": [
+                        { "name": "base", "type": "@todo" },
+                        { "name": "head", "type": "@todo" }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "RepositoryKey",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "title", "type": "@todo" },
+                    { "name": "key", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "id", "type": "@todo" },
+                { "name": "key", "type": "@todo" },
+                { "name": "title", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Tag",
+            "attributes": [
+                { "name": "name", "type": "@todo" },
+                { "name": "tarball_url", "type": "@todo" },
+                { "name": "zipball_url", "type": "@todo" },
+                { "name": "commit", "type": "Commit" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "Team",
+            "edit": {
+                "mandatory_parameters": [
+                    { "name": "name", "type": "@todo" }
+                ],
+                "optional_parameters": [
+                    { "name": "permission", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "id", "type": "@todo" },
+                { "name": "members_count", "type": "@todo" },
+                { "name": "name", "type": "@todo" },
+                { "name": "permission", "type": "@todo" },
+                { "name": "repos_count", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+                {
+                    "name": "members",
+                    "singular_name": "member",
+                    "type": "NamedUser",
+                    "get_list": true,
+                    "add_element": true,
+                    "has_element": true,
+                    "remove_element": true
+                },
+                {
+                    "name": "repos",
+                    "singular_name": "repo",
+                    "type": "Repository",
+                    "get_list": true,
+                    "add_element": true,
+                    "has_element": true,
+                    "remove_element": true
+                }
+            ]
+        },
+        {
+            "name": "UserKey",
+            "edit": {
+                "optional_parameters": [
+                    { "name": "title", "type": "@todo" },
+                    { "name": "key", "type": "@todo" }
+                ]
+            },
+            "delete": true,
+            "attributes": [
+                { "name": "id", "type": "@todo" },
+                { "name": "key", "type": "@todo" },
+                { "name": "title", "type": "@todo" },
+                { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        }
+    ]
+}

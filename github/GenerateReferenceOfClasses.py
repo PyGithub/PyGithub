@@ -3,7 +3,7 @@
 import GithubObjects
 
 def generateDocumentation():
-    classes = [ getattr( GithubObjects, c ) for c in dir( GithubObjects ) if hasattr( getattr( GithubObjects, c ), "_autoDocument" ) ]
+    classes = [ getattr( GithubObjects, c ) for c in sorted( dir( GithubObjects ) ) if hasattr( getattr( GithubObjects, c ), "_autoDocument" ) ]
     doc = ""
     for c in classes:
         doc += c._autoDocument()

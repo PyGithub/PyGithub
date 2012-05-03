@@ -1,6 +1,5 @@
 You don't normaly create instances of any class but `Github`.
 You obtain instances through calls to `get_` and `create_` methods.
-
 Class `Github`
 ==============
 * Constructed from user's login and password
@@ -15,59 +14,55 @@ Class `AuthenticatedUser`
 
 Attributes
 ----------
-* `login`
-* `id`
 * `avatar_url`
-* `gravatar_id`
-* `url`
-* `name`
-* `company`
-* `blog`
-* `location`
-* `email`
-* `hireable`
 * `bio`
-* `public_repos`
-* `public_gists`
+* `blog`
+* `collaborators`
+* `company`
+* `created_at`
+* `disk_usage`
+* `email`
 * `followers`
 * `following`
+* `gravatar_id`
+* `hireable`
 * `html_url`
-* `created_at`
-* `type`
-* `total_private_repos`
+* `id`
+* `location`: string
+* `login`: string
+* `name`: string
 * `owned_private_repos`
-* `private_gists`
-* `disk_usage`
-* `collaborators`
 * `plan`
-
-Modification
-------------
-* `edit( [name, email, blog, company, location, hireable, bio] )`
-
-Emails
-------
-* `get_emails()`: list of string
-* `add_to_emails( email, ... )`
-    * `email`: string
-* `remove_from_emails( email, ... )`
-    * `email`: string
+* `private_gists`
+* `public_gists`
+* `public_repos`
+* `total_private_repos`
+* `type`
+* `url`
 
 Authorizations
 --------------
-* `get_authorizations()`: list of `Authorization`
-* `get_authorization( id )`: `Authorization`
 * `create_authorization( [scopes, note, note_url] )`: `Authorization`
+    * `scopes`
+    * `note`
+    * `note_url`
+* `get_authorization( id )`: `Authorization`
+    * `id`
+* `get_authorizations()`: list of `Authorization`
 
-Keys
-----
-* `get_keys()`: list of `UserKey`
-* `get_key( id )`: `UserKey`
-* `create_key( title, key )`: `UserKey`
+Emails
+------
+* `add_to_emails( email, ... )`
+    * `email`: string
+* `get_emails()`: list of string
+* `remove_from_emails( email, ... )`
+    * `email`: string
 
 Events
 ------
 * `get_events()`: list of `Event`
+* `get_organization_events( org )`: list of `Event`
+    * `org`
 
 Followers
 ---------
@@ -75,149 +70,193 @@ Followers
 
 Following
 ---------
-* `get_following()`: list of `NamedUser`
 * `add_to_following( following )`
+    * `following`: `NamedUser`
+* `get_following()`: list of `NamedUser`
+* `has_in_following( following )`: bool
     * `following`: `NamedUser`
 * `remove_from_following( following )`
     * `following`: `NamedUser`
-* `has_in_following( following )`: bool
-    * `following`: `NamedUser`
-
-Orgs
-----
-* `get_orgs()`: list of `Organization`
-* `get_organization_events( org )`: list of `Event`
-
-Repos
------
-* `get_repos( [type] )`: list of `Repository`
-* `get_repo( name )`: `Repository`
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
-
-Watched
--------
-* `get_watched()`: list of `Repository`
-* `add_to_watched( watched )`
-    * `watched`: `Repository`
-* `remove_from_watched( watched )`
-    * `watched`: `Repository`
-* `has_in_watched( watched )`: bool
-    * `watched`: `Repository`
 
 Forking
 -------
 * `create_fork( repo )`: `Repository`
+    * `repo`: `Repository`
 
 Gists
 -----
-* `get_gists()`: list of `Gist`
 * `create_gist( public, files, [description] )`: `Gist`
+    * `public`: bool
+    * `files`: `dict`
+    * `description`: string
+* `get_gists()`: list of `Gist`
 * `get_starred_gists()`: list of `Gist`
 
 Issues
 ------
 * `get_issues()`: list of `Issue`
 
+Keys
+----
+* `create_key( title, key )`: `UserKey`
+    * `title`
+    * `key`
+* `get_key( id )`: `UserKey`
+    * `id`
+* `get_keys()`: list of `UserKey`
+
+Modification
+------------
+* `edit( [name, email, blog, company, location, hireable, bio] )`
+    * `name`: string
+    * `email`: string
+    * `blog`: string
+    * `company`: string
+    * `location`: string
+    * `hireable`: bool
+    * `bio`: string
+
+Orgs
+----
+* `get_orgs()`: list of `Organization`
+
+Repos
+-----
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+    * `name`: string
+    * `description`: string
+    * `homepage`: string
+    * `private`: bool
+    * `has_issues`: bool
+    * `has_wiki`: bool
+    * `has_downloads`: bool
+    * `team_id`: `int`
+* `get_repo( name )`: `Repository`
+    * `name`: string
+* `get_repos( [type] )`: list of `Repository`
+    * `type`: `enum`
+
+Watched
+-------
+* `add_to_watched( watched )`
+    * `watched`: `Repository`
+* `get_watched()`: list of `Repository`
+* `has_in_watched( watched )`: bool
+    * `watched`: `Repository`
+* `remove_from_watched( watched )`
+    * `watched`: `Repository`
+
 Class `Authorization`
 =====================
 
 Attributes
 ----------
-* `id`
-* `url`
-* `scopes`
-* `token`
 * `app`
+* `created_at`
+* `id`
 * `note`
 * `note_url`
+* `scopes`
+* `token`
 * `updated_at`
-* `created_at`
-
-Modification
-------------
-* `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
+* `url`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
+    * `scopes`
+    * `add_scopes`
+    * `remove_scopes`
+    * `note`
+    * `note_url`
 
 Class `Branch`
 ==============
 
 Attributes
 ----------
-* `name`
 * `commit`: `Commit`
+* `name`: string
 
 Class `Commit`
 ==============
 
 Attributes
 ----------
-* `sha`
-* `url`
-* `parents`
-* `stats`
-* `files`
-* `commit`: `GitCommit`
 * `author`: `NamedUser`
+* `commit`: `GitCommit`
 * `committer`: `NamedUser`
+* `files`: `dict`
+* `parents`: `list`
+* `sha`: string
+* `stats`: `dict`
+* `url`: string
 
 Comments
 --------
-* `get_comments()`: list of `CommitComment`
 * `create_comment( body, [commit_id, line, path, position] )`: `CommitComment`
+    * `body`
+    * `commit_id`
+    * `line`
+    * `path`
+    * `position`
+* `get_comments()`: list of `CommitComment`
 
 Class `CommitComment`
 =====================
 
 Attributes
 ----------
-* `url`
-* `id`
 * `body`
-* `path`
-* `position`
 * `commit_id`
 * `created_at`
-* `updated_at`
 * `html_url`
+* `id`
 * `line`
+* `path`
+* `position`
+* `updated_at`
+* `url`
 * `user`: `NamedUser`
-
-Modification
-------------
-* `edit( body )`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( body )`
+    * `body`
 
 Class `Download`
 ================
 
 Attributes
 ----------
-* `url`
+* `accesskeyid`
+* `acl`
+* `bucket`
+* `content_type`
+* `created_at`
+* `description`
+* `download_count`
+* `expirationdate`
 * `html_url`
 * `id`
-* `name`
-* `description`
-* `size`
-* `download_count`
-* `content_type`
-* `policy`
-* `signature`
-* `bucket`
-* `accesskeyid`
-* `path`
-* `acl`
-* `expirationdate`
-* `prefix`
 * `mime_type`
+* `name`
+* `path`
+* `policy`
+* `prefix`
 * `redirect`
 * `s3_url`
-* `created_at`
+* `signature`
+* `size`
+* `url`
 
 Deletion
 --------
@@ -228,168 +267,181 @@ Class `Event`
 
 Attributes
 ----------
-* `type`
-* `public`
-* `payload`
-* `created_at`
-* `id`
-* `commit_id`
-* `url`
-* `event`
-* `issue`
-* `repo`: `Repository`
 * `actor`: `NamedUser`
+* `commit_id`
+* `created_at`
+* `event`
+* `id`
+* `issue`
 * `org`: `Organization`
+* `payload`
+* `public`
+* `repo`: `Repository`
+* `type`
+* `url`
 
 Class `Gist`
 ============
 
 Attributes
 ----------
-* `url`
-* `id`
-* `description`
-* `public`
-* `files`
 * `comments`
-* `html_url`
+* `created_at`
+* `description`: string
+* `files`
+* `forks`
 * `git_pull_url`
 * `git_push_url`
-* `created_at`
-* `forks`
 * `history`
+* `html_url`
+* `id`: integer
+* `public`
 * `updated_at`
+* `url`
 * `user`: `NamedUser`
 
-Modification
-------------
-* `edit( [description, files] )`
+Comments
+--------
+* `create_comment( body )`: `GistComment`
+    * `body`
+* `get_comment( id )`: `GistComment`
+    * `id`
+* `get_comments()`: list of `GistComment`
 
 Deletion
 --------
 * `delete()`
 
-Comments
---------
-* `get_comments()`: list of `GistComment`
-* `get_comment( id )`: `GistComment`
-* `create_comment( body )`: `GistComment`
+Forking
+-------
+* `create_fork()`: `Gist`
+
+Modification
+------------
+* `edit( [description, files] )`
+    * `description`: string
+    * `files`
 
 Starring
 --------
 * `is_starred()`: bool
-* `set_starred()`
 * `reset_starred()`
-
-Forking
--------
-* `create_fork()`: `Gist`
+* `set_starred()`
 
 Class `GistComment`
 ===================
 
 Attributes
 ----------
-* `id`
-* `url`
 * `body`
 * `created_at`
+* `id`
 * `updated_at`
+* `url`
 * `user`: `NamedUser`
-
-Modification
-------------
-* `edit( body )`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( body )`
+    * `body`
 
 Class `GitBlob`
 ===============
 
 Attributes
 ----------
+* `content`
+* `encoding`
 * `sha`
 * `size`
 * `url`
-* `content`
-* `encoding`
 
 Class `GitCommit`
 =================
 
 Attributes
 ----------
-* `sha`
-* `url`
-* `message`
-* `parents`
 * `author`
 * `committer`
+* `message`
+* `parents`
+* `sha`
 * `tree`: `GitTree`
+* `url`
 
 Class `GitRef`
 ==============
 
 Attributes
 ----------
-* `ref`
-* `url`
 * `object`
-
-Modification
-------------
-* `edit( sha, [force] )`
+* `ref`: string
+* `url`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( sha, [force] )`
+    * `sha`
+    * `force`
 
 Class `GitTag`
 ==============
 
 Attributes
 ----------
-* `tag`
-* `sha`
-* `url`
 * `message`
-* `tagger`
 * `object`
+* `sha`
+* `tag`
+* `tagger`
+* `url`
 
 Class `GitTree`
 ===============
 
 Attributes
 ----------
-* `sha`
-* `url`
-* `tree`
 * `recursive`
+* `sha`
+* `tree`
+* `url`
 
 Class `Hook`
 ============
 
 Attributes
 ----------
-* `url`
-* `updated_at`
-* `created_at`
-* `name`
-* `events`
 * `active`
 * `config`
+* `created_at`
+* `events`
 * `id`
 * `last_response`
-
-Modification
-------------
-* `edit( name, config, [events, add_events, remove_events, active] )`
+* `name`
+* `updated_at`
+* `url`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( name, config, [events, add_events, remove_events, active] )`
+    * `name`
+    * `config`
+    * `events`
+    * `add_events`
+    * `remove_events`
+    * `active`
 
 Testing
 -------
@@ -400,118 +452,125 @@ Class `Issue`
 
 Attributes
 ----------
-* `url`
+* `assignee`: `NamedUser`
+* `body`
+* `closed_at`
+* `closed_by`
+* `comments`
+* `created_at`
 * `html_url`
+* `id`
+* `labels`
+* `milestone`: `Milestone`
 * `number`
+* `pull_request`
 * `state`
 * `title`
-* `body`
-* `labels`
-* `comments`
-* `closed_at`
-* `created_at`
 * `updated_at`
-* `id`
-* `closed_by`
-* `pull_request`
+* `url`
 * `user`: `NamedUser`
-* `assignee`: `NamedUser`
-* `milestone`: `Milestone`
-
-Modification
-------------
-* `edit( [title, body, assignee, state, milestone, labels] )`
-
-Labels
-------
-* `get_labels()`: list of `Label`
-* `add_to_labels( label, ... )`
-    * `label`: `Label`
-* `set_labels( label, ... )`
-    * `label`: `Label`
-* `delete_labels()`
-* `remove_from_labels( label )`
-    * `label`: `Label`
 
 Comments
 --------
-* `get_comments()`: list of `IssueComment`
-* `get_comment( id )`: `IssueComment`
 * `create_comment( body )`: `IssueComment`
+    * `body`: string
+* `get_comment( id )`: `IssueComment`
+    * `id`
+* `get_comments()`: list of `IssueComment`
 
 Events
 ------
 * `get_events()`: list of `IssueEvent`
+
+Labels
+------
+* `add_to_labels( label, ... )`
+    * `label`: `Label`
+* `delete_labels()`
+* `get_labels()`: list of `Label`
+* `remove_from_labels( label )`
+    * `label`: `Label`
+* `set_labels( label, ... )`
+    * `label`: `Label`
+
+Modification
+------------
+* `edit( [title, body, assignee, state, milestone, labels] )`
+    * `title`
+    * `body`
+    * `assignee`
+    * `state`
+    * `milestone`
+    * `labels`
 
 Class `IssueComment`
 ====================
 
 Attributes
 ----------
-* `url`
 * `body`
 * `created_at`
-* `updated_at`
 * `id`
+* `updated_at`
+* `url`
 * `user`: `NamedUser`
-
-Modification
-------------
-* `edit( body )`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( body )`
+    * `body`
 
 Class `IssueEvent`
 ==================
 
 Attributes
 ----------
-* `id`
-* `url`
-* `created_at`
-* `issue`
-* `event`
-* `commit_id`
 * `actor`: `NamedUser`
+* `commit_id`
+* `created_at`
+* `event`
+* `id`
+* `issue`
+* `url`
 
 Class `Label`
 =============
 
 Attributes
 ----------
-* `url`
-* `name`
 * `color`
-
-Modification
-------------
-* `edit( name, color )`
+* `name`
+* `url`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( name, color )`
+    * `name`
+    * `color`
 
 Class `Milestone`
 =================
 
 Attributes
 ----------
-* `url`
-* `number`
-* `state`
-* `title`
-* `description`
-* `open_issues`
 * `closed_issues`
 * `created_at`
-* `due_on`
 * `creator`: `NamedUser`
-
-Modification
-------------
-* `edit( title, [state, description, due_on] )`
+* `description`
+* `due_on`
+* `number`
+* `open_issues`
+* `state`
+* `title`
+* `url`
 
 Deletion
 --------
@@ -521,37 +580,52 @@ Labels
 ------
 * `get_labels()`: list of `Label`
 
+Modification
+------------
+* `edit( title, [state, description, due_on] )`
+    * `title`
+    * `state`
+    * `description`
+    * `due_on`
+
 Class `NamedUser`
 =================
 
 Attributes
 ----------
-* `login`
-* `id`
 * `avatar_url`
-* `gravatar_id`
-* `url`
-* `name`
-* `company`
-* `blog`
-* `location`
-* `email`
-* `hireable`
 * `bio`
-* `public_repos`
-* `public_gists`
-* `followers`
-* `following`
-* `html_url`
-* `created_at`
-* `type`
-* `contributions`
-* `disk_usage`
+* `blog`
 * `collaborators`
-* `plan`
-* `total_private_repos`
+* `company`
+* `contributions`
+* `created_at`
+* `disk_usage`
+* `email`
+* `followers`: integer
+* `following`
+* `gravatar_id`
+* `hireable`
+* `html_url`
+* `id`
+* `location`: string
+* `login`: string
+* `name`: string
 * `owned_private_repos`
+* `plan`
 * `private_gists`
+* `public_gists`
+* `public_repos`
+* `total_private_repos`
+* `type`
+* `url`
+
+Events
+------
+* `get_events()`: list of `Event`
+* `get_public_events()`: list of `Event`
+* `get_received_events()`: list of `Event`
+* `get_public_received_events()`: list of `Event`
 
 Followers
 ---------
@@ -561,140 +635,158 @@ Following
 ---------
 * `get_following()`: list of `NamedUser`
 
+Gists
+-----
+* `create_gist( public, files, [description] )`: `Gist`
+    * `public`: bool
+    * `files`: `dict`
+    * `description`: string
+* `get_gists()`: list of `Gist`
+
 Orgs
 ----
 * `get_orgs()`: list of `Organization`
 
-Events
-------
-* `get_events()`: list of `Event`
-* `get_public_events()`: list of `Event`
-
-Received events
----------------
-* `get_received_events()`: list of `Event`
-* `get_public_received_events()`: list of `Event`
-
 Repos
 -----
-* `get_repos( [type] )`: list of `Repository`
 * `get_repo( name )`: `Repository`
+    * `name`: string
+* `get_repos( [type] )`: list of `Repository`
+    * `type`: `enum`
 
 Watched
 -------
 * `get_watched()`: list of `Repository`
-
-Gists
------
-* `get_gists()`: list of `Gist`
-* `create_gist( public, files, [description] )`: `Gist`
 
 Class `Organization`
 ====================
 
 Attributes
 ----------
-* `login`
-* `id`
-* `url`
 * `avatar_url`
-* `name`
-* `company`
+* `billing_email`
 * `blog`
-* `location`
+* `collaborators`
+* `company`
+* `created_at`
+* `disk_usage`
 * `email`
-* `public_repos`
-* `public_gists`
 * `followers`
 * `following`
-* `html_url`
-* `created_at`
-* `type`
 * `gravatar_id`
-* `disk_usage`
-* `collaborators`
-* `billing_email`
+* `html_url`
+* `id`
+* `location`: string
+* `login`: string
+* `name`: string
+* `owned_private_repos`
 * `plan`
 * `private_gists`
+* `public_gists`
+* `public_repos`
 * `total_private_repos`
-* `owned_private_repos`
-
-Modification
-------------
-* `edit( [billing_email, blog, company, email, location, name] )`
-
-Public members
---------------
-* `get_public_members()`: list of `NamedUser`
-* `add_to_public_members( public_member )`
-    * `public_member`: `NamedUser`
-* `remove_from_public_members( public_member )`
-    * `public_member`: `NamedUser`
-* `has_in_public_members( public_member )`: bool
-    * `public_member`: `NamedUser`
-
-Members
--------
-* `get_members()`: list of `NamedUser`
-* `remove_from_members( member )`
-    * `member`: `NamedUser`
-* `has_in_members( member )`: bool
-    * `member`: `NamedUser`
-
-Repos
------
-* `get_repos( [type] )`: list of `Repository`
-* `get_repo( name )`: `Repository`
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
-
-Forking
--------
-* `create_fork( repo )`: `Repository`
-
-Teams
------
-* `get_teams()`: list of `Team`
-* `create_team( name, [repo_names, permission] )`: `Team`
+* `type`
+* `url`
 
 Events
 ------
 * `get_events()`: list of `Event`
+
+Forking
+-------
+* `create_fork( repo )`: `Repository`
+    * `repo`: `Repository`
+
+Members
+-------
+* `get_members()`: list of `NamedUser`
+* `has_in_members( member )`: bool
+    * `member`: `NamedUser`
+* `remove_from_members( member )`
+    * `member`: `NamedUser`
+
+Modification
+------------
+* `edit( [billing_email, blog, company, email, location, name] )`
+    * `billing_email`
+    * `blog`
+    * `company`
+    * `email`
+    * `location`
+    * `name`
+
+Public_members
+--------------
+* `add_to_public_members( public_member )`
+    * `public_member`: `NamedUser`
+* `get_public_members()`: list of `NamedUser`
+* `has_in_public_members( public_member )`: bool
+    * `public_member`: `NamedUser`
+* `remove_from_public_members( public_member )`
+    * `public_member`: `NamedUser`
+
+Repos
+-----
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+    * `name`: string
+    * `description`: string
+    * `homepage`: string
+    * `private`: bool
+    * `has_issues`: bool
+    * `has_wiki`: bool
+    * `has_downloads`: bool
+    * `team_id`: `int`
+* `get_repo( name )`: `Repository`
+    * `name`: string
+* `get_repos( [type] )`: list of `Repository`
+    * `type`: `enum`
+
+Teams
+-----
+* `create_team( name, [repo_names, permission] )`: `Team`
+    * `name`: string
+    * `repo_names`: `list`
+    * `permission`: `enum`
+* `get_teams()`: list of `Team`
 
 Class `PullRequest`
 ===================
 
 Attributes
 ----------
-* `id`
-* `url`
-* `html_url`
-* `diff_url`
-* `patch_url`
-* `issue_url`
-* `number`
-* `state`
-* `title`
+* `additions`
+* `base`
 * `body`
-* `created_at`
-* `updated_at`
+* `changed_files`
 * `closed_at`
-* `merged_at`
-* `merged`
-* `mergeable`
 * `comments`
 * `commits`
-* `additions`
+* `created_at`
 * `deletions`
-* `changed_files`
+* `diff_url`
 * `head`
-* `base`
+* `html_url`
+* `id`
+* `issue_url`
+* `mergeable`
+* `merged`
+* `merged_at`
 * `merged_by`
+* `number`
+* `patch_url`
 * `review_comments`
+* `state`
+* `title`
+* `updated_at`
+* `url`
 * `user`: `NamedUser`
 
-Modification
-------------
-* `edit( [title, body, state] )`
+Comments
+--------
+* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
+* `get_comment( id )`: `PullRequestComment`
+    * `id`
+* `get_comments()`: list of `PullRequestComment`
 
 Commits
 -------
@@ -704,264 +796,347 @@ Files
 -----
 * `get_files()`: list of `PullRequestFile`
 
-Comments
---------
-* `get_comments()`: list of `PullRequestComment`
-* `get_comment( id )`: `PullRequestComment`
-* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
+Merging
+-------
 * `is_merged()`: bool
 * `merge( [commit_message] )`
+    * `commit_message`: string
+
+Modification
+------------
+* `edit( [title, body, state] )`
+    * `title`
+    * `body`
+    * `state`
 
 Class `PullRequestComment`
 ==========================
 
 Attributes
 ----------
-* `url`
-* `id`
 * `body`
-* `path`
-* `position`
 * `commit_id`
 * `created_at`
-* `updated_at`
 * `html_url`
+* `id`
 * `line`
+* `path`
+* `position`
+* `updated_at`
+* `url`
 * `user`: `NamedUser`
-
-Modification
-------------
-* `edit( body )`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( body )`
+    * `body`
 
 Class `PullRequestFile`
 =======================
 
 Attributes
 ----------
-* `sha`
-* `filename`
-* `status`
 * `additions`
-* `deletions`
-* `changes`
 * `blob_url`
-* `raw_url`
+* `changes`
+* `deletions`
+* `filename`
 * `patch`
+* `raw_url`
+* `sha`
+* `status`
 
 Class `Repository`
 ==================
 
 Attributes
 ----------
-* `url`
-* `html_url`
 * `clone_url`
-* `git_url`
-* `ssh_url`
-* `svn_url`
-* `name`
+* `created_at`
 * `description`
-* `homepage`
-* `language`
-* `private`
 * `fork`
 * `forks`
-* `watchers`
-* `size`
-* `master_branch`
-* `open_issues`
-* `pushed_at`
-* `created_at`
-* `organization`
+* `git_url`
+* `has_downloads`
 * `has_issues`
 * `has_wiki`
-* `has_downloads`
-* `mirror_url`
-* `updated_at`
+* `homepage`
+* `html_url`
 * `id`
-* `permissions`
+* `language`
+* `master_branch`
+* `mirror_url`
+* `name`: string
+* `open_issues`
+* `organization`
 * `owner`: `NamedUser`
 * `parent`: `Repository`
+* `permissions`
+* `private`
+* `pushed_at`
+* `size`
 * `source`: `Repository`
+* `ssh_url`
+* `svn_url`
+* `updated_at`
+* `url`
+* `watchers`
 
-Issues events
--------------
-* `get_issues_events()`: list of `IssueEvent`
-* `get_issues_event( id )`: `IssueEvent`
-
-Forks
------
-* `get_forks()`: list of `Repository`
-
-Modification
-------------
-* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
-
-Languages
----------
-* `get_languages()`: dictionary of strings to integers
-
-Hooks
------
-* `get_hooks()`: list of `Hook`
-* `get_hook( id )`: `Hook`
-* `create_hook( name, config, [events, active] )`: `Hook`
-
-Keys
-----
-* `get_keys()`: list of `RepositoryKey`
-* `get_key( id )`: `RepositoryKey`
-* `create_key( title, key )`: `RepositoryKey`
-
-Collaborators
--------------
-* `get_collaborators()`: list of `NamedUser`
-* `add_to_collaborators( collaborator )`
-    * `collaborator`: `NamedUser`
-* `remove_from_collaborators( collaborator )`
-    * `collaborator`: `NamedUser`
-* `has_in_collaborators( collaborator )`: bool
-    * `collaborator`: `NamedUser`
-
-Contributors
-------------
-* `get_contributors()`: list of `NamedUser`
-
-Watchers
---------
-* `get_watchers()`: list of `NamedUser`
-
-Git refs
---------
-* `get_git_refs()`: list of `GitRef`
-* `get_git_ref( ref )`: `GitRef`
-* `create_git_ref( ref, sha )`: `GitRef`
-
-Git commits
------------
-* `get_git_commit( sha )`: `GitCommit`
-* `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
-
-Git trees
----------
-* `get_git_tree( sha, [recursive] )`: `GitTree`
-* `create_git_tree( tree, [base_tree] )`: `GitTree`
-
-Git blobs
----------
-* `get_git_blob( sha )`: `GitBlob`
-* `create_git_blob( content, encoding )`: `GitBlob`
-
-Git tags
---------
-* `get_git_tag( sha )`: `GitTag`
-* `create_git_tag( tag, message, object, type, [tagger] )`: `GitTag`
-
-Labels
-------
-* `get_labels()`: list of `Label`
-* `get_label( name )`: `Label`
-* `create_label( name, color )`: `Label`
-
-Milestones
+Comparison
 ----------
-* `get_milestones( [state, sort, direction] )`: list of `Milestone`
-* `get_milestone( number )`: `Milestone`
-* `create_milestone( title, [state, description, due_on] )`: `Milestone`
-
-Issues
-------
-* `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
-* `get_issue( number )`: `Issue`
-* `create_issue( title, [body, assignee, milestone, labels] )`: `Issue`
-
-Downloads
----------
-* `get_downloads()`: list of `Download`
-* `get_download( id )`: `Download`
-* `create_download( name, size, [description, content_type] )`: `Download`
-
-Comments
---------
-* `get_comments()`: list of `CommitComment`
-* `get_comment( id )`: `CommitComment`
-
-Commits
--------
-* `get_commits( [sha, path] )`: list of `Commit`
-* `get_commit( sha )`: `Commit`
-
-Tags
-----
-* `get_tags()`: list of `Tag`
+* `compare( base, head )`
+    * `base`
+    * `head`
 
 Branches
 --------
 * `get_branches()`: list of `Branch`
 
-Pulls
------
-* `get_pulls( [state] )`: list of `PullRequest`
-* `get_pull( number )`: `PullRequest`
-* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
-* `compare( base, head )`
+Collaborators
+-------------
+* `add_to_collaborators( collaborator )`
+    * `collaborator`: `NamedUser`
+* `get_collaborators()`: list of `NamedUser`
+* `has_in_collaborators( collaborator )`: bool
+    * `collaborator`: `NamedUser`
+* `remove_from_collaborators( collaborator )`
+    * `collaborator`: `NamedUser`
 
-Teams
------
-* `get_teams()`: list of `Team`
+Comments
+--------
+* `get_comment( id )`: `CommitComment`
+    * `id`
+* `get_comments()`: list of `CommitComment`
+
+Commits
+-------
+* `get_commit( sha )`: `Commit`
+    * `sha`
+* `get_commits( [sha, path] )`: list of `Commit`
+    * `sha`
+    * `path`
+
+Contributors
+------------
+* `get_contributors()`: list of `NamedUser`
+
+Downloads
+---------
+* `create_download( name, size, [description, content_type] )`: `Download`
+    * `name`
+    * `size`
+    * `description`
+    * `content_type`
+* `get_download( id )`: `Download`
+    * `id`
+* `get_downloads()`: list of `Download`
 
 Events
 ------
 * `get_events()`: list of `Event`
 * `get_network_events()`: list of `Event`
 
+Forks
+-----
+* `get_forks()`: list of `Repository`
+
+Git_blobs
+---------
+* `create_git_blob( content, encoding )`: `GitBlob`
+    * `content`
+    * `encoding`
+* `get_git_blob( sha )`: `GitBlob`
+    * `sha`
+
+Git_commits
+-----------
+* `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
+    * `message`
+    * `tree`
+    * `parents`
+    * `author`
+    * `committer`
+* `get_git_commit( sha )`: `GitCommit`
+    * `sha`
+
+Git_refs
+--------
+* `create_git_ref( ref, sha )`: `GitRef`
+    * `ref`
+    * `sha`
+* `get_git_ref( ref )`: `GitRef`
+    * `ref`
+* `get_git_refs()`: list of `GitRef`
+
+Git_tags
+--------
+* `create_git_tag( tag, message, object, type, [tagger] )`: `GitTag`
+    * `tag`
+    * `message`
+    * `object`
+    * `type`
+    * `tagger`
+* `get_git_tag( sha )`: `GitTag`
+    * `sha`
+
+Git_trees
+---------
+* `create_git_tree( tree, [base_tree] )`: `GitTree`
+    * `tree`
+    * `base_tree`
+* `get_git_tree( sha, [recursive] )`: `GitTree`
+    * `sha`
+    * `recursive`: bool
+
+Hooks
+-----
+* `create_hook( name, config, [events, active] )`: `Hook`
+    * `name`
+    * `config`
+    * `events`
+    * `active`
+* `get_hook( id )`: `Hook`
+    * `id`
+* `get_hooks()`: list of `Hook`
+
+Issues
+------
+* `create_issue( title, [body, assignee, milestone, labels] )`: `Issue`
+    * `title`
+    * `body`
+    * `assignee`
+    * `milestone`
+    * `labels`
+* `get_issue( number )`: `Issue`
+    * `number`
+* `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
+    * `milestone`
+    * `state`
+    * `assignee`
+    * `mentioned`
+    * `labels`
+    * `sort`
+    * `direction`
+    * `since`
+
+Issues_events
+-------------
+* `get_issues_event( id )`: `IssueEvent`
+    * `id`
+* `get_issues_events()`: list of `IssueEvent`
+
+Keys
+----
+* `create_key( title, key )`: `RepositoryKey`
+    * `title`
+    * `key`
+* `get_key( id )`: `RepositoryKey`
+    * `id`
+* `get_keys()`: list of `RepositoryKey`
+
+Labels
+------
+* `create_label( name, color )`: `Label`
+    * `name`
+    * `color`
+* `get_label( name )`: `Label`
+    * `name`
+* `get_labels()`: list of `Label`
+
+Languages
+---------
+* `get_languages()`
+
+Milestones
+----------
+* `create_milestone( title, [state, description, due_on] )`: `Milestone`
+    * `title`
+    * `state`
+    * `description`
+    * `due_on`
+* `get_milestone( number )`: `Milestone`
+    * `number`
+* `get_milestones( [state, sort, direction] )`: list of `Milestone`
+    * `state`
+    * `sort`
+    * `direction`
+
+Modification
+------------
+* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
+    * `name`
+    * `description`
+    * `homepage`
+    * `public`
+    * `has_issues`
+    * `has_wiki`
+    * `has_downloads`
+
+Pulls
+-----
+* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
+* `get_pull( number )`: `PullRequest`
+    * `number`
+* `get_pulls( [state] )`: list of `PullRequest`
+    * `state`
+
+Tags
+----
+* `get_tags()`: list of `Tag`
+
+Teams
+-----
+* `get_teams()`: list of `Team`
+
+Watchers
+--------
+* `get_watchers()`: list of `NamedUser`
+
 Class `RepositoryKey`
 =====================
 
 Attributes
 ----------
-* `url`
 * `id`
-* `title`
 * `key`
-
-Modification
-------------
-* `edit( title, key )`
+* `title`
+* `url`
 
 Deletion
 --------
 * `delete()`
+
+Modification
+------------
+* `edit( title, key )`
+    * `title`
+    * `key`
 
 Class `Tag`
 ===========
 
 Attributes
 ----------
-* `name`
-* `zipball_url`
-* `tarball_url`
 * `commit`: `Commit`
+* `name`
+* `tarball_url`
+* `zipball_url`
 
 Class `Team`
 ============
 
 Attributes
 ----------
-* `url`
-* `name`
 * `id`
-* `permission`
 * `members_count`
+* `name`
+* `permission`
 * `repos_count`
-
-Modification
-------------
-* `edit( name, [permission] )`
+* `url`
 
 Deletion
 --------
@@ -969,22 +1144,28 @@ Deletion
 
 Members
 -------
-* `get_members()`: list of `NamedUser`
 * `add_to_members( member )`
+    * `member`: `NamedUser`
+* `get_members()`: list of `NamedUser`
+* `has_in_members( member )`: bool
     * `member`: `NamedUser`
 * `remove_from_members( member )`
     * `member`: `NamedUser`
-* `has_in_members( member )`: bool
-    * `member`: `NamedUser`
+
+Modification
+------------
+* `edit( name, [permission] )`
+    * `name`
+    * `permission`
 
 Repos
 -----
-* `get_repos()`: list of `Repository`
 * `add_to_repos( repo )`
     * `repo`: `Repository`
-* `remove_from_repos( repo )`
-    * `repo`: `Repository`
+* `get_repos()`: list of `Repository`
 * `has_in_repos( repo )`: bool
+    * `repo`: `Repository`
+* `remove_from_repos( repo )`
     * `repo`: `Repository`
 
 Class `UserKey`
@@ -992,17 +1173,17 @@ Class `UserKey`
 
 Attributes
 ----------
-* `url`
 * `id`
-* `title`
 * `key`
-
-Modification
-------------
-* `edit( [title, key] )`
+* `title`
+* `url`
 
 Deletion
 --------
 * `delete()`
 
-
+Modification
+------------
+* `edit( [title, key] )`
+    * `title`
+    * `key`

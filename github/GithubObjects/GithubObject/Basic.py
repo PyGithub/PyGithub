@@ -114,5 +114,5 @@ class SeveralAttributePolicies:
             doc += "\n"
             doc += self.__documentationSection + "\n"
             doc += "-" * len( self.__documentationSection ) + "\n"
-        doc += "".join( attributePolicy.autoDocument() for attributePolicy in self.__attributePolicies )
+        doc += "".join( sorted( attributePolicy.autoDocument() for attributePolicy in self.__attributePolicies ) )
         return doc

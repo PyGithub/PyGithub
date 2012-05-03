@@ -1,0 +1,1 @@
+{% for part in concatenation %}{% if forloop.counter0 > 0 %} + {% endif %}{% if part.type == "constant" %}"{{ part.value }}"{% endif %}{% if part.type == "argument" %}{{ part.value|join:"." }}{% endif %}{% if part.type == "attribute" %}self.{{ part.value|join:"." }}{% endif %}{% endfor %}
