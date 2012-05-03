@@ -17,10 +17,17 @@ class Github:
 
     def get_user( self, login = None ):
         if login is None:
-            attributes = { "url": "https://api.github.com/user" }
+            attributes = {
+                "url": "https://api.github.com/user",
+                # "login": self.__login # @todo ?
+            }
             return GithubObjects.AuthenticatedUser.AuthenticatedUser( self, attributes, lazy = True )
         else:
-            return GithubObjects.NamedUser.NamedUser( self, { "login": login }, lazy = False )
+            attributes = {
+                "url": "https://api.github.com/users/" + login,
+                "login": login,
+            }
+            return GithubObjects.NamedUser.NamedUser( self, attributes, lazy = False )
 
     def get_organization( self, login ):
         return GithubObjects.Organization.Organization( self, { "login": login }, lazy = False )
