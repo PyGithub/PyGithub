@@ -104,8 +104,9 @@ class Event( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes:
-            self.__actor = attributes[ "actor" ]
+            self.__actor = NamedUser.NamedUser( self.__github, attributes[ "actor" ], lazy = True )
         if "commit_id" in attributes:
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes:
@@ -117,13 +118,13 @@ class Event( object ):
         if "issue" in attributes:
             self.__issue = attributes[ "issue" ]
         if "org" in attributes:
-            self.__org = attributes[ "org" ]
+            self.__org = Organization.Organization( self.__github, attributes[ "org" ], lazy = True )
         if "payload" in attributes:
             self.__payload = attributes[ "payload" ]
         if "public" in attributes:
             self.__public = attributes[ "public" ]
         if "repo" in attributes:
-            self.__repo = attributes[ "repo" ]
+            self.__repo = Repository.Repository( self.__github, attributes[ "repo" ], lazy = True )
         if "type" in attributes:
             self.__type = attributes[ "type" ]
         if "url" in attributes:

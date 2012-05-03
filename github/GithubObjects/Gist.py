@@ -164,6 +164,7 @@ class Gist( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "comments" in attributes:
             self.__comments = attributes[ "comments" ]
         if "created_at" in attributes:
@@ -191,4 +192,4 @@ class Gist( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = attributes[ "user" ]
+            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )

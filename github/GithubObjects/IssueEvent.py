@@ -72,8 +72,9 @@ class IssueEvent( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes:
-            self.__actor = attributes[ "actor" ]
+            self.__actor = NamedUser.NamedUser( self.__github, attributes[ "actor" ], lazy = True )
         if "commit_id" in attributes:
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes:

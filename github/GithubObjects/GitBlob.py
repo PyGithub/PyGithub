@@ -59,6 +59,7 @@ class GitBlob( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "content" in attributes:
             self.__content = attributes[ "content" ]
         if "encoding" in attributes:

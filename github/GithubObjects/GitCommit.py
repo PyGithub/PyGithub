@@ -72,6 +72,7 @@ class GitCommit( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "author" in attributes:
             self.__author = attributes[ "author" ]
         if "committer" in attributes:
@@ -83,6 +84,6 @@ class GitCommit( object ):
         if "sha" in attributes:
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes:
-            self.__tree = attributes[ "tree" ]
+            self.__tree = GitTree.GitTree( self.__github, attributes[ "tree" ], lazy = True )
         if "url" in attributes:
             self.__url = attributes[ "url" ]

@@ -287,6 +287,7 @@ class Organization( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "avatar_url" in attributes:
             self.__avatar_url = attributes[ "avatar_url" ]
         if "billing_email" in attributes:

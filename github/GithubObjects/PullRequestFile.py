@@ -83,6 +83,7 @@ class PullRequestFile( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes:
             self.__additions = attributes[ "additions" ]
         if "blob_url" in attributes:

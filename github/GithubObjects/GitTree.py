@@ -53,6 +53,7 @@ class GitTree( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "recursive" in attributes:
             self.__recursive = attributes[ "recursive" ]
         if "sha" in attributes:

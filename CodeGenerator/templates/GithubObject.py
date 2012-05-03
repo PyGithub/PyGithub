@@ -90,7 +90,13 @@ class {{ class.name }}( object ):
 {% endfor %}
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes %}
         if "{{ attribute.name }}" in attributes:
+{% if attribute.type.simple %}
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+{% else %}
+            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__github, attributes[ "{{ attribute.name }}" ], lazy = True )
+{% endif %}
+
 {% endfor %}

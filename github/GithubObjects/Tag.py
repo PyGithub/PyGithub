@@ -54,8 +54,9 @@ class Tag( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes:
-            self.__commit = attributes[ "commit" ]
+            self.__commit = Commit.Commit( self.__github, attributes[ "commit" ], lazy = True )
         if "name" in attributes:
             self.__name = attributes[ "name" ]
         if "tarball_url" in attributes:

@@ -213,8 +213,9 @@ class Issue( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes:
-            self.__assignee = attributes[ "assignee" ]
+            self.__assignee = NamedUser.NamedUser( self.__github, attributes[ "assignee" ], lazy = True )
         if "body" in attributes:
             self.__body = attributes[ "body" ]
         if "closed_at" in attributes:
@@ -232,7 +233,7 @@ class Issue( object ):
         if "labels" in attributes:
             self.__labels = attributes[ "labels" ]
         if "milestone" in attributes:
-            self.__milestone = attributes[ "milestone" ]
+            self.__milestone = Milestone.Milestone( self.__github, attributes[ "milestone" ], lazy = True )
         if "number" in attributes:
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes:
@@ -246,4 +247,4 @@ class Issue( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = attributes[ "user" ]
+            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )

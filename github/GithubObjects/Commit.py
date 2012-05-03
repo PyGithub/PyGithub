@@ -95,12 +95,13 @@ class Commit( object ):
         ]
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "author" in attributes:
-            self.__author = attributes[ "author" ]
+            self.__author = NamedUser.NamedUser( self.__github, attributes[ "author" ], lazy = True )
         if "commit" in attributes:
-            self.__commit = attributes[ "commit" ]
+            self.__commit = GitCommit.GitCommit( self.__github, attributes[ "commit" ], lazy = True )
         if "committer" in attributes:
-            self.__committer = attributes[ "committer" ]
+            self.__committer = NamedUser.NamedUser( self.__github, attributes[ "committer" ], lazy = True )
         if "files" in attributes:
             self.__files = attributes[ "files" ]
         if "parents" in attributes:

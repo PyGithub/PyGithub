@@ -111,6 +111,7 @@ class PullRequestComment( object ):
         self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes:
             self.__body = attributes[ "body" ]
         if "commit_id" in attributes:
@@ -132,4 +133,4 @@ class PullRequestComment( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = attributes[ "user" ]
+            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )

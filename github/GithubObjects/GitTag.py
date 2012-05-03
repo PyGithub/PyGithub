@@ -65,6 +65,7 @@ class GitTag( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "message" in attributes:
             self.__message = attributes[ "message" ]
         if "object" in attributes:

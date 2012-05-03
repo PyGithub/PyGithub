@@ -107,6 +107,7 @@ class Authorization( object ):
         self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "app" in attributes:
             self.__app = attributes[ "app" ]
         if "created_at" in attributes:

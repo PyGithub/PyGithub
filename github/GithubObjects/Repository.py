@@ -578,6 +578,7 @@ class Repository( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "clone_url" in attributes:
             self.__clone_url = attributes[ "clone_url" ]
         if "created_at" in attributes:
@@ -615,9 +616,9 @@ class Repository( object ):
         if "organization" in attributes:
             self.__organization = attributes[ "organization" ]
         if "owner" in attributes:
-            self.__owner = attributes[ "owner" ]
+            self.__owner = NamedUser.NamedUser( self.__github, attributes[ "owner" ], lazy = True )
         if "parent" in attributes:
-            self.__parent = attributes[ "parent" ]
+            self.__parent = Repository( self.__github, attributes[ "parent" ], lazy = True )
         if "permissions" in attributes:
             self.__permissions = attributes[ "permissions" ]
         if "private" in attributes:
@@ -627,7 +628,7 @@ class Repository( object ):
         if "size" in attributes:
             self.__size = attributes[ "size" ]
         if "source" in attributes:
-            self.__source = attributes[ "source" ]
+            self.__source = Repository( self.__github, attributes[ "source" ], lazy = True )
         if "ssh_url" in attributes:
             self.__ssh_url = attributes[ "ssh_url" ]
         if "svn_url" in attributes:

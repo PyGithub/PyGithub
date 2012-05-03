@@ -124,12 +124,13 @@ class Milestone( object ):
         ]
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "closed_issues" in attributes:
             self.__closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes:
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes:
-            self.__creator = attributes[ "creator" ]
+            self.__creator = NamedUser.NamedUser( self.__github, attributes[ "creator" ], lazy = True )
         if "description" in attributes:
             self.__description = attributes[ "description" ]
         if "due_on" in attributes:

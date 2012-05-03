@@ -251,6 +251,7 @@ class PullRequest( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes:
             self.__additions = attributes[ "additions" ]
         if "base" in attributes:
@@ -302,4 +303,4 @@ class PullRequest( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = attributes[ "user" ]
+            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )

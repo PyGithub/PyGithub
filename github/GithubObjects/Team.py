@@ -126,6 +126,7 @@ class Team( object ):
         pass
 
     def __useAttributes( self, attributes ):
+         #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "id" in attributes:
             self.__id = attributes[ "id" ]
         if "members_count" in attributes:
