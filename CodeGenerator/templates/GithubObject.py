@@ -72,12 +72,12 @@ class {{ class.name }}( object ):
 {% else %}
 
 {% if method.type.cardinality == "scalar" %}
-        return {{ method.type.name }}.{{ method.type.name }}( self.__github, result, lazy = True )
+        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__github, result, lazy = True )
 {% endif %}
 
 {% if method.type.cardinality == "list" %}
         return [
-            {{ method.type.name }}.{{ method.type.name }}( self.__github, element, lazy = True )
+            {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__github, element, lazy = True )
             for element in result
         ]
 {% endif %}

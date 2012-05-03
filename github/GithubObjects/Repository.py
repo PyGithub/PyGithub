@@ -393,7 +393,7 @@ class Repository( object ):
             None
         )
         return [
-            Repository.Repository( self.__github, element, lazy = True )
+            Repository( self.__github, element, lazy = True )
             for element in result
         ]
 

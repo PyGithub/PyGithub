@@ -212,7 +212,7 @@ class NamedUser( object ):
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
+            NamedUser( self.__github, element, lazy = True )
             for element in result
         ]
 
@@ -224,7 +224,7 @@ class NamedUser( object ):
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
+            NamedUser( self.__github, element, lazy = True )
             for element in result
         ]
 
