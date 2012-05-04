@@ -121,7 +121,7 @@ class Collection:
                         "url": [
                             { "type": "attribute", "value": [ "url" ] },
                             { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
@@ -202,7 +202,7 @@ class Collection:
                         "url": [
                             { "type": "attribute", "value": [ "url" ] },
                             { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
@@ -218,7 +218,7 @@ class Collection:
                         "url": [
                             { "type": "attribute", "value": [ "url" ] },
                             { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
@@ -233,7 +233,7 @@ class Collection:
 
 class Class:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "attributes", "collections" ], [ "edit", "delete", "additional_methods" ] )
+        checkKeys( desc, [ "name", "attributes", "collections" ], [ "identity", "edit", "delete", "additional_methods" ] )
 
         self.name = desc[ "name" ]
         self.attributes = sorted(
@@ -244,6 +244,10 @@ class Class:
             key = lambda class_: class_.name
         )
         self.methods = []
+        if "identity" in desc:
+            self.identity = desc[ "identity" ]
+        else:
+            self.identity = None
         if "edit" in desc:
             self.methods.append( Function(
                 desc[ "edit" ],
@@ -274,11 +278,14 @@ class Class:
             self.methods += [ Function( method ) for method in desc[ "additional_methods" ] ]
 
     def ToJson( self ):
-        return {
+        d = {
             "name": self.name,
             "attributes": self.attributes,
             "methods": self.methods,
         }
+        if self.identity is not None:
+            d[ "identity" ] = self.identity
+        return d
 
 class Description:
     def __init__( self, desc ):

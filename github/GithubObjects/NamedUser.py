@@ -268,6 +268,11 @@ class NamedUser( object ):
             for element in data
         ]
 
+    # @todo Remove '_identity' from the normalized json description
+    @property
+    def _identity( self ):
+        return str( self.login )
+
     def __initAttributes( self ):
         self.__avatar_url = None
         self.__bio = None

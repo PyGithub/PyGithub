@@ -190,7 +190,7 @@ class Repository( object ):
     def add_to_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/collaborators/" + str( collaborator.login ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
@@ -767,7 +767,7 @@ class Repository( object ):
     def has_in_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/collaborators/" + str( collaborator.login ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
@@ -776,10 +776,15 @@ class Repository( object ):
     def remove_from_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/collaborators/" + str( collaborator.login ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
+
+    # @todo Remove '_identity' from the normalized json description
+    @property
+    def _identity( self ):
+        return str( self.owner.login ) + "/" + str( self.name )
 
     def __initAttributes( self ):
         self.__clone_url = None

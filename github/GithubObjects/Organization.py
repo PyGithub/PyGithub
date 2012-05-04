@@ -143,7 +143,7 @@ class Organization( object ):
     def add_to_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/public_members/" + str( public_member.login ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )
@@ -294,7 +294,7 @@ class Organization( object ):
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/members/" + str( member.login ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -303,7 +303,7 @@ class Organization( object ):
     def has_in_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/public_members/" + str( public_member.login ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )
@@ -312,7 +312,7 @@ class Organization( object ):
     def remove_from_members( self, member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/members/" + str( member.login ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -320,7 +320,7 @@ class Organization( object ):
     def remove_from_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/public_members/" + str( public_member.login ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )

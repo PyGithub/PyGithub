@@ -33,6 +33,13 @@ class {{ class.name }}( object ):
     {% endif %}
 {% endfor %}
 
+{% if class.identity %}
+    # @todo Remove '_identity' from the normalized json description
+    @property
+    def _identity( self ):
+        return {% include "GithubObject.Concatenation.py" with concatenation=class.identity only  %}
+{% endif %}
+
     def __initAttributes( self ):
 {% for attribute in class.attributes|dictsort:"name" %}
         self.__{{ attribute.name }} = None

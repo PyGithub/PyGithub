@@ -704,6 +704,7 @@
                 { "name": "type", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
             ],
+            "identity": [ { "type": "attribute", "value": [ "login" ] } ],
             "collections": [
                 {
                     "name": "events",
@@ -1027,6 +1028,11 @@
         },
         {
             "name": "Repository",
+            "identity": [
+                { "type": "attribute", "value": [ "owner", "login" ] },
+                { "type": "constant", "value": "/" },
+                { "type": "attribute", "value": [ "name" ] }
+            ],
             "edit": {
                 "mandatory_parameters": [
                     { "name": "name", "type": "@todo" }

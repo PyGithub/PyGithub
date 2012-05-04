@@ -155,7 +155,7 @@ class AuthenticatedUser( object ):
     def add_to_following( self, following ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/following/" + str( following.login ),
+            str( self.url ) + "/following/" + str( following._identity ),
             None,
             None
         )
@@ -163,7 +163,7 @@ class AuthenticatedUser( object ):
     def add_to_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/watched/" + str( watched.login ),
+            str( self.url ) + "/watched/" + str( watched._identity ),
             None,
             None
         )
@@ -437,7 +437,7 @@ class AuthenticatedUser( object ):
     def has_in_following( self, following ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/following/" + str( following.login ),
+            str( self.url ) + "/following/" + str( following._identity ),
             None,
             None
         )
@@ -446,7 +446,7 @@ class AuthenticatedUser( object ):
     def has_in_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/watched/" + str( watched.login ),
+            str( self.url ) + "/watched/" + str( watched._identity ),
             None,
             None
         )
@@ -458,7 +458,7 @@ class AuthenticatedUser( object ):
     def remove_from_following( self, following ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/following/" + str( following.login ),
+            str( self.url ) + "/following/" + str( following._identity ),
             None,
             None
         )
@@ -466,7 +466,7 @@ class AuthenticatedUser( object ):
     def remove_from_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/watched/" + str( watched.login ),
+            str( self.url ) + "/watched/" + str( watched._identity ),
             None,
             None
         )

@@ -195,7 +195,7 @@ class Issue( object ):
     def remove_from_labels( self, label ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/labels/" + str( label.login ),
+            str( self.url ) + "/labels/" + str( label._identity ),
             None,
             None
         )
