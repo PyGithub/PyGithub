@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class UserKey( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -39,12 +44,12 @@ class UserKey( object ):
             None
         )
 
-    def edit( self, title = None, key = None ):
+    def edit( self, title = DefaultValueForOptionalParameters, key = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if title is not None:
+        if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
-        if key is not None:
+        if key is not DefaultValueForOptionalParameters:
             post_parameters[ "key" ] = key
         status, headers, data = self.__requester.request(
             "PATCH",

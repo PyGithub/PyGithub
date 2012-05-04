@@ -22,6 +22,11 @@ import Issue
 import Event
 import GitTree
 import Label
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Repository( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -193,14 +198,14 @@ class Repository( object ):
     def compare( self, base, head ):
         pass
 
-    def create_download( self, name, size, description = None, content_type = None ):
+    def create_download( self, name, size, description = DefaultValueForOptionalParameters, content_type = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
             "size": size,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if content_type is not None:
+        if content_type is not DefaultValueForOptionalParameters:
             post_parameters[ "content_type" ] = content_type
         status, headers, data = self.__requester.request(
             "POST",
@@ -223,15 +228,15 @@ class Repository( object ):
         )
         return GitBlob.GitBlob( self.__requester, data, lazy = True )
 
-    def create_git_commit( self, message, tree, parents, author = None, committer = None ):
+    def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
         post_parameters = {
             "message": message,
             "tree": tree,
             "parents": parents,
         }
-        if author is not None:
+        if author is not DefaultValueForOptionalParameters:
             post_parameters[ "author" ] = author
-        if committer is not None:
+        if committer is not DefaultValueForOptionalParameters:
             post_parameters[ "committer" ] = committer
         status, headers, data = self.__requester.request(
             "POST",
@@ -254,14 +259,14 @@ class Repository( object ):
         )
         return GitRef.GitRef( self.__requester, data, lazy = True )
 
-    def create_git_tag( self, tag, message, object, type, tagger = None ):
+    def create_git_tag( self, tag, message, object, type, tagger = DefaultValueForOptionalParameters ):
         post_parameters = {
             "tag": tag,
             "message": message,
             "object": object,
             "type": type,
         }
-        if tagger is not None:
+        if tagger is not DefaultValueForOptionalParameters:
             post_parameters[ "tagger" ] = tagger
         status, headers, data = self.__requester.request(
             "POST",
@@ -271,11 +276,11 @@ class Repository( object ):
         )
         return GitTag.GitTag( self.__requester, data, lazy = True )
 
-    def create_git_tree( self, tree, base_tree = None ):
+    def create_git_tree( self, tree, base_tree = DefaultValueForOptionalParameters ):
         post_parameters = {
             "tree": tree,
         }
-        if base_tree is not None:
+        if base_tree is not DefaultValueForOptionalParameters:
             post_parameters[ "base_tree" ] = base_tree
         status, headers, data = self.__requester.request(
             "POST",
@@ -285,14 +290,14 @@ class Repository( object ):
         )
         return GitTree.GitTree( self.__requester, data, lazy = True )
 
-    def create_hook( self, name, config, events = None, active = None ):
+    def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
             "config": config,
         }
-        if events is not None:
+        if events is not DefaultValueForOptionalParameters:
             post_parameters[ "events" ] = events
-        if active is not None:
+        if active is not DefaultValueForOptionalParameters:
             post_parameters[ "active" ] = active
         status, headers, data = self.__requester.request(
             "POST",
@@ -302,17 +307,17 @@ class Repository( object ):
         )
         return Hook.Hook( self.__requester, data, lazy = True )
 
-    def create_issue( self, title, body = None, assignee = None, milestone = None, labels = None ):
+    def create_issue( self, title, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         post_parameters = {
             "title": title,
         }
-        if body is not None:
+        if body is not DefaultValueForOptionalParameters:
             post_parameters[ "body" ] = body
-        if assignee is not None:
+        if assignee is not DefaultValueForOptionalParameters:
             post_parameters[ "assignee" ] = assignee
-        if milestone is not None:
+        if milestone is not DefaultValueForOptionalParameters:
             post_parameters[ "milestone" ] = milestone
-        if labels is not None:
+        if labels is not DefaultValueForOptionalParameters:
             post_parameters[ "labels" ] = labels
         status, headers, data = self.__requester.request(
             "POST",
@@ -348,15 +353,15 @@ class Repository( object ):
         )
         return Label.Label( self.__requester, data, lazy = True )
 
-    def create_milestone( self, title, state = None, description = None, due_on = None ):
+    def create_milestone( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
         post_parameters = {
             "title": title,
         }
-        if state is not None:
+        if state is not DefaultValueForOptionalParameters:
             post_parameters[ "state" ] = state
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if due_on is not None:
+        if due_on is not DefaultValueForOptionalParameters:
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self.__requester.request(
             "POST",
@@ -366,21 +371,21 @@ class Repository( object ):
         )
         return Milestone.Milestone( self.__requester, data, lazy = True )
 
-    def edit( self, name, description = None, homepage = None, public = None, has_issues = None, has_wiki = None, has_downloads = None ):
+    def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if homepage is not None:
+        if homepage is not DefaultValueForOptionalParameters:
             post_parameters[ "homepage" ] = homepage
-        if public is not None:
+        if public is not DefaultValueForOptionalParameters:
             post_parameters[ "public" ] = public
-        if has_issues is not None:
+        if has_issues is not DefaultValueForOptionalParameters:
             post_parameters[ "has_issues" ] = has_issues
-        if has_wiki is not None:
+        if has_wiki is not DefaultValueForOptionalParameters:
             post_parameters[ "has_wiki" ] = has_wiki
-        if has_downloads is not None:
+        if has_downloads is not DefaultValueForOptionalParameters:
             post_parameters[ "has_downloads" ] = has_downloads
         status, headers, data = self.__requester.request(
             "PATCH",
@@ -444,7 +449,7 @@ class Repository( object ):
         )
         return Commit.Commit( self.__requester, data, lazy = True )
 
-    def get_commits( self, sha = None, path = None ):
+    def get_commits( self, sha = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits",
@@ -561,7 +566,7 @@ class Repository( object ):
         )
         return GitTag.GitTag( self.__requester, data, lazy = True )
 
-    def get_git_tree( self, sha, recursive = None ):
+    def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git_trees/" + str( sha ),
@@ -600,7 +605,7 @@ class Repository( object ):
         )
         return Issue.Issue( self.__requester, data, lazy = True )
 
-    def get_issues( self, milestone = None, state = None, assignee = None, mentioned = None, labels = None, sort = None, direction = None, since = None ):
+    def get_issues( self, milestone = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, mentioned = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters, since = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues",
@@ -687,7 +692,7 @@ class Repository( object ):
         )
         return Milestone.Milestone( self.__requester, data, lazy = True )
 
-    def get_milestones( self, state = None, sort = None, direction = None ):
+    def get_milestones( self, state = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones",
@@ -711,7 +716,7 @@ class Repository( object ):
         )
         return PullRequest.PullRequest( self.__requester, data, lazy = True )
 
-    def get_pulls( self, state = None ):
+    def get_pulls( self, state = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls",

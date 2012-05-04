@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class GitRef( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -34,11 +39,11 @@ class GitRef( object ):
             None
         )
 
-    def edit( self, sha, force = None ):
+    def edit( self, sha, force = DefaultValueForOptionalParameters ):
         post_parameters = {
             "sha": sha,
         }
-        if force is not None:
+        if force is not DefaultValueForOptionalParameters:
             post_parameters[ "force" ] = force
         status, headers, data = self.__requester.request(
             "PATCH",

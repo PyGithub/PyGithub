@@ -5,7 +5,7 @@
     {% endfor %}
         }
     {% for parameter in method.optional_parameters %}
-        if {{ parameter.name }} is not None:
+        if {{ parameter.name }} is not DefaultValueForOptionalParameters:
             post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
     {% endfor %}
 {% endif %}

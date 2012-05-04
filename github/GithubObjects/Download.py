@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Download( object ):
     def __init__( self, requester, attributes, lazy ):

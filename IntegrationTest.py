@@ -278,14 +278,14 @@ class IntegrationTest:
         u.edit( name = originalName )
         print u.name
 
-    # def testEditOrganization( self ):
-        # o = self.g.get_organization( self.cobayeOrganization )
-        # originalName = o.name
-        # print o.name
-        # o.edit( name = str( o.name ) + " (edited by PyGithub)" )
-        # print o.name
-        # o.edit( name = originalName )
-        # print o.name
+    def testEditOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        originalName = o.name
+        print o.name
+        o.edit( name = str( o.name ) + " (edited by PyGithub)" )
+        print o.name
+        o.edit( name = originalName )
+        print o.name
 
     # def testEditOrganizationTeamAndMembers( self ):
         # o = self.g.get_organization( self.cobayeOrganization )

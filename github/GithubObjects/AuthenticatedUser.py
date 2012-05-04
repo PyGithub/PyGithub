@@ -9,6 +9,11 @@ import UserKey
 import Issue
 import Event
 import Authorization
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class AuthenticatedUser( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -163,14 +168,14 @@ class AuthenticatedUser( object ):
             None
         )
 
-    def create_authorization( self, scopes = None, note = None, note_url = None ):
+    def create_authorization( self, scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if scopes is not None:
+        if scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "scopes" ] = scopes
-        if note is not None:
+        if note is not DefaultValueForOptionalParameters:
             post_parameters[ "note" ] = note
-        if note_url is not None:
+        if note_url is not DefaultValueForOptionalParameters:
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "POST",
@@ -189,12 +194,12 @@ class AuthenticatedUser( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def create_gist( self, public, files, description = None ):
+    def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
         post_parameters = {
             "public": public,
             "files": files,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
         status, headers, data = self.__requester.request(
             "POST",
@@ -217,23 +222,23 @@ class AuthenticatedUser( object ):
         )
         return UserKey.UserKey( self.__requester, data, lazy = True )
 
-    def create_repo( self, name, description = None, homepage = None, private = None, has_issues = None, has_wiki = None, has_downloads = None, team_id = None ):
+    def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if homepage is not None:
+        if homepage is not DefaultValueForOptionalParameters:
             post_parameters[ "homepage" ] = homepage
-        if private is not None:
+        if private is not DefaultValueForOptionalParameters:
             post_parameters[ "private" ] = private
-        if has_issues is not None:
+        if has_issues is not DefaultValueForOptionalParameters:
             post_parameters[ "has_issues" ] = has_issues
-        if has_wiki is not None:
+        if has_wiki is not DefaultValueForOptionalParameters:
             post_parameters[ "has_wiki" ] = has_wiki
-        if has_downloads is not None:
+        if has_downloads is not DefaultValueForOptionalParameters:
             post_parameters[ "has_downloads" ] = has_downloads
-        if team_id is not None:
+        if team_id is not DefaultValueForOptionalParameters:
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
@@ -243,22 +248,22 @@ class AuthenticatedUser( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def edit( self, name = None, email = None, blog = None, company = None, location = None, hireable = None, bio = None ):
+    def edit( self, name = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, hireable = DefaultValueForOptionalParameters, bio = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if name is not None:
+        if name is not DefaultValueForOptionalParameters:
             post_parameters[ "name" ] = name
-        if email is not None:
+        if email is not DefaultValueForOptionalParameters:
             post_parameters[ "email" ] = email
-        if blog is not None:
+        if blog is not DefaultValueForOptionalParameters:
             post_parameters[ "blog" ] = blog
-        if company is not None:
+        if company is not DefaultValueForOptionalParameters:
             post_parameters[ "company" ] = company
-        if location is not None:
+        if location is not DefaultValueForOptionalParameters:
             post_parameters[ "location" ] = location
-        if hireable is not None:
+        if hireable is not DefaultValueForOptionalParameters:
             post_parameters[ "hireable" ] = hireable
-        if bio is not None:
+        if bio is not DefaultValueForOptionalParameters:
             post_parameters[ "bio" ] = bio
         status, headers, data = self.__requester.request(
             "PATCH",
@@ -402,7 +407,7 @@ class AuthenticatedUser( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def get_repos( self, type = None ):
+    def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",

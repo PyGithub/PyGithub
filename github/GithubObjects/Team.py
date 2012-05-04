@@ -3,6 +3,11 @@
 
 import Repository
 import NamedUser
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Team( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -67,11 +72,11 @@ class Team( object ):
             None
         )
 
-    def edit( self, name, permission = None ):
+    def edit( self, name, permission = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
-        if permission is not None:
+        if permission is not DefaultValueForOptionalParameters:
             post_parameters[ "permission" ] = permission
         status, headers, data = self.__requester.request(
             "PATCH",

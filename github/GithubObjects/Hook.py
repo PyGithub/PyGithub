@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Hook( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -64,18 +69,18 @@ class Hook( object ):
             None
         )
 
-    def edit( self, name, config, events = None, add_events = None, remove_events = None, active = None ):
+    def edit( self, name, config, events = DefaultValueForOptionalParameters, add_events = DefaultValueForOptionalParameters, remove_events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
             "config": config,
         }
-        if events is not None:
+        if events is not DefaultValueForOptionalParameters:
             post_parameters[ "events" ] = events
-        if add_events is not None:
+        if add_events is not DefaultValueForOptionalParameters:
             post_parameters[ "add_events" ] = add_events
-        if remove_events is not None:
+        if remove_events is not DefaultValueForOptionalParameters:
             post_parameters[ "remove_events" ] = remove_events
-        if active is not None:
+        if active is not DefaultValueForOptionalParameters:
             post_parameters[ "active" ] = active
         status, headers, data = self.__requester.request(
             "PATCH",

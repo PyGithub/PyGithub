@@ -1,6 +1,11 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Authorization( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -64,18 +69,18 @@ class Authorization( object ):
             None
         )
 
-    def edit( self, scopes = None, add_scopes = None, remove_scopes = None, note = None, note_url = None ):
+    def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if scopes is not None:
+        if scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "scopes" ] = scopes
-        if add_scopes is not None:
+        if add_scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "add_scopes" ] = add_scopes
-        if remove_scopes is not None:
+        if remove_scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "remove_scopes" ] = remove_scopes
-        if note is not None:
+        if note is not DefaultValueForOptionalParameters:
             post_parameters[ "note" ] = note
-        if note_url is not None:
+        if note_url is not DefaultValueForOptionalParameters:
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "PATCH",

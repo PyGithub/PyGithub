@@ -5,6 +5,11 @@ import Commit
 import NamedUser
 import PullRequestComment
 import PullRequestFile
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class PullRequest( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -145,14 +150,14 @@ class PullRequest( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
-    def edit( self, title = None, body = None, state = None ):
+    def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if title is not None:
+        if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
-        if body is not None:
+        if body is not DefaultValueForOptionalParameters:
             post_parameters[ "body" ] = body
-        if state is not None:
+        if state is not DefaultValueForOptionalParameters:
             post_parameters[ "state" ] = state
         status, headers, data = self.__requester.request(
             "PATCH",
@@ -210,7 +215,7 @@ class PullRequest( object ):
     def is_merged( self ):
         pass
 
-    def merge( self, commit_message = None ):
+    def merge( self, commit_message = DefaultValueForOptionalParameters ):
         pass
 
     def __initAttributes( self ):

@@ -6,6 +6,11 @@ import IssueEvent
 import NamedUser
 import Milestone
 import Label
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Issue( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -119,20 +124,20 @@ class Issue( object ):
     def delete_labels( self ):
         pass
 
-    def edit( self, title = None, body = None, assignee = None, state = None, milestone = None, labels = None ):
+    def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if title is not None:
+        if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
-        if body is not None:
+        if body is not DefaultValueForOptionalParameters:
             post_parameters[ "body" ] = body
-        if assignee is not None:
+        if assignee is not DefaultValueForOptionalParameters:
             post_parameters[ "assignee" ] = assignee
-        if state is not None:
+        if state is not DefaultValueForOptionalParameters:
             post_parameters[ "state" ] = state
-        if milestone is not None:
+        if milestone is not DefaultValueForOptionalParameters:
             post_parameters[ "milestone" ] = milestone
-        if labels is not None:
+        if labels is not DefaultValueForOptionalParameters:
             post_parameters[ "labels" ] = labels
         status, headers, data = self.__requester.request(
             "PATCH",

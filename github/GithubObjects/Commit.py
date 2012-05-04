@@ -4,6 +4,11 @@
 import NamedUser
 import GitCommit
 import CommitComment
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Commit( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -54,17 +59,17 @@ class Commit( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def create_comment( self, body, commit_id = None, line = None, path = None, position = None ):
+    def create_comment( self, body, commit_id = DefaultValueForOptionalParameters, line = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters, position = DefaultValueForOptionalParameters ):
         post_parameters = {
             "body": body,
         }
-        if commit_id is not None:
+        if commit_id is not DefaultValueForOptionalParameters:
             post_parameters[ "commit_id" ] = commit_id
-        if line is not None:
+        if line is not DefaultValueForOptionalParameters:
             post_parameters[ "line" ] = line
-        if path is not None:
+        if path is not DefaultValueForOptionalParameters:
             post_parameters[ "path" ] = path
-        if position is not None:
+        if position is not DefaultValueForOptionalParameters:
             post_parameters[ "position" ] = position
         status, headers, data = self.__requester.request(
             "POST",

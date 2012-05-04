@@ -4,6 +4,11 @@
 import NamedUser
 import Gist
 import GistComment
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Gist( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -107,12 +112,12 @@ class Gist( object ):
             None
         )
 
-    def edit( self, description = None, files = None ):
+    def edit( self, description = DefaultValueForOptionalParameters, files = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if files is not None:
+        if files is not DefaultValueForOptionalParameters:
             post_parameters[ "files" ] = files
         status, headers, data = self.__requester.request(
             "PATCH",

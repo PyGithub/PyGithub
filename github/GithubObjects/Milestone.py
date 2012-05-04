@@ -3,6 +3,11 @@
 
 import NamedUser
 import Label
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Milestone( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -71,15 +76,15 @@ class Milestone( object ):
             None
         )
 
-    def edit( self, title, state = None, description = None, due_on = None ):
+    def edit( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
         post_parameters = {
             "title": title,
         }
-        if state is not None:
+        if state is not DefaultValueForOptionalParameters:
             post_parameters[ "state" ] = state
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if due_on is not None:
+        if due_on is not DefaultValueForOptionalParameters:
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self.__requester.request(
             "PATCH",

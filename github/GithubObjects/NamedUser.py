@@ -6,6 +6,11 @@ import Gist
 import Event
 import Repository
 import NamedUser
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class NamedUser( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -146,12 +151,12 @@ class NamedUser( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def create_gist( self, public, files, description = None ):
+    def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
         post_parameters = {
             "public": public,
             "files": files,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
         status, headers, data = self.__requester.request(
             "POST",
@@ -239,7 +244,7 @@ class NamedUser( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def get_repos( self, type = None ):
+    def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",

@@ -5,6 +5,11 @@ import Team
 import Event
 import Repository
 import NamedUser
+# This allows None as a valid value for an optional parameter
+
+class DefaultValueForOptionalParametersType:
+    pass
+DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Organization( object ):
     def __init__( self, requester, attributes, lazy ):
@@ -152,23 +157,23 @@ class Organization( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def create_repo( self, name, description = None, homepage = None, private = None, has_issues = None, has_wiki = None, has_downloads = None, team_id = None ):
+    def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
-        if description is not None:
+        if description is not DefaultValueForOptionalParameters:
             post_parameters[ "description" ] = description
-        if homepage is not None:
+        if homepage is not DefaultValueForOptionalParameters:
             post_parameters[ "homepage" ] = homepage
-        if private is not None:
+        if private is not DefaultValueForOptionalParameters:
             post_parameters[ "private" ] = private
-        if has_issues is not None:
+        if has_issues is not DefaultValueForOptionalParameters:
             post_parameters[ "has_issues" ] = has_issues
-        if has_wiki is not None:
+        if has_wiki is not DefaultValueForOptionalParameters:
             post_parameters[ "has_wiki" ] = has_wiki
-        if has_downloads is not None:
+        if has_downloads is not DefaultValueForOptionalParameters:
             post_parameters[ "has_downloads" ] = has_downloads
-        if team_id is not None:
+        if team_id is not DefaultValueForOptionalParameters:
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
@@ -178,13 +183,13 @@ class Organization( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def create_team( self, name, repo_names = None, permission = None ):
+    def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
-        if repo_names is not None:
+        if repo_names is not DefaultValueForOptionalParameters:
             post_parameters[ "repo_names" ] = repo_names
-        if permission is not None:
+        if permission is not DefaultValueForOptionalParameters:
             post_parameters[ "permission" ] = permission
         status, headers, data = self.__requester.request(
             "POST",
@@ -194,20 +199,20 @@ class Organization( object ):
         )
         return Team.Team( self.__requester, data, lazy = True )
 
-    def edit( self, billing_email = None, blog = None, company = None, email = None, location = None, name = None ):
+    def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
-        if billing_email is not None:
+        if billing_email is not DefaultValueForOptionalParameters:
             post_parameters[ "billing_email" ] = billing_email
-        if blog is not None:
+        if blog is not DefaultValueForOptionalParameters:
             post_parameters[ "blog" ] = blog
-        if company is not None:
+        if company is not DefaultValueForOptionalParameters:
             post_parameters[ "company" ] = company
-        if email is not None:
+        if email is not DefaultValueForOptionalParameters:
             post_parameters[ "email" ] = email
-        if location is not None:
+        if location is not DefaultValueForOptionalParameters:
             post_parameters[ "location" ] = location
-        if name is not None:
+        if name is not DefaultValueForOptionalParameters:
             post_parameters[ "name" ] = name
         status, headers, data = self.__requester.request(
             "PATCH",
@@ -262,7 +267,7 @@ class Organization( object ):
         )
         return Repository.Repository( self.__requester, data, lazy = True )
 
-    def get_repos( self, type = None ):
+    def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
