@@ -522,7 +522,15 @@
                 {
                     "name": [ "test" ],
                     "group": "testing",
-                    "type": "void"
+                    "type": "void",
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/test" }
+                        ],
+                        "information": "status"
+                    }
                 }
             ]
         },
@@ -974,7 +982,15 @@
                 {
                     "name": [ "is", "merged" ],
                     "type": "bool",
-                    "group": "merging"
+                    "group": "merging",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/merge" }
+                        ],
+                        "information": "status"
+                    }
                 },
                 {
                     "name": [ "merge" ],
@@ -982,7 +998,15 @@
                     "group": "merging",
                     "optional_parameters": [
                         { "name": "commit_message", "type": "string" }
-                    ]
+                    ],
+                    "request": {
+                        "verb": "PUT",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/merge" }
+                        ],
+                        "information": "status"
+                    }
                 }
             ]
         },

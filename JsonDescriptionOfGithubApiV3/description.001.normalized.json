@@ -814,6 +814,23 @@
                         "name": "email"
                     }, 
                     "optional_parameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/emails"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
@@ -869,6 +886,23 @@
                         "name": "email"
                     }, 
                     "optional_parameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/emails"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "DELETE"
+                    }, 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
@@ -3272,6 +3306,22 @@
                     "name": [
                         "test"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/test"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -3665,6 +3715,23 @@
                         "name": "label"
                     }, 
                     "optional_parameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
@@ -6235,6 +6302,22 @@
                         "is", 
                         "merged"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/merge"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -6249,6 +6332,22 @@
                     "name": [
                         "merge"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/merge"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {

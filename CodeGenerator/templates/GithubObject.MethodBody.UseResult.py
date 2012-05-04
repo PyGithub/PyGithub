@@ -4,8 +4,16 @@
 
 {% if method.type.simple %}
 
+{% if method.type.cardinality == "scalar" %}
+
 {% if method.type.name == "bool" %}
         return status == 204
+{% endif %}
+
+{% endif %}
+
+{% if method.type.cardinality == "list" %}
+        return data
 {% endif %}
 
 {% else %}

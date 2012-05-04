@@ -91,7 +91,12 @@ class Hook( object ):
         self.__useAttributes( data )
 
     def test( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/test",
+            None,
+            None
+        )
 
     def __initAttributes( self ):
         self.__active = None

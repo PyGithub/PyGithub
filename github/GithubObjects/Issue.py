@@ -107,7 +107,13 @@ class Issue( object ):
         return self.__user
 
     def add_to_labels( self, *labels ):
-        pass
+        post_parameters = labels
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/labels",
+            None,
+            post_parameters
+        )
 
     def create_comment( self, body ):
         post_parameters = {

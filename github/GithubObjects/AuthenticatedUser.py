@@ -150,7 +150,13 @@ class AuthenticatedUser( object ):
         return self.__url
 
     def add_to_emails( self, *emails ):
-        pass
+        post_parameters = emails
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/emails",
+            None,
+            post_parameters
+        )
 
     def add_to_following( self, following ):
         status, headers, data = self.__requester.request(
@@ -301,6 +307,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        return data
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -453,7 +460,13 @@ class AuthenticatedUser( object ):
         return status == 204
 
     def remove_from_emails( self, *emails ):
-        pass
+        post_parameters = emails
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            str( self.url ) + "/emails",
+            None,
+            post_parameters
+        )
 
     def remove_from_following( self, following ):
         status, headers, data = self.__requester.request(

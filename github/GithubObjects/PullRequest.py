@@ -213,10 +213,21 @@ class PullRequest( object ):
         ]
 
     def is_merged( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/merge",
+            None,
+            None
+        )
+        return status == 204
 
     def merge( self, commit_message = DefaultValueForOptionalParameters ):
-        pass
+        status, headers, data = self.__requester.request(
+            "PUT",
+            str( self.url ) + "/merge",
+            None,
+            None
+        )
 
     def __initAttributes( self ):
         self.__additions = None

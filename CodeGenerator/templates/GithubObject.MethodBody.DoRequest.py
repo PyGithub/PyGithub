@@ -1,13 +1,17 @@
 {% if method.request.post_parameters %}
+    {% if method.variadic_parameter %}
+        post_parameters = {{ method.variadic_parameter.name }}s
+    {% else %}
         post_parameters = {
-    {% for parameter in method.mandatory_parameters %}
+        {% for parameter in method.mandatory_parameters %}
             "{{ parameter.name }}": {{ parameter.name }},
-    {% endfor %}
+        {% endfor %}
         }
-    {% for parameter in method.optional_parameters %}
+        {% for parameter in method.optional_parameters %}
         if {{ parameter.name }} is not DefaultValueForOptionalParameters:
             post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 {% endif %}
 
         status, headers, data = self.__requester.request(

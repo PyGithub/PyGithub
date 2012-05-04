@@ -335,6 +335,7 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
+    # @todo Restore correct pagination
     # def testEvents( self ):
         # self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
         # self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
@@ -354,16 +355,17 @@ class IntegrationTest:
 
         # self.printList( "Issue events", self.g.get_user().get_repo( "TestPyGithub" ).get_issue( 23 ).get_events(), lambda e: e.event )
 
-    # def testFollow( self ):
-        # cobaye = self.g.get_user( self.cobayeUser )
-        # u = self.g.get_user()
-        # u.remove_from_following( cobaye )
-        # assert not u.has_in_following( cobaye )
-        # u.add_to_following( cobaye )
-        # assert u.has_in_following( cobaye )
-        # self.printList( "Following", u.get_following(), lambda f: f.login )
-        # self.printList( "Followers", u.get_followers(), lambda f: f.login )
+    def testFollow( self ):
+        cobaye = self.g.get_user( self.cobayeUser )
+        u = self.g.get_user()
+        u.remove_from_following( cobaye )
+        assert not u.has_in_following( cobaye )
+        u.add_to_following( cobaye )
+        assert u.has_in_following( cobaye )
+        self.printList( "Following", u.get_following(), lambda f: f.login )
+        self.printList( "Followers", u.get_followers(), lambda f: f.login )
 
+    # @todo custom url /gists instead of /user/gists
     # def testGists( self ):
         # u = self.g.get_user()
         # self.printList( "Gists", u.get_gists(), lambda g: g.description )
@@ -399,6 +401,7 @@ class IntegrationTest:
     # def testGistsAll( self ):
         # self.printList( "Gists", self.g.get_gists(), lambda g: g.description )
 
+    # @todo custom url/repos/BeaverSoftware/TestPyGithub/git/refs/heads/master instead of /repos/BeaverSoftware/TestPyGithub/git_refs/refs/heads/master
     # def testGitObjects( self ):
         # o = self.g.get_organization( self.cobayeOrganization )
         # r = o.get_repo( "TestPyGithub" )
@@ -433,22 +436,22 @@ class IntegrationTest:
         # blob = r.create_git_blob( "This blob was also created by PyGithub", encoding = "latin1" )
         # tree = r.create_git_tree( [ { "path": "new.bar", "mode": "100644", "type": "blob", "sha": blob.sha } ], base_tree = masterTree.sha )
 
-    # def testHooks( self ):
-        # u = self.g.get_user()
-        # r = u.get_repo( "TestPyGithub" )
+    def testHooks( self ):
+        u = self.g.get_user()
+        r = u.get_repo( "TestPyGithub" )
 
-        # self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
-        # h = r.create_hook( "web", { "url": "http://www.invalid.org" } )
-        # self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
-        # h.edit( "web", { "url": "http://www.postbin.org/w5cgjr" } )
-        # self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h = r.create_hook( "web", { "url": "http://www.invalid.org" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h.edit( "web", { "url": "http://www.postbin.org/w5cgjr" } )
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
 
-        # sameHook = r.get_hook( h.id )
+        sameHook = r.get_hook( h.id )
 
-        # h.test()
+        h.test()
 
-        # h.delete()
-        # self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
+        h.delete()
+        self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
 
     # def testIssuesAndMilestones( self ):
         # u = self.g.get_user()
@@ -505,9 +508,11 @@ class IntegrationTest:
         # m.delete()
         # self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
 
+    # @todo custom url /issues instead of /user/issues
     # def testIssuesForAuthenticatedUser( self ):
         # self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
 
+    # @todo custom url /user/keys instead of /users/jacquev6/keys
     # def testKeys( self ):
         # u = self.g.get_user()
         # self.printList( "Keys", u.get_keys(), lambda k: k.title )
@@ -519,12 +524,12 @@ class IntegrationTest:
         # k.delete()
         # self.printList( "Keys", u.get_keys(), lambda k: k.title )
 
-    # def testMergePullRequest( self ):
-        # r = self.g.get_user().get_repo( "TestPyGithub" )
-        # p = r.get_pull( 26 )
-        # assert not p.is_merged()
-        # p.merge()
-        # assert p.is_merged()
+    def testMergePullRequest( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        p = r.get_pull( 26 )
+        assert not p.is_merged()
+        p.merge()
+        assert p.is_merged()
 
     def testNamedUserDetails( self ):
         u = self.g.get_user( "jacquev6" )
@@ -540,6 +545,7 @@ class IntegrationTest:
         o = self.g.get_organization( "github" )
         print o.login, "(" + o.name + ") is in", o.location
 
+    # @todo Two versions of Repository.create_pull
     # def testPullRequest( self ):
         # r = self.g.get_user().get_repo( "TestPyGithub" )
         # self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
@@ -562,10 +568,12 @@ class IntegrationTest:
         # p2.edit( state = "closed" )
         # self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
 
+    # @todo Repository.compare
     # def testRepositoryCompare( self ):
         # r = self.g.get_user().get_repo( "PyGithub" )
         # print str( r.compare( "master", "develop" ) )[ :100 ]
 
+    # @todo Repository.get_languages
     # def testRepositoryDetails( self ):
         # r1 = self.g.get_user().get_repo( "PyGithub" )
         # r2 = self.g.get_user().get_repo( "TestPyGithub" )
@@ -581,6 +589,7 @@ class IntegrationTest:
         # r3 = self.g.get_organization( "BeaverSoftware" ).get_repo( "TestPyGithub" )
         # self.printList( "Teams", r3.get_teams(), lambda t: t.name )
 
+    # @todo Custom url
     # def testRepositoryKeys( self ):
         # r = self.g.get_user().get_repo( "TestPyGithub" )
         # self.printList( "Keys", r.get_keys(), lambda k: k.title )
@@ -592,22 +601,22 @@ class IntegrationTest:
         # sameKey.delete()
         # self.printList( "Keys", r.get_keys(), lambda k: k.title )
 
-    # def testWatch( self ):
-        # r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
-        # u = self.g.get_user()
-        # u.remove_from_watched( r )
-        # assert not u.has_in_watched( r )
-        # u.add_to_watched( r )
-        # assert u.has_in_watched( r )
-        # self.printList( "Watched", u.get_watched(), lambda r: r.name )
+    def testWatch( self ):
+        r = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        u = self.g.get_user()
+        u.remove_from_watched( r )
+        assert not u.has_in_watched( r )
+        u.add_to_watched( r )
+        assert u.has_in_watched( r )
+        self.printList( "Watched", u.get_watched(), lambda r: r.name )
 
-    # def testEmails( self ):
-        # u = self.g.get_user()
-        # self.printList( "Emails", u.get_emails() )
-        # u.add_to_emails( "ab@xxx.com", "cd@xxx.com" )
-        # self.printList( "Emails", u.get_emails() )
-        # u.remove_from_emails( "ab@xxx.com", "cd@xxx.com" )
-        # self.printList( "Emails", u.get_emails() )
+    def testEmails( self ):
+        u = self.g.get_user()
+        self.printList( "Emails", u.get_emails() )
+        u.add_to_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
+        u.remove_from_emails( "ab@xxx.com", "cd@xxx.com" )
+        self.printList( "Emails", u.get_emails() )
 
     def printList( self, title, iterable, f = lambda x: x ):
         print title + ":", ", ".join( str( f( x ) ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""

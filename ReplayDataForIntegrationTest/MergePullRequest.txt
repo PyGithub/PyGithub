@@ -18,7 +18,7 @@ GET /repos/jacquev6/TestPyGithub/pulls/26/merge {} null
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4978'), ('content-length', '23'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Mon, 12 Mar 2012 21:04:50 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"message":"Not Found"}
 
-PUT /repos/jacquev6/TestPyGithub/pulls/26/merge {} {}
+PUT /repos/jacquev6/TestPyGithub/pulls/26/merge {} null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4977'), ('content-length', '109'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"6a9d69e558b3ab1b3747a666517b02c5"'), ('date', 'Mon, 12 Mar 2012 21:04:51 GMT'), ('content-type', 'application/json; charset=utf-8')]
 {"merged":true,"message":"Pull Request successfully merged","sha":"5098a3636ee911fcc01391c7d8ae0afbc1966aee"}

@@ -129,7 +129,20 @@ class Collection:
             ) )
         if "add_several_elements" in desc:
             assert desc[ "add_several_elements" ] is True
-            self.methods.append( Function( { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
+            self.methods.append( Function(
+                { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } },
+                {
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] },
+                        ],
+                        "information": "status",
+                        "post_parameters": True
+                    }
+                }
+            ) )
         if "create_element" in desc:
             self.methods.append( Function(
                 desc[ "create_element" ],
@@ -223,10 +236,23 @@ class Collection:
                         "information": "status",
                     }
                 }
-                ) )
+            ) )
         if "remove_several_elements" in desc:
             assert desc[ "remove_several_elements" ] is True
-            self.methods.append( Function( { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
+            self.methods.append( Function(
+                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } },
+                {
+                    "request": {
+                        "verb": "DELETE",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] },
+                        ],
+                        "information": "status",
+                        "post_parameters": True
+                    }
+                }
+            ) )
         if "set_list" in desc:
             assert desc[ "set_list" ] is True
             self.methods.append( Function( { "name": [ "set" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
