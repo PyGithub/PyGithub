@@ -27,7 +27,12 @@ class Label( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, name, color ):
         post_parameters = {
@@ -36,7 +41,7 @@ class Label( object ):
         }
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

@@ -105,7 +105,16 @@ class Issue( object ):
         pass
 
     def create_comment( self, body ):
-        pass
+        post_parameters = {
+            "body": body,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/comments",
+            None,
+            post_parameters
+        )
+        return IssueComment.IssueComment( self.__requester, data, lazy = True )
 
     def delete_labels( self ):
         pass
@@ -127,7 +136,7 @@ class Issue( object ):
             post_parameters[ "labels" ] = labels
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

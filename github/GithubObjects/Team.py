@@ -60,7 +60,12 @@ class Team( object ):
         )
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, name, permission = None ):
         post_parameters = {
@@ -70,7 +75,7 @@ class Team( object ):
             post_parameters[ "permission" ] = permission
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

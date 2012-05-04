@@ -57,7 +57,12 @@ class Hook( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, name, config, events = None, add_events = None, remove_events = None, active = None ):
         post_parameters = {
@@ -74,7 +79,7 @@ class Hook( object ):
             post_parameters[ "active" ] = active
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

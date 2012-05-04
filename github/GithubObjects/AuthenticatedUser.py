@@ -164,7 +164,21 @@ class AuthenticatedUser( object ):
         )
 
     def create_authorization( self, scopes = None, note = None, note_url = None ):
-        pass
+        post_parameters = {
+        }
+        if scopes is not None:
+            post_parameters[ "scopes" ] = scopes
+        if note is not None:
+            post_parameters[ "note" ] = note
+        if note_url is not None:
+            post_parameters[ "note_url" ] = note_url
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/authorizations",
+            None,
+            post_parameters
+        )
+        return Authorization.Authorization( self.__requester, data, lazy = True )
 
     def create_fork( self, repo ):
         status, headers, data = self.__requester.request(
@@ -176,13 +190,58 @@ class AuthenticatedUser( object ):
         return Repository.Repository( self.__requester, data, lazy = True )
 
     def create_gist( self, public, files, description = None ):
-        pass
+        post_parameters = {
+            "public": public,
+            "files": files,
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/gists",
+            None,
+            post_parameters
+        )
+        return Gist.Gist( self.__requester, data, lazy = True )
 
     def create_key( self, title, key ):
-        pass
+        post_parameters = {
+            "title": title,
+            "key": key,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/keys",
+            None,
+            post_parameters
+        )
+        return UserKey.UserKey( self.__requester, data, lazy = True )
 
     def create_repo( self, name, description = None, homepage = None, private = None, has_issues = None, has_wiki = None, has_downloads = None, team_id = None ):
-        pass
+        post_parameters = {
+            "name": name,
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if homepage is not None:
+            post_parameters[ "homepage" ] = homepage
+        if private is not None:
+            post_parameters[ "private" ] = private
+        if has_issues is not None:
+            post_parameters[ "has_issues" ] = has_issues
+        if has_wiki is not None:
+            post_parameters[ "has_wiki" ] = has_wiki
+        if has_downloads is not None:
+            post_parameters[ "has_downloads" ] = has_downloads
+        if team_id is not None:
+            post_parameters[ "team_id" ] = team_id
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/repos",
+            None,
+            post_parameters
+        )
+        return Repository.Repository( self.__requester, data, lazy = True )
 
     def edit( self, name = None, email = None, blog = None, company = None, location = None, hireable = None, bio = None ):
         post_parameters = {

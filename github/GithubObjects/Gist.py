@@ -85,13 +85,27 @@ class Gist( object ):
         return self.__user
 
     def create_comment( self, body ):
-        pass
+        post_parameters = {
+            "body": body,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/comments",
+            None,
+            post_parameters
+        )
+        return GistComment.GistComment( self.__requester, data, lazy = True )
 
     def create_fork( self ):
         pass
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, description = None, files = None ):
         post_parameters = {
@@ -102,7 +116,7 @@ class Gist( object ):
             post_parameters[ "files" ] = files
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

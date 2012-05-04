@@ -43,7 +43,12 @@ class GistComment( object ):
         return self.__user
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, body ):
         post_parameters = {
@@ -51,7 +56,7 @@ class GistComment( object ):
         }
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

@@ -294,6 +294,23 @@
                         "create", 
                         "authorization"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/authorizations"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -468,6 +485,23 @@
                         "create", 
                         "key"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/keys"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -547,6 +581,23 @@
                         "create", 
                         "repo"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/repos"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -1217,6 +1268,23 @@
                         "create", 
                         "gist"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/gists"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -1451,8 +1519,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -1514,6 +1584,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -1631,6 +1713,23 @@
                         "create", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -1816,8 +1915,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -1838,6 +1939,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -2019,6 +2132,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -2257,8 +2382,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -2296,6 +2423,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -2320,6 +2459,23 @@
                         "create", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -2516,8 +2672,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -2538,6 +2696,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -2703,8 +2873,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -2734,6 +2906,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -2939,8 +3123,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -2994,6 +3180,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -3168,8 +3366,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -3249,6 +3449,23 @@
                         "create", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -3557,8 +3774,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -3579,6 +3798,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -3706,8 +3937,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -3728,6 +3961,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -3841,8 +4086,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -3888,6 +4135,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4411,6 +4670,23 @@
                         "create", 
                         "gist"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/gists"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -4716,8 +4992,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -5130,6 +5408,23 @@
                         "create", 
                         "repo"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/repos"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -5301,6 +5596,23 @@
                         "create", 
                         "team"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/teams"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -5605,8 +5917,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -5914,8 +6228,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -5936,6 +6252,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -6287,8 +6615,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -6740,6 +7070,23 @@
                         "create", 
                         "download"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/downloads"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -6906,6 +7253,23 @@
                         "create", 
                         "git_blob"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_blobs"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -6970,6 +7334,23 @@
                         "create", 
                         "git_commit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_commits"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7043,6 +7424,23 @@
                         "create", 
                         "git_ref"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_refs"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7146,6 +7544,23 @@
                         "create", 
                         "git_tag"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_tags"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7203,6 +7618,23 @@
                         "create", 
                         "git_tree"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_trees"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7277,6 +7709,23 @@
                         "create", 
                         "hook"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/hooks"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7373,6 +7822,23 @@
                         "create", 
                         "issue"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7613,6 +8079,23 @@
                         "create", 
                         "key"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/keys"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7700,6 +8183,23 @@
                         "create", 
                         "label"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7779,6 +8279,23 @@
                         "create", 
                         "milestone"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/milestones"
+                            }
+                        ], 
+                        "information": "status", 
+                        "post_parameters": true, 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -8176,8 +8693,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -8198,6 +8717,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8317,8 +8848,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -8348,6 +8881,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8754,8 +9299,10 @@
                     "request": {
                         "url": [
                             {
-                                "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
                             }
                         ], 
                         "information": "data", 
@@ -8793,6 +9340,18 @@
                     "name": [
                         "delete"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 

@@ -57,7 +57,12 @@ class Authorization( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, scopes = None, add_scopes = None, remove_scopes = None, note = None, note_url = None ):
         post_parameters = {
@@ -74,7 +79,7 @@ class Authorization( object ):
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

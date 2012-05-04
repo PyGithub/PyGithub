@@ -194,37 +194,177 @@ class Repository( object ):
         pass
 
     def create_download( self, name, size, description = None, content_type = None ):
-        pass
+        post_parameters = {
+            "name": name,
+            "size": size,
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if content_type is not None:
+            post_parameters[ "content_type" ] = content_type
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/downloads",
+            None,
+            post_parameters
+        )
+        return Download.Download( self.__requester, data, lazy = True )
 
     def create_git_blob( self, content, encoding ):
-        pass
+        post_parameters = {
+            "content": content,
+            "encoding": encoding,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/git_blobs",
+            None,
+            post_parameters
+        )
+        return GitBlob.GitBlob( self.__requester, data, lazy = True )
 
     def create_git_commit( self, message, tree, parents, author = None, committer = None ):
-        pass
+        post_parameters = {
+            "message": message,
+            "tree": tree,
+            "parents": parents,
+        }
+        if author is not None:
+            post_parameters[ "author" ] = author
+        if committer is not None:
+            post_parameters[ "committer" ] = committer
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/git_commits",
+            None,
+            post_parameters
+        )
+        return GitCommit.GitCommit( self.__requester, data, lazy = True )
 
     def create_git_ref( self, ref, sha ):
-        pass
+        post_parameters = {
+            "ref": ref,
+            "sha": sha,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/git_refs",
+            None,
+            post_parameters
+        )
+        return GitRef.GitRef( self.__requester, data, lazy = True )
 
     def create_git_tag( self, tag, message, object, type, tagger = None ):
-        pass
+        post_parameters = {
+            "tag": tag,
+            "message": message,
+            "object": object,
+            "type": type,
+        }
+        if tagger is not None:
+            post_parameters[ "tagger" ] = tagger
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/git_tags",
+            None,
+            post_parameters
+        )
+        return GitTag.GitTag( self.__requester, data, lazy = True )
 
     def create_git_tree( self, tree, base_tree = None ):
-        pass
+        post_parameters = {
+            "tree": tree,
+        }
+        if base_tree is not None:
+            post_parameters[ "base_tree" ] = base_tree
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/git_trees",
+            None,
+            post_parameters
+        )
+        return GitTree.GitTree( self.__requester, data, lazy = True )
 
     def create_hook( self, name, config, events = None, active = None ):
-        pass
+        post_parameters = {
+            "name": name,
+            "config": config,
+        }
+        if events is not None:
+            post_parameters[ "events" ] = events
+        if active is not None:
+            post_parameters[ "active" ] = active
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/hooks",
+            None,
+            post_parameters
+        )
+        return Hook.Hook( self.__requester, data, lazy = True )
 
     def create_issue( self, title, body = None, assignee = None, milestone = None, labels = None ):
-        pass
+        post_parameters = {
+            "title": title,
+        }
+        if body is not None:
+            post_parameters[ "body" ] = body
+        if assignee is not None:
+            post_parameters[ "assignee" ] = assignee
+        if milestone is not None:
+            post_parameters[ "milestone" ] = milestone
+        if labels is not None:
+            post_parameters[ "labels" ] = labels
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/issues",
+            None,
+            post_parameters
+        )
+        return Issue.Issue( self.__requester, data, lazy = True )
 
     def create_key( self, title, key ):
-        pass
+        post_parameters = {
+            "title": title,
+            "key": key,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/keys",
+            None,
+            post_parameters
+        )
+        return RepositoryKey.RepositoryKey( self.__requester, data, lazy = True )
 
     def create_label( self, name, color ):
-        pass
+        post_parameters = {
+            "name": name,
+            "color": color,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/labels",
+            None,
+            post_parameters
+        )
+        return Label.Label( self.__requester, data, lazy = True )
 
     def create_milestone( self, title, state = None, description = None, due_on = None ):
-        pass
+        post_parameters = {
+            "title": title,
+        }
+        if state is not None:
+            post_parameters[ "state" ] = state
+        if description is not None:
+            post_parameters[ "description" ] = description
+        if due_on is not None:
+            post_parameters[ "due_on" ] = due_on
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/milestones",
+            None,
+            post_parameters
+        )
+        return Milestone.Milestone( self.__requester, data, lazy = True )
 
     def edit( self, name, description = None, homepage = None, public = None, has_issues = None, has_wiki = None, has_downloads = None ):
         post_parameters = {
@@ -244,7 +384,7 @@ class Repository( object ):
             post_parameters[ "has_downloads" ] = has_downloads
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

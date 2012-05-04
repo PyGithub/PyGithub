@@ -55,7 +55,24 @@ class Commit( object ):
         return self.__url
 
     def create_comment( self, body, commit_id = None, line = None, path = None, position = None ):
-        pass
+        post_parameters = {
+            "body": body,
+        }
+        if commit_id is not None:
+            post_parameters[ "commit_id" ] = commit_id
+        if line is not None:
+            post_parameters[ "line" ] = line
+        if path is not None:
+            post_parameters[ "path" ] = path
+        if position is not None:
+            post_parameters[ "position" ] = position
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/comments",
+            None,
+            post_parameters
+        )
+        return CommitComment.CommitComment( self.__requester, data, lazy = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(

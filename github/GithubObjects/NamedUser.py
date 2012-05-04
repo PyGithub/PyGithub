@@ -147,7 +147,19 @@ class NamedUser( object ):
         return self.__url
 
     def create_gist( self, public, files, description = None ):
-        pass
+        post_parameters = {
+            "public": public,
+            "files": files,
+        }
+        if description is not None:
+            post_parameters[ "description" ] = description
+        status, headers, data = self.__requester.request(
+            "POST",
+            self.url + "/gists",
+            None,
+            post_parameters
+        )
+        return Gist.Gist( self.__requester, data, lazy = True )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(

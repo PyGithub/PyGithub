@@ -230,17 +230,17 @@ class IntegrationTest:
         assert not r.has_in_collaborators( cobaye )
         self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
 
-    # def testCommentCommit( self ):
-        # r = self.g.get_user().get_repo( "TestPyGithub" )
-        # c = r.get_commits()[ 0 ]
-        # self.printList( "Comments", c.get_comments(), lambda c: c.body )
-        # com1 = c.create_comment( "Comment created by PyGithub" )
-        # self.printList( "Comments", c.get_comments(), lambda c: c.body )
-        # com2 = c.create_comment( "Comment also created by PyGithub", path = "ReadMe.md", line = 1 )
-        # self.printList( "Comments", c.get_comments(), lambda c: c.body )
-        # com2.delete()
-        # com1.edit( body = "Comment edited by PyGithub" )
-        # self.printList( "Comments", c.get_comments(), lambda c: c.body )
+    def testCommentCommit( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        c = r.get_commits()[ 0 ]
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com1 = c.create_comment( "Comment created by PyGithub" )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com2 = c.create_comment( "Comment also created by PyGithub", path = "ReadMe.md", line = 1 )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
+        com2.delete()
+        com1.edit( body = "Comment edited by PyGithub" )
+        self.printList( "Comments", c.get_comments(), lambda c: c.body )
 
     # def testCreateForkForOrganization( self ):
         # o = self.g.get_organization( self.cobayeOrganization )

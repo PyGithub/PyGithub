@@ -64,7 +64,12 @@ class Milestone( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, title, state = None, description = None, due_on = None ):
         post_parameters = {
@@ -78,7 +83,7 @@ class Milestone( object ):
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

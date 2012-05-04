@@ -156,7 +156,7 @@ class PullRequest( object ):
             post_parameters[ "state" ] = state
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

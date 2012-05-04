@@ -27,7 +27,12 @@ class GitRef( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def edit( self, sha, force = None ):
         post_parameters = {
@@ -37,7 +42,7 @@ class GitRef( object ):
             post_parameters[ "force" ] = force
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/user",
+            self.url,
             None,
             post_parameters
         )

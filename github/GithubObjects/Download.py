@@ -112,7 +112,12 @@ class Download( object ):
         return self.__url
 
     def delete( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
 
     def __initAttributes( self ):
         self.__accesskeyid = None

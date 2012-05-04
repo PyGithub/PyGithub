@@ -131,7 +131,18 @@ class Collection:
             assert desc[ "add_several_elements" ] is True
             self.methods.append( Function( { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
         if "create_element" in desc:
-            self.methods.append( Function( desc[ "create_element" ], { "name": [ "create", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ] } ) )
+            self.methods.append( Function(
+                desc[ "create_element" ],
+                { "name": [ "create", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ] },
+                {
+                    "request": {
+                        "verb": "POST",
+                        "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
+                        "information": "status",
+                        "post_parameters": True,
+                    }
+                }
+            ) )
         if "delete_list" in desc:
             assert desc[ "delete_list" ] is True
             self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
@@ -230,14 +241,23 @@ class Class:
                 {
                     "request": {
                         "verb": "PATCH",
-                        "url": [ { "type": "constant", "value": "https://api.github.com/user" } ], # @todo
+                        "url": [ { "type": "constant", "value": "https://api.github.com/user" } if desc[ "name" ] == "AuthenticatedUser" else { "type": "attribute", "value": [ "url" ] } ], # @todo
                         "post_parameters": True, # @todo
                         "information": "data",
                     },
                 }
             ) )
         if "delete" in desc:
-            self.methods.append( Function( { "name": [ "delete" ], "type": "void", "group": "deletion" } ) )
+            self.methods.append( Function(
+                { "name": [ "delete" ], "type": "void", "group": "deletion" },
+                {
+                    "request": {
+                        "verb": "DELETE",
+                        "url": [ { "type": "attribute", "value": [ "url" ] } ],
+                        "information": "data",
+                    },
+                }
+            ) )
         for collection in [ Collection( collection ) for collection in desc[ "collections" ] ]:
             self.methods += collection.methods
         if "additional_methods" in desc:
