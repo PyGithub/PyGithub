@@ -156,19 +156,25 @@ class PullRequest( object ):
             post_parameters[ "state" ] = state
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
         self.__useAttributes( data )
 
     def get_comment( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/comments/" + str( id ),
+            None,
+            None
+        )
+        return PullRequestComment.PullRequestComment( self.__requester, data, lazy = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             None
         )
@@ -180,7 +186,7 @@ class PullRequest( object ):
     def get_commits( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/commits",
+            str( self.url ) + "/commits",
             None,
             None
         )
@@ -192,7 +198,7 @@ class PullRequest( object ):
     def get_files( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/files",
+            str( self.url ) + "/files",
             None,
             None
         )

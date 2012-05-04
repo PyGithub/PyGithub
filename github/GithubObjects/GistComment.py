@@ -45,7 +45,7 @@ class GistComment( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url,
+            str( self.url ),
             None,
             None
         )
@@ -56,7 +56,7 @@ class GistComment( object ):
         }
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )

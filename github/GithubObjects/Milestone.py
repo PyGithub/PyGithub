@@ -66,7 +66,7 @@ class Milestone( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url,
+            str( self.url ),
             None,
             None
         )
@@ -83,7 +83,7 @@ class Milestone( object ):
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
@@ -92,7 +92,7 @@ class Milestone( object ):
     def get_labels( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/labels",
+            str( self.url ) + "/labels",
             None,
             None
         )

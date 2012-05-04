@@ -90,7 +90,7 @@ class Gist( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             post_parameters
         )
@@ -102,7 +102,7 @@ class Gist( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url,
+            str( self.url ),
             None,
             None
         )
@@ -116,19 +116,25 @@ class Gist( object ):
             post_parameters[ "files" ] = files
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
         self.__useAttributes( data )
 
     def get_comment( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/comments/" + str( id ),
+            None,
+            None
+        )
+        return GistComment.GistComment( self.__requester, data, lazy = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             None
         )

@@ -46,7 +46,7 @@ class Team( object ):
     def add_to_members( self, member ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/members/" + member.login,
+            str( self.url ) + "/members/" + str( member.login ),
             None,
             None
         )
@@ -54,7 +54,7 @@ class Team( object ):
     def add_to_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/repos/" + repo.login,
+            str( self.url ) + "/repos/" + str( repo.login ),
             None,
             None
         )
@@ -62,7 +62,7 @@ class Team( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url,
+            str( self.url ),
             None,
             None
         )
@@ -75,7 +75,7 @@ class Team( object ):
             post_parameters[ "permission" ] = permission
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
@@ -84,7 +84,7 @@ class Team( object ):
     def get_members( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/members",
+            str( self.url ) + "/members",
             None,
             None
         )
@@ -96,7 +96,7 @@ class Team( object ):
     def get_repos( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             None
         )
@@ -108,7 +108,7 @@ class Team( object ):
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/members/" + member.login,
+            str( self.url ) + "/members/" + str( member.login ),
             None,
             None
         )
@@ -117,7 +117,7 @@ class Team( object ):
     def has_in_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/repos/" + repo.login,
+            str( self.url ) + "/repos/" + str( repo.login ),
             None,
             None
         )
@@ -126,7 +126,7 @@ class Team( object ):
     def remove_from_members( self, member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/members/" + member.login,
+            str( self.url ) + "/members/" + str( member.login ),
             None,
             None
         )
@@ -134,7 +134,7 @@ class Team( object ):
     def remove_from_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/repos/" + repo.login,
+            str( self.url ) + "/repos/" + str( repo.login ),
             None,
             None
         )

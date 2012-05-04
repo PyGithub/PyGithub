@@ -163,7 +163,17 @@ class Collection:
                     }
                 }
             else:
-                hack = dict()
+                hack = {
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                            { "type": "argument", "value": [ desc[ "get_element" ][ "parameter" ][ "name" ] ] },
+                        ],
+                        "information": "data",
+                    }
+                }
 
             self.methods.append( Function(
                 desc[ "get_element" ],

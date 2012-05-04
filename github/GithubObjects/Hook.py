@@ -59,7 +59,7 @@ class Hook( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url,
+            str( self.url ),
             None,
             None
         )
@@ -79,7 +79,7 @@ class Hook( object ):
             post_parameters[ "active" ] = active
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )

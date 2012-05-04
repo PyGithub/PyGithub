@@ -360,6 +360,28 @@
                         "get", 
                         "authorization"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/authorizations/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -526,6 +548,28 @@
                         "get", 
                         "key"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/keys/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -2500,6 +2544,28 @@
                         "get", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -3490,6 +3556,28 @@
                         "get", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -6009,6 +6097,28 @@
                         "get", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -6937,6 +7047,28 @@
                         "get", 
                         "comment"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -6992,6 +7124,28 @@
                         "get", 
                         "commit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/commits/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7161,6 +7315,28 @@
                         "get", 
                         "download"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/downloads/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7327,6 +7503,28 @@
                         "get", 
                         "git_blob"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_blobs/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7425,6 +7623,28 @@
                         "get", 
                         "git_commit"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_commits/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7498,6 +7718,28 @@
                         "get", 
                         "git_ref"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_refs/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "ref"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7627,6 +7869,28 @@
                         "get", 
                         "git_tag"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_tags/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7701,6 +7965,28 @@
                         "get", 
                         "git_tree"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/git_trees/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [
                         {
                             "type": {
@@ -7800,6 +8086,28 @@
                         "get", 
                         "hook"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/hooks/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -7929,6 +8237,28 @@
                         "get", 
                         "issue"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "number"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -8049,6 +8379,28 @@
                         "get", 
                         "issues_event"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues_events/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -8153,6 +8505,28 @@
                         "get", 
                         "key"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/keys/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -8257,6 +8631,28 @@
                         "get", 
                         "label"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "name"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -8378,6 +8774,28 @@
                         "get", 
                         "milestone"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/milestones/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "number"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -8458,6 +8876,28 @@
                         "get", 
                         "pull"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/pulls/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "number"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 

@@ -68,7 +68,7 @@ class Commit( object ):
             post_parameters[ "position" ] = position
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             post_parameters
         )
@@ -77,7 +77,7 @@ class Commit( object ):
     def get_comments( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             None
         )

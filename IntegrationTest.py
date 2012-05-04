@@ -260,14 +260,14 @@ class IntegrationTest:
         r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
         self.printList( "Repos", u.get_repos(), lambda r: r.name )
 
-    # def testDownloads( self ):
-        # r = self.g.get_user().get_repo( "TestPyGithub" )
-        # self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
-        # d = r.create_download( "DownloadCreatedByPyGithub.txt", 1024 )
-        # self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
-        # sameDownload = r.get_download( d.id )
-        # sameDownload.delete()
-        # self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
+    def testDownloads( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
+        d = r.create_download( "DownloadCreatedByPyGithub.txt", 1024 )
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
+        sameDownload = r.get_download( d.id )
+        sameDownload.delete()
+        self.printList( "Downloads", r.get_downloads(), lambda d: d.name )
 
     def testEditAuthenticatedUser( self ):
         u = self.g.get_user()

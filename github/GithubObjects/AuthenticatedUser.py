@@ -150,7 +150,7 @@ class AuthenticatedUser( object ):
     def add_to_following( self, following ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/following/" + following.login,
+            str( self.url ) + "/following/" + str( following.login ),
             None,
             None
         )
@@ -158,7 +158,7 @@ class AuthenticatedUser( object ):
     def add_to_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/watched/" + watched.login,
+            str( self.url ) + "/watched/" + str( watched.login ),
             None,
             None
         )
@@ -174,7 +174,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/authorizations",
+            str( self.url ) + "/authorizations",
             None,
             post_parameters
         )
@@ -183,7 +183,7 @@ class AuthenticatedUser( object ):
     def create_fork( self, repo ):
         status, headers, data = self.__requester.request(
             "POST",
-            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
             None,
             None
         )
@@ -198,7 +198,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "description" ] = description
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/gists",
+            str( self.url ) + "/gists",
             None,
             post_parameters
         )
@@ -211,7 +211,7 @@ class AuthenticatedUser( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/keys",
+            str( self.url ) + "/keys",
             None,
             post_parameters
         )
@@ -237,7 +237,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             post_parameters
         )
@@ -269,12 +269,18 @@ class AuthenticatedUser( object ):
         self.__useAttributes( data )
 
     def get_authorization( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/authorizations/" + str( id ),
+            None,
+            None
+        )
+        return Authorization.Authorization( self.__requester, data, lazy = True )
 
     def get_authorizations( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/authorizations",
+            str( self.url ) + "/authorizations",
             None,
             None
         )
@@ -286,7 +292,7 @@ class AuthenticatedUser( object ):
     def get_emails( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/emails",
+            str( self.url ) + "/emails",
             None,
             None
         )
@@ -294,7 +300,7 @@ class AuthenticatedUser( object ):
     def get_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/events",
+            str( self.url ) + "/events",
             None,
             None
         )
@@ -306,7 +312,7 @@ class AuthenticatedUser( object ):
     def get_followers( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/followers",
+            str( self.url ) + "/followers",
             None,
             None
         )
@@ -318,7 +324,7 @@ class AuthenticatedUser( object ):
     def get_following( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/following",
+            str( self.url ) + "/following",
             None,
             None
         )
@@ -330,7 +336,7 @@ class AuthenticatedUser( object ):
     def get_gists( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/gists",
+            str( self.url ) + "/gists",
             None,
             None
         )
@@ -342,7 +348,7 @@ class AuthenticatedUser( object ):
     def get_issues( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/issues",
+            str( self.url ) + "/issues",
             None,
             None
         )
@@ -352,12 +358,18 @@ class AuthenticatedUser( object ):
         ]
 
     def get_key( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/keys/" + str( id ),
+            None,
+            None
+        )
+        return UserKey.UserKey( self.__requester, data, lazy = True )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/keys",
+            str( self.url ) + "/keys",
             None,
             None
         )
@@ -372,7 +384,7 @@ class AuthenticatedUser( object ):
     def get_orgs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/orgs",
+            str( self.url ) + "/orgs",
             None,
             None
         )
@@ -384,7 +396,7 @@ class AuthenticatedUser( object ):
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/repos/" + self.login + "/" + name,
+            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
             None,
             None
         )
@@ -393,7 +405,7 @@ class AuthenticatedUser( object ):
     def get_repos( self, type = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             None
         )
@@ -408,7 +420,7 @@ class AuthenticatedUser( object ):
     def get_watched( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/watched",
+            str( self.url ) + "/watched",
             None,
             None
         )
@@ -420,7 +432,7 @@ class AuthenticatedUser( object ):
     def has_in_following( self, following ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/following/" + following.login,
+            str( self.url ) + "/following/" + str( following.login ),
             None,
             None
         )
@@ -429,7 +441,7 @@ class AuthenticatedUser( object ):
     def has_in_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/watched/" + watched.login,
+            str( self.url ) + "/watched/" + str( watched.login ),
             None,
             None
         )
@@ -441,7 +453,7 @@ class AuthenticatedUser( object ):
     def remove_from_following( self, following ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/following/" + following.login,
+            str( self.url ) + "/following/" + str( following.login ),
             None,
             None
         )
@@ -449,7 +461,7 @@ class AuthenticatedUser( object ):
     def remove_from_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/watched/" + watched.login,
+            str( self.url ) + "/watched/" + str( watched.login ),
             None,
             None
         )

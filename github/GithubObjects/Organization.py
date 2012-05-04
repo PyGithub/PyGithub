@@ -138,7 +138,7 @@ class Organization( object ):
     def add_to_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/public_members/" + public_member.login,
+            str( self.url ) + "/public_members/" + str( public_member.login ),
             None,
             None
         )
@@ -146,7 +146,7 @@ class Organization( object ):
     def create_fork( self, repo ):
         status, headers, data = self.__requester.request(
             "POST",
-            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
             None,
             None
         )
@@ -172,7 +172,7 @@ class Organization( object ):
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             post_parameters
         )
@@ -188,7 +188,7 @@ class Organization( object ):
             post_parameters[ "permission" ] = permission
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/teams",
+            str( self.url ) + "/teams",
             None,
             post_parameters
         )
@@ -211,7 +211,7 @@ class Organization( object ):
             post_parameters[ "name" ] = name
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
@@ -220,7 +220,7 @@ class Organization( object ):
     def get_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/events",
+            str( self.url ) + "/events",
             None,
             None
         )
@@ -232,7 +232,7 @@ class Organization( object ):
     def get_members( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/members",
+            str( self.url ) + "/members",
             None,
             None
         )
@@ -244,7 +244,7 @@ class Organization( object ):
     def get_public_members( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/public_members",
+            str( self.url ) + "/public_members",
             None,
             None
         )
@@ -256,7 +256,7 @@ class Organization( object ):
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/repos/" + self.login + "/" + name,
+            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
             None,
             None
         )
@@ -265,7 +265,7 @@ class Organization( object ):
     def get_repos( self, type = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             None
         )
@@ -277,7 +277,7 @@ class Organization( object ):
     def get_teams( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/teams",
+            str( self.url ) + "/teams",
             None,
             None
         )
@@ -289,7 +289,7 @@ class Organization( object ):
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/members/" + member.login,
+            str( self.url ) + "/members/" + str( member.login ),
             None,
             None
         )
@@ -298,7 +298,7 @@ class Organization( object ):
     def has_in_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/public_members/" + public_member.login,
+            str( self.url ) + "/public_members/" + str( public_member.login ),
             None,
             None
         )
@@ -307,7 +307,7 @@ class Organization( object ):
     def remove_from_members( self, member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/members/" + member.login,
+            str( self.url ) + "/members/" + str( member.login ),
             None,
             None
         )
@@ -315,7 +315,7 @@ class Organization( object ):
     def remove_from_public_members( self, public_member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/public_members/" + public_member.login,
+            str( self.url ) + "/public_members/" + str( public_member.login ),
             None,
             None
         )

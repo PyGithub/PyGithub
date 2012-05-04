@@ -155,7 +155,7 @@ class NamedUser( object ):
             post_parameters[ "description" ] = description
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/gists",
+            str( self.url ) + "/gists",
             None,
             post_parameters
         )
@@ -164,7 +164,7 @@ class NamedUser( object ):
     def get_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/events",
+            str( self.url ) + "/events",
             None,
             None
         )
@@ -176,7 +176,7 @@ class NamedUser( object ):
     def get_followers( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/followers",
+            str( self.url ) + "/followers",
             None,
             None
         )
@@ -188,7 +188,7 @@ class NamedUser( object ):
     def get_following( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/following",
+            str( self.url ) + "/following",
             None,
             None
         )
@@ -200,7 +200,7 @@ class NamedUser( object ):
     def get_gists( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/gists",
+            str( self.url ) + "/gists",
             None,
             None
         )
@@ -212,7 +212,7 @@ class NamedUser( object ):
     def get_orgs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/orgs",
+            str( self.url ) + "/orgs",
             None,
             None
         )
@@ -233,7 +233,7 @@ class NamedUser( object ):
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/repos/" + self.login + "/" + name,
+            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
             None,
             None
         )
@@ -242,7 +242,7 @@ class NamedUser( object ):
     def get_repos( self, type = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/repos",
+            str( self.url ) + "/repos",
             None,
             None
         )
@@ -254,7 +254,7 @@ class NamedUser( object ):
     def get_watched( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/watched",
+            str( self.url ) + "/watched",
             None,
             None
         )

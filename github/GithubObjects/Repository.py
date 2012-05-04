@@ -185,7 +185,7 @@ class Repository( object ):
     def add_to_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "PUT",
-            self.url + "/collaborators/" + collaborator.login,
+            str( self.url ) + "/collaborators/" + str( collaborator.login ),
             None,
             None
         )
@@ -204,7 +204,7 @@ class Repository( object ):
             post_parameters[ "content_type" ] = content_type
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/downloads",
+            str( self.url ) + "/downloads",
             None,
             post_parameters
         )
@@ -217,7 +217,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/git_blobs",
+            str( self.url ) + "/git_blobs",
             None,
             post_parameters
         )
@@ -235,7 +235,7 @@ class Repository( object ):
             post_parameters[ "committer" ] = committer
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/git_commits",
+            str( self.url ) + "/git_commits",
             None,
             post_parameters
         )
@@ -248,7 +248,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/git_refs",
+            str( self.url ) + "/git_refs",
             None,
             post_parameters
         )
@@ -265,7 +265,7 @@ class Repository( object ):
             post_parameters[ "tagger" ] = tagger
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/git_tags",
+            str( self.url ) + "/git_tags",
             None,
             post_parameters
         )
@@ -279,7 +279,7 @@ class Repository( object ):
             post_parameters[ "base_tree" ] = base_tree
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/git_trees",
+            str( self.url ) + "/git_trees",
             None,
             post_parameters
         )
@@ -296,7 +296,7 @@ class Repository( object ):
             post_parameters[ "active" ] = active
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/hooks",
+            str( self.url ) + "/hooks",
             None,
             post_parameters
         )
@@ -316,7 +316,7 @@ class Repository( object ):
             post_parameters[ "labels" ] = labels
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/issues",
+            str( self.url ) + "/issues",
             None,
             post_parameters
         )
@@ -329,7 +329,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/keys",
+            str( self.url ) + "/keys",
             None,
             post_parameters
         )
@@ -342,7 +342,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/labels",
+            str( self.url ) + "/labels",
             None,
             post_parameters
         )
@@ -360,7 +360,7 @@ class Repository( object ):
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/milestones",
+            str( self.url ) + "/milestones",
             None,
             post_parameters
         )
@@ -384,7 +384,7 @@ class Repository( object ):
             post_parameters[ "has_downloads" ] = has_downloads
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
@@ -393,7 +393,7 @@ class Repository( object ):
     def get_branches( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/branches",
+            str( self.url ) + "/branches",
             None,
             None
         )
@@ -405,7 +405,7 @@ class Repository( object ):
     def get_collaborators( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/collaborators",
+            str( self.url ) + "/collaborators",
             None,
             None
         )
@@ -415,12 +415,18 @@ class Repository( object ):
         ]
 
     def get_comment( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/comments/" + str( id ),
+            None,
+            None
+        )
+        return CommitComment.CommitComment( self.__requester, data, lazy = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             None
         )
@@ -430,12 +436,18 @@ class Repository( object ):
         ]
 
     def get_commit( self, sha ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/commits/" + str( sha ),
+            None,
+            None
+        )
+        return Commit.Commit( self.__requester, data, lazy = True )
 
     def get_commits( self, sha = None, path = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/commits",
+            str( self.url ) + "/commits",
             None,
             None
         )
@@ -447,7 +459,7 @@ class Repository( object ):
     def get_contributors( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/contributors",
+            str( self.url ) + "/contributors",
             None,
             None
         )
@@ -457,12 +469,18 @@ class Repository( object ):
         ]
 
     def get_download( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/downloads/" + str( id ),
+            None,
+            None
+        )
+        return Download.Download( self.__requester, data, lazy = True )
 
     def get_downloads( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/downloads",
+            str( self.url ) + "/downloads",
             None,
             None
         )
@@ -474,7 +492,7 @@ class Repository( object ):
     def get_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/events",
+            str( self.url ) + "/events",
             None,
             None
         )
@@ -486,7 +504,7 @@ class Repository( object ):
     def get_forks( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/forks",
+            str( self.url ) + "/forks",
             None,
             None
         )
@@ -496,18 +514,36 @@ class Repository( object ):
         ]
 
     def get_git_blob( self, sha ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/git_blobs/" + str( sha ),
+            None,
+            None
+        )
+        return GitBlob.GitBlob( self.__requester, data, lazy = True )
 
     def get_git_commit( self, sha ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/git_commits/" + str( sha ),
+            None,
+            None
+        )
+        return GitCommit.GitCommit( self.__requester, data, lazy = True )
 
     def get_git_ref( self, ref ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/git_refs/" + str( ref ),
+            None,
+            None
+        )
+        return GitRef.GitRef( self.__requester, data, lazy = True )
 
     def get_git_refs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/git_refs",
+            str( self.url ) + "/git_refs",
             None,
             None
         )
@@ -517,18 +553,36 @@ class Repository( object ):
         ]
 
     def get_git_tag( self, sha ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/git_tags/" + str( sha ),
+            None,
+            None
+        )
+        return GitTag.GitTag( self.__requester, data, lazy = True )
 
     def get_git_tree( self, sha, recursive = None ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/git_trees/" + str( sha ),
+            None,
+            None
+        )
+        return GitTree.GitTree( self.__requester, data, lazy = True )
 
     def get_hook( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/hooks/" + str( id ),
+            None,
+            None
+        )
+        return Hook.Hook( self.__requester, data, lazy = True )
 
     def get_hooks( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/hooks",
+            str( self.url ) + "/hooks",
             None,
             None
         )
@@ -538,12 +592,18 @@ class Repository( object ):
         ]
 
     def get_issue( self, number ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/issues/" + str( number ),
+            None,
+            None
+        )
+        return Issue.Issue( self.__requester, data, lazy = True )
 
     def get_issues( self, milestone = None, state = None, assignee = None, mentioned = None, labels = None, sort = None, direction = None, since = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/issues",
+            str( self.url ) + "/issues",
             None,
             None
         )
@@ -553,12 +613,18 @@ class Repository( object ):
         ]
 
     def get_issues_event( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/issues_events/" + str( id ),
+            None,
+            None
+        )
+        return IssueEvent.IssueEvent( self.__requester, data, lazy = True )
 
     def get_issues_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/issues_events",
+            str( self.url ) + "/issues_events",
             None,
             None
         )
@@ -568,12 +634,18 @@ class Repository( object ):
         ]
 
     def get_key( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/keys/" + str( id ),
+            None,
+            None
+        )
+        return RepositoryKey.RepositoryKey( self.__requester, data, lazy = True )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/keys",
+            str( self.url ) + "/keys",
             None,
             None
         )
@@ -583,12 +655,18 @@ class Repository( object ):
         ]
 
     def get_label( self, name ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/labels/" + str( name ),
+            None,
+            None
+        )
+        return Label.Label( self.__requester, data, lazy = True )
 
     def get_labels( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/labels",
+            str( self.url ) + "/labels",
             None,
             None
         )
@@ -601,12 +679,18 @@ class Repository( object ):
         pass
 
     def get_milestone( self, number ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/milestones/" + str( number ),
+            None,
+            None
+        )
+        return Milestone.Milestone( self.__requester, data, lazy = True )
 
     def get_milestones( self, state = None, sort = None, direction = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/milestones",
+            str( self.url ) + "/milestones",
             None,
             None
         )
@@ -619,12 +703,18 @@ class Repository( object ):
         pass
 
     def get_pull( self, number ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/pulls/" + str( number ),
+            None,
+            None
+        )
+        return PullRequest.PullRequest( self.__requester, data, lazy = True )
 
     def get_pulls( self, state = None ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/pulls",
+            str( self.url ) + "/pulls",
             None,
             None
         )
@@ -636,7 +726,7 @@ class Repository( object ):
     def get_tags( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/tags",
+            str( self.url ) + "/tags",
             None,
             None
         )
@@ -648,7 +738,7 @@ class Repository( object ):
     def get_teams( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/teams",
+            str( self.url ) + "/teams",
             None,
             None
         )
@@ -660,7 +750,7 @@ class Repository( object ):
     def get_watchers( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/watchers",
+            str( self.url ) + "/watchers",
             None,
             None
         )
@@ -672,7 +762,7 @@ class Repository( object ):
     def has_in_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/collaborators/" + collaborator.login,
+            str( self.url ) + "/collaborators/" + str( collaborator.login ),
             None,
             None
         )
@@ -681,7 +771,7 @@ class Repository( object ):
     def remove_from_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/collaborators/" + collaborator.login,
+            str( self.url ) + "/collaborators/" + str( collaborator.login ),
             None,
             None
         )

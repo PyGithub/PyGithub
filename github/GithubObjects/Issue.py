@@ -110,7 +110,7 @@ class Issue( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             post_parameters
         )
@@ -136,19 +136,25 @@ class Issue( object ):
             post_parameters[ "labels" ] = labels
         status, headers, data = self.__requester.request(
             "PATCH",
-            self.url,
+            str( self.url ),
             None,
             post_parameters
         )
         self.__useAttributes( data )
 
     def get_comment( self, id ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/comments/" + str( id ),
+            None,
+            None
+        )
+        return IssueComment.IssueComment( self.__requester, data, lazy = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/comments",
+            str( self.url ) + "/comments",
             None,
             None
         )
@@ -160,7 +166,7 @@ class Issue( object ):
     def get_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/events",
+            str( self.url ) + "/events",
             None,
             None
         )
@@ -172,7 +178,7 @@ class Issue( object ):
     def get_labels( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            self.url + "/labels",
+            str( self.url ) + "/labels",
             None,
             None
         )
@@ -184,7 +190,7 @@ class Issue( object ):
     def remove_from_labels( self, label ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            self.url + "/labels/" + label.login,
+            str( self.url ) + "/labels/" + str( label.login ),
             None,
             None
         )
