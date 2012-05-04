@@ -190,16 +190,26 @@ class AuthenticatedUser( object ):
         pass
 
     def add_to_following( self, following ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/following/" + following.login,
+            None,
+            None
+        )
 
     def add_to_watched( self, watched ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/watched/" + watched.login,
+            None,
+            None
+        )
 
     def create_authorization( self, scopes = None, note = None, note_url = None ):
         pass
 
     def create_fork( self, repo ):
-        result = self.__github._dataRequest(
+        result = self.__github._Request(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
@@ -263,10 +273,6 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            string.string( self.__github, element, lazy = True )
-            for element in result
-        ]
 
     def get_events( self ):
         result = self.__github._dataRequest(
@@ -395,19 +401,41 @@ class AuthenticatedUser( object ):
         ]
 
     def has_in_following( self, following ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/following/" + following.login,
+            None,
+            None
+        )
+        return result == 204
 
     def has_in_watched( self, watched ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/watched/" + watched.login,
+            None,
+            None
+        )
+        return result == 204
 
     def remove_from_emails( self, *emails ):
         pass
 
     def remove_from_following( self, following ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/following/" + following.login,
+            None,
+            None
+        )
 
     def remove_from_watched( self, watched ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/watched/" + watched.login,
+            None,
+            None
+        )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

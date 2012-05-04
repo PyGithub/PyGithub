@@ -218,6 +218,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -370,6 +371,7 @@
                                 "value": "/authorizations"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -400,6 +402,7 @@
                                 "value": "/events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -430,6 +433,7 @@
                                 "value": "/issues"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -516,6 +520,7 @@
                                 "value": "/keys"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -646,6 +651,7 @@
                                 ]
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -676,6 +682,7 @@
                                 "value": "/repos"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -739,6 +746,7 @@
                                 "value": "/emails"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -790,6 +798,29 @@
                         "to", 
                         "watched"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/watched/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "watched", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -818,6 +849,7 @@
                                 "value": "/watched"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -845,6 +877,29 @@
                         "in", 
                         "watched"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/watched/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "watched", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -870,6 +925,29 @@
                         "from", 
                         "watched"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/watched/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "watched", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -895,6 +973,29 @@
                         "to", 
                         "following"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/following/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "following", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -923,6 +1024,7 @@
                                 "value": "/following"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -950,6 +1052,29 @@
                         "in", 
                         "following"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/following/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "following", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -975,6 +1100,29 @@
                         "from", 
                         "following"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/following/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "following", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -1003,6 +1151,7 @@
                                 "value": "/followers"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -1033,6 +1182,7 @@
                                 "value": "/orgs"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -1104,6 +1254,7 @@
                                 "value": "/gists"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -1303,6 +1454,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -1539,6 +1691,7 @@
                                 "value": "/comments"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -1666,6 +1819,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -2106,6 +2260,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -2216,6 +2371,7 @@
                                 "value": "/comments"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -2363,6 +2519,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -2549,6 +2706,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -2784,6 +2942,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -3012,6 +3171,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -3140,6 +3300,7 @@
                                 "value": "/comments"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -3170,6 +3331,7 @@
                                 "value": "/events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -3239,6 +3401,7 @@
                                 "value": "/labels"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -3266,6 +3429,29 @@
                         "from", 
                         "labels"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "label", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -3374,6 +3560,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -3522,6 +3709,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -3656,6 +3844,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -3726,6 +3915,7 @@
                                 "value": "/labels"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -3971,6 +4161,7 @@
                                 "value": "/events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4001,6 +4192,7 @@
                                 "value": "/followers"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4031,6 +4223,7 @@
                                 "value": "/following"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4080,6 +4273,7 @@
                                 ]
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4110,6 +4304,7 @@
                                 "value": "/repos"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -4149,6 +4344,7 @@
                                 "value": "/watched"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4179,6 +4375,7 @@
                                 "value": "/orgs"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4250,6 +4447,7 @@
                                 "value": "/gists"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4521,6 +4719,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -4601,6 +4800,7 @@
                                 "value": "/events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4631,6 +4831,7 @@
                                 "value": "/members"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4658,6 +4859,29 @@
                         "in", 
                         "members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4683,6 +4907,29 @@
                         "from", 
                         "members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4708,6 +4955,29 @@
                         "to", 
                         "public_members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/public_members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "public_member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4736,6 +5006,7 @@
                                 "value": "/public_members"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4763,6 +5034,29 @@
                         "in", 
                         "public_members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/public_members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "public_member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4788,6 +5082,29 @@
                         "from", 
                         "public_members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/public_members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "public_member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -4916,6 +5233,7 @@
                                 ]
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -4946,6 +5264,7 @@
                                 "value": "/repos"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -5026,6 +5345,7 @@
                                 "value": "/teams"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -5288,6 +5608,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -5368,6 +5689,7 @@
                                 "value": "/comments"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -5398,6 +5720,7 @@
                                 "value": "/commits"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -5428,6 +5751,7 @@
                                 "value": "/files"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -5593,6 +5917,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -5965,6 +6290,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -6045,6 +6371,7 @@
                                 "value": "/branches"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6072,6 +6399,29 @@
                         "to", 
                         "collaborators"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/collaborators/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "collaborator", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -6100,6 +6450,7 @@
                                 "value": "/collaborators"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6127,6 +6478,29 @@
                         "in", 
                         "collaborators"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/collaborators/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "collaborator", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -6152,6 +6526,29 @@
                         "from", 
                         "collaborators"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/collaborators/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "collaborator", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -6204,6 +6601,7 @@
                                 "value": "/comments"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6258,6 +6656,7 @@
                                 "value": "/commits"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -6305,6 +6704,7 @@
                                 "value": "/contributors"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6408,6 +6808,7 @@
                                 "value": "/downloads"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6438,6 +6839,7 @@
                                 "value": "/events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6468,6 +6870,7 @@
                                 "value": "/forks"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6691,6 +7094,7 @@
                                 "value": "/git_refs"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -6941,6 +7345,7 @@
                                 "value": "/hooks"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7052,6 +7457,7 @@
                                 "value": "/issues"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -7171,6 +7577,7 @@
                                 "value": "/issues_events"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7257,6 +7664,7 @@
                                 "value": "/keys"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7343,6 +7751,7 @@
                                 "value": "/labels"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7446,6 +7855,7 @@
                                 "value": "/milestones"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -7525,6 +7935,7 @@
                                 "value": "/pulls"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [
@@ -7564,6 +7975,7 @@
                                 "value": "/tags"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7594,6 +8006,7 @@
                                 "value": "/teams"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7624,6 +8037,7 @@
                                 "value": "/watchers"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -7765,6 +8179,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -7905,6 +8320,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 
@@ -7956,6 +8372,29 @@
                         "to", 
                         "members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -7984,6 +8423,7 @@
                                 "value": "/members"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -8011,6 +8451,29 @@
                         "in", 
                         "members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8036,6 +8499,29 @@
                         "from", 
                         "members"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/members/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "member", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8061,6 +8547,29 @@
                         "to", 
                         "repos"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/repos/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "repo", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8089,6 +8598,7 @@
                                 "value": "/repos"
                             }
                         ], 
+                        "information": "data", 
                         "verb": "GET"
                     }, 
                     "optional_parameters": [], 
@@ -8116,6 +8626,29 @@
                         "in", 
                         "repos"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/repos/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "repo", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8141,6 +8674,29 @@
                         "from", 
                         "repos"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/repos/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "repo", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": true, 
@@ -8201,6 +8757,7 @@
                                 "value": "https://api.github.com/user"
                             }
                         ], 
+                        "information": "data", 
                         "post_parameters": true, 
                         "verb": "PATCH"
                     }, 

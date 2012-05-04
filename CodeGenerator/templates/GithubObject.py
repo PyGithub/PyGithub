@@ -56,7 +56,7 @@ class {{ class.name }}( object ):
 
 {% endif %}
 
-        result = self.__github._dataRequest(
+        result = self.__github._{{ method.request.information }}Request(
             "{{ method.request.verb }}",
             {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
             None,
@@ -69,6 +69,14 @@ class {{ class.name }}( object ):
 
 {% if method.is_mutation %}
         self.__useAttributes( result )
+{% endif %}
+
+{% if method.type.simple %}
+
+{% if method.type.name == "bool" %}
+        return result == 204
+{% endif %}
+
 {% else %}
 
 {% if method.type.cardinality == "scalar" %}

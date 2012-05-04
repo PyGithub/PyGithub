@@ -230,7 +230,12 @@ class Repository( object ):
         self.__completed = True
 
     def add_to_collaborators( self, collaborator ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/collaborators/" + collaborator.login,
+            None,
+            None
+        )
 
     def compare( self, base, head ):
         pass
@@ -572,10 +577,21 @@ class Repository( object ):
         ]
 
     def has_in_collaborators( self, collaborator ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/collaborators/" + collaborator.login,
+            None,
+            None
+        )
+        return result == 204
 
     def remove_from_collaborators( self, collaborator ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/collaborators/" + collaborator.login,
+            None,
+            None
+        )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

@@ -207,7 +207,12 @@ class Issue( object ):
         ]
 
     def remove_from_labels( self, label ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/labels/" + label.login,
+            None,
+            None
+        )
 
     def set_labels( self, *labels ):
         pass

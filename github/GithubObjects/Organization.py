@@ -177,7 +177,12 @@ class Organization( object ):
         self.__completed = True
 
     def add_to_public_members( self, public_member ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/public_members/" + public_member.login,
+            None,
+            None
+        )
 
     def create_fork( self, repo ):
         pass
@@ -281,16 +286,38 @@ class Organization( object ):
         ]
 
     def has_in_members( self, member ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/members/" + member.login,
+            None,
+            None
+        )
+        return result == 204
 
     def has_in_public_members( self, public_member ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/public_members/" + public_member.login,
+            None,
+            None
+        )
+        return result == 204
 
     def remove_from_members( self, member ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/members/" + member.login,
+            None,
+            None
+        )
 
     def remove_from_public_members( self, public_member ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/public_members/" + public_member.login,
+            None,
+            None
+        )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

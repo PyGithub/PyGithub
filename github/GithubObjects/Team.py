@@ -67,10 +67,20 @@ class Team( object ):
         self.__completed = True
 
     def add_to_members( self, member ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/members/" + member.login,
+            None,
+            None
+        )
 
     def add_to_repos( self, repo ):
-        pass
+        result = self.__github._statusRequest(
+            "PUT",
+            self.url + "/repos/" + repo.login,
+            None,
+            None
+        )
 
     def delete( self ):
         pass
@@ -114,16 +124,38 @@ class Team( object ):
         ]
 
     def has_in_members( self, member ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/members/" + member.login,
+            None,
+            None
+        )
+        return result == 204
 
     def has_in_repos( self, repo ):
-        pass
+        result = self.__github._statusRequest(
+            "GET",
+            self.url + "/repos/" + repo.login,
+            None,
+            None
+        )
+        return result == 204
 
     def remove_from_members( self, member ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/members/" + member.login,
+            None,
+            None
+        )
 
     def remove_from_repos( self, repo ):
-        pass
+        result = self.__github._statusRequest(
+            "DELETE",
+            self.url + "/repos/" + repo.login,
+            None,
+            None
+        )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

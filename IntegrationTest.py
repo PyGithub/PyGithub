@@ -219,16 +219,16 @@ class IntegrationTest:
         u = self.g.get_user()
         self.printList( "Organizations", u.get_orgs(), lambda o: o.login )
 
-    # def testColaborators( self ):
-        # r = self.g.get_user().get_repo( "TestPyGithub" )
-        # cobaye = self.g.get_user( self.cobayeUser )
-        # self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
-        # r.add_to_collaborators( cobaye )
-        # assert r.has_in_collaborators( cobaye )
-        # self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
-        # r.remove_from_collaborators( cobaye )
-        # assert not r.has_in_collaborators( cobaye )
-        # self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+    def testColaborators( self ):
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        cobaye = self.g.get_user( self.cobayeUser )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.add_to_collaborators( cobaye )
+        assert r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
+        r.remove_from_collaborators( cobaye )
+        assert not r.has_in_collaborators( cobaye )
+        self.printList( "Collaborators", r.get_collaborators(), lambda m: m.login )
 
     # def testCommentCommit( self ):
         # r = self.g.get_user().get_repo( "TestPyGithub" )

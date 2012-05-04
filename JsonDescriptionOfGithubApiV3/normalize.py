@@ -115,16 +115,17 @@ class Collection:
             assert desc[ "add_element" ] is True
             self.methods.append( Function(
                 { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
-                # {
-                    # "request": {
-                        # "verb": "PUT",
-                        # "url": [
-                            # { "type": "attribute", "value": [ "url" ] },
-                            # { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
-                            # { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] },
-                        # ],
-                    # }
-                # }
+                {
+                    "request": {
+                        "verb": "PUT",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                        ],
+                        "information": "status",
+                    }
+                }
             ) )
         if "add_several_elements" in desc:
             assert desc[ "add_several_elements" ] is True
@@ -147,6 +148,7 @@ class Collection:
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] },
                         ],
+                        "information": "data",
                     }
                 }
             else:
@@ -165,15 +167,42 @@ class Collection:
                     "request": {
                         "verb": "GET",
                         "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
+                        "information": "data",
                     }
                 }
             ) )
         if "has_element" in desc:
             assert desc[ "has_element" ] is True
-            self.methods.append( Function( { "name": [ "has", "in" ] + name, "type": "bool", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] } ) )
+            self.methods.append( Function(
+                { "name": [ "has", "in" ] + name, "type": "bool", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
+                {
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                        ],
+                        "information": "status",
+                    }
+                }
+            ) )
         if "remove_element" in desc:
             assert desc[ "remove_element" ] is True
-            self.methods.append( Function( { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] } ) )
+            self.methods.append( Function(
+                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
+                {
+                    "request": {
+                        "verb": "DELETE",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                            { "type": "argument", "value": [ desc[ "singular_name" ], "login" ] }, # @todo 'login' should be 'the attribute identifying the object'
+                        ],
+                        "information": "status",
+                    }
+                }
+                ) )
         if "remove_several_elements" in desc:
             assert desc[ "remove_several_elements" ] is True
             self.methods.append( Function( { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
@@ -203,6 +232,7 @@ class Class:
                         "verb": "PATCH",
                         "url": [ { "type": "constant", "value": "https://api.github.com/user" } ], # @todo
                         "post_parameters": True, # @todo
+                        "information": "data",
                     },
                 }
             ) )
