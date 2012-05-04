@@ -609,16 +609,41 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Repository"
-                    }, 
                     "name": [
                         "get", 
                         "repo"
                     ], 
-                    "optional_parameters": []
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/repos/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "name"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3955,16 +3980,41 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Repository"
-                    }, 
                     "name": [
                         "get", 
                         "repo"
                     ], 
-                    "optional_parameters": []
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/repos/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "name"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4747,16 +4797,41 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Repository"
-                    }, 
                     "name": [
                         "get", 
                         "repo"
                     ], 
-                    "optional_parameters": []
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/repos/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "name"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }
                 }, 
                 {
                     "mandatory_parameters": [], 

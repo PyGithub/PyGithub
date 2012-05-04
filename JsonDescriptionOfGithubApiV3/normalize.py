@@ -121,7 +121,28 @@ class Collection:
             assert desc[ "delete_list" ] is True
             self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
         if "get_element" in desc:
-            self.methods.append( Function( desc[ "get_element" ], { "name": [ "get", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatory_parameters": [ desc[ "get_element" ][ "parameter" ] ] } ) )
+
+            # @todo Generalize
+            if desc[ "name" ] == "repos":
+                hack = {
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "attribute", "value": [ "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "name" ] },
+                        ],
+                    }
+                }
+            else:
+                hack = dict()
+
+            self.methods.append( Function(
+                desc[ "get_element" ],
+                { "name": [ "get", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatory_parameters": [ desc[ "get_element" ][ "parameter" ] ] },
+                hack
+            ) )
         if "get_list" in desc:
             self.methods.append( Function(
                 desc[ "get_list" ] if desc[ "get_list" ] is not True else dict(),

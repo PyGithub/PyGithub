@@ -359,7 +359,13 @@ class AuthenticatedUser( object ):
         ]
 
     def get_repo( self, name ):
-        pass
+        result = self.__github._dataRequest(
+            "GET",
+            "https://api.github.com/repos/" + self.login + "/" + name,
+            None,
+            None
+        )
+        return Repository.Repository( self.__github, result, lazy = True )
 
     def get_repos( self, type = None ):
         result = self.__github._dataRequest(
