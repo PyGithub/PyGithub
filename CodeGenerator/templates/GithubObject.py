@@ -67,7 +67,7 @@ class {{ class.name }}( object ):
 {% endif %}
         )
 
-{% if method.type.name == "void" %}
+{% if method.is_mutation %}
         self.__useAttributes( result )
 {% else %}
 

@@ -283,16 +283,12 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "authorizations", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Authorization"
-                    }, 
                     "name": [
                         "create", 
                         "authorization"
@@ -322,7 +318,13 @@
                             }, 
                             "name": "note_url"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Authorization"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -336,16 +338,17 @@
                         }
                     ], 
                     "group": "authorizations", 
+                    "name": [
+                        "get", 
+                        "authorization"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Authorization"
                     }, 
-                    "name": [
-                        "get", 
-                        "authorization"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -374,7 +377,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Authorization"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -403,7 +407,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -432,7 +437,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Issue"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -454,16 +460,17 @@
                         }
                     ], 
                     "group": "keys", 
+                    "name": [
+                        "create", 
+                        "key"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "UserKey"
                     }, 
-                    "name": [
-                        "create", 
-                        "key"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -477,16 +484,17 @@
                         }
                     ], 
                     "group": "keys", 
+                    "name": [
+                        "get", 
+                        "key"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "UserKey"
                     }, 
-                    "name": [
-                        "get", 
-                        "key"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -515,7 +523,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "UserKey"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -529,11 +538,6 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Repository"
-                    }, 
                     "name": [
                         "create", 
                         "repo"
@@ -595,7 +599,13 @@
                             }, 
                             "name": "team_id"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -643,7 +653,8 @@
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -681,7 +692,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -704,7 +716,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -733,7 +746,8 @@
                         "simple": true, 
                         "cardinality": "list", 
                         "name": "string"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -756,7 +770,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -770,17 +785,18 @@
                         }
                     ], 
                     "group": "watched", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "watched"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -809,7 +825,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -823,17 +840,18 @@
                         }
                     ], 
                     "group": "watched", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "watched"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -847,17 +865,18 @@
                         }
                     ], 
                     "group": "watched", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "watched"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -871,17 +890,18 @@
                         }
                     ], 
                     "group": "following", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "following"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -910,7 +930,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -924,17 +945,18 @@
                         }
                     ], 
                     "group": "following", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "following"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -948,17 +970,18 @@
                         }
                     ], 
                     "group": "following", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "following"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -987,7 +1010,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -1016,7 +1040,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Organization"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -1038,11 +1063,6 @@
                         }
                     ], 
                     "group": "gists", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Gist"
-                    }, 
                     "name": [
                         "create", 
                         "gist"
@@ -1056,7 +1076,13 @@
                             }, 
                             "name": "description"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Gist"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -1085,7 +1111,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Gist"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -1140,7 +1167,8 @@
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -1154,32 +1182,34 @@
                         }
                     ], 
                     "group": "events", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "list", 
-                        "name": "Event"
-                    }, 
                     "name": [
                         "get", 
                         "organization", 
                         "events"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Event"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "gists", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "list", 
-                        "name": "Gist"
-                    }, 
                     "name": [
                         "get", 
                         "starred", 
                         "gists"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Gist"
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -1322,20 +1352,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -1442,11 +1474,6 @@
                         }
                     ], 
                     "group": "comments", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "CommitComment"
-                    }, 
                     "name": [
                         "create", 
                         "comment"
@@ -1484,7 +1511,13 @@
                             }, 
                             "name": "position"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "CommitComment"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -1513,7 +1546,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "CommitComment"
-                    }
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -1640,20 +1674,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -1825,15 +1861,16 @@
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -2094,20 +2131,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -2121,16 +2160,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "create", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GistComment"
                     }, 
-                    "name": [
-                        "create", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -2144,16 +2184,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "get", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GistComment"
                     }, 
-                    "name": [
-                        "get", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -2182,63 +2223,68 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "GistComment"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "starring", 
+                    "name": [
+                        "is", 
+                        "starred"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "bool"
                     }, 
-                    "name": [
-                        "is", 
-                        "starred"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "starring", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "reset", 
                         "starred"
                     ], 
-                    "optional_parameters": []
-                }, 
-                {
-                    "mandatory_parameters": [], 
-                    "group": "starring", 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
+                    "is_mutation": false
+                }, 
+                {
+                    "mandatory_parameters": [], 
+                    "group": "starring", 
                     "name": [
                         "set", 
                         "starred"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "forking", 
+                    "name": [
+                        "create", 
+                        "fork"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Gist"
                     }, 
-                    "name": [
-                        "create", 
-                        "fork"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -2325,20 +2371,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -2518,20 +2566,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -2775,33 +2825,36 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "testing", 
+                    "name": [
+                        "test"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "test"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -3016,7 +3069,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [
@@ -3030,16 +3084,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "create", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "IssueComment"
                     }, 
-                    "name": [
-                        "create", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -3053,16 +3108,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "get", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "IssueComment"
                     }, 
-                    "name": [
-                        "get", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3091,7 +3147,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "IssueComment"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3120,7 +3177,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "IssueEvent"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3143,21 +3201,23 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "labels", 
+                    "name": [
+                        "delete", 
+                        "labels"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete", 
-                        "labels"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3186,7 +3246,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Label"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -3200,17 +3261,18 @@
                         }
                     ], 
                     "group": "labels", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "labels"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3232,7 +3294,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -3319,20 +3382,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -3465,20 +3530,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -3622,20 +3689,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3664,7 +3733,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Label"
-                    }
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -3908,7 +3978,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3937,7 +4008,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -3966,7 +4038,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4014,7 +4087,8 @@
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4052,7 +4126,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4081,7 +4156,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4110,7 +4186,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Organization"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4132,11 +4209,6 @@
                         }
                     ], 
                     "group": "gists", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Gist"
-                    }, 
                     "name": [
                         "create", 
                         "gist"
@@ -4150,7 +4222,13 @@
                             }, 
                             "name": "description"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Gist"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4179,53 +4257,57 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Gist"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "events", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "list", 
-                        "name": "Event"
-                    }, 
                     "name": [
                         "get", 
                         "public", 
                         "events"
                     ], 
-                    "optional_parameters": []
-                }, 
-                {
-                    "mandatory_parameters": [], 
-                    "group": "events", 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
                     }, 
+                    "is_mutation": false
+                }, 
+                {
+                    "mandatory_parameters": [], 
+                    "group": "events", 
                     "name": [
                         "get", 
                         "received", 
                         "events"
                     ], 
-                    "optional_parameters": []
-                }, 
-                {
-                    "mandatory_parameters": [], 
-                    "group": "events", 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
                     }, 
+                    "is_mutation": false
+                }, 
+                {
+                    "mandatory_parameters": [], 
+                    "group": "events", 
                     "name": [
                         "get", 
                         "public", 
                         "received", 
                         "events"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Event"
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -4496,7 +4578,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4525,7 +4608,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4554,7 +4638,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4568,17 +4653,18 @@
                         }
                     ], 
                     "group": "members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4592,17 +4678,18 @@
                         }
                     ], 
                     "group": "members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4616,17 +4703,18 @@
                         }
                     ], 
                     "group": "public_members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "public_members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4655,7 +4743,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4669,17 +4758,18 @@
                         }
                     ], 
                     "group": "public_members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "public_members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4693,17 +4783,18 @@
                         }
                     ], 
                     "group": "public_members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "public_members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4717,11 +4808,6 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Repository"
-                    }, 
                     "name": [
                         "create", 
                         "repo"
@@ -4783,7 +4869,13 @@
                             }, 
                             "name": "team_id"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4831,7 +4923,8 @@
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4869,7 +4962,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4883,11 +4977,6 @@
                         }
                     ], 
                     "group": "teams", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Team"
-                    }, 
                     "name": [
                         "create", 
                         "team"
@@ -4909,7 +4998,13 @@
                             }, 
                             "name": "permission"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Team"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -4938,7 +5033,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Team"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -4952,16 +5048,17 @@
                         }
                     ], 
                     "group": "forking", 
+                    "name": [
+                        "create", 
+                        "fork"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Repository"
                     }, 
-                    "name": [
-                        "create", 
-                        "fork"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -5224,7 +5321,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [
@@ -5238,16 +5336,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "get", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "PullRequestComment"
                     }, 
-                    "name": [
-                        "get", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5276,7 +5375,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "PullRequestComment"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5305,7 +5405,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Commit"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5334,30 +5435,27 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "PullRequestFile"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "merging", 
+                    "name": [
+                        "is", 
+                        "merged"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "bool"
                     }, 
-                    "name": [
-                        "is", 
-                        "merged"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "merging", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "merge"
                     ], 
@@ -5370,7 +5468,13 @@
                             }, 
                             "name": "commit_message"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -5497,20 +5601,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -5916,7 +6022,8 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5945,7 +6052,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Branch"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -5959,17 +6067,18 @@
                         }
                     ], 
                     "group": "collaborators", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "collaborators"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -5998,7 +6107,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6012,17 +6122,18 @@
                         }
                     ], 
                     "group": "collaborators", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "collaborators"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6036,17 +6147,18 @@
                         }
                     ], 
                     "group": "collaborators", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "collaborators"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6060,16 +6172,17 @@
                         }
                     ], 
                     "group": "comments", 
+                    "name": [
+                        "get", 
+                        "comment"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "CommitComment"
                     }, 
-                    "name": [
-                        "get", 
-                        "comment"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6098,7 +6211,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "CommitComment"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6112,16 +6226,17 @@
                         }
                     ], 
                     "group": "commits", 
+                    "name": [
+                        "get", 
+                        "commit"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Commit"
                     }, 
-                    "name": [
-                        "get", 
-                        "commit"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6167,7 +6282,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Commit"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6196,7 +6312,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6218,11 +6335,6 @@
                         }
                     ], 
                     "group": "downloads", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Download"
-                    }, 
                     "name": [
                         "create", 
                         "download"
@@ -6244,7 +6356,13 @@
                             }, 
                             "name": "content_type"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Download"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6258,16 +6376,17 @@
                         }
                     ], 
                     "group": "downloads", 
+                    "name": [
+                        "get", 
+                        "download"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Download"
                     }, 
-                    "name": [
-                        "get", 
-                        "download"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6296,7 +6415,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Download"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6325,7 +6445,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Event"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6354,7 +6475,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6376,16 +6498,17 @@
                         }
                     ], 
                     "group": "git_blobs", 
+                    "name": [
+                        "create", 
+                        "git_blob"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitBlob"
                     }, 
-                    "name": [
-                        "create", 
-                        "git_blob"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6399,16 +6522,17 @@
                         }
                     ], 
                     "group": "git_blobs", 
+                    "name": [
+                        "get", 
+                        "git_blob"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitBlob"
                     }, 
-                    "name": [
-                        "get", 
-                        "git_blob"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6438,11 +6562,6 @@
                         }
                     ], 
                     "group": "git_commits", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "GitCommit"
-                    }, 
                     "name": [
                         "create", 
                         "git_commit"
@@ -6464,7 +6583,13 @@
                             }, 
                             "name": "committer"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "GitCommit"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6478,16 +6603,17 @@
                         }
                     ], 
                     "group": "git_commits", 
+                    "name": [
+                        "get", 
+                        "git_commit"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitCommit"
                     }, 
-                    "name": [
-                        "get", 
-                        "git_commit"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6509,16 +6635,17 @@
                         }
                     ], 
                     "group": "git_refs", 
+                    "name": [
+                        "create", 
+                        "git_ref"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitRef"
                     }, 
-                    "name": [
-                        "create", 
-                        "git_ref"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6532,16 +6659,17 @@
                         }
                     ], 
                     "group": "git_refs", 
+                    "name": [
+                        "get", 
+                        "git_ref"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitRef"
                     }, 
-                    "name": [
-                        "get", 
-                        "git_ref"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6570,7 +6698,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "GitRef"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6608,11 +6737,6 @@
                         }
                     ], 
                     "group": "git_tags", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "GitTag"
-                    }, 
                     "name": [
                         "create", 
                         "git_tag"
@@ -6626,7 +6750,13 @@
                             }, 
                             "name": "tagger"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "GitTag"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6640,16 +6770,17 @@
                         }
                     ], 
                     "group": "git_tags", 
+                    "name": [
+                        "get", 
+                        "git_tag"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "GitTag"
                     }, 
-                    "name": [
-                        "get", 
-                        "git_tag"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6663,11 +6794,6 @@
                         }
                     ], 
                     "group": "git_trees", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "GitTree"
-                    }, 
                     "name": [
                         "create", 
                         "git_tree"
@@ -6681,7 +6807,13 @@
                             }, 
                             "name": "base_tree"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "GitTree"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6695,11 +6827,6 @@
                         }
                     ], 
                     "group": "git_trees", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "GitTree"
-                    }, 
                     "name": [
                         "get", 
                         "git_tree"
@@ -6713,7 +6840,13 @@
                             }, 
                             "name": "recursive"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "GitTree"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6735,11 +6868,6 @@
                         }
                     ], 
                     "group": "hooks", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Hook"
-                    }, 
                     "name": [
                         "create", 
                         "hook"
@@ -6761,7 +6889,13 @@
                             }, 
                             "name": "active"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Hook"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6775,16 +6909,17 @@
                         }
                     ], 
                     "group": "hooks", 
+                    "name": [
+                        "get", 
+                        "hook"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Hook"
                     }, 
-                    "name": [
-                        "get", 
-                        "hook"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6813,7 +6948,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Hook"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6827,11 +6963,6 @@
                         }
                     ], 
                     "group": "issues", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Issue"
-                    }, 
                     "name": [
                         "create", 
                         "issue"
@@ -6869,7 +7000,13 @@
                             }, 
                             "name": "labels"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Issue"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -6883,16 +7020,17 @@
                         }
                     ], 
                     "group": "issues", 
+                    "name": [
+                        "get", 
+                        "issue"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Issue"
                     }, 
-                    "name": [
-                        "get", 
-                        "issue"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -6986,7 +7124,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Issue"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7000,16 +7139,17 @@
                         }
                     ], 
                     "group": "issues_events", 
+                    "name": [
+                        "get", 
+                        "issues_event"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "IssueEvent"
                     }, 
-                    "name": [
-                        "get", 
-                        "issues_event"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7038,7 +7178,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "IssueEvent"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7060,16 +7201,17 @@
                         }
                     ], 
                     "group": "keys", 
+                    "name": [
+                        "create", 
+                        "key"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "RepositoryKey"
                     }, 
-                    "name": [
-                        "create", 
-                        "key"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7083,16 +7225,17 @@
                         }
                     ], 
                     "group": "keys", 
+                    "name": [
+                        "get", 
+                        "key"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "RepositoryKey"
                     }, 
-                    "name": [
-                        "get", 
-                        "key"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7121,7 +7264,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "RepositoryKey"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7143,16 +7287,17 @@
                         }
                     ], 
                     "group": "labels", 
+                    "name": [
+                        "create", 
+                        "label"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Label"
                     }, 
-                    "name": [
-                        "create", 
-                        "label"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7166,16 +7311,17 @@
                         }
                     ], 
                     "group": "labels", 
+                    "name": [
+                        "get", 
+                        "label"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Label"
                     }, 
-                    "name": [
-                        "get", 
-                        "label"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7204,7 +7350,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Label"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7218,11 +7365,6 @@
                         }
                     ], 
                     "group": "milestones", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "scalar", 
-                        "name": "Milestone"
-                    }, 
                     "name": [
                         "create", 
                         "milestone"
@@ -7252,7 +7394,13 @@
                             }, 
                             "name": "due_on"
                         }
-                    ]
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Milestone"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7266,16 +7414,17 @@
                         }
                     ], 
                     "group": "milestones", 
+                    "name": [
+                        "get", 
+                        "milestone"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Milestone"
                     }, 
-                    "name": [
-                        "get", 
-                        "milestone"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7329,7 +7478,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Milestone"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7343,16 +7493,17 @@
                         }
                     ], 
                     "group": "pulls", 
+                    "name": [
+                        "get", 
+                        "pull"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "PullRequest"
                     }, 
-                    "name": [
-                        "get", 
-                        "pull"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7390,7 +7541,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "PullRequest"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7419,7 +7571,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Tag"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7448,7 +7601,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Team"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7477,36 +7631,39 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "events", 
-                    "type": {
-                        "simple": false, 
-                        "cardinality": "list", 
-                        "name": "Event"
-                    }, 
                     "name": [
                         "get", 
                         "network", 
                         "events"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Event"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "languages", 
+                    "name": [
+                        "get", 
+                        "languages"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": [
-                        "get", 
-                        "languages"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7528,15 +7685,16 @@
                         }
                     ], 
                     "group": "Comparison", 
+                    "name": [
+                        "compare"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": [
-                        "compare"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -7615,20 +7773,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -7762,20 +7922,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7789,17 +7951,18 @@
                         }
                     ], 
                     "group": "members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7828,7 +7991,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "NamedUser"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7842,17 +8006,18 @@
                         }
                     ], 
                     "group": "members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7866,17 +8031,18 @@
                         }
                     ], 
                     "group": "members", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "members"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7890,17 +8056,18 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "add", 
                         "to", 
                         "repos"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [], 
@@ -7929,7 +8096,8 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Repository"
-                    }
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7943,17 +8111,18 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "bool"
-                    }, 
                     "name": [
                         "has", 
                         "in", 
                         "repos"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "is_mutation": false
                 }, 
                 {
                     "mandatory_parameters": [
@@ -7967,17 +8136,18 @@
                         }
                     ], 
                     "group": "repos", 
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "void"
-                    }, 
                     "name": [
                         "remove", 
                         "from", 
                         "repos"
                     ], 
-                    "optional_parameters": []
+                    "optional_parameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }, 
+                    "is_mutation": false
                 }
             ]
         }, 
@@ -8056,20 +8226,22 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
-                    }
+                    }, 
+                    "is_mutation": true
                 }, 
                 {
                     "mandatory_parameters": [], 
                     "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "optional_parameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
                     }, 
-                    "name": [
-                        "delete"
-                    ], 
-                    "optional_parameters": []
+                    "is_mutation": false
                 }
             ]
         }
