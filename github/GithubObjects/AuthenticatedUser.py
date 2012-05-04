@@ -11,8 +11,8 @@ import Event
 import Authorization
 
 class AuthenticatedUser( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -148,7 +148,7 @@ class AuthenticatedUser( object ):
         pass
 
     def add_to_following( self, following ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "PUT",
             self.url + "/following/" + following.login,
             None,
@@ -156,7 +156,7 @@ class AuthenticatedUser( object ):
         )
 
     def add_to_watched( self, watched ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "PUT",
             self.url + "/watched/" + watched.login,
             None,
@@ -167,13 +167,13 @@ class AuthenticatedUser( object ):
         pass
 
     def create_fork( self, repo ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
             None
         )
-        return Repository.Repository( self.__github, result, lazy = True )
+        return Repository.Repository( self.__requester, data, lazy = True )
 
     def create_gist( self, public, files, description = None ):
         pass
@@ -201,31 +201,31 @@ class AuthenticatedUser( object ):
             post_parameters[ "hireable" ] = hireable
         if bio is not None:
             post_parameters[ "bio" ] = bio
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_authorization( self, id ):
         pass
 
     def get_authorizations( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/authorizations",
             None,
             None
         )
         return [
-            Authorization.Authorization( self.__github, element, lazy = True )
-            for element in result
+            Authorization.Authorization( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_emails( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/emails",
             None,
@@ -233,154 +233,154 @@ class AuthenticatedUser( object ):
         )
 
     def get_events( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/events",
             None,
             None
         )
         return [
-            Event.Event( self.__github, element, lazy = True )
-            for element in result
+            Event.Event( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_followers( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/followers",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_following( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/following",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_gists( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/gists",
             None,
             None
         )
         return [
-            Gist.Gist( self.__github, element, lazy = True )
-            for element in result
+            Gist.Gist( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_issues( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/issues",
             None,
             None
         )
         return [
-            Issue.Issue( self.__github, element, lazy = True )
-            for element in result
+            Issue.Issue( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_key( self, id ):
         pass
 
     def get_keys( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/keys",
             None,
             None
         )
         return [
-            UserKey.UserKey( self.__github, element, lazy = True )
-            for element in result
+            UserKey.UserKey( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_organization_events( self, org ):
         pass
 
     def get_orgs( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/orgs",
             None,
             None
         )
         return [
-            Organization.Organization( self.__github, element, lazy = True )
-            for element in result
+            Organization.Organization( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_repo( self, name ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
-        return Repository.Repository( self.__github, result, lazy = True )
+        return Repository.Repository( self.__requester, data, lazy = True )
 
     def get_repos( self, type = None ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/repos",
             None,
             None
         )
         return [
-            Repository.Repository( self.__github, element, lazy = True )
-            for element in result
+            Repository.Repository( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_starred_gists( self ):
         pass
 
     def get_watched( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/watched",
             None,
             None
         )
         return [
-            Repository.Repository( self.__github, element, lazy = True )
-            for element in result
+            Repository.Repository( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def has_in_following( self, following ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/following/" + following.login,
             None,
             None
         )
-        return result == 204
+        return status == 204
 
     def has_in_watched( self, watched ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/watched/" + watched.login,
             None,
             None
         )
-        return result == 204
+        return status == 204
 
     def remove_from_emails( self, *emails ):
         pass
 
     def remove_from_following( self, following ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/following/" + following.login,
             None,
@@ -388,7 +388,7 @@ class AuthenticatedUser( object ):
         )
 
     def remove_from_watched( self, watched ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/watched/" + watched.login,
             None,
@@ -428,13 +428,13 @@ class AuthenticatedUser( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):

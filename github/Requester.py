@@ -10,40 +10,7 @@ class Requester:
     def __init__( self, login, password ):
         self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
 
-    def dataRequest( self, verb, url, parameters, input ):
-        if parameters is None:
-            parameters = dict()
-
-        headers, output = self.__statusCheckedRequest( verb, url, parameters, input )
-
-        obviouslyFinished = False
-        pageCount = 1
-        while "link" in headers and "next" in headers[ "link" ] and not obviouslyFinished and pageCount < 10:
-            for link in headers[ "link" ].split( "," ):
-                if "next" in link:
-                    linkUrl = link.split( ";" )[ 0 ][ : -1 ]
-                    params = linkUrl.split( "?" )[ 1 ]
-                    parameters.update( dict( p.split( "=" ) for p in params.split( "&" ) ) )
-                    break
-            headers, newOutput = self.__statusCheckedRequest( verb, url, parameters, input )
-            pageCount += 1
-            if len( newOutput ) == 0:
-                obviouslyFinished = True
-            output += newOutput
-
-        return output
-
-    def __statusCheckedRequest( self, verb, url, parameters, input ):
-        status, headers, output = self.__rawRequest( verb, url, parameters, input )
-        if status < 200 or status >= 300:
-            raise UnknownGithubObject()
-        return headers, output
-
-    def statusRequest( self, verb, url, parameters, input ):
-        status, headers, output = self.__rawRequest( verb, url, parameters, input )
-        return status
-
-    def __rawRequest( self, verb, url, parameters, input ):
+    def request( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
         assert url.startswith( "https://api.github.com" )
         url = url[ len( "https://api.github.com" ) : ]
@@ -59,7 +26,7 @@ class Requester:
 
         status = response.status
         headers = dict( response.getheaders() )
-        output = self.__strucutredFromJson( response.read() )
+        output = self.__structuredFromJson( response.read() )
 
         cnx.close()
 
@@ -72,7 +39,7 @@ class Requester:
         else:
             return url + "?" + urllib.urlencode( parameters )
 
-    def __strucutredFromJson( self, data ):
+    def __structuredFromJson( self, data ):
         if len( data ) == 0:
             return None
         else:

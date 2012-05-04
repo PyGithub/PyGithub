@@ -6,8 +6,8 @@ import GitCommit
 import CommitComment
 
 class Commit( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -58,15 +58,15 @@ class Commit( object ):
         pass
 
     def get_comments( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/comments",
             None,
             None
         )
         return [
-            CommitComment.CommitComment( self.__github, element, lazy = True )
-            for element in result
+            CommitComment.CommitComment( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def __initAttributes( self ):
@@ -85,23 +85,23 @@ class Commit( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "author" in attributes:
-            self.__author = NamedUser.NamedUser( self.__github, attributes[ "author" ], lazy = True )
+            self.__author = NamedUser.NamedUser( self.__requester, attributes[ "author" ], lazy = True )
         if "commit" in attributes:
-            self.__commit = GitCommit.GitCommit( self.__github, attributes[ "commit" ], lazy = True )
+            self.__commit = GitCommit.GitCommit( self.__requester, attributes[ "commit" ], lazy = True )
         if "committer" in attributes:
-            self.__committer = NamedUser.NamedUser( self.__github, attributes[ "committer" ], lazy = True )
+            self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], lazy = True )
         if "files" in attributes:
             self.__files = attributes[ "files" ]
         if "parents" in attributes:

@@ -5,8 +5,8 @@ import NamedUser
 import Label
 
 class Milestone( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -76,24 +76,24 @@ class Milestone( object ):
             post_parameters[ "description" ] = description
         if due_on is not None:
             post_parameters[ "due_on" ] = due_on
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_labels( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/labels",
             None,
             None
         )
         return [
-            Label.Label( self.__github, element, lazy = True )
-            for element in result
+            Label.Label( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def __initAttributes( self ):
@@ -114,13 +114,13 @@ class Milestone( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
@@ -130,7 +130,7 @@ class Milestone( object ):
         if "created_at" in attributes:
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes:
-            self.__creator = NamedUser.NamedUser( self.__github, attributes[ "creator" ], lazy = True )
+            self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], lazy = True )
         if "description" in attributes:
             self.__description = attributes[ "description" ]
         if "due_on" in attributes:

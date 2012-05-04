@@ -6,8 +6,8 @@ import Repository
 import NamedUser
 
 class Event( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -94,19 +94,19 @@ class Event( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes:
-            self.__actor = NamedUser.NamedUser( self.__github, attributes[ "actor" ], lazy = True )
+            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )
         if "commit_id" in attributes:
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes:
@@ -118,13 +118,13 @@ class Event( object ):
         if "issue" in attributes:
             self.__issue = attributes[ "issue" ]
         if "org" in attributes:
-            self.__org = Organization.Organization( self.__github, attributes[ "org" ], lazy = True )
+            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], lazy = True )
         if "payload" in attributes:
             self.__payload = attributes[ "payload" ]
         if "public" in attributes:
             self.__public = attributes[ "public" ]
         if "repo" in attributes:
-            self.__repo = Repository.Repository( self.__github, attributes[ "repo" ], lazy = True )
+            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], lazy = True )
         if "type" in attributes:
             self.__type = attributes[ "type" ]
         if "url" in attributes:

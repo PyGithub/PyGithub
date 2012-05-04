@@ -4,8 +4,8 @@
 import Commit
 
 class Tag( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -44,19 +44,19 @@ class Tag( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes:
-            self.__commit = Commit.Commit( self.__github, attributes[ "commit" ], lazy = True )
+            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], lazy = True )
         if "name" in attributes:
             self.__name = attributes[ "name" ]
         if "tarball_url" in attributes:

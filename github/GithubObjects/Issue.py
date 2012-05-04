@@ -8,8 +8,8 @@ import Milestone
 import Label
 
 class Issue( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -125,55 +125,55 @@ class Issue( object ):
             post_parameters[ "milestone" ] = milestone
         if labels is not None:
             post_parameters[ "labels" ] = labels
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_comment( self, id ):
         pass
 
     def get_comments( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/comments",
             None,
             None
         )
         return [
-            IssueComment.IssueComment( self.__github, element, lazy = True )
-            for element in result
+            IssueComment.IssueComment( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_events( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/events",
             None,
             None
         )
         return [
-            IssueEvent.IssueEvent( self.__github, element, lazy = True )
-            for element in result
+            IssueEvent.IssueEvent( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_labels( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/labels",
             None,
             None
         )
         return [
-            Label.Label( self.__github, element, lazy = True )
-            for element in result
+            Label.Label( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def remove_from_labels( self, label ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/labels/" + label.login,
             None,
@@ -208,19 +208,19 @@ class Issue( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes:
-            self.__assignee = NamedUser.NamedUser( self.__github, attributes[ "assignee" ], lazy = True )
+            self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], lazy = True )
         if "body" in attributes:
             self.__body = attributes[ "body" ]
         if "closed_at" in attributes:
@@ -238,7 +238,7 @@ class Issue( object ):
         if "labels" in attributes:
             self.__labels = attributes[ "labels" ]
         if "milestone" in attributes:
-            self.__milestone = Milestone.Milestone( self.__github, attributes[ "milestone" ], lazy = True )
+            self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], lazy = True )
         if "number" in attributes:
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes:
@@ -252,4 +252,4 @@ class Issue( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

@@ -7,8 +7,8 @@ import PullRequestComment
 import PullRequestFile
 
 class PullRequest( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -154,51 +154,51 @@ class PullRequest( object ):
             post_parameters[ "body" ] = body
         if state is not None:
             post_parameters[ "state" ] = state
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_comment( self, id ):
         pass
 
     def get_comments( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/comments",
             None,
             None
         )
         return [
-            PullRequestComment.PullRequestComment( self.__github, element, lazy = True )
-            for element in result
+            PullRequestComment.PullRequestComment( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_commits( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/commits",
             None,
             None
         )
         return [
-            Commit.Commit( self.__github, element, lazy = True )
-            for element in result
+            Commit.Commit( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_files( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/files",
             None,
             None
         )
         return [
-            PullRequestFile.PullRequestFile( self.__github, element, lazy = True )
-            for element in result
+            PullRequestFile.PullRequestFile( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def is_merged( self ):
@@ -241,13 +241,13 @@ class PullRequest( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
@@ -303,4 +303,4 @@ class PullRequest( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

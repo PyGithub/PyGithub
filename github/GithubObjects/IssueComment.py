@@ -4,8 +4,8 @@
 import NamedUser
 
 class IssueComment( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -49,13 +49,13 @@ class IssueComment( object ):
         post_parameters = {
             "body": body,
         }
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def __initAttributes( self ):
         self.__body = None
@@ -71,13 +71,13 @@ class IssueComment( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
@@ -93,4 +93,4 @@ class IssueComment( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

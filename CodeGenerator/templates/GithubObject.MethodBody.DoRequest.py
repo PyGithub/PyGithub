@@ -10,7 +10,7 @@
     {% endfor %}
 {% endif %}
 
-        result = self.__github._{{ method.request.information }}Request(
+        status, headers, data = self.__requester.request(
             "{{ method.request.verb }}",
             {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
             None,

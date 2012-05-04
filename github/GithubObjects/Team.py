@@ -5,8 +5,8 @@ import Repository
 import NamedUser
 
 class Team( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -44,7 +44,7 @@ class Team( object ):
         return self.__url
 
     def add_to_members( self, member ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "PUT",
             self.url + "/members/" + member.login,
             None,
@@ -52,7 +52,7 @@ class Team( object ):
         )
 
     def add_to_repos( self, repo ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "PUT",
             self.url + "/repos/" + repo.login,
             None,
@@ -68,58 +68,58 @@ class Team( object ):
         }
         if permission is not None:
             post_parameters[ "permission" ] = permission
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_members( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/members",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_repos( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/repos",
             None,
             None
         )
         return [
-            Repository.Repository( self.__github, element, lazy = True )
-            for element in result
+            Repository.Repository( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def has_in_members( self, member ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/members/" + member.login,
             None,
             None
         )
-        return result == 204
+        return status == 204
 
     def has_in_repos( self, repo ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/repos/" + repo.login,
             None,
             None
         )
-        return result == 204
+        return status == 204
 
     def remove_from_members( self, member ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/members/" + member.login,
             None,
@@ -127,7 +127,7 @@ class Team( object ):
         )
 
     def remove_from_repos( self, repo ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/repos/" + repo.login,
             None,
@@ -148,13 +148,13 @@ class Team( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):

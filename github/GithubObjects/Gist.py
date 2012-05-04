@@ -6,8 +6,8 @@ import Gist
 import GistComment
 
 class Gist( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -100,27 +100,27 @@ class Gist( object ):
             post_parameters[ "description" ] = description
         if files is not None:
             post_parameters[ "files" ] = files
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_comment( self, id ):
         pass
 
     def get_comments( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/comments",
             None,
             None
         )
         return [
-            GistComment.GistComment( self.__github, element, lazy = True )
-            for element in result
+            GistComment.GistComment( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def is_starred( self ):
@@ -154,13 +154,13 @@ class Gist( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
@@ -192,4 +192,4 @@ class Gist( object ):
         if "url" in attributes:
             self.__url = attributes[ "url" ]
         if "user" in attributes:
-            self.__user = NamedUser.NamedUser( self.__github, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

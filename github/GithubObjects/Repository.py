@@ -24,8 +24,8 @@ import GitTree
 import Label
 
 class Repository( object ):
-    def __init__( self, github, attributes, lazy ):
-        self.__github = github
+    def __init__( self, requester, attributes, lazy ):
+        self.__requester = requester
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -183,7 +183,7 @@ class Repository( object ):
         return self.__watchers
 
     def add_to_collaborators( self, collaborator ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "PUT",
             self.url + "/collaborators/" + collaborator.login,
             None,
@@ -242,117 +242,117 @@ class Repository( object ):
             post_parameters[ "has_wiki" ] = has_wiki
         if has_downloads is not None:
             post_parameters[ "has_downloads" ] = has_downloads
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
 
     def get_branches( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/branches",
             None,
             None
         )
         return [
-            Branch.Branch( self.__github, element, lazy = True )
-            for element in result
+            Branch.Branch( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_collaborators( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/collaborators",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_comment( self, id ):
         pass
 
     def get_comments( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/comments",
             None,
             None
         )
         return [
-            CommitComment.CommitComment( self.__github, element, lazy = True )
-            for element in result
+            CommitComment.CommitComment( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_commit( self, sha ):
         pass
 
     def get_commits( self, sha = None, path = None ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/commits",
             None,
             None
         )
         return [
-            Commit.Commit( self.__github, element, lazy = True )
-            for element in result
+            Commit.Commit( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_contributors( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/contributors",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_download( self, id ):
         pass
 
     def get_downloads( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/downloads",
             None,
             None
         )
         return [
-            Download.Download( self.__github, element, lazy = True )
-            for element in result
+            Download.Download( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_events( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/events",
             None,
             None
         )
         return [
-            Event.Event( self.__github, element, lazy = True )
-            for element in result
+            Event.Event( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_forks( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/forks",
             None,
             None
         )
         return [
-            Repository( self.__github, element, lazy = True )
-            for element in result
+            Repository( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_git_blob( self, sha ):
@@ -365,15 +365,15 @@ class Repository( object ):
         pass
 
     def get_git_refs( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/git_refs",
             None,
             None
         )
         return [
-            GitRef.GitRef( self.__github, element, lazy = True )
-            for element in result
+            GitRef.GitRef( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_git_tag( self, sha ):
@@ -386,75 +386,75 @@ class Repository( object ):
         pass
 
     def get_hooks( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/hooks",
             None,
             None
         )
         return [
-            Hook.Hook( self.__github, element, lazy = True )
-            for element in result
+            Hook.Hook( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_issue( self, number ):
         pass
 
     def get_issues( self, milestone = None, state = None, assignee = None, mentioned = None, labels = None, sort = None, direction = None, since = None ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/issues",
             None,
             None
         )
         return [
-            Issue.Issue( self.__github, element, lazy = True )
-            for element in result
+            Issue.Issue( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_issues_event( self, id ):
         pass
 
     def get_issues_events( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/issues_events",
             None,
             None
         )
         return [
-            IssueEvent.IssueEvent( self.__github, element, lazy = True )
-            for element in result
+            IssueEvent.IssueEvent( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_key( self, id ):
         pass
 
     def get_keys( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/keys",
             None,
             None
         )
         return [
-            RepositoryKey.RepositoryKey( self.__github, element, lazy = True )
-            for element in result
+            RepositoryKey.RepositoryKey( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_label( self, name ):
         pass
 
     def get_labels( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/labels",
             None,
             None
         )
         return [
-            Label.Label( self.__github, element, lazy = True )
-            for element in result
+            Label.Label( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_languages( self ):
@@ -464,15 +464,15 @@ class Repository( object ):
         pass
 
     def get_milestones( self, state = None, sort = None, direction = None ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/milestones",
             None,
             None
         )
         return [
-            Milestone.Milestone( self.__github, element, lazy = True )
-            for element in result
+            Milestone.Milestone( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_network_events( self ):
@@ -482,64 +482,64 @@ class Repository( object ):
         pass
 
     def get_pulls( self, state = None ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/pulls",
             None,
             None
         )
         return [
-            PullRequest.PullRequest( self.__github, element, lazy = True )
-            for element in result
+            PullRequest.PullRequest( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_tags( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/tags",
             None,
             None
         )
         return [
-            Tag.Tag( self.__github, element, lazy = True )
-            for element in result
+            Tag.Tag( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_teams( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/teams",
             None,
             None
         )
         return [
-            Team.Team( self.__github, element, lazy = True )
-            for element in result
+            Team.Team( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def get_watchers( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/watchers",
             None,
             None
         )
         return [
-            NamedUser.NamedUser( self.__github, element, lazy = True )
-            for element in result
+            NamedUser.NamedUser( self.__requester, element, lazy = True )
+            for element in data
         ]
 
     def has_in_collaborators( self, collaborator ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.url + "/collaborators/" + collaborator.login,
             None,
             None
         )
-        return result == 204
+        return status == 204
 
     def remove_from_collaborators( self, collaborator ):
-        result = self.__github._statusRequest(
+        status, headers, data = self.__requester.request(
             "DELETE",
             self.url + "/collaborators/" + collaborator.login,
             None,
@@ -584,13 +584,13 @@ class Repository( object ):
 
     # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
-        result = self.__github._dataRequest(
+        status, headers, data = self.__requester.request(
             "GET",
             self.__url,
             None,
             None
         )
-        self.__useAttributes( result )
+        self.__useAttributes( data )
         self.__completed = True
 
     def __useAttributes( self, attributes ):
@@ -632,9 +632,9 @@ class Repository( object ):
         if "organization" in attributes:
             self.__organization = attributes[ "organization" ]
         if "owner" in attributes:
-            self.__owner = NamedUser.NamedUser( self.__github, attributes[ "owner" ], lazy = True )
+            self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], lazy = True )
         if "parent" in attributes:
-            self.__parent = Repository( self.__github, attributes[ "parent" ], lazy = True )
+            self.__parent = Repository( self.__requester, attributes[ "parent" ], lazy = True )
         if "permissions" in attributes:
             self.__permissions = attributes[ "permissions" ]
         if "private" in attributes:
@@ -644,7 +644,7 @@ class Repository( object ):
         if "size" in attributes:
             self.__size = attributes[ "size" ]
         if "source" in attributes:
-            self.__source = Repository( self.__github, attributes[ "source" ], lazy = True )
+            self.__source = Repository( self.__requester, attributes[ "source" ], lazy = True )
         if "ssh_url" in attributes:
             self.__ssh_url = attributes[ "ssh_url" ]
         if "svn_url" in attributes:
