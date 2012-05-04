@@ -56,6 +56,30 @@ class Authorization( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def delete( self ):
+        pass
+
+    def edit( self, scopes = None, add_scopes = None, remove_scopes = None, note = None, note_url = None ):
+        post_parameters = {
+        }
+        if scopes is not None:
+            post_parameters[ "scopes" ] = scopes
+        if add_scopes is not None:
+            post_parameters[ "add_scopes" ] = add_scopes
+        if remove_scopes is not None:
+            post_parameters[ "remove_scopes" ] = remove_scopes
+        if note is not None:
+            post_parameters[ "note" ] = note
+        if note_url is not None:
+            post_parameters[ "note_url" ] = note_url
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
+
     def __initAttributes( self ):
         self.__app = None
         self.__created_at = None
@@ -81,30 +105,6 @@ class Authorization( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
-
-    def edit( self, scopes = None, add_scopes = None, remove_scopes = None, note = None, note_url = None ):
-        post_parameters = {
-        }
-        if scopes is not None:
-            post_parameters[ "scopes" ] = scopes
-        if add_scopes is not None:
-            post_parameters[ "add_scopes" ] = add_scopes
-        if remove_scopes is not None:
-            post_parameters[ "remove_scopes" ] = remove_scopes
-        if note is not None:
-            post_parameters[ "note" ] = note
-        if note_url is not None:
-            post_parameters[ "note_url" ] = note_url
-        result = self.__github._dataRequest(
-            "PATCH",
-            "https://api.github.com/user",
-            None,
-            post_parameters
-        )
-        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

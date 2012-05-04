@@ -26,6 +26,22 @@ class Label( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def delete( self ):
+        pass
+
+    def edit( self, name, color ):
+        post_parameters = {
+            "name": name,
+            "color": color,
+        }
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
+
     def __initAttributes( self ):
         self.__color = None
         self.__name = None
@@ -45,22 +61,6 @@ class Label( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
-
-    def edit( self, name, color ):
-        post_parameters = {
-            "name": name,
-            "color": color,
-        }
-        result = self.__github._dataRequest(
-            "PATCH",
-            "https://api.github.com/user",
-            None,
-            post_parameters
-        )
-        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

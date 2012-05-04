@@ -101,40 +101,6 @@ class Issue( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
-    def __initAttributes( self ):
-        self.__assignee = None
-        self.__body = None
-        self.__closed_at = None
-        self.__closed_by = None
-        self.__comments = None
-        self.__created_at = None
-        self.__html_url = None
-        self.__id = None
-        self.__labels = None
-        self.__milestone = None
-        self.__number = None
-        self.__pull_request = None
-        self.__state = None
-        self.__title = None
-        self.__updated_at = None
-        self.__url = None
-        self.__user = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def add_to_labels( self, *labels ):
         pass
 
@@ -216,6 +182,40 @@ class Issue( object ):
 
     def set_labels( self, *labels ):
         pass
+
+    def __initAttributes( self ):
+        self.__assignee = None
+        self.__body = None
+        self.__closed_at = None
+        self.__closed_by = None
+        self.__comments = None
+        self.__created_at = None
+        self.__html_url = None
+        self.__id = None
+        self.__labels = None
+        self.__milestone = None
+        self.__number = None
+        self.__pull_request = None
+        self.__state = None
+        self.__title = None
+        self.__updated_at = None
+        self.__url = None
+        self.__user = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

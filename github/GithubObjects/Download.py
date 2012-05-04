@@ -111,6 +111,9 @@ class Download( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def delete( self ):
+        pass
+
     def __initAttributes( self ):
         self.__accesskeyid = None
         self.__acl = None
@@ -147,9 +150,6 @@ class Download( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

@@ -56,32 +56,6 @@ class Hook( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def __initAttributes( self ):
-        self.__active = None
-        self.__config = None
-        self.__created_at = None
-        self.__events = None
-        self.__id = None
-        self.__last_response = None
-        self.__name = None
-        self.__updated_at = None
-        self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def delete( self ):
         pass
 
@@ -108,6 +82,32 @@ class Hook( object ):
 
     def test( self ):
         pass
+
+    def __initAttributes( self ):
+        self.__active = None
+        self.__config = None
+        self.__created_at = None
+        self.__events = None
+        self.__id = None
+        self.__last_response = None
+        self.__name = None
+        self.__updated_at = None
+        self.__url = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

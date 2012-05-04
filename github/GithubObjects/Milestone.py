@@ -63,33 +63,6 @@ class Milestone( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def __initAttributes( self ):
-        self.__closed_issues = None
-        self.__created_at = None
-        self.__creator = None
-        self.__description = None
-        self.__due_on = None
-        self.__number = None
-        self.__open_issues = None
-        self.__state = None
-        self.__title = None
-        self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def delete( self ):
         pass
 
@@ -122,6 +95,33 @@ class Milestone( object ):
             Label.Label( self.__github, element, lazy = True )
             for element in result
         ]
+
+    def __initAttributes( self ):
+        self.__closed_issues = None
+        self.__created_at = None
+        self.__creator = None
+        self.__description = None
+        self.__due_on = None
+        self.__number = None
+        self.__open_issues = None
+        self.__state = None
+        self.__title = None
+        self.__url = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

@@ -43,29 +43,6 @@ class Team( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def __initAttributes( self ):
-        self.__id = None
-        self.__members_count = None
-        self.__name = None
-        self.__permission = None
-        self.__repos_count = None
-        self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def add_to_members( self, member ):
         result = self.__github._statusRequest(
             "PUT",
@@ -156,6 +133,29 @@ class Team( object ):
             None,
             None
         )
+
+    def __initAttributes( self ):
+        self.__id = None
+        self.__members_count = None
+        self.__name = None
+        self.__permission = None
+        self.__repos_count = None
+        self.__url = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

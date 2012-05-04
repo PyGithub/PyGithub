@@ -84,37 +84,6 @@ class Gist( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
-    def __initAttributes( self ):
-        self.__comments = None
-        self.__created_at = None
-        self.__description = None
-        self.__files = None
-        self.__forks = None
-        self.__git_pull_url = None
-        self.__git_push_url = None
-        self.__history = None
-        self.__html_url = None
-        self.__id = None
-        self.__public = None
-        self.__updated_at = None
-        self.__url = None
-        self.__user = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def create_comment( self, body ):
         pass
 
@@ -162,6 +131,37 @@ class Gist( object ):
 
     def set_starred( self ):
         pass
+
+    def __initAttributes( self ):
+        self.__comments = None
+        self.__created_at = None
+        self.__description = None
+        self.__files = None
+        self.__forks = None
+        self.__git_pull_url = None
+        self.__git_push_url = None
+        self.__history = None
+        self.__html_url = None
+        self.__id = None
+        self.__public = None
+        self.__updated_at = None
+        self.__url = None
+        self.__user = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

@@ -54,6 +54,21 @@ class Commit( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def create_comment( self, body, commit_id = None, line = None, path = None, position = None ):
+        pass
+
+    def get_comments( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.url + "/comments",
+            None,
+            None
+        )
+        return [
+            CommitComment.CommitComment( self.__github, element, lazy = True )
+            for element in result
+        ]
+
     def __initAttributes( self ):
         self.__author = None
         self.__commit = None
@@ -78,21 +93,6 @@ class Commit( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def create_comment( self, body, commit_id = None, line = None, path = None, position = None ):
-        pass
-
-    def get_comments( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
-        return [
-            CommitComment.CommitComment( self.__github, element, lazy = True )
-            for element in result
-        ]
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

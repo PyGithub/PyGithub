@@ -26,6 +26,23 @@ class GitRef( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def delete( self ):
+        pass
+
+    def edit( self, sha, force = None ):
+        post_parameters = {
+            "sha": sha,
+        }
+        if force is not None:
+            post_parameters[ "force" ] = force
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
+
     def __initAttributes( self ):
         self.__object = None
         self.__ref = None
@@ -45,23 +62,6 @@ class GitRef( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
-
-    def edit( self, sha, force = None ):
-        post_parameters = {
-            "sha": sha,
-        }
-        if force is not None:
-            post_parameters[ "force" ] = force
-        result = self.__github._dataRequest(
-            "PATCH",
-            "https://api.github.com/user",
-            None,
-            post_parameters
-        )
-        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

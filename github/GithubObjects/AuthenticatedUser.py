@@ -144,48 +144,6 @@ class AuthenticatedUser( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def __initAttributes( self ):
-        self.__avatar_url = None
-        self.__bio = None
-        self.__blog = None
-        self.__collaborators = None
-        self.__company = None
-        self.__created_at = None
-        self.__disk_usage = None
-        self.__email = None
-        self.__followers = None
-        self.__following = None
-        self.__gravatar_id = None
-        self.__hireable = None
-        self.__html_url = None
-        self.__id = None
-        self.__location = None
-        self.__login = None
-        self.__name = None
-        self.__owned_private_repos = None
-        self.__plan = None
-        self.__private_gists = None
-        self.__public_gists = None
-        self.__public_repos = None
-        self.__total_private_repos = None
-        self.__type = None
-        self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def add_to_emails( self, *emails ):
         pass
 
@@ -436,6 +394,48 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+
+    def __initAttributes( self ):
+        self.__avatar_url = None
+        self.__bio = None
+        self.__blog = None
+        self.__collaborators = None
+        self.__company = None
+        self.__created_at = None
+        self.__disk_usage = None
+        self.__email = None
+        self.__followers = None
+        self.__following = None
+        self.__gravatar_id = None
+        self.__hireable = None
+        self.__html_url = None
+        self.__id = None
+        self.__location = None
+        self.__login = None
+        self.__name = None
+        self.__owned_private_repos = None
+        self.__plan = None
+        self.__private_gists = None
+        self.__public_gists = None
+        self.__public_repos = None
+        self.__total_private_repos = None
+        self.__type = None
+        self.__url = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

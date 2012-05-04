@@ -11,32 +11,12 @@ class {{ class.name }}( object ):
         if not lazy:
             self.__complete()
 
-{% for attribute in class.attributes %}
+{% for attribute in class.attributes|dictsort:"name" %}
     @property
     def {{ attribute.name }}( self ):
         self.__completeIfNeeded( self.__{{ attribute.name }} )
         return self.__{{ attribute.name }}
 {% endfor %}
-
-    def __initAttributes( self ):
-{% for attribute in class.attributes %}
-        self.__{{ attribute.name }} = None
-{% endfor %}
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
 
 {% for method in class.methods|dictsort:"name" %}
     def {{ method.name|join:"_" }}( {% include "GithubObject.Parameters.py" with function=method only %} ):
@@ -96,6 +76,26 @@ class {{ class.name }}( object ):
         pass
 {% endif %}
 {% endfor %}
+
+    def __initAttributes( self ):
+{% for attribute in class.attributes %}
+        self.__{{ attribute.name }} = None
+{% endfor %}
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

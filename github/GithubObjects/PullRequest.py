@@ -145,49 +145,6 @@ class PullRequest( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
-    def __initAttributes( self ):
-        self.__additions = None
-        self.__base = None
-        self.__body = None
-        self.__changed_files = None
-        self.__closed_at = None
-        self.__comments = None
-        self.__commits = None
-        self.__created_at = None
-        self.__deletions = None
-        self.__diff_url = None
-        self.__head = None
-        self.__html_url = None
-        self.__id = None
-        self.__issue_url = None
-        self.__mergeable = None
-        self.__merged = None
-        self.__merged_at = None
-        self.__merged_by = None
-        self.__number = None
-        self.__patch_url = None
-        self.__review_comments = None
-        self.__state = None
-        self.__title = None
-        self.__updated_at = None
-        self.__url = None
-        self.__user = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        result = self.__github._dataRequest(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( result )
-        self.__completed = True
-
     def edit( self, title = None, body = None, state = None ):
         post_parameters = {
         }
@@ -249,6 +206,49 @@ class PullRequest( object ):
 
     def merge( self, commit_message = None ):
         pass
+
+    def __initAttributes( self ):
+        self.__additions = None
+        self.__base = None
+        self.__body = None
+        self.__changed_files = None
+        self.__closed_at = None
+        self.__comments = None
+        self.__commits = None
+        self.__created_at = None
+        self.__deletions = None
+        self.__diff_url = None
+        self.__head = None
+        self.__html_url = None
+        self.__id = None
+        self.__issue_url = None
+        self.__mergeable = None
+        self.__merged = None
+        self.__merged_at = None
+        self.__merged_by = None
+        self.__number = None
+        self.__patch_url = None
+        self.__review_comments = None
+        self.__state = None
+        self.__title = None
+        self.__updated_at = None
+        self.__url = None
+        self.__user = None
+
+    def __completeIfNeeded( self, testedAttribute ):
+        if not self.__completed and testedAttribute is None:
+            self.__complete()
+
+    # @todo Do not generate __complete if type has no url attribute
+    def __complete( self ):
+        result = self.__github._dataRequest(
+            "GET",
+            self.__url,
+            None,
+            None
+        )
+        self.__useAttributes( result )
+        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

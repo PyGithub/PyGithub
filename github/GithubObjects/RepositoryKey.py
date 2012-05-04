@@ -31,6 +31,22 @@ class RepositoryKey( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
+    def delete( self ):
+        pass
+
+    def edit( self, title, key ):
+        post_parameters = {
+            "title": title,
+            "key": key,
+        }
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
+
     def __initAttributes( self ):
         self.__id = None
         self.__key = None
@@ -51,22 +67,6 @@ class RepositoryKey( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
-
-    def edit( self, title, key ):
-        post_parameters = {
-            "title": title,
-            "key": key,
-        }
-        result = self.__github._dataRequest(
-            "PATCH",
-            "https://api.github.com/user",
-            None,
-            post_parameters
-        )
-        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

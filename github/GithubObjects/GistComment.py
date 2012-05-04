@@ -42,6 +42,21 @@ class GistComment( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
+    def delete( self ):
+        pass
+
+    def edit( self, body ):
+        post_parameters = {
+            "body": body,
+        }
+        result = self.__github._dataRequest(
+            "PATCH",
+            "https://api.github.com/user",
+            None,
+            post_parameters
+        )
+        self.__useAttributes( result )
+
     def __initAttributes( self ):
         self.__body = None
         self.__created_at = None
@@ -64,21 +79,6 @@ class GistComment( object ):
         )
         self.__useAttributes( result )
         self.__completed = True
-
-    def delete( self ):
-        pass
-
-    def edit( self, body ):
-        post_parameters = {
-            "body": body,
-        }
-        result = self.__github._dataRequest(
-            "PATCH",
-            "https://api.github.com/user",
-            None,
-            post_parameters
-        )
-        self.__useAttributes( result )
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
