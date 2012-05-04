@@ -167,7 +167,7 @@ class AuthenticatedUser( object ):
         pass
 
     def create_fork( self, repo ):
-        result = self.__github._Request(
+        result = self.__github._statusRequest(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,

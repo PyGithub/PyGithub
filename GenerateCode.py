@@ -10,7 +10,8 @@ import django.template.loader
 django.conf.settings.configure(
     TEMPLATE_DIRS = (
         "CodeGenerator/templates",
-    )
+    ),
+    TEMPLATE_STRING_IF_INVALID = "We have a logic error in our template or API description",
 )
 
 description = json.load( open( "JsonDescriptionOfGithubApiV3/description.001.normalized.json" ) )

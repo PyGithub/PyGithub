@@ -20,65 +20,16 @@ class {{ class.name }}( object ):
 
 {% for method in class.methods|dictsort:"name" %}
     def {{ method.name|join:"_" }}( {% include "GithubObject.Parameters.py" with function=method only %} ):
-{% if method.request %}
-
-{% if method.request.post_parameters %}
-        post_parameters = {
-{% for parameter in method.mandatory_parameters %}
-            "{{ parameter.name }}": {{ parameter.name }},
-{% endfor %}
-        }
-
-{% for parameter in method.optional_parameters %}
-        if {{ parameter.name }} is not None:
-            post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
-{% endfor %}
-
-{% endif %}
-
-        result = self.__github._{{ method.request.information }}Request(
-            "{{ method.request.verb }}",
-            {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
-            None,
-{% if method.request.post_parameters %}
-            post_parameters
-{% else %}
-            None
-{% endif %}
-        )
-
-{% if method.is_mutation %}
-        self.__useAttributes( result )
-{% endif %}
-
-{% if method.type.simple %}
-
-{% if method.type.name == "bool" %}
-        return result == 204
-{% endif %}
-
-{% else %}
-
-{% if method.type.cardinality == "scalar" %}
-        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__github, result, lazy = True )
-{% endif %}
-
-{% if method.type.cardinality == "list" %}
-        return [
-            {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__github, element, lazy = True )
-            for element in result
-        ]
-{% endif %}
-
-{% endif %}
-
-{% else %}
+    {% if method.request %}
+        {% include "GithubObject.MethodBody.DoRequest.py" %}
+        {% include "GithubObject.MethodBody.UseResult.py" %}
+    {% else %}
         pass
-{% endif %}
+    {% endif %}
 {% endfor %}
 
     def __initAttributes( self ):
-{% for attribute in class.attributes %}
+{% for attribute in class.attributes|dictsort:"name" %}
         self.__{{ attribute.name }} = None
 {% endfor %}
 
@@ -99,7 +50,7 @@ class {{ class.name }}( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-{% for attribute in class.attributes %}
+{% for attribute in class.attributes|dictsort:"name" %}
         if "{{ attribute.name }}" in attributes:
 {% if attribute.type.simple %}
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]

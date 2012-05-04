@@ -181,7 +181,8 @@
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
                             { "type": "constant", "value": "/forks" }
-                        ]
+                        ],
+                        "information": "status"
                     }
                 },
                 {

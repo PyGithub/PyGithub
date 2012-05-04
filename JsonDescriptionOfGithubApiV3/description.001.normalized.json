@@ -1311,6 +1311,7 @@
                                 "value": "/forks"
                             }
                         ], 
+                        "information": "status", 
                         "verb": "POST"
                     }, 
                     "optional_parameters": [], 
