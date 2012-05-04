@@ -176,7 +176,7 @@
                     "request": {
                         "verb": "POST",
                         "url": [
-                            { "type": "constant", "value": "/repos/" },
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
@@ -894,7 +894,18 @@
                     "type": "Repository",
                     "mandatory_parameters": [
                         { "name": "repo", "type": "Repository" }
-                    ]
+                    ],
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "argument", "value": [ "repo", "owner", "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "repo", "name" ] },
+                            { "type": "constant", "value": "/forks" }
+                        ],
+                        "information": "status"
+                    }
                 }
             ]
         },

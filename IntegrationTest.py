@@ -242,23 +242,23 @@ class IntegrationTest:
         com1.edit( body = "Comment edited by PyGithub" )
         self.printList( "Comments", c.get_comments(), lambda c: c.body )
 
-    # def testCreateForkForOrganization( self ):
-        # o = self.g.get_organization( self.cobayeOrganization )
-        # r = self.g.get_user().get_repo( "TestPyGithub" )
-        # rf = o.create_fork( r )
-        # print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
+    def testCreateForkForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        r = self.g.get_user().get_repo( "TestPyGithub" )
+        rf = o.create_fork( r )
+        print r.owner.login + "/" + r.name, "->", rf.owner.login + "/" + rf.name
 
-    # def testCreateRepoForOrganization( self ):
-        # o = self.g.get_organization( self.cobayeOrganization )
-        # self.printList( "Repos", o.get_repos(), lambda r: r.name )
-        # r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
-        # self.printList( "Repos", o.get_repos(), lambda r: r.name )
+    def testCreateRepoForOrganization( self ):
+        o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
+        r = o.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", o.get_repos(), lambda r: r.name )
 
-    # def testCreateRepoForUser( self ):
-        # u = self.g.get_user()
-        # self.printList( "Repos", u.get_repos(), lambda r: r.name )
-        # r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
-        # self.printList( "Repos", u.get_repos(), lambda r: r.name )
+    def testCreateRepoForUser( self ):
+        u = self.g.get_user()
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
+        r = u.create_repo( "CreatedByPyGithub", has_wiki = False )
+        self.printList( "Repos", u.get_repos(), lambda r: r.name )
 
     # def testDownloads( self ):
         # r = self.g.get_user().get_repo( "TestPyGithub" )

@@ -144,7 +144,13 @@ class Organization( object ):
         )
 
     def create_fork( self, repo ):
-        pass
+        status, headers, data = self.__requester.request(
+            "POST",
+            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            None,
+            None
+        )
+        return Repository.Repository( self.__requester, data, lazy = True )
 
     def create_repo( self, name, description = None, homepage = None, private = None, has_issues = None, has_wiki = None, has_downloads = None, team_id = None ):
         post_parameters = {

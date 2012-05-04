@@ -183,7 +183,7 @@ class AuthenticatedUser( object ):
     def create_fork( self, repo ):
         status, headers, data = self.__requester.request(
             "POST",
-            "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
             None
         )

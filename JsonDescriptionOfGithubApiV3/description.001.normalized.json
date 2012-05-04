@@ -1353,7 +1353,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "/repos/"
+                                "value": "https://api.github.com/repos/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5685,6 +5685,39 @@
                         "create", 
                         "fork"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/repos/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "repo", 
+                                    "owner", 
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "repo", 
+                                    "name"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/forks"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
