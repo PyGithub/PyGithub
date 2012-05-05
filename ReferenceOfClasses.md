@@ -783,7 +783,6 @@ Attributes
 
 Comments
 --------
-* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
 * `get_comment( id )`: `PullRequestComment`
     * `id`
 * `get_comments()`: list of `PullRequestComment`
@@ -1078,7 +1077,6 @@ Modification
 
 Pulls
 -----
-* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
 * `get_pull( number )`: `PullRequest`
     * `number`
 * `get_pulls( [state] )`: list of `PullRequest`

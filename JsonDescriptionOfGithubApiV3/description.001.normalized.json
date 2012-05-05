@@ -4906,6 +4906,21 @@
                         "public", 
                         "events"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/events/public"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -4922,6 +4937,21 @@
                         "received", 
                         "events"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/received_events"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -4939,6 +4969,21 @@
                         "received", 
                         "events"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/received_events/public"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 

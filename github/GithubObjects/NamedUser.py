@@ -238,13 +238,46 @@ class NamedUser( object ):
         )
 
     def get_public_events( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/events/public",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_public_received_events( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/received_events/public",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_received_events( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/received_events",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(

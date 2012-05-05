@@ -3,6 +3,7 @@ import GithubObjects.AuthenticatedUser
 import GithubObjects.NamedUser
 import GithubObjects.Organization
 import GithubObjects.Gist
+import GithubObjects.PaginatedList
 
 class Github:
     def __init__( self, login, password ):
@@ -33,9 +34,10 @@ class Github:
         return GithubObjects.Gist.Gist( self.__requester, { "id": id }, lazy = False )
 
     def get_gists( self ):
-        status, headers, data = self.__requester.request( "GET", "/gists/public", None, None )
-        return [
-            GithubObjects.Gist.Gist( self.__requester, attributes, lazy = True )
-            for attributes
-            in data
-        ]
+        status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None, None )
+        return GithubObjects.PaginatedList.PaginatedList(
+            GithubObjects.Gist.Gist,
+            self.__requester,
+            headers,
+            data
+        )

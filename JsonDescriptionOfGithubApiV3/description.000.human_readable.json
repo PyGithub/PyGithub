@@ -777,17 +777,38 @@
                 {
                     "name": [ "get", "public", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" }
+                    "type": { "cardinality": "list", "name": "Event" },
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/events/public" }
+                        ]
+                    }
                 },
                 {
                     "name": [ "get", "received", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" }
+                    "type": { "cardinality": "list", "name": "Event" },
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/received_events" }
+                        ]
+                    }
                 },
                 {
                     "name": [ "get", "public", "received", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" }
+                    "type": { "cardinality": "list", "name": "Event" },
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/received_events/public" }
+                        ]
+                    }
                 }
             ]
         },

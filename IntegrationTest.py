@@ -335,16 +335,16 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
-    # @todo Restore correct pagination
-    # def testEvents( self ):
-        # self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
-        # self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
-        # self.printList( "User public received events", self.g.get_user( self.cobayeUser ).get_public_received_events(), lambda e: e.type )
-        # self.printList( "User received events", self.g.get_user( self.cobayeUser ).get_received_events(), lambda e: e.type )
+    # @todo Custom url /events instead of /user/events
+    def testEvents( self ):
+        self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
+        self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
+        self.printList( "User public received events", self.g.get_user( self.cobayeUser ).get_public_received_events(), lambda e: e.type )
+        self.printList( "User received events", self.g.get_user( self.cobayeUser ).get_received_events(), lambda e: e.type )
 
-        # self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
+        self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
 
-        # self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
+        self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
         # o = self.g.get_organization( self.cobayeOrganization )
         # self.printList( "Organization events", self.g.get_user().get_organization_events( o ), lambda e: e.type )
 
@@ -398,8 +398,8 @@ class IntegrationTest:
         # g.delete()
         # self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
-    # def testGistsAll( self ):
-        # self.printList( "Gists", self.g.get_gists(), lambda g: g.description )
+    def testGistsAll( self ):
+        self.printList( "Gists", self.g.get_gists(), lambda g: g.description )
 
     # @todo custom url/repos/BeaverSoftware/TestPyGithub/git/refs/heads/master instead of /repos/BeaverSoftware/TestPyGithub/git_refs/refs/heads/master
     # def testGitObjects( self ):
