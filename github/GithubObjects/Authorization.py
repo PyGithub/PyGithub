@@ -119,21 +119,21 @@ class Authorization( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "app" in attributes:
+        if "app" in attributes and attributes[ "app" ] is not None:
             self.__app = attributes[ "app" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "note" in attributes:
+        if "note" in attributes and attributes[ "note" ] is not None:
             self.__note = attributes[ "note" ]
-        if "note_url" in attributes:
+        if "note_url" in attributes and attributes[ "note_url" ] is not None:
             self.__note_url = attributes[ "note_url" ]
-        if "scopes" in attributes:
+        if "scopes" in attributes and attributes[ "scopes" ] is not None:
             self.__scopes = attributes[ "scopes" ]
-        if "token" in attributes:
+        if "token" in attributes and attributes[ "token" ] is not None:
             self.__token = attributes[ "token" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

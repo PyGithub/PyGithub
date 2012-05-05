@@ -75,9 +75,9 @@ class Label( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "color" in attributes:
+        if "color" in attributes and attributes[ "color" ] is not None:
             self.__color = attributes[ "color" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

@@ -131,7 +131,7 @@ class Gist( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments/" + str( id ),
+            str( self.url ) + "/comments" + "/" + str( id ),
             None,
             None
         )
@@ -193,31 +193,31 @@ class Gist( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "comments" in attributes:
+        if "comments" in attributes and attributes[ "comments" ] is not None:
             self.__comments = attributes[ "comments" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "description" in attributes:
+        if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]
-        if "files" in attributes:
+        if "files" in attributes and attributes[ "files" ] is not None:
             self.__files = attributes[ "files" ]
-        if "forks" in attributes:
+        if "forks" in attributes and attributes[ "forks" ] is not None:
             self.__forks = attributes[ "forks" ]
-        if "git_pull_url" in attributes:
+        if "git_pull_url" in attributes and attributes[ "git_pull_url" ] is not None:
             self.__git_pull_url = attributes[ "git_pull_url" ]
-        if "git_push_url" in attributes:
+        if "git_push_url" in attributes and attributes[ "git_push_url" ] is not None:
             self.__git_push_url = attributes[ "git_push_url" ]
-        if "history" in attributes:
+        if "history" in attributes and attributes[ "history" ] is not None:
             self.__history = attributes[ "history" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "public" in attributes:
+        if "public" in attributes and attributes[ "public" ] is not None:
             self.__public = attributes[ "public" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "user" in attributes:
+        if "user" in attributes and attributes[ "user" ] is not None:
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

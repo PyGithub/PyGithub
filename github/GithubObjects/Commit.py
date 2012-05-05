@@ -121,19 +121,19 @@ class Commit( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "author" in attributes:
+        if "author" in attributes and attributes[ "author" ] is not None:
             self.__author = NamedUser.NamedUser( self.__requester, attributes[ "author" ], lazy = True )
-        if "commit" in attributes:
+        if "commit" in attributes and attributes[ "commit" ] is not None:
             self.__commit = GitCommit.GitCommit( self.__requester, attributes[ "commit" ], lazy = True )
-        if "committer" in attributes:
+        if "committer" in attributes and attributes[ "committer" ] is not None:
             self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], lazy = True )
-        if "files" in attributes:
+        if "files" in attributes and attributes[ "files" ] is not None:
             self.__files = attributes[ "files" ]
-        if "parents" in attributes:
+        if "parents" in attributes and attributes[ "parents" ] is not None:
             self.__parents = attributes[ "parents" ]
-        if "sha" in attributes:
+        if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
-        if "stats" in attributes:
+        if "stats" in attributes and attributes[ "stats" ] is not None:
             self.__stats = attributes[ "stats" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

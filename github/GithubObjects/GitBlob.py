@@ -66,13 +66,13 @@ class GitBlob( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "content" in attributes:
+        if "content" in attributes and attributes[ "content" ] is not None:
             self.__content = attributes[ "content" ]
-        if "encoding" in attributes:
+        if "encoding" in attributes and attributes[ "encoding" ] is not None:
             self.__encoding = attributes[ "encoding" ]
-        if "sha" in attributes:
+        if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
-        if "size" in attributes:
+        if "size" in attributes and attributes[ "size" ] is not None:
             self.__size = attributes[ "size" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

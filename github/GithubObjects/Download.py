@@ -164,43 +164,43 @@ class Download( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "accesskeyid" in attributes:
+        if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None:
             self.__accesskeyid = attributes[ "accesskeyid" ]
-        if "acl" in attributes:
+        if "acl" in attributes and attributes[ "acl" ] is not None:
             self.__acl = attributes[ "acl" ]
-        if "bucket" in attributes:
+        if "bucket" in attributes and attributes[ "bucket" ] is not None:
             self.__bucket = attributes[ "bucket" ]
-        if "content_type" in attributes:
+        if "content_type" in attributes and attributes[ "content_type" ] is not None:
             self.__content_type = attributes[ "content_type" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "description" in attributes:
+        if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]
-        if "download_count" in attributes:
+        if "download_count" in attributes and attributes[ "download_count" ] is not None:
             self.__download_count = attributes[ "download_count" ]
-        if "expirationdate" in attributes:
+        if "expirationdate" in attributes and attributes[ "expirationdate" ] is not None:
             self.__expirationdate = attributes[ "expirationdate" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "mime_type" in attributes:
+        if "mime_type" in attributes and attributes[ "mime_type" ] is not None:
             self.__mime_type = attributes[ "mime_type" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "path" in attributes:
+        if "path" in attributes and attributes[ "path" ] is not None:
             self.__path = attributes[ "path" ]
-        if "policy" in attributes:
+        if "policy" in attributes and attributes[ "policy" ] is not None:
             self.__policy = attributes[ "policy" ]
-        if "prefix" in attributes:
+        if "prefix" in attributes and attributes[ "prefix" ] is not None:
             self.__prefix = attributes[ "prefix" ]
-        if "redirect" in attributes:
+        if "redirect" in attributes and attributes[ "redirect" ] is not None:
             self.__redirect = attributes[ "redirect" ]
-        if "s3_url" in attributes:
+        if "s3_url" in attributes and attributes[ "s3_url" ] is not None:
             self.__s3_url = attributes[ "s3_url" ]
-        if "signature" in attributes:
+        if "signature" in attributes and attributes[ "signature" ] is not None:
             self.__signature = attributes[ "signature" ]
-        if "size" in attributes:
+        if "size" in attributes and attributes[ "size" ] is not None:
             self.__size = attributes[ "size" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

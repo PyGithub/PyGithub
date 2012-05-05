@@ -72,15 +72,15 @@ class GitTag( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "message" in attributes:
+        if "message" in attributes and attributes[ "message" ] is not None:
             self.__message = attributes[ "message" ]
-        if "object" in attributes:
+        if "object" in attributes and attributes[ "object" ] is not None:
             self.__object = attributes[ "object" ]
-        if "sha" in attributes:
+        if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
-        if "tag" in attributes:
+        if "tag" in attributes and attributes[ "tag" ] is not None:
             self.__tag = attributes[ "tag" ]
-        if "tagger" in attributes:
+        if "tagger" in attributes and attributes[ "tagger" ] is not None:
             self.__tagger = attributes[ "tagger" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

@@ -52,7 +52,7 @@ class Team( object ):
     def add_to_members( self, member ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/members/" + str( member._identity ),
+            str( self.url ) + "/members" + "/" + str( member._identity ),
             None,
             None
         )
@@ -60,7 +60,7 @@ class Team( object ):
     def add_to_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            str( self.url ) + "/repos" + "/" + str( repo._identity ),
             None,
             None
         )
@@ -118,7 +118,7 @@ class Team( object ):
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/members/" + str( member._identity ),
+            str( self.url ) + "/members" + "/" + str( member._identity ),
             None,
             None
         )
@@ -127,7 +127,7 @@ class Team( object ):
     def has_in_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            str( self.url ) + "/repos" + "/" + str( repo._identity ),
             None,
             None
         )
@@ -136,7 +136,7 @@ class Team( object ):
     def remove_from_members( self, member ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/members/" + str( member._identity ),
+            str( self.url ) + "/members" + "/" + str( member._identity ),
             None,
             None
         )
@@ -144,7 +144,7 @@ class Team( object ):
     def remove_from_repos( self, repo ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            str( self.url ) + "/repos" + "/" + str( repo._identity ),
             None,
             None
         )
@@ -174,15 +174,15 @@ class Team( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "members_count" in attributes:
+        if "members_count" in attributes and attributes[ "members_count" ] is not None:
             self.__members_count = attributes[ "members_count" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "permission" in attributes:
+        if "permission" in attributes and attributes[ "permission" ] is not None:
             self.__permission = attributes[ "permission" ]
-        if "repos_count" in attributes:
+        if "repos_count" in attributes and attributes[ "repos_count" ] is not None:
             self.__repos_count = attributes[ "repos_count" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

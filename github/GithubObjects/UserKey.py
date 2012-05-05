@@ -83,11 +83,11 @@ class UserKey( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "key" in attributes:
+        if "key" in attributes and attributes[ "key" ] is not None:
             self.__key = attributes[ "key" ]
-        if "title" in attributes:
+        if "title" in attributes and attributes[ "title" ] is not None:
             self.__title = attributes[ "title" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

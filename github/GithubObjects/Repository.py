@@ -191,7 +191,7 @@ class Repository( object ):
     def add_to_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
             None,
             None
         )
@@ -427,7 +427,7 @@ class Repository( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments/" + str( id ),
+            str( self.url ) + "/comments" + "/" + str( id ),
             None,
             None
         )
@@ -450,7 +450,7 @@ class Repository( object ):
     def get_commit( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/commits/" + str( sha ),
+            str( self.url ) + "/commits" + "/" + str( sha ),
             None,
             None
         )
@@ -487,7 +487,7 @@ class Repository( object ):
     def get_download( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/downloads/" + str( id ),
+            str( self.url ) + "/downloads" + "/" + str( id ),
             None,
             None
         )
@@ -538,7 +538,7 @@ class Repository( object ):
     def get_git_blob( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_blobs/" + str( sha ),
+            str( self.url ) + "/git_blobs" + "/" + str( sha ),
             None,
             None
         )
@@ -547,7 +547,7 @@ class Repository( object ):
     def get_git_commit( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_commits/" + str( sha ),
+            str( self.url ) + "/git_commits" + "/" + str( sha ),
             None,
             None
         )
@@ -556,7 +556,7 @@ class Repository( object ):
     def get_git_ref( self, ref ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_refs/" + str( ref ),
+            str( self.url ) + "/git_refs" + "/" + str( ref ),
             None,
             None
         )
@@ -579,7 +579,7 @@ class Repository( object ):
     def get_git_tag( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_tags/" + str( sha ),
+            str( self.url ) + "/git_tags" + "/" + str( sha ),
             None,
             None
         )
@@ -588,7 +588,7 @@ class Repository( object ):
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_trees/" + str( sha ),
+            str( self.url ) + "/git_trees" + "/" + str( sha ),
             None,
             None
         )
@@ -597,7 +597,7 @@ class Repository( object ):
     def get_hook( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/hooks/" + str( id ),
+            str( self.url ) + "/hooks" + "/" + str( id ),
             None,
             None
         )
@@ -620,7 +620,7 @@ class Repository( object ):
     def get_issue( self, number ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues/" + str( number ),
+            str( self.url ) + "/issues" + "/" + str( number ),
             None,
             None
         )
@@ -643,7 +643,7 @@ class Repository( object ):
     def get_issues_event( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues_events/" + str( id ),
+            str( self.url ) + "/issues/events" + "/" + str( id ),
             None,
             None
         )
@@ -652,7 +652,7 @@ class Repository( object ):
     def get_issues_events( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues_events",
+            str( self.url ) + "/issues/events",
             None,
             None
         )
@@ -666,7 +666,7 @@ class Repository( object ):
     def get_key( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/keys/" + str( id ),
+            str( self.url ) + "/keys" + "/" + str( id ),
             None,
             None
         )
@@ -689,7 +689,7 @@ class Repository( object ):
     def get_label( self, name ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/labels/" + str( name ),
+            str( self.url ) + "/labels" + "/" + str( name ),
             None,
             None
         )
@@ -715,7 +715,7 @@ class Repository( object ):
     def get_milestone( self, number ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/milestones/" + str( number ),
+            str( self.url ) + "/milestones" + "/" + str( number ),
             None,
             None
         )
@@ -736,12 +736,23 @@ class Repository( object ):
         )
 
     def get_network_events( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            "https://api.github.com/networks/" + str( self.owner.login ) + "/" + str( self.name ) + "/events",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_pull( self, number ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/pulls/" + str( number ),
+            str( self.url ) + "/pulls" + "/" + str( number ),
             None,
             None
         )
@@ -806,7 +817,7 @@ class Repository( object ):
     def has_in_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
             None,
             None
         )
@@ -815,7 +826,7 @@ class Repository( object ):
     def remove_from_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
             None,
             None
         )
@@ -874,63 +885,63 @@ class Repository( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "clone_url" in attributes:
+        if "clone_url" in attributes and attributes[ "clone_url" ] is not None:
             self.__clone_url = attributes[ "clone_url" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "description" in attributes:
+        if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]
-        if "fork" in attributes:
+        if "fork" in attributes and attributes[ "fork" ] is not None:
             self.__fork = attributes[ "fork" ]
-        if "forks" in attributes:
+        if "forks" in attributes and attributes[ "forks" ] is not None:
             self.__forks = attributes[ "forks" ]
-        if "git_url" in attributes:
+        if "git_url" in attributes and attributes[ "git_url" ] is not None:
             self.__git_url = attributes[ "git_url" ]
-        if "has_downloads" in attributes:
+        if "has_downloads" in attributes and attributes[ "has_downloads" ] is not None:
             self.__has_downloads = attributes[ "has_downloads" ]
-        if "has_issues" in attributes:
+        if "has_issues" in attributes and attributes[ "has_issues" ] is not None:
             self.__has_issues = attributes[ "has_issues" ]
-        if "has_wiki" in attributes:
+        if "has_wiki" in attributes and attributes[ "has_wiki" ] is not None:
             self.__has_wiki = attributes[ "has_wiki" ]
-        if "homepage" in attributes:
+        if "homepage" in attributes and attributes[ "homepage" ] is not None:
             self.__homepage = attributes[ "homepage" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "language" in attributes:
+        if "language" in attributes and attributes[ "language" ] is not None:
             self.__language = attributes[ "language" ]
-        if "master_branch" in attributes:
+        if "master_branch" in attributes and attributes[ "master_branch" ] is not None:
             self.__master_branch = attributes[ "master_branch" ]
-        if "mirror_url" in attributes:
+        if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None:
             self.__mirror_url = attributes[ "mirror_url" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "open_issues" in attributes:
+        if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
             self.__open_issues = attributes[ "open_issues" ]
-        if "organization" in attributes:
+        if "organization" in attributes and attributes[ "organization" ] is not None:
             self.__organization = attributes[ "organization" ]
-        if "owner" in attributes:
+        if "owner" in attributes and attributes[ "owner" ] is not None:
             self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], lazy = True )
-        if "parent" in attributes:
+        if "parent" in attributes and attributes[ "parent" ] is not None:
             self.__parent = Repository( self.__requester, attributes[ "parent" ], lazy = True )
-        if "permissions" in attributes:
+        if "permissions" in attributes and attributes[ "permissions" ] is not None:
             self.__permissions = attributes[ "permissions" ]
-        if "private" in attributes:
+        if "private" in attributes and attributes[ "private" ] is not None:
             self.__private = attributes[ "private" ]
-        if "pushed_at" in attributes:
+        if "pushed_at" in attributes and attributes[ "pushed_at" ] is not None:
             self.__pushed_at = attributes[ "pushed_at" ]
-        if "size" in attributes:
+        if "size" in attributes and attributes[ "size" ] is not None:
             self.__size = attributes[ "size" ]
-        if "source" in attributes:
+        if "source" in attributes and attributes[ "source" ] is not None:
             self.__source = Repository( self.__requester, attributes[ "source" ], lazy = True )
-        if "ssh_url" in attributes:
+        if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None:
             self.__ssh_url = attributes[ "ssh_url" ]
-        if "svn_url" in attributes:
+        if "svn_url" in attributes and attributes[ "svn_url" ] is not None:
             self.__svn_url = attributes[ "svn_url" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "watchers" in attributes:
+        if "watchers" in attributes and attributes[ "watchers" ] is not None:
             self.__watchers = attributes[ "watchers" ]

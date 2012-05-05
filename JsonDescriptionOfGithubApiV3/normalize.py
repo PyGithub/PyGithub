@@ -107,7 +107,15 @@ class Function:
 
 class Collection:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "singular_name", "type" ], [ "add_element", "add_several_elements", "create_element", "delete_list", "get_element", "get_list", "has_element", "remove_element", "remove_several_elements", "set_list" ] )
+        checkKeys( desc, [ "name", "singular_name", "type" ], [ "add_element", "add_several_elements", "create_element", "delete_list", "get_element", "get_list", "has_element", "remove_element", "remove_several_elements", "set_list", "url" ] )
+
+        if "url" in desc:
+            self.__url = desc[ "url" ]
+        else:
+            self.__url = [
+                { "type": "attribute", "value": [ "url" ] },
+                { "type": "constant", "value": "/" + desc[ "name" ] },
+            ]
 
         name = desc[ "name" ] if isinstance( desc[ "name" ], list ) else [ desc[ "name" ] ]
         self.methods = list()
@@ -118,9 +126,8 @@ class Collection:
                 {
                     "request": {
                         "verb": "PUT",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                        "url": self.__url + [
+                            { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
@@ -134,10 +141,7 @@ class Collection:
                 {
                     "request": {
                         "verb": "POST",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] },
-                        ],
+                        "url": self.__url,
                         "information": "status",
                         "post_parameters": True
                     }
@@ -150,7 +154,7 @@ class Collection:
                 {
                     "request": {
                         "verb": "POST",
-                        "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
+                        "url": self.__url,
                         "information": "status",
                         "post_parameters": True,
                     }
@@ -179,9 +183,8 @@ class Collection:
                 hack = {
                     "request": {
                         "verb": "GET",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                        "url": self.__url + [
+                            { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ desc[ "get_element" ][ "parameter" ][ "name" ] ] },
                         ],
                         "information": "data",
@@ -200,7 +203,7 @@ class Collection:
                 {
                     "request": {
                         "verb": "GET",
-                        "url": [ { "type": "attribute", "value": [ "url" ] }, { "type": "constant", "value": "/" + desc[ "name" ] } ],
+                        "url": self.__url,
                         "information": "data",
                     }
                 }
@@ -212,9 +215,8 @@ class Collection:
                 {
                     "request": {
                         "verb": "GET",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                        "url": self.__url + [
+                            { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
@@ -228,9 +230,8 @@ class Collection:
                 {
                     "request": {
                         "verb": "DELETE",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] + "/" },
+                        "url": self.__url + [
+                            { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
                         ],
                         "information": "status",
@@ -244,10 +245,7 @@ class Collection:
                 {
                     "request": {
                         "verb": "DELETE",
-                        "url": [
-                            { "type": "attribute", "value": [ "url" ] },
-                            { "type": "constant", "value": "/" + desc[ "name" ] },
-                        ],
+                        "url": self.__url,
                         "information": "status",
                         "post_parameters": True
                     }

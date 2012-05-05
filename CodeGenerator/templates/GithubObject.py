@@ -65,7 +65,7 @@ class {{ class.name }}( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes|dictsort:"name" %}
-        if "{{ attribute.name }}" in attributes:
+        if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None:
 {% if attribute.type.simple %}
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
 {% else %}

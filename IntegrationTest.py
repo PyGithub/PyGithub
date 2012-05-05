@@ -345,15 +345,15 @@ class IntegrationTest:
         self.printList( "Organization events", self.g.get_organization( self.cobayeOrganization ).get_events(), lambda e: e.type )
 
         self.printList( "User events", self.g.get_user().get_events(), lambda e: e.type )
-        # o = self.g.get_organization( self.cobayeOrganization )
-        # self.printList( "Organization events", self.g.get_user().get_organization_events( o ), lambda e: e.type )
+        o = self.g.get_organization( self.cobayeOrganization )
+        self.printList( "Organization events", self.g.get_user().get_organization_events( o ), lambda e: e.type )
 
-        # self.printList( "Repo events", self.g.get_user().get_repo( "TestPyGithub" ).get_events(), lambda e: e.type )
-        # self.printList( "Repo issues events", self.g.get_user().get_repo( "TestPyGithub" ).get_issues_events(), lambda e: e.event )
-        # print self.g.get_user().get_repo( "TestPyGithub" ).get_issues_event( 10693379 ).event
-        # self.printList( "Repo network events", self.g.get_user().get_repo( "TestPyGithub" ).get_network_events(), lambda e: e.type )
+        self.printList( "Repo events", self.g.get_user().get_repo( "TestPyGithub" ).get_events(), lambda e: e.type )
+        self.printList( "Repo issues events", self.g.get_user().get_repo( "TestPyGithub" ).get_issues_events(), lambda e: e.event )
+        print self.g.get_user().get_repo( "TestPyGithub" ).get_issues_event( 10693379 ).event
+        self.printList( "Repo network events", self.g.get_user().get_repo( "TestPyGithub" ).get_network_events(), lambda e: e.type )
 
-        # self.printList( "Issue events", self.g.get_user().get_repo( "TestPyGithub" ).get_issue( 23 ).get_events(), lambda e: e.event )
+        self.printList( "Issue events", self.g.get_user().get_repo( "TestPyGithub" ).get_issue( 23 ).get_events(), lambda e: e.event )
 
     def testFollow( self ):
         cobaye = self.g.get_user( self.cobayeUser )

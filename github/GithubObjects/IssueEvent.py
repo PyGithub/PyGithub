@@ -79,17 +79,17 @@ class IssueEvent( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "actor" in attributes:
+        if "actor" in attributes and attributes[ "actor" ] is not None:
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )
-        if "commit_id" in attributes:
+        if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
             self.__commit_id = attributes[ "commit_id" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "event" in attributes:
+        if "event" in attributes and attributes[ "event" ] is not None:
             self.__event = attributes[ "event" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "issue" in attributes:
+        if "issue" in attributes and attributes[ "issue" ] is not None:
             self.__issue = attributes[ "issue" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

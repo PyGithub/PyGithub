@@ -76,9 +76,9 @@ class GitRef( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "object" in attributes:
+        if "object" in attributes and attributes[ "object" ] is not None:
             self.__object = attributes[ "object" ]
-        if "ref" in attributes:
+        if "ref" in attributes and attributes[ "ref" ] is not None:
             self.__ref = attributes[ "ref" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

@@ -79,17 +79,17 @@ class GitCommit( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "author" in attributes:
+        if "author" in attributes and attributes[ "author" ] is not None:
             self.__author = attributes[ "author" ]
-        if "committer" in attributes:
+        if "committer" in attributes and attributes[ "committer" ] is not None:
             self.__committer = attributes[ "committer" ]
-        if "message" in attributes:
+        if "message" in attributes and attributes[ "message" ] is not None:
             self.__message = attributes[ "message" ]
-        if "parents" in attributes:
+        if "parents" in attributes and attributes[ "parents" ] is not None:
             self.__parents = attributes[ "parents" ]
-        if "sha" in attributes:
+        if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
-        if "tree" in attributes:
+        if "tree" in attributes and attributes[ "tree" ] is not None:
             self.__tree = GitTree.GitTree( self.__requester, attributes[ "tree" ], lazy = True )
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

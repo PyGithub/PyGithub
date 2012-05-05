@@ -90,21 +90,21 @@ class PullRequestFile( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "additions" in attributes:
+        if "additions" in attributes and attributes[ "additions" ] is not None:
             self.__additions = attributes[ "additions" ]
-        if "blob_url" in attributes:
+        if "blob_url" in attributes and attributes[ "blob_url" ] is not None:
             self.__blob_url = attributes[ "blob_url" ]
-        if "changes" in attributes:
+        if "changes" in attributes and attributes[ "changes" ] is not None:
             self.__changes = attributes[ "changes" ]
-        if "deletions" in attributes:
+        if "deletions" in attributes and attributes[ "deletions" ] is not None:
             self.__deletions = attributes[ "deletions" ]
-        if "filename" in attributes:
+        if "filename" in attributes and attributes[ "filename" ] is not None:
             self.__filename = attributes[ "filename" ]
-        if "patch" in attributes:
+        if "patch" in attributes and attributes[ "patch" ] is not None:
             self.__patch = attributes[ "patch" ]
-        if "raw_url" in attributes:
+        if "raw_url" in attributes and attributes[ "raw_url" ] is not None:
             self.__raw_url = attributes[ "raw_url" ]
-        if "sha" in attributes:
+        if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
-        if "status" in attributes:
+        if "status" in attributes and attributes[ "status" ] is not None:
             self.__status = attributes[ "status" ]

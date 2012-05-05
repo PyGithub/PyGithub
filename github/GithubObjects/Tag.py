@@ -61,11 +61,11 @@ class Tag( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "commit" in attributes:
+        if "commit" in attributes and attributes[ "commit" ] is not None:
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], lazy = True )
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "tarball_url" in attributes:
+        if "tarball_url" in attributes and attributes[ "tarball_url" ] is not None:
             self.__tarball_url = attributes[ "tarball_url" ]
-        if "zipball_url" in attributes:
+        if "zipball_url" in attributes and attributes[ "zipball_url" ] is not None:
             self.__zipball_url = attributes[ "zipball_url" ]

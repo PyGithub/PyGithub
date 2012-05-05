@@ -171,7 +171,7 @@ class PullRequest( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments/" + str( id ),
+            str( self.url ) + "/comments" + "/" + str( id ),
             None,
             None
         )
@@ -281,55 +281,55 @@ class PullRequest( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "additions" in attributes:
+        if "additions" in attributes and attributes[ "additions" ] is not None:
             self.__additions = attributes[ "additions" ]
-        if "base" in attributes:
+        if "base" in attributes and attributes[ "base" ] is not None:
             self.__base = attributes[ "base" ]
-        if "body" in attributes:
+        if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
-        if "changed_files" in attributes:
+        if "changed_files" in attributes and attributes[ "changed_files" ] is not None:
             self.__changed_files = attributes[ "changed_files" ]
-        if "closed_at" in attributes:
+        if "closed_at" in attributes and attributes[ "closed_at" ] is not None:
             self.__closed_at = attributes[ "closed_at" ]
-        if "comments" in attributes:
+        if "comments" in attributes and attributes[ "comments" ] is not None:
             self.__comments = attributes[ "comments" ]
-        if "commits" in attributes:
+        if "commits" in attributes and attributes[ "commits" ] is not None:
             self.__commits = attributes[ "commits" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "deletions" in attributes:
+        if "deletions" in attributes and attributes[ "deletions" ] is not None:
             self.__deletions = attributes[ "deletions" ]
-        if "diff_url" in attributes:
+        if "diff_url" in attributes and attributes[ "diff_url" ] is not None:
             self.__diff_url = attributes[ "diff_url" ]
-        if "head" in attributes:
+        if "head" in attributes and attributes[ "head" ] is not None:
             self.__head = attributes[ "head" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "issue_url" in attributes:
+        if "issue_url" in attributes and attributes[ "issue_url" ] is not None:
             self.__issue_url = attributes[ "issue_url" ]
-        if "mergeable" in attributes:
+        if "mergeable" in attributes and attributes[ "mergeable" ] is not None:
             self.__mergeable = attributes[ "mergeable" ]
-        if "merged" in attributes:
+        if "merged" in attributes and attributes[ "merged" ] is not None:
             self.__merged = attributes[ "merged" ]
-        if "merged_at" in attributes:
+        if "merged_at" in attributes and attributes[ "merged_at" ] is not None:
             self.__merged_at = attributes[ "merged_at" ]
-        if "merged_by" in attributes:
+        if "merged_by" in attributes and attributes[ "merged_by" ] is not None:
             self.__merged_by = attributes[ "merged_by" ]
-        if "number" in attributes:
+        if "number" in attributes and attributes[ "number" ] is not None:
             self.__number = attributes[ "number" ]
-        if "patch_url" in attributes:
+        if "patch_url" in attributes and attributes[ "patch_url" ] is not None:
             self.__patch_url = attributes[ "patch_url" ]
-        if "review_comments" in attributes:
+        if "review_comments" in attributes and attributes[ "review_comments" ] is not None:
             self.__review_comments = attributes[ "review_comments" ]
-        if "state" in attributes:
+        if "state" in attributes and attributes[ "state" ] is not None:
             self.__state = attributes[ "state" ]
-        if "title" in attributes:
+        if "title" in attributes and attributes[ "title" ] is not None:
             self.__title = attributes[ "title" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "user" in attributes:
+        if "user" in attributes and attributes[ "user" ] is not None:
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

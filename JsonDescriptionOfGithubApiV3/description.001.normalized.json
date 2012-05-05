@@ -370,7 +370,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/authorizations/"
+                                "value": "/authorizations"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -431,14 +435,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/events"
+                                "value": "https://api.github.com/events"
                             }
                         ], 
                         "information": "data", 
@@ -558,7 +556,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/keys/"
+                                "value": "/keys"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -937,7 +939,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/watched/"
+                                "value": "/watched"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1016,7 +1022,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/watched/"
+                                "value": "/watched"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1064,7 +1074,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/watched/"
+                                "value": "/watched"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1112,7 +1126,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/following/"
+                                "value": "/following"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1191,7 +1209,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/following/"
+                                "value": "/following"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1239,7 +1261,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/following/"
+                                "value": "/following"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1472,9 +1498,9 @@
                     "mandatory_parameters": [
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "Organization"
                             }, 
                             "name": "org"
                         }
@@ -1485,6 +1511,33 @@
                         "organization", 
                         "events"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/users/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/events/orgs/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "org", 
+                                    "login"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -2588,7 +2641,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments/"
+                                "value": "/comments"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -3616,7 +3673,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments/"
+                                "value": "/comments"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -3812,7 +3873,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/labels/"
+                                "value": "/labels"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5356,7 +5421,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members/"
+                                "value": "/members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5404,7 +5473,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members/"
+                                "value": "/members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5452,7 +5525,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members/"
+                                "value": "/public_members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5531,7 +5608,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members/"
+                                "value": "/public_members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5579,7 +5660,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members/"
+                                "value": "/public_members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -6240,7 +6325,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments/"
+                                "value": "/comments"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7067,7 +7156,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators/"
+                                "value": "/collaborators"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7146,7 +7239,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators/"
+                                "value": "/collaborators"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7194,7 +7291,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators/"
+                                "value": "/collaborators"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7241,7 +7342,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments/"
+                                "value": "/comments"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7318,7 +7423,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/commits/"
+                                "value": "/commits"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7509,7 +7618,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/downloads/"
+                                "value": "/downloads"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7697,7 +7810,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_blobs/"
+                                "value": "/git_blobs"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7817,7 +7934,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_commits/"
+                                "value": "/git_commits"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7912,7 +8033,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_refs/"
+                                "value": "/git_refs"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8063,7 +8188,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_tags/"
+                                "value": "/git_tags"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8159,7 +8288,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_trees/"
+                                "value": "/git_trees"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8280,7 +8413,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/hooks/"
+                                "value": "/hooks"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8431,7 +8568,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/issues/"
+                                "value": "/issues"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8573,7 +8714,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/issues_events/"
+                                "value": "/issues/events"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8610,7 +8755,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/issues_events"
+                                "value": "/issues/events"
                             }
                         ], 
                         "information": "data", 
@@ -8699,7 +8844,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/keys/"
+                                "value": "/keys"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8825,7 +8974,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/labels/"
+                                "value": "/labels"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8968,7 +9121,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/milestones/"
+                                "value": "/milestones"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9070,7 +9227,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/pulls/"
+                                "value": "/pulls"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9231,6 +9392,36 @@
                         "network", 
                         "events"
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/networks/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "owner", 
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "name"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/events"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "optional_parameters": [], 
                     "type": {
                         "simple": false, 
@@ -9585,7 +9776,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members/"
+                                "value": "/members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9664,7 +9859,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members/"
+                                "value": "/members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9712,7 +9911,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members/"
+                                "value": "/members"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9760,7 +9963,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos/"
+                                "value": "/repos"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9839,7 +10046,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos/"
+                                "value": "/repos"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9887,7 +10098,11 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos/"
+                                "value": "/repos"
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
                             }, 
                             {
                                 "type": "argument", 

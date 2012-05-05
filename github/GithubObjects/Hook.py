@@ -127,21 +127,21 @@ class Hook( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "active" in attributes:
+        if "active" in attributes and attributes[ "active" ] is not None:
             self.__active = attributes[ "active" ]
-        if "config" in attributes:
+        if "config" in attributes and attributes[ "config" ] is not None:
             self.__config = attributes[ "config" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "events" in attributes:
+        if "events" in attributes and attributes[ "events" ] is not None:
             self.__events = attributes[ "events" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "last_response" in attributes:
+        if "last_response" in attributes and attributes[ "last_response" ] is not None:
             self.__last_response = attributes[ "last_response" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

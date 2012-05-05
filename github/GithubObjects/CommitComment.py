@@ -123,25 +123,25 @@ class CommitComment( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "body" in attributes:
+        if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
-        if "commit_id" in attributes:
+        if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
             self.__commit_id = attributes[ "commit_id" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "line" in attributes:
+        if "line" in attributes and attributes[ "line" ] is not None:
             self.__line = attributes[ "line" ]
-        if "path" in attributes:
+        if "path" in attributes and attributes[ "path" ] is not None:
             self.__path = attributes[ "path" ]
-        if "position" in attributes:
+        if "position" in attributes and attributes[ "position" ] is not None:
             self.__position = attributes[ "position" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "user" in attributes:
+        if "user" in attributes and attributes[ "user" ] is not None:
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

@@ -366,55 +366,55 @@ class NamedUser( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "avatar_url" in attributes:
+        if "avatar_url" in attributes and attributes[ "avatar_url" ] is not None:
             self.__avatar_url = attributes[ "avatar_url" ]
-        if "bio" in attributes:
+        if "bio" in attributes and attributes[ "bio" ] is not None:
             self.__bio = attributes[ "bio" ]
-        if "blog" in attributes:
+        if "blog" in attributes and attributes[ "blog" ] is not None:
             self.__blog = attributes[ "blog" ]
-        if "collaborators" in attributes:
+        if "collaborators" in attributes and attributes[ "collaborators" ] is not None:
             self.__collaborators = attributes[ "collaborators" ]
-        if "company" in attributes:
+        if "company" in attributes and attributes[ "company" ] is not None:
             self.__company = attributes[ "company" ]
-        if "contributions" in attributes:
+        if "contributions" in attributes and attributes[ "contributions" ] is not None:
             self.__contributions = attributes[ "contributions" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "disk_usage" in attributes:
+        if "disk_usage" in attributes and attributes[ "disk_usage" ] is not None:
             self.__disk_usage = attributes[ "disk_usage" ]
-        if "email" in attributes:
+        if "email" in attributes and attributes[ "email" ] is not None:
             self.__email = attributes[ "email" ]
-        if "followers" in attributes:
+        if "followers" in attributes and attributes[ "followers" ] is not None:
             self.__followers = attributes[ "followers" ]
-        if "following" in attributes:
+        if "following" in attributes and attributes[ "following" ] is not None:
             self.__following = attributes[ "following" ]
-        if "gravatar_id" in attributes:
+        if "gravatar_id" in attributes and attributes[ "gravatar_id" ] is not None:
             self.__gravatar_id = attributes[ "gravatar_id" ]
-        if "hireable" in attributes:
+        if "hireable" in attributes and attributes[ "hireable" ] is not None:
             self.__hireable = attributes[ "hireable" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "location" in attributes:
+        if "location" in attributes and attributes[ "location" ] is not None:
             self.__location = attributes[ "location" ]
-        if "login" in attributes:
+        if "login" in attributes and attributes[ "login" ] is not None:
             self.__login = attributes[ "login" ]
-        if "name" in attributes:
+        if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]
-        if "owned_private_repos" in attributes:
+        if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None:
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
-        if "plan" in attributes:
+        if "plan" in attributes and attributes[ "plan" ] is not None:
             self.__plan = attributes[ "plan" ]
-        if "private_gists" in attributes:
+        if "private_gists" in attributes and attributes[ "private_gists" ] is not None:
             self.__private_gists = attributes[ "private_gists" ]
-        if "public_gists" in attributes:
+        if "public_gists" in attributes and attributes[ "public_gists" ] is not None:
             self.__public_gists = attributes[ "public_gists" ]
-        if "public_repos" in attributes:
+        if "public_repos" in attributes and attributes[ "public_repos" ] is not None:
             self.__public_repos = attributes[ "public_repos" ]
-        if "total_private_repos" in attributes:
+        if "total_private_repos" in attributes and attributes[ "total_private_repos" ] is not None:
             self.__total_private_repos = attributes[ "total_private_repos" ]
-        if "type" in attributes:
+        if "type" in attributes and attributes[ "type" ] is not None:
             self.__type = attributes[ "type" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

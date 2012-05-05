@@ -138,23 +138,23 @@ class Milestone( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "closed_issues" in attributes:
+        if "closed_issues" in attributes and attributes[ "closed_issues" ] is not None:
             self.__closed_issues = attributes[ "closed_issues" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "creator" in attributes:
+        if "creator" in attributes and attributes[ "creator" ] is not None:
             self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], lazy = True )
-        if "description" in attributes:
+        if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]
-        if "due_on" in attributes:
+        if "due_on" in attributes and attributes[ "due_on" ] is not None:
             self.__due_on = attributes[ "due_on" ]
-        if "number" in attributes:
+        if "number" in attributes and attributes[ "number" ] is not None:
             self.__number = attributes[ "number" ]
-        if "open_issues" in attributes:
+        if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
             self.__open_issues = attributes[ "open_issues" ]
-        if "state" in attributes:
+        if "state" in attributes and attributes[ "state" ] is not None:
             self.__state = attributes[ "state" ]
-        if "title" in attributes:
+        if "title" in attributes and attributes[ "title" ] is not None:
             self.__title = attributes[ "title" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

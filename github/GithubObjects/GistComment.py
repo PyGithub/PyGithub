@@ -93,15 +93,15 @@ class GistComment( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "body" in attributes:
+        if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "user" in attributes:
+        if "user" in attributes and attributes[ "user" ] is not None:
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

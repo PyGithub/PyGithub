@@ -62,7 +62,7 @@ Events
 ------
 * `get_events()`: list of `Event`
 * `get_organization_events( org )`: list of `Event`
-    * `org`
+    * `org`: `Organization`
 
 Followers
 ---------

@@ -61,7 +61,8 @@
                     "name": "events",
                     "singular_name": "event",
                     "type": "Event",
-                    "get_list": true
+                    "get_list": true,
+                    "url": [ { "type": "constant", "value": "https://api.github.com/events" } ]
                 },
                 {
                     "name": "issues",
@@ -190,8 +191,18 @@
                     "group": "events",
                     "type": { "cardinality": "list", "name": "Event" },
                     "mandatory_parameters": [
-                        { "name": "org", "type": "@todo" }
-                    ]
+                        { "name": "org", "type": "Organization" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/users/" },
+                            { "type": "attribute", "value": [ "login" ] },
+                            { "type": "constant", "value": "/events/orgs/" },
+                            { "type": "argument", "value": [ "org", "login" ] }
+                        ],
+                        "information": "status"
+                    }
                 },
                 {
                     "name": [ "get", "starred", "gists" ],
@@ -1345,7 +1356,11 @@
                     "get_list": true,
                     "get_element": {
                         "parameter": { "name": "id", "type": "@todo" }
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/issues/events" }
+                    ]
                 },
                 {
                     "name": "keys",
@@ -1438,7 +1453,17 @@
                 {
                     "name": [ "get", "network", "events" ],
                     "type": { "cardinality": "list", "name": "Event" },
-                    "group": "events"
+                    "group": "events",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/networks/" },
+                            { "type": "attribute", "value": [ "owner", "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "attribute", "value": [ "name" ] },
+                            { "type": "constant", "value": "/events" }
+                        ]
+                    }
                 },
                 {
                     "name": [ "get", "languages" ],

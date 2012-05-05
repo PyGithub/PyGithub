@@ -157,7 +157,7 @@ class Issue( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments/" + str( id ),
+            str( self.url ) + "/comments" + "/" + str( id ),
             None,
             None
         )
@@ -208,7 +208,7 @@ class Issue( object ):
     def remove_from_labels( self, label ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/labels/" + str( label._identity ),
+            str( self.url ) + "/labels" + "/" + str( label._identity ),
             None,
             None
         )
@@ -252,37 +252,37 @@ class Issue( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "assignee" in attributes:
+        if "assignee" in attributes and attributes[ "assignee" ] is not None:
             self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], lazy = True )
-        if "body" in attributes:
+        if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
-        if "closed_at" in attributes:
+        if "closed_at" in attributes and attributes[ "closed_at" ] is not None:
             self.__closed_at = attributes[ "closed_at" ]
-        if "closed_by" in attributes:
+        if "closed_by" in attributes and attributes[ "closed_by" ] is not None:
             self.__closed_by = attributes[ "closed_by" ]
-        if "comments" in attributes:
+        if "comments" in attributes and attributes[ "comments" ] is not None:
             self.__comments = attributes[ "comments" ]
-        if "created_at" in attributes:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "html_url" in attributes:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes:
+        if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "labels" in attributes:
+        if "labels" in attributes and attributes[ "labels" ] is not None:
             self.__labels = attributes[ "labels" ]
-        if "milestone" in attributes:
+        if "milestone" in attributes and attributes[ "milestone" ] is not None:
             self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], lazy = True )
-        if "number" in attributes:
+        if "number" in attributes and attributes[ "number" ] is not None:
             self.__number = attributes[ "number" ]
-        if "pull_request" in attributes:
+        if "pull_request" in attributes and attributes[ "pull_request" ] is not None:
             self.__pull_request = attributes[ "pull_request" ]
-        if "state" in attributes:
+        if "state" in attributes and attributes[ "state" ] is not None:
             self.__state = attributes[ "state" ]
-        if "title" in attributes:
+        if "title" in attributes and attributes[ "title" ] is not None:
             self.__title = attributes[ "title" ]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes:
+        if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
-        if "user" in attributes:
+        if "user" in attributes and attributes[ "user" ] is not None:
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )
