@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import NamedUser
 import Label
 # This allows None as a valid value for an optional parameter
@@ -101,10 +102,12 @@ class Milestone( object ):
             None,
             None
         )
-        return [
-            Label.Label( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Label.Label,
+            self.__requester,
+            headers,
+            data
+        )
 
     def __initAttributes( self ):
         self.__closed_issues = None

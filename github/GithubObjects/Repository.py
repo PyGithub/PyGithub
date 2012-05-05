@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import GitCommit
 import Team
 import PullRequest
@@ -402,10 +403,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Branch.Branch( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Branch.Branch,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_collaborators( self ):
         status, headers, data = self.__requester.request(
@@ -414,10 +417,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
@@ -435,10 +440,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            CommitComment.CommitComment( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            CommitComment.CommitComment,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_commit( self, sha ):
         status, headers, data = self.__requester.request(
@@ -456,10 +463,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Commit.Commit( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Commit.Commit,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_contributors( self ):
         status, headers, data = self.__requester.request(
@@ -468,10 +477,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_download( self, id ):
         status, headers, data = self.__requester.request(
@@ -489,10 +500,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Download.Download( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Download.Download,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -501,10 +514,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Event.Event( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_forks( self ):
         status, headers, data = self.__requester.request(
@@ -513,10 +528,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_git_blob( self, sha ):
         status, headers, data = self.__requester.request(
@@ -552,10 +569,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            GitRef.GitRef( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            GitRef.GitRef,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_git_tag( self, sha ):
         status, headers, data = self.__requester.request(
@@ -591,10 +610,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Hook.Hook( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Hook.Hook,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_issue( self, number ):
         status, headers, data = self.__requester.request(
@@ -612,10 +633,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Issue.Issue( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Issue.Issue,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_issues_event( self, id ):
         status, headers, data = self.__requester.request(
@@ -633,10 +656,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            IssueEvent.IssueEvent( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            IssueEvent.IssueEvent,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_key( self, id ):
         status, headers, data = self.__requester.request(
@@ -654,10 +679,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            RepositoryKey.RepositoryKey( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            RepositoryKey.RepositoryKey,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_label( self, name ):
         status, headers, data = self.__requester.request(
@@ -675,10 +702,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Label.Label( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Label.Label,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_languages( self ):
         pass
@@ -699,10 +728,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Milestone.Milestone( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Milestone.Milestone,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_network_events( self ):
         pass
@@ -723,10 +754,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            PullRequest.PullRequest( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            PullRequest.PullRequest,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_tags( self ):
         status, headers, data = self.__requester.request(
@@ -735,10 +768,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Tag.Tag( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Tag.Tag,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_teams( self ):
         status, headers, data = self.__requester.request(
@@ -747,10 +782,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            Team.Team( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Team.Team,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_watchers( self ):
         status, headers, data = self.__requester.request(
@@ -759,10 +796,12 @@ class Repository( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def has_in_collaborators( self, collaborator ):
         status, headers, data = self.__requester.request(

@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import Repository
 import NamedUser
 # This allows None as a valid value for an optional parameter
@@ -93,10 +94,12 @@ class Team( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_repos( self ):
         status, headers, data = self.__requester.request(
@@ -105,10 +108,12 @@ class Team( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(

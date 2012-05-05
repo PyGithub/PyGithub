@@ -619,7 +619,8 @@ class IntegrationTest:
         self.printList( "Emails", u.get_emails() )
 
     def printList( self, title, iterable, f = lambda x: x ):
-        print title + ":", ", ".join( str( f( x ) ) for x in iterable[ :10 ] ), "..." if len( iterable ) > 10 else ""
+        printed = list( iterable )
+        print title + ":", ", ".join( str( f( x ) ) for x in printed[ :10 ] ), "..." if len( printed ) > 10 else ""
 
 sys.setrecursionlimit( 50 )
 IntegrationTest().main( sys.argv[ 1: ] )

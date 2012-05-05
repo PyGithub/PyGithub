@@ -1,3 +1,5 @@
+import PaginatedList
+
 {% for dependency in class.dependencies %}
 import {{ dependency }}
 {% endfor %}

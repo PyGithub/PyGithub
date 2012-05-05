@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import IssueComment
 import IssueEvent
 import NamedUser
@@ -169,10 +170,12 @@ class Issue( object ):
             None,
             None
         )
-        return [
-            IssueComment.IssueComment( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            IssueComment.IssueComment,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -181,10 +184,12 @@ class Issue( object ):
             None,
             None
         )
-        return [
-            IssueEvent.IssueEvent( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            IssueEvent.IssueEvent,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_labels( self ):
         status, headers, data = self.__requester.request(
@@ -193,10 +198,12 @@ class Issue( object ):
             None,
             None
         )
-        return [
-            Label.Label( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Label.Label,
+            self.__requester,
+            headers,
+            data
+        )
 
     def remove_from_labels( self, label ):
         status, headers, data = self.__requester.request(

@@ -23,10 +23,12 @@
 {% endif %}
 
 {% if method.type.cardinality == "list" %}
-        return [
-            {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList( 
+            {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }},
+            self.__requester,
+            headers,
+            data
+        )
 {% endif %}
 
 {% endif %}

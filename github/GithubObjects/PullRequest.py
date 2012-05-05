@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import Commit
 import NamedUser
 import PullRequestComment
@@ -183,10 +184,12 @@ class PullRequest( object ):
             None,
             None
         )
-        return [
-            PullRequestComment.PullRequestComment( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            PullRequestComment.PullRequestComment,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_commits( self ):
         status, headers, data = self.__requester.request(
@@ -195,10 +198,12 @@ class PullRequest( object ):
             None,
             None
         )
-        return [
-            Commit.Commit( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Commit.Commit,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_files( self ):
         status, headers, data = self.__requester.request(
@@ -207,10 +212,12 @@ class PullRequest( object ):
             None,
             None
         )
-        return [
-            PullRequestFile.PullRequestFile( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            PullRequestFile.PullRequestFile,
+            self.__requester,
+            headers,
+            data
+        )
 
     def is_merged( self ):
         status, headers, data = self.__requester.request(

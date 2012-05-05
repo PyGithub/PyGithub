@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import Gist
 import Repository
 import NamedUser
@@ -295,10 +296,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Authorization.Authorization( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Authorization.Authorization,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_emails( self ):
         status, headers, data = self.__requester.request(
@@ -316,10 +319,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Event.Event( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_followers( self ):
         status, headers, data = self.__requester.request(
@@ -328,10 +333,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_following( self ):
         status, headers, data = self.__requester.request(
@@ -340,10 +347,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_gists( self ):
         status, headers, data = self.__requester.request(
@@ -352,10 +361,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Gist.Gist( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Gist.Gist,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_issues( self ):
         status, headers, data = self.__requester.request(
@@ -364,10 +375,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Issue.Issue( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Issue.Issue,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_key( self, id ):
         status, headers, data = self.__requester.request(
@@ -385,10 +398,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            UserKey.UserKey( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            UserKey.UserKey,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_organization_events( self, org ):
         pass
@@ -400,10 +415,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Organization.Organization( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Organization.Organization,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(
@@ -421,10 +438,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_starred_gists( self ):
         pass
@@ -436,10 +455,12 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def has_in_following( self, following ):
         status, headers, data = self.__requester.request(

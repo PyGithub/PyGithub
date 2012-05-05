@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import Team
 import Event
 import Repository
@@ -232,10 +233,12 @@ class Organization( object ):
             None,
             None
         )
-        return [
-            Event.Event( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_members( self ):
         status, headers, data = self.__requester.request(
@@ -244,10 +247,12 @@ class Organization( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_public_members( self ):
         status, headers, data = self.__requester.request(
@@ -256,10 +261,12 @@ class Organization( object ):
             None,
             None
         )
-        return [
-            NamedUser.NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_repo( self, name ):
         status, headers, data = self.__requester.request(
@@ -277,10 +284,12 @@ class Organization( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_teams( self ):
         status, headers, data = self.__requester.request(
@@ -289,10 +298,12 @@ class Organization( object ):
             None,
             None
         )
-        return [
-            Team.Team( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Team.Team,
+            self.__requester,
+            headers,
+            data
+        )
 
     def has_in_members( self, member ):
         status, headers, data = self.__requester.request(

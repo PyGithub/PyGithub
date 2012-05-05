@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import Organization
 import Gist
 import Event
@@ -173,10 +174,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            Event.Event( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Event.Event,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_followers( self ):
         status, headers, data = self.__requester.request(
@@ -185,10 +188,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_following( self ):
         status, headers, data = self.__requester.request(
@@ -197,10 +202,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            NamedUser( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            NamedUser,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_gists( self ):
         status, headers, data = self.__requester.request(
@@ -209,10 +216,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            Gist.Gist( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Gist.Gist,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_orgs( self ):
         status, headers, data = self.__requester.request(
@@ -221,10 +230,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            Organization.Organization( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Organization.Organization,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_public_events( self ):
         pass
@@ -251,10 +262,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_watched( self ):
         status, headers, data = self.__requester.request(
@@ -263,10 +276,12 @@ class NamedUser( object ):
             None,
             None
         )
-        return [
-            Repository.Repository( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data
+        )
 
     # @todo Remove '_identity' from the normalized json description
     @property

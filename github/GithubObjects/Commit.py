@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import NamedUser
 import GitCommit
 import CommitComment
@@ -86,10 +87,12 @@ class Commit( object ):
             None,
             None
         )
-        return [
-            CommitComment.CommitComment( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            CommitComment.CommitComment,
+            self.__requester,
+            headers,
+            data
+        )
 
     def __initAttributes( self ):
         self.__author = None

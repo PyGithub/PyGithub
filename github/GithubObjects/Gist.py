@@ -1,6 +1,7 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import PaginatedList
 import NamedUser
 import Gist
 import GistComment
@@ -143,10 +144,12 @@ class Gist( object ):
             None,
             None
         )
-        return [
-            GistComment.GistComment( self.__requester, element, lazy = True )
-            for element in data
-        ]
+        return PaginatedList.PaginatedList(
+            GistComment.GistComment,
+            self.__requester,
+            headers,
+            data
+        )
 
     def is_starred( self ):
         pass
