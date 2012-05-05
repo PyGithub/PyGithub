@@ -913,6 +913,9 @@
                             { "type": "argument", "value": [ "repo", "name" ] },
                             { "type": "constant", "value": "/forks" }
                         ],
+                        "url_parameters": [
+                            { "name": "org", "value": [ { "type": "attribute", "value": [ "login" ] } ] }
+                        ],
                         "information": "status"
                     }
                 }

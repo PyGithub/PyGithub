@@ -5878,8 +5878,21 @@
                                 "value": "/forks"
                             }
                         ], 
-                        "information": "status", 
-                        "verb": "POST"
+                        "url_parameters": [
+                            {
+                                "name": "org", 
+                                "value": [
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "login"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ], 
+                        "verb": "POST", 
+                        "information": "status"
                     }, 
                     "optional_parameters": [], 
                     "type": {
