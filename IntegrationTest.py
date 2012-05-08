@@ -566,10 +566,9 @@ class IntegrationTest:
         # p2.edit( state = "closed" )
         # self.printList( "Pull requests", r.get_pulls(), lambda p: p.title )
 
-    # @todo Repository.compare
-    # def testRepositoryCompare( self ):
-        # r = self.g.get_user().get_repo( "PyGithub" )
-        # print str( r.compare( "master", "develop" ) )[ :100 ]
+    def testRepositoryCompare( self ):
+        r = self.g.get_user().get_repo( "PyGithub" )
+        print str( r.compare( "master", "develop" ) )[ :100 ]
 
     # @todo Repository.get_languages
     # def testRepositoryDetails( self ):

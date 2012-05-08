@@ -197,7 +197,13 @@ class Repository( object ):
         )
 
     def compare( self, base, head ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/compare/" + str( base ) + "..." + str( head ),
+            None,
+            None
+        )
+        return data
 
     def create_download( self, name, size, description = DefaultValueForOptionalParameters, content_type = DefaultValueForOptionalParameters ):
         post_parameters = {

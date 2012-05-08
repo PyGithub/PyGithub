@@ -9496,6 +9496,37 @@
                             "name": "head"
                         }
                     ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/compare/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "base"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "..."
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "head"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {

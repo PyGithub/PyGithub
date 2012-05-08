@@ -6,6 +6,10 @@
 
 {% if method.type.cardinality == "scalar" %}
 
+{% if method.type.name == "@todo" %}
+        return data
+{% endif %}
+
 {% if method.type.name == "bool" %}
         return status == 204
 {% endif %}
