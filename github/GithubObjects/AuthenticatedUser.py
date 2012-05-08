@@ -371,7 +371,7 @@ class AuthenticatedUser( object ):
     def get_issues( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues",
+            "https://api.github.com/issues",
             None,
             None
         )

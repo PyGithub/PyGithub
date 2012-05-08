@@ -460,14 +460,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/issues"
+                                "value": "https://api.github.com/issues"
                             }
                         ], 
                         "information": "data", 

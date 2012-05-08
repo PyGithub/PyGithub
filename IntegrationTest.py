@@ -508,9 +508,8 @@ class IntegrationTest:
         # m.delete()
         # self.printList( "Milestones", r.get_milestones(), lambda m: m.title )
 
-    # @todo custom url /issues instead of /user/issues
-    # def testIssuesForAuthenticatedUser( self ):
-        # self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
+    def testIssuesForAuthenticatedUser( self ):
+        self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
 
     # @todo custom url /user/keys instead of /users/jacquev6/keys
     # def testKeys( self ):
