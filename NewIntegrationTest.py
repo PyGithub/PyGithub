@@ -142,14 +142,12 @@ class AuthenticatedUser( TestCase ):
         self.assertEqual( self.u.type, "User" )
         self.assertEqual( self.u.url, "https://api.github.com/users/jacquev6" )
 
-if len( sys.argv ) > 1:
-    assert sys.argv[ 1 ] == "--record"
+if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
     for method in sys.argv[ 2 : ]:
         class_, method = method.split( "." )
         method = "test" + method
         print "Recording method", method, "of class", class_
-        # exec "testCase = " + class_ + "()"
-        testCase = AuthenticatedUser( methodName = method )
+        exec "testCase = " + class_ + "( methodName = method )"
         method = getattr( testCase, method )
         TestCase.setUp = TestCase.setUpForRecord
         testCase.setUp()
