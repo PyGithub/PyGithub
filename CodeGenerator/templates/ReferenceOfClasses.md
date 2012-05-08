@@ -30,14 +30,14 @@ Attributes
 
 * `{{ method.name|join:"_" }}({% include "ReferenceOfClasses.Parameters.md" with function=method only %})`{% include "ReferenceOfClasses.Type.md" with type=method.type only %}
 
-{% for parameter in method.mandatory_parameters %}
+{% for parameter in method.mandatoryParameters %}
     * `{{ parameter.name }}`{% include "ReferenceOfClasses.Type.md" with type=parameter.type only %}
 {% endfor %}
-{% for parameter in method.optional_parameters %}
+{% for parameter in method.optionalParameters %}
     * `{{ parameter.name }}`{% include "ReferenceOfClasses.Type.md" with type=parameter.type only %}
 {% endfor %}
-{% if method.variadic_parameter %}
-    * `{{ method.variadic_parameter.name }}`{% include "ReferenceOfClasses.Type.md" with type=method.variadic_parameter.type only %}
+{% if method.variadicParameter %}
+    * `{{ method.variadicParameter.name }}`{% include "ReferenceOfClasses.Type.md" with type=method.variadicParameter.type only %}
 {% endif %}
 
 {% endfor %}

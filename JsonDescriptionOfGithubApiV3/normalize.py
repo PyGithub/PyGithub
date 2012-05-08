@@ -4,9 +4,9 @@ import os.path
 import json
 import itertools
 
-def checkKeys( d, mandatory_keys, optional_keys = [] ):
-    assert set( d.keys() ) >= set( mandatory_keys ), d.keys()
-    assert set( d.keys() ) <= set( mandatory_keys ) | set( optional_keys ) | set( [ "@todo" ] ), d.keys()
+def checkKeys( d, mandatoryKeys, optionalKeys = [] ):
+    assert set( d.keys() ) >= set( mandatoryKeys ), d.keys()
+    assert set( d.keys() ) <= set( mandatoryKeys ) | set( optionalKeys ) | set( [ "@todo" ] ), d.keys()
 
 class Type:
     def __init__( self, arg ):
@@ -69,27 +69,27 @@ class Function:
             # GET parameters from input
             # POST parameters from input
 
-    def __init__( self, desc, *additional_descs ):
-        for additional_desc in additional_descs:
-            desc.update( additional_desc )
-        checkKeys( desc, [ "name", "type", "group" ], [ "is_mutation", "mandatory_parameters", "optional_parameters", "variadic_parameter", "parameter", "request" ] ) # @todo Move request to mandatory_keys
+    def __init__( self, desc, *additionalDescs ):
+        for additionalDesc in additionalDescs:
+            desc.update( additionalDesc )
+        checkKeys( desc, [ "name", "type", "group" ], [ "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] ) # @todo Move request to mandatoryKeys
 
         self.name = desc[ "name" ]
         self.type = Type( desc[ "type" ] )
         self.group = desc[ "group" ]
-        self.is_mutation = "is_mutation" in desc and desc[ "is_mutation" ]
-        self.mandatory_parameters = list()
-        if "mandatory_parameters" in desc:
-            for parameter in desc[ "mandatory_parameters" ]:
-                self.mandatory_parameters.append( Variable( parameter ) )
-        self.optional_parameters = list()
-        if "optional_parameters" in desc:
-            for parameter in desc[ "optional_parameters" ]:
-                self.optional_parameters.append( Variable( parameter ) )
-        if "variadic_parameter" in desc:
-            self.variadic_parameter = Variable( desc[ "variadic_parameter" ] )
+        self.isMutation = "isMutation" in desc and desc[ "isMutation" ]
+        self.mandatoryParameters = list()
+        if "mandatoryParameters" in desc:
+            for parameter in desc[ "mandatoryParameters" ]:
+                self.mandatoryParameters.append( Variable( parameter ) )
+        self.optionalParameters = list()
+        if "optionalParameters" in desc:
+            for parameter in desc[ "optionalParameters" ]:
+                self.optionalParameters.append( Variable( parameter ) )
+        if "variadicParameter" in desc:
+            self.variadicParameter = Variable( desc[ "variadicParameter" ] )
         else:
-            self.variadic_parameter = None
+            self.variadicParameter = None
         if "request" in desc:
             self.request = desc[ "request" ]
         else:
@@ -100,19 +100,19 @@ class Function:
             "name": self.name,
             "type": self.type,
             "group": self.group,
-            "is_mutation": self.is_mutation,
-            "mandatory_parameters": self.mandatory_parameters,
-            "optional_parameters": self.optional_parameters,
+            "isMutation": self.isMutation,
+            "mandatoryParameters": self.mandatoryParameters,
+            "optionalParameters": self.optionalParameters,
         }
-        if self.variadic_parameter is not None:
-            json[ "variadic_parameter" ] = self.variadic_parameter
+        if self.variadicParameter is not None:
+            json[ "variadicParameter" ] = self.variadicParameter
         if self.request is not None:
             json[ "request" ] = self.request
         return json
 
 class Collection:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "singular_name", "type" ], [ "add_element", "add_several_elements", "create_element", "delete_list", "get_element", "get_list", "has_element", "remove_element", "remove_several_elements", "set_list", "url" ] )
+        checkKeys( desc, [ "name", "singularName", "type" ], [ "addElement", "addSeveralElements", "createElement", "deleteList", "getElement", "getList", "hasElement", "removeElement", "removeSeveralElements", "setList", "url" ] )
 
         if "url" in desc:
             self.__url = desc[ "url" ]
@@ -124,51 +124,51 @@ class Collection:
 
         name = desc[ "name" ] if isinstance( desc[ "name" ], list ) else [ desc[ "name" ] ]
         self.methods = list()
-        if "add_element" in desc:
-            assert desc[ "add_element" ] is True
+        if "addElement" in desc:
+            assert desc[ "addElement" ] is True
             self.methods.append( Function(
-                { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
+                { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "mandatoryParameters": [ { "name": desc[ "singularName" ], "type": desc[ "type" ] } ] },
                 {
                     "request": {
                         "verb": "PUT",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
+                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
                 }
             ) )
-        if "add_several_elements" in desc:
-            assert desc[ "add_several_elements" ] is True
+        if "addSeveralElements" in desc:
+            assert desc[ "addSeveralElements" ] is True
             self.methods.append( Function(
-                { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } },
+                { "name": [ "add", "to" ] + name, "type": "void", "group": desc[ "name" ], "variadicParameter": { "name": desc[ "singularName" ], "type": desc[ "type" ] } },
                 {
                     "request": {
                         "verb": "POST",
                         "url": self.__url,
                         "information": "status",
-                        "post_parameters": True
+                        "postParameters": True
                     }
                 }
             ) )
-        if "create_element" in desc:
+        if "createElement" in desc:
             self.methods.append( Function(
-                desc[ "create_element" ],
-                { "name": [ "create", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ] },
+                desc[ "createElement" ],
+                { "name": [ "create", desc[ "singularName" ] ], "type": desc[ "type" ], "group": desc[ "name" ] },
                 {
                     "request": {
                         "verb": "POST",
                         "url": self.__url,
                         "information": "status",
-                        "post_parameters": True,
+                        "postParameters": True,
                     }
                 }
             ) )
-        if "delete_list" in desc:
-            assert desc[ "delete_list" ] is True
+        if "deleteList" in desc:
+            assert desc[ "deleteList" ] is True
             self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
-        if "get_element" in desc:
+        if "getElement" in desc:
 
             # @todo Generalize
             if desc[ "name" ] == "repos":
@@ -190,20 +190,20 @@ class Collection:
                         "verb": "GET",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "get_element" ][ "parameter" ][ "name" ] ] },
+                            { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] },
                         ],
                         "information": "data",
                     }
                 }
 
             self.methods.append( Function(
-                desc[ "get_element" ],
-                { "name": [ "get", desc[ "singular_name" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatory_parameters": [ desc[ "get_element" ][ "parameter" ] ] },
+                desc[ "getElement" ],
+                { "name": [ "get", desc[ "singularName" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatoryParameters": [ desc[ "getElement" ][ "parameter" ] ] },
                 hack
             ) )
-        if "get_list" in desc:
+        if "getList" in desc:
             self.methods.append( Function(
-                desc[ "get_list" ] if desc[ "get_list" ] is not True else dict(),
+                desc[ "getList" ] if desc[ "getList" ] is not True else dict(),
                 { "name": [ "get" ] + name, "type": { "cardinality": "list", "name": desc[ "type" ] }, "group": desc[ "name" ] },
                 {
                     "request": {
@@ -213,56 +213,56 @@ class Collection:
                     }
                 }
             ) )
-        if "has_element" in desc:
-            assert desc[ "has_element" ] is True
+        if "hasElement" in desc:
+            assert desc[ "hasElement" ] is True
             self.methods.append( Function(
-                { "name": [ "has", "in" ] + name, "type": "bool", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
+                { "name": [ "has", "in" ] + name, "type": "bool", "group": desc[ "name" ], "mandatoryParameters": [ { "name": desc[ "singularName" ], "type": desc[ "type" ] } ] },
                 {
                     "request": {
                         "verb": "GET",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
+                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
                 }
             ) )
-        if "remove_element" in desc:
-            assert desc[ "remove_element" ] is True
+        if "removeElement" in desc:
+            assert desc[ "removeElement" ] is True
             self.methods.append( Function(
-                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "mandatory_parameters": [ { "name": desc[ "singular_name" ], "type": desc[ "type" ] } ] },
+                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "mandatoryParameters": [ { "name": desc[ "singularName" ], "type": desc[ "type" ] } ] },
                 {
                     "request": {
                         "verb": "DELETE",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singular_name" ], "_identity" ] },
+                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
                         ],
                         "information": "status",
                     }
                 }
             ) )
-        if "remove_several_elements" in desc:
-            assert desc[ "remove_several_elements" ] is True
+        if "removeSeveralElements" in desc:
+            assert desc[ "removeSeveralElements" ] is True
             self.methods.append( Function(
-                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } },
+                { "name": [ "remove", "from" ] + name, "type": "void", "group": desc[ "name" ], "variadicParameter": { "name": desc[ "singularName" ], "type": desc[ "type" ] } },
                 {
                     "request": {
                         "verb": "DELETE",
                         "url": self.__url,
                         "information": "status",
-                        "post_parameters": True
+                        "postParameters": True
                     }
                 }
             ) )
-        if "set_list" in desc:
-            assert desc[ "set_list" ] is True
-            self.methods.append( Function( { "name": [ "set" ] + name, "type": "void", "group": desc[ "name" ], "variadic_parameter": { "name": desc[ "singular_name" ], "type": desc[ "type" ] } } ) )
+        if "setList" in desc:
+            assert desc[ "setList" ] is True
+            self.methods.append( Function( { "name": [ "set" ] + name, "type": "void", "group": desc[ "name" ], "variadicParameter": { "name": desc[ "singularName" ], "type": desc[ "type" ] } } ) )
 
 class Class:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "attributes", "collections" ], [ "identity", "edit", "delete", "additional_methods" ] )
+        checkKeys( desc, [ "name", "attributes", "collections" ], [ "identity", "edit", "delete", "additionalMethods" ] )
 
         self.name = desc[ "name" ]
         self.attributes = sorted(
@@ -280,12 +280,12 @@ class Class:
         if "edit" in desc:
             self.methods.append( Function(
                 desc[ "edit" ],
-                { "name": [ "edit" ], "type": "void", "group": "modification", "is_mutation": True },
+                { "name": [ "edit" ], "type": "void", "group": "modification", "isMutation": True },
                 {
                     "request": {
                         "verb": "PATCH",
                         "url": [ { "type": "constant", "value": "https://api.github.com/user" } if desc[ "name" ] == "AuthenticatedUser" else { "type": "attribute", "value": [ "url" ] } ], # @todo
-                        "post_parameters": True, # @todo
+                        "postParameters": True, # @todo
                         "information": "data",
                     },
                 }
@@ -303,8 +303,8 @@ class Class:
             ) )
         for collection in [ Collection( collection ) for collection in desc[ "collections" ] ]:
             self.methods += collection.methods
-        if "additional_methods" in desc:
-            self.methods += [ Function( method ) for method in desc[ "additional_methods" ] ]
+        if "additionalMethods" in desc:
+            self.methods += [ Function( method ) for method in desc[ "additionalMethods" ] ]
 
     def ToJson( self ):
         d = {

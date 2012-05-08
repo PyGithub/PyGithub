@@ -1,13 +1,13 @@
-{% if method.request.post_parameters %}
-    {% if method.variadic_parameter %}
-        post_parameters = {{ method.variadic_parameter.name }}s
+{% if method.request.postParameters %}
+    {% if method.variadicParameter %}
+        post_parameters = {{ method.variadicParameter.name }}s
     {% else %}
         post_parameters = {
-        {% for parameter in method.mandatory_parameters %}
+        {% for parameter in method.mandatoryParameters %}
             "{{ parameter.name }}": {{ parameter.name }},
         {% endfor %}
         }
-        {% for parameter in method.optional_parameters %}
+        {% for parameter in method.optionalParameters %}
         if {{ parameter.name }} is not DefaultValueForOptionalParameters:
             post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
         {% endfor %}
@@ -30,7 +30,7 @@
 {% else %}
             None,
 {% endif %}
-{% if method.request.post_parameters %}
+{% if method.request.postParameters %}
             post_parameters
 {% else %}
             None

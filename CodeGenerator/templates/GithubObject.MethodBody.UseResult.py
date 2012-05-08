@@ -1,4 +1,4 @@
-{% if method.is_mutation %}
+{% if method.isMutation %}
         self.__useAttributes( data )
 {% endif %}
 

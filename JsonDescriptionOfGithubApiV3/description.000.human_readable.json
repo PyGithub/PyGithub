@@ -3,7 +3,7 @@
         {
             "name": "AuthenticatedUser",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "name", "type": "string" },
                     { "name": "email", "type": "string" },
                     { "name": "blog", "type": "string" },
@@ -43,43 +43,43 @@
             "collections": [
                 {
                     "name": "authorizations",
-                    "singular_name": "authorization",
+                    "singularName": "authorization",
                     "type": "Authorization",
-                    "create_element": {
-                        "optional_parameters": [
+                    "createElement": {
+                        "optionalParameters": [
                             { "name": "scopes", "type": "@todo" },
                             { "name": "note", "type": "@todo" },
                             { "name": "note_url", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "events",
-                    "singular_name": "event",
+                    "singularName": "event",
                     "type": "Event",
-                    "get_list": true,
+                    "getList": true,
                     "url": [ { "type": "constant", "value": "https://api.github.com/events" } ]
                 },
                 {
                     "name": "issues",
-                    "singular_name": "issue",
+                    "singularName": "issue",
                     "type": "Issue",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "keys",
-                    "singular_name": "key",
+                    "singularName": "key",
                     "type": "UserKey",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "title", "type": "@todo" },
                             { "name": "key", "type": "@todo" }
                         ]
@@ -87,21 +87,21 @@
                 },
                 {
                     "name": "repos",
-                    "singular_name": "repo",
+                    "singularName": "repo",
                     "type": "Repository",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "type", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "name", "type": "string" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "string" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "description", "type": "string" },
                             { "name": "homepage", "type": "string" },
                             { "name": "private", "type": "bool" },
@@ -114,64 +114,64 @@
                 },
                 {
                     "name": "emails",
-                    "singular_name": "email",
+                    "singularName": "email",
                     "type": "string",
-                    "get_list": true,
-                    "add_several_elements": true,
-                    "remove_several_elements": true
+                    "getList": true,
+                    "addSeveralElements": true,
+                    "removeSeveralElements": true
                 },
                 {
                     "name": "watched",
-                    "singular_name": "watched",
+                    "singularName": "watched",
                     "type": "Repository",
-                    "get_list": true,
-                    "has_element": true,
-                    "add_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
                 },
                 {
                     "name": "following",
-                    "singular_name": "following",
+                    "singularName": "following",
                     "type": "NamedUser",
-                    "get_list": true,
-                    "remove_element": true,
-                    "has_element": true,
-                    "add_element": true
+                    "getList": true,
+                    "removeElement": true,
+                    "hasElement": true,
+                    "addElement": true
                 },
                 {
                     "name": "followers",
-                    "singular_name": "follower",
+                    "singularName": "follower",
                     "type": "NamedUser",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "orgs",
-                    "singular_name": "org",
+                    "singularName": "org",
                     "type": "Organization",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "gists",
-                    "singular_name": "gist",
+                    "singularName": "gist",
                     "type": "Gist",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
                             { "name": "files", "type": "dict" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "description", "type": "string" }
                         ]
                     }
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "create", "fork" ],
                     "group": "forking",
                     "type": "Repository",
-                    "mandatory_parameters": [
+                    "mandatoryParameters": [
                         { "name": "repo", "type": "Repository" }
                     ],
                     "request": {
@@ -190,7 +190,7 @@
                     "name": [ "get", "organization", "events" ],
                     "group": "events",
                     "type": "list:Event",
-                    "mandatory_parameters": [
+                    "mandatoryParameters": [
                         { "name": "org", "type": "Organization" }
                     ],
                     "request": {
@@ -214,7 +214,7 @@
         {
             "name": "Authorization",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "scopes", "type": "@todo" },
                     { "name": "add_scopes", "type": "@todo" },
                     { "name": "remove_scopes", "type": "@todo" },
@@ -261,14 +261,14 @@
             "collections": [
                 {
                     "name": "comments",
-                    "singular_name": "comment",
+                    "singularName": "comment",
                     "type": "CommitComment",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "body", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "commit_id", "type": "@todo" },
                             { "name": "line", "type": "@todo" },
                             { "name": "path", "type": "@todo" },
@@ -281,7 +281,7 @@
         {
             "name": "CommitComment",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }
                 ]
             },
@@ -352,7 +352,7 @@
         {
             "name": "Gist",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "description", "type": "string" },
                     { "name": "files", "type": "@todo" }
                 ]
@@ -377,20 +377,20 @@
             "collections": [
                 {
                     "name": "comments",
-                    "singular_name": "comment",
+                    "singularName": "comment",
                     "type": "GistComment",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "body", "type": "@todo" }
                         ]
                     }
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "is", "starred" ],
                     "group": "starring",
@@ -416,7 +416,7 @@
         {
             "name": "GistComment",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }
                 ]
             },
@@ -461,10 +461,10 @@
         {
             "name": "GitRef",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "sha", "type": "@todo" }
                 ],
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "force", "type": "@todo" }
                 ]
             },
@@ -504,11 +504,11 @@
         {
             "name": "Hook",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "name", "type": "@todo" },
                     { "name": "config", "type": "@todo" }
                 ],
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "events", "type": "@todo" },
                     { "name": "add_events", "type": "@todo" },
                     { "name": "remove_events", "type": "@todo" },
@@ -529,7 +529,7 @@
             ],
             "collections": [
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "test" ],
                     "group": "testing",
@@ -548,7 +548,7 @@
         {
             "name": "Issue",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "title", "type": "@todo" },
                     { "name": "body", "type": "@todo" },
                     { "name": "assignee", "type": "@todo" },
@@ -579,40 +579,40 @@
             "collections": [
                 {
                     "name": "comments",
-                    "singular_name": "comment",
+                    "singularName": "comment",
                     "type": "IssueComment",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "body", "type": "string" }
                         ]
                     }
                 },
                 {
                     "name": "events",
-                    "singular_name": "event",
+                    "singularName": "event",
                     "type": "IssueEvent",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "labels",
-                    "singular_name": "label",
+                    "singularName": "label",
                     "type": "Label",
-                    "get_list": true,
-                    "add_several_elements": true,
-                    "remove_element": true,
-                    "set_list": true,
-                    "delete_list": true
+                    "getList": true,
+                    "addSeveralElements": true,
+                    "removeElement": true,
+                    "setList": true,
+                    "deleteList": true
                 }
             ]
         },
         {
             "name": "IssueComment",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }
                 ]
             },
@@ -645,7 +645,7 @@
         {
             "name": "Label",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "name", "type": "@todo" },
                     { "name": "color", "type": "@todo" }
                 ]
@@ -662,10 +662,10 @@
         {
             "name": "Milestone",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "title", "type": "@todo" }
                 ],
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "state", "type": "@todo" },
                     { "name": "description", "type": "@todo" },
                     { "name": "due_on", "type": "@todo" }
@@ -687,9 +687,9 @@
             "collections": [
                 {
                     "name": "labels",
-                    "singular_name": "label",
+                    "singularName": "label",
                     "type": "Label",
-                    "get_list": true
+                    "getList": true
                 }
             ]
         },
@@ -727,64 +727,64 @@
             "collections": [
                 {
                     "name": "events",
-                    "singular_name": "event",
+                    "singularName": "event",
                     "type": "Event",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "followers",
-                    "singular_name": "follower",
+                    "singularName": "follower",
                     "type": "NamedUser",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "following",
-                    "singular_name": "following",
+                    "singularName": "following",
                     "type": "NamedUser",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "repos",
-                    "singular_name": "repo",
+                    "singularName": "repo",
                     "type": "Repository",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "type", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "name", "type": "string" }
                     }
                 },
                 {
                     "name": "watched",
-                    "singular_name": "watched",
+                    "singularName": "watched",
                     "type": "Repository",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "orgs",
-                    "singular_name": "org",
+                    "singularName": "org",
                     "type": "Organization",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "gists",
-                    "singular_name": "gist",
+                    "singularName": "gist",
                     "type": "Gist",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
                             { "name": "files", "type": "dict" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "description", "type": "string" }
                         ]
                     }
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "get", "public", "events" ],
                     "group": "events",
@@ -826,7 +826,7 @@
         {
             "name": "Organization",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "billing_email", "type": "@todo" },
                     { "name": "blog", "type": "@todo" },
                     { "name": "company", "type": "@todo" },
@@ -864,44 +864,44 @@
             "collections": [
                 {
                     "name": "events",
-                    "singular_name": "event",
+                    "singularName": "event",
                     "type": "Event",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "members",
-                    "singular_name": "member",
+                    "singularName": "member",
                     "type": "NamedUser",
-                    "get_list": true,
-                    "has_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "hasElement": true,
+                    "removeElement": true
                 },
                 {
                     "name": "public_members",
-                    "singular_name": "public_member",
+                    "singularName": "public_member",
                     "type": "NamedUser",
-                    "get_list": true,
-                    "has_element": true,
-                    "add_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
                 },
                 {
                     "name": "repos",
-                    "singular_name": "repo",
+                    "singularName": "repo",
                     "type": "Repository",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "type", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "name", "type": "string" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "string" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "description", "type": "string" },
                             { "name": "homepage", "type": "string" },
                             { "name": "private", "type": "bool" },
@@ -914,26 +914,26 @@
                 },
                 {
                     "name": "teams",
-                    "singular_name": "team",
+                    "singularName": "team",
                     "type": "Team",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "string" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "repo_names", "type": "list" },
                             { "name": "permission", "type": "@todo" }
                         ]
                     }
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "create", "fork" ],
                     "group": "forking",
                     "type": "Repository",
-                    "mandatory_parameters": [
+                    "mandatoryParameters": [
                         { "name": "repo", "type": "Repository" }
                     ],
                     "request": {
@@ -956,7 +956,7 @@
         {
             "name": "PullRequest",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "title", "type": "@todo" },
                     { "name": "body", "type": "@todo" },
                     { "name": "state", "type": "@todo" }
@@ -993,27 +993,27 @@
             "collections": [
                 {
                     "name": "comments",
-                    "singular_name": "comment",
+                    "singularName": "comment",
                     "type": "PullRequestComment",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
                     "name": "commits",
-                    "singular_name": "commit",
+                    "singularName": "commit",
                     "type": "Commit",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "files",
-                    "singular_name": "file",
+                    "singularName": "file",
                     "type": "PullRequestFile",
-                    "get_list": true
+                    "getList": true
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "is", "merged" ],
                     "type": "bool",
@@ -1031,7 +1031,7 @@
                     "name": [ "merge" ],
                     "type": "void",
                     "group": "merging",
-                    "optional_parameters": [
+                    "optionalParameters": [
                         { "name": "commit_message", "type": "string" }
                     ],
                     "request": {
@@ -1048,7 +1048,7 @@
         {
             "name": "PullRequestComment",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }
                 ]
             },
@@ -1093,10 +1093,10 @@
                 { "type": "attribute", "value": [ "name" ] }
             ],
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "name", "type": "@todo" }
                 ],
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "description", "type": "@todo" },
                     { "name": "homepage", "type": "@todo" },
                     { "name": "public", "type": "@todo" },
@@ -1140,62 +1140,62 @@
             "collections": [
                 {
                     "name": "branches",
-                    "singular_name": "branch",
+                    "singularName": "branch",
                     "type": "Branch",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "collaborators",
-                    "singular_name": "collaborator",
+                    "singularName": "collaborator",
                     "type": "NamedUser",
-                    "get_list": true,
-                    "has_element": true,
-                    "add_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
                 },
                 {
                     "name": "comments",
-                    "singular_name": "comment",
+                    "singularName": "comment",
                     "type": "CommitComment",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
                     "name": "commits",
-                    "singular_name": "commit",
+                    "singularName": "commit",
                     "type": "Commit",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "sha", "type": "@todo" },
                             { "name": "path", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" }
                     }
                 },
                 {
                     "name": "contributors",
-                    "singular_name": "contributor",
+                    "singularName": "contributor",
                     "type": "NamedUser",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "downloads",
-                    "singular_name": "download",
+                    "singularName": "download",
                     "type": "Download",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "@todo" },
                             { "name": "size", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "description", "type": "@todo" },
                             { "name": "content_type", "type": "@todo" }
                         ]
@@ -1203,25 +1203,25 @@
                 },
                 {
                     "name": "events",
-                    "singular_name": "event",
+                    "singularName": "event",
                     "type": "Event",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "forks",
-                    "singular_name": "fork",
+                    "singularName": "fork",
                     "type": "Repository",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "git_blobs",
-                    "singular_name": "git_blob",
+                    "singularName": "git_blob",
                     "type": "GitBlob",
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "content", "type": "@todo" },
                             { "name": "encoding", "type": "@todo" }
                         ]
@@ -1229,18 +1229,18 @@
                 },
                 {
                     "name": "git_commits",
-                    "singular_name": "git_commit",
+                    "singularName": "git_commit",
                     "type": "GitCommit",
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" }
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "message", "type": "@todo" },
                             { "name": "tree", "type": "@todo" },
                             { "name": "parents", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "author", "type": "@todo" },
                             { "name": "committer", "type": "@todo" }
                         ]
@@ -1248,82 +1248,82 @@
                 },
                 {
                     "name": "git_refs",
-                    "singular_name": "git_ref",
+                    "singularName": "git_ref",
                     "type": "GitRef",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "ref", "type": "@todo" },
                             { "name": "sha", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "ref", "type": "@todo" }
                     }
                 },
                 {
                     "name": "git_tags",
-                    "singular_name": "git_tag",
+                    "singularName": "git_tag",
                     "type": "GitTag",
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "tag", "type": "@todo" },
                             { "name": "message", "type": "@todo" },
                             { "name": "object", "type": "@todo" },
                             { "name": "type", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "tagger", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" }
                     }
                 },
                 {
                     "name": "git_trees",
-                    "singular_name": "git_tree",
+                    "singularName": "git_tree",
                     "type": "GitTree",
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "tree", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "base_tree", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" },
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "recursive", "type": "bool" }
                         ]
                     }
                 },
                 {
                     "name": "hooks",
-                    "singular_name": "hook",
+                    "singularName": "hook",
                     "type": "Hook",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "@todo" },
                             { "name": "config", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "events", "type": "@todo" },
                             { "name": "active", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
                     "name": "issues",
-                    "singular_name": "issue",
+                    "singularName": "issue",
                     "type": "Issue",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "milestone", "type": "@todo" },
                             { "name": "state", "type": "@todo" },
                             { "name": "assignee", "type": "@todo" },
@@ -1334,27 +1334,27 @@
                             { "name": "since", "type": "@todo" }
                         ]
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "title", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "body", "type": "@todo" },
                             { "name": "assignee", "type": "@todo" },
                             { "name": "milestone", "type": "@todo" },
                             { "name": "labels", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {
                     "name": "issues_events",
-                    "singular_name": "issues_event",
+                    "singularName": "issues_event",
                     "type": "IssueEvent",
-                    "get_list": true,
-                    "get_element": {
+                    "getList": true,
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     },
                     "url": [
@@ -1364,92 +1364,92 @@
                 },
                 {
                     "name": "keys",
-                    "singular_name": "key",
+                    "singularName": "key",
                     "type": "RepositoryKey",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "title", "type": "@todo" },
                             { "name": "key", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
                     }
                 },
                 {
                     "name": "labels",
-                    "singular_name": "label",
+                    "singularName": "label",
                     "type": "Label",
-                    "get_list": true,
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "name", "type": "@todo" },
                             { "name": "color", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "name", "type": "@todo" }
                     }
                 },
                 {
                     "name": "milestones",
-                    "singular_name": "milestone",
+                    "singularName": "milestone",
                     "type": "Milestone",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "state", "type": "@todo" },
                             { "name": "sort", "type": "@todo" },
                             { "name": "direction", "type": "@todo" }
                         ]
                     },
-                    "create_element": {
-                        "mandatory_parameters": [
+                    "createElement": {
+                        "mandatoryParameters": [
                             { "name": "title", "type": "@todo" }
                         ],
-                        "optional_parameters": [
+                        "optionalParameters": [
                             { "name": "state", "type": "@todo" },
                             { "name": "description", "type": "@todo" },
                             { "name": "due_on", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {
                     "name": "pulls",
-                    "singular_name": "pull",
+                    "singularName": "pull",
                     "type": "PullRequest",
-                    "get_list": {
-                        "optional_parameters": [
+                    "getList": {
+                        "optionalParameters": [
                             { "name": "state", "type": "@todo" }
                         ]
                     },
-                    "get_element": {
+                    "getElement": {
                         "parameter": { "name": "number", "type": "@todo" }
                     }
                 },
                 {
                     "name": "tags",
-                    "singular_name": "tag",
+                    "singularName": "tag",
                     "type": "Tag",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "teams",
-                    "singular_name": "team",
+                    "singularName": "team",
                     "type": "Team",
-                    "get_list": true
+                    "getList": true
                 },
                 {
                     "name": "watchers",
-                    "singular_name": "watcher",
+                    "singularName": "watcher",
                     "type": "NamedUser",
-                    "get_list": true
+                    "getList": true
                 }
             ],
-            "additional_methods": [
+            "additionalMethods": [
                 {
                     "name": [ "get", "network", "events" ],
                     "type": "list:Event",
@@ -1474,7 +1474,7 @@
                     "name": [ "compare" ],
                     "type": "@todo",
                     "group": "Comparison",
-                    "mandatory_parameters": [
+                    "mandatoryParameters": [
                         { "name": "base", "type": "@todo" },
                         { "name": "head", "type": "@todo" }
                     ]
@@ -1484,7 +1484,7 @@
         {
             "name": "RepositoryKey",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "title", "type": "@todo" },
                     { "name": "key", "type": "@todo" }
                 ]
@@ -1513,10 +1513,10 @@
         {
             "name": "Team",
             "edit": {
-                "mandatory_parameters": [
+                "mandatoryParameters": [
                     { "name": "name", "type": "@todo" }
                 ],
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "permission", "type": "@todo" }
                 ]
             },
@@ -1532,28 +1532,28 @@
             "collections": [
                 {
                     "name": "members",
-                    "singular_name": "member",
+                    "singularName": "member",
                     "type": "NamedUser",
-                    "get_list": true,
-                    "add_element": true,
-                    "has_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "addElement": true,
+                    "hasElement": true,
+                    "removeElement": true
                 },
                 {
                     "name": "repos",
-                    "singular_name": "repo",
+                    "singularName": "repo",
                     "type": "Repository",
-                    "get_list": true,
-                    "add_element": true,
-                    "has_element": true,
-                    "remove_element": true
+                    "getList": true,
+                    "addElement": true,
+                    "hasElement": true,
+                    "removeElement": true
                 }
             ]
         },
         {
             "name": "UserKey",
             "edit": {
-                "optional_parameters": [
+                "optionalParameters": [
                     { "name": "title", "type": "@todo" },
                     { "name": "key", "type": "@todo" }
                 ]
