@@ -142,6 +142,49 @@ class AuthenticatedUser( TestCase ):
         self.assertEqual( self.u.type, "User" )
         self.assertEqual( self.u.url, "https://api.github.com/users/jacquev6" )
 
+    def testEditWithoutArguments( self ):
+        self.u.edit()
+
+    def testEditWithAllArguments( self ):
+        oldName = self.u.name
+        newName = "Name edited by PyGithub"
+
+        oldEmail = self.u.email
+        newEmail = "Email edited by PyGithub"
+
+        oldBlog = self.u.blog
+        newBlog = "Blog edited by PyGithub"
+
+        oldCompany = self.u.company
+        newCompany = "Company edited by PyGithub"
+
+        oldLocation = self.u.location
+        newLocation = "Location edited by PyGithub"
+
+        oldHireable = self.u.hireable
+        newHireable = not oldHireable
+
+        oldBio = self.u.bio
+        newBio = "Bio edited by PyGithub"
+
+        self.u.edit( newName, newEmail, newBlog, newCompany, newLocation, newHireable, newBio )
+        self.assertEqual( self.u.name, newName )
+        self.assertEqual( self.u.email, newEmail )
+        self.assertEqual( self.u.blog, newBlog )
+        self.assertEqual( self.u.company, newCompany )
+        self.assertEqual( self.u.location, newLocation )
+        self.assertEqual( self.u.hireable, newHireable )
+        self.assertEqual( self.u.bio, newBio )
+
+        self.u.edit( oldName, oldEmail, oldBlog, oldCompany, oldLocation, oldHireable, oldBio )
+        self.assertEqual( self.u.name, oldName )
+        self.assertEqual( self.u.email, oldEmail )
+        self.assertEqual( self.u.blog, oldBlog )
+        self.assertEqual( self.u.company, oldCompany )
+        self.assertEqual( self.u.location, oldLocation )
+        self.assertEqual( self.u.hireable, oldHireable )
+        self.assertEqual( self.u.bio, oldBio )
+
 if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
     for method in sys.argv[ 2 : ]:
         class_, method = method.split( "." )
