@@ -198,7 +198,7 @@ if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
         class_, method = method.split( "." )
         method = "test" + method
         print "Recording method", method, "of class", class_
-        exec "testCase = " + class_ + "( methodName = method )"
+        testCase = eval( class_ )( methodName = method )
         method = getattr( testCase, method )
         TestCase.setUp = TestCase.setUpForRecord
         TestCase.tearDown = TestCase.tearDownForRecord
