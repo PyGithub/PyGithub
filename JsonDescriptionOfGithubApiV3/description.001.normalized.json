@@ -1375,14 +1375,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/gists"
+                                "value": "https://api.github.com/gists"
                             }
                         ], 
                         "information": "status", 
@@ -1416,14 +1410,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/gists"
+                                "value": "https://api.github.com/gists"
                             }
                         ], 
                         "information": "data", 
@@ -1554,6 +1542,16 @@
                         "gists"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/gists/starred"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
@@ -2634,18 +2632,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/comments"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/gists/comments/"
                             }, 
                             {
                                 "type": "argument", 
@@ -2703,6 +2691,22 @@
                         "starred"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/star"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
@@ -2718,6 +2722,22 @@
                         "starred"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/star"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
@@ -2733,6 +2753,22 @@
                         "starred"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/star"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
@@ -2748,6 +2784,22 @@
                         "fork"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/fork"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {

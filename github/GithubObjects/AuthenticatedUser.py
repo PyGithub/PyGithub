@@ -210,7 +210,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "description" ] = description
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/gists",
+            "https://api.github.com/gists",
             None,
             post_parameters
         )
@@ -357,7 +357,7 @@ class AuthenticatedUser( object ):
     def get_gists( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/gists",
+            "https://api.github.com/gists",
             None,
             None
         )
@@ -457,7 +457,18 @@ class AuthenticatedUser( object ):
         )
 
     def get_starred_gists( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            "https://api.github.com/gists/starred",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Gist.Gist,
+            self.__requester,
+            headers,
+            data
+        )
 
     def get_watched( self ):
         status, headers, data = self.__requester.request(

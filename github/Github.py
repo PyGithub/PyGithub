@@ -31,7 +31,11 @@ class Github:
         return GithubObjects.Organization.Organization( self.__requester, attributes, lazy = False )
 
     def get_gist( self, id ):
-        return GithubObjects.Gist.Gist( self.__requester, { "id": id }, lazy = False )
+        attributes = {
+                "url": "https://api.github.com/gists/" + str( id ),
+                "id": id,
+        }
+        return GithubObjects.Gist.Gist( self.__requester, attributes, lazy = False )
 
     def get_gists( self ):
         status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None, None )

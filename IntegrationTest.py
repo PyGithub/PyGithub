@@ -72,7 +72,7 @@ class ReplayingHttpsConnection:
             self.__file.readline()
             expectation = self.__file.readline().strip()
         if expectation != verb + " " + url + " " + str( headers ) + " " + input:
-            print expectation, "!=", verb + " " + url + " " + str( headers ) + " " + input
+            print "Expected [", expectation, "] but got [", verb + " " + url + " " + str( headers ) + " " + input, "]"
             raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
 
     def getresponse( self ):
@@ -335,7 +335,6 @@ class IntegrationTest:
         t.delete()
         self.printList( "Teams", o.get_teams(), lambda t: t.name )
 
-    # @todo Custom url /events instead of /user/events
     def testEvents( self ):
         self.printList( "User events", self.g.get_user( self.cobayeUser ).get_events(), lambda e: e.type )
         self.printList( "User public events", self.g.get_user( self.cobayeUser ).get_public_events(), lambda e: e.type )
@@ -366,37 +365,37 @@ class IntegrationTest:
         self.printList( "Followers", u.get_followers(), lambda f: f.login )
 
     # @todo custom url /gists instead of /user/gists
-    # def testGists( self ):
-        # u = self.g.get_user()
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description )
-        # g = u.create_gist( public = True, description = "Gist created by PyGithub", files = { "foo.bar": { "content": "This gist was created by PyGithub" } } )
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description )
-        # g.edit( description = "Gist edited by PyGithub" )
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description )
+    def testGists( self ):
+        u = self.g.get_user()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g = u.create_gist( public = True, description = "Gist created by PyGithub", files = { "foo.bar": { "content": "This gist was created by PyGithub" } } )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g.edit( description = "Gist edited by PyGithub" )
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
-        # self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
-        # g.set_starred()
-        # assert g.is_starred()
-        # self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
-        # g.reset_starred()
-        # self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+        g.set_starred()
+        assert g.is_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
+        g.reset_starred()
+        self.printList( "Starred gists", u.get_starred_gists(), lambda g: g.description )
 
-        # self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
-        # c = g.create_comment( "Comment created by PyGithub" )
-        # self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
-        # c.edit( "Comment edited by PyGithub" )
-        # self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
-        # sameComment = g.get_comment( c.id )
-        # c.delete()
-        # self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c = g.create_comment( "Comment created by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        c.edit( "Comment edited by PyGithub" )
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
+        sameComment = g.get_comment( c.id )
+        c.delete()
+        self.printList( "Gist comments", g.get_comments(), lambda c: c.body )
 
-        # otherGist = self.g.get_gist( 1965703 ).create_fork() # Origin gist picked up randomly
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description or "None" )
-        # otherGist.delete()
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        otherGist = self.g.get_gist( 1965703 ).create_fork() # Origin gist picked up randomly
+        self.printList( "Gists", u.get_gists(), lambda g: g.id )
+        otherGist.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
-        # g.delete()
-        # self.printList( "Gists", u.get_gists(), lambda g: g.description )
+        g.delete()
+        self.printList( "Gists", u.get_gists(), lambda g: g.description )
 
     def testGistsAll( self ):
         self.printList( "Gists", self.g.get_gists(), lambda g: g.description )

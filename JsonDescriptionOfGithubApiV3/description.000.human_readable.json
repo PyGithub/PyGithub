@@ -95,7 +95,13 @@
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "name", "type": "string" }
+                        "parameter": { "name": "name", "type": "string" },
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "attribute", "value": [ "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "name" ] }
+                        ]
                     },
                     "createElement": {
                         "mandatoryParameters": [
@@ -163,7 +169,10 @@
                         "optionalParameters": [
                             { "name": "description", "type": "string" }
                         ]
-                    }
+                    },
+                    "url": [
+                        { "type": "constant", "value": "https://api.github.com/gists" }
+                    ]
                 }
             ],
             "additionalMethods": [
@@ -207,7 +216,14 @@
                 {
                     "name": [ "get", "starred", "gists" ],
                     "group": "gists",
-                    "type": "list:Gist"
+                    "type": "list:Gist",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/gists/starred" }
+                        ],
+                        "information": "status"
+                    }
                 }
             ]
         },
@@ -381,7 +397,11 @@
                     "type": "GistComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "@todo" },
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/gists/comments/" },
+                            { "type": "argument", "value": [ "id" ] }
+                        ]
                     },
                     "createElement": {
                         "mandatoryParameters": [
@@ -394,22 +414,54 @@
                 {
                     "name": [ "is", "starred" ],
                     "group": "starring",
-                    "type": "bool"
+                    "type": "bool",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/star" }
+                        ],
+                        "information": "status"
+                    }
                 },
                 {
                     "name": [ "reset", "starred" ],
                     "group": "starring",
-                    "type": "void"
+                    "type": "void",
+                    "request": {
+                        "verb": "DELETE",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/star" }
+                        ],
+                        "information": "status"
+                    }
                 },
                 {
                     "name": [ "set", "starred" ],
                     "group": "starring",
-                    "type": "void"
+                    "type": "void",
+                    "request": {
+                        "verb": "PUT",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/star" }
+                        ],
+                        "information": "status"
+                    }
                 },
                 {
                     "name": [ "create", "fork" ],
                     "group": "forking",
-                    "type": "Gist"
+                    "type": "Gist",
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/fork" }
+                        ],
+                        "information": "status"
+                    }
                 }
             ]
         },
@@ -753,7 +805,13 @@
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "name", "type": "string" }
+                        "parameter": { "name": "name", "type": "string" },
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "attribute", "value": [ "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "name" ] }
+                        ]
                     }
                 },
                 {
@@ -895,7 +953,13 @@
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "name", "type": "string" }
+                        "parameter": { "name": "name", "type": "string" },
+                        "url": [
+                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "attribute", "value": [ "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "name" ] }
+                        ]
                     },
                     "createElement": {
                         "mandatoryParameters": [

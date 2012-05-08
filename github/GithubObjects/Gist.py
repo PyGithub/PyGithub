@@ -103,7 +103,13 @@ class Gist( object ):
         return GistComment.GistComment( self.__requester, data, lazy = True )
 
     def create_fork( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/fork",
+            None,
+            None
+        )
+        return Gist( self.__requester, data, lazy = True )
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -131,7 +137,7 @@ class Gist( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments" + "/" + str( id ),
+            "https://api.github.com/gists/comments/" + str( id ),
             None,
             None
         )
@@ -152,13 +158,29 @@ class Gist( object ):
         )
 
     def is_starred( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/star",
+            None,
+            None
+        )
+        return status == 204
 
     def reset_starred( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            str( self.url ) + "/star",
+            None,
+            None
+        )
 
     def set_starred( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "PUT",
+            str( self.url ) + "/star",
+            None,
+            None
+        )
 
     def __initAttributes( self ):
         self.__comments = None

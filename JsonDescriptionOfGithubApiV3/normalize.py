@@ -72,7 +72,7 @@ class Function:
     def __init__( self, desc, *additionalDescs ):
         for additionalDesc in additionalDescs:
             desc.update( additionalDesc )
-        checkKeys( desc, [ "name", "type", "group" ], [ "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] ) # @todo Move request to mandatoryKeys
+        checkKeys( desc, [ "name", "type", "group" ], [ "url", "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] ) # @todo Move request to mandatoryKeys
 
         self.name = desc[ "name" ]
         self.type = Type( desc[ "type" ] )
@@ -169,37 +169,24 @@ class Collection:
             assert desc[ "deleteList" ] is True
             self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
         if "getElement" in desc:
-
-            # @todo Generalize
-            if desc[ "name" ] == "repos":
-                hack = {
-                    "request": {
-                        "verb": "GET",
-                        "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
-                            { "type": "attribute", "value": [ "login" ] },
-                            { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ "name" ] },
-                        ],
-                        "information": "data",
-                    }
-                }
+            if "url" in desc[ "getElement" ]:
+                urlForGetElement = desc[ "getElement" ][ "url" ]
             else:
-                hack = {
-                    "request": {
-                        "verb": "GET",
-                        "url": self.__url + [
-                            { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] },
-                        ],
-                        "information": "data",
-                    }
-                }
+                urlForGetElement = self.__url + [
+                    { "type": "constant", "value": "/" },
+                    { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] },
+                ]
 
             self.methods.append( Function(
                 desc[ "getElement" ],
                 { "name": [ "get", desc[ "singularName" ] ], "type": desc[ "type" ], "group": desc[ "name" ], "mandatoryParameters": [ desc[ "getElement" ][ "parameter" ] ] },
-                hack
+                {
+                    "request": {
+                        "verb": "GET",
+                        "url": urlForGetElement,
+                        "information": "data",
+                    }
+                }
             ) )
         if "getList" in desc:
             self.methods.append( Function(
