@@ -364,7 +364,6 @@ class IntegrationTest:
         self.printList( "Following", u.get_following(), lambda f: f.login )
         self.printList( "Followers", u.get_followers(), lambda f: f.login )
 
-    # @todo custom url /gists instead of /user/gists
     def testGists( self ):
         u = self.g.get_user()
         self.printList( "Gists", u.get_gists(), lambda g: g.description )
