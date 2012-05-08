@@ -109,8 +109,31 @@ class AuthenticatedUser( TestCase ):
         TestCase.tearDown( self )
 
     def testAttributes( self ):
+        self.assertEqual( self.u.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
+        self.assertEqual( self.u.bio, "" )
+        self.assertEqual( self.u.blog, "http://vincent-jacques.net" )
+        self.assertEqual( self.u.collaborators, 0 )
+        self.assertEqual( self.u.company, "Criteo" )
+        self.assertEqual( self.u.created_at, "2010-07-09T06:10:06Z" )
+        self.assertEqual( self.u.disk_usage, 17252 )
+        self.assertEqual( self.u.email, "vincent@vincent-jacques.net" )
+        self.assertEqual( self.u.followers, 12 )
+        self.assertEqual( self.u.following, 24 )
+        self.assertEqual( self.u.gravatar_id, "b68de5ae38616c296fa345d2b9df2225" )
+        self.assertEqual( self.u.hireable, False )
+        self.assertEqual( self.u.html_url, "https://github.com/jacquev6" )
+        self.assertEqual( self.u.id, 327146 )
+        self.assertEqual( self.u.location, "Paris, France" )
         self.assertEqual( self.u.login, "jacquev6" )
         self.assertEqual( self.u.name, "Vincent Jacques" )
+        self.assertEqual( self.u.owned_private_repos, 5 )
+        ### @todo self.assertEqual( self.u.plan, "" )
+        self.assertEqual( self.u.private_gists, 2 )
+        self.assertEqual( self.u.public_gists, 4 )
+        self.assertEqual( self.u.public_repos, 15 )
+        self.assertEqual( self.u.total_private_repos, 5 )
+        self.assertEqual( self.u.type, "User" )
+        self.assertEqual( self.u.url, "https://api.github.com/users/jacquev6" )
 
 if len( sys.argv ) > 1:
     pass
