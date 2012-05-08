@@ -15,13 +15,17 @@ class {{ class.name }}( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
+{% if class.isCompletable %}
         if not lazy:
             self.__complete()
+{% endif %}
 
 {% for attribute in class.attributes|dictsort:"name" %}
     @property
     def {{ attribute.name }}( self ):
+{% if class.isCompletable %}
         self.__completeIfNeeded( self.__{{ attribute.name }} )
+{% endif %}
         return self.__{{ attribute.name }}
 {% endfor %}
 
@@ -47,11 +51,11 @@ class {{ class.name }}( object ):
         self.__{{ attribute.name }} = None
 {% endfor %}
 
+{% if class.isCompletable %}
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
             self.__complete()
 
-    # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
         status, headers, data = self.__requester.request(
             "GET",
@@ -61,6 +65,7 @@ class {{ class.name }}( object ):
         )
         self.__useAttributes( data )
         self.__completed = True
+{% endif %}
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory

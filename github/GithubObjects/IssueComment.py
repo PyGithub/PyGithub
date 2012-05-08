@@ -80,7 +80,6 @@ class IssueComment( object ):
         if not self.__completed and testedAttribute is None:
             self.__complete()
 
-    # @todo Do not generate __complete if type has no url attribute
     def __complete( self ):
         status, headers, data = self.__requester.request(
             "GET",

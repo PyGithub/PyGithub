@@ -14,52 +14,41 @@ class PullRequestFile( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
-            self.__complete()
 
     @property
     def additions( self ):
-        self.__completeIfNeeded( self.__additions )
         return self.__additions
 
     @property
     def blob_url( self ):
-        self.__completeIfNeeded( self.__blob_url )
         return self.__blob_url
 
     @property
     def changes( self ):
-        self.__completeIfNeeded( self.__changes )
         return self.__changes
 
     @property
     def deletions( self ):
-        self.__completeIfNeeded( self.__deletions )
         return self.__deletions
 
     @property
     def filename( self ):
-        self.__completeIfNeeded( self.__filename )
         return self.__filename
 
     @property
     def patch( self ):
-        self.__completeIfNeeded( self.__patch )
         return self.__patch
 
     @property
     def raw_url( self ):
-        self.__completeIfNeeded( self.__raw_url )
         return self.__raw_url
 
     @property
     def sha( self ):
-        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def status( self ):
-        self.__completeIfNeeded( self.__status )
         return self.__status
 
     def __initAttributes( self ):
@@ -72,21 +61,6 @@ class PullRequestFile( object ):
         self.__raw_url = None
         self.__sha = None
         self.__status = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    # @todo Do not generate __complete if type has no url attribute
-    def __complete( self ):
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
