@@ -23,8 +23,13 @@ class Type:
         }
 
     def __fromString( self, name ):
-        self.cardinality = "scalar"
-        self.name = name
+        listPrefix = "list:"
+        if name.startswith( listPrefix ):
+            self.cardinality = "list"
+            self.name = name[ len( listPrefix ) : ]
+        else:
+            self.cardinality = "scalar"
+            self.name = name
 
     def __fromDesc( self, desc ):
         checkKeys( desc, [ "cardinality", "name" ] )

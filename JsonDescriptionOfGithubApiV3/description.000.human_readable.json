@@ -189,7 +189,7 @@
                 {
                     "name": [ "get", "organization", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" },
+                    "type": "list:Event",
                     "mandatory_parameters": [
                         { "name": "org", "type": "Organization" }
                     ],
@@ -207,7 +207,7 @@
                 {
                     "name": [ "get", "starred", "gists" ],
                     "group": "gists",
-                    "type": { "cardinality": "list", "name": "Gist" }
+                    "type": "list:Gist"
                 }
             ]
         },
@@ -788,7 +788,7 @@
                 {
                     "name": [ "get", "public", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" },
+                    "type": "list:Event",
                     "request": {
                         "verb": "GET",
                         "url": [
@@ -800,7 +800,7 @@
                 {
                     "name": [ "get", "received", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" },
+                    "type": "list:Event",
                     "request": {
                         "verb": "GET",
                         "url": [
@@ -812,7 +812,7 @@
                 {
                     "name": [ "get", "public", "received", "events" ],
                     "group": "events",
-                    "type": { "cardinality": "list", "name": "Event" },
+                    "type": "list:Event",
                     "request": {
                         "verb": "GET",
                         "url": [
@@ -1452,7 +1452,7 @@
             "additional_methods": [
                 {
                     "name": [ "get", "network", "events" ],
-                    "type": { "cardinality": "list", "name": "Event" },
+                    "type": "list:Event",
                     "group": "events",
                     "request": {
                         "verb": "GET",
