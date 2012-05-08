@@ -570,21 +570,20 @@ class IntegrationTest:
         r = self.g.get_user().get_repo( "PyGithub" )
         print str( r.compare( "master", "develop" ) )[ :100 ]
 
-    # @todo Repository.get_languages
-    # def testRepositoryDetails( self ):
-        # r1 = self.g.get_user().get_repo( "PyGithub" )
-        # r2 = self.g.get_user().get_repo( "TestPyGithub" )
-        # self.printList( "Branches", r1.get_branches(), lambda b: b.name )
-        # self.printList( "Comments", r2.get_comments(), lambda c: c.body )
-        # r2.get_comment( r2.get_comments()[ 0 ].id )
-        # self.printList( "Contributors", r1.get_contributors(), lambda m: m.login )
-        # self.printList( "Forks", r2.get_forks(), lambda r: r.owner.login )
-        # print "Languages:", r1.get_languages()
-        # self.printList( "Tags", r1.get_tags(), lambda t: t.name )
-        # self.printList( "Watchers", r1.get_watchers(), lambda m: m.login )
+    def testRepositoryDetails( self ):
+        r1 = self.g.get_user().get_repo( "PyGithub" )
+        r2 = self.g.get_user().get_repo( "TestPyGithub" )
+        self.printList( "Branches", r1.get_branches(), lambda b: b.name )
+        self.printList( "Comments", r2.get_comments(), lambda c: c.body )
+        r2.get_comment( r2.get_comments()[ 0 ].id )
+        self.printList( "Contributors", r1.get_contributors(), lambda m: m.login )
+        self.printList( "Forks", r2.get_forks(), lambda r: r.owner.login )
+        print "Languages:", r1.get_languages()
+        self.printList( "Tags", r1.get_tags(), lambda t: t.name )
+        self.printList( "Watchers", r1.get_watchers(), lambda m: m.login )
 
-        # r3 = self.g.get_organization( "BeaverSoftware" ).get_repo( "TestPyGithub" )
-        # self.printList( "Teams", r3.get_teams(), lambda t: t.name )
+        r3 = self.g.get_organization( "BeaverSoftware" ).get_repo( "TestPyGithub" )
+        self.printList( "Teams", r3.get_teams(), lambda t: t.name )
 
     # @todo Custom url
     # def testRepositoryKeys( self ):

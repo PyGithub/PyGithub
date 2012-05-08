@@ -9465,6 +9465,21 @@
                         "languages"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/languages"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {

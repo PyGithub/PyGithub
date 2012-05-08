@@ -716,7 +716,13 @@ class Repository( object ):
         )
 
     def get_languages( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "GET",
+            str( self.url ) + "/languages",
+            None,
+            None
+        )
+        return data
 
     def get_milestone( self, number ):
         status, headers, data = self.__requester.request(

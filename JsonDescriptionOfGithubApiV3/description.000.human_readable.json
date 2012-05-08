@@ -1534,7 +1534,14 @@
                 {
                     "name": [ "get", "languages" ],
                     "type": "@todo",
-                    "group": "languages"
+                    "group": "languages",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/languages" }
+                        ]
+                    }
                 },
                 {
                     "name": [ "compare" ],
