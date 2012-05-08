@@ -502,14 +502,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/keys"
+                                "value": "https://api.github.com/user/keys"
                             }
                         ], 
                         "information": "status", 
@@ -543,14 +537,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/keys"
+                                "value": "https://api.github.com/user/keys"
                             }, 
                             {
                                 "type": "constant", 
@@ -584,14 +572,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }, 
-                            {
                                 "type": "constant", 
-                                "value": "/keys"
+                                "value": "https://api.github.com/user/keys"
                             }
                         ], 
                         "information": "data", 

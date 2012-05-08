@@ -511,17 +511,16 @@ class IntegrationTest:
     def testIssuesForAuthenticatedUser( self ):
         self.printList( "Issues", self.g.get_user().get_issues(), lambda i: i.title )
 
-    # @todo custom url /user/keys instead of /users/jacquev6/keys
-    # def testKeys( self ):
-        # u = self.g.get_user()
-        # self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        # k = u.create_key( u.login + "@PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
-        # self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        # k.edit( title = u.login + "@PyGithub2" )
-        # k = u.get_key( k.id )
-        # self.printList( "Keys", u.get_keys(), lambda k: k.title )
-        # k.delete()
-        # self.printList( "Keys", u.get_keys(), lambda k: k.title )
+    def testKeys( self ):
+        u = self.g.get_user()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k = u.create_key( u.login + "@PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAvborozfBBn2a+JETqPekTWZ1tmYjpfH9wTKFPLjIXQmxXjNye6HVgvi+iMI436RdoLsPEFDe3cjrQ6CJa7KzhRJKNTPh5EZbKI13CXfMGr7V1i3tOokXBFSRQKnDx2dj2hnswqxGUk2jXpgC/KA1q71yqnL45CBlWr50eDpwUIEPnmqSrPpRV/0ZGwIlh4o7+6HwPUF9aBhWj945WSkjZubR4UFWlDZl7ROafpkJHs2cQzaxtmBOZnu6dzmfyro0zJsvhZKD2K6d9eKgpDeKaw5rWr6FeOZPd4xyDaV1gctG0YEui8uuSPKhpcykgREUAFf+vmOKt+yXnOoq8P4vIQ==" )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.edit( title = u.login + "@PyGithub2" )
+        k = u.get_key( k.id )
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
+        k.delete()
+        self.printList( "Keys", u.get_keys(), lambda k: k.title )
 
     def testMergePullRequest( self ):
         r = self.g.get_user().get_repo( "TestPyGithub" )

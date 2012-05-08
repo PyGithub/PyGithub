@@ -75,6 +75,7 @@
                     "name": "keys",
                     "singularName": "key",
                     "type": "UserKey",
+                    "url": [ { "type": "constant", "value": "https://api.github.com/user/keys" } ],
                     "getList": true,
                     "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }

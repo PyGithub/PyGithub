@@ -223,7 +223,7 @@ class AuthenticatedUser( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/keys",
+            "https://api.github.com/user/keys",
             None,
             post_parameters
         )
@@ -385,7 +385,7 @@ class AuthenticatedUser( object ):
     def get_key( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/keys" + "/" + str( id ),
+            "https://api.github.com/user/keys" + "/" + str( id ),
             None,
             None
         )
@@ -394,7 +394,7 @@ class AuthenticatedUser( object ):
     def get_keys( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/keys",
+            "https://api.github.com/user/keys",
             None,
             None
         )
