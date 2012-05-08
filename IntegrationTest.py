@@ -452,6 +452,7 @@ class IntegrationTest:
         h.delete()
         self.printList( "Hooks", r.get_hooks(), lambda h: h.name + str( h.config ) )
 
+    ### @todo /repos/jacquev6/TestPyGithub/issues/comments/4462119 instead of /repos/jacquev6/TestPyGithub/issues/27/comments/4462119 => quite hard... maybe i.get_comment should be replaced by r.get_issue_comment
     # def testIssuesAndMilestones( self ):
         # u = self.g.get_user()
         # r = u.get_repo( "TestPyGithub" )
