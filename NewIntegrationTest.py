@@ -97,6 +97,11 @@ class TestCase( unittest.TestCase ):
 
     def tearDown( self ):
         unittest.TestCase.tearDown( self )
+        self.assertEqual( self.__file.readline(), "" )
+        self.__file.close()
+
+    def tearDownForRecord( self ):
+        unittest.TestCase.tearDown( self )
         self.__file.close()
 
     def __openFile( self, mode ):
@@ -193,6 +198,7 @@ if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
         exec "testCase = " + class_ + "( methodName = method )"
         method = getattr( testCase, method )
         TestCase.setUp = TestCase.setUpForRecord
+        TestCase.tearDown = TestCase.tearDownForRecord
         testCase.setUp()
         method()
         testCase.tearDown()
