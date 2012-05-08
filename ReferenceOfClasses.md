@@ -32,7 +32,7 @@ Attributes
 * `login`: string
 * `name`: string
 * `owned_private_repos`
-* `plan`
+* `plan`: `Plan`
 * `private_gists`
 * `public_gists`
 * `public_repos`
@@ -748,6 +748,16 @@ Teams
     * `repo_names`: `list`
     * `permission`
 * `get_teams()`: list of `Team`
+
+Class `Plan`
+============
+
+Attributes
+----------
+* `collaborators`
+* `name`
+* `private_repos`
+* `space`
 
 Class `PullRequest`
 ===================

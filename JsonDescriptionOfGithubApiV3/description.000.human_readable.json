@@ -1,6 +1,17 @@
 {
     "classes": [
         {
+            "name": "Plan",
+            "attributes": [
+                { "name": "collaborators", "type": "@todo" },
+                { "name": "private_repos", "type": "@todo" },
+                { "name": "name", "type": "@todo" },
+                { "name": "space", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "AuthenticatedUser",
             "edit": {
                 "optionalParameters": [
@@ -32,7 +43,7 @@
                 { "name": "login", "type": "string" },
                 { "name": "name", "type": "string" },
                 { "name": "owned_private_repos", "type": "@todo" },
-                { "name": "plan", "type": "@todo" },
+                { "name": "plan", "type": "Plan" },
                 { "name": "private_gists", "type": "@todo" },
                 { "name": "public_gists", "type": "@todo" },
                 { "name": "public_repos", "type": "@todo" },

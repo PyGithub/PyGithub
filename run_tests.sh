@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -f $(find -name "*.pyc")
+rm -f $(find . -name "*.pyc")
 
 coverage erase
 coverage run NewIntegrationTest.py

@@ -5,6 +5,7 @@ import PaginatedList
 import Gist
 import Repository
 import NamedUser
+import Plan
 import Organization
 import UserKey
 import Issue
@@ -608,7 +609,7 @@ class AuthenticatedUser( object ):
         if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None:
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None:
-            self.__plan = attributes[ "plan" ]
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], lazy = True )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None:
             self.__private_gists = attributes[ "private_gists" ]
         if "public_gists" in attributes and attributes[ "public_gists" ] is not None:
