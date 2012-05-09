@@ -558,7 +558,6 @@
         {
             "name": "GitTree",
             "attributes": [
-                { "name": "recursive", "type": "@todo" },
                 { "name": "sha", "type": "@todo" },
                 { "name": "tree", "type": "@todo" },
                 { "name": "url", "type": "@todo" }

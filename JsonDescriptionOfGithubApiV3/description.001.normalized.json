@@ -3175,14 +3175,6 @@
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": "recursive"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
                     "name": "sha"
                 }, 
                 {

@@ -18,11 +18,6 @@ class GitTree( object ):
             self.__complete()
 
     @property
-    def recursive( self ):
-        self.__completeIfNeeded( self.__recursive )
-        return self.__recursive
-
-    @property
     def sha( self ):
         self.__completeIfNeeded( self.__sha )
         return self.__sha
@@ -38,7 +33,6 @@ class GitTree( object ):
         return self.__url
 
     def __initAttributes( self ):
-        self.__recursive = None
         self.__sha = None
         self.__tree = None
         self.__url = None
@@ -59,8 +53,6 @@ class GitTree( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "recursive" in attributes and attributes[ "recursive" ] is not None:
-            self.__recursive = attributes[ "recursive" ]
         if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None:

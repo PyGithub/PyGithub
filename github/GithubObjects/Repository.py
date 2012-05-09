@@ -594,7 +594,7 @@ class Repository( object ):
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_trees" + "/" + str( sha ),
+            str( self.url ) + "/git/trees" + "/" + str( sha ),
             None,
             None
         )

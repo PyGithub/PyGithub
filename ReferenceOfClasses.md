@@ -409,7 +409,6 @@ Class `GitTree`
 
 Attributes
 ----------
-* `recursive`
 * `sha`
 * `tree`
 * `url`

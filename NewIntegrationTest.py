@@ -83,6 +83,7 @@ class ReplayingHttpsConnection:
 
 class TestCase( unittest.TestCase ):
     def setUp( self ):
+        self.__record = False
         unittest.TestCase.setUp( self )
         self.__fileName = ""
         self.__file = None
@@ -90,8 +91,10 @@ class TestCase( unittest.TestCase ):
         self.g = github.Github( "login", "password" )
 
     def setUpForRecord( self ):
+        self.__record = True
         import GithubCredentials
         unittest.TestCase.setUp( self )
+        self.__fileName = ""
         self.__file = None
         httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
         self.g = github.Github( GithubCredentials.login, GithubCredentials.password )
@@ -116,7 +119,8 @@ class TestCase( unittest.TestCase ):
 
     def __closeReplayFileIfNeeded( self ):
         if self.__file is not None:
-            self.assertEqual( self.__file.readline(), "" )
+            if not self.__record:
+                self.assertEqual( self.__file.readline(), "" )
             self.__file.close()
 
 class AuthenticatedUser( TestCase ):
@@ -239,6 +243,19 @@ class Repository( TestCase ):
         self.assertEqual( self.r.updated_at, "2012-05-08T19:27:43Z" )
         self.assertEqual( self.r.url, "https://api.github.com/repos/jacquev6/PyGithub" )
         self.assertEqual( self.r.watchers, 13 )
+
+class GitTree( TestCase ):
+    def setUp( self ):
+        TestCase.setUp( self )
+        self.t = self.g.get_user().get_repo( "PyGithub" ).get_git_tree( "f492784d8ca837779650d1fb406a1a3587a764ad" )
+
+    def tearDown( self ):
+        TestCase.tearDown( self )
+
+    def testAttributes( self ):
+        self.assertEqual( self.t.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
+        self.assertEqual( len( self.t.tree ), 11 )
+        self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
 
 if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
     for method in sys.argv[ 2 : ]:
