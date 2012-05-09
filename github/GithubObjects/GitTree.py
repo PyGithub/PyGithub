@@ -54,8 +54,10 @@ class GitTree( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "sha" in attributes and attributes[ "sha" ] is not None:
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None:
             self.__tree = attributes[ "tree" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

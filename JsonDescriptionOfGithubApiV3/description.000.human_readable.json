@@ -500,11 +500,11 @@
         {
             "name": "GitBlob",
             "attributes": [
-                { "name": "content", "type": "@todo" },
-                { "name": "encoding", "type": "@todo" },
-                { "name": "sha", "type": "@todo" },
-                { "name": "size", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "content", "type": "string" },
+                { "name": "encoding", "type": "string" },
+                { "name": "sha", "type": "string" },
+                { "name": "size", "type": "integer" },
+                { "name": "url", "type": "string" }
             ],
             "collections": [
             ]
@@ -514,10 +514,10 @@
             "attributes": [
                 { "name": "author", "type": "GitAuthor" },
                 { "name": "committer", "type": "GitAuthor" },
-                { "name": "message", "type": "@todo" },
-                { "name": "parents", "type": "@todo" },
-                { "name": "sha", "type": "@todo" },
-                { "name": "url", "type": "@todo" },
+                { "name": "message", "type": "string" },
+                { "name": "parents", "type": "list:GitCommit" },
+                { "name": "sha", "type": "string" },
+                { "name": "url", "type": "string" },
                 { "name": "tree", "type": "GitTree" }
             ],
             "collections": [
@@ -558,9 +558,9 @@
         {
             "name": "GitTree",
             "attributes": [
-                { "name": "sha", "type": "@todo" },
+                { "name": "sha", "type": "string" },
                 { "name": "tree", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "url", "type": "string" }
             ],
             "collections": [
             ]
@@ -1192,36 +1192,36 @@
                 ]
             },
             "attributes": [
-                { "name": "clone_url", "type": "@todo" },
-                { "name": "created_at", "type": "@todo" },
-                { "name": "description", "type": "@todo" },
-                { "name": "fork", "type": "@todo" },
-                { "name": "forks", "type": "@todo" },
-                { "name": "git_url", "type": "@todo" },
-                { "name": "has_downloads", "type": "@todo" },
-                { "name": "has_issues", "type": "@todo" },
-                { "name": "has_wiki", "type": "@todo" },
-                { "name": "homepage", "type": "@todo" },
-                { "name": "html_url", "type": "@todo" },
-                { "name": "id", "type": "@todo" },
-                { "name": "language", "type": "@todo" },
-                { "name": "master_branch", "type": "@todo" },
-                { "name": "mirror_url", "type": "@todo" },
+                { "name": "clone_url", "type": "string" },
+                { "name": "created_at", "type": "string" },
+                { "name": "description", "type": "string" },
+                { "name": "fork", "type": "bool" },
+                { "name": "forks", "type": "integer" },
+                { "name": "git_url", "type": "string" },
+                { "name": "has_downloads", "type": "bool" },
+                { "name": "has_issues", "type": "bool" },
+                { "name": "has_wiki", "type": "bool" },
+                { "name": "homepage", "type": "string" },
+                { "name": "html_url", "type": "string" },
+                { "name": "id", "type": "integer" },
+                { "name": "language", "type": "string" },
+                { "name": "master_branch", "type": "string" },
+                { "name": "mirror_url", "type": "string" },
                 { "name": "name", "type": "string" },
-                { "name": "open_issues", "type": "@todo" },
-                { "name": "organization", "type": "@todo" },
+                { "name": "open_issues", "type": "integer" },
+                { "name": "organization", "type": "Organization" },
                 { "name": "owner", "type": "NamedUser" },
                 { "name": "parent", "type": "Repository" },
                 { "name": "permissions", "type": "@todo" },
-                { "name": "private", "type": "@todo" },
-                { "name": "pushed_at", "type": "@todo" },
-                { "name": "size", "type": "@todo" },
+                { "name": "private", "type": "bool" },
+                { "name": "pushed_at", "type": "string" },
+                { "name": "size", "type": "integer" },
                 { "name": "source", "type": "Repository" },
-                { "name": "ssh_url", "type": "@todo" },
-                { "name": "svn_url", "type": "@todo" },
-                { "name": "updated_at", "type": "@todo" },
-                { "name": "url", "type": "@todo" },
-                { "name": "watchers", "type": "@todo" }
+                { "name": "ssh_url", "type": "string" },
+                { "name": "svn_url", "type": "string" },
+                { "name": "updated_at", "type": "string" },
+                { "name": "url", "type": "string" },
+                { "name": "watchers", "type": "integer" }
             ],
             "collections": [
                 {

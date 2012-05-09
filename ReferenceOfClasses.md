@@ -363,11 +363,11 @@ Class `GitBlob`
 
 Attributes
 ----------
-* `content`
-* `encoding`
-* `sha`
-* `size`
-* `url`
+* `content`: string
+* `encoding`: string
+* `sha`: string
+* `size`: integer
+* `url`: string
 
 Class `GitCommit`
 =================
@@ -376,11 +376,11 @@ Attributes
 ----------
 * `author`: `GitAuthor`
 * `committer`: `GitAuthor`
-* `message`
-* `parents`
-* `sha`
+* `message`: string
+* `parents`: list of `GitCommit`
+* `sha`: string
 * `tree`: `GitTree`
-* `url`
+* `url`: string
 
 Class `GitRef`
 ==============
@@ -418,9 +418,9 @@ Class `GitTree`
 
 Attributes
 ----------
-* `sha`
+* `sha`: string
 * `tree`
-* `url`
+* `url`: string
 
 Class `Hook`
 ============
@@ -873,36 +873,36 @@ Class `Repository`
 
 Attributes
 ----------
-* `clone_url`
-* `created_at`
-* `description`
-* `fork`
-* `forks`
-* `git_url`
-* `has_downloads`
-* `has_issues`
-* `has_wiki`
-* `homepage`
-* `html_url`
-* `id`
-* `language`
-* `master_branch`
-* `mirror_url`
+* `clone_url`: string
+* `created_at`: string
+* `description`: string
+* `fork`: bool
+* `forks`: integer
+* `git_url`: string
+* `has_downloads`: bool
+* `has_issues`: bool
+* `has_wiki`: bool
+* `homepage`: string
+* `html_url`: string
+* `id`: integer
+* `language`: string
+* `master_branch`: string
+* `mirror_url`: string
 * `name`: string
-* `open_issues`
-* `organization`
+* `open_issues`: integer
+* `organization`: `Organization`
 * `owner`: `NamedUser`
 * `parent`: `Repository`
 * `permissions`
-* `private`
-* `pushed_at`
-* `size`
+* `private`: bool
+* `pushed_at`: string
+* `size`: integer
 * `source`: `Repository`
-* `ssh_url`
-* `svn_url`
-* `updated_at`
-* `url`
-* `watchers`
+* `ssh_url`: string
+* `svn_url`: string
+* `updated_at`: string
+* `url`: string
+* `watchers`: integer
 
 Comparison
 ----------

@@ -3,6 +3,7 @@
 
 import PaginatedList
 import GitAuthor
+import GitCommit
 import GitTree
 # This allows None as a valid value for an optional parameter
 
@@ -86,13 +87,20 @@ class GitCommit( object ):
             assert isinstance( attributes[ "committer" ], dict )
             self.__committer = GitAuthor.GitAuthor( self.__requester, attributes[ "committer" ], lazy = True )
         if "message" in attributes and attributes[ "message" ] is not None:
+            assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]
         if "parents" in attributes and attributes[ "parents" ] is not None:
-            self.__parents = attributes[ "parents" ]
+            assert isinstance( attributes[ "parents" ], list )
+            self.__parents = [
+                GitCommit( self.__requester, element, lazy = True )
+                for element in attributes[ "parents" ]
+            ]
         if "sha" in attributes and attributes[ "sha" ] is not None:
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None:
             assert isinstance( attributes[ "tree" ], dict )
             self.__tree = GitTree.GitTree( self.__requester, attributes[ "tree" ], lazy = True )
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

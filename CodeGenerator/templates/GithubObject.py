@@ -71,6 +71,8 @@ class {{ class.name }}( object ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes|dictsort:"name" %}
         if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None:
+
+{% if attribute.type.cardinality == "scalar" %}
 {% if attribute.type.simple %}
     {% if attribute.type.name == "string" %}
             assert isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) )
@@ -85,6 +87,15 @@ class {{ class.name }}( object ):
 {% else %}
             assert isinstance( attributes[ "{{ attribute.name }}" ], dict )
             self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], lazy = True )
+{% endif %}
+{% endif %}
+
+{% if attribute.type.cardinality == "list" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list )
+            self.__{{ attribute.name }} = [
+                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, lazy = True )
+                for element in attributes[ "{{ attribute.name }}" ]
+            ]
 {% endif %}
 
 {% endfor %}

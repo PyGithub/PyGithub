@@ -2939,7 +2939,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "content"
                 }, 
@@ -2947,7 +2947,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "encoding"
                 }, 
@@ -2955,7 +2955,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "sha"
                 }, 
@@ -2963,7 +2963,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "size"
                 }, 
@@ -2971,7 +2971,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }
@@ -3001,15 +3001,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "message"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "GitCommit"
                     }, 
                     "name": "parents"
                 }, 
@@ -3017,7 +3017,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "sha"
                 }, 
@@ -3033,7 +3033,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }
@@ -3203,7 +3203,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "sha"
                 }, 
@@ -3219,7 +3219,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }
@@ -6843,7 +6843,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "clone_url"
                 }, 
@@ -6851,7 +6851,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "created_at"
                 }, 
@@ -6859,7 +6859,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "description"
                 }, 
@@ -6867,7 +6867,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "fork"
                 }, 
@@ -6875,7 +6875,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "forks"
                 }, 
@@ -6883,7 +6883,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "git_url"
                 }, 
@@ -6891,7 +6891,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "has_downloads"
                 }, 
@@ -6899,7 +6899,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "has_issues"
                 }, 
@@ -6907,7 +6907,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "has_wiki"
                 }, 
@@ -6915,7 +6915,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "homepage"
                 }, 
@@ -6923,7 +6923,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "html_url"
                 }, 
@@ -6931,7 +6931,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "id"
                 }, 
@@ -6939,7 +6939,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "language"
                 }, 
@@ -6947,7 +6947,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "master_branch"
                 }, 
@@ -6955,7 +6955,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "mirror_url"
                 }, 
@@ -6971,15 +6971,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "open_issues"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "Organization"
                     }, 
                     "name": "organization"
                 }, 
@@ -7011,7 +7011,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "private"
                 }, 
@@ -7019,7 +7019,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "pushed_at"
                 }, 
@@ -7027,7 +7027,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "size"
                 }, 
@@ -7043,7 +7043,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "ssh_url"
                 }, 
@@ -7051,7 +7051,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "svn_url"
                 }, 
@@ -7059,7 +7059,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -7067,7 +7067,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }, 
@@ -7075,7 +7075,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "watchers"
                 }

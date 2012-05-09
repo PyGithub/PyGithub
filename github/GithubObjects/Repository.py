@@ -2,27 +2,28 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+import Branch
+import IssueEvent
+import Label
+import GitBlob
+import Commit
+import GitRef
+import Issue
+import Repository
+import PullRequest
+import RepositoryKey
+import NamedUser
+import Milestone
+import CommitComment
 import GitCommit
 import Team
-import PullRequest
-import GitBlob
-import Repository
-import IssueEvent
-import Milestone
-import RepositoryKey
-import GitTag
-import CommitComment
+import Organization
+import GitTree
 import Hook
 import Tag
-import Branch
-import GitRef
+import GitTag
 import Download
-import Commit
-import NamedUser
-import Issue
 import Event
-import GitTree
-import Label
 # This allows None as a valid value for an optional parameter
 
 class DefaultValueForOptionalParametersType:
@@ -897,42 +898,59 @@ class Repository( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "clone_url" in attributes and attributes[ "clone_url" ] is not None:
+            assert isinstance( attributes[ "clone_url" ], ( str, unicode ) )
             self.__clone_url = attributes[ "clone_url" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None:
+            assert isinstance( attributes[ "description" ], ( str, unicode ) )
             self.__description = attributes[ "description" ]
         if "fork" in attributes and attributes[ "fork" ] is not None:
+            assert isinstance( attributes[ "fork" ], bool )
             self.__fork = attributes[ "fork" ]
         if "forks" in attributes and attributes[ "forks" ] is not None:
+            assert isinstance( attributes[ "forks" ], int )
             self.__forks = attributes[ "forks" ]
         if "git_url" in attributes and attributes[ "git_url" ] is not None:
+            assert isinstance( attributes[ "git_url" ], ( str, unicode ) )
             self.__git_url = attributes[ "git_url" ]
         if "has_downloads" in attributes and attributes[ "has_downloads" ] is not None:
+            assert isinstance( attributes[ "has_downloads" ], bool )
             self.__has_downloads = attributes[ "has_downloads" ]
         if "has_issues" in attributes and attributes[ "has_issues" ] is not None:
+            assert isinstance( attributes[ "has_issues" ], bool )
             self.__has_issues = attributes[ "has_issues" ]
         if "has_wiki" in attributes and attributes[ "has_wiki" ] is not None:
+            assert isinstance( attributes[ "has_wiki" ], bool )
             self.__has_wiki = attributes[ "has_wiki" ]
         if "homepage" in attributes and attributes[ "homepage" ] is not None:
+            assert isinstance( attributes[ "homepage" ], ( str, unicode ) )
             self.__homepage = attributes[ "homepage" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None:
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None:
+            assert isinstance( attributes[ "id" ], int )
             self.__id = attributes[ "id" ]
         if "language" in attributes and attributes[ "language" ] is not None:
+            assert isinstance( attributes[ "language" ], ( str, unicode ) )
             self.__language = attributes[ "language" ]
         if "master_branch" in attributes and attributes[ "master_branch" ] is not None:
+            assert isinstance( attributes[ "master_branch" ], ( str, unicode ) )
             self.__master_branch = attributes[ "master_branch" ]
         if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None:
+            assert isinstance( attributes[ "mirror_url" ], ( str, unicode ) )
             self.__mirror_url = attributes[ "mirror_url" ]
         if "name" in attributes and attributes[ "name" ] is not None:
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
+            assert isinstance( attributes[ "open_issues" ], int )
             self.__open_issues = attributes[ "open_issues" ]
         if "organization" in attributes and attributes[ "organization" ] is not None:
-            self.__organization = attributes[ "organization" ]
+            assert isinstance( attributes[ "organization" ], dict )
+            self.__organization = Organization.Organization( self.__requester, attributes[ "organization" ], lazy = True )
         if "owner" in attributes and attributes[ "owner" ] is not None:
             assert isinstance( attributes[ "owner" ], dict )
             self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], lazy = True )
@@ -942,21 +960,29 @@ class Repository( object ):
         if "permissions" in attributes and attributes[ "permissions" ] is not None:
             self.__permissions = attributes[ "permissions" ]
         if "private" in attributes and attributes[ "private" ] is not None:
+            assert isinstance( attributes[ "private" ], bool )
             self.__private = attributes[ "private" ]
         if "pushed_at" in attributes and attributes[ "pushed_at" ] is not None:
+            assert isinstance( attributes[ "pushed_at" ], ( str, unicode ) )
             self.__pushed_at = attributes[ "pushed_at" ]
         if "size" in attributes and attributes[ "size" ] is not None:
+            assert isinstance( attributes[ "size" ], int )
             self.__size = attributes[ "size" ]
         if "source" in attributes and attributes[ "source" ] is not None:
             assert isinstance( attributes[ "source" ], dict )
             self.__source = Repository( self.__requester, attributes[ "source" ], lazy = True )
         if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None:
+            assert isinstance( attributes[ "ssh_url" ], ( str, unicode ) )
             self.__ssh_url = attributes[ "ssh_url" ]
         if "svn_url" in attributes and attributes[ "svn_url" ] is not None:
+            assert isinstance( attributes[ "svn_url" ], ( str, unicode ) )
             self.__svn_url = attributes[ "svn_url" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
         if "watchers" in attributes and attributes[ "watchers" ] is not None:
+            assert isinstance( attributes[ "watchers" ], int )
             self.__watchers = attributes[ "watchers" ]
