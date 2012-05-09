@@ -8,22 +8,19 @@ import traceback
 
 import github
 
+class FakeHttpResponse:
+    def __init__( self, status, headers, output ):
+        self.status = status
+        self.__headers = headers
+        self.__output = output
+
+    def getheaders( self ):
+        return self.__headers
+
+    def read( self ):
+        return self.__output
+
 class RecordingHttpsConnection:
-    class HttpResponse( object ):
-        def __init__( self, file, res ):
-            self.status = res.status
-            self.__headers = res.getheaders()
-            self.__output = res.read()
-            file.write( str( self.status ) + "\n" )
-            file.write( str( self.__headers ) + "\n" )
-            file.write( str( self.__output ) + "\n" )
-
-        def getheaders( self ):
-            return self.__headers
-
-        def read( self ):
-            return self.__output
-
     __realHttpsConnection = httplib.HTTPSConnection
 
     def __init__( self, file, *args, **kwds ):
@@ -37,25 +34,23 @@ class RecordingHttpsConnection:
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
 
     def getresponse( self ):
-        return RecordingHttpsConnection.HttpResponse( self.__file, self.__cnx.getresponse() )
+        res = self.__cnx.getresponse()
+
+        status = res.status
+        headers = res.getheaders()
+        output = res.read()
+
+        self.__file.write( str( status ) + "\n" )
+        self.__file.write( str( headers ) + "\n" )
+        self.__file.write( str( output ) + "\n" )
+
+        return FakeHttpResponse( status, headers, output )
 
     def close( self ):
         self.__file.write( "\n" )
         return self.__cnx.close()
 
 class ReplayingHttpsConnection:
-    class HttpResponse( object ):
-        def __init__( self, file ):
-            self.status = int( file.readline().strip() )
-            self.__headers = eval( file.readline().strip() )
-            self.__output = file.readline().strip()
-
-        def getheaders( self ):
-            return self.__headers
-
-        def read( self ):
-            return self.__output
-
     def __init__( self, testCase, file ):
         self.__testCase = testCase
         self.__file = file
@@ -66,7 +61,11 @@ class ReplayingHttpsConnection:
         self.__testCase.assertEqual( verb + " " + url + " " + str( headers ) + " " + input, expectation )
 
     def getresponse( self ):
-        return ReplayingHttpsConnection.HttpResponse( self.__file )
+        status = int( self.__file.readline().strip() )
+        headers = eval( self.__file.readline().strip() )
+        output = self.__file.readline().strip()
+
+        return FakeHttpResponse( status, headers, output )
 
     def close( self ):
         self.__file.readline()
