@@ -1301,7 +1301,11 @@
                             { "name": "content", "type": "@todo" },
                             { "name": "encoding", "type": "@todo" }
                         ]
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/git/blobs" }
+                    ]
                 },
                 {
                     "name": "git_commits",
@@ -1320,7 +1324,11 @@
                             { "name": "author", "type": "@todo" },
                             { "name": "committer", "type": "@todo" }
                         ]
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/git/commits" }
+                    ]
                 },
                 {
                     "name": "git_refs",
@@ -1335,7 +1343,11 @@
                     },
                     "getElement": {
                         "parameter": { "name": "ref", "type": "@todo" }
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/git/refs" }
+                    ]
                 },
                 {
                     "name": "git_tags",
@@ -1354,7 +1366,11 @@
                     },
                     "getElement": {
                         "parameter": { "name": "sha", "type": "@todo" }
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/git/tags" }
+                    ]
                 },
                 {
                     "name": "git_trees",
@@ -1373,7 +1389,11 @@
                         "optionalParameters": [
                             { "name": "recursive", "type": "bool" }
                         ]
-                    }
+                    },
+                    "url": [
+                        { "type": "attribute", "value": [ "url" ] },
+                        { "type": "constant", "value": "/git/trees" }
+                    ]
                 },
                 {
                     "name": "hooks",

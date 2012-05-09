@@ -229,7 +229,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git_blobs",
+            str( self.url ) + "/git/blobs",
             None,
             post_parameters
         )
@@ -247,7 +247,7 @@ class Repository( object ):
             post_parameters[ "committer" ] = committer
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git_commits",
+            str( self.url ) + "/git/commits",
             None,
             post_parameters
         )
@@ -260,7 +260,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git_refs",
+            str( self.url ) + "/git/refs",
             None,
             post_parameters
         )
@@ -277,7 +277,7 @@ class Repository( object ):
             post_parameters[ "tagger" ] = tagger
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git_tags",
+            str( self.url ) + "/git/tags",
             None,
             post_parameters
         )
@@ -291,7 +291,7 @@ class Repository( object ):
             post_parameters[ "base_tree" ] = base_tree
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git_trees",
+            str( self.url ) + "/git/trees",
             None,
             post_parameters
         )
@@ -544,7 +544,7 @@ class Repository( object ):
     def get_git_blob( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_blobs" + "/" + str( sha ),
+            str( self.url ) + "/git/blobs" + "/" + str( sha ),
             None,
             None
         )
@@ -553,7 +553,7 @@ class Repository( object ):
     def get_git_commit( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_commits" + "/" + str( sha ),
+            str( self.url ) + "/git/commits" + "/" + str( sha ),
             None,
             None
         )
@@ -562,7 +562,7 @@ class Repository( object ):
     def get_git_ref( self, ref ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_refs" + "/" + str( ref ),
+            str( self.url ) + "/git/refs" + "/" + str( ref ),
             None,
             None
         )
@@ -571,7 +571,7 @@ class Repository( object ):
     def get_git_refs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_refs",
+            str( self.url ) + "/git/refs",
             None,
             None
         )
@@ -585,7 +585,7 @@ class Repository( object ):
     def get_git_tag( self, sha ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git_tags" + "/" + str( sha ),
+            str( self.url ) + "/git/tags" + "/" + str( sha ),
             None,
             None
         )

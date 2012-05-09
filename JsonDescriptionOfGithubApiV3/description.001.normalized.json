@@ -7827,7 +7827,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_blobs"
+                                "value": "/git/blobs"
                             }
                         ], 
                         "information": "status", 
@@ -7868,7 +7868,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_blobs"
+                                "value": "/git/blobs"
                             }, 
                             {
                                 "type": "constant", 
@@ -7934,7 +7934,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_commits"
+                                "value": "/git/commits"
                             }
                         ], 
                         "information": "status", 
@@ -7992,7 +7992,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_commits"
+                                "value": "/git/commits"
                             }, 
                             {
                                 "type": "constant", 
@@ -8050,7 +8050,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_refs"
+                                "value": "/git/refs"
                             }
                         ], 
                         "information": "status", 
@@ -8091,7 +8091,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_refs"
+                                "value": "/git/refs"
                             }, 
                             {
                                 "type": "constant", 
@@ -8132,7 +8132,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_refs"
+                                "value": "/git/refs"
                             }
                         ], 
                         "information": "data", 
@@ -8196,7 +8196,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_tags"
+                                "value": "/git/tags"
                             }
                         ], 
                         "information": "status", 
@@ -8246,7 +8246,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_tags"
+                                "value": "/git/tags"
                             }, 
                             {
                                 "type": "constant", 
@@ -8296,7 +8296,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_trees"
+                                "value": "/git/trees"
                             }
                         ], 
                         "information": "status", 
@@ -8346,7 +8346,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git_trees"
+                                "value": "/git/trees"
                             }, 
                             {
                                 "type": "constant", 
