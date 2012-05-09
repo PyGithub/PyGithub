@@ -8,9 +8,6 @@ import traceback
 
 import github
 
-class RecordReplayException( Exception ):
-    pass
-
 class RecordingHttpsConnection:
     class HttpResponse( object ):
         def __init__( self, file, res ):
@@ -59,21 +56,14 @@ class ReplayingHttpsConnection:
         def read( self ):
             return self.__output
 
-    def __init__( self, file ):
+    def __init__( self, testCase, file ):
+        self.__testCase = testCase
         self.__file = file
 
     def request( self, verb, url, input, headers ):
         del headers[ "Authorization" ]
         expectation = self.__file.readline().strip()
-        while expectation.startswith( "#" ):
-            self.__file.readline()
-            self.__file.readline()
-            self.__file.readline()
-            self.__file.readline()
-            expectation = self.__file.readline().strip()
-        if expectation != verb + " " + url + " " + str( headers ) + " " + input:
-            print "Expected [", expectation, "] but got [", verb + " " + url + " " + str( headers ) + " " + input, "]"
-            raise RecordReplayException( "This test has been changed since last record. Please re-run this script with argument '--record'" )
+        self.__testCase.assertEqual( verb + " " + url + " " + str( headers ) + " " + input, expectation )
 
     def getresponse( self ):
         return ReplayingHttpsConnection.HttpResponse( self.__file )
@@ -93,7 +83,7 @@ class TestCase( unittest.TestCase ):
             httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
             self.g = github.Github( GithubCredentials.login, GithubCredentials.password )
         else:
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self.__openFile( "r" ) )
+            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ) )
             self.g = github.Github( "login", "password" )
 
     def tearDown( self ):
