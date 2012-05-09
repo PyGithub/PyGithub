@@ -82,30 +82,23 @@ class ReplayingHttpsConnection:
         self.__file.readline()
 
 class TestCase( unittest.TestCase ):
-    def setUp( self ):
-        self.__record = False
-        unittest.TestCase.setUp( self )
-        self.__fileName = ""
-        self.__file = None
-        httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self.__openFile( "r" ) )
-        self.g = github.Github( "login", "password" )
+    recordMode = False
 
-    def setUpForRecord( self ):
-        self.__record = True
-        import GithubCredentials
+    def setUp( self ):
         unittest.TestCase.setUp( self )
         self.__fileName = ""
         self.__file = None
-        httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
-        self.g = github.Github( GithubCredentials.login, GithubCredentials.password )
+        if self.recordMode:
+            import GithubCredentials
+            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
+            self.g = github.Github( GithubCredentials.login, GithubCredentials.password )
+        else:
+            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self.__openFile( "r" ) )
+            self.g = github.Github( "login", "password" )
 
     def tearDown( self ):
         unittest.TestCase.tearDown( self )
         self.__closeReplayFileIfNeeded()
-
-    def tearDownForRecord( self ):
-        unittest.TestCase.tearDown( self )
-        self.__file.close()
 
     def __openFile( self, mode ):
         for ( _, _, functionName, _ ) in traceback.extract_stack():
@@ -119,7 +112,7 @@ class TestCase( unittest.TestCase ):
 
     def __closeReplayFileIfNeeded( self ):
         if self.__file is not None:
-            if not self.__record:
+            if not self.recordMode:
                 self.assertEqual( self.__file.readline(), "" )
             self.__file.close()
 
@@ -127,9 +120,6 @@ class AuthenticatedUser( TestCase ):
     def setUp( self ):
         TestCase.setUp( self )
         self.u = self.g.get_user()
-
-    def tearDown( self ):
-        TestCase.tearDown( self )
 
     def testAttributes( self ):
         self.assertEqual( self.u.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
@@ -209,9 +199,6 @@ class Repository( TestCase ):
         TestCase.setUp( self )
         self.r = self.g.get_user().get_repo( "PyGithub" )
 
-    def tearDown( self ):
-        TestCase.tearDown( self )
-
     def testAttributes( self ):
         self.assertEqual( self.r.clone_url, "https://github.com/jacquev6/PyGithub.git" )
         self.assertEqual( self.r.created_at, "2012-02-25T12:53:47Z" )
@@ -249,24 +236,12 @@ class GitTree( TestCase ):
         TestCase.setUp( self )
         self.t = self.g.get_user().get_repo( "PyGithub" ).get_git_tree( "f492784d8ca837779650d1fb406a1a3587a764ad" )
 
-    def tearDown( self ):
-        TestCase.tearDown( self )
-
     def testAttributes( self ):
         self.assertEqual( self.t.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
         self.assertEqual( len( self.t.tree ), 11 )
         self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
 
-if len( sys.argv ) > 1 and sys.argv[ 1 ] == "--record":
-    for method in sys.argv[ 2 : ]:
-        class_, method = method.split( "." )
-        print "Recording method", method, "of class", class_
-        testCase = eval( class_ )( methodName = method )
-        method = getattr( testCase, method )
-        TestCase.setUp = TestCase.setUpForRecord
-        TestCase.tearDown = TestCase.tearDownForRecord
-        testCase.setUp()
-        method()
-        testCase.tearDown()
-else:
-    unittest.main()
+if "--record" in sys.argv:
+    TestCase.recordMode = True
+
+unittest.main( argv = [ arg for arg in sys.argv if arg != "--record" ] )
