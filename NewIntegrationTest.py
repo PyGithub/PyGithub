@@ -230,6 +230,20 @@ class GitTree( TestCase ):
         self.assertEqual( len( self.t.tree ), 11 )
         self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
 
+class GitBlob( TestCase ):
+    def setUp( self ):
+        TestCase.setUp( self )
+        self.b = self.g.get_user().get_repo( "PyGithub" ).get_git_blob( "53bce9fa919b4544e67275089b3ec5b44be20667" )
+
+    def testAttributes( self ):
+        self.assertTrue( self.b.content.startswith( "IyEvdXNyL2Jpbi9lbnYgcHl0aG9uCgpmcm9tIGRpc3R1dGlscy5jb3JlIGlt\ncG9ydCBzZXR1cAppbXBvcnQgdGV4dHdyYXAKCnNldHVwKAogICAgbmFtZSA9\n" ) )
+        self.assertTrue( self.b.content.endswith( "Z3JhbW1pbmcgTGFuZ3VhZ2UgOjogUHl0aG9uIiwKICAgICAgICAiVG9waWMg\nOjogU29mdHdhcmUgRGV2ZWxvcG1lbnQiLAogICAgXSwKKQo=\n" ) )
+        self.assertEqual( len( self.b.content ), 1757 )
+        self.assertEqual( self.b.encoding, "base64" )
+        self.assertEqual( self.b.size, 1295 )
+        self.assertEqual( self.b.sha, "53bce9fa919b4544e67275089b3ec5b44be20667" )
+        self.assertEqual( self.b.url, "https://api.github.com/repos/jacquev6/PyGithub/git/blobs/53bce9fa919b4544e67275089b3ec5b44be20667" )
+
 if "--record" in sys.argv:
     TestCase.recordMode = True
 
