@@ -203,8 +203,12 @@ class GitCommit( TestCase ):
         self.c = self.g.get_user().get_repo( "PyGithub" ).get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
 
     def testAttributes( self ):
-        self.assertEqual( self.c.author, { "date": "2012-04-17T10:55:16-07:00", "email": "vincent@vincent-jacques.net", "name": "Vincent Jacques" } ) ### @todo Structure
-        self.assertEqual( self.c.committer, { "date": "2012-04-17T10:55:16-07:00", "email": "vincent@vincent-jacques.net", "name": "Vincent Jacques" } ) ### @todo Structure
+        self.assertEqual( self.c.author.name, "Vincent Jacques" )
+        self.assertEqual( self.c.author.email, "vincent@vincent-jacques.net" )
+        self.assertEqual( self.c.author.date, "2012-04-17T10:55:16-07:00" )
+        self.assertEqual( self.c.committer.name, "Vincent Jacques" )
+        self.assertEqual( self.c.committer.email, "vincent@vincent-jacques.net" )
+        self.assertEqual( self.c.committer.date, "2012-04-17T10:55:16-07:00" )
         self.assertEqual( self.c.message, "Merge branch 'develop'\n" )
         self.assertEqual( self.c.parents, [{u'url': u'https://api.github.com/repos/jacquev6/PyGithub/git/commits/936f4a97f1a86392637ec002bbf89ff036a5062d', u'sha': u'936f4a97f1a86392637ec002bbf89ff036a5062d'}, {u'url': u'https://api.github.com/repos/jacquev6/PyGithub/git/commits/2a7e80e6421c5d4d201d60619068dea6bae612cb', u'sha': u'2a7e80e6421c5d4d201d60619068dea6bae612cb'}] ) ### @todo Structure
         self.assertEqual( self.c.sha, "4303c5b90e2216d927155e9609436ccb8984c495" )

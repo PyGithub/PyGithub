@@ -512,8 +512,8 @@
         {
             "name": "GitCommit",
             "attributes": [
-                { "name": "author", "type": "@todo" },
-                { "name": "committer", "type": "@todo" },
+                { "name": "author", "type": "GitAuthor" },
+                { "name": "committer", "type": "GitAuthor" },
                 { "name": "message", "type": "@todo" },
                 { "name": "parents", "type": "@todo" },
                 { "name": "sha", "type": "@todo" },
@@ -561,6 +561,16 @@
                 { "name": "sha", "type": "@todo" },
                 { "name": "tree", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "GitAuthor",
+            "attributes": [
+                { "name": "date", "type": "string" },
+                { "name": "email", "type": "string" },
+                { "name": "name", "type": "string" }
             ],
             "collections": [
             ]

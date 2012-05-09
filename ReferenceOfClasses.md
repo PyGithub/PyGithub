@@ -349,6 +349,15 @@ Modification
 * `edit( body )`
     * `body`
 
+Class `GitAuthor`
+=================
+
+Attributes
+----------
+* `date`: string
+* `email`: string
+* `name`: string
+
 Class `GitBlob`
 ===============
 
@@ -365,8 +374,8 @@ Class `GitCommit`
 
 Attributes
 ----------
-* `author`
-* `committer`
+* `author`: `GitAuthor`
+* `committer`: `GitAuthor`
 * `message`
 * `parents`
 * `sha`

@@ -2,6 +2,7 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+import GitAuthor
 import GitTree
 # This allows None as a valid value for an optional parameter
 
@@ -79,9 +80,11 @@ class GitCommit( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "author" in attributes and attributes[ "author" ] is not None:
-            self.__author = attributes[ "author" ]
+            assert isinstance( attributes[ "author" ], dict )
+            self.__author = GitAuthor.GitAuthor( self.__requester, attributes[ "author" ], lazy = True )
         if "committer" in attributes and attributes[ "committer" ] is not None:
-            self.__committer = attributes[ "committer" ]
+            assert isinstance( attributes[ "committer" ], dict )
+            self.__committer = GitAuthor.GitAuthor( self.__requester, attributes[ "committer" ], lazy = True )
         if "message" in attributes and attributes[ "message" ] is not None:
             self.__message = attributes[ "message" ]
         if "parents" in attributes and attributes[ "parents" ] is not None:

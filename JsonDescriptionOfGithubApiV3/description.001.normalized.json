@@ -2909,6 +2909,36 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "date"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "email"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "name"
+                }
+            ], 
+            "name": "GitAuthor", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
                     "name": "content"
@@ -2953,17 +2983,17 @@
             "attributes": [
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "GitAuthor"
                     }, 
                     "name": "author"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "GitAuthor"
                     }, 
                     "name": "committer"
                 }, 
