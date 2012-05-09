@@ -91,7 +91,7 @@ class {{ class.name }}( object ):
 {% endif %}
 
 {% if attribute.type.cardinality == "list" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list )
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], dict ) )
             self.__{{ attribute.name }} = [
                 {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, lazy = True )
                 for element in attributes[ "{{ attribute.name }}" ]

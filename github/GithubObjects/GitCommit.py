@@ -90,7 +90,7 @@ class GitCommit( object ):
             assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]
         if "parents" in attributes and attributes[ "parents" ] is not None:
-            assert isinstance( attributes[ "parents" ], list )
+            assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) )
             self.__parents = [
                 GitCommit( self.__requester, element, lazy = True )
                 for element in attributes[ "parents" ]
