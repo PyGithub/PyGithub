@@ -408,10 +408,13 @@ class Organization( object ):
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
         if "location" in attributes and attributes[ "location" ] is not None:
+            assert isinstance( attributes[ "location" ], ( str, unicode ) )
             self.__location = attributes[ "location" ]
         if "login" in attributes and attributes[ "login" ] is not None:
+            assert isinstance( attributes[ "login" ], ( str, unicode ) )
             self.__login = attributes[ "login" ]
         if "name" in attributes and attributes[ "name" ] is not None:
+            assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None:
             self.__owned_private_repos = attributes[ "owned_private_repos" ]

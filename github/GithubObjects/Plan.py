@@ -40,10 +40,14 @@ class Plan( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None:
+            assert isinstance( attributes[ "collaborators" ], int )
             self.__collaborators = attributes[ "collaborators" ]
         if "name" in attributes and attributes[ "name" ] is not None:
+            assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "private_repos" in attributes and attributes[ "private_repos" ] is not None:
+            assert isinstance( attributes[ "private_repos" ], int )
             self.__private_repos = attributes[ "private_repos" ]
         if "space" in attributes and attributes[ "space" ] is not None:
+            assert isinstance( attributes[ "space" ], int )
             self.__space = attributes[ "space" ]

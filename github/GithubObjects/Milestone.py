@@ -142,6 +142,7 @@ class Milestone( object ):
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes and attributes[ "creator" ] is not None:
+            assert isinstance( attributes[ "creator" ], dict )
             self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], lazy = True )
         if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]

@@ -3,10 +3,10 @@
         {
             "name": "Plan",
             "attributes": [
-                { "name": "collaborators", "type": "@todo" },
-                { "name": "private_repos", "type": "@todo" },
-                { "name": "name", "type": "@todo" },
-                { "name": "space", "type": "@todo" }
+                { "name": "collaborators", "type": "integer" },
+                { "name": "private_repos", "type": "integer" },
+                { "name": "name", "type": "string" },
+                { "name": "space", "type": "integer" }
             ],
             "collections": [
             ]
@@ -25,31 +25,31 @@
                 ]
             },
             "attributes": [
-                { "name": "avatar_url", "type": "@todo" },
-                { "name": "bio", "type": "@todo" },
-                { "name": "blog", "type": "@todo" },
-                { "name": "collaborators", "type": "@todo" },
-                { "name": "company", "type": "@todo" },
-                { "name": "created_at", "type": "@todo" },
-                { "name": "disk_usage", "type": "@todo" },
-                { "name": "email", "type": "@todo" },
-                { "name": "followers", "type": "@todo" },
-                { "name": "following", "type": "@todo" },
-                { "name": "gravatar_id", "type": "@todo" },
-                { "name": "hireable", "type": "@todo" },
-                { "name": "html_url", "type": "@todo" },
-                { "name": "id", "type": "@todo" },
+                { "name": "avatar_url", "type": "string" },
+                { "name": "bio", "type": "string" },
+                { "name": "blog", "type": "string" },
+                { "name": "collaborators", "type": "integer" },
+                { "name": "company", "type": "string" },
+                { "name": "created_at", "type": "string" },
+                { "name": "disk_usage", "type": "integer" },
+                { "name": "email", "type": "string" },
+                { "name": "followers", "type": "integer" },
+                { "name": "following", "type": "integer" },
+                { "name": "gravatar_id", "type": "string" },
+                { "name": "hireable", "type": "bool" },
+                { "name": "html_url", "type": "string" },
+                { "name": "id", "type": "integer" },
                 { "name": "location", "type": "string" },
                 { "name": "login", "type": "string" },
                 { "name": "name", "type": "string" },
-                { "name": "owned_private_repos", "type": "@todo" },
+                { "name": "owned_private_repos", "type": "integer" },
                 { "name": "plan", "type": "Plan" },
-                { "name": "private_gists", "type": "@todo" },
-                { "name": "public_gists", "type": "@todo" },
-                { "name": "public_repos", "type": "@todo" },
-                { "name": "total_private_repos", "type": "@todo" },
-                { "name": "type", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "private_gists", "type": "integer" },
+                { "name": "public_gists", "type": "integer" },
+                { "name": "public_repos", "type": "integer" },
+                { "name": "total_private_repos", "type": "integer" },
+                { "name": "type", "type": "string" },
+                { "name": "url", "type": "string" }
             ],
             "collections": [
                 {
@@ -127,7 +127,7 @@
                             { "name": "has_issues", "type": "bool" },
                             { "name": "has_wiki", "type": "bool" },
                             { "name": "has_downloads", "type": "bool" },
-                            { "name": "team_id", "type": "int", "@todo": "Use Team" }
+                            { "name": "team_id", "type": "@todo" }
                         ]
                     }
                 },
@@ -985,7 +985,7 @@
                             { "name": "has_issues", "type": "bool" },
                             { "name": "has_wiki", "type": "bool" },
                             { "name": "has_downloads", "type": "bool" },
-                            { "name": "team_id", "type": "int", "@todo": "Use Team" }
+                            { "name": "team_id", "type": "@todo" }
                         ]
                     }
                 },

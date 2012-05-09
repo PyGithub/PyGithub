@@ -384,6 +384,7 @@ class NamedUser( object ):
         if "email" in attributes and attributes[ "email" ] is not None:
             self.__email = attributes[ "email" ]
         if "followers" in attributes and attributes[ "followers" ] is not None:
+            assert isinstance( attributes[ "followers" ], int )
             self.__followers = attributes[ "followers" ]
         if "following" in attributes and attributes[ "following" ] is not None:
             self.__following = attributes[ "following" ]
@@ -396,10 +397,13 @@ class NamedUser( object ):
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
         if "location" in attributes and attributes[ "location" ] is not None:
+            assert isinstance( attributes[ "location" ], ( str, unicode ) )
             self.__location = attributes[ "location" ]
         if "login" in attributes and attributes[ "login" ] is not None:
+            assert isinstance( attributes[ "login" ], ( str, unicode ) )
             self.__login = attributes[ "login" ]
         if "name" in attributes and attributes[ "name" ] is not None:
+            assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None:
             self.__owned_private_repos = attributes[ "owned_private_repos" ]

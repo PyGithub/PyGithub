@@ -14,31 +14,31 @@ Class `AuthenticatedUser`
 
 Attributes
 ----------
-* `avatar_url`
-* `bio`
-* `blog`
-* `collaborators`
-* `company`
-* `created_at`
-* `disk_usage`
-* `email`
-* `followers`
-* `following`
-* `gravatar_id`
-* `hireable`
-* `html_url`
-* `id`
+* `avatar_url`: string
+* `bio`: string
+* `blog`: string
+* `collaborators`: integer
+* `company`: string
+* `created_at`: string
+* `disk_usage`: integer
+* `email`: string
+* `followers`: integer
+* `following`: integer
+* `gravatar_id`: string
+* `hireable`: bool
+* `html_url`: string
+* `id`: integer
 * `location`: string
 * `login`: string
 * `name`: string
-* `owned_private_repos`
+* `owned_private_repos`: integer
 * `plan`: `Plan`
-* `private_gists`
-* `public_gists`
-* `public_repos`
-* `total_private_repos`
-* `type`
-* `url`
+* `private_gists`: integer
+* `public_gists`: integer
+* `public_repos`: integer
+* `total_private_repos`: integer
+* `type`: string
+* `url`: string
 
 Authorizations
 --------------
@@ -130,7 +130,7 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
-    * `team_id`: `int`
+    * `team_id`
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
@@ -735,7 +735,7 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
-    * `team_id`: `int`
+    * `team_id`
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
@@ -754,10 +754,10 @@ Class `Plan`
 
 Attributes
 ----------
-* `collaborators`
-* `name`
-* `private_repos`
-* `space`
+* `collaborators`: integer
+* `name`: string
+* `private_repos`: integer
+* `space`: integer
 
 Class `PullRequest`
 ===================

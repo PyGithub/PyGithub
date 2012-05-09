@@ -252,6 +252,7 @@ class Issue( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes and attributes[ "assignee" ] is not None:
+            assert isinstance( attributes[ "assignee" ], dict )
             self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], lazy = True )
         if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
@@ -270,6 +271,7 @@ class Issue( object ):
         if "labels" in attributes and attributes[ "labels" ] is not None:
             self.__labels = attributes[ "labels" ]
         if "milestone" in attributes and attributes[ "milestone" ] is not None:
+            assert isinstance( attributes[ "milestone" ], dict )
             self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], lazy = True )
         if "number" in attributes and attributes[ "number" ] is not None:
             self.__number = attributes[ "number" ]
@@ -284,4 +286,5 @@ class Issue( object ):
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
+            assert isinstance( attributes[ "user" ], dict )
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

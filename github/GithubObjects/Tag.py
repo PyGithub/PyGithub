@@ -41,6 +41,7 @@ class Tag( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes and attributes[ "commit" ] is not None:
+            assert isinstance( attributes[ "commit" ], dict )
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], lazy = True )
         if "name" in attributes and attributes[ "name" ] is not None:
             self.__name = attributes[ "name" ]

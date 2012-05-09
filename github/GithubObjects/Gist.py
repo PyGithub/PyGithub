@@ -219,6 +219,7 @@ class Gist( object ):
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None:
+            assert isinstance( attributes[ "description" ], ( str, unicode ) )
             self.__description = attributes[ "description" ]
         if "files" in attributes and attributes[ "files" ] is not None:
             self.__files = attributes[ "files" ]
@@ -233,6 +234,7 @@ class Gist( object ):
         if "html_url" in attributes and attributes[ "html_url" ] is not None:
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None:
+            assert isinstance( attributes[ "id" ], int )
             self.__id = attributes[ "id" ]
         if "public" in attributes and attributes[ "public" ] is not None:
             self.__public = attributes[ "public" ]
@@ -241,4 +243,5 @@ class Gist( object ):
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
+            assert isinstance( attributes[ "user" ], dict )
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )

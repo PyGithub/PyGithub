@@ -89,6 +89,7 @@ class GitCommit( object ):
         if "sha" in attributes and attributes[ "sha" ] is not None:
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None:
+            assert isinstance( attributes[ "tree" ], dict )
             self.__tree = GitTree.GitTree( self.__requester, attributes[ "tree" ], lazy = True )
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

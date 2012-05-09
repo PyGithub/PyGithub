@@ -111,6 +111,7 @@ class Event( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None:
+            assert isinstance( attributes[ "actor" ], dict )
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
             self.__commit_id = attributes[ "commit_id" ]
@@ -123,12 +124,14 @@ class Event( object ):
         if "issue" in attributes and attributes[ "issue" ] is not None:
             self.__issue = attributes[ "issue" ]
         if "org" in attributes and attributes[ "org" ] is not None:
+            assert isinstance( attributes[ "org" ], dict )
             self.__org = Organization.Organization( self.__requester, attributes[ "org" ], lazy = True )
         if "payload" in attributes and attributes[ "payload" ] is not None:
             self.__payload = attributes[ "payload" ]
         if "public" in attributes and attributes[ "public" ] is not None:
             self.__public = attributes[ "public" ]
         if "repo" in attributes and attributes[ "repo" ] is not None:
+            assert isinstance( attributes[ "repo" ], dict )
             self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], lazy = True )
         if "type" in attributes and attributes[ "type" ] is not None:
             self.__type = attributes[ "type" ]

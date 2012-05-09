@@ -78,6 +78,7 @@ class GitRef( object ):
         if "object" in attributes and attributes[ "object" ] is not None:
             self.__object = attributes[ "object" ]
         if "ref" in attributes and attributes[ "ref" ] is not None:
+            assert isinstance( attributes[ "ref" ], ( str, unicode ) )
             self.__ref = attributes[ "ref" ]
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]

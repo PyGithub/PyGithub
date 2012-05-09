@@ -927,14 +927,17 @@ class Repository( object ):
         if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None:
             self.__mirror_url = attributes[ "mirror_url" ]
         if "name" in attributes and attributes[ "name" ] is not None:
+            assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
             self.__open_issues = attributes[ "open_issues" ]
         if "organization" in attributes and attributes[ "organization" ] is not None:
             self.__organization = attributes[ "organization" ]
         if "owner" in attributes and attributes[ "owner" ] is not None:
+            assert isinstance( attributes[ "owner" ], dict )
             self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], lazy = True )
         if "parent" in attributes and attributes[ "parent" ] is not None:
+            assert isinstance( attributes[ "parent" ], dict )
             self.__parent = Repository( self.__requester, attributes[ "parent" ], lazy = True )
         if "permissions" in attributes and attributes[ "permissions" ] is not None:
             self.__permissions = attributes[ "permissions" ]
@@ -945,6 +948,7 @@ class Repository( object ):
         if "size" in attributes and attributes[ "size" ] is not None:
             self.__size = attributes[ "size" ]
         if "source" in attributes and attributes[ "source" ] is not None:
+            assert isinstance( attributes[ "source" ], dict )
             self.__source = Repository( self.__requester, attributes[ "source" ], lazy = True )
         if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None:
             self.__ssh_url = attributes[ "ssh_url" ]

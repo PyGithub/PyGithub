@@ -331,4 +331,5 @@ class PullRequest( object ):
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
+            assert isinstance( attributes[ "user" ], dict )
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )
