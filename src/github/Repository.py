@@ -261,7 +261,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git",
+            str( self.url ) + "/git/refs",
             None,
             post_parameters
         )

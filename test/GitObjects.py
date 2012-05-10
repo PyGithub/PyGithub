@@ -65,14 +65,21 @@ class GitCommit( Framework.TestCase ):
 class GitRef( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.r = self.g.get_user().get_repo( "PyGithub" ).get_git_ref( "refs/heads/topic/RewriteWithGeneratedCode" )
+        self.repo = self.g.get_user().get_repo( "PyGithub" )
 
     def testAttributes( self ):
-        self.assertEqual( self.r.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
-        self.assertEqual( self.r.object.type, "commit" )
-        self.assertEqual( self.r.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
-        self.assertEqual( self.r.ref, "refs/heads/topic/RewriteWithGeneratedCode" )
-        self.assertEqual( self.r.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/topic/RewriteWithGeneratedCode" )
+        ref = self.repo.get_git_ref( "refs/heads/topic/RewriteWithGeneratedCode" )
+        self.assertEqual( ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( ref.object.type, "commit" )
+        self.assertEqual( ref.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( ref.ref, "refs/heads/topic/RewriteWithGeneratedCode" )
+        self.assertEqual( ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/topic/RewriteWithGeneratedCode" )
+
+    def testCreateEditDelete( self ):
+        ref = self.repo.create_git_ref( "refs/heads/BranchCreatedByPyGithub", "4303c5b90e2216d927155e9609436ccb8984c495" )
+        ref.edit( "04cde900a0775b51f762735637bd30de392a2793" )
+        ref.edit( "4303c5b90e2216d927155e9609436ccb8984c495", force = True )
+        ref.delete()
 
 class GitTag( Framework.TestCase ):
     def setUp( self ):

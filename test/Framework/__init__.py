@@ -27,7 +27,7 @@ class RecordingHttpsConnection:
         self.__cnx = self.__realHttpsConnection( *args, **kwds )
 
     def request( self, verb, url, input, headers ):
-        print verb, url
+        print verb, url,
         self.__cnx.request( verb, url, input, headers )
         del headers[ "Authorization" ] # Do not let sensitive info in git :-p
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
@@ -36,6 +36,7 @@ class RecordingHttpsConnection:
         res = self.__cnx.getresponse()
 
         status = res.status
+        print "=>", status
         headers = res.getheaders()
         output = res.read()
 
