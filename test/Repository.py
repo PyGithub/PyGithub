@@ -42,3 +42,14 @@ class Repository( Framework.TestCase ):
     def testCreate( self ):
         repo = self.user.create_repo( "TestPyGithub" )
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+
+    def testEditWithoutArguments( self ):
+        repo = self.user.get_repo( "TestPyGithub" )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+        repo.edit( "TestPyGithub" ) ### @todo Make name an optional parameter
+
+    def testEditWithAllArguments( self ):
+        repo = self.user.get_repo( "TestPyGithub" )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+        repo.edit( "TestPyGithub", "Repository created by PyGithub", "http://vincent-jacques.net/PyGithub", public = True, has_issues = False, has_wiki = False, has_downloads = False )
+        self.assertEqual( repo.description, "Repository created by PyGithub" )
