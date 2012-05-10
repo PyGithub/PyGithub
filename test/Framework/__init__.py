@@ -4,7 +4,7 @@ import unittest
 import httplib
 import traceback
 
-sys.path.append( os.path.join( os.path.dirname( __file__ ), "..", "..", "src" ) )
+sys.path = [ os.path.join( os.path.dirname( __file__ ), "..", "..", "src" ) ] + sys.path
 import github
 
 class FakeHttpResponse:
