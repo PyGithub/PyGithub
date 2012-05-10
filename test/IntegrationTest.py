@@ -6,6 +6,8 @@ import unittest
 import httplib
 import traceback
 
+sys.path.append( os.path.join( "..", "src" ) )
+
 import github
 
 class FakeHttpResponse:
@@ -92,7 +94,7 @@ class TestCase( unittest.TestCase ):
     def __openFile( self, mode ):
         for ( _, _, functionName, _ ) in traceback.extract_stack():
             if functionName.startswith( "test" ) or functionName == "setUp" or functionName == "tearDown":
-                fileName = os.path.join( "ReplayDataForNewIntegrationTest", self.__class__.__name__ + "." + functionName + ".txt" )
+                fileName = os.path.join( "ReplayData", self.__class__.__name__ + "." + functionName + ".txt" )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName

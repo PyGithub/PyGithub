@@ -2,11 +2,13 @@
 
 rm -f $(find . -name "*.pyc")
 
+cd test
+
 coverage erase
-coverage run NewIntegrationTest.py
+coverage run IntegrationTest.py
 
 echo "=============="
 echo "|| Coverage ||"
 echo "=============="
 
-coverage report -m --include=./*
+coverage report -m --include=../src/*
