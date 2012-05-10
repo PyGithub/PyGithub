@@ -34,6 +34,23 @@ class GitCommit( Framework.TestCase ):
         self.assertEqual( self.c.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
         self.assertEqual( self.c.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495" )
 
+class GitTag( Framework.TestCase ):
+    def setUp( self ):
+        Framework.TestCase.setUp( self )
+        self.t = self.g.get_user().get_repo( "PyGithub" ).get_git_tag( "f5f37322407b02a80de4526ad88d5f188977bc3c" )
+
+    def testAttributes( self ):
+        self.assertEqual( self.t.message, "Version 0.6\n" )
+        self.assertEqual( self.t.object.sha, "4303c5b90e2216d927155e9609436ccb8984c495" )
+        self.assertEqual( self.t.object.type, "commit" )
+        self.assertEqual( self.t.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495" )
+        self.assertEqual( self.t.sha, "f5f37322407b02a80de4526ad88d5f188977bc3c" )
+        self.assertEqual( self.t.tag, "v0.6" )
+        self.assertEqual( self.t.tagger.date, "2012-05-10T11:14:15-07:00" )
+        self.assertEqual( self.t.tagger.email, "vincent@vincent-jacques.net" )
+        self.assertEqual( self.t.tagger.name, "Vincent Jacques" )
+        self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c" )
+
 class GitTree( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )

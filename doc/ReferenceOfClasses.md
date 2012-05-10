@@ -439,12 +439,12 @@ Class `GitTag`
 
 Attributes
 ----------
-* `message`
-* `object`
-* `sha`
-* `tag`
-* `tagger`
-* `url`
+* `message`: string
+* `object`: `GitObject`
+* `sha`: string
+* `tag`: string
+* `tagger`: `GitAuthor`
+* `url`: string
 
 Class `GitTree`
 ===============

@@ -2,6 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+import GitAuthor
+import GitObject
 # This allows None as a valid value for an optional parameter
 
 class DefaultValueForOptionalParametersType:
@@ -72,14 +74,20 @@ class GitTag( object ):
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
         if "message" in attributes and attributes[ "message" ] is not None:
+            assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]
         if "object" in attributes and attributes[ "object" ] is not None:
-            self.__object = attributes[ "object" ]
+            assert isinstance( attributes[ "object" ], dict )
+            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], lazy = True )
         if "sha" in attributes and attributes[ "sha" ] is not None:
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
         if "tag" in attributes and attributes[ "tag" ] is not None:
+            assert isinstance( attributes[ "tag" ], ( str, unicode ) )
             self.__tag = attributes[ "tag" ]
         if "tagger" in attributes and attributes[ "tagger" ] is not None:
-            self.__tagger = attributes[ "tagger" ]
+            assert isinstance( attributes[ "tagger" ], dict )
+            self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], lazy = True )
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

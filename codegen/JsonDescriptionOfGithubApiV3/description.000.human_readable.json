@@ -581,12 +581,12 @@
         {
             "name": "GitTag",
             "attributes": [
-                { "name": "message", "type": "@todo" },
-                { "name": "object", "type": "@todo" },
-                { "name": "sha", "type": "@todo" },
-                { "name": "tag", "type": "@todo" },
-                { "name": "tagger", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "message", "type": "string" },
+                { "name": "object", "type": "GitObject" },
+                { "name": "sha", "type": "string" },
+                { "name": "tag", "type": "string" },
+                { "name": "tagger", "type": "GitAuthor" },
+                { "name": "url", "type": "string" }
             ],
             "collections": [
             ]
