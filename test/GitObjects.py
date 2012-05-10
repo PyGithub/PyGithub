@@ -43,3 +43,31 @@ class GitTree( Framework.TestCase ):
         self.assertEqual( self.t.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
         self.assertEqual( len( self.t.tree ), 11 )
         self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
+
+class Branch( Framework.TestCase ):
+    def setUp( self ):
+        Framework.TestCase.setUp( self )
+        self.b = self.g.get_user().get_repo( "PyGithub" ).get_branches()[ 0 ]
+
+    def testAttributes( self ):
+        self.assertEqual( self.b.name, "topic/RewriteWithGeneratedCode" )
+        self.assertEqual( self.b.commit.author.login, "jacquev6" )
+        self.assertEqual( self.b.commit.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( self.b.commit.committer.login, "jacquev6" )
+        self.assertEqual( len( self.b.commit.files ), 1 )
+        self.assertEqual( self.b.commit.files[ 0 ].additions, 0 )
+        self.assertEqual( self.b.commit.files[ 0 ].blob_url, "https://github.com/jacquev6/PyGithub/blob/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github/GithubObjects/GitAuthor.py" )
+        self.assertEqual( self.b.commit.files[ 0 ].changes, 20 )
+        self.assertEqual( self.b.commit.files[ 0 ].deletions, 20 )
+        self.assertEqual( self.b.commit.files[ 0 ].filename, "github/GithubObjects/GitAuthor.py" )
+        self.assertTrue( isinstance( self.b.commit.files[ 0 ].patch, ( str, unicode ) ) )
+        self.assertEqual( self.b.commit.files[ 0 ].raw_url, "https://github.com/jacquev6/PyGithub/raw/1292bf0e22c796e91cc3d6e24b544aece8c21f2a/github/GithubObjects/GitAuthor.py" )
+        self.assertEqual( self.b.commit.files[ 0 ].sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( self.b.commit.files[ 0 ].status, "modified" )
+        self.assertEqual( len( self.b.commit.parents ), 1 )
+        self.assertEqual( self.b.commit.parents[ 0 ].sha, "b46ed0dfde5ad02d3b91eb54a41c5ed960710eae" )
+        self.assertEqual( self.b.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( self.b.commit.stats.deletions, 20 ) 
+        self.assertEqual( self.b.commit.stats.additions, 0 ) 
+        self.assertEqual( self.b.commit.stats.total, 20 ) 
+        self.assertEqual( self.b.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )

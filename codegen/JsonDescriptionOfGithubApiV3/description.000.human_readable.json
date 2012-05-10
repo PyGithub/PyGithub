@@ -276,12 +276,38 @@
             ]
         },
         {
+            "name": "CommitStats",
+            "attributes": [
+                { "name": "deletions", "type": "integer" },
+                { "name": "additions", "type": "integer" },
+                { "name": "total", "type": "integer" }
+            ],
+            "collections": [
+            ]
+        },
+        {
+            "name": "CommitFile",
+            "attributes": [
+                { "name": "additions", "type": "@todo" },
+                { "name": "blob_url", "type": "@todo" },
+                { "name": "changes", "type": "@todo" },
+                { "name": "deletions", "type": "@todo" },
+                { "name": "filename", "type": "@todo" },
+                { "name": "patch", "type": "@todo" },
+                { "name": "raw_url", "type": "@todo" },
+                { "name": "sha", "type": "@todo" },
+                { "name": "status", "type": "@todo" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "Commit",
             "attributes": [
-                { "name": "files", "type": "@todo" },
-                { "name": "parents", "type": "@todo" },
+                { "name": "files", "type": "list:CommitFile" },
+                { "name": "parents", "type": "list:Commit" },
                 { "name": "sha", "type": "string" },
-                { "name": "stats", "type": "@todo" },
+                { "name": "stats", "type": "CommitStats" },
                 { "name": "url", "type": "string" },
                 { "name": "author", "type": "NamedUser" },
                 { "name": "committer", "type": "NamedUser" },

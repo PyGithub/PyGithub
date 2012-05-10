@@ -2,8 +2,11 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+import CommitFile
 import NamedUser
 import GitCommit
+import CommitStats
+import Commit
 import CommitComment
 # This allows None as a valid value for an optional parameter
 
@@ -130,14 +133,23 @@ class Commit( object ):
             assert isinstance( attributes[ "committer" ], dict )
             self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], lazy = True )
         if "files" in attributes and attributes[ "files" ] is not None:
-            self.__files = attributes[ "files" ]
+            assert isinstance( attributes[ "files" ], list ) and ( len( attributes[ "files" ] ) == 0 or isinstance( attributes[ "files" ][ 0 ], dict ) )
+            self.__files = [
+                CommitFile.CommitFile( self.__requester, element, lazy = True )
+                for element in attributes[ "files" ]
+            ]
         if "parents" in attributes and attributes[ "parents" ] is not None:
-            self.__parents = attributes[ "parents" ]
+            assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) )
+            self.__parents = [
+                Commit( self.__requester, element, lazy = True )
+                for element in attributes[ "parents" ]
+            ]
         if "sha" in attributes and attributes[ "sha" ] is not None:
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
         if "stats" in attributes and attributes[ "stats" ] is not None:
-            self.__stats = attributes[ "stats" ]
+            assert isinstance( attributes[ "stats" ], dict )
+            self.__stats = CommitStats.CommitStats( self.__requester, attributes[ "stats" ], lazy = True )
         if "url" in attributes and attributes[ "url" ] is not None:
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

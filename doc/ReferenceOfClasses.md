@@ -190,10 +190,10 @@ Attributes
 * `author`: `NamedUser`
 * `commit`: `GitCommit`
 * `committer`: `NamedUser`
-* `files`
-* `parents`
+* `files`: list of `CommitFile`
+* `parents`: list of `Commit`
 * `sha`: string
-* `stats`
+* `stats`: `CommitStats`
 * `url`: string
 
 Comments
@@ -231,6 +231,30 @@ Modification
 ------------
 * `edit( body )`
     * `body`
+
+Class `CommitFile`
+==================
+
+Attributes
+----------
+* `additions`
+* `blob_url`
+* `changes`
+* `deletions`
+* `filename`
+* `patch`
+* `raw_url`
+* `sha`
+* `status`
+
+Class `CommitStats`
+===================
+
+Attributes
+----------
+* `additions`: integer
+* `deletions`: integer
+* `total`: integer
 
 Class `Download`
 ================
