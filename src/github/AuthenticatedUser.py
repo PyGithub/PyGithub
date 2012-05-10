@@ -250,7 +250,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/repos",
+            "https://api.github.com/user" + "/repos",
             None,
             post_parameters
         )

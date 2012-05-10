@@ -38,3 +38,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( repo.updated_at, "2012-05-08T19:27:43Z" )
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/PyGithub" )
         self.assertEqual( repo.watchers, 13 )
+
+    def testCreate( self ):
+        repo = self.user.create_repo( "TestPyGithub" )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
