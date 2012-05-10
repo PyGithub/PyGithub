@@ -2,14 +2,13 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-import GitObject
 # This allows None as a valid value for an optional parameter
 
 class DefaultValueForOptionalParametersType:
     pass
 DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
-class GitRef( object ):
+class GitObject( object ):
     def __init__( self, requester, attributes, lazy ):
         self.__requester = requester
         self.__completed = False
@@ -19,45 +18,23 @@ class GitRef( object ):
             self.__complete()
 
     @property
-    def object( self ):
-        self.__completeIfNeeded( self.__object )
-        return self.__object
+    def sha( self ):
+        self.__completeIfNeeded( self.__sha )
+        return self.__sha
 
     @property
-    def ref( self ):
-        self.__completeIfNeeded( self.__ref )
-        return self.__ref
+    def type( self ):
+        self.__completeIfNeeded( self.__type )
+        return self.__type
 
     @property
     def url( self ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def delete( self ):
-        status, headers, data = self.__requester.request(
-            "DELETE",
-            str( self.url ),
-            None,
-            None
-        )
-
-    def edit( self, sha, force = DefaultValueForOptionalParameters ):
-        post_parameters = {
-            "sha": sha,
-        }
-        if force is not DefaultValueForOptionalParameters:
-            post_parameters[ "force" ] = force
-        status, headers, data = self.__requester.request(
-            "PATCH",
-            str( self.url ),
-            None,
-            post_parameters
-        )
-        self.__useAttributes( data )
-
     def __initAttributes( self ):
-        self.__object = None
-        self.__ref = None
+        self.__sha = None
+        self.__type = None
         self.__url = None
 
     def __completeIfNeeded( self, testedAttribute ):
@@ -76,12 +53,12 @@ class GitRef( object ):
 
     def __useAttributes( self, attributes ):
          #@todo No need to check if attribute is in attributes when attribute is mandatory
-        if "object" in attributes and attributes[ "object" ] is not None:
-            assert isinstance( attributes[ "object" ], dict )
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], lazy = True )
-        if "ref" in attributes and attributes[ "ref" ] is not None:
-            assert isinstance( attributes[ "ref" ], ( str, unicode ) )
-            self.__ref = attributes[ "ref" ]
+        if "sha" in attributes and attributes[ "sha" ] is not None:
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
+            self.__sha = attributes[ "sha" ]
+        if "type" in attributes and attributes[ "type" ] is not None:
+            assert isinstance( attributes[ "type" ], ( str, unicode ) )
+            self.__type = attributes[ "type" ]
         if "url" in attributes and attributes[ "url" ] is not None:
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

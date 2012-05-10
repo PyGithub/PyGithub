@@ -44,6 +44,18 @@ class GitTree( Framework.TestCase ):
         self.assertEqual( len( self.t.tree ), 11 )
         self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
 
+class GitRef( Framework.TestCase ):
+    def setUp( self ):
+        Framework.TestCase.setUp( self )
+        self.r = self.g.get_user().get_repo( "PyGithub" ).get_git_ref( "refs/heads/topic/RewriteWithGeneratedCode" )
+
+    def testAttributes( self ):
+        self.assertEqual( self.r.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( self.r.object.type, "commit" )
+        self.assertEqual( self.r.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
+        self.assertEqual( self.r.ref, "refs/heads/topic/RewriteWithGeneratedCode" )
+        self.assertEqual( self.r.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/topic/RewriteWithGeneratedCode" )
+
 class Branch( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )

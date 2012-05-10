@@ -550,6 +550,16 @@
             ]
         },
         {
+            "name": "GitObject",
+            "attributes": [
+                { "name": "sha", "type": "string" },
+                { "name": "type", "type": "string" },
+                { "name": "url", "type": "string" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "GitRef",
             "edit": {
                 "mandatoryParameters": [
@@ -561,9 +571,9 @@
             },
             "delete": true,
             "attributes": [
-                { "name": "object", "type": "@todo" },
+                { "name": "object", "type": "GitObject" },
                 { "name": "ref", "type": "string" },
-                { "name": "url", "type": "@todo" }
+                { "name": "url", "type": "string" }
             ],
             "collections": [
             ]
@@ -1382,7 +1392,7 @@
                     },
                     "url": [
                         { "type": "attribute", "value": [ "url" ] },
-                        { "type": "constant", "value": "/git/refs" }
+                        { "type": "constant", "value": "/git" }
                     ]
                 },
                 {

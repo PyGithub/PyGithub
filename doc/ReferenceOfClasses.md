@@ -406,14 +406,23 @@ Attributes
 * `tree`: `GitTree`
 * `url`: string
 
+Class `GitObject`
+=================
+
+Attributes
+----------
+* `sha`: string
+* `type`: string
+* `url`: string
+
 Class `GitRef`
 ==============
 
 Attributes
 ----------
-* `object`
+* `object`: `GitObject`
 * `ref`: string
-* `url`
+* `url`: string
 
 Deletion
 --------

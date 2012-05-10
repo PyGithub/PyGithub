@@ -261,7 +261,7 @@ class Repository( object ):
         }
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/git/refs",
+            str( self.url ) + "/git",
             None,
             post_parameters
         )
@@ -563,7 +563,7 @@ class Repository( object ):
     def get_git_ref( self, ref ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/refs" + "/" + str( ref ),
+            str( self.url ) + "/git" + "/" + str( ref ),
             None,
             None
         )
@@ -572,7 +572,7 @@ class Repository( object ):
     def get_git_refs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/refs",
+            str( self.url ) + "/git",
             None,
             None
         )
