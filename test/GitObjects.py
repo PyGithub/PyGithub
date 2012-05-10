@@ -41,7 +41,7 @@ class GitTree( Framework.TestCase ):
 
     def testAttributes( self ):
         self.assertEqual( self.t.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
-        self.assertEqual( len( self.t.tree ), 11 )
+        self.assertEqual( len( self.t.tree ), 11 ) ### @todo
         self.assertEqual( self.t.url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees/f492784d8ca837779650d1fb406a1a3587a764ad" )
 
 class GitRef( Framework.TestCase ):
