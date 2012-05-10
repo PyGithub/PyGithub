@@ -83,15 +83,24 @@ class {{ class.name }}( object ):
     {% if attribute.type.name == "bool" %}
             assert isinstance( attributes[ "{{ attribute.name }}" ], bool )
     {% endif %}
-            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
 {% else %}
             assert isinstance( attributes[ "{{ attribute.name }}" ], dict )
-            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], lazy = True )
 {% endif %}
 {% endif %}
 
 {% if attribute.type.cardinality == "list" %}
             assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], dict ) )
+{% endif %}
+
+{% if attribute.type.cardinality == "scalar" %}
+{% if attribute.type.simple %}
+            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+{% else %}
+            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], lazy = True )
+{% endif %}
+{% endif %}
+
+{% if attribute.type.cardinality == "list" %}
             self.__{{ attribute.name }} = [
                 {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, lazy = True )
                 for element in attributes[ "{{ attribute.name }}" ]
