@@ -14,6 +14,7 @@ import PullRequest
 import RepositoryKey
 import NamedUser
 import Milestone
+import Permissions
 import CommitComment
 import GitCommit
 import Team
@@ -958,7 +959,8 @@ class Repository( object ):
             assert isinstance( attributes[ "parent" ], dict )
             self.__parent = Repository( self.__requester, attributes[ "parent" ], lazy = True )
         if "permissions" in attributes and attributes[ "permissions" ] is not None:
-            self.__permissions = attributes[ "permissions" ]
+            assert isinstance( attributes[ "permissions" ], dict )
+            self.__permissions = Permissions.Permissions( self.__requester, attributes[ "permissions" ], lazy = True )
         if "private" in attributes and attributes[ "private" ] is not None:
             assert isinstance( attributes[ "private" ], bool )
             self.__private = attributes[ "private" ]

@@ -28,7 +28,9 @@ class Repository( Framework.TestCase ):
         self.assertEqual( repo.organization, None )
         self.assertEqual( repo.owner.login, "jacquev6" )
         self.assertEqual( repo.parent, None )
-        self.assertEqual( repo.permissions, { "admin": True, "pull": True, "push": True } ) ### @todo Create a Permission class
+        self.assertEqual( repo.permissions.admin, True )
+        self.assertEqual( repo.permissions.pull, True )
+        self.assertEqual( repo.permissions.push, True )
         self.assertEqual( repo.private, False )
         self.assertEqual( repo.pushed_at, "2012-05-08T19:27:43Z" )
         self.assertEqual( repo.size, 212 )

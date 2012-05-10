@@ -6192,6 +6192,36 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "admin"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "pull"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "push"
+                }
+            ], 
+            "name": "Permissions", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
                         "name": "integer"
                     }, 
                     "name": "collaborators"
@@ -7103,9 +7133,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "Permissions"
                     }, 
                     "name": "permissions"
                 }, 

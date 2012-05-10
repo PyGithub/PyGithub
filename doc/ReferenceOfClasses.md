@@ -790,6 +790,15 @@ Teams
     * `permission`
 * `get_teams()`: list of `Team`
 
+Class `Permissions`
+===================
+
+Attributes
+----------
+* `admin`: bool
+* `pull`: bool
+* `push`: bool
+
 Class `Plan`
 ============
 
@@ -926,7 +935,7 @@ Attributes
 * `organization`: `Organization`
 * `owner`: `NamedUser`
 * `parent`: `Repository`
-* `permissions`
+* `permissions`: `Permissions`
 * `private`: bool
 * `pushed_at`: string
 * `size`: integer

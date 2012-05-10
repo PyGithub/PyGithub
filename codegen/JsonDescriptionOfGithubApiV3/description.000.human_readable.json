@@ -1211,6 +1211,16 @@
             ]
         },
         {
+            "name": "Permissions",
+            "attributes": [
+                { "name": "admin", "type": "bool" },
+                { "name": "pull", "type": "bool" },
+                { "name": "push", "type": "bool" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "Repository",
             "identity": [
                 { "type": "attribute", "value": [ "owner", "login" ] },
@@ -1251,7 +1261,7 @@
                 { "name": "organization", "type": "Organization" },
                 { "name": "owner", "type": "NamedUser" },
                 { "name": "parent", "type": "Repository" },
-                { "name": "permissions", "type": "@todo" },
+                { "name": "permissions", "type": "Permissions" },
                 { "name": "private", "type": "bool" },
                 { "name": "pushed_at", "type": "string" },
                 { "name": "size", "type": "integer" },
