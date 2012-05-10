@@ -111,14 +111,13 @@ class Function:
         return json
 
 class Collection:
-    def __init__( self, desc ):
+    def __init__( self, desc, ownerUrl ):
         checkKeys( desc, [ "name", "singularName", "type" ], [ "addElement", "addSeveralElements", "createElement", "deleteList", "getElement", "getList", "hasElement", "removeElement", "removeSeveralElements", "setList", "url" ] )
 
         if "url" in desc:
             self.__url = desc[ "url" ]
         else:
-            self.__url = [
-                { "type": "attribute", "value": [ "url" ] },
+            self.__url = ownerUrl + [
                 { "type": "constant", "value": "/" + desc[ "name" ] },
             ]
 
@@ -249,7 +248,7 @@ class Collection:
 
 class Class:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "attributes", "collections" ], [ "identity", "edit", "delete", "additionalMethods" ] )
+        checkKeys( desc, [ "name", "attributes", "collections" ], [ "url", "identity", "edit", "delete", "additionalMethods" ] )
 
         self.name = desc[ "name" ]
         self.attributes = sorted(
@@ -288,7 +287,11 @@ class Class:
                     },
                 }
             ) )
-        for collection in [ Collection( collection ) for collection in desc[ "collections" ] ]:
+        if "url" in desc:
+            url = desc[ "url" ]
+        else:
+            url = [ { "type": "attribute", "value": [ "url" ] } ]
+        for collection in [ Collection( collection, url ) for collection in desc[ "collections" ] ]:
             self.methods += collection.methods
         if "additionalMethods" in desc:
             self.methods += [ Function( method ) for method in desc[ "additionalMethods" ] ]

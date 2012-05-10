@@ -297,10 +297,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -363,10 +361,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -404,10 +400,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -606,10 +600,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -745,10 +737,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -794,10 +784,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -826,10 +814,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -866,10 +852,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -908,10 +892,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -950,10 +932,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -991,10 +971,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1043,10 +1021,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1095,10 +1071,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1137,10 +1111,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1178,10 +1150,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1230,10 +1200,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1272,10 +1240,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 
@@ -1303,10 +1269,8 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
+                                "type": "constant", 
+                                "value": "https://api.github.com/user"
                             }, 
                             {
                                 "type": "constant", 

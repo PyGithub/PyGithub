@@ -155,7 +155,7 @@ class AuthenticatedUser( object ):
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/emails",
+            "https://api.github.com/user" + "/emails",
             None,
             post_parameters
         )
@@ -163,7 +163,7 @@ class AuthenticatedUser( object ):
     def add_to_following( self, following ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/following" + "/" + str( following._identity ),
+            "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
             None,
             None
         )
@@ -171,7 +171,7 @@ class AuthenticatedUser( object ):
     def add_to_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/watched" + "/" + str( watched._identity ),
+            "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
             None,
             None
         )
@@ -187,7 +187,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "POST",
-            str( self.url ) + "/authorizations",
+            "https://api.github.com/user" + "/authorizations",
             None,
             post_parameters
         )
@@ -284,7 +284,7 @@ class AuthenticatedUser( object ):
     def get_authorization( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/authorizations" + "/" + str( id ),
+            "https://api.github.com/user" + "/authorizations" + "/" + str( id ),
             None,
             None
         )
@@ -293,7 +293,7 @@ class AuthenticatedUser( object ):
     def get_authorizations( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/authorizations",
+            "https://api.github.com/user" + "/authorizations",
             None,
             None
         )
@@ -307,7 +307,7 @@ class AuthenticatedUser( object ):
     def get_emails( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/emails",
+            "https://api.github.com/user" + "/emails",
             None,
             None
         )
@@ -330,7 +330,7 @@ class AuthenticatedUser( object ):
     def get_followers( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/followers",
+            "https://api.github.com/user" + "/followers",
             None,
             None
         )
@@ -344,7 +344,7 @@ class AuthenticatedUser( object ):
     def get_following( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/following",
+            "https://api.github.com/user" + "/following",
             None,
             None
         )
@@ -423,7 +423,7 @@ class AuthenticatedUser( object ):
     def get_orgs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/orgs",
+            "https://api.github.com/user" + "/orgs",
             None,
             None
         )
@@ -446,7 +446,7 @@ class AuthenticatedUser( object ):
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/repos",
+            "https://api.github.com/user" + "/repos",
             None,
             None
         )
@@ -474,7 +474,7 @@ class AuthenticatedUser( object ):
     def get_watched( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/watched",
+            "https://api.github.com/user" + "/watched",
             None,
             None
         )
@@ -488,7 +488,7 @@ class AuthenticatedUser( object ):
     def has_in_following( self, following ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/following" + "/" + str( following._identity ),
+            "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
             None,
             None
         )
@@ -497,7 +497,7 @@ class AuthenticatedUser( object ):
     def has_in_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/watched" + "/" + str( watched._identity ),
+            "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
             None,
             None
         )
@@ -507,7 +507,7 @@ class AuthenticatedUser( object ):
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/emails",
+            "https://api.github.com/user" + "/emails",
             None,
             post_parameters
         )
@@ -515,7 +515,7 @@ class AuthenticatedUser( object ):
     def remove_from_following( self, following ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/following" + "/" + str( following._identity ),
+            "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
             None,
             None
         )
@@ -523,7 +523,7 @@ class AuthenticatedUser( object ):
     def remove_from_watched( self, watched ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/watched" + "/" + str( watched._identity ),
+            "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
             None,
             None
         )

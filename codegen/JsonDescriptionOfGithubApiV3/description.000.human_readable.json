@@ -13,6 +13,9 @@
         },
         {
             "name": "AuthenticatedUser",
+            "url": [
+                { "type": "constant", "value": "https://api.github.com/user" }
+            ],
             "edit": {
                 "optionalParameters": [
                     { "name": "name", "type": "string" },
