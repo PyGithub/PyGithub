@@ -1,5 +1,0 @@
-GET /user/orgs {} null
-200
-[('status', '200 OK'), ('x-ratelimit-remaining', '4935'), ('content-length', '262'), ('server', 'nginx/1.0.12'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"3454c1345755c67af87593d8c4c9f79d"'), ('date', 'Sun, 04 Mar 2012 09:31:50 GMT'), ('content-type', 'application/json; charset=utf-8')]
-[{"login":"BeaverSoftware","url":"https://api.github.com/orgs/BeaverSoftware","id":1424031,"avatar_url":"https://secure.gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-orgs.png"}]
-
