@@ -1,3 +1,8 @@
+GET /repos/jacquev6/PyGithub/branches {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4994'), ('content-length', '769'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"2dada6dafd332016bcdf06e42487e520"'), ('date', 'Thu, 10 May 2012 13:56:55 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[{"name":"topic/RewriteWithGeneratedCode","commit":{"sha":"1292bf0e22c796e91cc3d6e24b544aece8c21f2a","url":"https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a"}},{"name":"master","commit":{"sha":"4303c5b90e2216d927155e9609436ccb8984c495","url":"https://api.github.com/repos/jacquev6/PyGithub/commits/4303c5b90e2216d927155e9609436ccb8984c495"}},{"name":"topic/DependencyGraph","commit":{"sha":"05157f11f29a3ac057e35d2487880c5d08bd69af","url":"https://api.github.com/repos/jacquev6/PyGithub/commits/05157f11f29a3ac057e35d2487880c5d08bd69af"}},{"name":"develop","commit":{"sha":"4303c5b90e2216d927155e9609436ccb8984c495","url":"https://api.github.com/repos/jacquev6/PyGithub/commits/4303c5b90e2216d927155e9609436ccb8984c495"}}]
+
 GET /repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a {} null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4993'), ('content-length', '3445'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"8fe19b9f161802e61f531cec78c69463"'), ('date', 'Thu, 10 May 2012 13:56:56 GMT'), ('content-type', 'application/json; charset=utf-8')]
