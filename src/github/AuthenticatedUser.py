@@ -2,6 +2,7 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+from GithubObject import *
 import Gist
 import Repository
 import NamedUser
@@ -11,11 +12,6 @@ import UserKey
 import Issue
 import Event
 import Authorization
-# This allows None as a valid value for an optional parameter
-
-class DefaultValueForOptionalParametersType:
-    pass
-DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class AuthenticatedUser( object ):
     def __init__( self, requester, attributes, lazy ):

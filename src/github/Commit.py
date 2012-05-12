@@ -2,17 +2,13 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+from GithubObject import *
 import CommitFile
 import NamedUser
 import GitCommit
 import CommitStats
 import Commit
 import CommitComment
-# This allows None as a valid value for an optional parameter
-
-class DefaultValueForOptionalParametersType:
-    pass
-DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class Commit( object ):
     def __init__( self, requester, attributes, lazy ):

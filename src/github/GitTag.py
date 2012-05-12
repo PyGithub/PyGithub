@@ -2,13 +2,9 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+from GithubObject import *
 import GitAuthor
 import GitObject
-# This allows None as a valid value for an optional parameter
-
-class DefaultValueForOptionalParametersType:
-    pass
-DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class GitTag( object ):
     def __init__( self, requester, attributes, lazy ):

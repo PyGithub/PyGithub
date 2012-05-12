@@ -2,15 +2,11 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
+from GithubObject import *
 import Commit
 import NamedUser
 import PullRequestComment
 import PullRequestFile
-# This allows None as a valid value for an optional parameter
-
-class DefaultValueForOptionalParametersType:
-    pass
-DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class PullRequest( object ):
     def __init__( self, requester, attributes, lazy ):

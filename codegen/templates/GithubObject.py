@@ -1,13 +1,9 @@
 import PaginatedList
+from GithubObject import *
 
 {% for dependency in class.dependencies %}
 import {{ dependency }}
 {% endfor %}
-
-# This allows None as a valid value for an optional parameter
-class DefaultValueForOptionalParametersType:
-    pass
-DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
 
 class {{ class.name }}( object ):
     def __init__( self, requester, attributes, lazy ):
