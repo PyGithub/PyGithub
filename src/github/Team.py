@@ -172,7 +172,10 @@ class Team( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "id", "members_count", "name", "permission", "repos_count", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
         if "members_count" in attributes and attributes[ "members_count" ] is not None:

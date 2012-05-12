@@ -162,7 +162,10 @@ class Download( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "accesskeyid", "acl", "bucket", "content_type", "created_at", "description", "download_count", "expirationdate", "html_url", "id", "mime_type", "name", "path", "policy", "prefix", "redirect", "s3_url", "signature", "size", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None:
             self.__accesskeyid = attributes[ "accesskeyid" ]
         if "acl" in attributes and attributes[ "acl" ] is not None:

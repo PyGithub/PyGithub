@@ -68,7 +68,11 @@ class {{ class.name }}( object ):
 {% endif %}
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ {% for attribute in class.attributes|dictsort:"name" %}"{{ attribute.name }}", {% endfor %}]
+
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes|dictsort:"name" %}
         if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None:
 

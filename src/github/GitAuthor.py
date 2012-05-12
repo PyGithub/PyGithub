@@ -33,7 +33,10 @@ class GitAuthor( object ):
         self.__name = None
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "date", "email", "name", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "date" in attributes and attributes[ "date" ] is not None:
             assert isinstance( attributes[ "date" ], ( str, unicode ) )
             self.__date = attributes[ "date" ]

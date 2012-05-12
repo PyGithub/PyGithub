@@ -136,7 +136,10 @@ class Milestone( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "closed_issues", "created_at", "creator", "description", "due_on", "number", "open_issues", "state", "title", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "closed_issues" in attributes and attributes[ "closed_issues" ] is not None:
             self.__closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:

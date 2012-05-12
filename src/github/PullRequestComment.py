@@ -121,7 +121,10 @@ class PullRequestComment( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "body", "commit_id", "created_at", "html_url", "id", "line", "path", "position", "updated_at", "url", "user", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None:

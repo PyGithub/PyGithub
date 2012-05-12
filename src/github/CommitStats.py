@@ -33,7 +33,10 @@ class CommitStats( object ):
         self.__total = None
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "additions", "deletions", "total", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None:
             assert isinstance( attributes[ "additions" ], int )
             self.__additions = attributes[ "additions" ]

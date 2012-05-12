@@ -73,7 +73,10 @@ class Label( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "color", "name", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "color" in attributes and attributes[ "color" ] is not None:
             self.__color = attributes[ "color" ]
         if "name" in attributes and attributes[ "name" ] is not None:

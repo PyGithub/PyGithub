@@ -77,7 +77,10 @@ class IssueEvent( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "actor", "commit_id", "created_at", "event", "id", "issue", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None:
             assert isinstance( attributes[ "actor" ], dict )
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )

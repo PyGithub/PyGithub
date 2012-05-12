@@ -897,7 +897,10 @@ class Repository( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "clone_url", "created_at", "description", "fork", "forks", "git_url", "has_downloads", "has_issues", "has_wiki", "homepage", "html_url", "id", "language", "master_branch", "mirror_url", "name", "open_issues", "organization", "owner", "parent", "permissions", "private", "pushed_at", "size", "source", "ssh_url", "svn_url", "updated_at", "url", "watchers", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "clone_url" in attributes and attributes[ "clone_url" ] is not None:
             assert isinstance( attributes[ "clone_url" ], ( str, unicode ) )
             self.__clone_url = attributes[ "clone_url" ]

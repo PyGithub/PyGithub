@@ -75,7 +75,10 @@ class GitRef( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-         #@todo No need to check if attribute is in attributes when attribute is mandatory
+        # @todo Remove this debug weakness: we shall assume that github will add new attributes
+        for attribute in attributes:
+            assert attribute in [ "object", "ref", "url", ]
+        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "object" in attributes and attributes[ "object" ] is not None:
             assert isinstance( attributes[ "object" ], dict )
             self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], lazy = True )
