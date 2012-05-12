@@ -452,7 +452,19 @@ Class `GitTree`
 Attributes
 ----------
 * `sha`: string
-* `tree`
+* `tree`: list of `GitTreeElement`
+* `url`: string
+
+Class `GitTreeElement`
+======================
+
+Attributes
+----------
+* `mode`: string
+* `path`: string
+* `sha`: string
+* `size`: integer
+* `type`: string
 * `url`: string
 
 Class `Hook`

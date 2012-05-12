@@ -595,10 +595,23 @@
             ]
         },
         {
+            "name": "GitTreeElement",
+            "attributes": [
+                { "name": "mode", "type": "string" },
+                { "name": "path", "type": "string" },
+                { "name": "sha", "type": "string" },
+                { "name": "size", "type": "integer" },
+                { "name": "type", "type": "string" },
+                { "name": "url", "type": "string" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "GitTree",
             "attributes": [
                 { "name": "sha", "type": "string" },
-                { "name": "tree", "type": "@todo" },
+                { "name": "tree", "type": "list:GitTreeElement" },
                 { "name": "url", "type": "string" }
             ],
             "collections": [

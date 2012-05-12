@@ -3311,9 +3311,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "GitTreeElement"
                     }, 
                     "name": "tree"
                 }, 
@@ -3327,6 +3327,60 @@
                 }
             ], 
             "name": "GitTree", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "mode"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "path"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "sha"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "size"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "type"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "url"
+                }
+            ], 
+            "name": "GitTreeElement", 
             "methods": []
         }, 
         {
