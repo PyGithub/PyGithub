@@ -1,10 +1,3 @@
-class PaginatedListIterator:
-    def __init__( self, list ):
-        pass
-
-    def next( self ):
-        return "foo"
-
 class PaginatedList:
     def __init__( self, contentClass, requester, headers, data ):
         self.__requester = requester
