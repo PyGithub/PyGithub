@@ -15,22 +15,17 @@ class GitRef( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
-            self.__complete()
 
     @property
     def object( self ):
-        self.__completeIfNeeded( self.__object )
         return self.__object
 
     @property
     def ref( self ):
-        self.__completeIfNeeded( self.__ref )
         return self.__ref
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def delete( self ):
@@ -59,20 +54,6 @@ class GitRef( object ):
         self.__object = None
         self.__ref = None
         self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    def __complete( self ):
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
 
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes

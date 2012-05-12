@@ -15,42 +15,23 @@ class GitTree( object ):
         self.__completed = False
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
-            self.__complete()
 
     @property
     def sha( self ):
-        self.__completeIfNeeded( self.__sha )
         return self.__sha
 
     @property
     def tree( self ):
-        self.__completeIfNeeded( self.__tree )
         return self.__tree
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def __initAttributes( self ):
         self.__sha = None
         self.__tree = None
         self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    def __complete( self ):
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
 
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes

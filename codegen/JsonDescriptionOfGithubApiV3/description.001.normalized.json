@@ -3060,7 +3060,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitBlob", 
             "methods": []
         }, 
@@ -3123,7 +3123,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitCommit", 
             "methods": []
         }, 
@@ -3154,7 +3154,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitObject", 
             "methods": []
         }, 
@@ -3185,7 +3185,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitRef", 
             "methods": [
                 {
@@ -3312,7 +3312,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitTag", 
             "methods": []
         }, 
@@ -3343,7 +3343,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GitTree", 
             "methods": []
         }, 

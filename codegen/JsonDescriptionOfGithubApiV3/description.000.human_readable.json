@@ -536,7 +536,6 @@
         },
         {
             "name": "GitBlob",
-            "isCompletable": true,
             "attributes": [
                 { "name": "content", "type": "string" },
                 { "name": "encoding", "type": "string" },
@@ -549,7 +548,6 @@
         },
         {
             "name": "GitCommit",
-            "isCompletable": true,
             "attributes": [
                 { "name": "author", "type": "GitAuthor" },
                 { "name": "committer", "type": "GitAuthor" },
@@ -564,7 +562,6 @@
         },
         {
             "name": "GitObject",
-            "isCompletable": true,
             "attributes": [
                 { "name": "sha", "type": "string" },
                 { "name": "type", "type": "string" },
@@ -575,7 +572,6 @@
         },
         {
             "name": "GitRef",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "sha", "type": "@todo" }
@@ -595,7 +591,6 @@
         },
         {
             "name": "GitTag",
-            "isCompletable": true,
             "attributes": [
                 { "name": "message", "type": "string" },
                 { "name": "object", "type": "GitObject" },
@@ -622,7 +617,6 @@
         },
         {
             "name": "GitTree",
-            "isCompletable": true,
             "attributes": [
                 { "name": "sha", "type": "string" },
                 { "name": "tree", "type": "list:GitTreeElement" },
