@@ -362,7 +362,7 @@ class NamedUser( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "avatar_url", "bio", "blog", "collaborators", "company", "contributions", "created_at", "disk_usage", "email", "followers", "following", "gravatar_id", "hireable", "html_url", "id", "location", "login", "name", "owned_private_repos", "plan", "private_gists", "public_gists", "public_repos", "total_private_repos", "type", "url", ]
+            assert attribute in [ "avatar_url", "bio", "blog", "collaborators", "company", "contributions", "created_at", "disk_usage", "email", "followers", "following", "gravatar_id", "hireable", "html_url", "id", "location", "login", "name", "owned_private_repos", "plan", "private_gists", "public_gists", "public_repos", "total_private_repos", "type", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "avatar_url" in attributes and attributes[ "avatar_url" ] is not None:
             self.__avatar_url = attributes[ "avatar_url" ]

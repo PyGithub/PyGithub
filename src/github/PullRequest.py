@@ -277,7 +277,7 @@ class PullRequest( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "additions", "base", "body", "changed_files", "closed_at", "comments", "commits", "created_at", "deletions", "diff_url", "head", "html_url", "id", "issue_url", "mergeable", "merged", "merged_at", "merged_by", "number", "patch_url", "review_comments", "state", "title", "updated_at", "url", "user", ]
+            assert attribute in [ "additions", "base", "body", "changed_files", "closed_at", "comments", "commits", "created_at", "deletions", "diff_url", "head", "html_url", "id", "issue_url", "mergeable", "merged", "merged_at", "merged_by", "number", "patch_url", "review_comments", "state", "title", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None:
             self.__additions = attributes[ "additions" ]

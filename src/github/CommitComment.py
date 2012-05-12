@@ -119,7 +119,7 @@ class CommitComment( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "body", "commit_id", "created_at", "html_url", "id", "line", "path", "position", "updated_at", "url", "user", ]
+            assert attribute in [ "body", "commit_id", "created_at", "html_url", "id", "line", "path", "position", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]

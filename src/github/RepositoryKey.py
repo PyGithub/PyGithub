@@ -77,7 +77,7 @@ class RepositoryKey( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "id", "key", "title", "url", ]
+            assert attribute in [ "id", "key", "title", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]

@@ -36,7 +36,7 @@ class Plan( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "collaborators", "name", "private_repos", "space", ]
+            assert attribute in [ "collaborators", "name", "private_repos", "space", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None:
             assert isinstance( attributes[ "collaborators" ], int )

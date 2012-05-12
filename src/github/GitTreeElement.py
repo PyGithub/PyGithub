@@ -46,7 +46,7 @@ class GitTreeElement( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "mode", "path", "sha", "size", "type", "url", ]
+            assert attribute in [ "mode", "path", "sha", "size", "type", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "mode" in attributes and attributes[ "mode" ] is not None:
             assert isinstance( attributes[ "mode" ], ( str, unicode ) )

@@ -115,7 +115,7 @@ class Authorization( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "app", "created_at", "id", "note", "note_url", "scopes", "token", "updated_at", "url", ]
+            assert attribute in [ "app", "created_at", "id", "note", "note_url", "scopes", "token", "updated_at", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "app" in attributes and attributes[ "app" ] is not None:
             self.__app = attributes[ "app" ]

@@ -61,7 +61,7 @@ class PullRequestFile( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "additions", "blob_url", "changes", "deletions", "filename", "patch", "raw_url", "sha", "status", ]
+            assert attribute in [ "additions", "blob_url", "changes", "deletions", "filename", "patch", "raw_url", "sha", "status", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None:
             self.__additions = attributes[ "additions" ]
