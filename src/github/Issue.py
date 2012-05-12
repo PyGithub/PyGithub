@@ -122,7 +122,7 @@ class Issue( object ):
             None,
             post_parameters
         )
-        return IssueComment.IssueComment( self.__requester, data, completion = LazyCompletion )
+        return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
 
     def delete_labels( self ):
         pass
@@ -157,7 +157,7 @@ class Issue( object ):
             None,
             None
         )
-        return IssueComment.IssueComment( self.__requester, data, completion = LazyCompletion )
+        return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(

@@ -161,7 +161,7 @@ class NamedUser( object ):
             None,
             post_parameters
         )
-        return Gist.Gist( self.__requester, data, completion = LazyCompletion )
+        return Gist.Gist( self.__requester, data, completion = NoCompletion )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -282,7 +282,7 @@ class NamedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(

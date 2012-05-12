@@ -218,7 +218,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return Download.Download( self.__requester, data, completion = LazyCompletion )
+        return Download.Download( self.__requester, data, completion = NoCompletion )
 
     def create_git_blob( self, content, encoding ):
         post_parameters = {
@@ -231,7 +231,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return GitBlob.GitBlob( self.__requester, data, completion = LazyCompletion )
+        return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
 
     def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -249,7 +249,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return GitCommit.GitCommit( self.__requester, data, completion = LazyCompletion )
+        return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
 
     def create_git_ref( self, ref, sha ):
         post_parameters = {
@@ -262,7 +262,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return GitRef.GitRef( self.__requester, data, completion = LazyCompletion )
+        return GitRef.GitRef( self.__requester, data, completion = NoCompletion )
 
     def create_git_tag( self, tag, message, object, type, tagger = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -279,7 +279,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return GitTag.GitTag( self.__requester, data, completion = LazyCompletion )
+        return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
 
     def create_git_tree( self, tree, base_tree = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -293,7 +293,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return GitTree.GitTree( self.__requester, data, completion = LazyCompletion )
+        return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
 
     def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -310,7 +310,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return Hook.Hook( self.__requester, data, completion = LazyCompletion )
+        return Hook.Hook( self.__requester, data, completion = NoCompletion )
 
     def create_issue( self, title, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -330,7 +330,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return Issue.Issue( self.__requester, data, completion = LazyCompletion )
+        return Issue.Issue( self.__requester, data, completion = NoCompletion )
 
     def create_key( self, title, key ):
         post_parameters = {
@@ -343,7 +343,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return RepositoryKey.RepositoryKey( self.__requester, data, completion = LazyCompletion )
+        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion )
 
     def create_label( self, name, color ):
         post_parameters = {
@@ -356,7 +356,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return Label.Label( self.__requester, data, completion = LazyCompletion )
+        return Label.Label( self.__requester, data, completion = NoCompletion )
 
     def create_milestone( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -374,7 +374,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return Milestone.Milestone( self.__requester, data, completion = LazyCompletion )
+        return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
 
     def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -435,7 +435,7 @@ class Repository( object ):
             None,
             None
         )
-        return CommitComment.CommitComment( self.__requester, data, completion = LazyCompletion )
+        return CommitComment.CommitComment( self.__requester, data, completion = NoCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -458,7 +458,7 @@ class Repository( object ):
             None,
             None
         )
-        return Commit.Commit( self.__requester, data, completion = LazyCompletion )
+        return Commit.Commit( self.__requester, data, completion = NoCompletion )
 
     def get_commits( self, sha = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
@@ -495,7 +495,7 @@ class Repository( object ):
             None,
             None
         )
-        return Download.Download( self.__requester, data, completion = LazyCompletion )
+        return Download.Download( self.__requester, data, completion = NoCompletion )
 
     def get_downloads( self ):
         status, headers, data = self.__requester.request(
@@ -546,7 +546,7 @@ class Repository( object ):
             None,
             None
         )
-        return GitBlob.GitBlob( self.__requester, data, completion = LazyCompletion )
+        return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
 
     def get_git_commit( self, sha ):
         status, headers, data = self.__requester.request(
@@ -555,7 +555,7 @@ class Repository( object ):
             None,
             None
         )
-        return GitCommit.GitCommit( self.__requester, data, completion = LazyCompletion )
+        return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
 
     def get_git_ref( self, ref ):
         status, headers, data = self.__requester.request(
@@ -564,7 +564,7 @@ class Repository( object ):
             None,
             None
         )
-        return GitRef.GitRef( self.__requester, data, completion = LazyCompletion )
+        return GitRef.GitRef( self.__requester, data, completion = NoCompletion )
 
     def get_git_refs( self ):
         status, headers, data = self.__requester.request(
@@ -587,7 +587,7 @@ class Repository( object ):
             None,
             None
         )
-        return GitTag.GitTag( self.__requester, data, completion = LazyCompletion )
+        return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
 
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
@@ -596,7 +596,7 @@ class Repository( object ):
             None,
             None
         )
-        return GitTree.GitTree( self.__requester, data, completion = LazyCompletion )
+        return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
 
     def get_hook( self, id ):
         status, headers, data = self.__requester.request(
@@ -605,7 +605,7 @@ class Repository( object ):
             None,
             None
         )
-        return Hook.Hook( self.__requester, data, completion = LazyCompletion )
+        return Hook.Hook( self.__requester, data, completion = NoCompletion )
 
     def get_hooks( self ):
         status, headers, data = self.__requester.request(
@@ -628,7 +628,7 @@ class Repository( object ):
             None,
             None
         )
-        return Issue.Issue( self.__requester, data, completion = LazyCompletion )
+        return Issue.Issue( self.__requester, data, completion = NoCompletion )
 
     def get_issues( self, milestone = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, mentioned = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters, since = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
@@ -651,7 +651,7 @@ class Repository( object ):
             None,
             None
         )
-        return IssueEvent.IssueEvent( self.__requester, data, completion = LazyCompletion )
+        return IssueEvent.IssueEvent( self.__requester, data, completion = NoCompletion )
 
     def get_issues_events( self ):
         status, headers, data = self.__requester.request(
@@ -674,7 +674,7 @@ class Repository( object ):
             None,
             None
         )
-        return RepositoryKey.RepositoryKey( self.__requester, data, completion = LazyCompletion )
+        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
@@ -697,7 +697,7 @@ class Repository( object ):
             None,
             None
         )
-        return Label.Label( self.__requester, data, completion = LazyCompletion )
+        return Label.Label( self.__requester, data, completion = NoCompletion )
 
     def get_labels( self ):
         status, headers, data = self.__requester.request(
@@ -729,7 +729,7 @@ class Repository( object ):
             None,
             None
         )
-        return Milestone.Milestone( self.__requester, data, completion = LazyCompletion )
+        return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
 
     def get_milestones( self, state = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
@@ -766,7 +766,7 @@ class Repository( object ):
             None,
             None
         )
-        return PullRequest.PullRequest( self.__requester, data, completion = LazyCompletion )
+        return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
 
     def get_pulls( self, state = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(

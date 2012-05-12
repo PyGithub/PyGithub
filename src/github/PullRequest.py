@@ -171,7 +171,7 @@ class PullRequest( object ):
             None,
             None
         )
-        return PullRequestComment.PullRequestComment( self.__requester, data, completion = LazyCompletion )
+        return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(

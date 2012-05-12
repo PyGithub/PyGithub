@@ -156,7 +156,7 @@ class Organization( object ):
             url_parameters,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -182,7 +182,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -198,7 +198,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Team.Team( self.__requester, data, completion = LazyCompletion )
+        return Team.Team( self.__requester, data, completion = NoCompletion )
 
     def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -272,7 +272,7 @@ class Organization( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(

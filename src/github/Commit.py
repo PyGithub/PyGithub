@@ -77,7 +77,7 @@ class Commit( object ):
             None,
             post_parameters
         )
-        return CommitComment.CommitComment( self.__requester, data, completion = LazyCompletion )
+        return CommitComment.CommitComment( self.__requester, data, completion = NoCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(

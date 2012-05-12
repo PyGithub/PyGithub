@@ -23,7 +23,7 @@
 {% else %}
 
 {% if method.type.cardinality == "scalar" %}
-        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__requester, data, completion = LazyCompletion )
+        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__requester, data, completion = NoCompletion )
 {% endif %}
 
 {% if method.type.cardinality == "list" %}

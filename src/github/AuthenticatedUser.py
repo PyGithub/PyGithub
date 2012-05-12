@@ -187,7 +187,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Authorization.Authorization( self.__requester, data, completion = LazyCompletion )
+        return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
 
     def create_fork( self, repo ):
         status, headers, data = self.__requester.request(
@@ -196,7 +196,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -211,7 +211,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Gist.Gist( self.__requester, data, completion = LazyCompletion )
+        return Gist.Gist( self.__requester, data, completion = NoCompletion )
 
     def create_key( self, title, key ):
         post_parameters = {
@@ -224,7 +224,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return UserKey.UserKey( self.__requester, data, completion = LazyCompletion )
+        return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -250,7 +250,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def edit( self, name = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, hireable = DefaultValueForOptionalParameters, bio = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -284,7 +284,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Authorization.Authorization( self.__requester, data, completion = LazyCompletion )
+        return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
 
     def get_authorizations( self ):
         status, headers, data = self.__requester.request(
@@ -386,7 +386,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return UserKey.UserKey( self.__requester, data, completion = LazyCompletion )
+        return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
@@ -437,7 +437,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
+        return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(

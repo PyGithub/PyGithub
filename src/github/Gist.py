@@ -96,7 +96,7 @@ class Gist( object ):
             None,
             post_parameters
         )
-        return GistComment.GistComment( self.__requester, data, completion = LazyCompletion )
+        return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
 
     def create_fork( self ):
         status, headers, data = self.__requester.request(
@@ -105,7 +105,7 @@ class Gist( object ):
             None,
             None
         )
-        return Gist( self.__requester, data, completion = LazyCompletion )
+        return Gist( self.__requester, data, completion = NoCompletion )
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -137,7 +137,7 @@ class Gist( object ):
             None,
             None
         )
-        return GistComment.GistComment( self.__requester, data, completion = LazyCompletion )
+        return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
