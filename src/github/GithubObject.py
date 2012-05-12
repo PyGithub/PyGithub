@@ -2,3 +2,7 @@
 class DefaultValueForOptionalParametersType:
     pass
 DefaultValueForOptionalParameters = DefaultValueForOptionalParametersType()
+
+LazyCompletion = 0
+ImmediateCompletion = 1
+NoCompletion = 2

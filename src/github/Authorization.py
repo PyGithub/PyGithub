@@ -5,12 +5,12 @@ import PaginatedList
 from GithubObject import *
 
 class Authorization( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property

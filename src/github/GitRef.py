@@ -6,9 +6,9 @@ from GithubObject import *
 import GitObject
 
 class GitRef( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 
@@ -58,7 +58,7 @@ class GitRef( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "object" in attributes and attributes[ "object" ] is not None:
             assert isinstance( attributes[ "object" ], dict )
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], lazy = True )
+            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
         if "ref" in attributes and attributes[ "ref" ] is not None:
             assert isinstance( attributes[ "ref" ], ( str, unicode ) )
             self.__ref = attributes[ "ref" ]

@@ -10,12 +10,12 @@ import Milestone
 import Label
 
 class Issue( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -122,7 +122,7 @@ class Issue( object ):
             None,
             post_parameters
         )
-        return IssueComment.IssueComment( self.__requester, data, lazy = True )
+        return IssueComment.IssueComment( self.__requester, data, completion = LazyCompletion )
 
     def delete_labels( self ):
         pass
@@ -157,7 +157,7 @@ class Issue( object ):
             None,
             None
         )
-        return IssueComment.IssueComment( self.__requester, data, lazy = True )
+        return IssueComment.IssueComment( self.__requester, data, completion = LazyCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -252,7 +252,7 @@ class Issue( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes and attributes[ "assignee" ] is not None:
             assert isinstance( attributes[ "assignee" ], dict )
-            self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], lazy = True )
+            self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completion = LazyCompletion )
         if "body" in attributes and attributes[ "body" ] is not None:
             self.__body = attributes[ "body" ]
         if "closed_at" in attributes and attributes[ "closed_at" ] is not None:
@@ -271,7 +271,7 @@ class Issue( object ):
             self.__labels = attributes[ "labels" ]
         if "milestone" in attributes and attributes[ "milestone" ] is not None:
             assert isinstance( attributes[ "milestone" ], dict )
-            self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], lazy = True )
+            self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], completion = LazyCompletion )
         if "number" in attributes and attributes[ "number" ] is not None:
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None:
@@ -286,4 +286,4 @@ class Issue( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
             assert isinstance( attributes[ "user" ], dict )
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

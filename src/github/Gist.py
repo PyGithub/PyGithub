@@ -8,12 +8,12 @@ import Gist
 import GistComment
 
 class Gist( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -96,7 +96,7 @@ class Gist( object ):
             None,
             post_parameters
         )
-        return GistComment.GistComment( self.__requester, data, lazy = True )
+        return GistComment.GistComment( self.__requester, data, completion = LazyCompletion )
 
     def create_fork( self ):
         status, headers, data = self.__requester.request(
@@ -105,7 +105,7 @@ class Gist( object ):
             None,
             None
         )
-        return Gist( self.__requester, data, lazy = True )
+        return Gist( self.__requester, data, completion = LazyCompletion )
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -137,7 +137,7 @@ class Gist( object ):
             None,
             None
         )
-        return GistComment.GistComment( self.__requester, data, lazy = True )
+        return GistComment.GistComment( self.__requester, data, completion = LazyCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -243,4 +243,4 @@ class Gist( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
             assert isinstance( attributes[ "user" ], dict )
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

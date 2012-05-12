@@ -8,12 +8,12 @@ import Repository
 import NamedUser
 
 class Event( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -111,7 +111,7 @@ class Event( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None:
             assert isinstance( attributes[ "actor" ], dict )
-            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )
+            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
@@ -124,14 +124,14 @@ class Event( object ):
             self.__issue = attributes[ "issue" ]
         if "org" in attributes and attributes[ "org" ] is not None:
             assert isinstance( attributes[ "org" ], dict )
-            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], lazy = True )
+            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completion = LazyCompletion )
         if "payload" in attributes and attributes[ "payload" ] is not None:
             self.__payload = attributes[ "payload" ]
         if "public" in attributes and attributes[ "public" ] is not None:
             self.__public = attributes[ "public" ]
         if "repo" in attributes and attributes[ "repo" ] is not None:
             assert isinstance( attributes[ "repo" ], dict )
-            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], lazy = True )
+            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completion = LazyCompletion )
         if "type" in attributes and attributes[ "type" ] is not None:
             self.__type = attributes[ "type" ]
         if "url" in attributes and attributes[ "url" ] is not None:

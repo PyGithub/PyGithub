@@ -9,12 +9,12 @@ import PullRequestComment
 import PullRequestFile
 
 class PullRequest( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -171,7 +171,7 @@ class PullRequest( object ):
             None,
             None
         )
-        return PullRequestComment.PullRequestComment( self.__requester, data, lazy = True )
+        return PullRequestComment.PullRequestComment( self.__requester, data, completion = LazyCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -331,4 +331,4 @@ class PullRequest( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
             assert isinstance( attributes[ "user" ], dict )
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], lazy = True )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

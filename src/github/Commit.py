@@ -11,12 +11,12 @@ import Commit
 import CommitComment
 
 class Commit( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -77,7 +77,7 @@ class Commit( object ):
             None,
             post_parameters
         )
-        return CommitComment.CommitComment( self.__requester, data, lazy = True )
+        return CommitComment.CommitComment( self.__requester, data, completion = LazyCompletion )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -124,23 +124,23 @@ class Commit( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "author" in attributes and attributes[ "author" ] is not None:
             assert isinstance( attributes[ "author" ], dict )
-            self.__author = NamedUser.NamedUser( self.__requester, attributes[ "author" ], lazy = True )
+            self.__author = NamedUser.NamedUser( self.__requester, attributes[ "author" ], completion = LazyCompletion )
         if "commit" in attributes and attributes[ "commit" ] is not None:
             assert isinstance( attributes[ "commit" ], dict )
-            self.__commit = GitCommit.GitCommit( self.__requester, attributes[ "commit" ], lazy = True )
+            self.__commit = GitCommit.GitCommit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
         if "committer" in attributes and attributes[ "committer" ] is not None:
             assert isinstance( attributes[ "committer" ], dict )
-            self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], lazy = True )
+            self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], completion = LazyCompletion )
         if "files" in attributes and attributes[ "files" ] is not None:
             assert isinstance( attributes[ "files" ], list ) and ( len( attributes[ "files" ] ) == 0 or isinstance( attributes[ "files" ][ 0 ], dict ) )
             self.__files = [
-                CommitFile.CommitFile( self.__requester, element, lazy = True )
+                CommitFile.CommitFile( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "files" ]
             ]
         if "parents" in attributes and attributes[ "parents" ] is not None:
             assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) )
             self.__parents = [
-                Commit( self.__requester, element, lazy = True )
+                Commit( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "parents" ]
             ]
         if "sha" in attributes and attributes[ "sha" ] is not None:
@@ -148,7 +148,7 @@ class Commit( object ):
             self.__sha = attributes[ "sha" ]
         if "stats" in attributes and attributes[ "stats" ] is not None:
             assert isinstance( attributes[ "stats" ], dict )
-            self.__stats = CommitStats.CommitStats( self.__requester, attributes[ "stats" ], lazy = True )
+            self.__stats = CommitStats.CommitStats( self.__requester, attributes[ "stats" ], completion = LazyCompletion )
         if "url" in attributes and attributes[ "url" ] is not None:
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

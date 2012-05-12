@@ -10,12 +10,12 @@ import Repository
 import NamedUser
 
 class NamedUser( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -161,7 +161,7 @@ class NamedUser( object ):
             None,
             post_parameters
         )
-        return Gist.Gist( self.__requester, data, lazy = True )
+        return Gist.Gist( self.__requester, data, completion = LazyCompletion )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -282,7 +282,7 @@ class NamedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, lazy = True )
+        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(

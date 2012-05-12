@@ -6,12 +6,12 @@ from GithubObject import *
 import NamedUser
 
 class IssueEvent( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -79,7 +79,7 @@ class IssueEvent( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None:
             assert isinstance( attributes[ "actor" ], dict )
-            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], lazy = True )
+            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:

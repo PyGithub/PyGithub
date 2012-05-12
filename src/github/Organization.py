@@ -10,12 +10,12 @@ import Repository
 import NamedUser
 
 class Organization( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -156,7 +156,7 @@ class Organization( object ):
             url_parameters,
             None
         )
-        return Repository.Repository( self.__requester, data, lazy = True )
+        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -182,7 +182,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Repository.Repository( self.__requester, data, lazy = True )
+        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
 
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -198,7 +198,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Team.Team( self.__requester, data, lazy = True )
+        return Team.Team( self.__requester, data, completion = LazyCompletion )
 
     def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -272,7 +272,7 @@ class Organization( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, lazy = True )
+        return Repository.Repository( self.__requester, data, completion = LazyCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         status, headers, data = self.__requester.request(
@@ -434,7 +434,7 @@ class Organization( object ):
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None:
             assert isinstance( attributes[ "plan" ], dict )
-            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], lazy = True )
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None:
             assert isinstance( attributes[ "private_gists" ], int )
             self.__private_gists = attributes[ "private_gists" ]

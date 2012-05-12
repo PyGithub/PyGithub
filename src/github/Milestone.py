@@ -7,12 +7,12 @@ import NamedUser
 import Label
 
 class Milestone( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 
     @property
@@ -142,7 +142,7 @@ class Milestone( object ):
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes and attributes[ "creator" ] is not None:
             assert isinstance( attributes[ "creator" ], dict )
-            self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], lazy = True )
+            self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], completion = LazyCompletion )
         if "description" in attributes and attributes[ "description" ] is not None:
             self.__description = attributes[ "description" ]
         if "due_on" in attributes and attributes[ "due_on" ] is not None:

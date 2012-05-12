@@ -6,13 +6,13 @@ import {{ dependency }}
 {% endfor %}
 
 class {{ class.name }}( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 {% if class.isCompletable %}
-        if not lazy:
+        if completion == ImmediateCompletion:
             self.__complete()
 {% endif %}
 
@@ -96,13 +96,13 @@ class {{ class.name }}( object ):
 {% if attribute.type.simple %}
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
 {% else %}
-            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], lazy = True )
+            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completion = LazyCompletion )
 {% endif %}
 {% endif %}
 
 {% if attribute.type.cardinality == "list" %}
             self.__{{ attribute.name }} = [
-                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, lazy = True )
+                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "{{ attribute.name }}" ]
             ]
 {% endif %}

@@ -7,9 +7,9 @@ import GitAuthor
 import GitObject
 
 class GitTag( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 
@@ -55,7 +55,7 @@ class GitTag( object ):
             self.__message = attributes[ "message" ]
         if "object" in attributes and attributes[ "object" ] is not None:
             assert isinstance( attributes[ "object" ], dict )
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], lazy = True )
+            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
         if "sha" in attributes and attributes[ "sha" ] is not None:
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
@@ -64,7 +64,7 @@ class GitTag( object ):
             self.__tag = attributes[ "tag" ]
         if "tagger" in attributes and attributes[ "tagger" ] is not None:
             assert isinstance( attributes[ "tagger" ], dict )
-            self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], lazy = True )
+            self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], completion = LazyCompletion )
         if "url" in attributes and attributes[ "url" ] is not None:
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

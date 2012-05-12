@@ -6,9 +6,9 @@ from GithubObject import *
 import Commit
 
 class Branch( object ):
-    def __init__( self, requester, attributes, lazy ):
+    def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = False
+        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 
@@ -31,7 +31,7 @@ class Branch( object ):
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes and attributes[ "commit" ] is not None:
             assert isinstance( attributes[ "commit" ], dict )
-            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], lazy = True )
+            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
         if "name" in attributes and attributes[ "name" ] is not None:
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
