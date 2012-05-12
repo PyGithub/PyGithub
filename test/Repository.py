@@ -21,7 +21,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( repo.html_url, "https://github.com/jacquev6/PyGithub" )
         self.assertEqual( repo.id, 3544490 )
         self.assertEqual( repo.language, "Python" )
-        self.assertEqual( repo.master_branch, None ) ### @todo Why does this trigger a new request to github ? Because the object does not know that it is already completed, and it tries to de-None-ify master_branch
+        self.assertEqual( repo.master_branch, None )
         self.assertEqual( repo.mirror_url, None )
         self.assertEqual( repo.name, "PyGithub" )
         self.assertEqual( repo.open_issues, 15 )

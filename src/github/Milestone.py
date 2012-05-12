@@ -41,6 +41,11 @@ class Milestone( object ):
         return self.__due_on
 
     @property
+    def id( self ):
+        self.__completeIfNeeded( self.__id )
+        return self.__id
+
+    @property
     def number( self ):
         self.__completeIfNeeded( self.__number )
         return self.__number
@@ -111,6 +116,7 @@ class Milestone( object ):
         self.__creator = None
         self.__description = None
         self.__due_on = None
+        self.__id = None
         self.__number = None
         self.__open_issues = None
         self.__state = None
@@ -134,26 +140,38 @@ class Milestone( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "closed_issues", "created_at", "creator", "description", "due_on", "number", "open_issues", "state", "title", "url", ]
+            assert attribute in [ "closed_issues", "created_at", "creator", "description", "due_on", "id", "number", "open_issues", "state", "title", "url", ]
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "closed_issues" in attributes and attributes[ "closed_issues" ] is not None:
+            assert isinstance( attributes[ "closed_issues" ], int )
             self.__closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes and attributes[ "creator" ] is not None:
             assert isinstance( attributes[ "creator" ], dict )
             self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], completion = LazyCompletion )
         if "description" in attributes and attributes[ "description" ] is not None:
+            assert isinstance( attributes[ "description" ], ( str, unicode ) )
             self.__description = attributes[ "description" ]
         if "due_on" in attributes and attributes[ "due_on" ] is not None:
+            assert isinstance( attributes[ "due_on" ], ( str, unicode ) )
             self.__due_on = attributes[ "due_on" ]
+        if "id" in attributes and attributes[ "id" ] is not None:
+            assert isinstance( attributes[ "id" ], int )
+            self.__id = attributes[ "id" ]
         if "number" in attributes and attributes[ "number" ] is not None:
+            assert isinstance( attributes[ "number" ], int )
             self.__number = attributes[ "number" ]
         if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
+            assert isinstance( attributes[ "open_issues" ], int )
             self.__open_issues = attributes[ "open_issues" ]
         if "state" in attributes and attributes[ "state" ] is not None:
+            assert isinstance( attributes[ "state" ], ( str, unicode ) )
             self.__state = attributes[ "state" ]
         if "title" in attributes and attributes[ "title" ] is not None:
+            assert isinstance( attributes[ "title" ], ( str, unicode ) )
             self.__title = attributes[ "title" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

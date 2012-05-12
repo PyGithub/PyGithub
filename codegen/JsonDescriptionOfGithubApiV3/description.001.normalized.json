@@ -4439,7 +4439,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "closed_issues"
                 }, 
@@ -4447,7 +4447,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "created_at"
                 }, 
@@ -4463,7 +4463,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "description"
                 }, 
@@ -4471,7 +4471,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "due_on"
                 }, 
@@ -4479,7 +4479,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
+                    }, 
+                    "name": "id"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
                     }, 
                     "name": "number"
                 }, 
@@ -4487,7 +4495,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "open_issues"
                 }, 
@@ -4495,7 +4503,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "state"
                 }, 
@@ -4503,7 +4511,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "title"
                 }, 
@@ -4511,7 +4519,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }

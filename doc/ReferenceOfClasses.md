@@ -614,16 +614,17 @@ Class `Milestone`
 
 Attributes
 ----------
-* `closed_issues`
-* `created_at`
+* `closed_issues`: integer
+* `created_at`: string
 * `creator`: `NamedUser`
-* `description`
-* `due_on`
-* `number`
-* `open_issues`
-* `state`
-* `title`
-* `url`
+* `description`: string
+* `due_on`: string
+* `id`: integer
+* `number`: integer
+* `open_issues`: integer
+* `state`: string
+* `title`: string
+* `url`: string
 
 Deletion
 --------
