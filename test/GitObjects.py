@@ -41,6 +41,10 @@ class GitBlob( TestCaseWithRepo ):
         self.assertEqual( blob.sha, "53bce9fa919b4544e67275089b3ec5b44be20667" )
         self.assertEqual( blob.url, "https://api.github.com/repos/jacquev6/PyGithub/git/blobs/53bce9fa919b4544e67275089b3ec5b44be20667" )
 
+    def testCreate( self ):
+        blob = self.repo.create_git_blob( "Blob created by PyGithub", "latin1" )
+        self.assertEqual( blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8" )
+
 class GitCommit( TestCaseWithRepo ):
     def testAttributes( self ):
         commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
