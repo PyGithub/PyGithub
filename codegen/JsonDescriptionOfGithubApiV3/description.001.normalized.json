@@ -203,6 +203,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "AuthenticatedUser", 
             "methods": [
                 {
@@ -1577,6 +1578,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Authorization", 
             "methods": [
                 {
@@ -1694,6 +1696,7 @@
                     "name": "name"
                 }
             ], 
+            "isCompletable": false, 
             "name": "Branch", 
             "methods": []
         }, 
@@ -1764,6 +1767,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Commit", 
             "methods": [
                 {
@@ -1964,6 +1968,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "CommitComment", 
             "methods": [
                 {
@@ -2105,6 +2110,7 @@
                     "name": "status"
                 }
             ], 
+            "isCompletable": false, 
             "name": "CommitFile", 
             "methods": []
         }, 
@@ -2135,6 +2141,7 @@
                     "name": "total"
                 }
             ], 
+            "isCompletable": false, 
             "name": "CommitStats", 
             "methods": []
         }, 
@@ -2301,6 +2308,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Download", 
             "methods": [
                 {
@@ -2430,6 +2438,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Event", 
             "methods": []
         }, 
@@ -2548,6 +2557,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Gist", 
             "methods": [
                 {
@@ -2909,6 +2919,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GistComment", 
             "methods": [
                 {
@@ -3002,6 +3013,7 @@
                     "name": "name"
                 }
             ], 
+            "isCompletable": false, 
             "name": "GitAuthor", 
             "methods": []
         }, 
@@ -3048,6 +3060,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitBlob", 
             "methods": []
         }, 
@@ -3110,6 +3123,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitCommit", 
             "methods": []
         }, 
@@ -3140,6 +3154,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitObject", 
             "methods": []
         }, 
@@ -3170,6 +3185,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitRef", 
             "methods": [
                 {
@@ -3296,6 +3312,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitTag", 
             "methods": []
         }, 
@@ -3326,6 +3343,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "GitTree", 
             "methods": []
         }, 
@@ -3380,6 +3398,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": false, 
             "name": "GitTreeElement", 
             "methods": []
         }, 
@@ -3458,6 +3477,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Hook", 
             "methods": [
                 {
@@ -3734,6 +3754,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Issue", 
             "methods": [
                 {
@@ -4180,6 +4201,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "IssueComment", 
             "methods": [
                 {
@@ -4305,6 +4327,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "IssueEvent", 
             "methods": []
         }, 
@@ -4335,6 +4358,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Label", 
             "methods": [
                 {
@@ -4492,6 +4516,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Milestone", 
             "methods": [
                 {
@@ -4825,6 +4850,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "NamedUser", 
             "identity": [
                 {
@@ -5460,6 +5486,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Organization", 
             "methods": [
                 {
@@ -6267,6 +6294,7 @@
                     "name": "push"
                 }
             ], 
+            "isCompletable": false, 
             "name": "Permissions", 
             "methods": []
         }, 
@@ -6305,6 +6333,7 @@
                     "name": "space"
                 }
             ], 
+            "isCompletable": false, 
             "name": "Plan", 
             "methods": []
         }, 
@@ -6519,6 +6548,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "PullRequest", 
             "methods": [
                 {
@@ -6879,6 +6909,7 @@
                     "name": "user"
                 }
             ], 
+            "isCompletable": true, 
             "name": "PullRequestComment", 
             "methods": [
                 {
@@ -7020,6 +7051,7 @@
                     "name": "status"
                 }
             ], 
+            "isCompletable": false, 
             "name": "PullRequestFile", 
             "methods": []
         }, 
@@ -7266,6 +7298,7 @@
                     "name": "watchers"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Repository", 
             "identity": [
                 {
@@ -9833,6 +9866,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "RepositoryKey", 
             "methods": [
                 {
@@ -9942,6 +9976,7 @@
                     "name": "zipball_url"
                 }
             ], 
+            "isCompletable": false, 
             "name": "Tag", 
             "methods": []
         }, 
@@ -9996,6 +10031,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "Team", 
             "methods": [
                 {
@@ -10480,6 +10516,7 @@
                     "name": "url"
                 }
             ], 
+            "isCompletable": true, 
             "name": "UserKey", 
             "methods": [
                 {

@@ -248,7 +248,7 @@ class Collection:
 
 class Class:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "attributes", "collections" ], [ "url", "identity", "edit", "delete", "additionalMethods" ] )
+        checkKeys( desc, [ "name", "attributes", "collections" ], [ "isCompletable", "url", "identity", "edit", "delete", "additionalMethods" ] )
 
         self.name = desc[ "name" ]
         self.attributes = sorted(
@@ -258,6 +258,7 @@ class Class:
             ],
             key = lambda class_: class_.name
         )
+        self.isCompletable = "isCompletable" in desc and desc[ "isCompletable" ]
         self.methods = []
         if "identity" in desc:
             self.identity = desc[ "identity" ]
@@ -301,6 +302,7 @@ class Class:
             "name": self.name,
             "attributes": self.attributes,
             "methods": self.methods,
+            "isCompletable": self.isCompletable,
         }
         if self.identity is not None:
             d[ "identity" ] = self.identity

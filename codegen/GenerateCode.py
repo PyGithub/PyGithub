@@ -24,13 +24,6 @@ for class_ in description[ "classes" ]:
             dependencies.add( thing[ "type" ][ "name" ] )
     class_[ "dependencies" ] = list( dependencies )
 
-for class_ in description[ "classes" ]:
-    isCompletable = False
-    for attribute in class_[ "attributes" ]:
-        if attribute[ "name" ] == "url":
-            isCompletable = True
-    class_[ "isCompletable" ] = isCompletable
-
 githubObjectTemplate = django.template.loader.get_template( "GithubObject.py" )
 for class_ in description[ "classes" ]:
     with open( os.path.join( os.path.dirname( __file__ ), "..", "src", "github", class_[ "name" ] + ".py" ), "w" ) as f:
