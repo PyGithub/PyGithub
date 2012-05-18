@@ -211,16 +211,16 @@ Class `CommitComment`
 
 Attributes
 ----------
-* `body`
-* `commit_id`
-* `created_at`
-* `html_url`
-* `id`
-* `line`
-* `path`
-* `position`
-* `updated_at`
-* `url`
+* `body`: string
+* `commit_id`: string
+* `created_at`: string
+* `html_url`: string
+* `id`: integer
+* `line`: integer
+* `path`: string
+* `position`: integer
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Deletion

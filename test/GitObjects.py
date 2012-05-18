@@ -25,6 +25,40 @@ class Branch( Framework.TestCaseWithRepo ):
         self.assertEqual( branch.commit.stats.total, 20 )
         self.assertEqual( branch.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
 
+    def testCommitComments( self ):
+        commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
+        comments = list( commit.get_comments() )
+        self.assertEqual( len( comments ), 4 )
+        comment = comments[ 0 ]
+        self.assertEqual( len( comment.body ), 492 )
+        self.assertEqual( comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d" )
+        self.assertEqual( comment.created_at, "2012-05-18T08:46:09Z" )
+        self.assertEqual( comment.html_url, "https://github.com/jacquev6/PyGithub/commit/6945921c529be14c3a8f566dd1e483674516d46d#commitcomment-1347033" )
+        self.assertEqual( comment.id, 1347033 )
+        self.assertEqual( comment.line, None )
+        self.assertEqual( comment.path, None )
+        self.assertEqual( comment.position, None )
+        self.assertEqual( comment.updated_at, "2012-05-18T08:46:09Z" )
+        self.assertEqual( comment.url, "https://api.github.com/repos/jacquev6/PyGithub/comments/1347033" )
+        self.assertEqual( comment.user.login, "bilderbuchi" )
+
+    def testCommitCommentsOnLine( self ):
+        commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
+        comments = list( commit.get_comments() )
+        self.assertEqual( len( comments ), 4 )
+        comment = comments[ 3 ]
+        self.assertEqual( comment.body, "This comment is here only to test PyGithub..." )
+        self.assertEqual( comment.commit_id, "6945921c529be14c3a8f566dd1e483674516d46d" )
+        self.assertEqual( comment.created_at, "2012-05-18T20:11:17Z" )
+        self.assertEqual( comment.html_url, "https://github.com/jacquev6/PyGithub/commit/6945921c529be14c3a8f566dd1e483674516d46d#commitcomment-1349654" )
+        self.assertEqual( comment.id, 1349654 )
+        self.assertEqual( comment.line, 25 )
+        self.assertEqual( comment.path, "codegen/templates/GithubObject.MethodBody.UseResult.py" )
+        self.assertEqual( comment.position, 3 )
+        self.assertEqual( comment.updated_at, "2012-05-18T20:11:17Z" )
+        self.assertEqual( comment.url, "https://api.github.com/repos/jacquev6/PyGithub/comments/1349654" )
+        self.assertEqual( comment.user.login, "jacquev6" )
+
 class GitBlob( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         blob = self.repo.get_git_blob( "53bce9fa919b4544e67275089b3ec5b44be20667" )
