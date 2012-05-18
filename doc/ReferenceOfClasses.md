@@ -647,32 +647,32 @@ Class `NamedUser`
 
 Attributes
 ----------
-* `avatar_url`
-* `bio`
-* `blog`
-* `collaborators`
-* `company`
-* `contributions`
-* `created_at`
-* `disk_usage`
-* `email`
+* `avatar_url`: string
+* `bio`: string
+* `blog`: string
+* `collaborators`: integer
+* `company`: string
+* `contributions`: integer
+* `created_at`: string
+* `disk_usage`: integer
+* `email`: string
 * `followers`: integer
-* `following`
-* `gravatar_id`
-* `hireable`
-* `html_url`
-* `id`
+* `following`: integer
+* `gravatar_id`: string
+* `hireable`: bool
+* `html_url`: string
+* `id`: integer
 * `location`: string
 * `login`: string
 * `name`: string
-* `owned_private_repos`
-* `plan`
-* `private_gists`
-* `public_gists`
-* `public_repos`
-* `total_private_repos`
-* `type`
-* `url`
+* `owned_private_repos`: integer
+* `plan`: `Plan`
+* `private_gists`: integer
+* `public_gists`: integer
+* `public_repos`: integer
+* `total_private_repos`: integer
+* `type`: string
+* `url`: string
 
 Events
 ------

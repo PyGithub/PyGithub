@@ -3,11 +3,12 @@
 
 import PaginatedList
 from GithubObject import *
-import Organization
 import Gist
-import Event
 import Repository
 import NamedUser
+import Plan
+import Organization
+import Event
 
 class NamedUser( object ):
     def __init__( self, requester, attributes, completion ):
@@ -365,35 +366,49 @@ class NamedUser( object ):
             assert attribute in [ "avatar_url", "bio", "blog", "collaborators", "company", "contributions", "created_at", "disk_usage", "email", "followers", "following", "gravatar_id", "hireable", "html_url", "id", "location", "login", "name", "owned_private_repos", "plan", "private_gists", "public_gists", "public_repos", "total_private_repos", "type", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "avatar_url" in attributes and attributes[ "avatar_url" ] is not None:
+            assert isinstance( attributes[ "avatar_url" ], ( str, unicode ) )
             self.__avatar_url = attributes[ "avatar_url" ]
         if "bio" in attributes and attributes[ "bio" ] is not None:
+            assert isinstance( attributes[ "bio" ], ( str, unicode ) )
             self.__bio = attributes[ "bio" ]
         if "blog" in attributes and attributes[ "blog" ] is not None:
+            assert isinstance( attributes[ "blog" ], ( str, unicode ) )
             self.__blog = attributes[ "blog" ]
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None:
+            assert isinstance( attributes[ "collaborators" ], int )
             self.__collaborators = attributes[ "collaborators" ]
         if "company" in attributes and attributes[ "company" ] is not None:
+            assert isinstance( attributes[ "company" ], ( str, unicode ) )
             self.__company = attributes[ "company" ]
         if "contributions" in attributes and attributes[ "contributions" ] is not None:
+            assert isinstance( attributes[ "contributions" ], int )
             self.__contributions = attributes[ "contributions" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
         if "disk_usage" in attributes and attributes[ "disk_usage" ] is not None:
+            assert isinstance( attributes[ "disk_usage" ], int )
             self.__disk_usage = attributes[ "disk_usage" ]
         if "email" in attributes and attributes[ "email" ] is not None:
+            assert isinstance( attributes[ "email" ], ( str, unicode ) )
             self.__email = attributes[ "email" ]
         if "followers" in attributes and attributes[ "followers" ] is not None:
             assert isinstance( attributes[ "followers" ], int )
             self.__followers = attributes[ "followers" ]
         if "following" in attributes and attributes[ "following" ] is not None:
+            assert isinstance( attributes[ "following" ], int )
             self.__following = attributes[ "following" ]
         if "gravatar_id" in attributes and attributes[ "gravatar_id" ] is not None:
+            assert isinstance( attributes[ "gravatar_id" ], ( str, unicode ) )
             self.__gravatar_id = attributes[ "gravatar_id" ]
         if "hireable" in attributes and attributes[ "hireable" ] is not None:
+            assert isinstance( attributes[ "hireable" ], bool )
             self.__hireable = attributes[ "hireable" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None:
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None:
+            assert isinstance( attributes[ "id" ], int )
             self.__id = attributes[ "id" ]
         if "location" in attributes and attributes[ "location" ] is not None:
             assert isinstance( attributes[ "location" ], ( str, unicode ) )
@@ -405,18 +420,26 @@ class NamedUser( object ):
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None:
+            assert isinstance( attributes[ "owned_private_repos" ], int )
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None:
-            self.__plan = attributes[ "plan" ]
+            assert isinstance( attributes[ "plan" ], dict )
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None:
+            assert isinstance( attributes[ "private_gists" ], int )
             self.__private_gists = attributes[ "private_gists" ]
         if "public_gists" in attributes and attributes[ "public_gists" ] is not None:
+            assert isinstance( attributes[ "public_gists" ], int )
             self.__public_gists = attributes[ "public_gists" ]
         if "public_repos" in attributes and attributes[ "public_repos" ] is not None:
+            assert isinstance( attributes[ "public_repos" ], int )
             self.__public_repos = attributes[ "public_repos" ]
         if "total_private_repos" in attributes and attributes[ "total_private_repos" ] is not None:
+            assert isinstance( attributes[ "total_private_repos" ], int )
             self.__total_private_repos = attributes[ "total_private_repos" ]
         if "type" in attributes and attributes[ "type" ] is not None:
+            assert isinstance( attributes[ "type" ], ( str, unicode ) )
             self.__type = attributes[ "type" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
