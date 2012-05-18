@@ -105,6 +105,11 @@ class TestCase( unittest.TestCase ):
                 self.assertEqual( self.__file.readline(), "" )
             self.__file.close()
 
+class TestCaseWithRepo( TestCase ):
+    def setUp( self ):
+        TestCase.setUp( self )
+        self.repo = self.g.get_user().get_repo( "PyGithub" )
+
 def main():
     if "--record" in sys.argv:
         TestCase.recordMode = True

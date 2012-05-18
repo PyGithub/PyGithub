@@ -3629,7 +3629,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "body"
                 }, 
@@ -3637,15 +3637,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "closed_at"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "NamedUser"
                     }, 
                     "name": "closed_by"
                 }, 
@@ -3653,7 +3653,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "comments"
                 }, 
@@ -3661,7 +3661,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "created_at"
                 }, 
@@ -3669,7 +3669,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "html_url"
                 }, 
@@ -3677,15 +3677,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "id"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Label"
                     }, 
                     "name": "labels"
                 }, 
@@ -3701,7 +3701,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "number"
                 }, 
@@ -3717,7 +3717,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "state"
                 }, 
@@ -3725,7 +3725,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "title"
                 }, 
@@ -3733,7 +3733,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -3741,7 +3741,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }, 

@@ -506,21 +506,21 @@ Class `Issue`
 Attributes
 ----------
 * `assignee`: `NamedUser`
-* `body`
-* `closed_at`
-* `closed_by`
-* `comments`
-* `created_at`
-* `html_url`
-* `id`
-* `labels`
+* `body`: string
+* `closed_at`: string
+* `closed_by`: `NamedUser`
+* `comments`: integer
+* `created_at`: string
+* `html_url`: string
+* `id`: integer
+* `labels`: list of `Label`
 * `milestone`: `Milestone`
-* `number`
+* `number`: integer
 * `pull_request`
-* `state`
-* `title`
-* `updated_at`
-* `url`
+* `state`: string
+* `title`: string
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Comments
@@ -856,7 +856,6 @@ Attributes
 
 Comments
 --------
-* `create_comment( < body, commit_id, path, position > or < body, in_reply_to > )`: `PullRequestComment`
 * `get_comment( id )`: `PullRequestComment`
     * `id`
 * `get_comments()`: list of `PullRequestComment`
@@ -1151,7 +1150,6 @@ Modification
 
 Pulls
 -----
-* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
 * `get_pull( number )`: `PullRequest`
     * `number`
 * `get_pulls( [state] )`: list of `PullRequest`

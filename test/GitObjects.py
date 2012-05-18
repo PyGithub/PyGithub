@@ -1,11 +1,6 @@
 import Framework
 
-class TestCaseWithRepo( Framework.TestCase ):
-    def setUp( self ):
-        Framework.TestCase.setUp( self )
-        self.repo = self.g.get_user().get_repo( "PyGithub" )
-
-class Branch( TestCaseWithRepo ):
+class Branch( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         branch = self.repo.get_branches()[ 0 ]
         self.assertEqual( branch.name, "topic/RewriteWithGeneratedCode" )
@@ -30,7 +25,7 @@ class Branch( TestCaseWithRepo ):
         self.assertEqual( branch.commit.stats.total, 20 )
         self.assertEqual( branch.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
 
-class GitBlob( TestCaseWithRepo ):
+class GitBlob( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         blob = self.repo.get_git_blob( "53bce9fa919b4544e67275089b3ec5b44be20667" )
         self.assertTrue( blob.content.startswith( "IyEvdXNyL2Jpbi9lbnYgcHl0aG9uCgpmcm9tIGRpc3R1dGlscy5jb3JlIGlt\ncG9ydCBzZXR1cAppbXBvcnQgdGV4dHdyYXAKCnNldHVwKAogICAgbmFtZSA9\n" ) )
@@ -45,7 +40,7 @@ class GitBlob( TestCaseWithRepo ):
         blob = self.repo.create_git_blob( "Blob created by PyGithub", "latin1" )
         self.assertEqual( blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8" )
 
-class GitCommit( TestCaseWithRepo ):
+class GitCommit( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
         self.assertEqual( commit.author.name, "Vincent Jacques" )
@@ -62,7 +57,7 @@ class GitCommit( TestCaseWithRepo ):
         self.assertEqual( commit.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )
         self.assertEqual( commit.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495" )
 
-class GitRef( TestCaseWithRepo ):
+class GitRef( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         ref = self.repo.get_git_ref( "refs/heads/topic/RewriteWithGeneratedCode" )
         self.assertEqual( ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
@@ -77,7 +72,7 @@ class GitRef( TestCaseWithRepo ):
         ref.edit( "4303c5b90e2216d927155e9609436ccb8984c495", force = True )
         ref.delete()
 
-class GitTag( TestCaseWithRepo ):
+class GitTag( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         tag = self.repo.get_git_tag( "f5f37322407b02a80de4526ad88d5f188977bc3c" )
         self.assertEqual( tag.message, "Version 0.6\n" )
@@ -91,7 +86,7 @@ class GitTag( TestCaseWithRepo ):
         self.assertEqual( tag.tagger.name, "Vincent Jacques" )
         self.assertEqual( tag.url, "https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c" )
 
-class GitTree( TestCaseWithRepo ):
+class GitTree( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         tree = self.repo.get_git_tree( "f492784d8ca837779650d1fb406a1a3587a764ad" )
         self.assertEqual( tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad" )

@@ -254,35 +254,51 @@ class Issue( object ):
             assert isinstance( attributes[ "assignee" ], dict )
             self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completion = LazyCompletion )
         if "body" in attributes and attributes[ "body" ] is not None:
+            assert isinstance( attributes[ "body" ], ( str, unicode ) )
             self.__body = attributes[ "body" ]
         if "closed_at" in attributes and attributes[ "closed_at" ] is not None:
+            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) )
             self.__closed_at = attributes[ "closed_at" ]
         if "closed_by" in attributes and attributes[ "closed_by" ] is not None:
-            self.__closed_by = attributes[ "closed_by" ]
+            assert isinstance( attributes[ "closed_by" ], dict )
+            self.__closed_by = NamedUser.NamedUser( self.__requester, attributes[ "closed_by" ], completion = LazyCompletion )
         if "comments" in attributes and attributes[ "comments" ] is not None:
+            assert isinstance( attributes[ "comments" ], int )
             self.__comments = attributes[ "comments" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None:
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None:
+            assert isinstance( attributes[ "id" ], int )
             self.__id = attributes[ "id" ]
         if "labels" in attributes and attributes[ "labels" ] is not None:
-            self.__labels = attributes[ "labels" ]
+            assert isinstance( attributes[ "labels" ], list ) and ( len( attributes[ "labels" ] ) == 0 or isinstance( attributes[ "labels" ][ 0 ], dict ) )
+            self.__labels = [
+                Label.Label( self.__requester, element, completion = LazyCompletion )
+                for element in attributes[ "labels" ]
+            ]
         if "milestone" in attributes and attributes[ "milestone" ] is not None:
             assert isinstance( attributes[ "milestone" ], dict )
             self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], completion = LazyCompletion )
         if "number" in attributes and attributes[ "number" ] is not None:
+            assert isinstance( attributes[ "number" ], int )
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None:
             self.__pull_request = attributes[ "pull_request" ]
         if "state" in attributes and attributes[ "state" ] is not None:
+            assert isinstance( attributes[ "state" ], ( str, unicode ) )
             self.__state = attributes[ "state" ]
         if "title" in attributes and attributes[ "title" ] is not None:
+            assert isinstance( attributes[ "title" ], ( str, unicode ) )
             self.__title = attributes[ "title" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
             assert isinstance( attributes[ "user" ], dict )
