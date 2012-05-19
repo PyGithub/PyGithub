@@ -3477,7 +3477,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "Hook", 
             "methods": [
                 {

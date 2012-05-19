@@ -637,7 +637,6 @@
         },
         {
             "name": "Hook",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "name", "type": "@todo" },
