@@ -63,6 +63,26 @@ class Issue( Framework.TestCaseWithRepo ):
         self.assertEqual( issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/1" )
         self.assertEqual( issue.user.login, "jacquev6" )
 
+    def testCreate( self ):
+        issue = self.repo.create_issue( "Issue created by PyGithub" )
+        self.assertEqual( issue.number, 28 )
+
+    def testEditWithoutParameters( self ):
+        issue = self.repo.get_issue( 28 )
+        issue.edit()
+
+    def testEditWithAllParameters( self ):
+        issue = self.repo.get_issue( 28 )
+        ### @todo Variadic argument for labels?
+        ### @todo NamedUser instead of string for assignee
+        issue.edit( "Title edited by PyGithub", "Body edited by PyGithub", "jacquev6", "open", 2, [ "Bug" ] )
+        self.assertEqual( issue.assignee.login, "jacquev6" )
+        self.assertEqual( issue.body, "Body edited by PyGithub" )
+        self.assertEqual( issue.state, "open" )
+        self.assertEqual( issue.title, "Title edited by PyGithub" )
+        self.assertEqual( len( issue.labels ), 1 )
+        self.assertEqual( issue.labels[ 0 ].name, "Bug" )
+
 class Label( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         label = self.repo.get_label( "Bug" )
