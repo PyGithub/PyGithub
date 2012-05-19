@@ -8,7 +8,6 @@ import Commit
 class Branch( object ):
     def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 

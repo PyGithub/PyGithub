@@ -9,9 +9,9 @@ import NamedUser
 class Team( object ):
     def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
+        self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
             self.__complete()
 

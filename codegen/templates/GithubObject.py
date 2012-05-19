@@ -8,10 +8,10 @@ import {{ dependency }}
 class {{ class.name }}( object ):
     def __init__( self, requester, attributes, completion ):
         self.__requester = requester
-        self.__completed = completion != LazyCompletion
         self.__initAttributes()
         self.__useAttributes( attributes )
 {% if class.isCompletable %}
+        self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
             self.__complete()
 {% endif %}
