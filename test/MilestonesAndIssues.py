@@ -1,6 +1,6 @@
 import Framework
 
-class Milestones( Framework.TestCaseWithRepo ):
+class Milestone( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         milestone = self.repo.get_milestone( 1 )
         self.assertEqual( milestone.closed_issues, 2 )
@@ -15,7 +15,7 @@ class Milestones( Framework.TestCaseWithRepo ):
         self.assertEqual( milestone.url, "https://api.github.com/repos/jacquev6/PyGithub/milestones/1" )
         self.assertEqual( milestone.creator.login, "jacquev6" )
 
-class Issues( Framework.TestCaseWithRepo ):
+class Issue( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         issue = self.repo.get_issue( 1 )
         self.assertEqual( issue.assignee.login, "jacquev6" )
