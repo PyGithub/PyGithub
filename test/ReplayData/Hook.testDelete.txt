@@ -1,0 +1,10 @@
+GET /repos/jacquev6/PyGithub/hooks/257967 {} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4987'), ('content-length', '303'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"a686c4d4f706840e166ebafdfd05f41f"'), ('date', 'Sat, 19 May 2012 05:09:01 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"updated_at":"2012-05-19T05:08:16Z","url":"https://api.github.com/repos/jacquev6/PyGithub/hooks/257967","config":{"url":"http://foobar.com/hook"},"last_response":{"status":"unused","message":null,"code":null},"active":true,"events":["push"],"name":"web","created_at":"2012-05-19T05:03:14Z","id":257967}
+
+DELETE /repos/jacquev6/PyGithub/hooks/257967 {} null
+204
+[('status', '204 No Content'), ('x-ratelimit-remaining', '4986'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 19 May 2012 05:09:01 GMT')]
+
+

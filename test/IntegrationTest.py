@@ -8,5 +8,6 @@ from Repository import *
 from Organization import *
 from MilestonesAndIssues import *
 from NamedUser import *
+from Hook import *
 
 Framework.main()
