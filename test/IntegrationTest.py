@@ -9,5 +9,6 @@ from Organization import *
 from MilestonesAndIssues import *
 from NamedUser import *
 from Hook import *
+from Gist import *
 
 Framework.main()

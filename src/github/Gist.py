@@ -3,6 +3,7 @@
 
 import PaginatedList
 from GithubObject import *
+import GistHistoryState
 import NamedUser
 import Gist
 import GistComment
@@ -35,6 +36,11 @@ class Gist( object ):
     def files( self ):
         self.__completeIfNeeded( self.__files )
         return self.__files
+
+    @property
+    def fork_of( self ):
+        self.__completeIfNeeded( self.__fork_of )
+        return self.__fork_of
 
     @property
     def forks( self ):
@@ -183,6 +189,7 @@ class Gist( object ):
         self.__created_at = None
         self.__description = None
         self.__files = None
+        self.__fork_of = None
         self.__forks = None
         self.__git_pull_url = None
         self.__git_push_url = None
@@ -211,35 +218,54 @@ class Gist( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "comments", "created_at", "description", "files", "forks", "git_pull_url", "git_push_url", "history", "html_url", "id", "public", "updated_at", "url", "user", ], attribute
+            assert attribute in [ "comments", "created_at", "description", "files", "fork_of", "forks", "git_pull_url", "git_push_url", "history", "html_url", "id", "public", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "comments" in attributes and attributes[ "comments" ] is not None:
+            assert isinstance( attributes[ "comments" ], int )
             self.__comments = attributes[ "comments" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None:
             assert isinstance( attributes[ "description" ], ( str, unicode ) )
             self.__description = attributes[ "description" ]
         if "files" in attributes and attributes[ "files" ] is not None:
             self.__files = attributes[ "files" ]
+        if "fork_of" in attributes and attributes[ "fork_of" ] is not None:
+            assert isinstance( attributes[ "fork_of" ], dict )
+            self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completion = LazyCompletion )
         if "forks" in attributes and attributes[ "forks" ] is not None:
-            self.__forks = attributes[ "forks" ]
+            assert isinstance( attributes[ "forks" ], list ) and ( len( attributes[ "forks" ] ) == 0 or isinstance( attributes[ "forks" ][ 0 ], dict ) )
+            self.__forks = [
+                Gist( self.__requester, element, completion = LazyCompletion )
+                for element in attributes[ "forks" ]
+            ]
         if "git_pull_url" in attributes and attributes[ "git_pull_url" ] is not None:
+            assert isinstance( attributes[ "git_pull_url" ], ( str, unicode ) )
             self.__git_pull_url = attributes[ "git_pull_url" ]
         if "git_push_url" in attributes and attributes[ "git_push_url" ] is not None:
+            assert isinstance( attributes[ "git_push_url" ], ( str, unicode ) )
             self.__git_push_url = attributes[ "git_push_url" ]
         if "history" in attributes and attributes[ "history" ] is not None:
-            self.__history = attributes[ "history" ]
+            assert isinstance( attributes[ "history" ], list ) and ( len( attributes[ "history" ] ) == 0 or isinstance( attributes[ "history" ][ 0 ], dict ) )
+            self.__history = [
+                GistHistoryState.GistHistoryState( self.__requester, element, completion = LazyCompletion )
+                for element in attributes[ "history" ]
+            ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None:
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None:
-            assert isinstance( attributes[ "id" ], int )
+            assert isinstance( attributes[ "id" ], ( str, unicode ) )
             self.__id = attributes[ "id" ]
         if "public" in attributes and attributes[ "public" ] is not None:
+            assert isinstance( attributes[ "public" ], bool )
             self.__public = attributes[ "public" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None:
+            assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None:
             assert isinstance( attributes[ "user" ], dict )

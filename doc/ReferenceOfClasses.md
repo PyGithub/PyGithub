@@ -309,19 +309,20 @@ Class `Gist`
 
 Attributes
 ----------
-* `comments`
-* `created_at`
+* `comments`: integer
+* `created_at`: string
 * `description`: string
 * `files`
-* `forks`
-* `git_pull_url`
-* `git_push_url`
-* `history`
-* `html_url`
-* `id`: integer
-* `public`
-* `updated_at`
-* `url`
+* `fork_of`: `Gist`
+* `forks`: list of `Gist`
+* `git_pull_url`: string
+* `git_push_url`: string
+* `history`: list of `GistHistoryState`
+* `html_url`: string
+* `id`: string
+* `public`: bool
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Comments
@@ -372,6 +373,17 @@ Modification
 ------------
 * `edit( body )`
     * `body`
+
+Class `GistHistoryState`
+========================
+
+Attributes
+----------
+* `change_status`: `CommitStats`
+* `committed_at`: string
+* `url`: string
+* `user`: `NamedUser`
+* `version`: string
 
 Class `GitAuthor`
 =================

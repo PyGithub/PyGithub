@@ -414,6 +414,18 @@
             ]
         },
         {
+            "name": "GistHistoryState",
+            "attributes": [
+                { "name": "change_status", "type": "CommitStats" },
+                { "name": "committed_at", "type": "string" },
+                { "name": "url", "type": "string" },
+                { "name": "user", "type": "NamedUser" },
+                { "name": "version", "type": "string" }
+            ],
+            "collections": [
+            ]
+        },
+        {
             "name": "Gist",
             "isCompletable": true,
             "edit": {
@@ -424,19 +436,20 @@
             },
             "delete": true,
             "attributes": [
-                { "name": "comments", "type": "@todo" },
-                { "name": "created_at", "type": "@todo" },
+                { "name": "comments", "type": "integer" },
+                { "name": "created_at", "type": "string" },
                 { "name": "description", "type": "string" },
                 { "name": "files", "type": "@todo" },
-                { "name": "forks", "type": "@todo" },
-                { "name": "git_pull_url", "type": "@todo" },
-                { "name": "git_push_url", "type": "@todo" },
-                { "name": "history", "type": "@todo" },
-                { "name": "html_url", "type": "@todo" },
-                { "name": "id", "type": "integer" },
-                { "name": "public", "type": "@todo" },
-                { "name": "updated_at", "type": "@todo" },
-                { "name": "url", "type": "@todo" },
+                { "name": "fork_of", "type": "Gist" },
+                { "name": "forks", "type": "list:Gist" },
+                { "name": "git_pull_url", "type": "string" },
+                { "name": "git_push_url", "type": "string" },
+                { "name": "history", "type": "list:GistHistoryState" },
+                { "name": "html_url", "type": "string" },
+                { "name": "id", "type": "string" },
+                { "name": "public", "type": "bool" },
+                { "name": "updated_at", "type": "string" },
+                { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ],
             "collections": [
@@ -516,7 +529,6 @@
         },
         {
             "name": "GistComment",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }

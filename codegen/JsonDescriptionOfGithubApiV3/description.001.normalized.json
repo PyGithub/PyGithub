@@ -2448,7 +2448,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "comments"
                 }, 
@@ -2456,7 +2456,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "created_at"
                 }, 
@@ -2478,9 +2478,17 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "Gist"
+                    }, 
+                    "name": "fork_of"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Gist"
                     }, 
                     "name": "forks"
                 }, 
@@ -2488,7 +2496,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "git_pull_url"
                 }, 
@@ -2496,15 +2504,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "git_push_url"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "GistHistoryState"
                     }, 
                     "name": "history"
                 }, 
@@ -2512,7 +2520,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "html_url"
                 }, 
@@ -2520,7 +2528,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "integer"
+                        "name": "string"
                     }, 
                     "name": "id"
                 }, 
@@ -2528,7 +2536,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "bool"
                     }, 
                     "name": "public"
                 }, 
@@ -2536,7 +2544,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -2544,7 +2552,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }, 
@@ -2919,7 +2927,7 @@
                     "name": "user"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "GistComment", 
             "methods": [
                 {
@@ -2985,6 +2993,53 @@
                     }
                 }
             ]
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "CommitStats"
+                    }, 
+                    "name": "change_status"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "committed_at"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "url"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "NamedUser"
+                    }, 
+                    "name": "user"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "version"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "GistHistoryState", 
+            "methods": []
         }, 
         {
             "attributes": [
