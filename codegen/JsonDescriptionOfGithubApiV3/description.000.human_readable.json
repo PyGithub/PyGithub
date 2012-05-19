@@ -1708,9 +1708,9 @@
         {
             "name": "Tag",
             "attributes": [
-                { "name": "name", "type": "@todo" },
-                { "name": "tarball_url", "type": "@todo" },
-                { "name": "zipball_url", "type": "@todo" },
+                { "name": "name", "type": "string" },
+                { "name": "tarball_url", "type": "string" },
+                { "name": "zipball_url", "type": "string" },
                 { "name": "commit", "type": "Commit" }
             ],
             "collections": [

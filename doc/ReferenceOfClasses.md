@@ -1193,9 +1193,9 @@ Class `Tag`
 Attributes
 ----------
 * `commit`: `Commit`
-* `name`
-* `tarball_url`
-* `zipball_url`
+* `name`: string
+* `tarball_url`: string
+* `zipball_url`: string
 
 Class `Team`
 ============

@@ -43,8 +43,11 @@ class Tag( object ):
             assert isinstance( attributes[ "commit" ], dict )
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
         if "name" in attributes and attributes[ "name" ] is not None:
+            assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
         if "tarball_url" in attributes and attributes[ "tarball_url" ] is not None:
+            assert isinstance( attributes[ "tarball_url" ], ( str, unicode ) )
             self.__tarball_url = attributes[ "tarball_url" ]
         if "zipball_url" in attributes and attributes[ "zipball_url" ] is not None:
+            assert isinstance( attributes[ "zipball_url" ], ( str, unicode ) )
             self.__zipball_url = attributes[ "zipball_url" ]

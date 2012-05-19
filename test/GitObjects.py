@@ -59,6 +59,14 @@ class Branch( Framework.TestCaseWithRepo ):
         self.assertEqual( comment.url, "https://api.github.com/repos/jacquev6/PyGithub/comments/1349654" )
         self.assertEqual( comment.user.login, "jacquev6" )
 
+class Tag( Framework.TestCaseWithRepo ):
+    def testAttributes( self ):
+        tag = self.repo.get_tags()[ 0 ]
+        self.assertEqual( tag.commit.sha, "636e6112deb72277b3bffcc3303cd7e8a7431a5d" )
+        self.assertEqual( tag.name, "v0.3" )
+        self.assertEqual( tag.tarball_url, "https://github.com/jacquev6/PyGithub/tarball/v0.3" )
+        self.assertEqual( tag.zipball_url, "https://github.com/jacquev6/PyGithub/zipball/v0.3" )
+
 class GitBlob( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         blob = self.repo.get_git_blob( "53bce9fa919b4544e67275089b3ec5b44be20667" )
