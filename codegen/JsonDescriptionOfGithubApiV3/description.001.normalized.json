@@ -4579,7 +4579,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "Milestone", 
             "methods": [
                 {

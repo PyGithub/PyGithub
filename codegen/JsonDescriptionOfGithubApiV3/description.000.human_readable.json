@@ -810,7 +810,6 @@
         },
         {
             "name": "Milestone",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "title", "type": "@todo" }

@@ -15,6 +15,32 @@ class Milestone( Framework.TestCaseWithRepo ):
         self.assertEqual( milestone.url, "https://api.github.com/repos/jacquev6/PyGithub/milestones/1" )
         self.assertEqual( milestone.creator.login, "jacquev6" )
 
+    def testCreate( self ):
+        milestone = self.repo.create_milestone( "Milestone created by PyGithub", state = "open", description = "Description created by PyGithub", due_on = "2012-06-15" )
+        self.assertEqual( milestone.number, 5 )
+
+    def testEditWithMinimalParameters( self ):
+        milestone = self.repo.get_milestone( 5 )
+        milestone.edit( "Title edited by PyGithub" )
+        self.assertEqual( milestone.title, "Title edited by PyGithub" )
+
+    def testEditWithAllParameters( self ):
+        milestone = self.repo.get_milestone( 5 )
+        milestone.edit( "Title edited twice by PyGithub", "closed", "Description edited by PyGithub", due_on = "2012-06-16" )
+        self.assertEqual( milestone.title, "Title edited twice by PyGithub" )
+        self.assertEqual( milestone.state, "closed" )
+        self.assertEqual( milestone.description, "Description edited by PyGithub" )
+        self.assertEqual( milestone.due_on, "2012-06-16T07:00:00Z" )
+
+    def testGetLabels( self ):
+        milestone = self.repo.get_milestone( 2 )
+        labels = milestone.get_labels()
+        self.assertEqual( labels[ 0 ].name, "Public interface" )
+
+    def testDelete( self ):
+        milestone = self.repo.get_milestone( 5 )
+        milestone.delete()
+
 class Issue( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         issue = self.repo.get_issue( 1 )
