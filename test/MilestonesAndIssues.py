@@ -36,3 +36,33 @@ class Issue( Framework.TestCaseWithRepo ):
         self.assertEqual( issue.updated_at, "2012-03-12T20:46:35Z" )
         self.assertEqual( issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/1" )
         self.assertEqual( issue.user.login, "jacquev6" )
+
+class Label( Framework.TestCaseWithRepo ):
+    def testAttributes( self ):
+        label = self.repo.get_label( "Bug" )
+        self.assertEqual( label.color, "e10c02" )
+        self.assertEqual( label.name, "Bug" )
+        self.assertEqual( label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug" )
+
+    def testCreate( self ):
+        label = self.repo.create_label( "Label with silly name % * + created by PyGithub", "00ff00" )
+        self.assertEqual( label.color, "00ff00" )
+        self.assertEqual( label.name, "Label with silly name % * + created by PyGithub" )
+        self.assertEqual( label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+silly+name+%25+%2A+%2B+created+by+PyGithub" )
+
+    def testGetLabelWithSillyName( self ):
+        label = self.repo.get_label( "Label with silly name % * + created by PyGithub" )
+        self.assertEqual( label.color, "00ff00" )
+        self.assertEqual( label.name, "Label with silly name % * + created by PyGithub" )
+        self.assertEqual( label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+silly+name+%25+%2A+%2B+created+by+PyGithub" )
+
+    def testEdit( self ):
+        label = self.repo.get_label( "Label with silly name % * + created by PyGithub" )
+        label.edit( "LabelEditedByPyGithub", "0000ff" )
+        self.assertEqual( label.color, "0000ff" )
+        self.assertEqual( label.name, "LabelEditedByPyGithub" )
+        self.assertEqual( label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/LabelEditedByPyGithub" )
+
+    def testDelete( self ):
+        label = self.repo.get_label( "LabelEditedByPyGithub" )
+        label.delete()

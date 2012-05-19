@@ -9,23 +9,17 @@ class Label( object ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete()
 
     @property
     def color( self ):
-        self.__completeIfNeeded( self.__color )
         return self.__color
 
     @property
     def name( self ):
-        self.__completeIfNeeded( self.__name )
         return self.__name
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
         return self.__url
 
     def delete( self ):
@@ -53,20 +47,6 @@ class Label( object ):
         self.__color = None
         self.__name = None
         self.__url = None
-
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete()
-
-    def __complete( self ):
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
 
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes

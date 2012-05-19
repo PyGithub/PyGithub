@@ -4413,7 +4413,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "Label", 
             "methods": [
                 {

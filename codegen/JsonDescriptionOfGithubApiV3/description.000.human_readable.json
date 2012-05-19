@@ -793,7 +793,6 @@
         },
         {
             "name": "Label",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "name", "type": "@todo" },
