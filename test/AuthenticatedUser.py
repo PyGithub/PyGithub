@@ -77,3 +77,20 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertEqual( self.user.location, oldLocation )
         self.assertEqual( self.user.hireable, oldHireable )
         self.assertEqual( self.user.bio, oldBio )
+
+    def testEmails( self ):
+        self.assertEqual( self.user.get_emails(), [ "vincent@vincent-jacques.net", "github.com@vincent-jacques.net" ] )
+        self.user.add_to_emails( "1@foobar.com", "2@foobar.com" )
+        self.assertEqual( self.user.get_emails(), [ "vincent@vincent-jacques.net", "1@foobar.com", "2@foobar.com", "github.com@vincent-jacques.net" ] )
+        self.user.remove_from_emails( "1@foobar.com", "2@foobar.com" )
+        self.assertEqual( self.user.get_emails(), [ "vincent@vincent-jacques.net", "github.com@vincent-jacques.net" ] )
+
+    def testFollowing( self ):
+        nvie = self.g.get_user( "nvie" )
+        self.assertEqual( self.user.get_following()[ 0 ].login, "schacon" )
+        self.assertEqual( self.user.has_in_following( nvie ), True )
+        self.user.remove_from_following( nvie )
+        self.assertEqual( self.user.has_in_following( nvie ), False )
+        self.user.add_to_following( nvie )
+        self.assertEqual( self.user.has_in_following( nvie ), True )
+        self.assertEqual( self.user.get_followers()[ 0 ].login, "jnorthrup" )
