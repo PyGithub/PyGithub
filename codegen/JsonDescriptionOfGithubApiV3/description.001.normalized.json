@@ -4256,7 +4256,7 @@
                     "name": "user"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "IssueComment", 
             "methods": [
                 {

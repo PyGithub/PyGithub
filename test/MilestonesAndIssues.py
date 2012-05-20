@@ -83,6 +83,30 @@ class Issue( Framework.TestCaseWithRepo ):
         self.assertEqual( len( issue.labels ), 1 )
         self.assertEqual( issue.labels[ 0 ].name, "Bug" )
 
+    def testCreateComment( self ):
+        issue = self.repo.get_issue( 28 )
+        comment = issue.create_comment( "Comment created by PyGithub" )
+        self.assertEqual( comment.id, 5808311 )
+
+    def testCommentAttributes( self ):
+        comment = self.repo.get_issue( 28 ).get_comment( 5808311 )
+        self.assertEqual( comment.body, "Comment created by PyGithub" )
+        self.assertEqual( comment.created_at, "2012-05-20T11:46:42Z" )
+        self.assertEqual( comment.id, 5808311 )
+        self.assertEqual( comment.updated_at, "2012-05-20T11:46:42Z" )
+        self.assertEqual( comment.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311" )
+        self.assertEqual( comment.user.login, "jacquev6" )
+
+    def testEditComment( self ):
+        comment = self.repo.get_issue( 28 ).get_comment( 5808311 )
+        comment.edit( "Comment edited by PyGithub" )
+        self.assertEqual( comment.body, "Comment edited by PyGithub" )
+        self.assertEqual( comment.updated_at, "2012-05-20T11:53:59Z" )
+
+    def testDeleteComment( self ):
+        comment = self.repo.get_issue( 28 ).get_comment( 5808311 )
+        comment.delete()
+
 class Label( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         label = self.repo.get_label( "Bug" )

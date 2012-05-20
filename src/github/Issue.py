@@ -153,7 +153,7 @@ class Issue( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments" + "/" + str( id ),
+            "https://api.github.com/repos/jacquev6/PyGithub/issues/comments" + "/" + str( id ), ### @todo
             None,
             None
         )

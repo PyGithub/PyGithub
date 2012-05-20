@@ -758,7 +758,6 @@
         },
         {
             "name": "IssueComment",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "body", "type": "@todo" }
