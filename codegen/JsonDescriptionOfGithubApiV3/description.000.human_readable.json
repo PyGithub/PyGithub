@@ -779,12 +779,12 @@
             "name": "IssueEvent",
             "isCompletable": true,
             "attributes": [
-                { "name": "commit_id", "type": "@todo" },
-                { "name": "created_at", "type": "@todo" },
-                { "name": "event", "type": "@todo" },
-                { "name": "id", "type": "@todo" },
-                { "name": "issue", "type": "@todo" },
-                { "name": "url", "type": "@todo" },
+                { "name": "commit_id", "type": "string" },
+                { "name": "created_at", "type": "string" },
+                { "name": "event", "type": "string" },
+                { "name": "id", "type": "integer" },
+                { "name": "issue", "type": "Issue" },
+                { "name": "url", "type": "string" },
                 { "name": "actor", "type": "NamedUser" }
             ],
             "collections": [

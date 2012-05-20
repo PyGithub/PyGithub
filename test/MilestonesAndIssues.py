@@ -107,6 +107,16 @@ class Issue( Framework.TestCaseWithRepo ):
         comment = self.repo.get_issue( 28 ).get_comment( 5808311 )
         comment.delete()
 
+    def testEvents( self ):
+        event = self.repo.get_issue( 28 ).get_events()[ 0 ]
+        self.assertEqual( event.actor.login, "jacquev6" )
+        self.assertEqual( event.commit_id, None )
+        self.assertEqual( event.created_at, "2012-05-19T10:38:23Z" )
+        self.assertEqual( event.event, "subscribed" )
+        self.assertEqual( event.id, 15819975 )
+        self.assertEqual( event.issue.number, 28 )
+        self.assertEqual( event.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/events/15819975" )
+
 class Label( Framework.TestCaseWithRepo ):
     def testAttributes( self ):
         label = self.repo.get_label( "Bug" )

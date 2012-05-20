@@ -595,12 +595,12 @@ Class `IssueEvent`
 Attributes
 ----------
 * `actor`: `NamedUser`
-* `commit_id`
-* `created_at`
-* `event`
-* `id`
-* `issue`
-* `url`
+* `commit_id`: string
+* `created_at`: string
+* `event`: string
+* `id`: integer
+* `issue`: `Issue`
+* `url`: string
 
 Class `Label`
 =============

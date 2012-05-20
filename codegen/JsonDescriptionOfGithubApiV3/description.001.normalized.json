@@ -4337,7 +4337,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "commit_id"
                 }, 
@@ -4345,7 +4345,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "created_at"
                 }, 
@@ -4353,7 +4353,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "event"
                 }, 
@@ -4361,15 +4361,15 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "integer"
                     }, 
                     "name": "id"
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "Issue"
                     }, 
                     "name": "issue"
                 }, 
@@ -4377,7 +4377,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "string"
                     }, 
                     "name": "url"
                 }
