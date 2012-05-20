@@ -55,3 +55,9 @@ class Repository( Framework.TestCase ):
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
         repo.edit( "TestPyGithub", "Repository created by PyGithub", "http://vincent-jacques.net/PyGithub", public = True, has_issues = False, has_wiki = False, has_downloads = False )
         self.assertEqual( repo.description, "Repository created by PyGithub" )
+
+    def testContributors( self ):
+        repo = self.user.get_repo( "PyGithub" )
+        contributor = repo.get_contributors()[ 0 ]
+        self.assertEqual( contributor.login, "jacquev6" )
+        self.assertEqual( contributor.contributions, 355 )

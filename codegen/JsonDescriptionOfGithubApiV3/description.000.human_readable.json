@@ -395,7 +395,6 @@
         },
         {
             "name": "Event",
-            "isCompletable": true,
             "attributes": [
                 { "name": "commit_id", "type": "@todo" },
                 { "name": "created_at", "type": "@todo" },

@@ -2438,7 +2438,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": true, 
+            "isCompletable": false, 
             "name": "Event", 
             "methods": []
         }, 
