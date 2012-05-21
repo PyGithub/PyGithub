@@ -8,6 +8,7 @@ Class `Github`
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
 * `get_gists()`: list of `Gist`
+* `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
 
 Class `AuthenticatedUser`
 =========================

@@ -9,6 +9,7 @@ class UnknownGithubObject( Exception ):
 class Requester:
     def __init__( self, login, password ):
         self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
+        self.rate_limiting = ( 5000, 5000 )
 
     def request( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
@@ -29,6 +30,8 @@ class Requester:
         output = self.__structuredFromJson( response.read() )
 
         cnx.close()
+
+        self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
         # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
         return status, headers, output

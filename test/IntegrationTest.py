@@ -10,5 +10,6 @@ from MilestonesAndIssues import *
 from NamedUser import *
 from Hook import *
 from Gist import *
+from RateLimiting import *
 
 Framework.main()
