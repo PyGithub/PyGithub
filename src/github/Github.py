@@ -6,9 +6,13 @@ import Gist
 import PaginatedList
 from GithubObject import LazyCompletion, ImmediateCompletion
 
-class Github:
+class Github( object ):
     def __init__( self, login, password ):
         self.__requester = Requester( login, password )
+
+    @property
+    def rate_limiting( self ):
+        return self.__requester.rate_limiting
 
     def get_user( self, login = None ):
         if login is None:

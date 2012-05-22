@@ -11,6 +11,7 @@ from NamedUser import *
 from Hook import *
 from Gist import *
 from Authorization import *
+from RateLimiting import *
 from Download import *
 
 Framework.main()

@@ -7,8 +7,6 @@
                 { "name": "private_repos", "type": "integer" },
                 { "name": "name", "type": "string" },
                 { "name": "space", "type": "integer" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -270,8 +268,6 @@
                 { "name": "token", "type": "@todo" },
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -279,8 +275,6 @@
             "attributes": [
                 { "name": "name", "type": "string" },
                 { "name": "commit", "type": "Commit" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -289,8 +283,6 @@
                 { "name": "deletions", "type": "integer" },
                 { "name": "additions", "type": "integer" },
                 { "name": "total", "type": "integer" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -305,8 +297,6 @@
                 { "name": "raw_url", "type": "@todo" },
                 { "name": "sha", "type": "@todo" },
                 { "name": "status", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -362,8 +352,6 @@
                 { "name": "updated_at", "type": "string" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -391,8 +379,6 @@
                 { "name": "signature", "type": "@todo" },
                 { "name": "size", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -410,8 +396,6 @@
                 { "name": "actor", "type": "NamedUser" },
                 { "name": "org", "type": "Organization" },
                 { "name": "repo", "type": "Repository" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -422,8 +406,6 @@
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" },
                 { "name": "version", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -543,8 +525,6 @@
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" },
                 { "name": "user", "type": "NamedUser" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -555,8 +535,6 @@
                 { "name": "sha", "type": "string" },
                 { "name": "size", "type": "integer" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -569,8 +547,6 @@
                 { "name": "sha", "type": "string" },
                 { "name": "url", "type": "string" },
                 { "name": "tree", "type": "GitTree" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -579,8 +555,6 @@
                 { "name": "sha", "type": "string" },
                 { "name": "type", "type": "string" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -598,8 +572,6 @@
                 { "name": "object", "type": "GitObject" },
                 { "name": "ref", "type": "string" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -611,8 +583,6 @@
                 { "name": "tag", "type": "string" },
                 { "name": "tagger", "type": "GitAuthor" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -624,8 +594,6 @@
                 { "name": "size", "type": "integer" },
                 { "name": "type", "type": "string" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -634,8 +602,6 @@
                 { "name": "sha", "type": "string" },
                 { "name": "tree", "type": "list:GitTreeElement" },
                 { "name": "url", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -644,8 +610,6 @@
                 { "name": "date", "type": "string" },
                 { "name": "email", "type": "string" },
                 { "name": "name", "type": "string" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -673,8 +637,6 @@
                 { "name": "name", "type": "@todo" },
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ],
             "additionalMethods": [
                 {
@@ -772,8 +734,6 @@
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" },
                 { "name": "user", "type": "NamedUser" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -787,8 +747,6 @@
                 { "name": "issue", "type": "Issue" },
                 { "name": "url", "type": "string" },
                 { "name": "actor", "type": "NamedUser" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -804,8 +762,6 @@
                 { "name": "color", "type": "@todo" },
                 { "name": "name", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1231,8 +1187,6 @@
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" },
                 { "name": "user", "type": "NamedUser" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1247,8 +1201,6 @@
                 { "name": "raw_url", "type": "@todo" },
                 { "name": "sha", "type": "@todo" },
                 { "name": "status", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1257,8 +1209,6 @@
                 { "name": "admin", "type": "bool" },
                 { "name": "pull", "type": "bool" },
                 { "name": "push", "type": "bool" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1710,8 +1660,6 @@
                 { "name": "key", "type": "@todo" },
                 { "name": "title", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1721,8 +1669,6 @@
                 { "name": "tarball_url", "type": "string" },
                 { "name": "zipball_url", "type": "string" },
                 { "name": "commit", "type": "Commit" }
-            ],
-            "collections": [
             ]
         },
         {
@@ -1781,8 +1727,6 @@
                 { "name": "key", "type": "@todo" },
                 { "name": "title", "type": "@todo" },
                 { "name": "url", "type": "@todo" }
-            ],
-            "collections": [
             ]
         }
     ]

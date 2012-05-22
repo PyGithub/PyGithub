@@ -248,7 +248,7 @@ class Collection:
 
 class Class:
     def __init__( self, desc ):
-        checkKeys( desc, [ "name", "attributes", "collections" ], [ "isCompletable", "url", "identity", "edit", "delete", "additionalMethods" ] )
+        checkKeys( desc, [ "name", "attributes" ], [ "isCompletable", "url", "identity", "edit", "delete", "additionalMethods", "collections" ] )
 
         self.name = desc[ "name" ]
         self.attributes = sorted(
@@ -292,8 +292,9 @@ class Class:
             url = desc[ "url" ]
         else:
             url = [ { "type": "attribute", "value": [ "url" ] } ]
-        for collection in [ Collection( collection, url ) for collection in desc[ "collections" ] ]:
-            self.methods += collection.methods
+        if "collections" in desc:
+            for collection in [ Collection( collection, url ) for collection in desc[ "collections" ] ]:
+                self.methods += collection.methods
         if "additionalMethods" in desc:
             self.methods += [ Function( method ) for method in desc[ "additionalMethods" ] ]
 
