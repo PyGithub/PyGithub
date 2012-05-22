@@ -94,3 +94,12 @@ class AuthenticatedUser( Framework.TestCase ):
         self.user.add_to_following( nvie )
         self.assertEqual( self.user.has_in_following( nvie ), True )
         self.assertEqual( self.user.get_followers()[ 0 ].login, "jnorthrup" )
+
+    def testWatching( self ):
+        gitflow = self.g.get_user( "nvie" ).get_repo( "gitflow" )
+        self.assertEqual( self.user.get_watched()[ 0 ].name, "git" )
+        self.assertEqual( self.user.has_in_watched( gitflow ), True )
+        self.user.remove_from_watched( gitflow )
+        self.assertEqual( self.user.has_in_watched( gitflow ), False )
+        self.user.add_to_watched( gitflow )
+        self.assertEqual( self.user.has_in_watched( gitflow ), True )
