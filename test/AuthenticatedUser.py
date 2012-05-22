@@ -103,3 +103,7 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertEqual( self.user.has_in_watched( gitflow ), False )
         self.user.add_to_watched( gitflow )
         self.assertEqual( self.user.has_in_watched( gitflow ), True )
+
+    def testGetAuthorizations( self ):
+        authorization = self.user.get_authorizations()[ 0 ]
+        self.assertEqual( authorization.id, 372294 )

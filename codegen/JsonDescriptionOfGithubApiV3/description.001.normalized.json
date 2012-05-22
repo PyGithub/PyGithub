@@ -299,11 +299,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/authorizations"
+                                "value": "https://api.github.com/authorizations"
                             }
                         ], 
                         "information": "status", 
@@ -363,11 +359,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/authorizations"
+                                "value": "https://api.github.com/authorizations"
                             }, 
                             {
                                 "type": "constant", 
@@ -402,11 +394,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/authorizations"
+                                "value": "https://api.github.com/authorizations"
                             }
                         ], 
                         "information": "data", 

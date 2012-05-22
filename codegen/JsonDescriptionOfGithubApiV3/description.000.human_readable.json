@@ -60,6 +60,9 @@
                     "name": "authorizations",
                     "singularName": "authorization",
                     "type": "Authorization",
+                    "url": [
+                        { "type": "constant", "value": "https://api.github.com/authorizations" }
+                    ],
                     "createElement": {
                         "optionalParameters": [
                             { "name": "scopes", "type": "@todo" },

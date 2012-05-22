@@ -183,7 +183,7 @@ class AuthenticatedUser( object ):
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self.__requester.request(
             "POST",
-            "https://api.github.com/user" + "/authorizations",
+            "https://api.github.com/authorizations",
             None,
             post_parameters
         )
@@ -280,7 +280,7 @@ class AuthenticatedUser( object ):
     def get_authorization( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/user" + "/authorizations" + "/" + str( id ),
+            "https://api.github.com/authorizations" + "/" + str( id ),
             None,
             None
         )
@@ -289,7 +289,7 @@ class AuthenticatedUser( object ):
     def get_authorizations( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/user" + "/authorizations",
+            "https://api.github.com/authorizations",
             None,
             None
         )
