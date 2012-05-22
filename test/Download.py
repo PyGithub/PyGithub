@@ -1,0 +1,56 @@
+import Framework
+
+class Download( Framework.TestCaseWithRepo ):
+    def testCreateWithMinimalArguments( self ):
+        download = self.repo.create_download( "Foobar.txt", 1024 )
+        self.assertEqual( download.id, 242562 )
+
+    def testCreateWithAllArguments( self ):
+        download = self.repo.create_download( "Foobar.txt", 1024, "Download created by PyGithub", "text/richtext" )
+        self.assertEqual( download.accesskeyid, "1DWESVTPGHQVTX38V182" )
+        self.assertEqual( download.acl, "public-read" )
+        self.assertEqual( download.bucket, "github" )
+        self.assertEqual( download.content_type, "text/richtext" )
+        self.assertEqual( download.created_at, "2012-05-22T19:11:49Z" )
+        self.assertEqual( download.description, "Download created by PyGithub" )
+        self.assertEqual( download.download_count, 0 )
+        self.assertEqual( download.expirationdate, "2112-05-22T19:11:49.000Z" )
+        self.assertEqual( download.html_url, "https://github.com/downloads/jacquev6/PyGithub/Foobar.txt" )
+        self.assertEqual( download.id, 242556 )
+        self.assertEqual( download.mime_type, "text/richtext" )
+        self.assertEqual( download.name, "Foobar.txt" )
+        self.assertEqual( download.path, "downloads/jacquev6/PyGithub/Foobar.txt" )
+        self.assertEqual( download.policy, "ewogICAgJ2V4cGlyYXRpb24nOiAnMjExMi0wNS0yMlQxOToxMTo0OS4wMDBaJywKICAgICdjb25kaXRpb25zJzogWwogICAgICAgIHsnYnVja2V0JzogJ2dpdGh1Yid9LAogICAgICAgIHsna2V5JzogJ2Rvd25sb2Fkcy9qYWNxdWV2Ni9QeUdpdGh1Yi9Gb29iYXIudHh0J30sCiAgICAgICAgeydhY2wnOiAncHVibGljLXJlYWQnfSwKICAgICAgICB7J3N1Y2Nlc3NfYWN0aW9uX3N0YXR1cyc6ICcyMDEnfSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRGaWxlbmFtZScsICcnXSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRDb250ZW50LVR5cGUnLCAnJ10KICAgIF0KfQ==" )
+        self.assertEqual( download.prefix, "downloads/jacquev6/PyGithub" )
+        self.assertEqual( download.redirect, False )
+        self.assertEqual( download.s3_url, "https://github.s3.amazonaws.com/" )
+        self.assertEqual( download.signature, "8FCU/4rgT3ohXfE9N6HO7JgbuK4=" )
+        self.assertEqual( download.size, 1024 )
+        self.assertEqual( download.url, "https://api.github.com/repos/jacquev6/PyGithub/downloads/242556" )
+
+    def testAttributes( self ):
+        download = self.repo.get_download( 242550 )
+        self.assertEqual( download.accesskeyid, None )
+        self.assertEqual( download.acl, None )
+        self.assertEqual( download.bucket, None )
+        self.assertEqual( download.content_type, "text/plain" )
+        self.assertEqual( download.created_at, "2012-05-22T18:58:32Z" )
+        self.assertEqual( download.description, None )
+        self.assertEqual( download.download_count, 0 )
+        self.assertEqual( download.expirationdate, None )
+        self.assertEqual( download.html_url, "https://github.com/downloads/jacquev6/PyGithub/Foobar.txt" )
+        self.assertEqual( download.id, 242550 )
+        self.assertEqual( download.mime_type, None )
+        self.assertEqual( download.name, "Foobar.txt" )
+        self.assertEqual( download.path, None )
+        self.assertEqual( download.policy, None )
+        self.assertEqual( download.prefix, None )
+        self.assertEqual( download.redirect, None )
+        self.assertEqual( download.s3_url, None )
+        self.assertEqual( download.signature, None )
+        self.assertEqual( download.size, 1024 )
+        self.assertEqual( download.url, "https://api.github.com/repos/jacquev6/PyGithub/downloads/242550" )
+
+    def testDelete( self ):
+        download = self.repo.get_download( 242562 )
+        download.delete()

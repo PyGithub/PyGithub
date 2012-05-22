@@ -333,7 +333,6 @@
                             { "name": "body", "type": "@todo" }
                         ],
                         "optionalParameters": [
-                            { "name": "commit_id", "type": "@todo" },
                             { "name": "line", "type": "@todo" },
                             { "name": "path", "type": "@todo" },
                             { "name": "position", "type": "@todo" }

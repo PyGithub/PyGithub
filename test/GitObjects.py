@@ -42,6 +42,35 @@ class Branch( Framework.TestCaseWithRepo ):
         self.assertEqual( comment.url, "https://api.github.com/repos/jacquev6/PyGithub/comments/1347033" )
         self.assertEqual( comment.user.login, "bilderbuchi" )
 
+    def testCreateCommitComment( self ):
+        commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
+        comment = commit.create_comment( "Comment created by PyGithub" )
+        self.assertEqual( comment.id, 1361949 )
+
+    def testCreateCommitCommentOnFileLine( self ):
+        commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
+        comment = commit.create_comment( "Comment created by PyGithub", path = "codegen/templates/GithubObject.MethodBody.UseResult.py", line = 26 )
+        self.assertEqual( comment.id, 1362000 )
+        self.assertEqual( comment.line, 26 )
+        self.assertEqual( comment.path, "codegen/templates/GithubObject.MethodBody.UseResult.py" )
+        self.assertEqual( comment.position, None )
+
+    def testCreateCommitCommentOnFilePosition( self ):
+        commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
+        comment = commit.create_comment( "Comment also created by PyGithub", path = "codegen/templates/GithubObject.MethodBody.UseResult.py", position = 3 )
+        self.assertEqual( comment.id, 1362001 )
+        self.assertEqual( comment.line, None )
+        self.assertEqual( comment.path, "codegen/templates/GithubObject.MethodBody.UseResult.py" )
+        self.assertEqual( comment.position, 3 )
+
+    def testEditCommitComment( self ):
+        comment = self.repo.get_comment( 1361949 )
+        comment.edit( "Comment edited by PyGithub" )
+
+    def testDeleteCommitComment( self ):
+        comment = self.repo.get_comment( 1361949 )
+        comment.delete()
+
     def testCommitCommentsOnLine( self ):
         commit = self.repo.get_commit( "6945921c529be14c3a8f566dd1e483674516d46d" )
         comments = list( commit.get_comments() )

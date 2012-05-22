@@ -59,12 +59,10 @@ class Commit( object ):
         self.__completeIfNeeded( self.__url )
         return self.__url
 
-    def create_comment( self, body, commit_id = DefaultValueForOptionalParameters, line = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters, position = DefaultValueForOptionalParameters ):
+    def create_comment( self, body, line = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters, position = DefaultValueForOptionalParameters ):
         post_parameters = {
             "body": body,
         }
-        if commit_id is not DefaultValueForOptionalParameters:
-            post_parameters[ "commit_id" ] = commit_id
         if line is not DefaultValueForOptionalParameters:
             post_parameters[ "line" ] = line
         if path is not DefaultValueForOptionalParameters:

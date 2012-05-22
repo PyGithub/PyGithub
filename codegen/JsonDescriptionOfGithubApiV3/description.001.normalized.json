@@ -1799,14 +1799,6 @@
                                 "cardinality": "scalar", 
                                 "name": "@todo"
                             }, 
-                            "name": "commit_id"
-                        }, 
-                        {
-                            "type": {
-                                "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
-                            }, 
                             "name": "line"
                         }, 
                         {

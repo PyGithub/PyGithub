@@ -198,9 +198,8 @@ Attributes
 
 Comments
 --------
-* `create_comment( body, [commit_id, line, path, position] )`: `CommitComment`
+* `create_comment( body, [line, path, position] )`: `CommitComment`
     * `body`
-    * `commit_id`
     * `line`
     * `path`
     * `position`
