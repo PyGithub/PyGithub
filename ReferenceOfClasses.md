@@ -3,7 +3,7 @@ You obtain instances through calls to `get_` and `create_` methods.
 
 Class `Github`
 ==============
-* Constructed from user's login and password
+* Constructed from user's login and password or OAuth token
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`

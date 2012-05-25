@@ -5,7 +5,7 @@ import textwrap
 
 setup(
     name = 'PyGithub',
-    version = '0.6',
+    version = '0.7',
     description = 'Use the full Github API v3',
     author = 'Vincent Jacques',
     author_email = 'vincent@vincent-jacques.net',
@@ -25,6 +25,14 @@ setup(
             for repo in g.get_user().get_repos():
                 print repo.name
                 repo.edit( has_wiki = False )
+
+        You can also create a Github instance without authentication::
+
+            g = Github( "user", "password" )
+
+        Or with an OAuth token::
+
+            g = Github( token )
 
         Reference documentation
         =======================
