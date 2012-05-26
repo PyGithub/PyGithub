@@ -132,11 +132,6 @@ class TestCase( BasicTestCase ):
         BasicTestCase.setUp( self )
         self.g = github.Github( self.login, self.password )
 
-class TestCaseWithRepo( TestCase ):
-    def setUp( self ):
-        TestCase.setUp( self )
-        self.repo = self.g.get_user().get_repo( "PyGithub" )
-
 def main():
     if "--record" in sys.argv:
         BasicTestCase.recordMode = True

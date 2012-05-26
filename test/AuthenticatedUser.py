@@ -87,17 +87,17 @@ class AuthenticatedUser( Framework.TestCase ):
 
     def testFollowing( self ):
         nvie = self.g.get_user( "nvie" )
-        self.assertEqual( self.user.get_following()[ 0 ].login, "schacon" )
+        self.assertListKeyEqual( self.user.get_following(), lambda u: u.login, [ "schacon", "jamis", "chad", "unclebob", "dabrahams", "jnorthrup", "brugidou", "regisb", "walidk", "tanzilli", "fjardon", "r3c", "sdanzan", "vineus", "cjuniet", "gturri", "ant9000", "asquini", "claudyus", "jardon-u", "s-bernard", "kamaradclimber", "Lyloa", "nvie" ] )
         self.assertEqual( self.user.has_in_following( nvie ), True )
         self.user.remove_from_following( nvie )
         self.assertEqual( self.user.has_in_following( nvie ), False )
         self.user.add_to_following( nvie )
         self.assertEqual( self.user.has_in_following( nvie ), True )
-        self.assertEqual( self.user.get_followers()[ 0 ].login, "jnorthrup" )
+        self.assertListKeyEqual( self.user.get_followers(), lambda u: u.login, [ "jnorthrup", "brugidou", "regisb", "walidk", "afzalkhan", "sdanzan", "vineus", "gturri", "fjardon", "cjuniet", "jardon-u", "kamaradclimber", "L42y" ] )
 
     def testWatching( self ):
         gitflow = self.g.get_user( "nvie" ).get_repo( "gitflow" )
-        self.assertEqual( self.user.get_watched()[ 0 ].name, "git" )
+        self.assertListKeyEqual( self.user.get_watched(), lambda r: r.name, [ "git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "PyGithub", "django", "django", "TestPyGithub" ] )
         self.assertEqual( self.user.has_in_watched( gitflow ), True )
         self.user.remove_from_watched( gitflow )
         self.assertEqual( self.user.has_in_watched( gitflow ), False )
@@ -105,8 +105,7 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertEqual( self.user.has_in_watched( gitflow ), True )
 
     def testGetAuthorizations( self ):
-        authorization = self.user.get_authorizations()[ 0 ]
-        self.assertEqual( authorization.id, 372294 )
+        self.assertListKeyEqual( self.user.get_authorizations(), lambda a: a.id, [ 372294 ] )
 
     def testCreateRepository( self ):
         repo = self.user.create_repo( "TestPyGithub" )
@@ -115,3 +114,21 @@ class AuthenticatedUser( Framework.TestCase ):
     def testCreateRepositoryWithAllArguments( self ):
         repo = self.user.create_repo( "TestPyGithub", "Repo created by PyGithub", "http://foobar.com", private = False, has_issues = False, has_wiki = False, has_downloads = False )
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+
+    def testCreateAuthorizationWithoutArguments( self ):
+        authorization = self.user.create_authorization()
+        self.assertEqual( authorization.id, 372259 )
+
+    def testCreateAuthorizationWithAllArguments( self ):
+        authorization = self.user.create_authorization( [ "repo" ], "Note created by PyGithub", "http://vincent-jacques.net/PyGithub" )
+        self.assertEqual( authorization.id, 372294 )
+
+    def testCreateGist( self ):
+        gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } }, "Gist created by PyGithub" )
+        self.assertEquals( gist.description, "Gist created by PyGithub" )
+        self.assertEquals( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2729810/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
+
+    def testCreateGistWithoutDescription( self ):
+        gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } } )
+        self.assertEquals( gist.description, None )
+        self.assertEquals( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2793179/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
