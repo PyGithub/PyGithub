@@ -1,8 +1,3 @@
-GET /users/jacquev6 {'Authorization': 'Basic login_and_password_removed'} null
-200
-[('status', '200 OK'), ('x-ratelimit-remaining', '4944'), ('content-length', '801'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"bc486ee823927c173ad9cac98c622c9d"'), ('date', 'Sun, 20 May 2012 12:29:38 GMT'), ('content-type', 'application/json; charset=utf-8')]
-{"type":"User","public_gists":1,"company":"Criteo","hireable":false,"url":"https://api.github.com/users/jacquev6","gravatar_id":"b68de5ae38616c296fa345d2b9df2225","private_gists":5,"plan":{"private_repos":5,"collaborators":1,"name":"micro","space":614400},"followers":13,"bio":"","avatar_url":"https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png","total_private_repos":5,"blog":"http://vincent-jacques.net","login":"jacquev6","email":"vincent@vincent-jacques.net","owned_private_repos":5,"disk_usage":16852,"collaborators":0,"html_url":"https://github.com/jacquev6","name":"Vincent Jacques","public_repos":11,"created_at":"2010-07-09T06:10:06Z","location":"Paris, France","id":327146,"following":24}
-
 GET /users/jacquev6/received_events/public {'Authorization': 'Basic login_and_password_removed'} null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4943'), ('content-length', '79562'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('link', '<https://api.github.com/users/jacquev6/received_events/public?page=2>; rel="next"'), ('etag', '"901c887a2dc34d6a5067538b206fdb07"'), ('date', 'Sun, 20 May 2012 12:29:39 GMT'), ('content-type', 'application/json; charset=utf-8')]

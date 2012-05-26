@@ -1,83 +1,85 @@
 import Framework
 
 class NamedUser( Framework.TestCase ):
+    def setUp( self ):
+        Framework.TestCase.setUp( self )
+        self.user = self.g.get_user( "jacquev6" )
+
     def testAttributesOfOtherUser( self ):
-        user = self.g.get_user( "nvie" )
-        self.assertEqual( user.avatar_url, "https://secure.gravatar.com/avatar/c5a7f21b46df698f3db31c37ed0cf55a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
-        self.assertEqual( user.bio, None )
-        self.assertEqual( user.blog, "http://nvie.com" )
-        self.assertEqual( user.collaborators, None )
-        self.assertEqual( user.company, "3rd Cloud" )
-        self.assertEqual( user.created_at, "2009-05-12T21:19:38Z" )
-        self.assertEqual( user.disk_usage, None )
-        self.assertEqual( user.email, "vincent@3rdcloud.com" )
-        self.assertEqual( user.followers, 296 )
-        self.assertEqual( user.following, 41 )
-        self.assertEqual( user.gravatar_id, "c5a7f21b46df698f3db31c37ed0cf55a" )
-        self.assertEqual( user.hireable, False )
-        self.assertEqual( user.html_url, "https://github.com/nvie" )
-        self.assertEqual( user.id, 83844 )
-        self.assertEqual( user.location, "Netherlands" )
-        self.assertEqual( user.login, "nvie" )
-        self.assertEqual( user.name, "Vincent Driessen" )
-        self.assertEqual( user.owned_private_repos, None )
-        self.assertEqual( user.plan, None )
-        self.assertEqual( user.private_gists, None )
-        self.assertEqual( user.public_gists, 16 )
-        self.assertEqual( user.public_repos, 61 )
-        self.assertEqual( user.total_private_repos, None )
-        self.assertEqual( user.type, "User" )
-        self.assertEqual( user.url, "https://api.github.com/users/nvie" )
+        self.user = self.g.get_user( "nvie" )
+        self.assertEqual( self.user.avatar_url, "https://secure.gravatar.com/avatar/c5a7f21b46df698f3db31c37ed0cf55a?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
+        self.assertEqual( self.user.bio, None )
+        self.assertEqual( self.user.blog, "http://nvie.com" )
+        self.assertEqual( self.user.collaborators, None )
+        self.assertEqual( self.user.company, "3rd Cloud" )
+        self.assertEqual( self.user.created_at, "2009-05-12T21:19:38Z" )
+        self.assertEqual( self.user.disk_usage, None )
+        self.assertEqual( self.user.email, "vincent@3rdcloud.com" )
+        self.assertEqual( self.user.followers, 296 )
+        self.assertEqual( self.user.following, 41 )
+        self.assertEqual( self.user.gravatar_id, "c5a7f21b46df698f3db31c37ed0cf55a" )
+        self.assertEqual( self.user.hireable, False )
+        self.assertEqual( self.user.html_url, "https://github.com/nvie" )
+        self.assertEqual( self.user.id, 83844 )
+        self.assertEqual( self.user.location, "Netherlands" )
+        self.assertEqual( self.user.login, "nvie" )
+        self.assertEqual( self.user.name, "Vincent Driessen" )
+        self.assertEqual( self.user.owned_private_repos, None )
+        self.assertEqual( self.user.plan, None )
+        self.assertEqual( self.user.private_gists, None )
+        self.assertEqual( self.user.public_gists, 16 )
+        self.assertEqual( self.user.public_repos, 61 )
+        self.assertEqual( self.user.total_private_repos, None )
+        self.assertEqual( self.user.type, "User" )
+        self.assertEqual( self.user.url, "https://api.github.com/users/nvie" )
 
     def testAttributesOfSelf( self ):
-        user = self.g.get_user( "jacquev6" )
-        self.assertEqual( user.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
-        self.assertEqual( user.bio, "" )
-        self.assertEqual( user.blog, "http://vincent-jacques.net" )
-        self.assertEqual( user.collaborators, 0 )
-        self.assertEqual( user.company, "Criteo" )
-        self.assertEqual( user.created_at, "2010-07-09T06:10:06Z" )
-        self.assertEqual( user.disk_usage, 16852 )
-        self.assertEqual( user.email, "vincent@vincent-jacques.net" )
-        self.assertEqual( user.followers, 13 )
-        self.assertEqual( user.following, 24 )
-        self.assertEqual( user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225" )
-        self.assertEqual( user.hireable, False )
-        self.assertEqual( user.html_url, "https://github.com/jacquev6" )
-        self.assertEqual( user.id, 327146 )
-        self.assertEqual( user.location, "Paris, France" )
-        self.assertEqual( user.login, "jacquev6" )
-        self.assertEqual( user.name, "Vincent Jacques" )
-        self.assertEqual( user.owned_private_repos, 5 )
-        self.assertEqual( user.plan.name, "micro" )
-        self.assertEqual( user.plan.collaborators, 1 )
-        self.assertEqual( user.plan.space, 614400 )
-        self.assertEqual( user.plan.private_repos, 5 )
-        self.assertEqual( user.private_gists, 5 )
-        self.assertEqual( user.public_gists, 1 )
-        self.assertEqual( user.public_repos, 11 )
-        self.assertEqual( user.total_private_repos, 5 )
-        self.assertEqual( user.type, "User" )
-        self.assertEqual( user.url, "https://api.github.com/users/jacquev6" )
+        self.assertEqual( self.user.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" )
+        self.assertEqual( self.user.bio, "" )
+        self.assertEqual( self.user.blog, "http://vincent-jacques.net" )
+        self.assertEqual( self.user.collaborators, 0 )
+        self.assertEqual( self.user.company, "Criteo" )
+        self.assertEqual( self.user.created_at, "2010-07-09T06:10:06Z" )
+        self.assertEqual( self.user.disk_usage, 17080 )
+        self.assertEqual( self.user.email, "vincent@vincent-jacques.net" )
+        self.assertEqual( self.user.followers, 13 )
+        self.assertEqual( self.user.following, 24 )
+        self.assertEqual( self.user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225" )
+        self.assertEqual( self.user.hireable, False )
+        self.assertEqual( self.user.html_url, "https://github.com/jacquev6" )
+        self.assertEqual( self.user.id, 327146 )
+        self.assertEqual( self.user.location, "Paris, France" )
+        self.assertEqual( self.user.login, "jacquev6" )
+        self.assertEqual( self.user.name, "Vincent Jacques" )
+        self.assertEqual( self.user.owned_private_repos, 5 )
+        self.assertEqual( self.user.plan.name, "micro" )
+        self.assertEqual( self.user.plan.collaborators, 1 )
+        self.assertEqual( self.user.plan.space, 614400 )
+        self.assertEqual( self.user.plan.private_repos, 5 )
+        self.assertEqual( self.user.private_gists, 5 )
+        self.assertEqual( self.user.public_gists, 2 )
+        self.assertEqual( self.user.public_repos, 11 )
+        self.assertEqual( self.user.total_private_repos, 5 )
+        self.assertEqual( self.user.type, "User" )
+        self.assertEqual( self.user.url, "https://api.github.com/users/jacquev6" )
 
     def testCreateGist( self ):
-        gist = self.g.get_user( "jacquev6" ).create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } }, "Gist created by PyGithub on a NamedUser" )
+        gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } }, "Gist created by PyGithub on a NamedUser" )
         self.assertEqual( gist.description, "Gist created by PyGithub on a NamedUser" )
         gist.delete()
 
     def testGetGists( self ):
-        gist = self.g.get_user( "nvie" ).get_gists()[ 0 ]
-        self.assertEqual( gist.description, "zsh-sourcing.txt" )
+        gist = self.user.get_gists()[ 0 ]
+        self.assertEqual( gist.description, "Gist created by PyGithub" )
 
     def testFollowing( self ):
-        user = self.g.get_user( "jacquev6" )
-        follower = user.get_followers()[ 0 ]
+        follower = self.user.get_followers()[ 0 ]
         self.assertEqual( follower.login, "jnorthrup" )
-        followed = user.get_following()[ 0 ]
+        followed = self.user.get_following()[ 0 ]
         self.assertEqual( followed.login, "nvie" )
 
     def testEvents( self ):
-        event = self.g.get_user( "jacquev6" ).get_events()[ 0 ]
+        event = self.user.get_events()[ 0 ]
         self.assertEqual( event.actor.login, "jacquev6" )
         self.assertEqual( event.commit_id, None )
         self.assertEqual( event.created_at, "2012-05-20T12:14:09Z" )
@@ -92,11 +94,11 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( event.url, None )
 
     def testOrganizations( self ):
-        org = self.g.get_user( "jacquev6" ).get_orgs()[ 0 ]
+        org = self.user.get_orgs()[ 0 ]
         self.assertEqual( org.login, "BeaverSoftware" )
 
     def testPublicEvents( self ):
-        event = self.g.get_user( "jacquev6" ).get_public_events()[ 0 ]
+        event = self.user.get_public_events()[ 0 ]
         self.assertEqual( event.actor.login, "jacquev6" )
         self.assertEqual( event.commit_id, None )
         self.assertEqual( event.created_at, "2012-05-20T12:14:09Z" )
@@ -111,7 +113,7 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( event.url, None )
 
     def testPublicReceivedEvents( self ):
-        event = self.g.get_user( "jacquev6" ).get_public_received_events()[ 0 ]
+        event = self.user.get_public_received_events()[ 0 ]
         self.assertEqual( event.actor.login, "cherryboss" )
         self.assertEqual( event.commit_id, None )
         self.assertEqual( event.created_at, "2012-05-20T12:29:18Z" )
@@ -126,7 +128,7 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( event.url, None )
 
     def testReceivedEvents( self ):
-        event = self.g.get_user( "jacquev6" ).get_received_events()[ 0 ]
+        event = self.user.get_received_events()[ 0 ]
         self.assertEqual( event.actor.login, "cherryboss" )
         self.assertEqual( event.commit_id, None )
         self.assertEqual( event.created_at, "2012-05-20T12:29:18Z" )
@@ -141,13 +143,13 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( event.url, None )
 
     def testGetRepo( self ):
-        repo = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        repo = self.user.get_repo( "PyGithub" )
         self.assertEqual( repo.description, "Python library implementing the full Github API v3" )
 
     def testGetRepos( self ):
-        repo = self.g.get_user( "nvie" ).get_repos()[ 0 ]
-        self.assertEqual( repo.name, "git-it" )
+        repo = self.user.get_repos()[ 0 ]
+        self.assertEqual( repo.name, "TestPyGithub" )
 
     def testGetWatched( self ):
-        repo = self.g.get_user( "jacquev6" ).get_watched()[ 0 ]
+        repo = self.user.get_watched()[ 0 ]
         self.assertEqual( repo.name, "git" )
