@@ -107,3 +107,11 @@ class AuthenticatedUser( Framework.TestCase ):
     def testGetAuthorizations( self ):
         authorization = self.user.get_authorizations()[ 0 ]
         self.assertEqual( authorization.id, 372294 )
+
+    def testCreateRepository( self ):
+        repo = self.user.create_repo( "TestPyGithub" )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+
+    def testCreateRepositoryWithAllArguments( self ):
+        repo = self.user.create_repo( "TestPyGithub", "Repo created by PyGithub", "http://foobar.com", private = False, has_issues = False, has_wiki = False, has_downloads = False )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
