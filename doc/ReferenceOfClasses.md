@@ -123,7 +123,7 @@ Orgs
 
 Repos
 -----
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads] )`: `Repository`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -131,7 +131,6 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
-    * `team_id`
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`

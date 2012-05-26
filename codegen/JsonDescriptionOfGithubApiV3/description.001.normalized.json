@@ -650,14 +650,6 @@
                                 "name": "bool"
                             }, 
                             "name": "has_downloads"
-                        }, 
-                        {
-                            "type": {
-                                "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
-                            }, 
-                            "name": "team_id"
                         }
                     ], 
                     "type": {

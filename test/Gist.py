@@ -40,6 +40,11 @@ class Gist( Framework.TestCase ):
         self.assertEquals( gist.description, "Gist created by PyGithub" )
         self.assertEquals( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2729810/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
 
+    def testCreateWithoutDescription( self ):
+        gist = self.g.get_user().create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } } )
+        self.assertEquals( gist.description, None )
+        self.assertEquals( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2793179/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
+
     def testEditWithoutParameters( self ):
         gist = self.g.get_gist( "2729810" )
         gist.edit()

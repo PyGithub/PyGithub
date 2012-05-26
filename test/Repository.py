@@ -46,6 +46,10 @@ class Repository( Framework.TestCase ):
         repo = self.user.create_repo( "TestPyGithub" )
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
 
+    def testCreateWithAllArguments( self ):
+        repo = self.user.create_repo( "TestPyGithub", "Repo created by PyGithub", "http://foobar.com", private = False, has_issues = False, has_wiki = False, has_downloads = False )
+        self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )
+
     def testEditWithoutArguments( self ):
         repo = self.user.get_repo( "TestPyGithub" )
         self.assertEqual( repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub" )

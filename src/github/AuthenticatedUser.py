@@ -226,7 +226,7 @@ class AuthenticatedUser( object ):
         )
         return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
 
-    def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
+    def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,
         }
@@ -242,8 +242,6 @@ class AuthenticatedUser( object ):
             post_parameters[ "has_wiki" ] = has_wiki
         if has_downloads is not DefaultValueForOptionalParameters:
             post_parameters[ "has_downloads" ] = has_downloads
-        if team_id is not DefaultValueForOptionalParameters:
-            post_parameters[ "team_id" ] = team_id
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/user" + "/repos",

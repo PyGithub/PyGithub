@@ -131,8 +131,7 @@
                             { "name": "private", "type": "bool" },
                             { "name": "has_issues", "type": "bool" },
                             { "name": "has_wiki", "type": "bool" },
-                            { "name": "has_downloads", "type": "bool" },
-                            { "name": "team_id", "type": "@todo" }
+                            { "name": "has_downloads", "type": "bool" }
                         ]
                     }
                 },
