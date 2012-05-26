@@ -7,8 +7,15 @@ class UnknownGithubObject( Exception ):
     pass
 
 class Requester:
-    def __init__( self, login, password ):
-        self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
+    def __init__( self, login_or_token, password ):
+        if password is not None:
+            login = login_or_token
+            self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
+        elif login_or_token is not None:
+            token = login_or_token
+            self.__authorizationHeader = "token " + token
+        else:
+            self.__authorizationHeader = None
         self.rate_limiting = ( 5000, 5000 )
 
     def request( self, verb, url, parameters, input ):
@@ -16,12 +23,16 @@ class Requester:
         assert url.startswith( "https://api.github.com" )
         url = url[ len( "https://api.github.com" ) : ]
 
+        headers = dict()
+        if self.__authorizationHeader is not None:
+            headers[ "Authorization" ] = self.__authorizationHeader
+
         cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
             json.dumps( input ),
-            { "Authorization" : self.__authorizationHeader }
+            headers
         )
         response = cnx.getresponse()
 

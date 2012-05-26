@@ -7,8 +7,8 @@ import PaginatedList
 from GithubObject import LazyCompletion, ImmediateCompletion
 
 class Github( object ):
-    def __init__( self, login, password ):
-        self.__requester = Requester( login, password )
+    def __init__( self, login_or_token = None, password = None ):
+        self.__requester = Requester( login_or_token, password )
 
     @property
     def rate_limiting( self ):
