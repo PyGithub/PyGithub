@@ -288,6 +288,15 @@ class Organization( object ):
             data
         )
 
+    def get_team( self, id ):
+        status, headers, data = self.__requester.request(
+            "GET",
+            "https://api.github.com/teams/" + str( id ),
+            None,
+            None
+        )
+        return Team.Team( self.__requester, data, completion = NoCompletion )
+
     def get_teams( self ):
         status, headers, data = self.__requester.request(
             "GET",

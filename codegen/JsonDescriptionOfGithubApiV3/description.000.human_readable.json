@@ -1041,6 +1041,13 @@
                             { "name": "repo_names", "type": "list" },
                             { "name": "permission", "type": "@todo" }
                         ]
+                    },
+                    "getElement": {
+                        "parameter": { "name": "id", "type": "integer" },
+                        "url" : [
+                            { "type": "constant", "value": "https://api.github.com/teams/" },
+                            { "type": "argument", "value": [ "id" ] }
+                        ]
                     }
                 }
             ],

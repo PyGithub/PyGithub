@@ -6179,6 +6179,46 @@
                     "group": "teams", 
                     "name": [
                         "get", 
+                        "team"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "integer"
+                            }, 
+                            "name": "id"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "https://api.github.com/teams/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "id"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Team"
+                    }
+                }, 
+                {
+                    "group": "teams", 
+                    "name": [
+                        "get", 
                         "teams"
                     ], 
                     "mandatoryParameters": [], 

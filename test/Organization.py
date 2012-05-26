@@ -44,3 +44,11 @@ class Organization( Framework.TestCase ):
         self.assertEqual( self.org.email, "BeaverSoftware2@vincent-jacques.net" )
         self.assertEqual( self.org.location, "Location edited by PyGithub" )
         self.assertEqual( self.org.name, "Name edited by PyGithub" )
+
+    def testCreateTeam( self ):
+        team = self.org.create_team( "Team created by PyGithub" )
+        self.assertEqual( team.id, 189850 )
+
+    def testCreateTeamWithAllArguments( self ):
+        team = self.org.create_team( "Team also created by PyGithub", [ "BeaverSoftware/FatherBeaver" ], "push" )
+        self.assertEqual( team.id, 189852 )

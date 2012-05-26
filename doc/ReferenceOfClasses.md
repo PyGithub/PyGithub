@@ -809,6 +809,8 @@ Teams
     * `name`: string
     * `repo_names`: `list`
     * `permission`
+* `get_team( id )`: `Team`
+    * `id`: integer
 * `get_teams()`: list of `Team`
 
 Class `Permissions`
