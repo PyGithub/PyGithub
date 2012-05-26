@@ -13,5 +13,6 @@ from Gist import *
 from Authorization import *
 from RateLimiting import *
 from Download import *
+from Authentication import *
 
 Framework.main()

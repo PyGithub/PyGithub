@@ -36,7 +36,7 @@ class RecordingHttpsConnection:
         self.__cnx = self.__realHttpsConnection( *args, **kwds )
 
     def request( self, verb, url, input, headers ):
-        print verb, url,
+        print verb, url, input, headers,
         self.__cnx.request( verb, url, input, headers )
         fixAuthorizationHeader( headers )
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
@@ -91,10 +91,12 @@ class BasicTestCase( unittest.TestCase ):
             import GithubCredentials
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
+            self.oauth_token = GithubCredentials.oauth_token
         else:
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ) )
             self.login = "login"
             self.password = "password"
+            self.oauth_token = "oauth_token"
 
     def tearDown( self ):
         unittest.TestCase.tearDown( self )
