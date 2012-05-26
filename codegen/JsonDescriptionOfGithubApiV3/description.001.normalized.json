@@ -2327,14 +2327,6 @@
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": "commit_id"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
                     "name": "created_at"
                 }, 
                 {
@@ -2343,23 +2335,7 @@
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": "event"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
                     "name": "id"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
-                    "name": "issue"
                 }, 
                 {
                     "type": {
@@ -2400,14 +2376,6 @@
                         "name": "@todo"
                     }, 
                     "name": "type"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
-                    "name": "url"
                 }
             ], 
             "isCompletable": false, 
@@ -3739,6 +3707,14 @@
                         "name": "@todo"
                     }, 
                     "name": "pull_request"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }, 
+                    "name": "repository"
                 }, 
                 {
                     "type": {
@@ -9907,6 +9883,14 @@
                         "name": "@todo"
                     }, 
                     "name": "url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "verified"
                 }
             ], 
             "isCompletable": true, 
@@ -9917,7 +9901,22 @@
                     "name": [
                         "edit"
                     ], 
-                    "mandatoryParameters": [
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "postParameters": true, 
+                        "verb": "PATCH", 
+                        "information": "data"
+                    }, 
+                    "isMutation": true, 
+                    "optionalParameters": [
                         {
                             "type": {
                                 "simple": true, 
@@ -9935,21 +9934,6 @@
                             "name": "key"
                         }
                     ], 
-                    "request": {
-                        "url": [
-                            {
-                                "type": "attribute", 
-                                "value": [
-                                    "url"
-                                ]
-                            }
-                        ], 
-                        "postParameters": true, 
-                        "verb": "PATCH", 
-                        "information": "data"
-                    }, 
-                    "isMutation": true, 
-                    "optionalParameters": [], 
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
@@ -10557,6 +10541,14 @@
                         "name": "@todo"
                     }, 
                     "name": "url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "verified"
                 }
             ], 
             "isCompletable": true, 

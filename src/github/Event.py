@@ -18,24 +18,12 @@ class Event( object ):
         return self.__actor
 
     @property
-    def commit_id( self ):
-        return self.__commit_id
-
-    @property
     def created_at( self ):
         return self.__created_at
 
     @property
-    def event( self ):
-        return self.__event
-
-    @property
     def id( self ):
         return self.__id
-
-    @property
-    def issue( self ):
-        return self.__issue
 
     @property
     def org( self ):
@@ -57,42 +45,28 @@ class Event( object ):
     def type( self ):
         return self.__type
 
-    @property
-    def url( self ):
-        return self.__url
-
     def __initAttributes( self ):
         self.__actor = None
-        self.__commit_id = None
         self.__created_at = None
-        self.__event = None
         self.__id = None
-        self.__issue = None
         self.__org = None
         self.__payload = None
         self.__public = None
         self.__repo = None
         self.__type = None
-        self.__url = None
 
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "actor", "commit_id", "created_at", "event", "id", "issue", "org", "payload", "public", "repo", "type", "url", ], attribute
+            assert attribute in [ "actor", "created_at", "id", "org", "payload", "public", "repo", "type", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None:
             assert isinstance( attributes[ "actor" ], dict )
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
-        if "commit_id" in attributes and attributes[ "commit_id" ] is not None:
-            self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None:
             self.__created_at = attributes[ "created_at" ]
-        if "event" in attributes and attributes[ "event" ] is not None:
-            self.__event = attributes[ "event" ]
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
-        if "issue" in attributes and attributes[ "issue" ] is not None:
-            self.__issue = attributes[ "issue" ]
         if "org" in attributes and attributes[ "org" ] is not None:
             assert isinstance( attributes[ "org" ], dict )
             self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completion = LazyCompletion )
@@ -105,5 +79,3 @@ class Event( object ):
             self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completion = LazyCompletion )
         if "type" in attributes and attributes[ "type" ] is not None:
             self.__type = attributes[ "type" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
-            self.__url = attributes[ "url" ]

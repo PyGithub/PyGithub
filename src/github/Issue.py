@@ -3,10 +3,11 @@
 
 import PaginatedList
 from GithubObject import *
-import IssueComment
+import Repository
 import IssueEvent
 import NamedUser
 import Milestone
+import IssueComment
 import Label
 
 class Issue( object ):
@@ -16,7 +17,7 @@ class Issue( object ):
         self.__useAttributes( attributes )
         self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
     @property
     def assignee( self ):
@@ -77,6 +78,11 @@ class Issue( object ):
     def pull_request( self ):
         self.__completeIfNeeded( self.__pull_request )
         return self.__pull_request
+
+    @property
+    def repository( self ):
+        self.__completeIfNeeded( self.__repository )
+        return self.__repository
 
     @property
     def state( self ):
@@ -225,6 +231,7 @@ class Issue( object ):
         self.__milestone = None
         self.__number = None
         self.__pull_request = None
+        self.__repository = None
         self.__state = None
         self.__title = None
         self.__updated_at = None
@@ -233,9 +240,9 @@ class Issue( object ):
 
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
-    def __complete( self ):
+    def __complete( self ): # pragma: no cover
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
@@ -248,7 +255,7 @@ class Issue( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "assignee", "body", "closed_at", "closed_by", "comments", "created_at", "html_url", "id", "labels", "milestone", "number", "pull_request", "state", "title", "updated_at", "url", "user", ], attribute
+            assert attribute in [ "assignee", "body", "closed_at", "closed_by", "comments", "created_at", "html_url", "id", "labels", "milestone", "number", "pull_request", "repository", "state", "title", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes and attributes[ "assignee" ] is not None:
             assert isinstance( attributes[ "assignee" ], dict )
@@ -288,6 +295,9 @@ class Issue( object ):
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None:
             self.__pull_request = attributes[ "pull_request" ]
+        if "repository" in attributes and attributes[ "repository" ] is not None:
+            assert isinstance( attributes[ "repository" ], dict )
+            self.__repository = Repository.Repository( self.__requester, attributes[ "repository" ], completion = LazyCompletion )
         if "state" in attributes and attributes[ "state" ] is not None:
             assert isinstance( attributes[ "state" ], ( str, unicode ) )
             self.__state = attributes[ "state" ]

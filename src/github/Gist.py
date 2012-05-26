@@ -15,7 +15,7 @@ class Gist( object ):
         self.__useAttributes( attributes )
         self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
     @property
     def comments( self ):
@@ -203,9 +203,9 @@ class Gist( object ):
 
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
-    def __complete( self ):
+    def __complete( self ): # pragma: no cover
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,

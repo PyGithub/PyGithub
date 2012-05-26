@@ -383,16 +383,12 @@
         {
             "name": "Event",
             "attributes": [
-                { "name": "commit_id", "type": "@todo" },
+                { "name": "actor", "type": "NamedUser" },
                 { "name": "created_at", "type": "@todo" },
-                { "name": "event", "type": "@todo" },
                 { "name": "id", "type": "@todo" },
-                { "name": "issue", "type": "@todo" },
                 { "name": "payload", "type": "@todo" },
                 { "name": "public", "type": "@todo" },
                 { "name": "type", "type": "@todo" },
-                { "name": "url", "type": "@todo" },
-                { "name": "actor", "type": "NamedUser" },
                 { "name": "org", "type": "Organization" },
                 { "name": "repo", "type": "Repository" }
             ]
@@ -679,6 +675,7 @@
                 { "name": "milestone", "type": "Milestone" },
                 { "name": "number", "type": "integer" },
                 { "name": "pull_request", "type": "@todo" },
+                { "name": "repository", "type": "Repository" },
                 { "name": "state", "type": "string" },
                 { "name": "title", "type": "string" },
                 { "name": "updated_at", "type": "string" },
@@ -1649,7 +1646,7 @@
             "name": "RepositoryKey",
             "isCompletable": true,
             "edit": {
-                "mandatoryParameters": [
+                "optionalParameters": [
                     { "name": "title", "type": "@todo" },
                     { "name": "key", "type": "@todo" }
                 ]
@@ -1659,7 +1656,8 @@
                 { "name": "id", "type": "@todo" },
                 { "name": "key", "type": "@todo" },
                 { "name": "title", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "url", "type": "@todo" },
+                { "name": "verified", "type": "bool" }
             ]
         },
         {
@@ -1726,7 +1724,8 @@
                 { "name": "id", "type": "@todo" },
                 { "name": "key", "type": "@todo" },
                 { "name": "title", "type": "@todo" },
-                { "name": "url", "type": "@todo" }
+                { "name": "url", "type": "@todo" },
+                { "name": "verified", "type": "bool" }
             ]
         }
     ]

@@ -131,3 +131,7 @@ class Repository( Framework.TestCase ):
     def testCreateGitBlob( self ):
         blob = self.repo.create_git_blob( "Blob created by PyGithub", "latin1" )
         self.assertEqual( blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8" )
+
+    def testCreateKey( self ):
+        key = self.repo.create_key( "Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE" )
+        self.assertEqual( key.id, 2626761 )

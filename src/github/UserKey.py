@@ -11,7 +11,7 @@ class UserKey( object ):
         self.__useAttributes( attributes )
         self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
     @property
     def id( self ):
@@ -32,6 +32,11 @@ class UserKey( object ):
     def url( self ):
         self.__completeIfNeeded( self.__url )
         return self.__url
+
+    @property
+    def verified( self ):
+        self.__completeIfNeeded( self.__verified )
+        return self.__verified
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -61,12 +66,13 @@ class UserKey( object ):
         self.__key = None
         self.__title = None
         self.__url = None
+        self.__verified = None
 
     def __completeIfNeeded( self, testedAttribute ):
         if not self.__completed and testedAttribute is None:
-            self.__complete()
+            self.__complete() # pragma: no cover
 
-    def __complete( self ):
+    def __complete( self ): # pragma: no cover
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
@@ -79,7 +85,7 @@ class UserKey( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "id", "key", "title", "url", ], attribute
+            assert attribute in [ "id", "key", "title", "url", "verified", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "id" in attributes and attributes[ "id" ] is not None:
             self.__id = attributes[ "id" ]
@@ -89,3 +95,6 @@ class UserKey( object ):
             self.__title = attributes[ "title" ]
         if "url" in attributes and attributes[ "url" ] is not None:
             self.__url = attributes[ "url" ]
+        if "verified" in attributes and attributes[ "verified" ] is not None:
+            assert isinstance( attributes[ "verified" ], bool )
+            self.__verified = attributes[ "verified" ]

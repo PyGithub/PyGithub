@@ -37,42 +37,10 @@ class Organization( Framework.TestCase ):
         self.org.edit()
 
     def testEditWithAllArguments( self ):
-        # oldName = self.org.name
-        # newName = "Name edited by PyGithub"
-
-        # oldEmail = self.org.email
-        # newEmail = "Email edited by PyGithub"
-
-        # oldBlog = self.org.blog
-        # newBlog = "Blog edited by PyGithub"
-
-        # oldCompany = self.org.company
-        # newCompany = "Company edited by PyGithub"
-
-        # oldLocation = self.org.location
-        # newLocation = "Location edited by PyGithub"
-
-        # oldHireable = self.org.hireable
-        # newHireable = not oldHireable
-
-        # oldBio = self.org.bio
-        # newBio = "Bio edited by PyGithub"
-
-        # self.org.edit( newName, newEmail, newBlog, newCompany, newLocation, newHireable, newBio )
-        # self.assertEqual( self.org.name, newName )
-        # self.assertEqual( self.org.email, newEmail )
-        # self.assertEqual( self.org.blog, newBlog )
-        # self.assertEqual( self.org.company, newCompany )
-        # self.assertEqual( self.org.location, newLocation )
-        # self.assertEqual( self.org.hireable, newHireable )
-        # self.assertEqual( self.org.bio, newBio )
-
-        # self.org.edit( oldName, oldEmail, oldBlog, oldCompany, oldLocation, oldHireable, oldBio )
-        # self.assertEqual( self.org.name, oldName )
-        # self.assertEqual( self.org.email, oldEmail )
-        # self.assertEqual( self.org.blog, oldBlog )
-        # self.assertEqual( self.org.company, oldCompany )
-        # self.assertEqual( self.org.location, oldLocation )
-        # self.assertEqual( self.org.hireable, oldHireable )
-        # self.assertEqual( self.org.bio, oldBio )
-        pass
+        self.org.edit( "BeaverSoftware2@vincent-jacques.net", "http://vincent-jacques.net", "Company edited by PyGithub", "BeaverSoftware2@vincent-jacques.net", "Location edited by PyGithub", "Name edited by PyGithub" )
+        self.assertEqual( self.org.billing_email, "BeaverSoftware2@vincent-jacques.net" )
+        self.assertEqual( self.org.blog, "http://vincent-jacques.net" )
+        self.assertEqual( self.org.company, "Company edited by PyGithub" )
+        self.assertEqual( self.org.email, "BeaverSoftware2@vincent-jacques.net" )
+        self.assertEqual( self.org.location, "Location edited by PyGithub" )
+        self.assertEqual( self.org.name, "Name edited by PyGithub" )

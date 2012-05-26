@@ -291,17 +291,13 @@ Class `Event`
 Attributes
 ----------
 * `actor`: `NamedUser`
-* `commit_id`
 * `created_at`
-* `event`
 * `id`
-* `issue`
 * `org`: `Organization`
 * `payload`
 * `public`
 * `repo`: `Repository`
 * `type`
-* `url`
 
 Class `Gist`
 ============
@@ -528,6 +524,7 @@ Attributes
 * `milestone`: `Milestone`
 * `number`: integer
 * `pull_request`
+* `repository`: `Repository`
 * `state`: string
 * `title`: string
 * `updated_at`: string
@@ -1188,6 +1185,7 @@ Attributes
 * `key`
 * `title`
 * `url`
+* `verified`: bool
 
 Deletion
 --------
@@ -1195,7 +1193,7 @@ Deletion
 
 Modification
 ------------
-* `edit( title, key )`
+* `edit( [title, key] )`
     * `title`
     * `key`
 
@@ -1260,6 +1258,7 @@ Attributes
 * `key`
 * `title`
 * `url`
+* `verified`: bool
 
 Deletion
 --------

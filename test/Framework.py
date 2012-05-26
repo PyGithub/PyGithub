@@ -120,12 +120,19 @@ class BasicTestCase( unittest.TestCase ):
             self.__file.close()
 
     def assertListKeyEqual( self, elements, key, expectedKeys ):
-        for element, expectedKey in itertools.izip_longest( elements, expectedKeys ):
-            self.assertEqual( key( element ), expectedKey )
+        realKeys = [ key( element ) for element in elements ]
+        self.assertEqual( realKeys, expectedKeys )
 
     def assertListKeyBegin( self, elements, key, expectedKeys ):
-        for element, expectedKey in itertools.izip( elements, expectedKeys ):
-            self.assertEqual( key( element ), expectedKey )
+        def take( sequence, length ):
+            taken = list()
+            for element in elements:
+                taken.append( element )
+                if len( taken ) >= length:
+                    break
+            return taken
+        realKeys = [ key( element ) for element in take( elements, len( expectedKeys ) ) ]
+        self.assertEqual( realKeys, expectedKeys )
 
 class TestCase( BasicTestCase ):
     def setUp( self ):

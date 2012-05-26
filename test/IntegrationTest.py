@@ -3,30 +3,33 @@
 import Framework
 
 from AuthenticatedUser import *
+from Authentication import *
+from Authorization import *
 from Branch import *
 from Commit import *
 from CommitComment import *
+from Download import *
+from Event import *
+from Gist import *
+from GistComment import *
 from GitBlob import *
 from GitCommit import *
+from Github import *
 from GitRef import *
 from GitTag import *
 from GitTree import *
-from Tag import *
-from Repository import *
-from Organization import *
-from Milestone import *
+from Hook import *
 from Issue import *
 from IssueComment import *
+from IssueEvent import *
 from Label import *
+from Milestone import *
 from NamedUser import *
-from Hook import *
-from Gist import *
-from GistComment import *
-from Authorization import *
+from Organization import *
 from RateLimiting import *
-from Download import *
-from Authentication import *
-from Event import *
-from Github import *
+from Repository import *
+from RepositoryKey import *
+from Tag import *
+from UserKey import *
 
 Framework.main()
