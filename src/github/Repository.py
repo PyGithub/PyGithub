@@ -64,6 +64,11 @@ class Repository( object ):
         return self.__forks
 
     @property
+    def full_name( self ):
+        self.__completeIfNeeded( self.__full_name )
+        return self.__full_name
+
+    @property
     def git_url( self ):
         self.__completeIfNeeded( self.__git_url )
         return self.__git_url
@@ -854,6 +859,7 @@ class Repository( object ):
         self.__description = None
         self.__fork = None
         self.__forks = None
+        self.__full_name = None
         self.__git_url = None
         self.__has_downloads = None
         self.__has_issues = None
@@ -897,7 +903,7 @@ class Repository( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "clone_url", "created_at", "description", "fork", "forks", "git_url", "has_downloads", "has_issues", "has_wiki", "homepage", "html_url", "id", "language", "master_branch", "mirror_url", "name", "open_issues", "organization", "owner", "parent", "permissions", "private", "pushed_at", "size", "source", "ssh_url", "svn_url", "updated_at", "url", "watchers", ], attribute
+            assert attribute in [ "clone_url", "created_at", "description", "fork", "forks", "full_name", "git_url", "has_downloads", "has_issues", "has_wiki", "homepage", "html_url", "id", "language", "master_branch", "mirror_url", "name", "open_issues", "organization", "owner", "parent", "permissions", "private", "pushed_at", "size", "source", "ssh_url", "svn_url", "updated_at", "url", "watchers", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "clone_url" in attributes and attributes[ "clone_url" ] is not None:
             assert isinstance( attributes[ "clone_url" ], ( str, unicode ) )
@@ -914,6 +920,9 @@ class Repository( object ):
         if "forks" in attributes and attributes[ "forks" ] is not None:
             assert isinstance( attributes[ "forks" ], int )
             self.__forks = attributes[ "forks" ]
+        if "full_name" in attributes and attributes[ "full_name" ] is not None:
+            assert isinstance( attributes[ "full_name" ], ( str, unicode ) )
+            self.__full_name = attributes[ "full_name" ]
         if "git_url" in attributes and attributes[ "git_url" ] is not None:
             assert isinstance( attributes[ "git_url" ], ( str, unicode ) )
             self.__git_url = attributes[ "git_url" ]

@@ -7146,6 +7146,14 @@
                         "cardinality": "scalar", 
                         "name": "string"
                     }, 
+                    "name": "full_name"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
                     "name": "git_url"
                 }, 
                 {

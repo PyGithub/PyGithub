@@ -1238,6 +1238,7 @@
                 { "name": "description", "type": "string" },
                 { "name": "fork", "type": "bool" },
                 { "name": "forks", "type": "integer" },
+                { "name": "full_name", "type": "string" },
                 { "name": "git_url", "type": "string" },
                 { "name": "has_downloads", "type": "bool" },
                 { "name": "has_issues", "type": "bool" },

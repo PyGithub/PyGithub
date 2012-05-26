@@ -944,6 +944,7 @@ Attributes
 * `description`: string
 * `fork`: bool
 * `forks`: integer
+* `full_name`: string
 * `git_url`: string
 * `has_downloads`: bool
 * `has_issues`: bool

@@ -107,6 +107,10 @@ class Issue( Framework.TestCaseWithRepo ):
         comment = self.repo.get_issue( 28 ).get_comment( 5808311 )
         comment.delete()
 
+    def testComments( self ):
+        comment = self.repo.get_issue( 24 ).get_comments()[ 0 ]
+        self.assertEqual( comment.user.login, "jacquev6" )
+
     def testEvents( self ):
         event = self.repo.get_issue( 28 ).get_events()[ 0 ]
         self.assertEqual( event.actor.login, "jacquev6" )
