@@ -19,6 +19,15 @@ class FakeHttpResponse:
     def read( self ):
         return self.__output
 
+def fixAuthorizationHeader( headers ):
+    if "Authorization" in headers:
+        if headers[ "Authorization" ].startswith( "token " ):
+            headers[ "Authorization" ] = "token private_token_removed"
+        elif headers[ "Authorization" ].startswith( "Basic " ):
+            headers[ "Authorization" ] = "Basic login_and_password_removed"
+        else:
+            del headers[ "Authorization" ] # Do not let sensitive info in git :-p
+
 class RecordingHttpsConnection:
     __realHttpsConnection = httplib.HTTPSConnection
 
@@ -29,7 +38,7 @@ class RecordingHttpsConnection:
     def request( self, verb, url, input, headers ):
         print verb, url,
         self.__cnx.request( verb, url, input, headers )
-        del headers[ "Authorization" ] # Do not let sensitive info in git :-p
+        fixAuthorizationHeader( headers )
         self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
 
     def getresponse( self ):
@@ -56,7 +65,7 @@ class ReplayingHttpsConnection:
         self.__file = file
 
     def request( self, verb, url, input, headers ):
-        del headers[ "Authorization" ]
+        fixAuthorizationHeader( headers )
         expectation = self.__file.readline().strip()
         self.__testCase.assertEqual( verb + " " + url + " " + str( headers ) + " " + input, expectation )
 
