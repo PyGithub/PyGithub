@@ -14,5 +14,6 @@ from Authorization import *
 from RateLimiting import *
 from Download import *
 from Authentication import *
+from Event import *
 
 Framework.main()
