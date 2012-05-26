@@ -3,6 +3,7 @@ import sys
 import unittest
 import httplib
 import traceback
+import itertools
 
 sys.path = [ os.path.join( os.path.dirname( __file__ ), "..", "src" ) ] + sys.path
 import github
@@ -117,6 +118,14 @@ class BasicTestCase( unittest.TestCase ):
             if not self.recordMode:
                 self.assertEqual( self.__file.readline(), "" )
             self.__file.close()
+
+    def assertListKeyEqual( self, elements, key, expectedKeys ):
+        for element, expectedKey in itertools.izip_longest( elements, expectedKeys ):
+            self.assertEqual( key( element ), expectedKey )
+
+    def assertListKeyBegin( self, elements, key, expectedKeys ):
+        for element, expectedKey in itertools.izip( elements, expectedKeys ):
+            self.assertEqual( key( element ), expectedKey )
 
 class TestCase( BasicTestCase ):
     def setUp( self ):
