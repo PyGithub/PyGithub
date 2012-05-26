@@ -79,7 +79,7 @@ class ReplayingHttpsConnection:
     def close( self ):
         self.__file.readline()
 
-class TestCase( unittest.TestCase ):
+class BasicTestCase( unittest.TestCase ):
     recordMode = False
 
     def setUp( self ):
@@ -87,12 +87,14 @@ class TestCase( unittest.TestCase ):
         self.__fileName = ""
         self.__file = None
         if self.recordMode:
-            import GithubCredentials
             httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
-            self.g = github.Github( GithubCredentials.login, GithubCredentials.password )
+            import GithubCredentials
+            self.login = GithubCredentials.login
+            self.password = GithubCredentials.password
         else:
             httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ) )
-            self.g = github.Github( "login", "password" )
+            self.login = "login"
+            self.password = "password"
 
     def tearDown( self ):
         unittest.TestCase.tearDown( self )
@@ -114,6 +116,11 @@ class TestCase( unittest.TestCase ):
                 self.assertEqual( self.__file.readline(), "" )
             self.__file.close()
 
+class TestCase( BasicTestCase ):
+    def setUp( self ):
+        BasicTestCase.setUp( self )
+        self.g = github.Github( self.login, self.password )
+
 class TestCaseWithRepo( TestCase ):
     def setUp( self ):
         TestCase.setUp( self )
@@ -121,6 +128,6 @@ class TestCaseWithRepo( TestCase ):
 
 def main():
     if "--record" in sys.argv:
-        TestCase.recordMode = True
+        BasicTestCase.recordMode = True
 
     unittest.main( argv = [ arg for arg in sys.argv if arg != "--record" ] )
