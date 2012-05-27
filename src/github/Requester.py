@@ -58,3 +58,6 @@ class Requester:
             return None
         else:
             return json.loads( data )
+
+    def parentUrl( self, url ):
+        return "/".join( url.split( "/" )[ : -1 ] )

@@ -3896,9 +3896,14 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
+                                "type": "parentUrl", 
                                 "value": [
-                                    "url"
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "url"
+                                        ]
+                                    }
                                 ]
                             }, 
                             {
@@ -6784,9 +6789,14 @@
                     "request": {
                         "url": [
                             {
-                                "type": "attribute", 
+                                "type": "parentUrl", 
                                 "value": [
-                                    "url"
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "url"
+                                        ]
+                                    }
                                 ]
                             }, 
                             {

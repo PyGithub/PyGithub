@@ -182,7 +182,7 @@ class PullRequest( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            "https://api.github.com/repos/jacquev6/PyGithub/pulls/comments/" + str( id ), ### @todo
+            self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),
             None,
             None
         )

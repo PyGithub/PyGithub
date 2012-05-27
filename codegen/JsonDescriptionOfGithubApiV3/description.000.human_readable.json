@@ -689,7 +689,20 @@
                     "type": "IssueComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "@todo" },
+                        "request": {
+                            "url": [
+                                {
+                                    "type": "parentUrl",
+                                    "value": [
+                                        { "type": "attribute", "value": [ "url" ] }
+                                    ]
+                                },
+                                { "type": "constant", "value": "/comments" },
+                                { "type": "constant", "value": "/" },
+                                { "type": "argument", "value": [ "id" ] }
+                            ]
+                        }
                     },
                     "createElement": {
                         "mandatoryParameters": [
@@ -1129,7 +1142,20 @@
                     "type": "PullRequestComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "@todo" },
+                        "request": {
+                            "url": [
+                                {
+                                    "type": "parentUrl",
+                                    "value": [
+                                        { "type": "attribute", "value": [ "url" ] }
+                                    ]
+                                },
+                                { "type": "constant", "value": "/comments" }, 
+                                { "type": "constant", "value": "/" }, 
+                                { "type": "argument", "value": [ "id" ] }
+                            ]
+                        }
                     },
                     "createElement": {
                         "mandatoryParameters": [
