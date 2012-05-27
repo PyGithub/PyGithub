@@ -3,7 +3,7 @@ import Framework
 class IssueEvent( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.event = self.g.get_user().get_repo( "PyGithub" ).get_issue( 28 ).get_events()[ 0 ]
+        self.event = self.g.get_user().get_repo( "PyGithub" ).get_issues_event( 15819975 )
 
     def testAttributes( self ):
         self.assertEqual( self.event.actor.login, "jacquev6" )

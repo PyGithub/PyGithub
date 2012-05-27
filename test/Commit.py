@@ -3,7 +3,7 @@ import Framework
 class Commit( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.commit = self.g.get_user().get_repo( "PyGithub" ).get_branches()[ 0 ].commit
+        self.commit = self.g.get_user().get_repo( "PyGithub" ).get_commit( "1292bf0e22c796e91cc3d6e24b544aece8c21f2a" )
         self.commit.author.login # to force lazy completion
 
     def testAttributes( self ):

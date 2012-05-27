@@ -576,7 +576,7 @@ class Repository( object ):
     def get_git_refs( self ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git",
+            str( self.url ) + "/git/refs",
             None,
             None
         )
