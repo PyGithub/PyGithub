@@ -188,6 +188,7 @@ class Repository( object ):
         return self.__watchers
 
     def add_to_collaborators( self, collaborator ):
+        assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
@@ -582,6 +583,8 @@ class Repository( object ):
         return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
 
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
+        if recursive is not DefaultValueForOptionalParameters:
+            assert isinstance( recursive, bool ), recursive
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/trees" + "/" + str( sha ),
@@ -797,6 +800,7 @@ class Repository( object ):
         )
 
     def has_in_collaborators( self, collaborator ):
+        assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
@@ -805,6 +809,7 @@ class Repository( object ):
         return status == 204
 
     def remove_from_collaborators( self, collaborator ):
+        assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),

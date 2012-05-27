@@ -181,7 +181,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
-                            { "name": "files", "type": "dict" }
+                            { "name": "files", "type": "@todo" }
                         ],
                         "optionalParameters": [
                             { "name": "description", "type": "string" }
@@ -906,7 +906,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
-                            { "name": "files", "type": "dict" }
+                            { "name": "files", "type": "@todo" }
                         ],
                         "optionalParameters": [
                             { "name": "description", "type": "string" }
@@ -1059,7 +1059,7 @@
                             { "name": "name", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "repo_names", "type": "list" },
+                            { "name": "repo_names", "type": "list:string" },
                             { "name": "permission", "type": "@todo" }
                         ]
                     },

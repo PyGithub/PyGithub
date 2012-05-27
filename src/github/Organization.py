@@ -139,6 +139,7 @@ class Organization( object ):
         return self.__url
 
     def add_to_public_members( self, public_member ):
+        assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
@@ -146,6 +147,7 @@ class Organization( object ):
         )
 
     def create_fork( self, repo ):
+        assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks?org=" + str( self.login ),
@@ -154,6 +156,19 @@ class Organization( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if homepage is not DefaultValueForOptionalParameters:
+            assert isinstance( homepage, ( str, unicode ) ), homepage
+        if private is not DefaultValueForOptionalParameters:
+            assert isinstance( private, bool ), private
+        if has_issues is not DefaultValueForOptionalParameters:
+            assert isinstance( has_issues, bool ), has_issues
+        if has_wiki is not DefaultValueForOptionalParameters:
+            assert isinstance( has_wiki, bool ), has_wiki
+        if has_downloads is not DefaultValueForOptionalParameters:
+            assert isinstance( has_downloads, bool ), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -179,6 +194,9 @@ class Organization( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if repo_names is not DefaultValueForOptionalParameters:
+            assert isinstance( repo_names, list ) and ( len( repo_names ) == 0 or isinstance( repo_names[ 0 ], ( str, unicode ) ) ), repo_names
         post_parameters = {
             "name": name,
         }
@@ -255,6 +273,7 @@ class Organization( object ):
         )
 
     def get_repo( self, name ):
+        assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
@@ -276,6 +295,7 @@ class Organization( object ):
         )
 
     def get_team( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/teams/" + str( id ),
@@ -297,6 +317,7 @@ class Organization( object ):
         )
 
     def has_in_members( self, member ):
+        assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members" + "/" + str( member._identity ),
@@ -305,6 +326,7 @@ class Organization( object ):
         return status == 204
 
     def has_in_public_members( self, public_member ):
+        assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
@@ -313,6 +335,7 @@ class Organization( object ):
         return status == 204
 
     def remove_from_members( self, member ):
+        assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/members" + "/" + str( member._identity ),
@@ -320,6 +343,7 @@ class Organization( object ):
         )
 
     def remove_from_public_members( self, public_member ):
+        assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),

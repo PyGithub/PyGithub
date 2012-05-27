@@ -110,6 +110,7 @@ class Issue( object ):
         return self.__user
 
     def add_to_labels( self, *labels ):
+        assert len( labels ) == 0 or isinstance( labels[ 0 ], Label.Label ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "POST",
@@ -118,6 +119,7 @@ class Issue( object ):
         )
 
     def create_comment( self, body ):
+        assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }
@@ -205,6 +207,7 @@ class Issue( object ):
         )
 
     def remove_from_labels( self, label ):
+        assert isinstance( label, Label.Label ), label
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/labels" + "/" + str( label._identity ),
@@ -212,6 +215,7 @@ class Issue( object ):
         )
 
     def set_labels( self, *labels ):
+        assert len( labels ) == 0 or isinstance( labels[ 0 ], Label.Label ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "PUT",

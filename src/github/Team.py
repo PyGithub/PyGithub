@@ -46,6 +46,7 @@ class Team( object ):
         return self.__url
 
     def add_to_members( self, member ):
+        assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/members" + "/" + str( member._identity ),
@@ -53,6 +54,7 @@ class Team( object ):
         )
 
     def add_to_repos( self, repo ):
+        assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),
@@ -106,6 +108,7 @@ class Team( object ):
         )
 
     def has_in_members( self, member ):
+        assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members" + "/" + str( member._identity ),
@@ -114,6 +117,7 @@ class Team( object ):
         return status == 204
 
     def has_in_repos( self, repo ):
+        assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),
@@ -122,6 +126,7 @@ class Team( object ):
         return status == 204
 
     def remove_from_members( self, member ):
+        assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/members" + "/" + str( member._identity ),
@@ -129,6 +134,7 @@ class Team( object ):
         )
 
     def remove_from_repos( self, repo ):
+        assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),

@@ -1286,9 +1286,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "dict"
+                                "name": "@todo"
                             }, 
                             "name": "files"
                         }
@@ -5185,9 +5185,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": false, 
+                                "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "dict"
+                                "name": "@todo"
                             }, 
                             "name": "files"
                         }
@@ -6205,9 +6205,9 @@
                     "optionalParameters": [
                         {
                             "type": {
-                                "simple": false, 
-                                "cardinality": "scalar", 
-                                "name": "list"
+                                "simple": true, 
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "repo_names"
                         }, 

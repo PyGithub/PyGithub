@@ -148,6 +148,7 @@ class AuthenticatedUser( object ):
         return self.__url
 
     def add_to_emails( self, *emails ):
+        assert len( emails ) == 0 or isinstance( emails[ 0 ], ( str, unicode ) ), emails
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "POST",
@@ -156,6 +157,7 @@ class AuthenticatedUser( object ):
         )
 
     def add_to_following( self, following ):
+        assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self.__requester.request(
             "PUT",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
@@ -163,6 +165,7 @@ class AuthenticatedUser( object ):
         )
 
     def add_to_watched( self, watched ):
+        assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self.__requester.request(
             "PUT",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
@@ -186,6 +189,7 @@ class AuthenticatedUser( object ):
         return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
 
     def create_fork( self, repo ):
+        assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
@@ -194,6 +198,9 @@ class AuthenticatedUser( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
+        assert isinstance( public, bool ), public
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
             "files": files,
@@ -220,6 +227,19 @@ class AuthenticatedUser( object ):
         return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if homepage is not DefaultValueForOptionalParameters:
+            assert isinstance( homepage, ( str, unicode ) ), homepage
+        if private is not DefaultValueForOptionalParameters:
+            assert isinstance( private, bool ), private
+        if has_issues is not DefaultValueForOptionalParameters:
+            assert isinstance( has_issues, bool ), has_issues
+        if has_wiki is not DefaultValueForOptionalParameters:
+            assert isinstance( has_wiki, bool ), has_wiki
+        if has_downloads is not DefaultValueForOptionalParameters:
+            assert isinstance( has_downloads, bool ), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -243,6 +263,20 @@ class AuthenticatedUser( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def edit( self, name = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, hireable = DefaultValueForOptionalParameters, bio = DefaultValueForOptionalParameters ):
+        if name is not DefaultValueForOptionalParameters:
+            assert isinstance( name, ( str, unicode ) ), name
+        if email is not DefaultValueForOptionalParameters:
+            assert isinstance( email, ( str, unicode ) ), email
+        if blog is not DefaultValueForOptionalParameters:
+            assert isinstance( blog, ( str, unicode ) ), blog
+        if company is not DefaultValueForOptionalParameters:
+            assert isinstance( company, ( str, unicode ) ), company
+        if location is not DefaultValueForOptionalParameters:
+            assert isinstance( location, ( str, unicode ) ), location
+        if hireable is not DefaultValueForOptionalParameters:
+            assert isinstance( hireable, bool ), hireable
+        if bio is not DefaultValueForOptionalParameters:
+            assert isinstance( bio, ( str, unicode ) ), bio
         post_parameters = {
         }
         if name is not DefaultValueForOptionalParameters:
@@ -382,6 +416,7 @@ class AuthenticatedUser( object ):
         )
 
     def get_organization_events( self, org ):
+        assert isinstance( org, Organization.Organization ), org
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/users/" + str( self.login ) + "/events/orgs/" + str( org.login ),
@@ -408,6 +443,7 @@ class AuthenticatedUser( object ):
         )
 
     def get_repo( self, name ):
+        assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
@@ -455,6 +491,7 @@ class AuthenticatedUser( object ):
         )
 
     def has_in_following( self, following ):
+        assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
@@ -463,6 +500,7 @@ class AuthenticatedUser( object ):
         return status == 204
 
     def has_in_watched( self, watched ):
+        assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
@@ -471,6 +509,7 @@ class AuthenticatedUser( object ):
         return status == 204
 
     def remove_from_emails( self, *emails ):
+        assert len( emails ) == 0 or isinstance( emails[ 0 ], ( str, unicode ) ), emails
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "DELETE",
@@ -479,6 +518,7 @@ class AuthenticatedUser( object ):
         )
 
     def remove_from_following( self, following ):
+        assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self.__requester.request(
             "DELETE",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
@@ -486,6 +526,7 @@ class AuthenticatedUser( object ):
         )
 
     def remove_from_watched( self, watched ):
+        assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self.__requester.request(
             "DELETE",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),

@@ -88,7 +88,7 @@ Gists
 -----
 * `create_gist( public, files, [description] )`: `Gist`
     * `public`: bool
-    * `files`: `dict`
+    * `files`
     * `description`: string
 * `get_gists()`: list of `Gist`
 * `get_starred_gists()`: list of `Gist`
@@ -701,7 +701,7 @@ Gists
 -----
 * `create_gist( public, files, [description] )`: `Gist`
     * `public`: bool
-    * `files`: `dict`
+    * `files`
     * `description`: string
 * `get_gists()`: list of `Gist`
 
@@ -807,7 +807,7 @@ Teams
 -----
 * `create_team( name, [repo_names, permission] )`: `Team`
     * `name`: string
-    * `repo_names`: `list`
+    * `repo_names`: list of string
     * `permission`
 * `get_team( id )`: `Team`
     * `id`: integer

@@ -150,6 +150,9 @@ class NamedUser( object ):
         return self.__url
 
     def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
+        assert isinstance( public, bool ), public
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
             "files": files,
@@ -268,6 +271,7 @@ class NamedUser( object ):
         )
 
     def get_repo( self, name ):
+        assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),

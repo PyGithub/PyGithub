@@ -119,6 +119,8 @@ class Gist( object ):
         )
 
     def edit( self, description = DefaultValueForOptionalParameters, files = DefaultValueForOptionalParameters ):
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
         post_parameters = {
         }
         if description is not DefaultValueForOptionalParameters:

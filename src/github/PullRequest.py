@@ -233,6 +233,8 @@ class PullRequest( object ):
         return status == 204
 
     def merge( self, commit_message = DefaultValueForOptionalParameters ):
+        if commit_message is not DefaultValueForOptionalParameters:
+            assert isinstance( commit_message, ( str, unicode ) ), commit_message
         post_parameters = {
         }
         if commit_message is not DefaultValueForOptionalParameters:
