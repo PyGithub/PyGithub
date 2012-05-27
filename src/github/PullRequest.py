@@ -240,11 +240,15 @@ class PullRequest( object ):
         return status == 204
 
     def merge( self, commit_message = DefaultValueForOptionalParameters ):
+        post_parameters = {
+        }
+        if commit_message is not DefaultValueForOptionalParameters:
+            post_parameters[ "commit_message" ] = commit_message
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/merge",
             None,
-            {}
+            post_parameters
         )
 
     def __initAttributes( self ):

@@ -45,7 +45,6 @@ class Label( object ):
         )
         self.__useAttributes( data )
 
-    # @todo Remove '_identity' from the normalized json description
     @property
     def _identity( self ):
         return urllib.quote( self.name )
@@ -56,7 +55,6 @@ class Label( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "color" in attributes and attributes[ "color" ] is not None: # pragma no branch
             self.__color = attributes[ "color" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch

@@ -4037,6 +4037,22 @@
                         "labels"
                     ], 
                     "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
@@ -4142,6 +4158,23 @@
                             "name": "Label"
                         }, 
                         "name": "label"
+                    }, 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/labels"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT", 
+                        "postParameters": true
                     }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
@@ -4363,6 +4396,14 @@
             ], 
             "isCompletable": false, 
             "name": "Label", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "name"
+                    ]
+                }
+            ], 
             "methods": [
                 {
                     "group": "modification", 
@@ -6913,7 +6954,8 @@
                             }
                         ], 
                         "information": "status", 
-                        "verb": "PUT"
+                        "verb": "PUT", 
+                        "postParameters": true
                     }, 
                     "isMutation": false, 
                     "optionalParameters": [
@@ -8415,7 +8457,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git"
+                                "value": "/git/refs"
                             }
                         ], 
                         "information": "status", 
@@ -8456,11 +8498,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/git/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8497,7 +8535,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git"
+                                "value": "/git/refs"
                             }
                         ], 
                         "information": "data", 
@@ -9622,6 +9660,79 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "Milestone"
+                    }
+                }, 
+                {
+                    "group": "pulls", 
+                    "name": [
+                        "create", 
+                        "pull"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/pulls"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "title"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "body"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "issue"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "base"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "head"
+                        }
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "PullRequest"
                     }
                 }, 
                 {

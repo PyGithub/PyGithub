@@ -1166,6 +1166,11 @@ Modification
 Pulls
 -----
 * `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
+    * `title`
+    * `body`
+    * `issue`
+    * `base`
+    * `head`
 * `get_pull( number )`: `PullRequest`
     * `number`
 * `get_pulls( [state] )`: list of `PullRequest`

@@ -7,6 +7,19 @@ import itertools
 ### @todo Mandatory/optional attributes
 ### @todo Remove '_identity' from the normalized json description
 
+def mergeDict( base, *additions ):
+    r = dict( base )
+    for addition in additions:
+        for k in addition:
+            if k in r:
+                if isinstance( r[ k ], dict ):
+                    r[ k ] = mergeDict( r[ k ], addition[ k ] )
+                # else:
+                    # we ignore the addition: the first dict which specifies a value wins
+            else:
+                r[ k ] = addition[ k ]
+    return r
+
 def checkKeys( d, mandatoryKeys, optionalKeys = [] ):
     assert set( d.keys() ) >= set( mandatoryKeys ), d.keys()
     assert set( d.keys() ) <= set( mandatoryKeys ) | set( optionalKeys ) | set( [ "@todo" ] ), d.keys()
@@ -73,8 +86,7 @@ class Function:
             # POST parameters from input
 
     def __init__( self, desc, *additionalDescs ):
-        for additionalDesc in additionalDescs:
-            desc.update( additionalDesc )
+        desc = mergeDict( desc, *additionalDescs )
         checkKeys( desc, [ "name", "type", "group" ], [ "url", "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] ) # @todo Move request to mandatoryKeys
 
         self.name = desc[ "name" ]
@@ -169,7 +181,16 @@ class Collection:
             ) )
         if "deleteList" in desc:
             assert desc[ "deleteList" ] is True
-            self.methods.append( Function( { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] } ) )
+            self.methods.append( Function(
+                { "name": [ "delete" ] + name, "type": "void", "group": desc[ "name" ] },
+                {
+                    "request": {
+                        "verb": "DELETE",
+                        "url": self.__url,
+                        "information": "status",
+                    }
+                }
+            ) )
         if "getElement" in desc:
             if "url" in desc[ "getElement" ]:
                 urlForGetElement = desc[ "getElement" ][ "url" ]
@@ -247,7 +268,17 @@ class Collection:
             ) )
         if "setList" in desc:
             assert desc[ "setList" ] is True
-            self.methods.append( Function( { "name": [ "set" ] + name, "type": "void", "group": desc[ "name" ], "variadicParameter": { "name": desc[ "singularName" ], "type": desc[ "type" ] } } ) )
+            self.methods.append( Function(
+                { "name": [ "set" ] + name, "type": "void", "group": desc[ "name" ], "variadicParameter": { "name": desc[ "singularName" ], "type": desc[ "type" ] } },
+                {
+                    "request": {
+                        "verb": "PUT",
+                        "url": self.__url,
+                        "information": "status",
+                        "postParameters": True,
+                    }
+                }
+            ) )
 
 class Class:
     def __init__( self, desc ):
