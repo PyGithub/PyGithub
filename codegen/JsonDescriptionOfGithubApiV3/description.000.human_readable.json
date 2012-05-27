@@ -1265,15 +1265,15 @@
             ],
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "name", "type": "@todo" }
+                    { "name": "name", "type": "string" }
                 ],
                 "optionalParameters": [
-                    { "name": "description", "type": "@todo" },
-                    { "name": "homepage", "type": "@todo" },
-                    { "name": "public", "type": "@todo" },
-                    { "name": "has_issues", "type": "@todo" },
-                    { "name": "has_wiki", "type": "@todo" },
-                    { "name": "has_downloads", "type": "@todo" }
+                    { "name": "description", "type": "string" },
+                    { "name": "homepage", "type": "string" },
+                    { "name": "public", "type": "bool" },
+                    { "name": "has_issues", "type": "bool" },
+                    { "name": "has_wiki", "type": "bool" },
+                    { "name": "has_downloads", "type": "bool" }
                 ]
             },
             "attributes": [
@@ -1330,7 +1330,7 @@
                     "type": "CommitComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     }
                 },
                 {
@@ -1339,12 +1339,12 @@
                     "type": "Commit",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "sha", "type": "@todo" },
-                            { "name": "path", "type": "@todo" }
+                            { "name": "sha", "type": "string" },
+                            { "name": "path", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "sha", "type": "@todo" }
+                        "parameter": { "name": "sha", "type": "string" }
                     }
                 },
                 {
@@ -1359,16 +1359,16 @@
                     "type": "Download",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "name", "type": "@todo" },
-                            { "name": "size", "type": "@todo" }
+                            { "name": "name", "type": "string" },
+                            { "name": "size", "type": "integer" }
                         ],
                         "optionalParameters": [
-                            { "name": "description", "type": "@todo" },
-                            { "name": "content_type", "type": "@todo" }
+                            { "name": "description", "type": "string" },
+                            { "name": "content_type", "type": "string" }
                         ]
                     }
                 },
@@ -1389,12 +1389,12 @@
                     "singularName": "git_blob",
                     "type": "GitBlob",
                     "getElement": {
-                        "parameter": { "name": "sha", "type": "@todo" }
+                        "parameter": { "name": "sha", "type": "string" }
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "content", "type": "@todo" },
-                            { "name": "encoding", "type": "@todo" }
+                            { "name": "content", "type": "string" },
+                            { "name": "encoding", "type": "string" }
                         ]
                     },
                     "url": [
@@ -1407,13 +1407,13 @@
                     "singularName": "git_commit",
                     "type": "GitCommit",
                     "getElement": {
-                        "parameter": { "name": "sha", "type": "@todo" }
+                        "parameter": { "name": "sha", "type": "string" }
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "message", "type": "@todo" },
+                            { "name": "message", "type": "string" },
                             { "name": "tree", "type": "@todo" },
-                            { "name": "parents", "type": "@todo" }
+                            { "name": "parents", "type": "list:GitCommit" }
                         ],
                         "optionalParameters": [
                             { "name": "author", "type": "@todo" },
@@ -1432,12 +1432,12 @@
                     "getList": true,
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "ref", "type": "@todo" },
-                            { "name": "sha", "type": "@todo" }
+                            { "name": "ref", "type": "string" },
+                            { "name": "sha", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "ref", "type": "@todo" },
+                        "parameter": { "name": "ref", "type": "string" },
                         "request": {
                             "url": [
                                 { "type": "attribute", "value": [ "url" ] },
@@ -1457,17 +1457,17 @@
                     "type": "GitTag",
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "tag", "type": "@todo" },
-                            { "name": "message", "type": "@todo" },
-                            { "name": "object", "type": "@todo" },
-                            { "name": "type", "type": "@todo" }
+                            { "name": "tag", "type": "string" },
+                            { "name": "message", "type": "string" },
+                            { "name": "object", "type": "string" },
+                            { "name": "type", "type": "string" }
                         ],
                         "optionalParameters": [
                             { "name": "tagger", "type": "@todo" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "sha", "type": "@todo" }
+                        "parameter": { "name": "sha", "type": "string" }
                     },
                     "url": [
                         { "type": "attribute", "value": [ "url" ] },
@@ -1487,7 +1487,7 @@
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "sha", "type": "@todo" },
+                        "parameter": { "name": "sha", "type": "string" },
                         "optionalParameters": [
                             { "name": "recursive", "type": "bool" }
                         ]
@@ -1504,16 +1504,16 @@
                     "getList": true,
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "name", "type": "@todo" },
+                            { "name": "name", "type": "string" },
                             { "name": "config", "type": "@todo" }
                         ],
                         "optionalParameters": [
-                            { "name": "events", "type": "@todo" },
-                            { "name": "active", "type": "@todo" }
+                            { "name": "events", "type": "list:string" },
+                            { "name": "active", "type": "bool" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     }
                 },
                 {
@@ -1522,29 +1522,29 @@
                     "type": "Issue",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "milestone", "type": "@todo" },
-                            { "name": "state", "type": "@todo" },
-                            { "name": "assignee", "type": "@todo" },
-                            { "name": "mentioned", "type": "@todo" },
-                            { "name": "labels", "type": "@todo" },
-                            { "name": "sort", "type": "@todo" },
-                            { "name": "direction", "type": "@todo" },
-                            { "name": "since", "type": "@todo" }
+                            { "name": "milestone", "type": "integer" },
+                            { "name": "state", "type": "string" },
+                            { "name": "assignee", "type": "string" },
+                            { "name": "mentioned", "type": "string" },
+                            { "name": "labels", "type": "list:string" },
+                            { "name": "sort", "type": "string" },
+                            { "name": "direction", "type": "string" },
+                            { "name": "since", "type": "string" }
                         ]
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "title", "type": "@todo" }
+                            { "name": "title", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "body", "type": "@todo" },
-                            { "name": "assignee", "type": "@todo" },
-                            { "name": "milestone", "type": "@todo" },
-                            { "name": "labels", "type": "@todo" }
+                            { "name": "body", "type": "string" },
+                            { "name": "assignee", "type": "string" },
+                            { "name": "milestone", "type": "integer" },
+                            { "name": "labels", "type": "list:string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "number", "type": "@todo" }
+                        "parameter": { "name": "number", "type": "integer" }
                     }
                 },
                 {
@@ -1553,7 +1553,7 @@
                     "type": "IssueEvent",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     },
                     "url": [
                         { "type": "attribute", "value": [ "url" ] },
@@ -1567,12 +1567,12 @@
                     "getList": true,
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "title", "type": "@todo" },
-                            { "name": "key", "type": "@todo" }
+                            { "name": "title", "type": "string" },
+                            { "name": "key", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     }
                 },
                 {
@@ -1582,12 +1582,12 @@
                     "getList": true,
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "name", "type": "@todo" },
-                            { "name": "color", "type": "@todo" }
+                            { "name": "name", "type": "string" },
+                            { "name": "color", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "name", "type": "@todo" },
+                        "parameter": { "name": "name", "type": "string" },
                         "request": {
                             "url": [
                                 { "type": "attribute", "value": [ "url" ] },
@@ -1608,23 +1608,23 @@
                     "type": "Milestone",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "state", "type": "@todo" },
-                            { "name": "sort", "type": "@todo" },
-                            { "name": "direction", "type": "@todo" }
+                            { "name": "state", "type": "string" },
+                            { "name": "sort", "type": "string" },
+                            { "name": "direction", "type": "string" }
                         ]
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "title", "type": "@todo" }
+                            { "name": "title", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "state", "type": "@todo" },
-                            { "name": "description", "type": "@todo" },
-                            { "name": "due_on", "type": "@todo" }
+                            { "name": "state", "type": "string" },
+                            { "name": "description", "type": "string" },
+                            { "name": "due_on", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "number", "type": "@todo" }
+                        "parameter": { "name": "number", "type": "integer" }
                     }
                 },
                 {
@@ -1633,17 +1633,17 @@
                     "type": "PullRequest",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "state", "type": "@todo" }
+                            { "name": "state", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "number", "type": "@todo" }
+                        "parameter": { "name": "number", "type": "integer" }
                     },
                     "createElement": {
                         "optionalParameters": [
-                            { "name": "title", "type": "@todo" },
-                            { "name": "body", "type": "@todo" },
-                            { "name": "issue", "type": "@todo" },
+                            { "name": "title", "type": "string" },
+                            { "name": "body", "type": "string" },
+                            { "name": "issue", "type": "integer" },
                             { "name": "base", "type": "@todo" },
                             { "name": "head", "type": "@todo" }
                         ]
@@ -1722,8 +1722,8 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "title", "type": "@todo" },
-                    { "name": "key", "type": "@todo" }
+                    { "name": "title", "type": "string" },
+                    { "name": "key", "type": "string" }
                 ]
             },
             "delete": true,

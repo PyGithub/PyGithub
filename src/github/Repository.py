@@ -204,6 +204,12 @@ class Repository( object ):
         return data
 
     def create_download( self, name, size, description = DefaultValueForOptionalParameters, content_type = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        assert isinstance( size, int ), size
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if content_type is not DefaultValueForOptionalParameters:
+            assert isinstance( content_type, ( str, unicode ) ), content_type
         post_parameters = {
             "name": name,
             "size": size,
@@ -220,6 +226,8 @@ class Repository( object ):
         return Download.Download( self.__requester, data, completion = NoCompletion )
 
     def create_git_blob( self, content, encoding ):
+        assert isinstance( content, ( str, unicode ) ), content
+        assert isinstance( encoding, ( str, unicode ) ), encoding
         post_parameters = {
             "content": content,
             "encoding": encoding,
@@ -232,6 +240,8 @@ class Repository( object ):
         return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
 
     def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
+        assert isinstance( message, ( str, unicode ) ), message
+        assert isinstance( parents, list ) and ( len( parents ) == 0 or isinstance( parents[ 0 ], GitCommit.GitCommit ) ), parents
         post_parameters = {
             "message": message,
             "tree": tree,
@@ -249,6 +259,8 @@ class Repository( object ):
         return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
 
     def create_git_ref( self, ref, sha ):
+        assert isinstance( ref, ( str, unicode ) ), ref
+        assert isinstance( sha, ( str, unicode ) ), sha
         post_parameters = {
             "ref": ref,
             "sha": sha,
@@ -261,6 +273,10 @@ class Repository( object ):
         return GitRef.GitRef( self.__requester, data, completion = NoCompletion )
 
     def create_git_tag( self, tag, message, object, type, tagger = DefaultValueForOptionalParameters ):
+        assert isinstance( tag, ( str, unicode ) ), tag
+        assert isinstance( message, ( str, unicode ) ), message
+        assert isinstance( object, ( str, unicode ) ), object
+        assert isinstance( type, ( str, unicode ) ), type
         post_parameters = {
             "tag": tag,
             "message": message,
@@ -290,6 +306,11 @@ class Repository( object ):
         return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
 
     def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if events is not DefaultValueForOptionalParameters:
+            assert isinstance( events, list ) and ( len( events ) == 0 or isinstance( events[ 0 ], ( str, unicode ) ) ), events
+        if active is not DefaultValueForOptionalParameters:
+            assert isinstance( active, bool ), active
         post_parameters = {
             "name": name,
             "config": config,
@@ -306,6 +327,15 @@ class Repository( object ):
         return Hook.Hook( self.__requester, data, completion = NoCompletion )
 
     def create_issue( self, title, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
+        assert isinstance( title, ( str, unicode ) ), title
+        if body is not DefaultValueForOptionalParameters:
+            assert isinstance( body, ( str, unicode ) ), body
+        if assignee is not DefaultValueForOptionalParameters:
+            assert isinstance( assignee, ( str, unicode ) ), assignee
+        if milestone is not DefaultValueForOptionalParameters:
+            assert isinstance( milestone, int ), milestone
+        if labels is not DefaultValueForOptionalParameters:
+            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
         post_parameters = {
             "title": title,
         }
@@ -325,6 +355,8 @@ class Repository( object ):
         return Issue.Issue( self.__requester, data, completion = NoCompletion )
 
     def create_key( self, title, key ):
+        assert isinstance( title, ( str, unicode ) ), title
+        assert isinstance( key, ( str, unicode ) ), key
         post_parameters = {
             "title": title,
             "key": key,
@@ -337,6 +369,8 @@ class Repository( object ):
         return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion, repoUrl = self.url )
 
     def create_label( self, name, color ):
+        assert isinstance( name, ( str, unicode ) ), name
+        assert isinstance( color, ( str, unicode ) ), color
         post_parameters = {
             "name": name,
             "color": color,
@@ -349,6 +383,13 @@ class Repository( object ):
         return Label.Label( self.__requester, data, completion = NoCompletion )
 
     def create_milestone( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
+        assert isinstance( title, ( str, unicode ) ), title
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if due_on is not DefaultValueForOptionalParameters:
+            assert isinstance( due_on, ( str, unicode ) ), due_on
         post_parameters = {
             "title": title,
         }
@@ -372,9 +413,12 @@ class Repository( object ):
             return self.__create_pull_2( *args, **kwds )
 
     def __create_pull_1( self, title, body, base, head ):
+        assert isinstance( title, ( str, unicode ) ), title
+        assert isinstance( body, ( str, unicode ) ), body
         return self.__create_pull( title = title, body = body, base = base, head = head )
 
     def __create_pull_2( self, issue, base, head ):
+        assert isinstance( issue, int ), issue
         return self.__create_pull( issue = issue, base = base, head = head )
 
     def __create_pull( self, **kwds ):
@@ -387,6 +431,19 @@ class Repository( object ):
         return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
 
     def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if homepage is not DefaultValueForOptionalParameters:
+            assert isinstance( homepage, ( str, unicode ) ), homepage
+        if public is not DefaultValueForOptionalParameters:
+            assert isinstance( public, bool ), public
+        if has_issues is not DefaultValueForOptionalParameters:
+            assert isinstance( has_issues, bool ), has_issues
+        if has_wiki is not DefaultValueForOptionalParameters:
+            assert isinstance( has_wiki, bool ), has_wiki
+        if has_downloads is not DefaultValueForOptionalParameters:
+            assert isinstance( has_downloads, bool ), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -436,6 +493,7 @@ class Repository( object ):
         )
 
     def get_comment( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments" + "/" + str( id ),
@@ -457,6 +515,7 @@ class Repository( object ):
         )
 
     def get_commit( self, sha ):
+        assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits" + "/" + str( sha ),
@@ -465,6 +524,10 @@ class Repository( object ):
         return Commit.Commit( self.__requester, data, completion = NoCompletion )
 
     def get_commits( self, sha = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters ):
+        if sha is not DefaultValueForOptionalParameters:
+            assert isinstance( sha, ( str, unicode ) ), sha
+        if path is not DefaultValueForOptionalParameters:
+            assert isinstance( path, ( str, unicode ) ), path
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits",
@@ -491,6 +554,7 @@ class Repository( object ):
         )
 
     def get_download( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/downloads" + "/" + str( id ),
@@ -538,6 +602,7 @@ class Repository( object ):
         )
 
     def get_git_blob( self, sha ):
+        assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/blobs" + "/" + str( sha ),
@@ -546,6 +611,7 @@ class Repository( object ):
         return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
 
     def get_git_commit( self, sha ):
+        assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/commits" + "/" + str( sha ),
@@ -554,6 +620,7 @@ class Repository( object ):
         return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
 
     def get_git_ref( self, ref ):
+        assert isinstance( ref, ( str, unicode ) ), ref
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/" + str( ref ),
@@ -575,6 +642,7 @@ class Repository( object ):
         )
 
     def get_git_tag( self, sha ):
+        assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/tags" + "/" + str( sha ),
@@ -583,6 +651,7 @@ class Repository( object ):
         return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
 
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
+        assert isinstance( sha, ( str, unicode ) ), sha
         if recursive is not DefaultValueForOptionalParameters:
             assert isinstance( recursive, bool ), recursive
         status, headers, data = self.__requester.request(
@@ -593,6 +662,7 @@ class Repository( object ):
         return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
 
     def get_hook( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/hooks" + "/" + str( id ),
@@ -614,6 +684,7 @@ class Repository( object ):
         )
 
     def get_issue( self, number ):
+        assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues" + "/" + str( number ),
@@ -622,6 +693,22 @@ class Repository( object ):
         return Issue.Issue( self.__requester, data, completion = NoCompletion )
 
     def get_issues( self, milestone = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, mentioned = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters, since = DefaultValueForOptionalParameters ):
+        if milestone is not DefaultValueForOptionalParameters:
+            assert isinstance( milestone, int ), milestone
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
+        if assignee is not DefaultValueForOptionalParameters:
+            assert isinstance( assignee, ( str, unicode ) ), assignee
+        if mentioned is not DefaultValueForOptionalParameters:
+            assert isinstance( mentioned, ( str, unicode ) ), mentioned
+        if labels is not DefaultValueForOptionalParameters:
+            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
+        if sort is not DefaultValueForOptionalParameters:
+            assert isinstance( sort, ( str, unicode ) ), sort
+        if direction is not DefaultValueForOptionalParameters:
+            assert isinstance( direction, ( str, unicode ) ), direction
+        if since is not DefaultValueForOptionalParameters:
+            assert isinstance( since, ( str, unicode ) ), since
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues",
@@ -635,6 +722,7 @@ class Repository( object ):
         )
 
     def get_issues_event( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues/events" + "/" + str( id ),
@@ -656,6 +744,7 @@ class Repository( object ):
         )
 
     def get_key( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/keys" + "/" + str( id ),
@@ -677,6 +766,7 @@ class Repository( object ):
         )
 
     def get_label( self, name ):
+        assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/labels/" + urllib.quote( str( name ) ),
@@ -706,6 +796,7 @@ class Repository( object ):
         return data
 
     def get_milestone( self, number ):
+        assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones" + "/" + str( number ),
@@ -714,6 +805,12 @@ class Repository( object ):
         return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
 
     def get_milestones( self, state = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
+        if sort is not DefaultValueForOptionalParameters:
+            assert isinstance( sort, ( str, unicode ) ), sort
+        if direction is not DefaultValueForOptionalParameters:
+            assert isinstance( direction, ( str, unicode ) ), direction
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones",
@@ -740,6 +837,7 @@ class Repository( object ):
         )
 
     def get_pull( self, number ):
+        assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls" + "/" + str( number ),
@@ -748,6 +846,8 @@ class Repository( object ):
         return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
 
     def get_pulls( self, state = DefaultValueForOptionalParameters ):
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls",

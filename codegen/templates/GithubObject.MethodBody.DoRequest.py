@@ -45,7 +45,7 @@
         assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], bool ) ), {{ parameter.name }}
                 {% endif %}
             {% else %}
-        assert isinstance( {{ parameter.name }}, list ) and ( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], {{ parameter.type.name }}.{{ parameter.type.name }} ) ), {{ parameter.name }}
+        assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], {{ parameter.type.name }}.{{ parameter.type.name }} ) ), {{ parameter.name }}
             {% endif %}
 
         {% endif %}

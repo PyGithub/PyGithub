@@ -996,16 +996,16 @@ Collaborators
 Comments
 --------
 * `get_comment( id )`: `CommitComment`
-    * `id`
+    * `id`: integer
 * `get_comments()`: list of `CommitComment`
 
 Commits
 -------
 * `get_commit( sha )`: `Commit`
-    * `sha`
+    * `sha`: string
 * `get_commits( [sha, path] )`: list of `Commit`
-    * `sha`
-    * `path`
+    * `sha`: string
+    * `path`: string
 
 Contributors
 ------------
@@ -1014,12 +1014,12 @@ Contributors
 Downloads
 ---------
 * `create_download( name, size, [description, content_type] )`: `Download`
-    * `name`
-    * `size`
-    * `description`
-    * `content_type`
+    * `name`: string
+    * `size`: integer
+    * `description`: string
+    * `content_type`: string
 * `get_download( id )`: `Download`
-    * `id`
+    * `id`: integer
 * `get_downloads()`: list of `Download`
 
 Events
@@ -1034,41 +1034,41 @@ Forks
 Git_blobs
 ---------
 * `create_git_blob( content, encoding )`: `GitBlob`
-    * `content`
-    * `encoding`
+    * `content`: string
+    * `encoding`: string
 * `get_git_blob( sha )`: `GitBlob`
-    * `sha`
+    * `sha`: string
 
 Git_commits
 -----------
 * `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
-    * `message`
+    * `message`: string
     * `tree`
-    * `parents`
+    * `parents`: list of `GitCommit`
     * `author`
     * `committer`
 * `get_git_commit( sha )`: `GitCommit`
-    * `sha`
+    * `sha`: string
 
 Git_refs
 --------
 * `create_git_ref( ref, sha )`: `GitRef`
-    * `ref`
-    * `sha`
+    * `ref`: string
+    * `sha`: string
 * `get_git_ref( ref )`: `GitRef`
-    * `ref`
+    * `ref`: string
 * `get_git_refs()`: list of `GitRef`
 
 Git_tags
 --------
 * `create_git_tag( tag, message, object, type, [tagger] )`: `GitTag`
-    * `tag`
-    * `message`
-    * `object`
-    * `type`
+    * `tag`: string
+    * `message`: string
+    * `object`: string
+    * `type`: string
     * `tagger`
 * `get_git_tag( sha )`: `GitTag`
-    * `sha`
+    * `sha`: string
 
 Git_trees
 ---------
@@ -1076,62 +1076,62 @@ Git_trees
     * `tree`
     * `base_tree`
 * `get_git_tree( sha, [recursive] )`: `GitTree`
-    * `sha`
+    * `sha`: string
     * `recursive`: bool
 
 Hooks
 -----
 * `create_hook( name, config, [events, active] )`: `Hook`
-    * `name`
+    * `name`: string
     * `config`
-    * `events`
-    * `active`
+    * `events`: list of string
+    * `active`: bool
 * `get_hook( id )`: `Hook`
-    * `id`
+    * `id`: integer
 * `get_hooks()`: list of `Hook`
 
 Issues
 ------
 * `create_issue( title, [body, assignee, milestone, labels] )`: `Issue`
-    * `title`
-    * `body`
-    * `assignee`
-    * `milestone`
-    * `labels`
+    * `title`: string
+    * `body`: string
+    * `assignee`: string
+    * `milestone`: integer
+    * `labels`: list of string
 * `get_issue( number )`: `Issue`
-    * `number`
+    * `number`: integer
 * `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
-    * `milestone`
-    * `state`
-    * `assignee`
-    * `mentioned`
-    * `labels`
-    * `sort`
-    * `direction`
-    * `since`
+    * `milestone`: integer
+    * `state`: string
+    * `assignee`: string
+    * `mentioned`: string
+    * `labels`: list of string
+    * `sort`: string
+    * `direction`: string
+    * `since`: string
 
 Issues_events
 -------------
 * `get_issues_event( id )`: `IssueEvent`
-    * `id`
+    * `id`: integer
 * `get_issues_events()`: list of `IssueEvent`
 
 Keys
 ----
 * `create_key( title, key )`: `RepositoryKey`
-    * `title`
-    * `key`
+    * `title`: string
+    * `key`: string
 * `get_key( id )`: `RepositoryKey`
-    * `id`
+    * `id`: integer
 * `get_keys()`: list of `RepositoryKey`
 
 Labels
 ------
 * `create_label( name, color )`: `Label`
-    * `name`
-    * `color`
+    * `name`: string
+    * `color`: string
 * `get_label( name )`: `Label`
-    * `name`
+    * `name`: string
 * `get_labels()`: list of `Label`
 
 Languages
@@ -1141,40 +1141,40 @@ Languages
 Milestones
 ----------
 * `create_milestone( title, [state, description, due_on] )`: `Milestone`
-    * `title`
-    * `state`
-    * `description`
-    * `due_on`
+    * `title`: string
+    * `state`: string
+    * `description`: string
+    * `due_on`: string
 * `get_milestone( number )`: `Milestone`
-    * `number`
+    * `number`: integer
 * `get_milestones( [state, sort, direction] )`: list of `Milestone`
-    * `state`
-    * `sort`
-    * `direction`
+    * `state`: string
+    * `sort`: string
+    * `direction`: string
 
 Modification
 ------------
 * `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
-    * `name`
-    * `description`
-    * `homepage`
-    * `public`
-    * `has_issues`
-    * `has_wiki`
-    * `has_downloads`
+    * `name`: string
+    * `description`: string
+    * `homepage`: string
+    * `public`: bool
+    * `has_issues`: bool
+    * `has_wiki`: bool
+    * `has_downloads`: bool
 
 Pulls
 -----
 * `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
-    * `title`
-    * `body`
-    * `issue`
+    * `title`: string
+    * `body`: string
+    * `issue`: integer
     * `base`
     * `head`
 * `get_pull( number )`: `PullRequest`
-    * `number`
+    * `number`: integer
 * `get_pulls( [state] )`: list of `PullRequest`
-    * `state`
+    * `state`: string
 
 Tags
 ----
@@ -1206,8 +1206,8 @@ Deletion
 Modification
 ------------
 * `edit( [title, key] )`
-    * `title`
-    * `key`
+    * `title`: string
+    * `key`: string
 
 Class `Tag`
 ===========
