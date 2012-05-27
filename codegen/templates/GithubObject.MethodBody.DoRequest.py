@@ -1,6 +1,10 @@
 {% if method.request.postParameters %}
     {% if method.variadicParameter %}
+        {% if method.variadicParameter.type.simple %}
         post_parameters = {{ method.variadicParameter.name }}s
+        {% else %}
+        post_parameters = [ {{ method.variadicParameter.name }}._identity for {{ method.variadicParameter.name }} in {{ method.variadicParameter.name }}s ]
+        {% endif %}
     {% else %}
         post_parameters = {
         {% for parameter in method.mandatoryParameters %}

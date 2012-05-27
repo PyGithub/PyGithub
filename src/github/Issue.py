@@ -110,7 +110,7 @@ class Issue( object ):
         return self.__user
 
     def add_to_labels( self, *labels ):
-        post_parameters = [ label.name for label in labels ]
+        post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/labels",
@@ -221,7 +221,7 @@ class Issue( object ):
         )
 
     def set_labels( self, *labels ):
-        post_parameters = [ label.name for label in labels ]
+        post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/labels",
