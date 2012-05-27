@@ -142,18 +142,13 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
-            None,
             None
         )
 
     def create_fork( self, repo ):
-        url_parameters = {
-            "org": str( self.login ),
-        }
         status, headers, data = self.__requester.request(
             "POST",
-            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
-            url_parameters,
+            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks?org=" + str( self.login ),
             None
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -179,7 +174,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/repos",
-            None,
             post_parameters
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -195,7 +189,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/teams",
-            None,
             post_parameters
         )
         return Team.Team( self.__requester, data, completion = NoCompletion )
@@ -218,7 +211,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
-            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -227,7 +219,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -241,7 +232,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -255,7 +245,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/public_members",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -269,7 +258,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
-            None,
             None
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -278,7 +266,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -292,7 +279,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/teams/" + str( id ),
-            None,
             None
         )
         return Team.Team( self.__requester, data, completion = NoCompletion )
@@ -301,7 +287,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/teams",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -315,7 +300,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members" + "/" + str( member._identity ),
-            None,
             None
         )
         return status == 204
@@ -324,7 +308,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
-            None,
             None
         )
         return status == 204
@@ -333,7 +316,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/members" + "/" + str( member._identity ),
-            None,
             None
         )
 
@@ -341,7 +323,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
-            None,
             None
         )
 
@@ -379,7 +360,6 @@ class Organization( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

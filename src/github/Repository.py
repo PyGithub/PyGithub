@@ -191,7 +191,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
-            None,
             None
         )
 
@@ -199,7 +198,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/compare/" + str( base ) + "..." + str( head ),
-            None,
             None
         )
         return data
@@ -216,7 +214,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/downloads",
-            None,
             post_parameters
         )
         return Download.Download( self.__requester, data, completion = NoCompletion )
@@ -229,7 +226,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/git/blobs",
-            None,
             post_parameters
         )
         return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
@@ -247,7 +243,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/git/commits",
-            None,
             post_parameters
         )
         return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
@@ -260,7 +255,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/git/refs",
-            None,
             post_parameters
         )
         return GitRef.GitRef( self.__requester, data, completion = NoCompletion )
@@ -277,7 +271,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/git/tags",
-            None,
             post_parameters
         )
         return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
@@ -291,7 +284,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/git/trees",
-            None,
             post_parameters
         )
         return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
@@ -308,7 +300,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/hooks",
-            None,
             post_parameters
         )
         return Hook.Hook( self.__requester, data, completion = NoCompletion )
@@ -328,7 +319,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/issues",
-            None,
             post_parameters
         )
         return Issue.Issue( self.__requester, data, completion = NoCompletion )
@@ -341,7 +331,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/keys",
-            None,
             post_parameters
         )
         return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion, repoUrl = self.url )
@@ -354,7 +343,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/labels",
-            None,
             post_parameters
         )
         return Label.Label( self.__requester, data, completion = NoCompletion )
@@ -372,7 +360,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/milestones",
-            None,
             post_parameters
         )
         return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
@@ -394,7 +381,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/pulls",
-            None,
             post_parameters
         )
         return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
@@ -418,7 +404,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
-            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -427,7 +412,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/branches",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -441,7 +425,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/collaborators",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -455,7 +438,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments" + "/" + str( id ),
-            None,
             None
         )
         return CommitComment.CommitComment( self.__requester, data, completion = NoCompletion )
@@ -464,7 +446,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -478,7 +459,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits" + "/" + str( sha ),
-            None,
             None
         )
         return Commit.Commit( self.__requester, data, completion = NoCompletion )
@@ -487,7 +467,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -501,7 +480,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/contributors",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -515,7 +493,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/downloads" + "/" + str( id ),
-            None,
             None
         )
         return Download.Download( self.__requester, data, completion = NoCompletion )
@@ -524,7 +501,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/downloads",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -538,7 +514,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -552,7 +527,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/forks",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -566,7 +540,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/blobs" + "/" + str( sha ),
-            None,
             None
         )
         return GitBlob.GitBlob( self.__requester, data, completion = NoCompletion )
@@ -575,7 +548,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/commits" + "/" + str( sha ),
-            None,
             None
         )
         return GitCommit.GitCommit( self.__requester, data, completion = NoCompletion )
@@ -584,7 +556,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/" + str( ref ),
-            None,
             None
         )
         return GitRef.GitRef( self.__requester, data, completion = NoCompletion )
@@ -593,7 +564,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/refs",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -607,7 +577,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/tags" + "/" + str( sha ),
-            None,
             None
         )
         return GitTag.GitTag( self.__requester, data, completion = NoCompletion )
@@ -616,7 +585,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/trees" + "/" + str( sha ),
-            None,
             None
         )
         return GitTree.GitTree( self.__requester, data, completion = NoCompletion )
@@ -625,7 +593,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/hooks" + "/" + str( id ),
-            None,
             None
         )
         return Hook.Hook( self.__requester, data, completion = NoCompletion )
@@ -634,7 +601,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/hooks",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -648,7 +614,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues" + "/" + str( number ),
-            None,
             None
         )
         return Issue.Issue( self.__requester, data, completion = NoCompletion )
@@ -657,7 +622,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -671,7 +635,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues/events" + "/" + str( id ),
-            None,
             None
         )
         return IssueEvent.IssueEvent( self.__requester, data, completion = NoCompletion )
@@ -680,7 +643,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -694,7 +656,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/keys" + "/" + str( id ),
-            None,
             None
         )
         return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion, repoUrl = self.url )
@@ -703,7 +664,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/keys",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -717,7 +677,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/labels/" + urllib.quote( str( name ) ),
-            None,
             None
         )
         return Label.Label( self.__requester, data, completion = NoCompletion )
@@ -726,7 +685,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/labels",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -740,7 +698,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/languages",
-            None,
             None
         )
         return data
@@ -749,7 +706,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones" + "/" + str( number ),
-            None,
             None
         )
         return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
@@ -758,7 +714,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -772,7 +727,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/networks/" + str( self.owner.login ) + "/" + str( self.name ) + "/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -786,7 +740,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls" + "/" + str( number ),
-            None,
             None
         )
         return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
@@ -795,7 +748,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -809,7 +761,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/tags",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -823,7 +774,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/teams",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -837,7 +787,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/watchers",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -851,7 +800,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
-            None,
             None
         )
         return status == 204
@@ -860,7 +808,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
-            None,
             None
         )
 
@@ -908,7 +855,6 @@ class Repository( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

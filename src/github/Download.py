@@ -117,7 +117,6 @@ class Download( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
-            None,
             None
         )
 
@@ -151,7 +150,6 @@ class Download( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

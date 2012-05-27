@@ -157,7 +157,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/comments",
-            None,
             post_parameters
         )
         return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
@@ -174,7 +173,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
-            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -183,7 +181,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),
-            None,
             None
         )
         return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
@@ -192,7 +189,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -206,7 +202,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -220,7 +215,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/files",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -234,7 +228,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/merge",
-            None,
             None
         )
         return status == 204
@@ -247,7 +240,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/merge",
-            None,
             post_parameters
         )
 
@@ -287,7 +279,6 @@ class PullRequest( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

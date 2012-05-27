@@ -43,7 +43,7 @@ class Github( object ):
         return Gist.Gist( self.__requester, attributes, completion = ImmediateCompletion )
 
     def get_gists( self ):
-        status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None, None )
+        status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,

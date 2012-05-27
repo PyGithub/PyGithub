@@ -114,7 +114,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/labels",
-            None,
             post_parameters
         )
 
@@ -125,7 +124,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/comments",
-            None,
             post_parameters
         )
         return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
@@ -134,7 +132,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/labels",
-            None,
             None
         )
 
@@ -156,7 +153,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
-            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -165,7 +161,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),
-            None,
             None
         )
         return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
@@ -174,7 +169,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -188,7 +182,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -202,7 +195,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/labels",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -216,7 +208,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/labels" + "/" + str( label._identity ),
-            None,
             None
         )
 
@@ -225,7 +216,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/labels",
-            None,
             post_parameters
         )
 
@@ -257,7 +247,6 @@ class Issue( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

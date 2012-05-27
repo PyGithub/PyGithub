@@ -18,7 +18,7 @@ class Requester:
             self.__authorizationHeader = None
         self.rate_limiting = ( 5000, 5000 )
 
-    def request( self, verb, url, parameters, input ):
+    def request( self, verb, url, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
         assert url.startswith( "https://api.github.com" )
         url = url[ len( "https://api.github.com" ) : ]
@@ -30,7 +30,7 @@ class Requester:
         cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
         cnx.request(
             verb,
-            self.__completeUrl( url, parameters ),
+            url,
             json.dumps( input ),
             headers
         )
@@ -44,14 +44,8 @@ class Requester:
 
         self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
-        # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
+        # print verb, url, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
         return status, headers, output
-
-    def __completeUrl( self, url, parameters ):
-        if parameters is None or len( parameters ) == 0:
-            return url
-        else:
-            return url + "?" + urllib.urlencode( parameters )
 
     def __structuredFromJson( self, data ):
         if len( data ) == 0:

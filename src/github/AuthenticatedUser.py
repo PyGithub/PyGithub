@@ -152,7 +152,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/user" + "/emails",
-            None,
             post_parameters
         )
 
@@ -160,7 +159,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
-            None,
             None
         )
 
@@ -168,7 +166,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
-            None,
             None
         )
 
@@ -184,7 +181,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/authorizations",
-            None,
             post_parameters
         )
         return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
@@ -193,7 +189,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
-            None,
             None
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -208,7 +203,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/gists",
-            None,
             post_parameters
         )
         return Gist.Gist( self.__requester, data, completion = NoCompletion )
@@ -221,7 +215,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/user/keys",
-            None,
             post_parameters
         )
         return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
@@ -245,7 +238,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             "https://api.github.com/user" + "/repos",
-            None,
             post_parameters
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -270,7 +262,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             "https://api.github.com/user",
-            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -279,7 +270,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/authorizations" + "/" + str( id ),
-            None,
             None
         )
         return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
@@ -288,7 +278,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/authorizations",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -302,7 +291,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/emails",
-            None,
             None
         )
         return data
@@ -311,7 +299,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/events",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -325,7 +312,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/followers",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -339,7 +325,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/following",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -353,7 +338,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/gists",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -367,7 +351,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/issues",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -381,7 +364,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user/keys" + "/" + str( id ),
-            None,
             None
         )
         return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
@@ -390,7 +372,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user/keys",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -404,7 +385,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/users/" + str( self.login ) + "/events/orgs/" + str( org.login ),
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -418,7 +398,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/orgs",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -432,7 +411,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
-            None,
             None
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -441,7 +419,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/repos",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -455,7 +432,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/gists/starred",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -469,7 +445,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/watched",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -483,7 +458,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
-            None,
             None
         )
         return status == 204
@@ -492,7 +466,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
-            None,
             None
         )
         return status == 204
@@ -502,7 +475,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             "https://api.github.com/user" + "/emails",
-            None,
             post_parameters
         )
 
@@ -510,7 +482,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             "https://api.github.com/user" + "/following" + "/" + str( following._identity ),
-            None,
             None
         )
 
@@ -518,7 +489,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             "https://api.github.com/user" + "/watched" + "/" + str( watched._identity ),
-            None,
             None
         )
 
@@ -557,7 +527,6 @@ class AuthenticatedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )

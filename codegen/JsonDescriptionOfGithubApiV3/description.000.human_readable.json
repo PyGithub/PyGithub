@@ -1087,10 +1087,8 @@
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
-                            { "type": "constant", "value": "/forks" }
-                        ],
-                        "url_parameters": [
-                            { "name": "org", "value": [ { "type": "attribute", "value": [ "login" ] } ] }
+                            { "type": "constant", "value": "/forks?org=" },
+                            { "type": "attribute", "value": [ "login" ] }
                         ],
                         "information": "status"
                     }

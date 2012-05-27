@@ -72,7 +72,6 @@ class Commit( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/comments",
-            None,
             post_parameters
         )
         return CommitComment.CommitComment( self.__requester, data, completion = NoCompletion )
@@ -81,7 +80,6 @@ class Commit( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments",
-            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -109,7 +107,6 @@ class Commit( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
-            None,
             None
         )
         self.__useAttributes( data )
