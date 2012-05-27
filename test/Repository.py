@@ -56,9 +56,17 @@ class Repository( Framework.TestCase ):
         milestone = self.repo.create_milestone( "Milestone created by PyGithub", state = "open", description = "Description created by PyGithub", due_on = "2012-06-15" )
         self.assertEqual( milestone.number, 5 )
 
+    def testCreateMilestoneWithMinimalArguments( self ):
+        milestone = self.repo.create_milestone( "Milestone also created by PyGithub" )
+        self.assertEqual( milestone.number, 6 )
+
     def testCreateIssue( self ):
         issue = self.repo.create_issue( "Issue created by PyGithub" )
         self.assertEqual( issue.number, 28 )
+
+    def testCreateIssueWithAllArguments( self ):
+        issue = self.repo.create_issue( "Issue also created by PyGithub", "Body created by PyGithub", "jacquev6", 2, [ "Question" ] ) ### @todo Use typed arguments
+        self.assertEqual( issue.number, 30 )
 
     def testCreateLabel( self ):
         label = self.repo.create_label( "Label with silly name % * + created by PyGithub", "00ff00" )
@@ -132,6 +140,54 @@ class Repository( Framework.TestCase ):
         blob = self.repo.create_git_blob( "Blob created by PyGithub", "latin1" )
         self.assertEqual( blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8" )
 
+    def testCreateGitTree( self ):
+        tree = self.repo.create_git_tree(
+            [ {
+                "path": "Foobar.txt",
+                "mode": "100644",
+                "type": "blob",
+                "content": "File created by PyGithub" ### @todo create_git_tree with sha instead of content
+            } ] 
+        )
+        self.assertEqual( tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b" )
+
+    def testCreateGitTreeWithBaseTree( self ):
+        tree = self.repo.create_git_tree(
+            [ {
+                "path": "Barbaz.txt",
+                "mode": "100644",
+                "type": "blob",
+                "content": "File also created by PyGithub" ### @todo create_git_tree with sha instead of content
+            } ], 
+            "41cf8c178c636a018d537cb20daae09391efd70b"
+        )
+        self.assertEqual( tree.sha, "107139a922f33bab6fbeb9f9eb8787e7f19e0528" )
+
+    def testCreateGitCommit( self ):
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [] )
+        self.assertEqual( commit.sha, "0b820628236ab8bab3890860fc414fa757ca15f4" )
+
+    def testCreateGitCommitWithAllArguments( self ):
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [], { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" }, { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" } )
+        self.assertEqual( commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea" )
+
+    def testCreateGitTag( self ):
+        tag = self.repo.create_git_tag( "TaggedByPyGithub", "Tag created by PyGithub", "0b820628236ab8bab3890860fc414fa757ca15f4", "commit" )
+        self.assertEqual( tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a" )
+
+    def testCreateGitTagWithAllArguments( self ):
+        tag = self.repo.create_git_tag( "TaggedByPyGithub2", "Tag also created by PyGithub", "526946197ae9da59c6507cacd13ad6f1cfb686ea", "commit", { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" } )
+        self.assertEqual( tag.sha, "f0e99a8335fbc84c53366c4a681118468f266625" )
+
     def testCreateKey( self ):
         key = self.repo.create_key( "Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE" )
         self.assertEqual( key.id, 2626761 )
+
+    def testCollaborators( self ):
+        lyloa = self.g.get_user( "Lyloa" )
+        self.assertFalse( self.repo.has_in_collaborators( lyloa ) )
+        self.repo.add_to_collaborators( lyloa )
+        self.assertTrue( self.repo.has_in_collaborators( lyloa ) )
+        self.assertListKeyEqual( self.repo.get_collaborators(), lambda u: u.login, [ "jacquev6", "Lyloa" ] )
+        self.repo.remove_from_collaborators( lyloa )
+        self.assertFalse( self.repo.has_in_collaborators( lyloa ) )

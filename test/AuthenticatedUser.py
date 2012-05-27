@@ -120,7 +120,7 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertListKeyEqual( self.user.get_starred_gists(), lambda g: g.id, [ "1942384", "dcb7de17e8a52b74541d" ] )
 
     def testGetIssues( self ):
-        self.assertListKeyEqual( self.user.get_issues(), lambda i: i.id, [ 4639931, 4452000, 4356743, 3716033, 3715946, 3643837, 3628022, 3624595, 3624570, 3624561, 3624556, 3619973, 3527266, 3527245, 3527231 ] )
+        self.assertListKeyEqual( self.user.get_issues(), lambda i: ( i.id, i.repository.name ), [ ( 4639931, "PyGithub" ), ( 4452000, "PyGithub" ), ( 4356743, "PyGithub" ), ( 3716033, "PyGithub" ), ( 3715946, "PyGithub" ), ( 3643837, "PyGithub" ), ( 3628022, "PyGithub" ), ( 3624595, "PyGithub" ), ( 3624570, "PyGithub" ), ( 3624561, "PyGithub" ), ( 3624556, "PyGithub" ), ( 3619973, "PyGithub" ), ( 3527266, "PyGithub" ), ( 3527245, "PyGithub" ), ( 3527231, "PyGithub" ) ] )
 
     def testGetKeys( self ):
         self.assertListKeyEqual( self.user.get_keys(), lambda k: k.title, [ "vincent@home", "vincent@gandi", "vincent@aws", "vincent@macbook" ] )
