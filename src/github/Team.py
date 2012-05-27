@@ -69,6 +69,9 @@ class Team( object ):
         )
 
     def edit( self, name, permission = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if permission is not DefaultValueForOptionalParameters:
+            assert isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }

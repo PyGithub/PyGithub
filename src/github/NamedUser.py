@@ -280,6 +280,8 @@ class NamedUser( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
+        if type is not DefaultValueForOptionalParameters:
+            assert isinstance( type, ( str, unicode ) ), type
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",

@@ -31,6 +31,8 @@ class Label( object ):
         )
 
     def edit( self, name, color ):
+        assert isinstance( name, ( str, unicode ) ), name
+        assert isinstance( color, ( str, unicode ) ), color
         post_parameters = {
             "name": name,
             "color": color,

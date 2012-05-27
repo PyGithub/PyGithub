@@ -138,6 +138,18 @@ class Issue( object ):
         )
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
+        if title is not DefaultValueForOptionalParameters:
+            assert isinstance( title, ( str, unicode ) ), title
+        if body is not DefaultValueForOptionalParameters:
+            assert isinstance( body, ( str, unicode ) ), body
+        if assignee is not DefaultValueForOptionalParameters:
+            assert isinstance( assignee, ( str, unicode ) ), assignee
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
+        if milestone is not DefaultValueForOptionalParameters:
+            assert isinstance( milestone, int ), milestone
+        if labels is not DefaultValueForOptionalParameters:
+            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
         post_parameters = {
         }
         if title is not DefaultValueForOptionalParameters:
@@ -160,6 +172,7 @@ class Issue( object ):
         self.__useAttributes( data )
 
     def get_comment( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),

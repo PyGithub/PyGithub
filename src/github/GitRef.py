@@ -31,6 +31,9 @@ class GitRef( object ):
         )
 
     def edit( self, sha, force = DefaultValueForOptionalParameters ):
+        assert isinstance( sha, ( str, unicode ) ), sha
+        if force is not DefaultValueForOptionalParameters:
+            assert isinstance( force, bool ), force
         post_parameters = {
             "sha": sha,
         }

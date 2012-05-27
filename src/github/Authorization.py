@@ -66,6 +66,16 @@ class Authorization( object ):
         )
 
     def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
+        if scopes is not DefaultValueForOptionalParameters:
+            assert isinstance( scopes, list ) and ( len( scopes ) == 0 or isinstance( scopes[ 0 ], ( str, unicode ) ) ), scopes
+        if add_scopes is not DefaultValueForOptionalParameters:
+            assert isinstance( add_scopes, list ) and ( len( add_scopes ) == 0 or isinstance( add_scopes[ 0 ], ( str, unicode ) ) ), add_scopes
+        if remove_scopes is not DefaultValueForOptionalParameters:
+            assert isinstance( remove_scopes, list ) and ( len( remove_scopes ) == 0 or isinstance( remove_scopes[ 0 ], ( str, unicode ) ) ), remove_scopes
+        if note is not DefaultValueForOptionalParameters:
+            assert isinstance( note, ( str, unicode ) ), note
+        if note_url is not DefaultValueForOptionalParameters:
+            assert isinstance( note_url, ( str, unicode ) ), note_url
         post_parameters = {
         }
         if scopes is not DefaultValueForOptionalParameters:

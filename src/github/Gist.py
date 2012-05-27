@@ -93,6 +93,7 @@ class Gist( object ):
         return self.__user
 
     def create_comment( self, body ):
+        assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }
@@ -135,6 +136,7 @@ class Gist( object ):
         self.__useAttributes( data )
 
     def get_comment( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/gists/comments/" + str( id ),

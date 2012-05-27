@@ -46,6 +46,10 @@ class UserKey( object ):
         )
 
     def edit( self, title = DefaultValueForOptionalParameters, key = DefaultValueForOptionalParameters ):
+        if title is not DefaultValueForOptionalParameters:
+            assert isinstance( title, ( str, unicode ) ), title
+        if key is not DefaultValueForOptionalParameters:
+            assert isinstance( key, ( str, unicode ) ), key
         post_parameters = {
         }
         if title is not DefaultValueForOptionalParameters:

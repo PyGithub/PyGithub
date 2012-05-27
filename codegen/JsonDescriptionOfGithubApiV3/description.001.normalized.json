@@ -311,8 +311,8 @@
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "scopes"
                         }, 
@@ -320,7 +320,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "note"
                         }, 
@@ -328,7 +328,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "note_url"
                         }
@@ -350,7 +350,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "id"
                         }
@@ -469,7 +469,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "title"
                         }, 
@@ -477,7 +477,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "key"
                         }
@@ -512,7 +512,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "id"
                         }
@@ -735,7 +735,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "type"
                         }
@@ -1585,24 +1585,24 @@
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "scopes"
                         }, 
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "add_scopes"
                         }, 
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "remove_scopes"
                         }, 
@@ -1610,7 +1610,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "note"
                         }, 
@@ -1618,7 +1618,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "note_url"
                         }
@@ -1761,7 +1761,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -1789,7 +1789,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "line"
                         }, 
@@ -1797,7 +1797,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "path"
                         }, 
@@ -1805,7 +1805,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "position"
                         }
@@ -1953,7 +1953,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -2589,7 +2589,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -2630,7 +2630,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "id"
                         }
@@ -2880,7 +2880,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -3193,7 +3193,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "sha"
                         }
@@ -3217,7 +3217,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "bool"
                             }, 
                             "name": "force"
                         }
@@ -3485,7 +3485,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "name"
                         }, 
@@ -3516,24 +3516,24 @@
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "events"
                         }, 
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "add_events"
                         }, 
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "remove_events"
                         }, 
@@ -3541,7 +3541,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "bool"
                             }, 
                             "name": "active"
                         }
@@ -3785,7 +3785,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "title"
                         }, 
@@ -3793,7 +3793,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }, 
@@ -3801,7 +3801,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "assignee"
                         }, 
@@ -3809,7 +3809,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "state"
                         }, 
@@ -3817,15 +3817,15 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "milestone"
                         }, 
                         {
                             "type": {
                                 "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "string"
                             }, 
                             "name": "labels"
                         }
@@ -3888,7 +3888,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "id"
                         }
@@ -4255,7 +4255,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -4425,7 +4425,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "name"
                         }, 
@@ -4433,7 +4433,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "color"
                         }
@@ -4591,7 +4591,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "title"
                         }
@@ -4615,7 +4615,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "state"
                         }, 
@@ -4623,7 +4623,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "description"
                         }, 
@@ -4631,7 +4631,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "due_on"
                         }
@@ -5095,7 +5095,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "type"
                         }
@@ -5576,7 +5576,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "billing_email"
                         }, 
@@ -5584,7 +5584,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "blog"
                         }, 
@@ -5592,7 +5592,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "company"
                         }, 
@@ -5600,7 +5600,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "email"
                         }, 
@@ -5608,7 +5608,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "location"
                         }, 
@@ -5616,7 +5616,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "name"
                         }
@@ -6067,7 +6067,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "team_id"
                         }
@@ -6157,7 +6157,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "type"
                         }
@@ -6215,7 +6215,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "permission"
                         }
@@ -6671,7 +6671,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "title"
                         }, 
@@ -6679,7 +6679,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }, 
@@ -6687,7 +6687,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "state"
                         }
@@ -6709,7 +6709,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }, 
@@ -6717,7 +6717,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "commit_id"
                         }, 
@@ -6725,7 +6725,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "path"
                         }, 
@@ -6733,7 +6733,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "position"
                         }
@@ -6774,7 +6774,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "integer"
                             }, 
                             "name": "id"
                         }
@@ -7088,7 +7088,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "body"
                         }
@@ -10013,7 +10013,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "base"
                         }, 
@@ -10021,7 +10021,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "head"
                         }
@@ -10288,7 +10288,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "name"
                         }
@@ -10312,7 +10312,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "permission"
                         }
@@ -10796,7 +10796,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "title"
                         }, 
@@ -10804,7 +10804,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "key"
                         }

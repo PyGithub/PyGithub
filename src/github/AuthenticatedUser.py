@@ -173,6 +173,12 @@ class AuthenticatedUser( object ):
         )
 
     def create_authorization( self, scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
+        if scopes is not DefaultValueForOptionalParameters:
+            assert isinstance( scopes, list ) and ( len( scopes ) == 0 or isinstance( scopes[ 0 ], ( str, unicode ) ) ), scopes
+        if note is not DefaultValueForOptionalParameters:
+            assert isinstance( note, ( str, unicode ) ), note
+        if note_url is not DefaultValueForOptionalParameters:
+            assert isinstance( note_url, ( str, unicode ) ), note_url
         post_parameters = {
         }
         if scopes is not DefaultValueForOptionalParameters:
@@ -215,6 +221,8 @@ class AuthenticatedUser( object ):
         return Gist.Gist( self.__requester, data, completion = NoCompletion )
 
     def create_key( self, title, key ):
+        assert isinstance( title, ( str, unicode ) ), title
+        assert isinstance( key, ( str, unicode ) ), key
         post_parameters = {
             "title": title,
             "key": key,
@@ -301,6 +309,7 @@ class AuthenticatedUser( object ):
         self.__useAttributes( data )
 
     def get_authorization( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/authorizations" + "/" + str( id ),
@@ -395,6 +404,7 @@ class AuthenticatedUser( object ):
         )
 
     def get_key( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user/keys" + "/" + str( id ),
@@ -452,6 +462,8 @@ class AuthenticatedUser( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
+        if type is not DefaultValueForOptionalParameters:
+            assert isinstance( type, ( str, unicode ) ), type
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/repos",

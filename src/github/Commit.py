@@ -60,6 +60,13 @@ class Commit( object ):
         return self.__url
 
     def create_comment( self, body, line = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters, position = DefaultValueForOptionalParameters ):
+        assert isinstance( body, ( str, unicode ) ), body
+        if line is not DefaultValueForOptionalParameters:
+            assert isinstance( line, int ), line
+        if path is not DefaultValueForOptionalParameters:
+            assert isinstance( path, ( str, unicode ) ), path
+        if position is not DefaultValueForOptionalParameters:
+            assert isinstance( position, int ), position
         post_parameters = {
             "body": body,
         }

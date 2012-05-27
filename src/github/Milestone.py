@@ -64,6 +64,13 @@ class Milestone( object ):
         )
 
     def edit( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
+        assert isinstance( title, ( str, unicode ) ), title
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
+        if description is not DefaultValueForOptionalParameters:
+            assert isinstance( description, ( str, unicode ) ), description
+        if due_on is not DefaultValueForOptionalParameters:
+            assert isinstance( due_on, ( str, unicode ) ), due_on
         post_parameters = {
             "title": title,
         }

@@ -43,6 +43,7 @@ class GistComment( object ):
         )
 
     def edit( self, body ):
+        assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }

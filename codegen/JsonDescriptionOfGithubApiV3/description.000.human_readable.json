@@ -63,13 +63,13 @@
                     ],
                     "createElement": {
                         "optionalParameters": [
-                            { "name": "scopes", "type": "@todo" },
-                            { "name": "note", "type": "@todo" },
-                            { "name": "note_url", "type": "@todo" }
+                            { "name": "scopes", "type": "list:string" },
+                            { "name": "note", "type": "string" },
+                            { "name": "note_url", "type": "string" }
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     },
                     "getList": true
                 },
@@ -94,12 +94,12 @@
                     "url": [ { "type": "constant", "value": "https://api.github.com/user/keys" } ],
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" }
+                        "parameter": { "name": "id", "type": "integer" }
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "title", "type": "@todo" },
-                            { "name": "key", "type": "@todo" }
+                            { "name": "title", "type": "string" },
+                            { "name": "key", "type": "string" }
                         ]
                     }
                 },
@@ -109,7 +109,7 @@
                     "type": "Repository",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "type", "type": "@todo" }
+                            { "name": "type", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -249,11 +249,11 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "scopes", "type": "@todo" },
-                    { "name": "add_scopes", "type": "@todo" },
-                    { "name": "remove_scopes", "type": "@todo" },
-                    { "name": "note", "type": "@todo" },
-                    { "name": "note_url", "type": "@todo" }
+                    { "name": "scopes", "type": "list:string" },
+                    { "name": "add_scopes", "type": "list:string" },
+                    { "name": "remove_scopes", "type": "list:string" },
+                    { "name": "note", "type": "string" },
+                    { "name": "note_url", "type": "string" }
                 ]
             },
             "delete": true,
@@ -319,12 +319,12 @@
                     "getList": true,
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "body", "type": "@todo" }
+                            { "name": "body", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "line", "type": "@todo" },
-                            { "name": "path", "type": "@todo" },
-                            { "name": "position", "type": "@todo" }
+                            { "name": "line", "type": "integer" },
+                            { "name": "path", "type": "string" },
+                            { "name": "position", "type": "integer" }
                         ]
                     }
                 }
@@ -335,7 +335,7 @@
             "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "body", "type": "@todo" }
+                    { "name": "body", "type": "string" }
                 ]
             },
             "delete": true,
@@ -437,7 +437,7 @@
                     "type": "GistComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" },
+                        "parameter": { "name": "id", "type": "integer" },
                         "url": [
                             { "type": "constant", "value": "https://api.github.com/gists/comments/" },
                             { "type": "argument", "value": [ "id" ] }
@@ -445,7 +445,7 @@
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "body", "type": "@todo" }
+                            { "name": "body", "type": "string" }
                         ]
                     }
                 }
@@ -509,7 +509,7 @@
             "name": "GistComment",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "body", "type": "@todo" }
+                    { "name": "body", "type": "string" }
                 ]
             },
             "delete": true,
@@ -556,10 +556,10 @@
             "name": "GitRef",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "sha", "type": "@todo" }
+                    { "name": "sha", "type": "string" }
                 ],
                 "optionalParameters": [
-                    { "name": "force", "type": "@todo" }
+                    { "name": "force", "type": "bool" }
                 ]
             },
             "delete": true,
@@ -611,14 +611,14 @@
             "name": "Hook",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "name", "type": "@todo" },
+                    { "name": "name", "type": "string" },
                     { "name": "config", "type": "@todo" }
                 ],
                 "optionalParameters": [
-                    { "name": "events", "type": "@todo" },
-                    { "name": "add_events", "type": "@todo" },
-                    { "name": "remove_events", "type": "@todo" },
-                    { "name": "active", "type": "@todo" }
+                    { "name": "events", "type": "list:string" },
+                    { "name": "add_events", "type": "list:string" },
+                    { "name": "remove_events", "type": "list:string" },
+                    { "name": "active", "type": "bool" }
                 ]
             },
             "delete": true,
@@ -654,12 +654,12 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "title", "type": "@todo" },
-                    { "name": "body", "type": "@todo" },
-                    { "name": "assignee", "type": "@todo" },
-                    { "name": "state", "type": "@todo" },
-                    { "name": "milestone", "type": "@todo" },
-                    { "name": "labels", "type": "@todo" }
+                    { "name": "title", "type": "string" },
+                    { "name": "body", "type": "string" },
+                    { "name": "assignee", "type": "string" },
+                    { "name": "state", "type": "string" },
+                    { "name": "milestone", "type": "integer" },
+                    { "name": "labels", "type": "list:string" }
                 ]
             },
             "attributes": [
@@ -689,7 +689,7 @@
                     "type": "IssueComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" },
+                        "parameter": { "name": "id", "type": "integer" },
                         "request": {
                             "url": [
                                 {
@@ -732,7 +732,7 @@
             "name": "IssueComment",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "body", "type": "@todo" }
+                    { "name": "body", "type": "string" }
                 ]
             },
             "delete": true,
@@ -762,8 +762,8 @@
             "name": "Label",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "name", "type": "@todo" },
-                    { "name": "color", "type": "@todo" }
+                    { "name": "name", "type": "string" },
+                    { "name": "color", "type": "string" }
                 ]
             },
             "delete": true,
@@ -785,12 +785,12 @@
             "name": "Milestone",
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "title", "type": "@todo" }
+                    { "name": "title", "type": "string" }
                 ],
                 "optionalParameters": [
-                    { "name": "state", "type": "@todo" },
-                    { "name": "description", "type": "@todo" },
-                    { "name": "due_on", "type": "@todo" }
+                    { "name": "state", "type": "string" },
+                    { "name": "description", "type": "string" },
+                    { "name": "due_on", "type": "string" }
                 ]
             },
             "delete": true,
@@ -873,7 +873,7 @@
                     "type": "Repository",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "type", "type": "@todo" }
+                            { "name": "type", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -958,12 +958,12 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "billing_email", "type": "@todo" },
-                    { "name": "blog", "type": "@todo" },
-                    { "name": "company", "type": "@todo" },
-                    { "name": "email", "type": "@todo" },
-                    { "name": "location", "type": "@todo" },
-                    { "name": "name", "type": "@todo" }
+                    { "name": "billing_email", "type": "string" },
+                    { "name": "blog", "type": "string" },
+                    { "name": "company", "type": "string" },
+                    { "name": "email", "type": "string" },
+                    { "name": "location", "type": "string" },
+                    { "name": "name", "type": "string" }
                 ]
             },
             "attributes": [
@@ -1022,7 +1022,7 @@
                     "type": "Repository",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "type", "type": "@todo" }
+                            { "name": "type", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -1045,7 +1045,7 @@
                             { "name": "has_issues", "type": "bool" },
                             { "name": "has_wiki", "type": "bool" },
                             { "name": "has_downloads", "type": "bool" },
-                            { "name": "team_id", "type": "@todo" }
+                            { "name": "team_id", "type": "integer" }
                         ]
                     }
                 },
@@ -1060,7 +1060,7 @@
                         ],
                         "optionalParameters": [
                             { "name": "repo_names", "type": "list:string" },
-                            { "name": "permission", "type": "@todo" }
+                            { "name": "permission", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -1100,9 +1100,9 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "title", "type": "@todo" },
-                    { "name": "body", "type": "@todo" },
-                    { "name": "state", "type": "@todo" }
+                    { "name": "title", "type": "string" },
+                    { "name": "body", "type": "string" },
+                    { "name": "state", "type": "string" }
                 ]
             },
             "attributes": [
@@ -1140,7 +1140,7 @@
                     "type": "PullRequestComment",
                     "getList": true,
                     "getElement": {
-                        "parameter": { "name": "id", "type": "@todo" },
+                        "parameter": { "name": "id", "type": "integer" },
                         "request": {
                             "url": [
                                 {
@@ -1157,10 +1157,10 @@
                     },
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "body", "type": "@todo" },
-                            { "name": "commit_id", "type": "@todo" },
-                            { "name": "path", "type": "@todo" },
-                            { "name": "position", "type": "@todo" }
+                            { "name": "body", "type": "string" },
+                            { "name": "commit_id", "type": "string" },
+                            { "name": "path", "type": "string" },
+                            { "name": "position", "type": "integer" }
                         ]
                     }
                 },
@@ -1215,7 +1215,7 @@
             "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "body", "type": "@todo" }
+                    { "name": "body", "type": "string" }
                 ]
             },
             "delete": true,
@@ -1701,8 +1701,8 @@
                     "type": "@todo",
                     "group": "Comparison",
                     "mandatoryParameters": [
-                        { "name": "base", "type": "@todo" },
-                        { "name": "head", "type": "@todo" }
+                        { "name": "base", "type": "string" },
+                        { "name": "head", "type": "string" }
                     ],
                     "request": {
                         "verb": "GET",
@@ -1749,10 +1749,10 @@
             "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
-                    { "name": "name", "type": "@todo" }
+                    { "name": "name", "type": "string" }
                 ],
                 "optionalParameters": [
-                    { "name": "permission", "type": "@todo" }
+                    { "name": "permission", "type": "string" }
                 ]
             },
             "delete": true,
@@ -1790,8 +1790,8 @@
             "isCompletable": true,
             "edit": {
                 "optionalParameters": [
-                    { "name": "title", "type": "@todo" },
-                    { "name": "key", "type": "@todo" }
+                    { "name": "title", "type": "string" },
+                    { "name": "key", "type": "string" }
                 ]
             },
             "delete": true,

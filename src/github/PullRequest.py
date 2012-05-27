@@ -148,6 +148,10 @@ class PullRequest( object ):
         return self.__user
 
     def create_comment( self, body, commit_id, path, position ):
+        assert isinstance( body, ( str, unicode ) ), body
+        assert isinstance( commit_id, ( str, unicode ) ), commit_id
+        assert isinstance( path, ( str, unicode ) ), path
+        assert isinstance( position, int ), position
         post_parameters = {
             "body": body,
             "commit_id": commit_id,
@@ -162,6 +166,12 @@ class PullRequest( object ):
         return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
+        if title is not DefaultValueForOptionalParameters:
+            assert isinstance( title, ( str, unicode ) ), title
+        if body is not DefaultValueForOptionalParameters:
+            assert isinstance( body, ( str, unicode ) ), body
+        if state is not DefaultValueForOptionalParameters:
+            assert isinstance( state, ( str, unicode ) ), state
         post_parameters = {
         }
         if title is not DefaultValueForOptionalParameters:
@@ -178,6 +188,7 @@ class PullRequest( object ):
         self.__useAttributes( data )
 
     def get_comment( self, id ):
+        assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
             self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),

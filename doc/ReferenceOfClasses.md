@@ -44,11 +44,11 @@ Attributes
 Authorizations
 --------------
 * `create_authorization( [scopes, note, note_url] )`: `Authorization`
-    * `scopes`
-    * `note`
-    * `note_url`
+    * `scopes`: list of string
+    * `note`: string
+    * `note_url`: string
 * `get_authorization( id )`: `Authorization`
-    * `id`
+    * `id`: integer
 * `get_authorizations()`: list of `Authorization`
 
 Emails
@@ -100,10 +100,10 @@ Issues
 Keys
 ----
 * `create_key( title, key )`: `UserKey`
-    * `title`
-    * `key`
+    * `title`: string
+    * `key`: string
 * `get_key( id )`: `UserKey`
-    * `id`
+    * `id`: integer
 * `get_keys()`: list of `UserKey`
 
 Modification
@@ -134,7 +134,7 @@ Repos
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`
+    * `type`: string
 
 Watched
 -------
@@ -168,11 +168,11 @@ Deletion
 Modification
 ------------
 * `edit( [scopes, add_scopes, remove_scopes, note, note_url] )`
-    * `scopes`
-    * `add_scopes`
-    * `remove_scopes`
-    * `note`
-    * `note_url`
+    * `scopes`: list of string
+    * `add_scopes`: list of string
+    * `remove_scopes`: list of string
+    * `note`: string
+    * `note_url`: string
 
 Class `Branch`
 ==============
@@ -199,10 +199,10 @@ Attributes
 Comments
 --------
 * `create_comment( body, [line, path, position] )`: `CommitComment`
-    * `body`
-    * `line`
-    * `path`
-    * `position`
+    * `body`: string
+    * `line`: integer
+    * `path`: string
+    * `position`: integer
 * `get_comments()`: list of `CommitComment`
 
 Class `CommitComment`
@@ -229,7 +229,7 @@ Deletion
 Modification
 ------------
 * `edit( body )`
-    * `body`
+    * `body`: string
 
 Class `CommitFile`
 ==================
@@ -323,9 +323,9 @@ Attributes
 Comments
 --------
 * `create_comment( body )`: `GistComment`
-    * `body`
+    * `body`: string
 * `get_comment( id )`: `GistComment`
-    * `id`
+    * `id`: integer
 * `get_comments()`: list of `GistComment`
 
 Deletion
@@ -367,7 +367,7 @@ Deletion
 Modification
 ------------
 * `edit( body )`
-    * `body`
+    * `body`: string
 
 Class `GistHistoryState`
 ========================
@@ -438,8 +438,8 @@ Deletion
 Modification
 ------------
 * `edit( sha, [force] )`
-    * `sha`
-    * `force`
+    * `sha`: string
+    * `force`: bool
 
 Class `GitTag`
 ==============
@@ -496,12 +496,12 @@ Deletion
 Modification
 ------------
 * `edit( name, config, [events, add_events, remove_events, active] )`
-    * `name`
+    * `name`: string
     * `config`
-    * `events`
-    * `add_events`
-    * `remove_events`
-    * `active`
+    * `events`: list of string
+    * `add_events`: list of string
+    * `remove_events`: list of string
+    * `active`: bool
 
 Testing
 -------
@@ -536,7 +536,7 @@ Comments
 * `create_comment( body )`: `IssueComment`
     * `body`: string
 * `get_comment( id )`: `IssueComment`
-    * `id`
+    * `id`: integer
 * `get_comments()`: list of `IssueComment`
 
 Events
@@ -557,12 +557,12 @@ Labels
 Modification
 ------------
 * `edit( [title, body, assignee, state, milestone, labels] )`
-    * `title`
-    * `body`
-    * `assignee`
-    * `state`
-    * `milestone`
-    * `labels`
+    * `title`: string
+    * `body`: string
+    * `assignee`: string
+    * `state`: string
+    * `milestone`: integer
+    * `labels`: list of string
 
 Class `IssueComment`
 ====================
@@ -583,7 +583,7 @@ Deletion
 Modification
 ------------
 * `edit( body )`
-    * `body`
+    * `body`: string
 
 Class `IssueEvent`
 ==================
@@ -614,8 +614,8 @@ Deletion
 Modification
 ------------
 * `edit( name, color )`
-    * `name`
-    * `color`
+    * `name`: string
+    * `color`: string
 
 Class `Milestone`
 =================
@@ -645,10 +645,10 @@ Labels
 Modification
 ------------
 * `edit( title, [state, description, due_on] )`
-    * `title`
-    * `state`
-    * `description`
-    * `due_on`
+    * `title`: string
+    * `state`: string
+    * `description`: string
+    * `due_on`: string
 
 Class `NamedUser`
 =================
@@ -714,7 +714,7 @@ Repos
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`
+    * `type`: string
 
 Watched
 -------
@@ -770,12 +770,12 @@ Members
 Modification
 ------------
 * `edit( [billing_email, blog, company, email, location, name] )`
-    * `billing_email`
-    * `blog`
-    * `company`
-    * `email`
-    * `location`
-    * `name`
+    * `billing_email`: string
+    * `blog`: string
+    * `company`: string
+    * `email`: string
+    * `location`: string
+    * `name`: string
 
 Public_members
 --------------
@@ -797,18 +797,18 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
-    * `team_id`
+    * `team_id`: integer
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
-    * `type`
+    * `type`: string
 
 Teams
 -----
 * `create_team( name, [repo_names, permission] )`: `Team`
     * `name`: string
     * `repo_names`: list of string
-    * `permission`
+    * `permission`: string
 * `get_team( id )`: `Team`
     * `id`: integer
 * `get_teams()`: list of `Team`
@@ -867,12 +867,12 @@ Attributes
 Comments
 --------
 * `create_comment( body, commit_id, path, position )`: `PullRequestComment`
-    * `body`
-    * `commit_id`
-    * `path`
-    * `position`
+    * `body`: string
+    * `commit_id`: string
+    * `path`: string
+    * `position`: integer
 * `get_comment( id )`: `PullRequestComment`
-    * `id`
+    * `id`: integer
 * `get_comments()`: list of `PullRequestComment`
 
 Commits
@@ -892,9 +892,9 @@ Merging
 Modification
 ------------
 * `edit( [title, body, state] )`
-    * `title`
-    * `body`
-    * `state`
+    * `title`: string
+    * `body`: string
+    * `state`: string
 
 Class `PullRequestComment`
 ==========================
@@ -920,7 +920,7 @@ Deletion
 Modification
 ------------
 * `edit( body )`
-    * `body`
+    * `body`: string
 
 Class `PullRequestFile`
 =======================
@@ -976,8 +976,8 @@ Attributes
 Comparison
 ----------
 * `compare( base, head )`
-    * `base`
-    * `head`
+    * `base`: string
+    * `head`: string
 
 Branches
 --------
@@ -1248,8 +1248,8 @@ Members
 Modification
 ------------
 * `edit( name, [permission] )`
-    * `name`
-    * `permission`
+    * `name`: string
+    * `permission`: string
 
 Repos
 -----
@@ -1279,5 +1279,5 @@ Deletion
 Modification
 ------------
 * `edit( [title, key] )`
-    * `title`
-    * `key`
+    * `title`: string
+    * `key`: string

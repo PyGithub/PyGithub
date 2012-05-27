@@ -54,6 +54,15 @@ class Hook( object ):
         )
 
     def edit( self, name, config, events = DefaultValueForOptionalParameters, add_events = DefaultValueForOptionalParameters, remove_events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
+        assert isinstance( name, ( str, unicode ) ), name
+        if events is not DefaultValueForOptionalParameters:
+            assert isinstance( events, list ) and ( len( events ) == 0 or isinstance( events[ 0 ], ( str, unicode ) ) ), events
+        if add_events is not DefaultValueForOptionalParameters:
+            assert isinstance( add_events, list ) and ( len( add_events ) == 0 or isinstance( add_events[ 0 ], ( str, unicode ) ) ), add_events
+        if remove_events is not DefaultValueForOptionalParameters:
+            assert isinstance( remove_events, list ) and ( len( remove_events ) == 0 or isinstance( remove_events[ 0 ], ( str, unicode ) ) ), remove_events
+        if active is not DefaultValueForOptionalParameters:
+            assert isinstance( active, bool ), active
         post_parameters = {
             "name": name,
             "config": config,

@@ -169,6 +169,8 @@ class Organization( object ):
             assert isinstance( has_wiki, bool ), has_wiki
         if has_downloads is not DefaultValueForOptionalParameters:
             assert isinstance( has_downloads, bool ), has_downloads
+        if team_id is not DefaultValueForOptionalParameters:
+            assert isinstance( team_id, int ), team_id
         post_parameters = {
             "name": name,
         }
@@ -197,6 +199,8 @@ class Organization( object ):
         assert isinstance( name, ( str, unicode ) ), name
         if repo_names is not DefaultValueForOptionalParameters:
             assert isinstance( repo_names, list ) and ( len( repo_names ) == 0 or isinstance( repo_names[ 0 ], ( str, unicode ) ) ), repo_names
+        if permission is not DefaultValueForOptionalParameters:
+            assert isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }
@@ -212,6 +216,18 @@ class Organization( object ):
         return Team.Team( self.__requester, data, completion = NoCompletion )
 
     def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
+        if billing_email is not DefaultValueForOptionalParameters:
+            assert isinstance( billing_email, ( str, unicode ) ), billing_email
+        if blog is not DefaultValueForOptionalParameters:
+            assert isinstance( blog, ( str, unicode ) ), blog
+        if company is not DefaultValueForOptionalParameters:
+            assert isinstance( company, ( str, unicode ) ), company
+        if email is not DefaultValueForOptionalParameters:
+            assert isinstance( email, ( str, unicode ) ), email
+        if location is not DefaultValueForOptionalParameters:
+            assert isinstance( location, ( str, unicode ) ), location
+        if name is not DefaultValueForOptionalParameters:
+            assert isinstance( name, ( str, unicode ) ), name
         post_parameters = {
         }
         if billing_email is not DefaultValueForOptionalParameters:
@@ -282,6 +298,8 @@ class Organization( object ):
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
+        if type is not DefaultValueForOptionalParameters:
+            assert isinstance( type, ( str, unicode ) ), type
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
