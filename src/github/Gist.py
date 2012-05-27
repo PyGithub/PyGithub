@@ -216,9 +216,6 @@ class Gist( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "comments", "created_at", "description", "files", "fork_of", "forks", "git_pull_url", "git_push_url", "history", "html_url", "id", "public", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
             assert isinstance( attributes[ "comments" ], int )

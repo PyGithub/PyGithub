@@ -24,9 +24,6 @@ class Branch( object ):
         self.__name = None
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "commit", "name", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict )

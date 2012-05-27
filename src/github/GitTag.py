@@ -45,9 +45,6 @@ class GitTag( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "message", "object", "sha", "tag", "tagger", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
             assert isinstance( attributes[ "message" ], ( str, unicode ) )

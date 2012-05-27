@@ -40,9 +40,6 @@ class GistHistoryState( object ):
         self.__version = None
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "change_status", "committed_at", "url", "user", "version", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "change_status" in attributes and attributes[ "change_status" ] is not None: # pragma no branch
             assert isinstance( attributes[ "change_status" ], dict )

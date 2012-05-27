@@ -957,7 +957,6 @@ Attributes
 * `id`: integer
 * `language`: string
 * `master_branch`: string
-* `mirror_url`: string
 * `name`: string
 * `open_issues`: integer
 * `organization`: `Organization`

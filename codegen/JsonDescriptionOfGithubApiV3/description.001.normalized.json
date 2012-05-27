@@ -7299,14 +7299,6 @@
                         "cardinality": "scalar", 
                         "name": "string"
                     }, 
-                    "name": "mirror_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
                     "name": "name"
                 }, 
                 {

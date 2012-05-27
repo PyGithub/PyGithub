@@ -110,9 +110,6 @@ class Milestone( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "closed_issues", "created_at", "creator", "description", "due_on", "id", "number", "open_issues", "state", "title", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "closed_issues" in attributes and attributes[ "closed_issues" ] is not None: # pragma no branch
             assert isinstance( attributes[ "closed_issues" ], int )

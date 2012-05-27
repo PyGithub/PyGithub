@@ -28,9 +28,6 @@ class Permissions( object ):
         self.__push = None
 
     def __useAttributes( self, attributes ):
-        # @todo Remove this debug weakness: we shall assume that github will add new attributes
-        for attribute in attributes:
-            assert attribute in [ "admin", "pull", "push", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "admin" in attributes and attributes[ "admin" ] is not None: # pragma no branch
             assert isinstance( attributes[ "admin" ], bool )

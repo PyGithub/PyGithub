@@ -1259,7 +1259,6 @@
                 { "name": "id", "type": "integer" },
                 { "name": "language", "type": "string" },
                 { "name": "master_branch", "type": "string" },
-                { "name": "mirror_url", "type": "string" },
                 { "name": "name", "type": "string" },
                 { "name": "open_issues", "type": "integer" },
                 { "name": "organization", "type": "Organization" },
