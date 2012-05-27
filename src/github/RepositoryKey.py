@@ -5,13 +5,18 @@ import PaginatedList
 from GithubObject import *
 
 class RepositoryKey( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completion, repoUrl ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
         self.__completed = completion != LazyCompletion
         if completion == ImmediateCompletion:
             self.__complete() # pragma: no cover
+        self.__repoUrl = repoUrl
+
+    @property
+    def __customUrl( self ):
+        return self.__repoUrl + "/keys/" + str( self.id )
 
     @property
     def id( self ):
@@ -41,7 +46,7 @@ class RepositoryKey( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            "https://api.github.com/repos/jacquev6/PyGithub/keys/2626761",
+            self.__customUrl,
             None,
             None
         )
@@ -55,7 +60,7 @@ class RepositoryKey( object ):
             post_parameters[ "key" ] = key
         status, headers, data = self.__requester.request(
             "PATCH",
-            "https://api.github.com/repos/jacquev6/PyGithub/keys/2626761",
+            self.__customUrl,
             None,
             post_parameters
         )

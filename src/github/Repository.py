@@ -344,7 +344,7 @@ class Repository( object ):
             None,
             post_parameters
         )
-        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion )
+        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion, repoUrl = self.url )
 
     def create_label( self, name, color ):
         post_parameters = {
@@ -697,7 +697,7 @@ class Repository( object ):
             None,
             None
         )
-        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion )
+        return RepositoryKey.RepositoryKey( self.__requester, data, completion = NoCompletion, repoUrl = self.url )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
@@ -707,7 +707,7 @@ class Repository( object ):
             None
         )
         return PaginatedList.PaginatedList(
-            RepositoryKey.RepositoryKey,
+            lambda r, d, completion: RepositoryKey.RepositoryKey( r, d, completion, repoUrl = self.url ),
             self.__requester,
             headers,
             data
