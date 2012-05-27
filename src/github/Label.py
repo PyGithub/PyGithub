@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import urllib
+
 import PaginatedList
 from GithubObject import *
 
@@ -42,6 +44,11 @@ class Label( object ):
             post_parameters
         )
         self.__useAttributes( data )
+
+    # @todo Remove '_identity' from the normalized json description
+    @property
+    def _identity( self ):
+        return urllib.quote( self.name )
 
     def __initAttributes( self ):
         self.__color = None

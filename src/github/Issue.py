@@ -110,7 +110,7 @@ class Issue( object ):
         return self.__user
 
     def add_to_labels( self, *labels ):
-        post_parameters = labels
+        post_parameters = [ label.name for label in labels ]
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/labels",
@@ -131,7 +131,12 @@ class Issue( object ):
         return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
 
     def delete_labels( self ):
-        pass
+        status, headers, data = self.__requester.request(
+            "DELETE",
+            str( self.url ) + "/labels",
+            None,
+            None
+        )
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -216,7 +221,13 @@ class Issue( object ):
         )
 
     def set_labels( self, *labels ):
-        pass
+        post_parameters = [ label.name for label in labels ]
+        status, headers, data = self.__requester.request(
+            "PUT",
+            str( self.url ) + "/labels",
+            None,
+            post_parameters
+        )
 
     def __initAttributes( self ):
         self.__assignee = None
