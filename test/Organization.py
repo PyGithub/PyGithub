@@ -72,3 +72,26 @@ class Organization( Framework.TestCase ):
         self.assertTrue( self.org.has_in_members( lyloa ) )
         self.org.remove_from_members( lyloa )
         self.assertFalse( self.org.has_in_members( lyloa ) )
+
+    def testGetRepos( self ):
+        ### @todo get_repos( type )
+        self.assertListKeyEqual( self.org.get_repos(), lambda r: r.name, [ "FatherBeaver", "TestPyGithub" ] )
+
+    def testGetEvents( self ):
+        self.assertListKeyEqual( self.org.get_events(), lambda e: e.type, [ "CreateEvent", "CreateEvent", "PushEvent", "PushEvent", "DeleteEvent", "DeleteEvent", "PushEvent", "PushEvent", "DeleteEvent", "DeleteEvent", "PushEvent", "PushEvent", "PushEvent", "CreateEvent", "CreateEvent", "CreateEvent", "CreateEvent", "CreateEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "ForkEvent", "CreateEvent" ] )
+
+    def testGetTeams( self ):
+        self.assertListKeyEqual( self.org.get_teams(), lambda t: t.name, [ "Members", "Owners" ] )
+
+    def testCreateRepoWithMinimalArguments( self ):
+        repo = self.org.create_repo( "TestPyGithub" )
+        self.assertEqual( repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub" )
+
+    def testCreateRepoWithAllArguments( self ):
+        repo = self.org.create_repo( "TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, 141496 )
+        self.assertEqual( repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2" )
+
+    def testCreateFork( self ):
+        pygithub = self.g.get_user( "jacquev6" ).get_repo( "PyGithub" )
+        repo = self.org.create_fork( pygithub )
+        self.assertEqual( repo.url, "https://api.github.com/repos/BeaverSoftware/PyGithub" )
