@@ -39,17 +39,17 @@ class GitBlob( object ):
 
     def __useAttributes( self, attributes ):
         if "content" in attributes and attributes[ "content" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "content" ], ( str, unicode ) )
+            assert isinstance( attributes[ "content" ], ( str, unicode ) ), attributes[ "content" ]
             self.__content = attributes[ "content" ]
         if "encoding" in attributes and attributes[ "encoding" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "encoding" ], ( str, unicode ) )
+            assert isinstance( attributes[ "encoding" ], ( str, unicode ) ), attributes[ "encoding" ]
             self.__encoding = attributes[ "encoding" ]
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self.__sha = attributes[ "sha" ]
         if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "size" ], int )
+            assert isinstance( attributes[ "size" ], int ), attributes[ "size" ]
             self.__size = attributes[ "size" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

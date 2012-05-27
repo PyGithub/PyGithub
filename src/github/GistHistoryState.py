@@ -41,17 +41,17 @@ class GistHistoryState( object ):
 
     def __useAttributes( self, attributes ):
         if "change_status" in attributes and attributes[ "change_status" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "change_status" ], dict )
+            assert isinstance( attributes[ "change_status" ], dict ), attributes[ "change_status" ]
             self.__change_status = CommitStats.CommitStats( self.__requester, attributes[ "change_status" ], completion = LazyCompletion )
         if "committed_at" in attributes and attributes[ "committed_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "committed_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "committed_at" ], ( str, unicode ) ), attributes[ "committed_at" ]
             self.__committed_at = attributes[ "committed_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict )
+            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
         if "version" in attributes and attributes[ "version" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "version" ], ( str, unicode ) )
+            assert isinstance( attributes[ "version" ], ( str, unicode ) ), attributes[ "version" ]
             self.__version = attributes[ "version" ]

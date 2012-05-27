@@ -116,18 +116,26 @@ class Authorization( object ):
         if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
             self.__app = attributes[ "app" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "note" in attributes and attributes[ "note" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "note" ], ( str, unicode ) ), attributes[ "note" ]
             self.__note = attributes[ "note" ]
         if "note_url" in attributes and attributes[ "note_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
             self.__note_url = attributes[ "note_url" ]
         if "scopes" in attributes and attributes[ "scopes" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "scopes" ], list ) and ( len( attributes[ "scopes" ] ) == 0 or isinstance( attributes[ "scopes" ][ 0 ], ( str, unicode ) ) ), attributes[ "scopes" ]
             self.__scopes = attributes[ "scopes" ]
         if "token" in attributes and attributes[ "token" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]
             self.__token = attributes[ "token" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

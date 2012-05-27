@@ -565,77 +565,77 @@ class AuthenticatedUser( object ):
 
     def __useAttributes( self, attributes ):
         if "avatar_url" in attributes and attributes[ "avatar_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "avatar_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "avatar_url" ], ( str, unicode ) ), attributes[ "avatar_url" ]
             self.__avatar_url = attributes[ "avatar_url" ]
         if "bio" in attributes and attributes[ "bio" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "bio" ], ( str, unicode ) )
+            assert isinstance( attributes[ "bio" ], ( str, unicode ) ), attributes[ "bio" ]
             self.__bio = attributes[ "bio" ]
         if "blog" in attributes and attributes[ "blog" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "blog" ], ( str, unicode ) )
+            assert isinstance( attributes[ "blog" ], ( str, unicode ) ), attributes[ "blog" ]
             self.__blog = attributes[ "blog" ]
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "collaborators" ], int )
+            assert isinstance( attributes[ "collaborators" ], int ), attributes[ "collaborators" ]
             self.__collaborators = attributes[ "collaborators" ]
         if "company" in attributes and attributes[ "company" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "company" ], ( str, unicode ) )
+            assert isinstance( attributes[ "company" ], ( str, unicode ) ), attributes[ "company" ]
             self.__company = attributes[ "company" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "disk_usage" in attributes and attributes[ "disk_usage" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "disk_usage" ], int )
+            assert isinstance( attributes[ "disk_usage" ], int ), attributes[ "disk_usage" ]
             self.__disk_usage = attributes[ "disk_usage" ]
         if "email" in attributes and attributes[ "email" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "email" ], ( str, unicode ) )
+            assert isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
             self.__email = attributes[ "email" ]
         if "followers" in attributes and attributes[ "followers" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "followers" ], int )
+            assert isinstance( attributes[ "followers" ], int ), attributes[ "followers" ]
             self.__followers = attributes[ "followers" ]
         if "following" in attributes and attributes[ "following" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "following" ], int )
+            assert isinstance( attributes[ "following" ], int ), attributes[ "following" ]
             self.__following = attributes[ "following" ]
         if "gravatar_id" in attributes and attributes[ "gravatar_id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "gravatar_id" ], ( str, unicode ) )
+            assert isinstance( attributes[ "gravatar_id" ], ( str, unicode ) ), attributes[ "gravatar_id" ]
             self.__gravatar_id = attributes[ "gravatar_id" ]
         if "hireable" in attributes and attributes[ "hireable" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "hireable" ], bool )
+            assert isinstance( attributes[ "hireable" ], bool ), attributes[ "hireable" ]
             self.__hireable = attributes[ "hireable" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int )
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "location" in attributes and attributes[ "location" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "location" ], ( str, unicode ) )
+            assert isinstance( attributes[ "location" ], ( str, unicode ) ), attributes[ "location" ]
             self.__location = attributes[ "location" ]
         if "login" in attributes and attributes[ "login" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "login" ], ( str, unicode ) )
+            assert isinstance( attributes[ "login" ], ( str, unicode ) ), attributes[ "login" ]
             self.__login = attributes[ "login" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) )
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "owned_private_repos" in attributes and attributes[ "owned_private_repos" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "owned_private_repos" ], int )
+            assert isinstance( attributes[ "owned_private_repos" ], int ), attributes[ "owned_private_repos" ]
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "plan" ], dict )
+            assert isinstance( attributes[ "plan" ], dict ), attributes[ "plan" ]
             self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "private_gists" ], int )
+            assert isinstance( attributes[ "private_gists" ], int ), attributes[ "private_gists" ]
             self.__private_gists = attributes[ "private_gists" ]
         if "public_gists" in attributes and attributes[ "public_gists" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "public_gists" ], int )
+            assert isinstance( attributes[ "public_gists" ], int ), attributes[ "public_gists" ]
             self.__public_gists = attributes[ "public_gists" ]
         if "public_repos" in attributes and attributes[ "public_repos" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "public_repos" ], int )
+            assert isinstance( attributes[ "public_repos" ], int ), attributes[ "public_repos" ]
             self.__public_repos = attributes[ "public_repos" ]
         if "total_private_repos" in attributes and attributes[ "total_private_repos" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "total_private_repos" ], int )
+            assert isinstance( attributes[ "total_private_repos" ], int ), attributes[ "total_private_repos" ]
             self.__total_private_repos = attributes[ "total_private_repos" ]
         if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "type" ], ( str, unicode ) )
+            assert isinstance( attributes[ "type" ], ( str, unicode ) ), attributes[ "type" ]
             self.__type = attributes[ "type" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

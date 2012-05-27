@@ -71,38 +71,58 @@ class {{ class.name }}( object ):
         if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None: # pragma no branch
 
 {% if attribute.type.cardinality == "scalar" %}
-{% if attribute.type.simple %}
-    {% if attribute.type.name == "string" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) )
-    {% endif %}
-    {% if attribute.type.name == "integer" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], int )
-    {% endif %}
-    {% if attribute.type.name == "bool" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], bool )
-    {% endif %}
-{% else %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], dict )
-{% endif %}
-{% endif %}
 
-{% if attribute.type.cardinality == "list" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], dict ) )
+    {% if attribute.type.simple %}
+        {% if attribute.type.name == "string" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+        {% if attribute.type.name == "integer" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], int ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+        {% if attribute.type.name == "bool" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], bool ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+    {% else %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
+    {% endif %}
+
+{% else %}
+
+    {% if attribute.type.simple %}
+        {% if attribute.type.name == "string" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], ( str, unicode ) ) ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+        {% if attribute.type.name == "integer" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], int ) ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+        {% if attribute.type.name == "bool" %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], bool ) ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
+    {% else %}
+            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], dict ) ), attributes[ "{{ attribute.name }}" ]
+    {% endif %}
+
 {% endif %}
 
 {% if attribute.type.cardinality == "scalar" %}
-{% if attribute.type.simple %}
-            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
-{% else %}
-            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completion = LazyCompletion )
-{% endif %}
-{% endif %}
 
-{% if attribute.type.cardinality == "list" %}
+    {% if attribute.type.simple %}
+            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+    {% else %}
+            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completion = LazyCompletion )
+    {% endif %}
+
+{% else %}
+
+    {% if attribute.type.simple %}
+            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+    {% else %}
             self.__{{ attribute.name }} = [
                 {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "{{ attribute.name }}" ]
             ]
+    {% endif %}
+
 {% endif %}
 
 {% endfor %}

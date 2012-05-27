@@ -29,11 +29,11 @@ class CommitStats( object ):
 
     def __useAttributes( self, attributes ):
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "additions" ], int )
+            assert isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
             self.__additions = attributes[ "additions" ]
         if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "deletions" ], int )
+            assert isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
             self.__deletions = attributes[ "deletions" ]
         if "total" in attributes and attributes[ "total" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "total" ], int )
+            assert isinstance( attributes[ "total" ], int ), attributes[ "total" ]
             self.__total = attributes[ "total" ]

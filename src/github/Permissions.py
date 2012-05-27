@@ -29,11 +29,11 @@ class Permissions( object ):
 
     def __useAttributes( self, attributes ):
         if "admin" in attributes and attributes[ "admin" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "admin" ], bool )
+            assert isinstance( attributes[ "admin" ], bool ), attributes[ "admin" ]
             self.__admin = attributes[ "admin" ]
         if "pull" in attributes and attributes[ "pull" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "pull" ], bool )
+            assert isinstance( attributes[ "pull" ], bool ), attributes[ "pull" ]
             self.__pull = attributes[ "pull" ]
         if "push" in attributes and attributes[ "push" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "push" ], bool )
+            assert isinstance( attributes[ "push" ], bool ), attributes[ "push" ]
             self.__push = attributes[ "push" ]

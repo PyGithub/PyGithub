@@ -30,14 +30,14 @@ class GitTree( object ):
 
     def __useAttributes( self, attributes ):
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self.__sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "tree" ], list ) and ( len( attributes[ "tree" ] ) == 0 or isinstance( attributes[ "tree" ][ 0 ], dict ) )
+            assert isinstance( attributes[ "tree" ], list ) and ( len( attributes[ "tree" ] ) == 0 or isinstance( attributes[ "tree" ][ 0 ], dict ) ), attributes[ "tree" ]
             self.__tree = [
                 GitTreeElement.GitTreeElement( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "tree" ]
             ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

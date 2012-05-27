@@ -23,7 +23,7 @@ class PullRequest( Framework.TestCase ):
         self.assertEqual( self.pull.mergeable, None )
         self.assertEqual( self.pull.merged, True )
         self.assertEqual( self.pull.merged_at, "2012-05-27T10:29:07Z" )
-        self.assertEqual( self.pull.merged_by,  {u'url': u'https://api.github.com/users/jacquev6', u'login': u'jacquev6', u'avatar_url': u'https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png', u'id': 327146, u'gravatar_id': u'b68de5ae38616c296fa345d2b9df2225'} ) ### @todo
+        self.assertEqual( self.pull.merged_by.login, "jacquev6" )
         self.assertEqual( self.pull.number, 31 )
         self.assertEqual( self.pull.patch_url, "https://github.com/jacquev6/PyGithub/pull/31.patch" )
         self.assertEqual( self.pull.review_comments, 1 )

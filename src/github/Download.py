@@ -159,42 +159,62 @@ class Download( object ):
 
     def __useAttributes( self, attributes ):
         if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "accesskeyid" ], ( str, unicode ) ), attributes[ "accesskeyid" ]
             self.__accesskeyid = attributes[ "accesskeyid" ]
         if "acl" in attributes and attributes[ "acl" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "acl" ], ( str, unicode ) ), attributes[ "acl" ]
             self.__acl = attributes[ "acl" ]
         if "bucket" in attributes and attributes[ "bucket" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "bucket" ], ( str, unicode ) ), attributes[ "bucket" ]
             self.__bucket = attributes[ "bucket" ]
         if "content_type" in attributes and attributes[ "content_type" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "content_type" ], ( str, unicode ) ), attributes[ "content_type" ]
             self.__content_type = attributes[ "content_type" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self.__description = attributes[ "description" ]
         if "download_count" in attributes and attributes[ "download_count" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "download_count" ], int ), attributes[ "download_count" ]
             self.__download_count = attributes[ "download_count" ]
         if "expirationdate" in attributes and attributes[ "expirationdate" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "expirationdate" ], ( str, unicode ) ), attributes[ "expirationdate" ]
             self.__expirationdate = attributes[ "expirationdate" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "mime_type" in attributes and attributes[ "mime_type" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "mime_type" ], ( str, unicode ) ), attributes[ "mime_type" ]
             self.__mime_type = attributes[ "mime_type" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "path" ], ( str, unicode ) ), attributes[ "path" ]
             self.__path = attributes[ "path" ]
         if "policy" in attributes and attributes[ "policy" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "policy" ], ( str, unicode ) ), attributes[ "policy" ]
             self.__policy = attributes[ "policy" ]
         if "prefix" in attributes and attributes[ "prefix" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "prefix" ], ( str, unicode ) ), attributes[ "prefix" ]
             self.__prefix = attributes[ "prefix" ]
         if "redirect" in attributes and attributes[ "redirect" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "redirect" ], bool ), attributes[ "redirect" ]
             self.__redirect = attributes[ "redirect" ]
         if "s3_url" in attributes and attributes[ "s3_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "s3_url" ], ( str, unicode ) ), attributes[ "s3_url" ]
             self.__s3_url = attributes[ "s3_url" ]
         if "signature" in attributes and attributes[ "signature" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "signature" ], ( str, unicode ) ), attributes[ "signature" ]
             self.__signature = attributes[ "signature" ]
         if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "size" ], int ), attributes[ "size" ]
             self.__size = attributes[ "size" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

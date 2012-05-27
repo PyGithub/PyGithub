@@ -59,20 +59,29 @@ class CommitFile( object ):
 
     def __useAttributes( self, attributes ):
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
             self.__additions = attributes[ "additions" ]
         if "blob_url" in attributes and attributes[ "blob_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "blob_url" ], ( str, unicode ) ), attributes[ "blob_url" ]
             self.__blob_url = attributes[ "blob_url" ]
         if "changes" in attributes and attributes[ "changes" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "changes" ], int ), attributes[ "changes" ]
             self.__changes = attributes[ "changes" ]
         if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
             self.__deletions = attributes[ "deletions" ]
         if "filename" in attributes and attributes[ "filename" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "filename" ], ( str, unicode ) ), attributes[ "filename" ]
             self.__filename = attributes[ "filename" ]
         if "patch" in attributes and attributes[ "patch" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "patch" ], ( str, unicode ) ), attributes[ "patch" ]
             self.__patch = attributes[ "patch" ]
         if "raw_url" in attributes and attributes[ "raw_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "raw_url" ], ( str, unicode ) ), attributes[ "raw_url" ]
             self.__raw_url = attributes[ "raw_url" ]
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self.__sha = attributes[ "sha" ]
         if "status" in attributes and attributes[ "status" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "status" ], ( str, unicode ) ), attributes[ "status" ]
             self.__status = attributes[ "status" ]

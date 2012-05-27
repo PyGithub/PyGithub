@@ -25,8 +25,8 @@ class Branch( object ):
 
     def __useAttributes( self, attributes ):
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commit" ], dict )
+            assert isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) )
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]

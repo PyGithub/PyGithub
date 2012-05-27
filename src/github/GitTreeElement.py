@@ -44,20 +44,20 @@ class GitTreeElement( object ):
 
     def __useAttributes( self, attributes ):
         if "mode" in attributes and attributes[ "mode" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "mode" ], ( str, unicode ) )
+            assert isinstance( attributes[ "mode" ], ( str, unicode ) ), attributes[ "mode" ]
             self.__mode = attributes[ "mode" ]
         if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "path" ], ( str, unicode ) )
+            assert isinstance( attributes[ "path" ], ( str, unicode ) ), attributes[ "path" ]
             self.__path = attributes[ "path" ]
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) )
+            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self.__sha = attributes[ "sha" ]
         if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "size" ], int )
+            assert isinstance( attributes[ "size" ], int ), attributes[ "size" ]
             self.__size = attributes[ "size" ]
         if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "type" ], ( str, unicode ) )
+            assert isinstance( attributes[ "type" ], ( str, unicode ) ), attributes[ "type" ]
             self.__type = attributes[ "type" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

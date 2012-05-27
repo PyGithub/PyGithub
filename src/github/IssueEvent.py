@@ -75,23 +75,23 @@ class IssueEvent( object ):
 
     def __useAttributes( self, attributes ):
         if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "actor" ], dict )
+            assert isinstance( attributes[ "actor" ], dict ), attributes[ "actor" ]
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commit_id" ], ( str, unicode ) )
+            assert isinstance( attributes[ "commit_id" ], ( str, unicode ) ), attributes[ "commit_id" ]
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "event" in attributes and attributes[ "event" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "event" ], ( str, unicode ) )
+            assert isinstance( attributes[ "event" ], ( str, unicode ) ), attributes[ "event" ]
             self.__event = attributes[ "event" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int )
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "issue" in attributes and attributes[ "issue" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "issue" ], dict )
+            assert isinstance( attributes[ "issue" ], dict ), attributes[ "issue" ]
             self.__issue = Issue.Issue( self.__requester, attributes[ "issue" ], completion = LazyCompletion )
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

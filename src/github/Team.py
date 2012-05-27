@@ -169,14 +169,20 @@ class Team( object ):
 
     def __useAttributes( self, attributes ):
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "members_count" in attributes and attributes[ "members_count" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "members_count" ], int ), attributes[ "members_count" ]
             self.__members_count = attributes[ "members_count" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "permission" in attributes and attributes[ "permission" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "permission" ], ( str, unicode ) ), attributes[ "permission" ]
             self.__permission = attributes[ "permission" ]
         if "repos_count" in attributes and attributes[ "repos_count" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "repos_count" ], int ), attributes[ "repos_count" ]
             self.__repos_count = attributes[ "repos_count" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

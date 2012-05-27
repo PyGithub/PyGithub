@@ -29,11 +29,11 @@ class GitAuthor( object ):
 
     def __useAttributes( self, attributes ):
         if "date" in attributes and attributes[ "date" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "date" ], ( str, unicode ) )
+            assert isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
             self.__date = attributes[ "date" ]
         if "email" in attributes and attributes[ "email" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "email" ], ( str, unicode ) )
+            assert isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
             self.__email = attributes[ "email" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) )
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]

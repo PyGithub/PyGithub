@@ -35,14 +35,14 @@ class Tag( object ):
 
     def __useAttributes( self, attributes ):
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commit" ], dict )
+            assert isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) )
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "tarball_url" in attributes and attributes[ "tarball_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "tarball_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "tarball_url" ], ( str, unicode ) ), attributes[ "tarball_url" ]
             self.__tarball_url = attributes[ "tarball_url" ]
         if "zipball_url" in attributes and attributes[ "zipball_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "zipball_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "zipball_url" ], ( str, unicode ) ), attributes[ "zipball_url" ]
             self.__zipball_url = attributes[ "zipball_url" ]

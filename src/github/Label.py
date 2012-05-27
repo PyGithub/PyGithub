@@ -55,8 +55,11 @@ class Label( object ):
 
     def __useAttributes( self, attributes ):
         if "color" in attributes and attributes[ "color" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "color" ], ( str, unicode ) ), attributes[ "color" ]
             self.__color = attributes[ "color" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

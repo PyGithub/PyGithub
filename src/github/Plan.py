@@ -34,14 +34,14 @@ class Plan( object ):
 
     def __useAttributes( self, attributes ):
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "collaborators" ], int )
+            assert isinstance( attributes[ "collaborators" ], int ), attributes[ "collaborators" ]
             self.__collaborators = attributes[ "collaborators" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) )
+            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
         if "private_repos" in attributes and attributes[ "private_repos" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "private_repos" ], int )
+            assert isinstance( attributes[ "private_repos" ], int ), attributes[ "private_repos" ]
             self.__private_repos = attributes[ "private_repos" ]
         if "space" in attributes and attributes[ "space" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "space" ], int )
+            assert isinstance( attributes[ "space" ], int ), attributes[ "space" ]
             self.__space = attributes[ "space" ]

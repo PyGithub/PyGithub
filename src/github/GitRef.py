@@ -52,11 +52,11 @@ class GitRef( object ):
 
     def __useAttributes( self, attributes ):
         if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "object" ], dict )
+            assert isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
             self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
         if "ref" in attributes and attributes[ "ref" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "ref" ], ( str, unicode ) )
+            assert isinstance( attributes[ "ref" ], ( str, unicode ) ), attributes[ "ref" ]
             self.__ref = attributes[ "ref" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

@@ -118,25 +118,35 @@ class PullRequestComment( object ):
 
     def __useAttributes( self, attributes ):
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self.__body = attributes[ "body" ]
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "commit_id" ], ( str, unicode ) ), attributes[ "commit_id" ]
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "original_commit_id" in attributes and attributes[ "original_commit_id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "original_commit_id" ], ( str, unicode ) ), attributes[ "original_commit_id" ]
             self.__original_commit_id = attributes[ "original_commit_id" ]
         if "original_position" in attributes and attributes[ "original_position" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "original_position" ], int ), attributes[ "original_position" ]
             self.__original_position = attributes[ "original_position" ]
         if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "path" ], ( str, unicode ) ), attributes[ "path" ]
             self.__path = attributes[ "path" ]
         if "position" in attributes and attributes[ "position" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "position" ], int ), attributes[ "position" ]
             self.__position = attributes[ "position" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict )
+            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

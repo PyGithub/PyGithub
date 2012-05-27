@@ -217,52 +217,52 @@ class Gist( object ):
 
     def __useAttributes( self, attributes ):
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "comments" ], int )
+            assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self.__comments = attributes[ "comments" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "description" ], ( str, unicode ) )
+            assert isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self.__description = attributes[ "description" ]
         if "files" in attributes and attributes[ "files" ] is not None: # pragma no branch
             self.__files = attributes[ "files" ]
         if "fork_of" in attributes and attributes[ "fork_of" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "fork_of" ], dict )
+            assert isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
             self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completion = LazyCompletion )
         if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "forks" ], list ) and ( len( attributes[ "forks" ] ) == 0 or isinstance( attributes[ "forks" ][ 0 ], dict ) )
+            assert isinstance( attributes[ "forks" ], list ) and ( len( attributes[ "forks" ] ) == 0 or isinstance( attributes[ "forks" ][ 0 ], dict ) ), attributes[ "forks" ]
             self.__forks = [
                 Gist( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "forks" ]
             ]
         if "git_pull_url" in attributes and attributes[ "git_pull_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "git_pull_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "git_pull_url" ], ( str, unicode ) ), attributes[ "git_pull_url" ]
             self.__git_pull_url = attributes[ "git_pull_url" ]
         if "git_push_url" in attributes and attributes[ "git_push_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "git_push_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "git_push_url" ], ( str, unicode ) ), attributes[ "git_push_url" ]
             self.__git_push_url = attributes[ "git_push_url" ]
         if "history" in attributes and attributes[ "history" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "history" ], list ) and ( len( attributes[ "history" ] ) == 0 or isinstance( attributes[ "history" ][ 0 ], dict ) )
+            assert isinstance( attributes[ "history" ], list ) and ( len( attributes[ "history" ] ) == 0 or isinstance( attributes[ "history" ][ 0 ], dict ) ), attributes[ "history" ]
             self.__history = [
                 GistHistoryState.GistHistoryState( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "history" ]
             ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], ( str, unicode ) )
+            assert isinstance( attributes[ "id" ], ( str, unicode ) ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "public" in attributes and attributes[ "public" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "public" ], bool )
+            assert isinstance( attributes[ "public" ], bool ), attributes[ "public" ]
             self.__public = attributes[ "public" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict )
+            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

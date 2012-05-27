@@ -111,35 +111,35 @@ class Milestone( object ):
 
     def __useAttributes( self, attributes ):
         if "closed_issues" in attributes and attributes[ "closed_issues" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_issues" ], int )
+            assert isinstance( attributes[ "closed_issues" ], int ), attributes[ "closed_issues" ]
             self.__closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "creator" in attributes and attributes[ "creator" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "creator" ], dict )
+            assert isinstance( attributes[ "creator" ], dict ), attributes[ "creator" ]
             self.__creator = NamedUser.NamedUser( self.__requester, attributes[ "creator" ], completion = LazyCompletion )
         if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "description" ], ( str, unicode ) )
+            assert isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self.__description = attributes[ "description" ]
         if "due_on" in attributes and attributes[ "due_on" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "due_on" ], ( str, unicode ) )
+            assert isinstance( attributes[ "due_on" ], ( str, unicode ) ), attributes[ "due_on" ]
             self.__due_on = attributes[ "due_on" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int )
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "number" ], int )
+            assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
         if "open_issues" in attributes and attributes[ "open_issues" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "open_issues" ], int )
+            assert isinstance( attributes[ "open_issues" ], int ), attributes[ "open_issues" ]
             self.__open_issues = attributes[ "open_issues" ]
         if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "state" ], ( str, unicode ) )
+            assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self.__state = attributes[ "state" ]
         if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "title" ], ( str, unicode ) )
+            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self.__title = attributes[ "title" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

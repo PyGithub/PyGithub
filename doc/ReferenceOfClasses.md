@@ -152,14 +152,14 @@ Class `Authorization`
 Attributes
 ----------
 * `app`
-* `created_at`
-* `id`
-* `note`
-* `note_url`
-* `scopes`
-* `token`
-* `updated_at`
-* `url`
+* `created_at`: string
+* `id`: integer
+* `note`: string
+* `note_url`: string
+* `scopes`: list of string
+* `token`: string
+* `updated_at`: string
+* `url`: string
 
 Deletion
 --------
@@ -236,15 +236,15 @@ Class `CommitFile`
 
 Attributes
 ----------
-* `additions`
-* `blob_url`
-* `changes`
-* `deletions`
-* `filename`
-* `patch`
-* `raw_url`
-* `sha`
-* `status`
+* `additions`: integer
+* `blob_url`: string
+* `changes`: integer
+* `deletions`: integer
+* `filename`: string
+* `patch`: string
+* `raw_url`: string
+* `sha`: string
+* `status`: string
 
 Class `CommitStats`
 ===================
@@ -260,26 +260,26 @@ Class `Download`
 
 Attributes
 ----------
-* `accesskeyid`
-* `acl`
-* `bucket`
-* `content_type`
-* `created_at`
-* `description`
-* `download_count`
-* `expirationdate`
-* `html_url`
-* `id`
-* `mime_type`
-* `name`
-* `path`
-* `policy`
-* `prefix`
-* `redirect`
-* `s3_url`
-* `signature`
-* `size`
-* `url`
+* `accesskeyid`: string
+* `acl`: string
+* `bucket`: string
+* `content_type`: string
+* `created_at`: string
+* `description`: string
+* `download_count`: integer
+* `expirationdate`: string
+* `html_url`: string
+* `id`: integer
+* `mime_type`: string
+* `name`: string
+* `path`: string
+* `policy`: string
+* `prefix`: string
+* `redirect`: bool
+* `s3_url`: string
+* `signature`: string
+* `size`: integer
+* `url`: string
 
 Deletion
 --------
@@ -291,13 +291,13 @@ Class `Event`
 Attributes
 ----------
 * `actor`: `NamedUser`
-* `created_at`
-* `id`
+* `created_at`: string
+* `id`: string
 * `org`: `Organization`
 * `payload`
-* `public`
+* `public`: bool
 * `repo`: `Repository`
-* `type`
+* `type`: string
 
 Class `Gist`
 ============
@@ -353,11 +353,11 @@ Class `GistComment`
 
 Attributes
 ----------
-* `body`
-* `created_at`
-* `id`
-* `updated_at`
-* `url`
+* `body`: string
+* `created_at`: string
+* `id`: integer
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Deletion
@@ -479,15 +479,15 @@ Class `Hook`
 
 Attributes
 ----------
-* `active`
+* `active`: bool
 * `config`
-* `created_at`
-* `events`
-* `id`
+* `created_at`: string
+* `events`: list of string
+* `id`: integer
 * `last_response`
-* `name`
-* `updated_at`
-* `url`
+* `name`: string
+* `updated_at`: string
+* `url`: string
 
 Deletion
 --------
@@ -569,11 +569,11 @@ Class `IssueComment`
 
 Attributes
 ----------
-* `body`
-* `created_at`
-* `id`
-* `updated_at`
-* `url`
+* `body`: string
+* `created_at`: string
+* `id`: integer
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Deletion
@@ -603,9 +603,9 @@ Class `Label`
 
 Attributes
 ----------
-* `color`
-* `name`
-* `url`
+* `color`: string
+* `name`: string
+* `url`: string
 
 Deletion
 --------
@@ -837,31 +837,31 @@ Class `PullRequest`
 
 Attributes
 ----------
-* `additions`
+* `additions`: integer
 * `base`
-* `body`
-* `changed_files`
-* `closed_at`
-* `comments`
-* `commits`
-* `created_at`
-* `deletions`
-* `diff_url`
+* `body`: string
+* `changed_files`: integer
+* `closed_at`: string
+* `comments`: integer
+* `commits`: integer
+* `created_at`: string
+* `deletions`: integer
+* `diff_url`: string
 * `head`
-* `html_url`
-* `id`
-* `issue_url`
-* `mergeable`
-* `merged`
-* `merged_at`
-* `merged_by`
-* `number`
-* `patch_url`
-* `review_comments`
-* `state`
-* `title`
-* `updated_at`
-* `url`
+* `html_url`: string
+* `id`: integer
+* `issue_url`: string
+* `mergeable`: bool
+* `merged`: bool
+* `merged_at`: string
+* `merged_by`: `NamedUser`
+* `number`: integer
+* `patch_url`: string
+* `review_comments`: integer
+* `state`: string
+* `title`: string
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Comments
@@ -901,16 +901,16 @@ Class `PullRequestComment`
 
 Attributes
 ----------
-* `body`
-* `commit_id`
-* `created_at`
-* `id`
-* `original_commit_id`
-* `original_position`
-* `path`
-* `position`
-* `updated_at`
-* `url`
+* `body`: string
+* `commit_id`: string
+* `created_at`: string
+* `id`: integer
+* `original_commit_id`: string
+* `original_position`: integer
+* `path`: string
+* `position`: integer
+* `updated_at`: string
+* `url`: string
 * `user`: `NamedUser`
 
 Deletion
@@ -927,15 +927,15 @@ Class `PullRequestFile`
 
 Attributes
 ----------
-* `additions`
-* `blob_url`
-* `changes`
-* `deletions`
-* `filename`
-* `patch`
-* `raw_url`
-* `sha`
-* `status`
+* `additions`: integer
+* `blob_url`: string
+* `changes`: integer
+* `deletions`: integer
+* `filename`: string
+* `patch`: string
+* `raw_url`: string
+* `sha`: string
+* `status`: string
 
 Class `Repository`
 ==================
@@ -1193,10 +1193,10 @@ Class `RepositoryKey`
 
 Attributes
 ----------
-* `id`
-* `key`
-* `title`
-* `url`
+* `id`: integer
+* `key`: string
+* `title`: string
+* `url`: string
 * `verified`: bool
 
 Deletion
@@ -1224,12 +1224,12 @@ Class `Team`
 
 Attributes
 ----------
-* `id`
-* `members_count`
-* `name`
-* `permission`
-* `repos_count`
-* `url`
+* `id`: integer
+* `members_count`: integer
+* `name`: string
+* `permission`: string
+* `repos_count`: integer
+* `url`: string
 
 Deletion
 --------
@@ -1266,10 +1266,10 @@ Class `UserKey`
 
 Attributes
 ----------
-* `id`
-* `key`
-* `title`
-* `url`
+* `id`: integer
+* `key`: string
+* `title`: string
+* `url`: string
 * `verified`: bool
 
 Deletion

@@ -84,13 +84,17 @@ class UserKey( object ):
 
     def __useAttributes( self, attributes ):
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "key" in attributes and attributes[ "key" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "key" ], ( str, unicode ) ), attributes[ "key" ]
             self.__key = attributes[ "key" ]
         if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self.__title = attributes[ "title" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "verified" in attributes and attributes[ "verified" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "verified" ], bool )
+            assert isinstance( attributes[ "verified" ], bool ), attributes[ "verified" ]
             self.__verified = attributes[ "verified" ]

@@ -265,58 +265,58 @@ class Issue( object ):
 
     def __useAttributes( self, attributes ):
         if "assignee" in attributes and attributes[ "assignee" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "assignee" ], dict )
+            assert isinstance( attributes[ "assignee" ], dict ), attributes[ "assignee" ]
             self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completion = LazyCompletion )
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "body" ], ( str, unicode ) )
+            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self.__body = attributes[ "body" ]
         if "closed_at" in attributes and attributes[ "closed_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
             self.__closed_at = attributes[ "closed_at" ]
         if "closed_by" in attributes and attributes[ "closed_by" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_by" ], dict )
+            assert isinstance( attributes[ "closed_by" ], dict ), attributes[ "closed_by" ]
             self.__closed_by = NamedUser.NamedUser( self.__requester, attributes[ "closed_by" ], completion = LazyCompletion )
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "comments" ], int )
+            assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self.__comments = attributes[ "comments" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int )
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "labels" in attributes and attributes[ "labels" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "labels" ], list ) and ( len( attributes[ "labels" ] ) == 0 or isinstance( attributes[ "labels" ][ 0 ], dict ) )
+            assert isinstance( attributes[ "labels" ], list ) and ( len( attributes[ "labels" ] ) == 0 or isinstance( attributes[ "labels" ][ 0 ], dict ) ), attributes[ "labels" ]
             self.__labels = [
                 Label.Label( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "labels" ]
             ]
         if "milestone" in attributes and attributes[ "milestone" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "milestone" ], dict )
+            assert isinstance( attributes[ "milestone" ], dict ), attributes[ "milestone" ]
             self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], completion = LazyCompletion )
         if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "number" ], int )
+            assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None: # pragma no branch
             self.__pull_request = attributes[ "pull_request" ]
         if "repository" in attributes and attributes[ "repository" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "repository" ], dict )
+            assert isinstance( attributes[ "repository" ], dict ), attributes[ "repository" ]
             self.__repository = Repository.Repository( self.__requester, attributes[ "repository" ], completion = LazyCompletion )
         if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "state" ], ( str, unicode ) )
+            assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self.__state = attributes[ "state" ]
         if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "title" ], ( str, unicode ) )
+            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self.__title = attributes[ "title" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) )
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict )
+            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

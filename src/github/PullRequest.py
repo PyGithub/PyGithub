@@ -295,55 +295,78 @@ class PullRequest( object ):
 
     def __useAttributes( self, attributes ):
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
             self.__additions = attributes[ "additions" ]
         if "base" in attributes and attributes[ "base" ] is not None: # pragma no branch
             self.__base = attributes[ "base" ]
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self.__body = attributes[ "body" ]
         if "changed_files" in attributes and attributes[ "changed_files" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "changed_files" ], int ), attributes[ "changed_files" ]
             self.__changed_files = attributes[ "changed_files" ]
         if "closed_at" in attributes and attributes[ "closed_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
             self.__closed_at = attributes[ "closed_at" ]
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self.__comments = attributes[ "comments" ]
         if "commits" in attributes and attributes[ "commits" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "commits" ], int ), attributes[ "commits" ]
             self.__commits = attributes[ "commits" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
             self.__deletions = attributes[ "deletions" ]
         if "diff_url" in attributes and attributes[ "diff_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
             self.__diff_url = attributes[ "diff_url" ]
         if "head" in attributes and attributes[ "head" ] is not None: # pragma no branch
             self.__head = attributes[ "head" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "issue_url" in attributes and attributes[ "issue_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "issue_url" ], ( str, unicode ) ), attributes[ "issue_url" ]
             self.__issue_url = attributes[ "issue_url" ]
         if "mergeable" in attributes and attributes[ "mergeable" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "mergeable" ], bool ), attributes[ "mergeable" ]
             self.__mergeable = attributes[ "mergeable" ]
         if "merged" in attributes and attributes[ "merged" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "merged" ], bool ), attributes[ "merged" ]
             self.__merged = attributes[ "merged" ]
         if "merged_at" in attributes and attributes[ "merged_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "merged_at" ], ( str, unicode ) ), attributes[ "merged_at" ]
             self.__merged_at = attributes[ "merged_at" ]
         if "merged_by" in attributes and attributes[ "merged_by" ] is not None: # pragma no branch
-            self.__merged_by = attributes[ "merged_by" ]
+            assert isinstance( attributes[ "merged_by" ], dict ), attributes[ "merged_by" ]
+            self.__merged_by = NamedUser.NamedUser( self.__requester, attributes[ "merged_by" ], completion = LazyCompletion )
         if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
         if "patch_url" in attributes and attributes[ "patch_url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "patch_url" ], ( str, unicode ) ), attributes[ "patch_url" ]
             self.__patch_url = attributes[ "patch_url" ]
         if "review_comments" in attributes and attributes[ "review_comments" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "review_comments" ], int ), attributes[ "review_comments" ]
             self.__review_comments = attributes[ "review_comments" ]
         if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self.__state = attributes[ "state" ]
         if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self.__title = attributes[ "title" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self.__updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
+            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict )
+            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
