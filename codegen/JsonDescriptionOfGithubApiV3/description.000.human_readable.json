@@ -1122,6 +1122,14 @@
                     "getList": true,
                     "getElement": {
                         "parameter": { "name": "id", "type": "@todo" }
+                    },
+                    "createElement": {
+                        "mandatoryParameters": [
+                            { "name": "body", "type": "@todo" },
+                            { "name": "commit_id", "type": "@todo" },
+                            { "name": "path", "type": "@todo" },
+                            { "name": "position", "type": "@todo" }
+                        ]
                     }
                 },
                 {
@@ -1182,11 +1190,11 @@
                 { "name": "body", "type": "@todo" },
                 { "name": "commit_id", "type": "@todo" },
                 { "name": "created_at", "type": "@todo" },
-                { "name": "html_url", "type": "@todo" },
                 { "name": "id", "type": "@todo" },
-                { "name": "line", "type": "@todo" },
                 { "name": "path", "type": "@todo" },
                 { "name": "position", "type": "@todo" },
+                { "name": "original_position", "type": "@todo" },
+                { "name": "original_commit_id", "type": "@todo" },
                 { "name": "updated_at", "type": "@todo" },
                 { "name": "url", "type": "@todo" },
                 { "name": "user", "type": "NamedUser" }

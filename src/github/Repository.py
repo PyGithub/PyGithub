@@ -383,6 +383,28 @@ class Repository( object ):
         )
         return Milestone.Milestone( self.__requester, data, completion = NoCompletion )
 
+    def create_pull( self, *args, **kwds ):
+        if len( args ) + len( kwds ) == 4:
+            return self.__create_pull_1( *args, **kwds )
+        else:
+            return self.__create_pull_2( *args, **kwds )
+
+    def __create_pull_1( self, title, body, base, head ):
+        return self.__create_pull( title = title, body = body, base = base, head = head )
+
+    def __create_pull_2( self, issue, base, head ):
+        return self.__create_pull( issue = issue, base = base, head = head )
+
+    def __create_pull( self, **kwds ):
+        post_parameters = kwds
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/pulls",
+            None,
+            post_parameters
+        )
+        return PullRequest.PullRequest( self.__requester, data, completion = NoCompletion )
+
     def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         post_parameters = {
             "name": name,

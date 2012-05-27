@@ -866,6 +866,11 @@ Attributes
 
 Comments
 --------
+* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+    * `body`
+    * `commit_id`
+    * `path`
+    * `position`
 * `get_comment( id )`: `PullRequestComment`
     * `id`
 * `get_comments()`: list of `PullRequestComment`
@@ -899,9 +904,9 @@ Attributes
 * `body`
 * `commit_id`
 * `created_at`
-* `html_url`
 * `id`
-* `line`
+* `original_commit_id`
+* `original_position`
 * `path`
 * `position`
 * `updated_at`
@@ -1161,6 +1166,7 @@ Modification
 
 Pulls
 -----
+* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
 * `get_pull( number )`: `PullRequest`
     * `number`
 * `get_pulls( [state] )`: list of `PullRequest`

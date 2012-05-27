@@ -147,6 +147,21 @@ class PullRequest( object ):
         self.__completeIfNeeded( self.__user )
         return self.__user
 
+    def create_comment( self, body, commit_id, path, position ):
+        post_parameters = {
+            "body": body,
+            "commit_id": commit_id,
+            "path": path,
+            "position": position,
+        }
+        status, headers, data = self.__requester.request(
+            "POST",
+            str( self.url ) + "/comments",
+            None,
+            post_parameters
+        )
+        return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
+
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
         post_parameters = {
         }
@@ -167,7 +182,7 @@ class PullRequest( object ):
     def get_comment( self, id ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments" + "/" + str( id ),
+            "https://api.github.com/repos/jacquev6/PyGithub/pulls/comments/" + str( id ), ### @todo
             None,
             None
         )
@@ -229,7 +244,7 @@ class PullRequest( object ):
             "PUT",
             str( self.url ) + "/merge",
             None,
-            None
+            {}
         )
 
     def __initAttributes( self ):
@@ -277,7 +292,7 @@ class PullRequest( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "additions", "base", "body", "changed_files", "closed_at", "comments", "commits", "created_at", "deletions", "diff_url", "head", "html_url", "id", "issue_url", "mergeable", "merged", "merged_at", "merged_by", "number", "patch_url", "review_comments", "state", "title", "updated_at", "url", "user", ], attribute
+            assert attribute in [ "additions", "base", "body", "changed_files", "closed_at", "comments", "commits", "created_at", "deletions", "diff_url", "head", "html_url", "id", "issue_url", "mergeable", "merged", "merged_at", "merged_by", "number", "patch_url", "review_comments", "state", "title", "updated_at", "url", "user", "_links", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             self.__additions = attributes[ "additions" ]

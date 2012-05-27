@@ -30,19 +30,19 @@ class PullRequestComment( object ):
         return self.__created_at
 
     @property
-    def html_url( self ):
-        self.__completeIfNeeded( self.__html_url )
-        return self.__html_url
-
-    @property
     def id( self ):
         self.__completeIfNeeded( self.__id )
         return self.__id
 
     @property
-    def line( self ):
-        self.__completeIfNeeded( self.__line )
-        return self.__line
+    def original_commit_id( self ):
+        self.__completeIfNeeded( self.__original_commit_id )
+        return self.__original_commit_id
+
+    @property
+    def original_position( self ):
+        self.__completeIfNeeded( self.__original_position )
+        return self.__original_position
 
     @property
     def path( self ):
@@ -93,9 +93,9 @@ class PullRequestComment( object ):
         self.__body = None
         self.__commit_id = None
         self.__created_at = None
-        self.__html_url = None
         self.__id = None
-        self.__line = None
+        self.__original_commit_id = None
+        self.__original_position = None
         self.__path = None
         self.__position = None
         self.__updated_at = None
@@ -119,7 +119,7 @@ class PullRequestComment( object ):
     def __useAttributes( self, attributes ):
         # @todo Remove this debug weakness: we shall assume that github will add new attributes
         for attribute in attributes:
-            assert attribute in [ "body", "commit_id", "created_at", "html_url", "id", "line", "path", "position", "updated_at", "url", "user", ], attribute
+            assert attribute in [ "body", "commit_id", "created_at", "id", "original_commit_id", "original_position", "path", "position", "updated_at", "url", "user", "_links", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             self.__body = attributes[ "body" ]
@@ -127,12 +127,12 @@ class PullRequestComment( object ):
             self.__commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             self.__created_at = attributes[ "created_at" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            self.__html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "line" in attributes and attributes[ "line" ] is not None: # pragma no branch
-            self.__line = attributes[ "line" ]
+        if "original_commit_id" in attributes and attributes[ "original_commit_id" ] is not None: # pragma no branch
+            self.__original_commit_id = attributes[ "original_commit_id" ]
+        if "original_position" in attributes and attributes[ "original_position" ] is not None: # pragma no branch
+            self.__original_position = attributes[ "original_position" ]
         if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
             self.__path = attributes[ "path" ]
         if "position" in attributes and attributes[ "position" ] is not None: # pragma no branch

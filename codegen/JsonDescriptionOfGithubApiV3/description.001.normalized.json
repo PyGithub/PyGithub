@@ -6657,6 +6657,71 @@
                 {
                     "group": "comments", 
                     "name": [
+                        "create", 
+                        "comment"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "body"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "commit_id"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "path"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "@todo"
+                            }, 
+                            "name": "position"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "PullRequestComment"
+                    }
+                }, 
+                {
+                    "group": "comments", 
+                    "name": [
                         "get", 
                         "comment"
                     ], 
@@ -6901,14 +6966,6 @@
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": "html_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
-                    }, 
                     "name": "id"
                 }, 
                 {
@@ -6917,7 +6974,15 @@
                         "cardinality": "scalar", 
                         "name": "@todo"
                     }, 
-                    "name": "line"
+                    "name": "original_commit_id"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "@todo"
+                    }, 
+                    "name": "original_position"
                 }, 
                 {
                     "type": {

@@ -26,6 +26,9 @@ from Label import *
 from Milestone import *
 from NamedUser import *
 from Organization import *
+from PullRequest import *
+from PullRequestComment import *
+from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *

@@ -302,17 +302,10 @@ class Repository( Framework.TestCase ):
     def testGetWatchers( self ):
         self.assertListKeyEqual( self.repo.get_watchers(), lambda u: u.login, [ "Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "BeaverSoftware" ] )
 
-    # def testGet( self ):
-        # self.assertListKeyEqual( self.repo.get_(), lambda : ., [] )
+    def testCreatePull( self ):
+        pull = self.repo.create_pull( "Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
+        self.assertEqual( pull.id, 1436215 )
 
-    # def testGet( self ):
-        # self.assertListKeyEqual( self.repo.get_(), lambda : ., [] )
-
-    # def testGet( self ):
-        # self.assertListKeyEqual( self.repo.get_(), lambda : ., [] )
-
-    # def testGet( self ):
-        # self.assertListKeyEqual( self.repo.get_(), lambda : ., [] )
-
-    # def testGet( self ):
-        # self.assertListKeyEqual( self.repo.get_(), lambda : ., [] )
+    def testGetPulls( self ):
+        ### @todo Create another PullRequest and re-record this test (at the same time as testCreatePullFromIssue)
+        self.assertListKeyEqual( self.repo.get_pulls(), lambda p: p.id, [ 0 ] )
