@@ -2,7 +2,6 @@
 # Do not modify it manually, your work would be lost.
 
 import urllib
-
 import PaginatedList
 from GithubObject import *
 
@@ -47,7 +46,7 @@ class Label( object ):
 
     @property
     def _identity( self ):
-        return urllib.quote( self.name )
+        return urllib.quote( str( self.name ) )
 
     def __initAttributes( self ):
         self.__color = None

@@ -23,6 +23,7 @@ for class_ in description[ "classes" ]:
         if not thing[ "type" ][ "simple" ]:
             dependencies.add( thing[ "type" ][ "name" ] )
     class_[ "dependencies" ] = list( dependencies )
+    class_[ "needsUrllib" ] = class_[ "name" ] in [ "Label", "Repository" ]
 
 githubObjectTemplate = django.template.loader.get_template( "GithubObject.py" )
 for class_ in description[ "classes" ]:

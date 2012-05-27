@@ -4398,9 +4398,14 @@
             "name": "Label", 
             "identity": [
                 {
-                    "type": "attribute", 
+                    "type": "urlquote", 
                     "value": [
-                        "name"
+                        {
+                            "type": "attribute", 
+                            "value": [
+                                "name"
+                            ]
+                        }
                     ]
                 }
             ], 
@@ -9435,16 +9440,17 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/labels"
+                                "value": "/labels/"
                             }, 
                             {
-                                "type": "constant", 
-                                "value": "/"
-                            }, 
-                            {
-                                "type": "argument", 
+                                "type": "urlquote", 
                                 "value": [
-                                    "name"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "name"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 

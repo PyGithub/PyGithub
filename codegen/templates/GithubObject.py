@@ -1,3 +1,7 @@
+{% if class.needsUrllib %}
+import urllib
+{% endif %}
+
 import PaginatedList
 from GithubObject import *
 

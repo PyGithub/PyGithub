@@ -760,7 +760,12 @@
                 { "name": "url", "type": "@todo" }
             ],
             "identity": [
-                { "type": "attribute", "value": [ "name" ] }
+                { 
+                    "type": "urlquote",
+                    "value": [
+                        { "type": "attribute", "value": [ "name" ] }
+                    ]
+                }
             ]
         },
         {
@@ -1558,7 +1563,19 @@
                         ]
                     },
                     "getElement": {
-                        "parameter": { "name": "name", "type": "@todo" }
+                        "parameter": { "name": "name", "type": "@todo" },
+                        "request": {
+                            "url": [
+                                { "type": "attribute", "value": [ "url" ] },
+                                { "type": "constant", "value": "/labels/" },
+                                {
+                                    "type": "urlquote",
+                                    "value": [
+                                        { "type": "argument", "value": [ "name" ] }
+                                    ]
+                                }
+                            ]
+                        }
                     }
                 },
                 {

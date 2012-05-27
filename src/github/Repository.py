@@ -2,7 +2,6 @@
 # Do not modify it manually, your work would be lost.
 
 import urllib
-
 import PaginatedList
 from GithubObject import *
 import Branch
@@ -717,7 +716,7 @@ class Repository( object ):
     def get_label( self, name ):
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/labels" + "/" + urllib.quote( name ),
+            str( self.url ) + "/labels/" + urllib.quote( str( name ) ),
             None,
             None
         )
