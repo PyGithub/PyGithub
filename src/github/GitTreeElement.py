@@ -47,21 +47,21 @@ class GitTreeElement( object ):
         for attribute in attributes:
             assert attribute in [ "mode", "path", "sha", "size", "type", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "mode" in attributes and attributes[ "mode" ] is not None:
+        if "mode" in attributes and attributes[ "mode" ] is not None: # pragma no branch
             assert isinstance( attributes[ "mode" ], ( str, unicode ) )
             self.__mode = attributes[ "mode" ]
-        if "path" in attributes and attributes[ "path" ] is not None:
+        if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
             assert isinstance( attributes[ "path" ], ( str, unicode ) )
             self.__path = attributes[ "path" ]
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "size" in attributes and attributes[ "size" ] is not None:
+        if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             assert isinstance( attributes[ "size" ], int )
             self.__size = attributes[ "size" ]
-        if "type" in attributes and attributes[ "type" ] is not None:
+        if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
             assert isinstance( attributes[ "type" ], ( str, unicode ) )
             self.__type = attributes[ "type" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

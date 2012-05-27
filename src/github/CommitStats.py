@@ -32,12 +32,12 @@ class CommitStats( object ):
         for attribute in attributes:
             assert attribute in [ "additions", "deletions", "total", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "additions" in attributes and attributes[ "additions" ] is not None:
+        if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             assert isinstance( attributes[ "additions" ], int )
             self.__additions = attributes[ "additions" ]
-        if "deletions" in attributes and attributes[ "deletions" ] is not None:
+        if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
             assert isinstance( attributes[ "deletions" ], int )
             self.__deletions = attributes[ "deletions" ]
-        if "total" in attributes and attributes[ "total" ] is not None:
+        if "total" in attributes and attributes[ "total" ] is not None: # pragma no branch
             assert isinstance( attributes[ "total" ], int )
             self.__total = attributes[ "total" ]

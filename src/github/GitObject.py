@@ -32,12 +32,12 @@ class GitObject( object ):
         for attribute in attributes:
             assert attribute in [ "sha", "type", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "type" in attributes and attributes[ "type" ] is not None:
+        if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
             assert isinstance( attributes[ "type" ], ( str, unicode ) )
             self.__type = attributes[ "type" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

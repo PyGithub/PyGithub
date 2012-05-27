@@ -32,12 +32,12 @@ class GitAuthor( object ):
         for attribute in attributes:
             assert attribute in [ "date", "email", "name", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "date" in attributes and attributes[ "date" ] is not None:
+        if "date" in attributes and attributes[ "date" ] is not None: # pragma no branch
             assert isinstance( attributes[ "date" ], ( str, unicode ) )
             self.__date = attributes[ "date" ]
-        if "email" in attributes and attributes[ "email" ] is not None:
+        if "email" in attributes and attributes[ "email" ] is not None: # pragma no branch
             assert isinstance( attributes[ "email" ], ( str, unicode ) )
             self.__email = attributes[ "email" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]

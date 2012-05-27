@@ -905,96 +905,96 @@ class Repository( object ):
         for attribute in attributes:
             assert attribute in [ "clone_url", "created_at", "description", "fork", "forks", "full_name", "git_url", "has_downloads", "has_issues", "has_wiki", "homepage", "html_url", "id", "language", "master_branch", "mirror_url", "name", "open_issues", "organization", "owner", "parent", "permissions", "private", "pushed_at", "size", "source", "ssh_url", "svn_url", "updated_at", "url", "watchers", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "clone_url" in attributes and attributes[ "clone_url" ] is not None:
+        if "clone_url" in attributes and attributes[ "clone_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "clone_url" ], ( str, unicode ) )
             self.__clone_url = attributes[ "clone_url" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) )
             self.__created_at = attributes[ "created_at" ]
-        if "description" in attributes and attributes[ "description" ] is not None:
+        if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
             assert isinstance( attributes[ "description" ], ( str, unicode ) )
             self.__description = attributes[ "description" ]
-        if "fork" in attributes and attributes[ "fork" ] is not None:
+        if "fork" in attributes and attributes[ "fork" ] is not None: # pragma no branch
             assert isinstance( attributes[ "fork" ], bool )
             self.__fork = attributes[ "fork" ]
-        if "forks" in attributes and attributes[ "forks" ] is not None:
+        if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
             assert isinstance( attributes[ "forks" ], int )
             self.__forks = attributes[ "forks" ]
-        if "full_name" in attributes and attributes[ "full_name" ] is not None:
+        if "full_name" in attributes and attributes[ "full_name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "full_name" ], ( str, unicode ) )
             self.__full_name = attributes[ "full_name" ]
-        if "git_url" in attributes and attributes[ "git_url" ] is not None:
+        if "git_url" in attributes and attributes[ "git_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "git_url" ], ( str, unicode ) )
             self.__git_url = attributes[ "git_url" ]
-        if "has_downloads" in attributes and attributes[ "has_downloads" ] is not None:
+        if "has_downloads" in attributes and attributes[ "has_downloads" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_downloads" ], bool )
             self.__has_downloads = attributes[ "has_downloads" ]
-        if "has_issues" in attributes and attributes[ "has_issues" ] is not None:
+        if "has_issues" in attributes and attributes[ "has_issues" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_issues" ], bool )
             self.__has_issues = attributes[ "has_issues" ]
-        if "has_wiki" in attributes and attributes[ "has_wiki" ] is not None:
+        if "has_wiki" in attributes and attributes[ "has_wiki" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_wiki" ], bool )
             self.__has_wiki = attributes[ "has_wiki" ]
-        if "homepage" in attributes and attributes[ "homepage" ] is not None:
+        if "homepage" in attributes and attributes[ "homepage" ] is not None: # pragma no branch
             assert isinstance( attributes[ "homepage" ], ( str, unicode ) )
             self.__homepage = attributes[ "homepage" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "html_url" ], ( str, unicode ) )
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int )
             self.__id = attributes[ "id" ]
-        if "language" in attributes and attributes[ "language" ] is not None:
+        if "language" in attributes and attributes[ "language" ] is not None: # pragma no branch
             assert isinstance( attributes[ "language" ], ( str, unicode ) )
             self.__language = attributes[ "language" ]
-        if "master_branch" in attributes and attributes[ "master_branch" ] is not None:
+        if "master_branch" in attributes and attributes[ "master_branch" ] is not None: # pragma no branch
             assert isinstance( attributes[ "master_branch" ], ( str, unicode ) )
             self.__master_branch = attributes[ "master_branch" ]
-        if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None:
+        if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "mirror_url" ], ( str, unicode ) )
             self.__mirror_url = attributes[ "mirror_url" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
-        if "open_issues" in attributes and attributes[ "open_issues" ] is not None:
+        if "open_issues" in attributes and attributes[ "open_issues" ] is not None: # pragma no branch
             assert isinstance( attributes[ "open_issues" ], int )
             self.__open_issues = attributes[ "open_issues" ]
-        if "organization" in attributes and attributes[ "organization" ] is not None:
+        if "organization" in attributes and attributes[ "organization" ] is not None: # pragma no branch
             assert isinstance( attributes[ "organization" ], dict )
             self.__organization = Organization.Organization( self.__requester, attributes[ "organization" ], completion = LazyCompletion )
-        if "owner" in attributes and attributes[ "owner" ] is not None:
+        if "owner" in attributes and attributes[ "owner" ] is not None: # pragma no branch
             assert isinstance( attributes[ "owner" ], dict )
             self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], completion = LazyCompletion )
-        if "parent" in attributes and attributes[ "parent" ] is not None:
+        if "parent" in attributes and attributes[ "parent" ] is not None: # pragma no branch
             assert isinstance( attributes[ "parent" ], dict )
             self.__parent = Repository( self.__requester, attributes[ "parent" ], completion = LazyCompletion )
-        if "permissions" in attributes and attributes[ "permissions" ] is not None:
+        if "permissions" in attributes and attributes[ "permissions" ] is not None: # pragma no branch
             assert isinstance( attributes[ "permissions" ], dict )
             self.__permissions = Permissions.Permissions( self.__requester, attributes[ "permissions" ], completion = LazyCompletion )
-        if "private" in attributes and attributes[ "private" ] is not None:
+        if "private" in attributes and attributes[ "private" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private" ], bool )
             self.__private = attributes[ "private" ]
-        if "pushed_at" in attributes and attributes[ "pushed_at" ] is not None:
+        if "pushed_at" in attributes and attributes[ "pushed_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "pushed_at" ], ( str, unicode ) )
             self.__pushed_at = attributes[ "pushed_at" ]
-        if "size" in attributes and attributes[ "size" ] is not None:
+        if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             assert isinstance( attributes[ "size" ], int )
             self.__size = attributes[ "size" ]
-        if "source" in attributes and attributes[ "source" ] is not None:
+        if "source" in attributes and attributes[ "source" ] is not None: # pragma no branch
             assert isinstance( attributes[ "source" ], dict )
             self.__source = Repository( self.__requester, attributes[ "source" ], completion = LazyCompletion )
-        if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None:
+        if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "ssh_url" ], ( str, unicode ) )
             self.__ssh_url = attributes[ "ssh_url" ]
-        if "svn_url" in attributes and attributes[ "svn_url" ] is not None:
+        if "svn_url" in attributes and attributes[ "svn_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "svn_url" ], ( str, unicode ) )
             self.__svn_url = attributes[ "svn_url" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "updated_at" ], ( str, unicode ) )
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
-        if "watchers" in attributes and attributes[ "watchers" ] is not None:
+        if "watchers" in attributes and attributes[ "watchers" ] is not None: # pragma no branch
             assert isinstance( attributes[ "watchers" ], int )
             self.__watchers = attributes[ "watchers" ]

@@ -68,16 +68,16 @@ class GistComment( object ):
         for attribute in attributes:
             assert attribute in [ "body", "created_at", "id", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "body" in attributes and attributes[ "body" ] is not None:
+        if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             self.__body = attributes[ "body" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             self.__created_at = attributes[ "created_at" ]
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]
-        if "user" in attributes and attributes[ "user" ] is not None:
+        if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict )
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

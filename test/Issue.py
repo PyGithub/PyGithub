@@ -3,7 +3,8 @@ import Framework
 class Issue( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.issue = self.g.get_user().get_repo( "PyGithub" ).get_issue( 28 )
+        self.repo = self.g.get_user().get_repo( "PyGithub" )
+        self.issue = self.repo.get_issue( 28 )
 
     def testAttributes( self ):
         self.assertEqual( self.issue.assignee.login, "jacquev6" )
@@ -47,3 +48,26 @@ class Issue( Framework.TestCase ):
 
     def testGetEvents( self ):
         self.assertListKeyEqual( self.issue.get_events(), lambda e: e.id, [ 15819975, 15820048 ] )
+
+    def testGetLabels( self ):
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Bug", "Project management", "Question" ] )
+
+    def testAddAndRemoveLabels( self ):
+        bug = self.repo.get_label( "Bug" )
+        question = self.repo.get_label( "Question" )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Bug", "Project management", "Question" ] )
+        self.issue.remove_from_labels( bug )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Project management", "Question" ] )
+        self.issue.remove_from_labels( question )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Project management" ] )
+        self.issue.add_to_labels( bug, question )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Bug", "Project management", "Question" ] )
+
+    def testDeleteAndSetLabels( self ):
+        bug = self.repo.get_label( "Bug" )
+        question = self.repo.get_label( "Question" )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Bug", "Project management", "Question" ] )
+        self.issue.delete_labels()
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [] )
+        self.issue.set_labels( bug, question )
+        self.assertListKeyEqual( self.issue.get_labels(), lambda l: l.name, [ "Bug", "Question" ] )

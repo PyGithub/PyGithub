@@ -120,33 +120,33 @@ class Commit( object ):
         for attribute in attributes:
             assert attribute in [ "author", "commit", "committer", "files", "parents", "sha", "stats", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "author" in attributes and attributes[ "author" ] is not None:
+        if "author" in attributes and attributes[ "author" ] is not None: # pragma no branch
             assert isinstance( attributes[ "author" ], dict )
             self.__author = NamedUser.NamedUser( self.__requester, attributes[ "author" ], completion = LazyCompletion )
-        if "commit" in attributes and attributes[ "commit" ] is not None:
+        if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict )
             self.__commit = GitCommit.GitCommit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
-        if "committer" in attributes and attributes[ "committer" ] is not None:
+        if "committer" in attributes and attributes[ "committer" ] is not None: # pragma no branch
             assert isinstance( attributes[ "committer" ], dict )
             self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], completion = LazyCompletion )
-        if "files" in attributes and attributes[ "files" ] is not None:
+        if "files" in attributes and attributes[ "files" ] is not None: # pragma no branch
             assert isinstance( attributes[ "files" ], list ) and ( len( attributes[ "files" ] ) == 0 or isinstance( attributes[ "files" ][ 0 ], dict ) )
             self.__files = [
                 CommitFile.CommitFile( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "files" ]
             ]
-        if "parents" in attributes and attributes[ "parents" ] is not None:
+        if "parents" in attributes and attributes[ "parents" ] is not None: # pragma no branch
             assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) )
             self.__parents = [
                 Commit( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "parents" ]
             ]
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "stats" in attributes and attributes[ "stats" ] is not None:
+        if "stats" in attributes and attributes[ "stats" ] is not None: # pragma no branch
             assert isinstance( attributes[ "stats" ], dict )
             self.__stats = CommitStats.CommitStats( self.__requester, attributes[ "stats" ], completion = LazyCompletion )
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]
