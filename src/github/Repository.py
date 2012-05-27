@@ -114,11 +114,6 @@ class Repository( object ):
         return self.__master_branch
 
     @property
-    def mirror_url( self ):
-        self.__completeIfNeeded( self.__mirror_url )
-        return self.__mirror_url
-
-    @property
     def name( self ):
         self.__completeIfNeeded( self.__name )
         return self.__name
@@ -891,7 +886,6 @@ class Repository( object ):
         self.__id = None
         self.__language = None
         self.__master_branch = None
-        self.__mirror_url = None
         self.__name = None
         self.__open_issues = None
         self.__organization = None
@@ -972,9 +966,6 @@ class Repository( object ):
         if "master_branch" in attributes and attributes[ "master_branch" ] is not None: # pragma no branch
             assert isinstance( attributes[ "master_branch" ], ( str, unicode ) )
             self.__master_branch = attributes[ "master_branch" ]
-        if "mirror_url" in attributes and attributes[ "mirror_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "mirror_url" ], ( str, unicode ) )
-            self.__mirror_url = attributes[ "mirror_url" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]

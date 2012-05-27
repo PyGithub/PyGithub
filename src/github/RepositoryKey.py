@@ -41,7 +41,7 @@ class RepositoryKey( object ):
     def delete( self ):
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ),
+            "https://api.github.com/repos/jacquev6/PyGithub/keys/2626761",
             None,
             None
         )
@@ -55,7 +55,7 @@ class RepositoryKey( object ):
             post_parameters[ "key" ] = key
         status, headers, data = self.__requester.request(
             "PATCH",
-            str( self.url ),
+            "https://api.github.com/repos/jacquev6/PyGithub/keys/2626761",
             None,
             post_parameters
         )

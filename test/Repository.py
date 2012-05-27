@@ -21,7 +21,6 @@ class Repository( Framework.TestCase ):
         self.assertEqual( self.repo.id, 3544490 )
         self.assertEqual( self.repo.language, "Python" )
         self.assertEqual( self.repo.master_branch, None )
-        self.assertEqual( self.repo.mirror_url, None )
         self.assertEqual( self.repo.name, "PyGithub" )
         self.assertEqual( self.repo.open_issues, 16 )
         self.assertEqual( self.repo.organization, None )
@@ -306,6 +305,10 @@ class Repository( Framework.TestCase ):
         pull = self.repo.create_pull( "Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
         self.assertEqual( pull.id, 1436215 )
 
+    def testCreatePullFromIssue( self ):
+        pull = self.repo.create_pull( 32, "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
+        self.assertEqual( pull.id, 1436310 )
+
     def testGetPulls( self ):
         ### @todo Create another PullRequest and re-record this test (at the same time as testCreatePullFromIssue)
-        self.assertListKeyEqual( self.repo.get_pulls(), lambda p: p.id, [ 0 ] )
+        self.assertListKeyEqual( self.repo.get_pulls(), lambda p: p.id, [ 1436310 ] )
