@@ -70,7 +70,7 @@ class {{ class.name }}( object ):
 
         # @todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes|dictsort:"name" %}
-        if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None:
+        if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None: # pragma no branch
 
 {% if attribute.type.cardinality == "scalar" %}
 {% if attribute.type.simple %}

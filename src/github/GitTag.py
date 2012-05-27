@@ -49,21 +49,21 @@ class GitTag( object ):
         for attribute in attributes:
             assert attribute in [ "message", "object", "sha", "tag", "tagger", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "message" in attributes and attributes[ "message" ] is not None:
+        if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
             assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]
-        if "object" in attributes and attributes[ "object" ] is not None:
+        if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict )
             self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "tag" in attributes and attributes[ "tag" ] is not None:
+        if "tag" in attributes and attributes[ "tag" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tag" ], ( str, unicode ) )
             self.__tag = attributes[ "tag" ]
-        if "tagger" in attributes and attributes[ "tagger" ] is not None:
+        if "tagger" in attributes and attributes[ "tagger" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tagger" ], dict )
             self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], completion = LazyCompletion )
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

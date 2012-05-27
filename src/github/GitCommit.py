@@ -55,27 +55,27 @@ class GitCommit( object ):
         for attribute in attributes:
             assert attribute in [ "author", "committer", "message", "parents", "sha", "tree", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "author" in attributes and attributes[ "author" ] is not None:
+        if "author" in attributes and attributes[ "author" ] is not None: # pragma no branch
             assert isinstance( attributes[ "author" ], dict )
             self.__author = GitAuthor.GitAuthor( self.__requester, attributes[ "author" ], completion = LazyCompletion )
-        if "committer" in attributes and attributes[ "committer" ] is not None:
+        if "committer" in attributes and attributes[ "committer" ] is not None: # pragma no branch
             assert isinstance( attributes[ "committer" ], dict )
             self.__committer = GitAuthor.GitAuthor( self.__requester, attributes[ "committer" ], completion = LazyCompletion )
-        if "message" in attributes and attributes[ "message" ] is not None:
+        if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
             assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]
-        if "parents" in attributes and attributes[ "parents" ] is not None:
+        if "parents" in attributes and attributes[ "parents" ] is not None: # pragma no branch
             assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) )
             self.__parents = [
                 GitCommit( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "parents" ]
             ]
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "tree" in attributes and attributes[ "tree" ] is not None:
+        if "tree" in attributes and attributes[ "tree" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tree" ], dict )
             self.__tree = GitTree.GitTree( self.__requester, attributes[ "tree" ], completion = LazyCompletion )
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

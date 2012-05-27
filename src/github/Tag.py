@@ -38,15 +38,15 @@ class Tag( object ):
         for attribute in attributes:
             assert attribute in [ "commit", "name", "tarball_url", "zipball_url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "commit" in attributes and attributes[ "commit" ] is not None:
+        if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict )
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
-        if "tarball_url" in attributes and attributes[ "tarball_url" ] is not None:
+        if "tarball_url" in attributes and attributes[ "tarball_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tarball_url" ], ( str, unicode ) )
             self.__tarball_url = attributes[ "tarball_url" ]
-        if "zipball_url" in attributes and attributes[ "zipball_url" ] is not None:
+        if "zipball_url" in attributes and attributes[ "zipball_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "zipball_url" ], ( str, unicode ) )
             self.__zipball_url = attributes[ "zipball_url" ]

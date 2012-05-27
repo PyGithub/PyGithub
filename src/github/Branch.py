@@ -28,9 +28,9 @@ class Branch( object ):
         for attribute in attributes:
             assert attribute in [ "commit", "name", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "commit" in attributes and attributes[ "commit" ] is not None:
+        if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict )
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]

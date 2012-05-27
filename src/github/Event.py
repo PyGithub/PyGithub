@@ -60,22 +60,22 @@ class Event( object ):
         for attribute in attributes:
             assert attribute in [ "actor", "created_at", "id", "org", "payload", "public", "repo", "type", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "actor" in attributes and attributes[ "actor" ] is not None:
+        if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
             assert isinstance( attributes[ "actor" ], dict )
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
-        if "created_at" in attributes and attributes[ "created_at" ] is not None:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             self.__created_at = attributes[ "created_at" ]
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "org" in attributes and attributes[ "org" ] is not None:
+        if "org" in attributes and attributes[ "org" ] is not None: # pragma no branch
             assert isinstance( attributes[ "org" ], dict )
             self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completion = LazyCompletion )
-        if "payload" in attributes and attributes[ "payload" ] is not None:
+        if "payload" in attributes and attributes[ "payload" ] is not None: # pragma no branch
             self.__payload = attributes[ "payload" ]
-        if "public" in attributes and attributes[ "public" ] is not None:
+        if "public" in attributes and attributes[ "public" ] is not None: # pragma no branch
             self.__public = attributes[ "public" ]
-        if "repo" in attributes and attributes[ "repo" ] is not None:
+        if "repo" in attributes and attributes[ "repo" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repo" ], dict )
             self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completion = LazyCompletion )
-        if "type" in attributes and attributes[ "type" ] is not None:
+        if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
             self.__type = attributes[ "type" ]

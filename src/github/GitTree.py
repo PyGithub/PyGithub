@@ -33,15 +33,15 @@ class GitTree( object ):
         for attribute in attributes:
             assert attribute in [ "sha", "tree", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "tree" in attributes and attributes[ "tree" ] is not None:
+        if "tree" in attributes and attributes[ "tree" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tree" ], list ) and ( len( attributes[ "tree" ] ) == 0 or isinstance( attributes[ "tree" ][ 0 ], dict ) )
             self.__tree = [
                 GitTreeElement.GitTreeElement( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "tree" ]
             ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

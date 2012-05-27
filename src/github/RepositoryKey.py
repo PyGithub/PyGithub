@@ -87,14 +87,14 @@ class RepositoryKey( object ):
         for attribute in attributes:
             assert attribute in [ "id", "key", "title", "url", "verified", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "key" in attributes and attributes[ "key" ] is not None:
+        if "key" in attributes and attributes[ "key" ] is not None: # pragma no branch
             self.__key = attributes[ "key" ]
-        if "title" in attributes and attributes[ "title" ] is not None:
+        if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
             self.__title = attributes[ "title" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]
-        if "verified" in attributes and attributes[ "verified" ] is not None:
+        if "verified" in attributes and attributes[ "verified" ] is not None: # pragma no branch
             assert isinstance( attributes[ "verified" ], bool )
             self.__verified = attributes[ "verified" ]

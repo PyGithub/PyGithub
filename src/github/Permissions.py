@@ -32,12 +32,12 @@ class Permissions( object ):
         for attribute in attributes:
             assert attribute in [ "admin", "pull", "push", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "admin" in attributes and attributes[ "admin" ] is not None:
+        if "admin" in attributes and attributes[ "admin" ] is not None: # pragma no branch
             assert isinstance( attributes[ "admin" ], bool )
             self.__admin = attributes[ "admin" ]
-        if "pull" in attributes and attributes[ "pull" ] is not None:
+        if "pull" in attributes and attributes[ "pull" ] is not None: # pragma no branch
             assert isinstance( attributes[ "pull" ], bool )
             self.__pull = attributes[ "pull" ]
-        if "push" in attributes and attributes[ "push" ] is not None:
+        if "push" in attributes and attributes[ "push" ] is not None: # pragma no branch
             assert isinstance( attributes[ "push" ], bool )
             self.__push = attributes[ "push" ]

@@ -53,9 +53,9 @@ class Label( object ):
         for attribute in attributes:
             assert attribute in [ "color", "name", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "color" in attributes and attributes[ "color" ] is not None:
+        if "color" in attributes and attributes[ "color" ] is not None: # pragma no branch
             self.__color = attributes[ "color" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             self.__name = attributes[ "name" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]
