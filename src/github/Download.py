@@ -162,43 +162,43 @@ class Download( object ):
         for attribute in attributes:
             assert attribute in [ "accesskeyid", "acl", "bucket", "content_type", "created_at", "description", "download_count", "expirationdate", "html_url", "id", "mime_type", "name", "path", "policy", "prefix", "redirect", "s3_url", "signature", "size", "url", "x-amz-meta-content-disposition" ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None:
+        if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None: # pragma no branch
             self.__accesskeyid = attributes[ "accesskeyid" ]
-        if "acl" in attributes and attributes[ "acl" ] is not None:
+        if "acl" in attributes and attributes[ "acl" ] is not None: # pragma no branch
             self.__acl = attributes[ "acl" ]
-        if "bucket" in attributes and attributes[ "bucket" ] is not None:
+        if "bucket" in attributes and attributes[ "bucket" ] is not None: # pragma no branch
             self.__bucket = attributes[ "bucket" ]
-        if "content_type" in attributes and attributes[ "content_type" ] is not None:
+        if "content_type" in attributes and attributes[ "content_type" ] is not None: # pragma no branch
             self.__content_type = attributes[ "content_type" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             self.__created_at = attributes[ "created_at" ]
-        if "description" in attributes and attributes[ "description" ] is not None:
+        if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
             self.__description = attributes[ "description" ]
-        if "download_count" in attributes and attributes[ "download_count" ] is not None:
+        if "download_count" in attributes and attributes[ "download_count" ] is not None: # pragma no branch
             self.__download_count = attributes[ "download_count" ]
-        if "expirationdate" in attributes and attributes[ "expirationdate" ] is not None:
+        if "expirationdate" in attributes and attributes[ "expirationdate" ] is not None: # pragma no branch
             self.__expirationdate = attributes[ "expirationdate" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "mime_type" in attributes and attributes[ "mime_type" ] is not None:
+        if "mime_type" in attributes and attributes[ "mime_type" ] is not None: # pragma no branch
             self.__mime_type = attributes[ "mime_type" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             self.__name = attributes[ "name" ]
-        if "path" in attributes and attributes[ "path" ] is not None:
+        if "path" in attributes and attributes[ "path" ] is not None: # pragma no branch
             self.__path = attributes[ "path" ]
-        if "policy" in attributes and attributes[ "policy" ] is not None:
+        if "policy" in attributes and attributes[ "policy" ] is not None: # pragma no branch
             self.__policy = attributes[ "policy" ]
-        if "prefix" in attributes and attributes[ "prefix" ] is not None:
+        if "prefix" in attributes and attributes[ "prefix" ] is not None: # pragma no branch
             self.__prefix = attributes[ "prefix" ]
-        if "redirect" in attributes and attributes[ "redirect" ] is not None:
+        if "redirect" in attributes and attributes[ "redirect" ] is not None: # pragma no branch
             self.__redirect = attributes[ "redirect" ]
-        if "s3_url" in attributes and attributes[ "s3_url" ] is not None:
+        if "s3_url" in attributes and attributes[ "s3_url" ] is not None: # pragma no branch
             self.__s3_url = attributes[ "s3_url" ]
-        if "signature" in attributes and attributes[ "signature" ] is not None:
+        if "signature" in attributes and attributes[ "signature" ] is not None: # pragma no branch
             self.__signature = attributes[ "signature" ]
-        if "size" in attributes and attributes[ "size" ] is not None:
+        if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             self.__size = attributes[ "size" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]

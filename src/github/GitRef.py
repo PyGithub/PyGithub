@@ -55,12 +55,12 @@ class GitRef( object ):
         for attribute in attributes:
             assert attribute in [ "object", "ref", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "object" in attributes and attributes[ "object" ] is not None:
+        if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict )
             self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
-        if "ref" in attributes and attributes[ "ref" ] is not None:
+        if "ref" in attributes and attributes[ "ref" ] is not None: # pragma no branch
             assert isinstance( attributes[ "ref" ], ( str, unicode ) )
             self.__ref = attributes[ "ref" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

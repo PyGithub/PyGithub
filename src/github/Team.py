@@ -172,15 +172,15 @@ class Team( object ):
         for attribute in attributes:
             assert attribute in [ "id", "members_count", "name", "permission", "repos_count", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "members_count" in attributes and attributes[ "members_count" ] is not None:
+        if "members_count" in attributes and attributes[ "members_count" ] is not None: # pragma no branch
             self.__members_count = attributes[ "members_count" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             self.__name = attributes[ "name" ]
-        if "permission" in attributes and attributes[ "permission" ] is not None:
+        if "permission" in attributes and attributes[ "permission" ] is not None: # pragma no branch
             self.__permission = attributes[ "permission" ]
-        if "repos_count" in attributes and attributes[ "repos_count" ] is not None:
+        if "repos_count" in attributes and attributes[ "repos_count" ] is not None: # pragma no branch
             self.__repos_count = attributes[ "repos_count" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]

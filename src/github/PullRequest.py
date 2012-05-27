@@ -279,56 +279,56 @@ class PullRequest( object ):
         for attribute in attributes:
             assert attribute in [ "additions", "base", "body", "changed_files", "closed_at", "comments", "commits", "created_at", "deletions", "diff_url", "head", "html_url", "id", "issue_url", "mergeable", "merged", "merged_at", "merged_by", "number", "patch_url", "review_comments", "state", "title", "updated_at", "url", "user", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "additions" in attributes and attributes[ "additions" ] is not None:
+        if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             self.__additions = attributes[ "additions" ]
-        if "base" in attributes and attributes[ "base" ] is not None:
+        if "base" in attributes and attributes[ "base" ] is not None: # pragma no branch
             self.__base = attributes[ "base" ]
-        if "body" in attributes and attributes[ "body" ] is not None:
+        if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             self.__body = attributes[ "body" ]
-        if "changed_files" in attributes and attributes[ "changed_files" ] is not None:
+        if "changed_files" in attributes and attributes[ "changed_files" ] is not None: # pragma no branch
             self.__changed_files = attributes[ "changed_files" ]
-        if "closed_at" in attributes and attributes[ "closed_at" ] is not None:
+        if "closed_at" in attributes and attributes[ "closed_at" ] is not None: # pragma no branch
             self.__closed_at = attributes[ "closed_at" ]
-        if "comments" in attributes and attributes[ "comments" ] is not None:
+        if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
             self.__comments = attributes[ "comments" ]
-        if "commits" in attributes and attributes[ "commits" ] is not None:
+        if "commits" in attributes and attributes[ "commits" ] is not None: # pragma no branch
             self.__commits = attributes[ "commits" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None:
+        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             self.__created_at = attributes[ "created_at" ]
-        if "deletions" in attributes and attributes[ "deletions" ] is not None:
+        if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
             self.__deletions = attributes[ "deletions" ]
-        if "diff_url" in attributes and attributes[ "diff_url" ] is not None:
+        if "diff_url" in attributes and attributes[ "diff_url" ] is not None: # pragma no branch
             self.__diff_url = attributes[ "diff_url" ]
-        if "head" in attributes and attributes[ "head" ] is not None:
+        if "head" in attributes and attributes[ "head" ] is not None: # pragma no branch
             self.__head = attributes[ "head" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None:
+        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
             self.__html_url = attributes[ "html_url" ]
-        if "id" in attributes and attributes[ "id" ] is not None:
+        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             self.__id = attributes[ "id" ]
-        if "issue_url" in attributes and attributes[ "issue_url" ] is not None:
+        if "issue_url" in attributes and attributes[ "issue_url" ] is not None: # pragma no branch
             self.__issue_url = attributes[ "issue_url" ]
-        if "mergeable" in attributes and attributes[ "mergeable" ] is not None:
+        if "mergeable" in attributes and attributes[ "mergeable" ] is not None: # pragma no branch
             self.__mergeable = attributes[ "mergeable" ]
-        if "merged" in attributes and attributes[ "merged" ] is not None:
+        if "merged" in attributes and attributes[ "merged" ] is not None: # pragma no branch
             self.__merged = attributes[ "merged" ]
-        if "merged_at" in attributes and attributes[ "merged_at" ] is not None:
+        if "merged_at" in attributes and attributes[ "merged_at" ] is not None: # pragma no branch
             self.__merged_at = attributes[ "merged_at" ]
-        if "merged_by" in attributes and attributes[ "merged_by" ] is not None:
+        if "merged_by" in attributes and attributes[ "merged_by" ] is not None: # pragma no branch
             self.__merged_by = attributes[ "merged_by" ]
-        if "number" in attributes and attributes[ "number" ] is not None:
+        if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
             self.__number = attributes[ "number" ]
-        if "patch_url" in attributes and attributes[ "patch_url" ] is not None:
+        if "patch_url" in attributes and attributes[ "patch_url" ] is not None: # pragma no branch
             self.__patch_url = attributes[ "patch_url" ]
-        if "review_comments" in attributes and attributes[ "review_comments" ] is not None:
+        if "review_comments" in attributes and attributes[ "review_comments" ] is not None: # pragma no branch
             self.__review_comments = attributes[ "review_comments" ]
-        if "state" in attributes and attributes[ "state" ] is not None:
+        if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
             self.__state = attributes[ "state" ]
-        if "title" in attributes and attributes[ "title" ] is not None:
+        if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
             self.__title = attributes[ "title" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None:
+        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             self.__updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]
-        if "user" in attributes and attributes[ "user" ] is not None:
+        if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict )
             self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )

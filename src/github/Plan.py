@@ -37,15 +37,15 @@ class Plan( object ):
         for attribute in attributes:
             assert attribute in [ "collaborators", "name", "private_repos", "space", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "collaborators" in attributes and attributes[ "collaborators" ] is not None:
+        if "collaborators" in attributes and attributes[ "collaborators" ] is not None: # pragma no branch
             assert isinstance( attributes[ "collaborators" ], int )
             self.__collaborators = attributes[ "collaborators" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) )
             self.__name = attributes[ "name" ]
-        if "private_repos" in attributes and attributes[ "private_repos" ] is not None:
+        if "private_repos" in attributes and attributes[ "private_repos" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private_repos" ], int )
             self.__private_repos = attributes[ "private_repos" ]
-        if "space" in attributes and attributes[ "space" ] is not None:
+        if "space" in attributes and attributes[ "space" ] is not None: # pragma no branch
             assert isinstance( attributes[ "space" ], int )
             self.__space = attributes[ "space" ]

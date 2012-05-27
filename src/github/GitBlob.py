@@ -42,18 +42,18 @@ class GitBlob( object ):
         for attribute in attributes:
             assert attribute in [ "content", "encoding", "sha", "size", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "content" in attributes and attributes[ "content" ] is not None:
+        if "content" in attributes and attributes[ "content" ] is not None: # pragma no branch
             assert isinstance( attributes[ "content" ], ( str, unicode ) )
             self.__content = attributes[ "content" ]
-        if "encoding" in attributes and attributes[ "encoding" ] is not None:
+        if "encoding" in attributes and attributes[ "encoding" ] is not None: # pragma no branch
             assert isinstance( attributes[ "encoding" ], ( str, unicode ) )
             self.__encoding = attributes[ "encoding" ]
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]
-        if "size" in attributes and attributes[ "size" ] is not None:
+        if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             assert isinstance( attributes[ "size" ], int )
             self.__size = attributes[ "size" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) )
             self.__url = attributes[ "url" ]

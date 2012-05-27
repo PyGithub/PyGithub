@@ -62,21 +62,21 @@ class PullRequestFile( object ):
         for attribute in attributes:
             assert attribute in [ "additions", "blob_url", "changes", "deletions", "filename", "patch", "raw_url", "sha", "status", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "additions" in attributes and attributes[ "additions" ] is not None:
+        if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             self.__additions = attributes[ "additions" ]
-        if "blob_url" in attributes and attributes[ "blob_url" ] is not None:
+        if "blob_url" in attributes and attributes[ "blob_url" ] is not None: # pragma no branch
             self.__blob_url = attributes[ "blob_url" ]
-        if "changes" in attributes and attributes[ "changes" ] is not None:
+        if "changes" in attributes and attributes[ "changes" ] is not None: # pragma no branch
             self.__changes = attributes[ "changes" ]
-        if "deletions" in attributes and attributes[ "deletions" ] is not None:
+        if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
             self.__deletions = attributes[ "deletions" ]
-        if "filename" in attributes and attributes[ "filename" ] is not None:
+        if "filename" in attributes and attributes[ "filename" ] is not None: # pragma no branch
             self.__filename = attributes[ "filename" ]
-        if "patch" in attributes and attributes[ "patch" ] is not None:
+        if "patch" in attributes and attributes[ "patch" ] is not None: # pragma no branch
             self.__patch = attributes[ "patch" ]
-        if "raw_url" in attributes and attributes[ "raw_url" ] is not None:
+        if "raw_url" in attributes and attributes[ "raw_url" ] is not None: # pragma no branch
             self.__raw_url = attributes[ "raw_url" ]
-        if "sha" in attributes and attributes[ "sha" ] is not None:
+        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             self.__sha = attributes[ "sha" ]
-        if "status" in attributes and attributes[ "status" ] is not None:
+        if "status" in attributes and attributes[ "status" ] is not None: # pragma no branch
             self.__status = attributes[ "status" ]

@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import urllib
+
 import PaginatedList
 from GithubObject import *
 
@@ -43,6 +45,11 @@ class Label( object ):
         )
         self.__useAttributes( data )
 
+    # @todo Remove '_identity' from the normalized json description
+    @property
+    def _identity( self ):
+        return urllib.quote( self.name )
+
     def __initAttributes( self ):
         self.__color = None
         self.__name = None
@@ -53,9 +60,9 @@ class Label( object ):
         for attribute in attributes:
             assert attribute in [ "color", "name", "url", ], attribute
         # @todo No need to check if attribute is in attributes when attribute is mandatory
-        if "color" in attributes and attributes[ "color" ] is not None:
+        if "color" in attributes and attributes[ "color" ] is not None: # pragma no branch
             self.__color = attributes[ "color" ]
-        if "name" in attributes and attributes[ "name" ] is not None:
+        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             self.__name = attributes[ "name" ]
-        if "url" in attributes and attributes[ "url" ] is not None:
+        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             self.__url = attributes[ "url" ]
