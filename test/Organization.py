@@ -52,3 +52,23 @@ class Organization( Framework.TestCase ):
     def testCreateTeamWithAllArguments( self ):
         team = self.org.create_team( "Team also created by PyGithub", [ "BeaverSoftware/FatherBeaver" ], "push" )
         self.assertEqual( team.id, 189852 )
+
+    def testPublicMembers( self ):
+        lyloa = self.g.get_user( "Lyloa" )
+        self.assertFalse( self.org.has_in_public_members( lyloa ) )
+        self.org.add_to_public_members( lyloa )
+        self.assertTrue( self.org.has_in_public_members( lyloa ) )
+        self.org.remove_from_public_members( lyloa )
+        self.assertFalse( self.org.has_in_public_members( lyloa ) )
+
+    def testGetPublicMembers( self ):
+        self.assertListKeyEqual( self.org.get_public_members(), lambda u: u.login, [ "jacquev6" ] )
+
+    def testGetMembers( self ):
+        self.assertListKeyEqual( self.org.get_members(), lambda u: u.login, [ "cjuniet", "jacquev6", "Lyloa" ] )
+
+    def testMembers( self ):
+        lyloa = self.g.get_user( "Lyloa" )
+        self.assertTrue( self.org.has_in_members( lyloa ) )
+        self.org.remove_from_members( lyloa )
+        self.assertFalse( self.org.has_in_members( lyloa ) )
