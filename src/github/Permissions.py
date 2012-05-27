@@ -28,7 +28,6 @@ class Permissions( object ):
         self.__push = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "admin" in attributes and attributes[ "admin" ] is not None: # pragma no branch
             assert isinstance( attributes[ "admin" ], bool )
             self.__admin = attributes[ "admin" ]

@@ -45,7 +45,6 @@ class GitTag( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
             assert isinstance( attributes[ "message" ], ( str, unicode ) )
             self.__message = attributes[ "message" ]

@@ -28,7 +28,6 @@ class CommitStats( object ):
         self.__total = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             assert isinstance( attributes[ "additions" ], int )
             self.__additions = attributes[ "additions" ]

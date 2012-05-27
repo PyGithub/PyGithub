@@ -158,7 +158,6 @@ class Download( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "accesskeyid" in attributes and attributes[ "accesskeyid" ] is not None: # pragma no branch
             self.__accesskeyid = attributes[ "accesskeyid" ]
         if "acl" in attributes and attributes[ "acl" ] is not None: # pragma no branch

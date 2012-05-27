@@ -29,7 +29,6 @@ class GitTree( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) )
             self.__sha = attributes[ "sha" ]

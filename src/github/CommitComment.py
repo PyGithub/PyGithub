@@ -117,7 +117,6 @@ class CommitComment( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             assert isinstance( attributes[ "body" ], ( str, unicode ) )
             self.__body = attributes[ "body" ]

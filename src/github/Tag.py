@@ -34,7 +34,6 @@ class Tag( object ):
         self.__zipball_url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict )
             self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )

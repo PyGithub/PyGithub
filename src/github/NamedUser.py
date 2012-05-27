@@ -313,7 +313,6 @@ class NamedUser( object ):
             data
         )
 
-    # @todo Remove '_identity' from the normalized json description
     @property
     def _identity( self ):
         return str( self.login )
@@ -361,7 +360,6 @@ class NamedUser( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "avatar_url" in attributes and attributes[ "avatar_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "avatar_url" ], ( str, unicode ) )
             self.__avatar_url = attributes[ "avatar_url" ]

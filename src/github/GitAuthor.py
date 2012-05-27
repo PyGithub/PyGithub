@@ -28,7 +28,6 @@ class GitAuthor( object ):
         self.__name = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "date" in attributes and attributes[ "date" ] is not None: # pragma no branch
             assert isinstance( attributes[ "date" ], ( str, unicode ) )
             self.__date = attributes[ "date" ]

@@ -36,7 +36,6 @@ class {{ class.name }}( object ):
 {% endfor %}
 
 {% if class.identity %}
-    # @todo Remove '_identity' from the normalized json description
     @property
     def _identity( self ):
         return {% include "GithubObject.Concatenation.py" with concatenation=class.identity only  %}
@@ -64,7 +63,6 @@ class {{ class.name }}( object ):
 {% endif %}
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
 {% for attribute in class.attributes|dictsort:"name" %}
         if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None: # pragma no branch
 

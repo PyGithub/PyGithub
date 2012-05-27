@@ -58,7 +58,6 @@ class PullRequestFile( object ):
         self.__status = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             self.__additions = attributes[ "additions" ]
         if "blob_url" in attributes and attributes[ "blob_url" ] is not None: # pragma no branch

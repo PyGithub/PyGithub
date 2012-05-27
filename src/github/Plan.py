@@ -33,7 +33,6 @@ class Plan( object ):
         self.__space = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "collaborators" in attributes and attributes[ "collaborators" ] is not None: # pragma no branch
             assert isinstance( attributes[ "collaborators" ], int )
             self.__collaborators = attributes[ "collaborators" ]

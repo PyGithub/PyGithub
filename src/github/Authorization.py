@@ -113,7 +113,6 @@ class Authorization( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
             self.__app = attributes[ "app" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch

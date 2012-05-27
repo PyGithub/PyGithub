@@ -40,7 +40,6 @@ class GistHistoryState( object ):
         self.__version = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "change_status" in attributes and attributes[ "change_status" ] is not None: # pragma no branch
             assert isinstance( attributes[ "change_status" ], dict )
             self.__change_status = CommitStats.CommitStats( self.__requester, attributes[ "change_status" ], completion = LazyCompletion )

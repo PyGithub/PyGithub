@@ -216,7 +216,6 @@ class Gist( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
             assert isinstance( attributes[ "comments" ], int )
             self.__comments = attributes[ "comments" ]

@@ -95,7 +95,6 @@ class Hook( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "active" in attributes and attributes[ "active" ] is not None: # pragma no branch
             self.__active = attributes[ "active" ]
         if "config" in attributes and attributes[ "config" ] is not None: # pragma no branch

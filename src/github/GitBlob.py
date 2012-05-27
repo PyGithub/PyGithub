@@ -38,7 +38,6 @@ class GitBlob( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "content" in attributes and attributes[ "content" ] is not None: # pragma no branch
             assert isinstance( attributes[ "content" ], ( str, unicode ) )
             self.__content = attributes[ "content" ]

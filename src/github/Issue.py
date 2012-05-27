@@ -264,7 +264,6 @@ class Issue( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "assignee" in attributes and attributes[ "assignee" ] is not None: # pragma no branch
             assert isinstance( attributes[ "assignee" ], dict )
             self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completion = LazyCompletion )

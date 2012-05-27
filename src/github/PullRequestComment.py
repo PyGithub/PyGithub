@@ -117,7 +117,6 @@ class PullRequestComment( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             self.__body = attributes[ "body" ]
         if "commit_id" in attributes and attributes[ "commit_id" ] is not None: # pragma no branch

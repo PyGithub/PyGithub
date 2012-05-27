@@ -51,7 +51,6 @@ class GitRef( object ):
         self.__url = None
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict )
             self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )

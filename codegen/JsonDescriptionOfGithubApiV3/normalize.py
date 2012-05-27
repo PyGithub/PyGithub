@@ -4,6 +4,9 @@ import os.path
 import json
 import itertools
 
+### @todo Mandatory/optional attributes
+### @todo Remove '_identity' from the normalized json description
+
 def checkKeys( d, mandatoryKeys, optionalKeys = [] ):
     assert set( d.keys() ) >= set( mandatoryKeys ), d.keys()
     assert set( d.keys() ) <= set( mandatoryKeys ) | set( optionalKeys ) | set( [ "@todo" ] ), d.keys()

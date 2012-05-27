@@ -74,7 +74,6 @@ class IssueEvent( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
             assert isinstance( attributes[ "actor" ], dict )
             self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )

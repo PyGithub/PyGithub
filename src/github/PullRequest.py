@@ -290,7 +290,6 @@ class PullRequest( object ):
         self.__completed = True
 
     def __useAttributes( self, attributes ):
-        # @todo No need to check if attribute is in attributes when attribute is mandatory
         if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
             self.__additions = attributes[ "additions" ]
         if "base" in attributes and attributes[ "base" ] is not None: # pragma no branch
