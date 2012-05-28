@@ -28,7 +28,7 @@ setup(
 
         You can also create a Github instance without authentication::
 
-            g = Github( "user", "password" )
+            g = Github()
 
         Or with an OAuth token::
 
