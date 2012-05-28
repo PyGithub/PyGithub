@@ -27,7 +27,7 @@ for class_ in description[ "classes" ]:
 
 githubObjectTemplate = django.template.loader.get_template( "GithubObject.py" )
 for class_ in description[ "classes" ]:
-    with open( os.path.join( os.path.dirname( __file__ ), "..", "src", "github", class_[ "name" ] + ".py" ), "w" ) as f:
+    with open( os.path.join( os.path.dirname( __file__ ), "..", "src", "github", class_[ "name" ] + ".py" ), "wb" ) as f:
         f.write( "# WARNING: this file is generated automaticaly.\n" )
         f.write( "# Do not modify it manually, your work would be lost.\n" )
         f.write( "\n" )
@@ -45,7 +45,7 @@ for class_ in description[ "classes" ]:
         f.write( "\n".join( code ) + "\n" )
 
 referenceOfClassesTemplate = django.template.loader.get_template( "ReferenceOfClasses.md" )
-with open( os.path.join( os.path.dirname( __file__ ), "..", "doc", "ReferenceOfClasses.md" ), "w" ) as f:
+with open( os.path.join( os.path.dirname( __file__ ), "..", "doc", "ReferenceOfClasses.md" ), "wb" ) as f:
     rawCode = referenceOfClassesTemplate.render( django.template.Context( description ) ).split( "\n" )
     code = list()
     for line in rawCode:

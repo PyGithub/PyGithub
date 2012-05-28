@@ -367,7 +367,7 @@ class Description:
                     return obj.ToJson()
                 return json.JSONEncoder.default( self, obj )
 
-        with open( os.path.join( os.path.dirname( __file__ ), fileName ), "w" ) as f:
+        with open( os.path.join( os.path.dirname( __file__ ), fileName ), "wb" ) as f:
             json.dump( self, f, indent = 4, cls = Encoder )
 
 with open( os.path.join( os.path.dirname( __file__ ), "description.000.human_readable.json" ) ) as f:
