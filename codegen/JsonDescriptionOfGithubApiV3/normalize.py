@@ -6,6 +6,7 @@ import itertools
 
 ### @todo Mandatory/optional attributes
 ### @todo Remove '_identity' from the normalized json description
+### @todo Use of method arguments as input data or url parameters in request
 
 def mergeDict( base, *additions ):
     r = dict( base )
