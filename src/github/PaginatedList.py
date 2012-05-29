@@ -4,7 +4,6 @@ class PaginatedList:
     def __init__( self, contentClass, requester, headers, data ):
         self.__requester = requester
         self.__contentClass = contentClass
-        self.__pages = 0
         self.__fromData( headers, data )
 
     def __iter__( self ):
@@ -23,8 +22,7 @@ class PaginatedList:
 
     def __fromData( self, headers, data ):
         links = self.__parseLinkHeader( headers )
-        if len( data ) > 0 and "next" in links and self.__pages < 9: ### @todo Why would we want to stop at the 10th page ?
-            self.__pages += 1
+        if len( data ) > 0 and "next" in links:
             self.__nextUrl = links[ "next" ]
         else:
             self.__nextUrl = None
