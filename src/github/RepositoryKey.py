@@ -56,8 +56,7 @@ class RepositoryKey( object ):
             assert isinstance( title, ( str, unicode ) ), title
         if key is not DefaultValueForOptionalParameters:
             assert isinstance( key, ( str, unicode ) ), key
-        post_parameters = {
-        }
+        post_parameters = dict()
         if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
         if key is not DefaultValueForOptionalParameters:

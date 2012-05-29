@@ -153,8 +153,7 @@ class Issue( object ):
             assert isinstance( milestone, int ), milestone
         if labels is not DefaultValueForOptionalParameters:
             assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
-        post_parameters = {
-        }
+        post_parameters = dict()
         if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
         if body is not DefaultValueForOptionalParameters:

@@ -173,8 +173,7 @@ class PullRequest( object ):
             assert isinstance( body, ( str, unicode ) ), body
         if state is not DefaultValueForOptionalParameters:
             assert isinstance( state, ( str, unicode ) ), state
-        post_parameters = {
-        }
+        post_parameters = dict()
         if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
         if body is not DefaultValueForOptionalParameters:
@@ -253,8 +252,7 @@ class PullRequest( object ):
     def merge( self, commit_message = DefaultValueForOptionalParameters ):
         if commit_message is not DefaultValueForOptionalParameters:
             assert isinstance( commit_message, ( str, unicode ) ), commit_message
-        post_parameters = {
-        }
+        post_parameters = dict()
         if commit_message is not DefaultValueForOptionalParameters:
             post_parameters[ "commit_message" ] = commit_message
         status, headers, data = self.__requester.request(

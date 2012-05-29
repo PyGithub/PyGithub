@@ -550,10 +550,15 @@ class Repository( object ):
             assert isinstance( sha, ( str, unicode ) ), sha
         if path is not DefaultValueForOptionalParameters:
             assert isinstance( path, ( str, unicode ) ), path
+        url_parameters = dict()
+        if sha is not DefaultValueForOptionalParameters:
+            url_parameters[ "sha" ] = sha
+        if path is not DefaultValueForOptionalParameters:
+            url_parameters[ "path" ] = path
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/commits",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(
@@ -687,7 +692,7 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         if recursive is not DefaultValueForOptionalParameters:
             assert isinstance( recursive, bool ), recursive
-        url_parameters = {}
+        url_parameters = dict()
         if recursive is not DefaultValueForOptionalParameters:
             url_parameters[ "recursive" ] = recursive
         status, headers, data = self.__requester.request(
@@ -749,10 +754,27 @@ class Repository( object ):
             assert isinstance( direction, ( str, unicode ) ), direction
         if since is not DefaultValueForOptionalParameters:
             assert isinstance( since, ( str, unicode ) ), since
+        url_parameters = dict()
+        if milestone is not DefaultValueForOptionalParameters:
+            url_parameters[ "milestone" ] = milestone
+        if state is not DefaultValueForOptionalParameters:
+            url_parameters[ "state" ] = state
+        if assignee is not DefaultValueForOptionalParameters:
+            url_parameters[ "assignee" ] = assignee
+        if mentioned is not DefaultValueForOptionalParameters:
+            url_parameters[ "mentioned" ] = mentioned
+        if labels is not DefaultValueForOptionalParameters:
+            url_parameters[ "labels" ] = labels
+        if sort is not DefaultValueForOptionalParameters:
+            url_parameters[ "sort" ] = sort
+        if direction is not DefaultValueForOptionalParameters:
+            url_parameters[ "direction" ] = direction
+        if since is not DefaultValueForOptionalParameters:
+            url_parameters[ "since" ] = since
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/issues",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(
@@ -860,10 +882,17 @@ class Repository( object ):
             assert isinstance( sort, ( str, unicode ) ), sort
         if direction is not DefaultValueForOptionalParameters:
             assert isinstance( direction, ( str, unicode ) ), direction
+        url_parameters = dict()
+        if state is not DefaultValueForOptionalParameters:
+            url_parameters[ "state" ] = state
+        if sort is not DefaultValueForOptionalParameters:
+            url_parameters[ "sort" ] = sort
+        if direction is not DefaultValueForOptionalParameters:
+            url_parameters[ "direction" ] = direction
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/milestones",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(
@@ -900,10 +929,13 @@ class Repository( object ):
     def get_pulls( self, state = DefaultValueForOptionalParameters ):
         if state is not DefaultValueForOptionalParameters:
             assert isinstance( state, ( str, unicode ) ), state
+        url_parameters = dict()
+        if state is not DefaultValueForOptionalParameters:
+            url_parameters[ "state" ] = state
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/pulls",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(

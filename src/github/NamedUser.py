@@ -292,10 +292,13 @@ class NamedUser( object ):
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
             assert isinstance( type, ( str, unicode ) ), type
+        url_parameters = dict()
+        if type is not DefaultValueForOptionalParameters:
+            url_parameters[ "type" ] = type
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(

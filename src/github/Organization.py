@@ -235,8 +235,7 @@ class Organization( object ):
             assert isinstance( location, ( str, unicode ) ), location
         if name is not DefaultValueForOptionalParameters:
             assert isinstance( name, ( str, unicode ) ), name
-        post_parameters = {
-        }
+        post_parameters = dict()
         if billing_email is not DefaultValueForOptionalParameters:
             post_parameters[ "billing_email" ] = billing_email
         if blog is not DefaultValueForOptionalParameters:
@@ -312,10 +311,13 @@ class Organization( object ):
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
             assert isinstance( type, ( str, unicode ) ), type
+        url_parameters = dict()
+        if type is not DefaultValueForOptionalParameters:
+            url_parameters[ "type" ] = type
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(
