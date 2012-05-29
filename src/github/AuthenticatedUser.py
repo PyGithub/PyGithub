@@ -182,8 +182,7 @@ class AuthenticatedUser( object ):
             assert isinstance( note, ( str, unicode ) ), note
         if note_url is not DefaultValueForOptionalParameters:
             assert isinstance( note_url, ( str, unicode ) ), note_url
-        post_parameters = {
-        }
+        post_parameters = dict()
         if scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "scopes" ] = scopes
         if note is not DefaultValueForOptionalParameters:
@@ -293,8 +292,7 @@ class AuthenticatedUser( object ):
             assert isinstance( hireable, bool ), hireable
         if bio is not DefaultValueForOptionalParameters:
             assert isinstance( bio, ( str, unicode ) ), bio
-        post_parameters = {
-        }
+        post_parameters = dict()
         if name is not DefaultValueForOptionalParameters:
             post_parameters[ "name" ] = name
         if email is not DefaultValueForOptionalParameters:
@@ -486,10 +484,13 @@ class AuthenticatedUser( object ):
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
             assert isinstance( type, ( str, unicode ) ), type
+        url_parameters = dict()
+        if type is not DefaultValueForOptionalParameters:
+            url_parameters[ "type" ] = type
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/repos",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(

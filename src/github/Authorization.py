@@ -77,8 +77,7 @@ class Authorization( object ):
             assert isinstance( note, ( str, unicode ) ), note
         if note_url is not DefaultValueForOptionalParameters:
             assert isinstance( note_url, ( str, unicode ) ), note_url
-        post_parameters = {
-        }
+        post_parameters = dict()
         if scopes is not DefaultValueForOptionalParameters:
             post_parameters[ "scopes" ] = scopes
         if add_scopes is not DefaultValueForOptionalParameters:
