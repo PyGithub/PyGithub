@@ -3,6 +3,7 @@
 
 import PaginatedList
 from GithubObject import *
+import AuthorizationApplication
 
 class Authorization( object ):
     def __init__( self, requester, attributes, completion ):
@@ -123,7 +124,8 @@ class Authorization( object ):
 
     def __useAttributes( self, attributes ):
         if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
-            self.__app = attributes[ "app" ]
+            assert isinstance( attributes[ "app" ], dict ), attributes[ "app" ]
+            self.__app = AuthorizationApplication.AuthorizationApplication( self.__requester, attributes[ "app" ], completion = LazyCompletion )
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]

@@ -6,7 +6,8 @@ class Authorization( Framework.TestCase ):
         self.authorization = self.g.get_user().get_authorization( 372259 )
 
     def testAttributes( self ):
-        self.assertEqual( self.authorization.app, {u'url': u'http://developer.github.com/v3/oauth/#oauth-authorizations-api', u'name': u'GitHub API'} )
+        self.assertEqual( self.authorization.app.url, "http://developer.github.com/v3/oauth/#oauth-authorizations-api" )
+        self.assertEqual( self.authorization.app.name, "GitHub API" )
         self.assertEqual( self.authorization.created_at, "2012-05-22T18:03:17Z" )
         self.assertEqual( self.authorization.id, 372259 )
         self.assertEqual( self.authorization.note, None )

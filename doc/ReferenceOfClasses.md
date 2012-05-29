@@ -153,7 +153,7 @@ Class `Authorization`
 
 Attributes
 ----------
-* `app`
+* `app`: `AuthorizationApplication`
 * `created_at`: string
 * `id`: integer
 * `note`: string
@@ -175,6 +175,14 @@ Modification
     * `remove_scopes`: list of string
     * `note`: string
     * `note_url`: string
+
+Class `AuthorizationApplication`
+================================
+
+Attributes
+----------
+* `name`: string
+* `url`: string
 
 Class `Branch`
 ==============
@@ -486,7 +494,7 @@ Attributes
 * `created_at`: string
 * `events`: list of string
 * `id`: integer
-* `last_response`
+* `last_response`: `HookResponse`
 * `name`: string
 * `updated_at`: string
 * `url`: string
@@ -509,6 +517,15 @@ Testing
 -------
 * `test()`
 
+Class `HookResponse`
+====================
+
+Attributes
+----------
+* `code`: integer
+* `message`: string
+* `status`: string
+
 Class `Issue`
 =============
 
@@ -525,7 +542,7 @@ Attributes
 * `labels`: list of `Label`
 * `milestone`: `Milestone`
 * `number`: integer
-* `pull_request`
+* `pull_request`: `IssuePullRequest`
 * `repository`: `Repository`
 * `state`: string
 * `title`: string
@@ -599,6 +616,15 @@ Attributes
 * `id`: integer
 * `issue`: `Issue`
 * `url`: string
+
+Class `IssuePullRequest`
+========================
+
+Attributes
+----------
+* `diff_url`: string
+* `html_url`: string
+* `patch_url`: string
 
 Class `Label`
 =============

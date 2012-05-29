@@ -247,6 +247,14 @@
             ]
         },
         {
+            "name": "AuthorizationApplication",
+            "isCompletable": false,
+            "attributes": [
+                { "name": "url", "type": "string" },
+                { "name": "name", "type": "string" }
+            ]
+        },
+        {
             "name": "Authorization",
             "isCompletable": true,
             "edit": {
@@ -260,7 +268,7 @@
             },
             "delete": true,
             "attributes": [
-                { "name": "app", "type": "@todo" },
+                { "name": "app", "type": "AuthorizationApplication" },
                 { "name": "created_at", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "note_url", "type": "string" },
@@ -610,6 +618,15 @@
             ]
         },
         {
+            "name": "HookResponse",
+            "isCompletable": false,
+            "attributes": [
+                { "name": "status", "type": "string" },
+                { "name": "message", "type": "string" },
+                { "name": "code", "type": "integer" }
+            ]
+        },
+        {
             "name": "Hook",
             "edit": {
                 "mandatoryParameters": [
@@ -630,7 +647,7 @@
                 { "name": "created_at", "type": "string" },
                 { "name": "events", "type": "list:string" },
                 { "name": "id", "type": "integer" },
-                { "name": "last_response", "type": "@todo" },
+                { "name": "last_response", "type": "HookResponse" },
                 { "name": "name", "type": "string" },
                 { "name": "updated_at", "type": "string" },
                 { "name": "url", "type": "string" }
@@ -649,6 +666,15 @@
                         "information": "status"
                     }
                 }
+            ]
+        },
+        {
+            "name": "IssuePullRequest",
+            "isCompletable": false,
+            "attributes": [
+                { "name": "diff_url", "type": "string" },
+                { "name": "patch_url", "type": "string" },
+                { "name": "html_url", "type": "string" }
             ]
         },
         {
@@ -676,7 +702,7 @@
                 { "name": "labels", "type": "list:Label" },
                 { "name": "milestone", "type": "Milestone" },
                 { "name": "number", "type": "integer" },
-                { "name": "pull_request", "type": "@todo" },
+                { "name": "pull_request", "type": "IssuePullRequest" },
                 { "name": "repository", "type": "Repository" },
                 { "name": "state", "type": "string" },
                 { "name": "title", "type": "string" },

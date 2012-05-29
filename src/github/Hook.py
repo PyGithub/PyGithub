@@ -3,6 +3,7 @@
 
 import PaginatedList
 from GithubObject import *
+import HookResponse
 
 class Hook( object ):
     def __init__( self, requester, attributes, completion ):
@@ -119,7 +120,8 @@ class Hook( object ):
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "last_response" in attributes and attributes[ "last_response" ] is not None: # pragma no branch
-            self.__last_response = attributes[ "last_response" ]
+            assert isinstance( attributes[ "last_response" ], dict ), attributes[ "last_response" ]
+            self.__last_response = HookResponse.HookResponse( self.__requester, attributes[ "last_response" ], completion = LazyCompletion )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]

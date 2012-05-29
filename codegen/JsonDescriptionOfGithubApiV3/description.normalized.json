@@ -1503,9 +1503,9 @@
             "attributes": [
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "AuthorizationApplication"
                     }, 
                     "name": "app"
                 }, 
@@ -1672,6 +1672,29 @@
                     }
                 }
             ]
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "name"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "url"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "AuthorizationApplication", 
+            "methods": []
         }, 
         {
             "attributes": [
@@ -3457,9 +3480,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "HookResponse"
                     }, 
                     "name": "last_response"
                 }, 
@@ -3630,6 +3653,37 @@
             "attributes": [
                 {
                     "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "code"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "message"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "status"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "HookResponse", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "NamedUser"
@@ -3718,9 +3772,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "IssuePullRequest"
                     }, 
                     "name": "pull_request"
                 }, 
@@ -4386,6 +4440,37 @@
             ], 
             "isCompletable": true, 
             "name": "IssueEvent", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "diff_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "html_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "patch_url"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "IssuePullRequest", 
             "methods": []
         }, 
         {

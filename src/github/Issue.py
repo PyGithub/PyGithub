@@ -5,10 +5,11 @@ import PaginatedList
 from GithubObject import *
 import Repository
 import IssueEvent
+import Label
 import NamedUser
 import Milestone
 import IssueComment
-import Label
+import IssuePullRequest
 
 class Issue( object ):
     def __init__( self, requester, attributes, completion ):
@@ -317,7 +318,8 @@ class Issue( object ):
             assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None: # pragma no branch
-            self.__pull_request = attributes[ "pull_request" ]
+            assert isinstance( attributes[ "pull_request" ], dict ), attributes[ "pull_request" ]
+            self.__pull_request = IssuePullRequest.IssuePullRequest( self.__requester, attributes[ "pull_request" ], completion = LazyCompletion )
         if "repository" in attributes and attributes[ "repository" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repository" ], dict ), attributes[ "repository" ]
             self.__repository = Repository.Repository( self.__requester, attributes[ "repository" ], completion = LazyCompletion )
