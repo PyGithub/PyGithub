@@ -6343,7 +6343,8 @@
                                 "value": "/forks"
                             }
                         ], 
-                        "url_parameters": [
+                        "information": "status", 
+                        "urlParameters": [
                             {
                                 "name": "org", 
                                 "value": [
@@ -6356,8 +6357,7 @@
                                 ]
                             }
                         ], 
-                        "verb": "POST", 
-                        "information": "status"
+                        "verb": "POST"
                     }, 
                     "isMutation": false, 
                     "optionalParameters": [], 
