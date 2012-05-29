@@ -36,6 +36,7 @@ from Tag import *
 from Team import *
 from UserKey import *
 
+from PaginatedList import *
 from Issue33 import *
 
 Framework.main()
