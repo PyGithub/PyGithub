@@ -88,7 +88,7 @@ class BasicTestCase( unittest.TestCase ):
         self.__fileName = ""
         self.__file = None
         if self.recordMode:
-            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "w" ), *args, **kwds )
+            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
             import GithubCredentials
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
