@@ -60,6 +60,7 @@ class Milestone( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
+            None,
             None
         )
 
@@ -83,6 +84,7 @@ class Milestone( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -91,6 +93,7 @@ class Milestone( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/labels",
+            None,
             None
         )
         return PaginatedList.PaginatedList(

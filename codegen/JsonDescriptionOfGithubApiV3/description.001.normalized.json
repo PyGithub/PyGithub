@@ -6340,17 +6340,24 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/forks?org="
-                            }, 
+                                "value": "/forks"
+                            }
+                        ], 
+                        "url_parameters": [
                             {
-                                "type": "attribute", 
+                                "name": "org", 
                                 "value": [
-                                    "login"
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "login"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
-                        "information": "status", 
-                        "verb": "POST"
+                        "verb": "POST", 
+                        "information": "status"
                     }, 
                     "isMutation": false, 
                     "optionalParameters": [], 

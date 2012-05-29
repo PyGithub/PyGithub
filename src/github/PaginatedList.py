@@ -15,7 +15,7 @@ class PaginatedList:
                 yield element
             if self.__nextUrl is not None:
                 goOn = True
-                status, headers, data = self.__requester.request( "GET", self.__nextUrl, None )
+                status, headers, data = self.__requester.request( "GET", self.__nextUrl, None, None )
                 self.__fromData( headers, data )
 
     def __getitem__( self, index ):

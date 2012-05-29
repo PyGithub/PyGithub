@@ -50,6 +50,7 @@ class Hook( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
+            None,
             None
         )
 
@@ -78,6 +79,7 @@ class Hook( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -86,6 +88,7 @@ class Hook( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/test",
+            None,
             None
         )
 

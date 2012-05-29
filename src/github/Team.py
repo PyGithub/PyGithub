@@ -50,6 +50,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/members" + "/" + str( member._identity ),
+            None,
             None
         )
 
@@ -58,6 +59,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            None,
             None
         )
 
@@ -65,6 +67,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
+            None,
             None
         )
 
@@ -80,6 +83,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -88,6 +92,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -101,6 +106,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -115,6 +121,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/members" + "/" + str( member._identity ),
+            None,
             None
         )
         return status == 204
@@ -124,6 +131,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            None,
             None
         )
         return status == 204
@@ -133,6 +141,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/members" + "/" + str( member._identity ),
+            None,
             None
         )
 
@@ -141,6 +150,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            None,
             None
         )
 
@@ -160,6 +170,7 @@ class Team( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )

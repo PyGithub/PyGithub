@@ -162,6 +162,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/gists",
+            None,
             post_parameters
         )
         return Gist.Gist( self.__requester, data, completion = NoCompletion )
@@ -170,6 +171,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/events",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -183,6 +185,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/followers",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -196,6 +199,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/following",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -209,6 +213,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/gists",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -222,6 +227,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/orgs",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -235,6 +241,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/events/public",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -248,6 +255,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/received_events/public",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -261,6 +269,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/received_events",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -275,6 +284,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
+            None,
             None
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
@@ -285,6 +295,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/repos",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -298,6 +309,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/watched",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -347,6 +359,7 @@ class NamedUser( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )

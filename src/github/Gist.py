@@ -100,6 +100,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/comments",
+            None,
             post_parameters
         )
         return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
@@ -108,6 +109,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "POST",
             str( self.url ) + "/fork",
+            None,
             None
         )
         return Gist( self.__requester, data, completion = NoCompletion )
@@ -116,6 +118,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
+            None,
             None
         )
 
@@ -131,6 +134,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -140,6 +144,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/gists/comments/" + str( id ),
+            None,
             None
         )
         return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
@@ -148,6 +153,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/comments",
+            None,
             None
         )
         return PaginatedList.PaginatedList(
@@ -161,6 +167,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/star",
+            None,
             None
         )
         return status == 204
@@ -169,6 +176,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ) + "/star",
+            None,
             None
         )
 
@@ -176,6 +184,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "PUT",
             str( self.url ) + "/star",
+            None,
             None
         )
 
@@ -204,6 +213,7 @@ class Gist( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )

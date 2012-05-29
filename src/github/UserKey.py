@@ -42,6 +42,7 @@ class UserKey( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             str( self.url ),
+            None,
             None
         )
 
@@ -59,6 +60,7 @@ class UserKey( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             str( self.url ),
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -78,6 +80,7 @@ class UserKey( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )

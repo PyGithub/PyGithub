@@ -67,6 +67,7 @@ class IssueEvent( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )

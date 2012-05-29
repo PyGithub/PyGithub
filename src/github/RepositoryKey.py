@@ -47,6 +47,7 @@ class RepositoryKey( object ):
         status, headers, data = self.__requester.request(
             "DELETE",
             self.__customUrl,
+            None,
             None
         )
 
@@ -64,6 +65,7 @@ class RepositoryKey( object ):
         status, headers, data = self.__requester.request(
             "PATCH",
             self.__customUrl,
+            None,
             post_parameters
         )
         self.__useAttributes( data )
@@ -83,6 +85,7 @@ class RepositoryKey( object ):
         status, headers, data = self.__requester.request(
             "GET",
             self.__url,
+            None,
             None
         )
         self.__useAttributes( data )
