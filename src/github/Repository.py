@@ -197,6 +197,8 @@ class Repository( object ):
         )
 
     def compare( self, base, head ):
+        assert isinstance( base, ( str, unicode ) ), base
+        assert isinstance( head, ( str, unicode ) ), head
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/compare/" + str( base ) + "..." + str( head ),
