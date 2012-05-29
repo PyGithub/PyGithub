@@ -15,7 +15,7 @@ django.conf.settings.configure(
     TEMPLATE_STRING_IF_INVALID = "We have a logic error in our template or API description",
 )
 
-description = json.load( open( os.path.join( os.path.dirname( __file__ ), "JsonDescriptionOfGithubApiV3", "description.001.normalized.json" ) ) )
+description = json.load( open( os.path.join( os.path.dirname( __file__ ), "JsonDescriptionOfGithubApiV3", "description.normalized.json" ) ) )
 
 for class_ in description[ "classes" ]:
     dependencies = set()
