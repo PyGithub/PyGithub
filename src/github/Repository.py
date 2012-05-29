@@ -687,10 +687,13 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         if recursive is not DefaultValueForOptionalParameters:
             assert isinstance( recursive, bool ), recursive
+        url_parameters = {}
+        if recursive is not DefaultValueForOptionalParameters:
+            url_parameters[ "recursive" ] = recursive
         status, headers, data = self.__requester.request(
             "GET",
             str( self.url ) + "/git/trees" + "/" + str( sha ),
-            None,
+            url_parameters,
             None
         )
         return GitTree.GitTree( self.__requester, data, completion = NoCompletion )

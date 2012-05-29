@@ -131,6 +131,9 @@ class AuthenticatedUser( Framework.TestCase ):
     def testGetRepos( self ):
         self.assertListKeyEqual( self.user.get_repos(), lambda r: r.name,  [ "TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
 
+    def testGetReposWithArguments( self ):
+        self.assertListKeyEqual( self.user.get_repos( "public" ), lambda r: r.name,  [ "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
+
     def testCreateFork( self ):
         repo = self.user.create_fork( self.g.get_user( "nvie" ).get_repo( "gitflow" ) )
         self.assertEqual( repo.source.full_name, "nvie/gitflow" )

@@ -486,10 +486,13 @@ class AuthenticatedUser( object ):
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
             assert isinstance( type, ( str, unicode ) ), type
+        url_parameters = {}
+        if type is not DefaultValueForOptionalParameters:
+            url_parameters[ "type" ] = type
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/repos",
-            None,
+            url_parameters,
             None
         )
         return PaginatedList.PaginatedList(
