@@ -133,8 +133,10 @@ Repos
     * `has_downloads`: bool
 * `get_repo( name )`: `Repository`
     * `name`: string
-* `get_repos( [type] )`: list of `Repository`
+* `get_repos( [type, sort, direction] )`: list of `Repository`
     * `type`: string
+    * `sort`: string
+    * `direction`: string
 
 Watched
 -------
@@ -1105,7 +1107,7 @@ Issues
     * `state`: string
     * `assignee`: string
     * `mentioned`: string
-    * `labels`: list of string
+    * `labels`: string
     * `sort`: string
     * `direction`: string
     * `since`: string

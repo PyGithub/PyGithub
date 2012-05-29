@@ -89,6 +89,9 @@ class NamedUser( Framework.TestCase ):
     def testGetRepos( self ):
         self.assertListKeyEqual( self.user.get_repos(), lambda r: r.name, [ "TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
 
+    def testGetReposWithType( self ):
+        self.assertListKeyEqual( self.user.get_repos( "owner" ), lambda r: r.name, [ "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
+
     def testGetWatched( self ):
         self.assertListKeyEqual( self.user.get_watched(), lambda r: r.name, [ "git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "PyGithub", "django", "django", "TestPyGithub" ] )
 

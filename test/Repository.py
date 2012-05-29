@@ -255,6 +255,9 @@ class Repository( Framework.TestCase ):
     def testGetCommits( self ):
         self.assertListKeyBegin( self.repo.get_commits(), lambda c: c.sha, [ u'ecda065e01876209d2bdf5fe4e91cee8ffaa9ff7', u'0cec0d25e606c023a62a4fc7cdc815309ebf6d16', u'cb0313157bf904f2d364377d35d9397b269547a5', u'5bb654d26dd014d36794acd1e6ecf3736f12aad7', u'4303c5b90e2216d927155e9609436ccb8984c495', u'2a7e80e6421c5d4d201d60619068dea6bae612cb', u'0af24499a98e85f8ab2191898e8b809e5cebd4c5', u'e5ae923a68a9ae295ce5aa20b1227253de60e918', u'2f64b625f7e2afc9bef61d0decb459e2ef65c550', u'590798d349cba7de6e83b43aa5d4f8b0a38e685d', u'e7dca9143a23b8e2045a4a910a4a329007b10086', u'ab3f9b422cb3043d35cf6002fc9c042f8ead8c2a', u'632d8b63c32a2b79e87eb3b93e1ad228724de4bd', u'64c6a1e975e61b9c1449bed016cd19f33ee4b1c5', u'99963536fc81db3b9986c761b9dd08de22089aa2', u'8d57522bbd15d1fb6b616fae795cd8721deb1c4d', u'1140a91f3e45d09bc15463724f178a7ebf8e3149', u'936f4a97f1a86392637ec002bbf89ff036a5062d', u'e10470481795506e2c232720e2a9ecf588c8b567', u'e456549e5265406f8090ae5145255c8ca9ea5e4e', u'a91131be42eb328ae030f584af500f56aa08424b', u'2469c6e1aeb7919126a8271f6980b555b167e8b0', u'a655d0424135befd3a0d53f3f7eff2d1c754854f', u'ce62e91268aa34dad0ba0dbee4769933e3a71e50', u'1c88ee221b7f995855a1fdfac7d0ba19db918739', u'bd1a5dff3c547c634b2d89f5847218820e343883', u'b226b5b4e2f44107dde674e7a5d3e88d4e3518df', u'25dbd4053e982402c7d92139f167dbe46008c932', u'a0cc821c1beada4aa9ca0d5218664c5372720936', u'c1440bdf20bfeb62684c6d1779448719dce9d2df', u'1095d304b7fab3818dcb4c42093c8c56d3ac05e4', u'bd39726f7cf86ea7ffb33b5718241fdab5fc8f53', u'1d2b27824d20612066d84be42d6691c66bb18ef4', u'6af2bfd0d46bc0eeb8c37b85c7b3003e0e4ae297', u'a475d685d8ae709095d09094ea0962ac182d33f0', u'a85de99ea5b5e7b38bd68e076d09c49207b8687e', u'd24cf209ddd1758188c5f35344f76df818d09a46', u'0909fec395bb1f97e2580d6a029cfc64b352aff9', u'6e421e9e85e12008758870bc046bc2c6120af72a', u'32ed0ebc377efbed5b482b3d49ff54bf1715d55a', u'8213df1d744f251aa8e52229643a9f6ce352f3c0', u'69cc298fd159f19eb204dd09f17d31dc4abc3d41', u'85eef756353e13efcb24c726320cd2617c2a7bd8', u'50ac55b25ceba555b84709839f80447552450697', u'767d75a580279e457f9bc52bc308a17ff8ea0509', u'75e72ffa3066693291f7da03070666e8f885097a', u'504047e218e6b34a3828ccc408431634f17b9504', u'960db1d5c9853e9f5fbbc9237c2c166ceef1f080', u'877dde23e140bbf038f9a2d8f0f07b4e3a965c61', u'1c95ddfa09ec0aa1f07ee9ad50a77be1dd74b55e', u'99564c1cab139d1e4678f5f83f60d26f1210db7e', u'231926207709ceaa61e87b64e34e17d85adecd9c', u'fb722625dddb9a32f75190723f7da12683b7c4b2', u'cab9d71603e127bdd1f600a759dccea1781fa1ab', u'e648e5aeb5edc1fbf83e9d37d2a3cb57c005019a', u'4a5cf98e7f959f1b5d9af484760c25cd27d9180d', u'5d1add448e0b0b1dadb8c6094a9e5e19b255f67e', u'0d9fc99a4b5d1ec6473c9c81c888917c132ffa65', u'b56aa09011378b014221f86dffb8304957a9e6bd', u'3e8169c0a98ce1e2c6a32ae1256ae0f735065df5', u'378558f6cac6183b4a7100c0ce5eaad1cfff6717', u'58b4396aa0e7cb72911b75cb035798143a06e0ee', u'a3be28756101370fbc689eec3a7825c4c385a6c9', u'3d6bd49ce229243fea4bb46a937622d0ec7d4d1c', u'58cb0dbdef9765e0e913c726f923a47315aaf80e', u'7b7ac20c6fa27f72a24483c73ab1bf4deffc89f0', u'97f308e67383368a2d15788cac28e126c8528bb2', u'fc33a6de4f0e08d7ff2de05935517ec3932d212e', u'cc6d0fc044eadf2e6fde5da699f61654c1e691f3', u'2dd71f3777b87f2ba61cb20d2c67f10401e3eb2c', u'366ca58ca004b9129f9d435db8204ce0f5bc57c3', u'0d3b3ffd1e5c143af8725fdee808101f626f683d', u'157f9c13275738b6b39b8d7a874f5f0aee47cb18' ] )
 
+    def testGetCommitsWithArguments( self ):
+        self.assertListKeyEqual( self.repo.get_commits( "topic/RewriteWithGeneratedCode", "codegen/GenerateCode.py" ), lambda c: c.sha, [ "de386d5dc9cf103c90c4128eeca0e6abdd382065", "5b44982f6111bff2454243869df2e1c3086ccbba", "d6835ff949141957a733c8ddfa147026515ae493", "075d3d961d4614a2a0835d5583248adfc0687a7d", "8956796e7f462a49f499eac52fab901cdb59abdb", "283da5e7de6a4a3b6aaae7045909d70b643ad380", "d631e83b7901b0a0b6061b361130700a79505319" ] )
+
     def testGetDownloads( self ):
         self.assertListKeyEqual( self.repo.get_downloads(), lambda d: d.id, [ 245143 ] )
 
@@ -278,6 +281,13 @@ class Repository( Framework.TestCase ):
     def testGetIssues( self ):
         self.assertListKeyEqual( self.repo.get_issues(), lambda i: i.id, [ 4769659, 4639931, 4452000, 4356743, 3716033, 3715946, 3643837, 3628022, 3624595, 3624570, 3624561, 3624556, 3619973, 3527266, 3527245, 3527231 ] )
 
+    def testGetIssuesWithArguments( self ):
+        self.assertListKeyEqual( self.repo.get_issues( 3, "closed" ), lambda i: i.id, [ 3624472, 3620132, 3619658, 3561926 ] )
+        self.assertListKeyEqual( self.repo.get_issues( labels = "Bug" ), lambda i: i.id, [ 4780155 ] )
+        self.assertListKeyEqual( self.repo.get_issues( assignee = "jacquev6", sort = "comments", direction = "asc" ), lambda i: i.id, [ 4793106, 3527231, 3527266, 3624556, 4793216, 3619973, 3624595, 4452000, 3643837, 3628022, 3527245, 4793162, 4356743, 4780155 ] )
+        self.assertListKeyEqual( self.repo.get_issues( since = "2012-05-28T23:00:00Z" ), lambda i: i.id, [ 4793216, 4793162, 4793106, 3624556, 3619973, 3527266 ] )
+        self.assertListKeyEqual( self.repo.get_issues( mentioned = "Lyloa" ), lambda i: i.id, [ 4793162 ] )
+
     def testGetKeys( self ):
         self.assertListKeyEqual( self.repo.get_keys(), lambda k: k.title, [ "Key added through PyGithub" ] )
 
@@ -289,6 +299,9 @@ class Repository( Framework.TestCase ):
 
     def testGetMilestones( self ):
         self.assertListKeyEqual( self.repo.get_milestones(), lambda m: m.id, [ 93547 ] )
+
+    def testGetMilestonesWithArguments( self ):
+        self.assertListKeyEqual( self.repo.get_milestones( "closed", "due_date", "asc" ), lambda m: m.id, [ 93546, 95354, 108652, 124045 ] )
 
     def testGetIssuesEvents( self ):
         self.assertListKeyBegin( self.repo.get_issues_events(), lambda e: e.event, [ "assigned", "subscribed", "closed", "assigned", "closed" ] )
@@ -313,3 +326,6 @@ class Repository( Framework.TestCase ):
 
     def testGetPulls( self ):
         self.assertListKeyEqual( self.repo.get_pulls(), lambda p: p.id, [ 1436310 ] )
+
+    def testGetPullsWithArguments( self ):
+        self.assertListKeyEqual( self.repo.get_pulls( "closed" ), lambda p: p.id, [ 1448168, 1436310, 1436215 ] )

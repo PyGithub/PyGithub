@@ -747,7 +747,7 @@ class Repository( object ):
         if mentioned is not DefaultValueForOptionalParameters:
             assert isinstance( mentioned, ( str, unicode ) ), mentioned
         if labels is not DefaultValueForOptionalParameters:
-            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
+            assert isinstance( labels, ( str, unicode ) ), labels
         if sort is not DefaultValueForOptionalParameters:
             assert isinstance( sort, ( str, unicode ) ), sort
         if direction is not DefaultValueForOptionalParameters:

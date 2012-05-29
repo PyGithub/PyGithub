@@ -76,6 +76,9 @@ class Organization( Framework.TestCase ):
     def testGetRepos( self ):
         self.assertListKeyEqual( self.org.get_repos(), lambda r: r.name, [ "FatherBeaver", "TestPyGithub" ] )
 
+    def testGetReposWithType( self ):
+        self.assertListKeyEqual( self.org.get_repos( "public" ), lambda r: r.name, [ "FatherBeaver", "PyGithub" ] )
+
     def testGetEvents( self ):
         self.assertListKeyEqual( self.org.get_events(), lambda e: e.type, [ "CreateEvent", "CreateEvent", "PushEvent", "PushEvent", "DeleteEvent", "DeleteEvent", "PushEvent", "PushEvent", "DeleteEvent", "DeleteEvent", "PushEvent", "PushEvent", "PushEvent", "CreateEvent", "CreateEvent", "CreateEvent", "CreateEvent", "CreateEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "PushEvent", "ForkEvent", "CreateEvent" ] )
 

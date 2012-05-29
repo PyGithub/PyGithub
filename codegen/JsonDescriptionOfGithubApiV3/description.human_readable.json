@@ -109,7 +109,9 @@
                     "type": "Repository",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "type", "type": "string" }
+                            { "name": "type", "type": "string" },
+                            { "name": "sort", "type": "string" },
+                            { "name": "direction", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -1528,7 +1530,7 @@
                             { "name": "state", "type": "string" },
                             { "name": "assignee", "type": "string" },
                             { "name": "mentioned", "type": "string" },
-                            { "name": "labels", "type": "list:string" },
+                            { "name": "labels", "type": "string" },
                             { "name": "sort", "type": "string" },
                             { "name": "direction", "type": "string" },
                             { "name": "since", "type": "string" }

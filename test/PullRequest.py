@@ -59,3 +59,6 @@ class PullRequest( Framework.TestCase ):
         self.assertFalse( self.pull.is_merged() )
         status = self.pull.merge()
         self.assertTrue( self.pull.is_merged() )
+
+    def testMergeWithCommitMessage( self ):
+        self.g.get_user().get_repo( "PyGithub" ).get_pull( 39 ).merge( "Custom commit message created by PyGithub" )

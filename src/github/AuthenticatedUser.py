@@ -481,12 +481,20 @@ class AuthenticatedUser( object ):
         )
         return Repository.Repository( self.__requester, data, completion = NoCompletion )
 
-    def get_repos( self, type = DefaultValueForOptionalParameters ):
+    def get_repos( self, type = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
             assert isinstance( type, ( str, unicode ) ), type
+        if sort is not DefaultValueForOptionalParameters:
+            assert isinstance( sort, ( str, unicode ) ), sort
+        if direction is not DefaultValueForOptionalParameters:
+            assert isinstance( direction, ( str, unicode ) ), direction
         url_parameters = dict()
         if type is not DefaultValueForOptionalParameters:
             url_parameters[ "type" ] = type
+        if sort is not DefaultValueForOptionalParameters:
+            url_parameters[ "sort" ] = sort
+        if direction is not DefaultValueForOptionalParameters:
+            url_parameters[ "direction" ] = direction
         status, headers, data = self.__requester.request(
             "GET",
             "https://api.github.com/user" + "/repos",

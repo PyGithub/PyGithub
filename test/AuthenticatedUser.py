@@ -129,10 +129,10 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertListKeyEqual( self.user.get_orgs(), lambda o: o.login, [ "BeaverSoftware" ] )
 
     def testGetRepos( self ):
-        self.assertListKeyEqual( self.user.get_repos(), lambda r: r.name,  [ "TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
+        self.assertListKeyEqual( self.user.get_repos(), lambda r: r.name, [ "TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
 
     def testGetReposWithArguments( self ):
-        self.assertListKeyEqual( self.user.get_repos( "public" ), lambda r: r.name,  [ "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE" ] )
+        self.assertListKeyEqual( self.user.get_repos( "public", "full_name", "desc" ), lambda r: r.name, [ "ViDE", "QuadProgMm", "PyGithub", "DrawTurksHead", "DrawSyntax", "django", "developer.github.com", "C4Planner", "Boost.HierarchicalEnum", "acme-public-website" ] )
 
     def testCreateFork( self ):
         repo = self.user.create_fork( self.g.get_user( "nvie" ).get_repo( "gitflow" ) )
