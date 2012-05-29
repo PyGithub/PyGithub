@@ -40,7 +40,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( self.repo.watchers, 15 )
 
     def testEditWithoutArguments( self ):
-        self.repo.edit( "PyGithub" ) ### @todo Make name an optional parameter
+        self.repo.edit( "PyGithub" )
 
     def testEditWithAllArguments( self ):
         self.repo.edit( "PyGithub", "Description edited by PyGithub", "http://vincent-jacques.net/PyGithub", public = True, has_issues = True, has_wiki = False, has_downloads = True )
@@ -64,7 +64,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( issue.number, 28 )
 
     def testCreateIssueWithAllArguments( self ):
-        issue = self.repo.create_issue( "Issue also created by PyGithub", "Body created by PyGithub", "jacquev6", 2, [ "Question" ] ) ### @todo Use typed arguments
+        issue = self.repo.create_issue( "Issue also created by PyGithub", "Body created by PyGithub", "jacquev6", 2, [ "Question" ] )
         self.assertEqual( issue.number, 30 )
 
     def testCreateLabel( self ):
@@ -80,7 +80,6 @@ class Repository( Framework.TestCase ):
         self.assertEqual( label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+silly+name+%25+%2A+%2B+created+by+PyGithub" )
 
     def testCreateHookWithMinimalParameters( self ):
-        ### @todo Implement https://api.github.com/hooks, which is not described, but refered by http://developer.github.com/v3/repos/hooks/#create-a-hook
         hook = self.repo.create_hook( "web", { "url": "http://foobar.com" } )
         self.assertEqual( hook.active, True )
         self.assertEqual( hook.config, { "url": "http://foobar.com" } )
@@ -145,7 +144,7 @@ class Repository( Framework.TestCase ):
                 "path": "Foobar.txt",
                 "mode": "100644",
                 "type": "blob",
-                "content": "File created by PyGithub" ### @todo create_git_tree with sha instead of content
+                "content": "File created by PyGithub"
             } ] 
         )
         self.assertEqual( tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b" )
@@ -156,7 +155,7 @@ class Repository( Framework.TestCase ):
                 "path": "Barbaz.txt",
                 "mode": "100644",
                 "type": "blob",
-                "content": "File also created by PyGithub" ### @todo create_git_tree with sha instead of content
+                "content": "File also created by PyGithub"
             } ], 
             "41cf8c178c636a018d537cb20daae09391efd70b"
         )
@@ -192,7 +191,6 @@ class Repository( Framework.TestCase ):
         self.assertFalse( self.repo.has_in_collaborators( lyloa ) )
 
     def testCompare( self ):
-        ### @todo Structure ComparisionResult
         self.assertEqual(
             self.repo.compare( "v0.6", "v0.7" ),
             {
@@ -282,8 +280,7 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_labels(), lambda l: l.name, [ "Refactoring", "Public interface", "Functionalities", "Project management", "Bug", "Question" ] )
 
     def testGetLanguages( self ):
-        ### @todo Structure ?
-        self.assertEqual( self.repo.get_languages(),  { "Python": 127266, "Shell": 673} )
+        self.assertEqual( self.repo.get_languages(), { "Python": 127266, "Shell": 673} )
 
     def testGetMilestones( self ):
         self.assertListKeyEqual( self.repo.get_milestones(), lambda m: m.id, [ 93547 ] )
@@ -310,5 +307,4 @@ class Repository( Framework.TestCase ):
         self.assertEqual( pull.id, 1436310 )
 
     def testGetPulls( self ):
-        ### @todo Create another PullRequest and re-record this test (at the same time as testCreatePullFromIssue)
         self.assertListKeyEqual( self.repo.get_pulls(), lambda p: p.id, [ 1436310 ] )

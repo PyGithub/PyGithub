@@ -4,10 +4,6 @@ import os.path
 import json
 import itertools
 
-### @todo Mandatory/optional attributes
-### @todo Remove '_identity' from the normalized json description
-### @todo Use of method arguments as input data or url parameters in request
-
 def mergeDict( base, *additions ):
     r = dict( base )
     for addition in additions:
@@ -88,7 +84,7 @@ class Function:
 
     def __init__( self, desc, *additionalDescs ):
         desc = mergeDict( desc, *additionalDescs )
-        checkKeys( desc, [ "name", "type", "group" ], [ "url", "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] ) # @todo Move request to mandatoryKeys
+        checkKeys( desc, [ "name", "type", "group", "request" ], [ "url", "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] )
 
         self.name = desc[ "name" ]
         self.type = Type( desc[ "type" ] )

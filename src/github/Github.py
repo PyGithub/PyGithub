@@ -17,8 +17,7 @@ class Github( object ):
     def get_user( self, login = None ):
         if login is None:
             attributes = {
-                "url": "https://api.github.com/user", # @todo Erf, this url is replaced by /users/login when __complete is called...
-                # "login": self.__login # @todo ?
+                "url": "https://api.github.com/user",
             }
             return AuthenticatedUser.AuthenticatedUser( self.__requester, attributes, completion = LazyCompletion )
         else:
@@ -30,15 +29,15 @@ class Github( object ):
 
     def get_organization( self, login ):
         attributes = {
-                "url": "https://api.github.com/orgs/" + login,
-                "login": login,
+            "url": "https://api.github.com/orgs/" + login,
+            "login": login,
         }
         return Organization.Organization( self.__requester, attributes, completion = ImmediateCompletion )
 
     def get_gist( self, id ):
         attributes = {
-                "url": "https://api.github.com/gists/" + str( id ),
-                "id": id,
+            "url": "https://api.github.com/gists/" + str( id ),
+            "id": id,
         }
         return Gist.Gist( self.__requester, attributes, completion = ImmediateCompletion )
 

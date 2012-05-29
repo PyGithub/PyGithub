@@ -74,7 +74,6 @@ class Organization( Framework.TestCase ):
         self.assertFalse( self.org.has_in_members( lyloa ) )
 
     def testGetRepos( self ):
-        ### @todo get_repos( type )
         self.assertListKeyEqual( self.org.get_repos(), lambda r: r.name, [ "FatherBeaver", "TestPyGithub" ] )
 
     def testGetEvents( self ):

@@ -96,12 +96,12 @@ class AuthenticatedUser( Framework.TestCase ):
     def testCreateGist( self ):
         gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } }, "Gist created by PyGithub" )
         self.assertEqual( gist.description, "Gist created by PyGithub" )
-        self.assertEqual( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2729810/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
+        self.assertEqual( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2729810/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} )
 
     def testCreateGistWithoutDescription( self ):
         gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } } )
         self.assertEqual( gist.description, None )
-        self.assertEqual( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2793179/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} ) ### @todo
+        self.assertEqual( gist.files, {u'foobar.txt': {u'raw_url': u'https://gist.github.com/raw/2793179/73a1c7f17aa0ad5d7cbb5a8ca033ce47d3d23197/foobar.txt', u'language': u'Text', u'filename': u'foobar.txt', u'content': u'File created by PyGithub', u'type': u'text/plain', u'size': 24}} )
 
     def testCreateKey( self ):
         key = self.user.create_key( "Key added through PyGithub", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA2Mm0RjTNAYFfSCtUpO54usdseroUSIYg5KX4JoseTpqyiB/hqewjYLAdUq/tNIQzrkoEJWSyZrQt0ma7/YCyMYuNGd3DU6q6ZAyBeY3E9RyCiKjO3aTL2VKQGFvBVVmGdxGVSCITRphAcsKc/PF35/fg9XP9S0anMXcEFtdfMHz41SSw+XtE+Vc+6cX9FuI5qUfLGbkv8L1v3g4uw9VXlzq4GfTA+1S7D6mcoGHopAIXFlVr+2RfDKdSURMcB22z41fljO1MW4+zUS/4FyUTpL991es5fcwKXYoiE+x06VJeJJ1Krwx+DZj45uweV6cHXt2JwJEI9fWB6WyBlDejWw== vincent@IDEE" )

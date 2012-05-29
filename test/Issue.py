@@ -18,7 +18,7 @@ class Issue( Framework.TestCase ):
         self.assertListKeyEqual( self.issue.labels, lambda l: l.name, [ "Bug", "Project management", "Question" ] )
         self.assertEqual( self.issue.milestone.title, "Version 0.4" )
         self.assertEqual( self.issue.number, 28 )
-        self.assertEqual( self.issue.pull_request, {u'diff_url': None, u'patch_url': None, u'html_url': None} ) ### @todo
+        self.assertEqual( self.issue.pull_request, {u'diff_url': None, u'patch_url': None, u'html_url': None} )
         self.assertEqual( self.issue.state, "closed" )
         self.assertEqual( self.issue.title, "Issue created by PyGithub" )
         self.assertEqual( self.issue.updated_at, "2012-05-26T14:59:33Z" )
@@ -29,15 +29,12 @@ class Issue( Framework.TestCase ):
         self.issue.edit()
 
     def testEditWithAllParameters( self ):
-        ### @todo Variadic argument for labels?
-        ### @todo NamedUser instead of string for assignee
         self.issue.edit( "Title edited by PyGithub", "Body edited by PyGithub", "jacquev6", "open", 2, [ "Bug" ] )
         self.assertEqual( self.issue.assignee.login, "jacquev6" )
         self.assertEqual( self.issue.body, "Body edited by PyGithub" )
         self.assertEqual( self.issue.state, "open" )
         self.assertEqual( self.issue.title, "Title edited by PyGithub" )
-        self.assertEqual( len( self.issue.labels ), 1 )
-        self.assertEqual( self.issue.labels[ 0 ].name, "Bug" )
+        self.assertListKeyEqual( self.issue.labels, lambda l: l.name, [ "Bug" ] )
 
     def testCreateComment( self ):
         comment = self.issue.create_comment( "Comment created by PyGithub" )
