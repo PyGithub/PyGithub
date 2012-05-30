@@ -118,6 +118,8 @@ class Download( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__accesskeyid = None

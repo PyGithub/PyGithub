@@ -80,6 +80,8 @@ class Commit( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return CommitComment.CommitComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -89,6 +91,8 @@ class Commit( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self.__requester,

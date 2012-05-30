@@ -54,6 +54,8 @@ class Hook( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, name, config, events = DefaultValueForOptionalParameters, add_events = DefaultValueForOptionalParameters, remove_events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -83,6 +85,8 @@ class Hook( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def test( self ):
@@ -92,6 +96,8 @@ class Hook( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__active = None

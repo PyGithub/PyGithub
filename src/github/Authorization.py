@@ -64,6 +64,8 @@ class Authorization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
@@ -93,6 +95,8 @@ class Authorization( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

@@ -63,6 +63,8 @@ class Milestone( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -87,6 +89,8 @@ class Milestone( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_labels( self ):
@@ -96,6 +100,8 @@ class Milestone( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Label.Label,
             self.__requester,

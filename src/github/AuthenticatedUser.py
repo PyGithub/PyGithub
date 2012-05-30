@@ -154,6 +154,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def add_to_following( self, following ):
         assert isinstance( following, NamedUser.NamedUser ), following
@@ -163,6 +165,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def add_to_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
@@ -172,6 +176,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def create_authorization( self, scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
@@ -193,6 +199,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Authorization.Authorization( self.__requester, data, completed = True )
 
     def create_fork( self, repo ):
@@ -203,6 +211,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
@@ -221,6 +231,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Gist.Gist( self.__requester, data, completed = True )
 
     def create_key( self, title, key ):
@@ -236,8 +248,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ):
-            raise GithubException( status, data )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return UserKey.UserKey( self.__requester, data, completed = True )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
@@ -275,6 +287,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def edit( self, name = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, hireable = DefaultValueForOptionalParameters, bio = DefaultValueForOptionalParameters ):
@@ -313,6 +327,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_authorization( self, id ):
@@ -323,6 +339,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Authorization.Authorization( self.__requester, data, completed = True )
 
     def get_authorizations( self ):
@@ -332,6 +350,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Authorization.Authorization,
             self.__requester,
@@ -346,6 +366,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return data
 
     def get_events( self ):
@@ -355,6 +377,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -369,6 +393,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -383,6 +409,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -397,6 +425,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,
@@ -411,6 +441,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self.__requester,
@@ -426,6 +458,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return UserKey.UserKey( self.__requester, data, completed = True )
 
     def get_keys( self ):
@@ -435,6 +469,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             UserKey.UserKey,
             self.__requester,
@@ -450,6 +486,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -464,6 +502,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Organization.Organization,
             self.__requester,
@@ -479,6 +519,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
@@ -501,6 +543,8 @@ class AuthenticatedUser( object ):
             url_parameters,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,
@@ -515,6 +559,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,
@@ -529,6 +575,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,
@@ -565,6 +613,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def remove_from_following( self, following ):
         assert isinstance( following, NamedUser.NamedUser ), following
@@ -574,6 +624,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def remove_from_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
@@ -583,6 +635,8 @@ class AuthenticatedUser( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__avatar_url = None

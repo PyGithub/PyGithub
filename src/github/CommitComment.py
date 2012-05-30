@@ -74,6 +74,8 @@ class CommitComment( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, body ):
         assert isinstance( body, ( str, unicode ) ), body
@@ -86,6 +88,8 @@ class CommitComment( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

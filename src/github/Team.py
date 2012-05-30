@@ -51,6 +51,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def add_to_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
@@ -60,6 +62,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -68,6 +72,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, name, permission = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -84,6 +90,8 @@ class Team( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_members( self ):
@@ -93,6 +101,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -107,6 +117,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,
@@ -142,6 +154,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def remove_from_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
@@ -151,6 +165,8 @@ class Team( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__id = None

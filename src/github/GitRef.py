@@ -30,6 +30,8 @@ class GitRef( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, sha, force = DefaultValueForOptionalParameters ):
         assert isinstance( sha, ( str, unicode ) ), sha
@@ -46,6 +48,8 @@ class GitRef( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

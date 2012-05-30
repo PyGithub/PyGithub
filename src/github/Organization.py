@@ -144,6 +144,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def create_fork( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
@@ -156,6 +158,8 @@ class Organization( object ):
             url_parameters,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
@@ -197,6 +201,8 @@ class Organization( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
@@ -218,6 +224,8 @@ class Organization( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Team.Team( self.__requester, data, completed = True )
 
     def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
@@ -252,6 +260,8 @@ class Organization( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_events( self ):
@@ -261,6 +271,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -275,6 +287,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -289,6 +303,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -304,6 +320,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
@@ -318,6 +336,8 @@ class Organization( object ):
             url_parameters,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,
@@ -333,6 +353,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Team.Team( self.__requester, data, completed = True )
 
     def get_teams( self ):
@@ -342,6 +364,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Team.Team,
             self.__requester,
@@ -377,6 +401,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def remove_from_public_members( self, public_member ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
@@ -386,6 +412,8 @@ class Organization( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__avatar_url = None

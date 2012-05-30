@@ -43,6 +43,8 @@ class UserKey( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, title = DefaultValueForOptionalParameters, key = DefaultValueForOptionalParameters ):
         if title is not DefaultValueForOptionalParameters:
@@ -60,6 +62,8 @@ class UserKey( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

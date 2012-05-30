@@ -101,6 +101,8 @@ class Gist( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return GistComment.GistComment( self.__requester, data, completed = True )
 
     def create_fork( self ):
@@ -110,6 +112,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return Gist( self.__requester, data, completed = True )
 
     def delete( self ):
@@ -119,6 +123,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def edit( self, description = DefaultValueForOptionalParameters, files = DefaultValueForOptionalParameters ):
         if description is not DefaultValueForOptionalParameters:
@@ -134,6 +140,8 @@ class Gist( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_comment( self, id ):
@@ -144,6 +152,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return GistComment.GistComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -153,6 +163,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             GistComment.GistComment,
             self.__requester,
@@ -176,6 +188,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def set_starred( self ):
         status, headers, data = self.__requester.request(
@@ -184,6 +198,8 @@ class Gist( object ):
             None,
             None
         )
+        if self.__requester.isFailureStatus( status ): # pragma no branch
+            raise GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__comments = None
