@@ -111,7 +111,7 @@ class Issue( object ):
         return self.__user
 
     def add_to_labels( self, *labels ):
-        assert len( labels ) == 0 or isinstance( labels[ 0 ], Label.Label ), labels
+        assert all( isinstance( label, Label.Label ) for label in labels ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "POST",
@@ -153,7 +153,7 @@ class Issue( object ):
         if milestone is not DefaultValueForOptionalParameters:
             assert isinstance( milestone, int ), milestone
         if labels is not DefaultValueForOptionalParameters:
-            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
+            assert all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = dict()
         if title is not DefaultValueForOptionalParameters:
             post_parameters[ "title" ] = title
@@ -237,7 +237,7 @@ class Issue( object ):
         )
 
     def set_labels( self, *labels ):
-        assert len( labels ) == 0 or isinstance( labels[ 0 ], Label.Label ), labels
+        assert all( isinstance( label, Label.Label ) for label in labels ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self.__requester.request(
             "PUT",
@@ -306,7 +306,7 @@ class Issue( object ):
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self.__id = attributes[ "id" ]
         if "labels" in attributes and attributes[ "labels" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "labels" ], list ) and ( len( attributes[ "labels" ] ) == 0 or isinstance( attributes[ "labels" ][ 0 ], dict ) ), attributes[ "labels" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "labels" ] ), attributes[ "labels" ]
             self.__labels = [
                 Label.Label( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "labels" ]

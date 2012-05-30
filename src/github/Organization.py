@@ -204,7 +204,7 @@ class Organization( object ):
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
         if repo_names is not DefaultValueForOptionalParameters:
-            assert isinstance( repo_names, list ) and ( len( repo_names ) == 0 or isinstance( repo_names[ 0 ], ( str, unicode ) ) ), repo_names
+            assert all( isinstance( element, ( str, unicode ) ) for element in repo_names ), repo_names
         if permission is not DefaultValueForOptionalParameters:
             assert isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {

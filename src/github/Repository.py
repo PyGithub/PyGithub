@@ -247,7 +247,7 @@ class Repository( object ):
 
     def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
         assert isinstance( message, ( str, unicode ) ), message
-        assert isinstance( parents, list ) and ( len( parents ) == 0 or isinstance( parents[ 0 ], GitCommit.GitCommit ) ), parents
+        assert all( isinstance( element, GitCommit.GitCommit ) for element in parents ), parents
         post_parameters = {
             "message": message,
             "tree": tree,
@@ -318,7 +318,7 @@ class Repository( object ):
     def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
         if events is not DefaultValueForOptionalParameters:
-            assert isinstance( events, list ) and ( len( events ) == 0 or isinstance( events[ 0 ], ( str, unicode ) ) ), events
+            assert all( isinstance( element, ( str, unicode ) ) for element in events ), events
         if active is not DefaultValueForOptionalParameters:
             assert isinstance( active, bool ), active
         post_parameters = {
@@ -346,7 +346,7 @@ class Repository( object ):
         if milestone is not DefaultValueForOptionalParameters:
             assert isinstance( milestone, int ), milestone
         if labels is not DefaultValueForOptionalParameters:
-            assert isinstance( labels, list ) and ( len( labels ) == 0 or isinstance( labels[ 0 ], ( str, unicode ) ) ), labels
+            assert all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = {
             "title": title,
         }

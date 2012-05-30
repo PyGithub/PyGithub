@@ -69,11 +69,11 @@ class Authorization( object ):
 
     def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
-            assert isinstance( scopes, list ) and ( len( scopes ) == 0 or isinstance( scopes[ 0 ], ( str, unicode ) ) ), scopes
+            assert all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
         if add_scopes is not DefaultValueForOptionalParameters:
-            assert isinstance( add_scopes, list ) and ( len( add_scopes ) == 0 or isinstance( add_scopes[ 0 ], ( str, unicode ) ) ), add_scopes
+            assert all( isinstance( element, ( str, unicode ) ) for element in add_scopes ), add_scopes
         if remove_scopes is not DefaultValueForOptionalParameters:
-            assert isinstance( remove_scopes, list ) and ( len( remove_scopes ) == 0 or isinstance( remove_scopes[ 0 ], ( str, unicode ) ) ), remove_scopes
+            assert all( isinstance( element, ( str, unicode ) ) for element in remove_scopes ), remove_scopes
         if note is not DefaultValueForOptionalParameters:
             assert isinstance( note, ( str, unicode ) ), note
         if note_url is not DefaultValueForOptionalParameters:
@@ -139,7 +139,7 @@ class Authorization( object ):
             assert isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
             self.__note_url = attributes[ "note_url" ]
         if "scopes" in attributes and attributes[ "scopes" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "scopes" ], list ) and ( len( attributes[ "scopes" ] ) == 0 or isinstance( attributes[ "scopes" ][ 0 ], ( str, unicode ) ) ), attributes[ "scopes" ]
+            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "scopes" ] ), attributes[ "scopes" ]
             self.__scopes = attributes[ "scopes" ]
         if "token" in attributes and attributes[ "token" ] is not None: # pragma no branch
             assert isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]

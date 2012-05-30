@@ -61,7 +61,7 @@ class GitCommit( object ):
             assert isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
             self.__message = attributes[ "message" ]
         if "parents" in attributes and attributes[ "parents" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) ), attributes[ "parents" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
             self.__parents = [
                 GitCommit( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "parents" ]

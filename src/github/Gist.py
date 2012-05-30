@@ -234,7 +234,7 @@ class Gist( object ):
             assert isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
             self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completion = LazyCompletion )
         if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "forks" ], list ) and ( len( attributes[ "forks" ] ) == 0 or isinstance( attributes[ "forks" ][ 0 ], dict ) ), attributes[ "forks" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "forks" ] ), attributes[ "forks" ]
             self.__forks = [
                 Gist( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "forks" ]
@@ -246,7 +246,7 @@ class Gist( object ):
             assert isinstance( attributes[ "git_push_url" ], ( str, unicode ) ), attributes[ "git_push_url" ]
             self.__git_push_url = attributes[ "git_push_url" ]
         if "history" in attributes and attributes[ "history" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "history" ], list ) and ( len( attributes[ "history" ] ) == 0 or isinstance( attributes[ "history" ][ 0 ], dict ) ), attributes[ "history" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "history" ] ), attributes[ "history" ]
             self.__history = [
                 GistHistoryState.GistHistoryState( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "history" ]

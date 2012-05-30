@@ -19,16 +19,16 @@
 
         {% if parameter.type.simple %}
             {% if parameter.type.name == "string" %}
-        assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], ( str, unicode ) ) ), {{ parameter.name }}
+        assert all( isinstance( element, ( str, unicode ) ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "integer" %}
-        assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], int ) ), {{ parameter.name }}
+        assert all( isinstance( element, int ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "bool" %}
-        assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], bool ) ), {{ parameter.name }}
+        assert all( isinstance( element, bool ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
         {% else %}
-        assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], {{ parameter.type.name }}.{{ parameter.type.name }} ) ), {{ parameter.name }}
+        assert all( isinstance( element, {{ parameter.type.name }}.{{ parameter.type.name }} ) for element in {{ parameter.name }} ), {{ parameter.name }}
         {% endif %}
 
     {% endif %}
@@ -58,16 +58,16 @@
 
         {% if parameter.type.simple %}
             {% if parameter.type.name == "string" %}
-            assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], ( str, unicode ) ) ), {{ parameter.name }}
+            assert all( isinstance( element, ( str, unicode ) ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "integer" %}
-            assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], int ) ), {{ parameter.name }}
+            assert all( isinstance( element, int ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "bool" %}
-            assert isinstance( {{ parameter.name }}, list ) and ( len( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], bool ) ), {{ parameter.name }}
+            assert all( isinstance( element, bool ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
-            {% else %}
-            assert isinstance( {{ parameter.name }}, list ) and ( {{ parameter.name }} ) == 0 or isinstance( {{ parameter.name }}[ 0 ], {{ parameter.type.name }}.{{ parameter.type.name }} ) ), {{ parameter.name }}
+        {% else %}
+            assert all( isinstance( element, {{ parameter.type.name }}.{{ parameter.type.name }} ) for element in {{ parameter.name }} ), {{ parameter.name }}
         {% endif %}
 
     {% endif %}
@@ -77,16 +77,16 @@
     {% if method.variadicParameter.type.name != "@todo" %}
             {% if method.variadicParameter.type.simple %}
                 {% if method.variadicParameter.type.name == "string" %}
-        assert len( {{ method.variadicParameter.name }}s ) == 0 or isinstance( {{ method.variadicParameter.name }}s[ 0 ], ( str, unicode ) ), {{ method.variadicParameter.name }}s
+        assert all( isinstance( {{ method.variadicParameter.name }}, ( str, unicode ) ) for {{ method.variadicParameter.name }} in {{ method.variadicParameter.name }}s ), {{ method.variadicParameter.name }}s
                 {% endif %}
                 {% if parameter.type.name == "integer" %}
-        assert len( {{ method.variadicParameter.name }}s ) == 0 or isinstance( {{ method.variadicParameter.name }}s[ 0 ], int ), {{ method.variadicParameter.name }}s
+        assert all( isinstance( {{ method.variadicParameter.name }}, int ) for {{ method.variadicParameter.name }} in {{ method.variadicParameter.name }}s ), {{ method.variadicParameter.name }}s
                 {% endif %}
                 {% if parameter.type.name == "bool" %}
-        assert len( {{ method.variadicParameter.name }}s ) == 0 or isinstance( {{ method.variadicParameter.name }}s[ 0 ], bool ), {{ method.variadicParameter.name }}s
+        assert all( isinstance( {{ method.variadicParameter.name }}, bool ) for {{ method.variadicParameter.name }} in {{ method.variadicParameter.name }}s ), {{ method.variadicParameter.name }}s
                 {% endif %}
             {% else %}
-        assert len( {{ method.variadicParameter.name }}s ) == 0 or isinstance( {{ method.variadicParameter.name }}s[ 0 ], {{ method.variadicParameter.type.name }}.{{ method.variadicParameter.type.name }} ), {{ method.variadicParameter.name }}s
+        assert all( isinstance( {{ method.variadicParameter.name }}, {{ method.variadicParameter.type.name }}.{{ method.variadicParameter.type.name }} ) for {{ method.variadicParameter.name }} in {{ method.variadicParameter.name }}s ), {{ method.variadicParameter.name }}s
             {% endif %}
     {% endif %}
 {% endif %}

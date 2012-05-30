@@ -133,13 +133,13 @@ class Commit( object ):
             assert isinstance( attributes[ "committer" ], dict ), attributes[ "committer" ]
             self.__committer = NamedUser.NamedUser( self.__requester, attributes[ "committer" ], completion = LazyCompletion )
         if "files" in attributes and attributes[ "files" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "files" ], list ) and ( len( attributes[ "files" ] ) == 0 or isinstance( attributes[ "files" ][ 0 ], dict ) ), attributes[ "files" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
             self.__files = [
                 CommitFile.CommitFile( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "files" ]
             ]
         if "parents" in attributes and attributes[ "parents" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "parents" ], list ) and ( len( attributes[ "parents" ] ) == 0 or isinstance( attributes[ "parents" ][ 0 ], dict ) ), attributes[ "parents" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
             self.__parents = [
                 Commit( self.__requester, element, completion = LazyCompletion )
                 for element in attributes[ "parents" ]

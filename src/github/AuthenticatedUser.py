@@ -177,7 +177,7 @@ class AuthenticatedUser( object ):
 
     def create_authorization( self, scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
-            assert isinstance( scopes, list ) and ( len( scopes ) == 0 or isinstance( scopes[ 0 ], ( str, unicode ) ) ), scopes
+            assert all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
         if note is not DefaultValueForOptionalParameters:
             assert isinstance( note, ( str, unicode ) ), note
         if note_url is not DefaultValueForOptionalParameters:
@@ -559,7 +559,7 @@ class AuthenticatedUser( object ):
         return status == 204
 
     def remove_from_emails( self, *emails ):
-        assert len( emails ) == 0 or isinstance( emails[ 0 ], ( str, unicode ) ), emails
+        assert all( isinstance( email, ( str, unicode ) ) for email in emails ), emails
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "DELETE",

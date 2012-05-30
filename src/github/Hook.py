@@ -58,11 +58,11 @@ class Hook( object ):
     def edit( self, name, config, events = DefaultValueForOptionalParameters, add_events = DefaultValueForOptionalParameters, remove_events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
         if events is not DefaultValueForOptionalParameters:
-            assert isinstance( events, list ) and ( len( events ) == 0 or isinstance( events[ 0 ], ( str, unicode ) ) ), events
+            assert all( isinstance( element, ( str, unicode ) ) for element in events ), events
         if add_events is not DefaultValueForOptionalParameters:
-            assert isinstance( add_events, list ) and ( len( add_events ) == 0 or isinstance( add_events[ 0 ], ( str, unicode ) ) ), add_events
+            assert all( isinstance( element, ( str, unicode ) ) for element in add_events ), add_events
         if remove_events is not DefaultValueForOptionalParameters:
-            assert isinstance( remove_events, list ) and ( len( remove_events ) == 0 or isinstance( remove_events[ 0 ], ( str, unicode ) ) ), remove_events
+            assert all( isinstance( element, ( str, unicode ) ) for element in remove_events ), remove_events
         if active is not DefaultValueForOptionalParameters:
             assert isinstance( active, bool ), active
         post_parameters = {
@@ -114,7 +114,7 @@ class Hook( object ):
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
         if "events" in attributes and attributes[ "events" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "events" ], list ) and ( len( attributes[ "events" ] ) == 0 or isinstance( attributes[ "events" ][ 0 ], ( str, unicode ) ) ), attributes[ "events" ]
+            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "events" ] ), attributes[ "events" ]
             self.__events = attributes[ "events" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]

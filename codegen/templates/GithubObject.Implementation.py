@@ -49,16 +49,16 @@
 
     {% if attribute.type.simple %}
         {% if attribute.type.name == "string" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], ( str, unicode ) ) ), attributes[ "{{ attribute.name }}" ]
+            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
         {% if attribute.type.name == "integer" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], int ) ), attributes[ "{{ attribute.name }}" ]
+            assert all( isinstance( element, int ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
         {% if attribute.type.name == "bool" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], bool ) ), attributes[ "{{ attribute.name }}" ]
+            assert all( isinstance( element, bool ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
     {% else %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], list ) and ( len( attributes[ "{{ attribute.name }}" ] ) == 0 or isinstance( attributes[ "{{ attribute.name }}" ][ 0 ], dict ) ), attributes[ "{{ attribute.name }}" ]
+            assert all( isinstance( element, dict ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
     {% endif %}
 
 {% endif %}
