@@ -865,10 +865,9 @@
                                 "value": "https://api.github.com/user/watched/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "watched", 
-                                    "_identity"
+                                    "watched"
                                 ]
                             }
                         ], 
@@ -932,10 +931,9 @@
                                 "value": "https://api.github.com/user/watched/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "watched", 
-                                    "_identity"
+                                    "watched"
                                 ]
                             }
                         ], 
@@ -974,10 +972,9 @@
                                 "value": "https://api.github.com/user/watched/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "watched", 
-                                    "_identity"
+                                    "watched"
                                 ]
                             }
                         ], 
@@ -1016,10 +1013,9 @@
                                 "value": "https://api.github.com/user/following/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "following", 
-                                    "_identity"
+                                    "following"
                                 ]
                             }
                         ], 
@@ -1083,10 +1079,9 @@
                                 "value": "https://api.github.com/user/following/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "following", 
-                                    "_identity"
+                                    "following"
                                 ]
                             }
                         ], 
@@ -1125,10 +1120,9 @@
                                 "value": "https://api.github.com/user/following/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "following", 
-                                    "_identity"
+                                    "following"
                                 ]
                             }
                         ], 
@@ -4101,10 +4095,9 @@
                                 "value": "/labels/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "label", 
-                                    "_identity"
+                                    "label"
                                 ]
                             }
                         ], 
@@ -5720,10 +5713,9 @@
                                 "value": "/members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "member", 
-                                    "_identity"
+                                    "member"
                                 ]
                             }
                         ], 
@@ -5768,10 +5760,9 @@
                                 "value": "/members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "member", 
-                                    "_identity"
+                                    "member"
                                 ]
                             }
                         ], 
@@ -5816,10 +5807,9 @@
                                 "value": "/public_members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "public_member", 
-                                    "_identity"
+                                    "public_member"
                                 ]
                             }
                         ], 
@@ -5895,10 +5885,9 @@
                                 "value": "/public_members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "public_member", 
-                                    "_identity"
+                                    "public_member"
                                 ]
                             }
                         ], 
@@ -5943,10 +5932,9 @@
                                 "value": "/public_members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "public_member", 
-                                    "_identity"
+                                    "public_member"
                                 ]
                             }
                         ], 
@@ -7647,10 +7635,9 @@
                                 "value": "/collaborators/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "collaborator", 
-                                    "_identity"
+                                    "collaborator"
                                 ]
                             }
                         ], 
@@ -7726,10 +7713,9 @@
                                 "value": "/collaborators/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "collaborator", 
-                                    "_identity"
+                                    "collaborator"
                                 ]
                             }
                         ], 
@@ -7774,10 +7760,9 @@
                                 "value": "/collaborators/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "collaborator", 
-                                    "_identity"
+                                    "collaborator"
                                 ]
                             }
                         ], 
@@ -10330,10 +10315,9 @@
                                 "value": "/members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "member", 
-                                    "_identity"
+                                    "member"
                                 ]
                             }
                         ], 
@@ -10409,10 +10393,9 @@
                                 "value": "/members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "member", 
-                                    "_identity"
+                                    "member"
                                 ]
                             }
                         ], 
@@ -10457,10 +10440,9 @@
                                 "value": "/members/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "member", 
-                                    "_identity"
+                                    "member"
                                 ]
                             }
                         ], 
@@ -10505,10 +10487,9 @@
                                 "value": "/repos/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "repo", 
-                                    "_identity"
+                                    "repo"
                                 ]
                             }
                         ], 
@@ -10584,10 +10565,9 @@
                                 "value": "/repos/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "repo", 
-                                    "_identity"
+                                    "repo"
                                 ]
                             }
                         ], 
@@ -10632,10 +10612,9 @@
                                 "value": "/repos/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "identity", 
                                 "value": [
-                                    "repo", 
-                                    "_identity"
+                                    "repo"
                                 ]
                             }
                         ], 

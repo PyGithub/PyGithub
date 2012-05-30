@@ -151,7 +151,7 @@ class Collection:
                         "verb": "PUT",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
+                            { "type": "identity", "value": [ desc[ "singularName" ] ] },
                         ],
                         "information": "status",
                     }
@@ -236,7 +236,7 @@ class Collection:
                         "verb": "GET",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
+                            { "type": "identity", "value": [ desc[ "singularName" ] ] },
                         ],
                         "information": "status",
                     }
@@ -251,7 +251,7 @@ class Collection:
                         "verb": "DELETE",
                         "url": self.__url + [
                             { "type": "constant", "value": "/" },
-                            { "type": "argument", "value": [ desc[ "singularName" ], "_identity" ] },
+                            { "type": "identity", "value": [ desc[ "singularName" ] ] },
                         ],
                         "information": "status",
                     }
