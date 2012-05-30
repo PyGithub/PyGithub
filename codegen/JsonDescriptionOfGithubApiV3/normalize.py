@@ -302,6 +302,10 @@ class Class:
             self.identity = desc[ "identity" ]
         else:
             self.identity = None
+        if "url" in desc:
+            url = desc[ "url" ]
+        else:
+            url = [ { "type": "attribute", "value": [ "url" ] } ]
         if "edit" in desc:
             self.methods.append( Function(
                 desc[ "edit" ],
@@ -309,7 +313,7 @@ class Class:
                 {
                     "request": {
                         "verb": "PATCH",
-                        "url": [ { "type": "constant", "value": "https://api.github.com/user" } if desc[ "name" ] == "AuthenticatedUser" else { "type": "attribute", "value": [ "url" ] } ], # @todo
+                        "url": url,
                         "postParameters": True, # @todo
                         "information": "data",
                     },
@@ -321,15 +325,11 @@ class Class:
                 {
                     "request": {
                         "verb": "DELETE",
-                        "url": [ { "type": "attribute", "value": [ "url" ] } ],
+                        "url": url,
                         "information": "data",
                     },
                 }
             ) )
-        if "url" in desc:
-            url = desc[ "url" ]
-        else:
-            url = [ { "type": "attribute", "value": [ "url" ] } ]
         if "collections" in desc:
             for collection in [ Collection( collection, url ) for collection in desc[ "collections" ] ]:
                 self.methods += collection.methods
