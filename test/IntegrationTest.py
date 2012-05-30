@@ -38,5 +38,6 @@ from UserKey import *
 
 from PaginatedList import *
 from Issue33 import *
+from Exceptions import *
 
 Framework.main()

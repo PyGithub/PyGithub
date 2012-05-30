@@ -148,7 +148,7 @@ class AuthenticatedUser( object ):
         return self.__url
 
     def add_to_emails( self, *emails ):
-        assert len( emails ) == 0 or isinstance( emails[ 0 ], ( str, unicode ) ), emails
+        assert all( isinstance( email, ( str, unicode ) ) for email in emails ), emails
         post_parameters = emails
         status, headers, data = self.__requester.request(
             "POST",
@@ -238,6 +238,8 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
+        if self.__requester.isFailureStatus( status ):
+            raise GithubException( status, data )
         return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):

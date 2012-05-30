@@ -3,9 +3,6 @@ import json
 import base64
 import urllib
 
-class UnknownGithubObject( Exception ):
-    pass
-
 class Requester:
     def __init__( self, login_or_token, password ):
         if password is not None:
@@ -61,3 +58,6 @@ class Requester:
 
     def parentUrl( self, url ):
         return "/".join( url.split( "/" )[ : -1 ] )
+
+    def isFailureStatus( self, status ):
+        return status >= 400
