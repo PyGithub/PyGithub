@@ -1,131 +1,123 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import GithubObject
 import PaginatedList
-import GithubException
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+##########
 import GistHistoryState
 import NamedUser
 import Gist
 import GistComment
 
-class Gist( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-        self.__completed = completed
-
+class Gist( GithubObject.CompletableGithubObject ):
     @property
     def comments( self ):
-        self.__completeIfNeeded( self.__comments )
-        return self.__comments
+        self._completeIfNeeded( self._comments )
+        return self._comments
 
     @property
     def created_at( self ):
-        self.__completeIfNeeded( self.__created_at )
-        return self.__created_at
+        self._completeIfNeeded( self._created_at )
+        return self._created_at
 
     @property
     def description( self ):
-        self.__completeIfNeeded( self.__description )
-        return self.__description
+        self._completeIfNeeded( self._description )
+        return self._description
 
     @property
     def files( self ):
-        self.__completeIfNeeded( self.__files )
-        return self.__files
+        self._completeIfNeeded( self._files )
+        return self._files
 
     @property
     def fork_of( self ):
-        self.__completeIfNeeded( self.__fork_of )
-        return self.__fork_of
+        self._completeIfNeeded( self._fork_of )
+        return self._fork_of
 
     @property
     def forks( self ):
-        self.__completeIfNeeded( self.__forks )
-        return self.__forks
+        self._completeIfNeeded( self._forks )
+        return self._forks
 
     @property
     def git_pull_url( self ):
-        self.__completeIfNeeded( self.__git_pull_url )
-        return self.__git_pull_url
+        self._completeIfNeeded( self._git_pull_url )
+        return self._git_pull_url
 
     @property
     def git_push_url( self ):
-        self.__completeIfNeeded( self.__git_push_url )
-        return self.__git_push_url
+        self._completeIfNeeded( self._git_push_url )
+        return self._git_push_url
 
     @property
     def history( self ):
-        self.__completeIfNeeded( self.__history )
-        return self.__history
+        self._completeIfNeeded( self._history )
+        return self._history
 
     @property
     def html_url( self ):
-        self.__completeIfNeeded( self.__html_url )
-        return self.__html_url
+        self._completeIfNeeded( self._html_url )
+        return self._html_url
 
     @property
     def id( self ):
-        self.__completeIfNeeded( self.__id )
-        return self.__id
+        self._completeIfNeeded( self._id )
+        return self._id
 
     @property
     def public( self ):
-        self.__completeIfNeeded( self.__public )
-        return self.__public
+        self._completeIfNeeded( self._public )
+        return self._public
 
     @property
     def updated_at( self ):
-        self.__completeIfNeeded( self.__updated_at )
-        return self.__updated_at
+        self._completeIfNeeded( self._updated_at )
+        return self._updated_at
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
-        return self.__url
+        self._completeIfNeeded( self._url )
+        return self._url
 
     @property
     def user( self ):
-        self.__completeIfNeeded( self.__user )
-        return self.__user
+        self._completeIfNeeded( self._user )
+        return self._user
 
     def create_comment( self, body ):
         assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/comments",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GistComment.GistComment( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GistComment.GistComment( self._requester, data, completed = True )
 
     def create_fork( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/fork",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Gist( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Gist( self._requester, data, completed = True )
 
     def delete( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def edit( self, description = DefaultValueForOptionalParameters, files = DefaultValueForOptionalParameters ):
         if description is not DefaultValueForOptionalParameters:
@@ -135,46 +127,43 @@ class Gist( object ):
             post_parameters[ "description" ] = description
         if files is not DefaultValueForOptionalParameters:
             post_parameters[ "files" ] = files
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             str( self.url ),
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             "https://api.github.com/gists/comments/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GistComment.GistComment( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GistComment.GistComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/comments",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             GistComment.GistComment,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def is_starred( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/star",
             None,
@@ -183,104 +172,88 @@ class Gist( object ):
         return status == 204
 
     def reset_starred( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ) + "/star",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def set_starred( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PUT",
             str( self.url ) + "/star",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
-    def __initAttributes( self ):
-        self.__comments = None
-        self.__created_at = None
-        self.__description = None
-        self.__files = None
-        self.__fork_of = None
-        self.__forks = None
-        self.__git_pull_url = None
-        self.__git_push_url = None
-        self.__history = None
-        self.__html_url = None
-        self.__id = None
-        self.__public = None
-        self.__updated_at = None
-        self.__url = None
-        self.__user = None
+    def _initAttributes( self ):
+        self._comments = None
+        self._created_at = None
+        self._description = None
+        self._files = None
+        self._fork_of = None
+        self._forks = None
+        self._git_pull_url = None
+        self._git_push_url = None
+        self._history = None
+        self._html_url = None
+        self._id = None
+        self._public = None
+        self._updated_at = None
+        self._url = None
+        self._user = None
 
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
             assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
-            self.__comments = attributes[ "comments" ]
+            self._comments = attributes[ "comments" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self.__created_at = attributes[ "created_at" ]
+            self._created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
             assert isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
-            self.__description = attributes[ "description" ]
+            self._description = attributes[ "description" ]
         if "files" in attributes and attributes[ "files" ] is not None: # pragma no branch
-            self.__files = attributes[ "files" ]
+            self._files = attributes[ "files" ]
         if "fork_of" in attributes and attributes[ "fork_of" ] is not None: # pragma no branch
             assert isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
-            self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completed = False )
+            self._fork_of = Gist( self._requester, attributes[ "fork_of" ], completed = False )
         if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "forks" ] ), attributes[ "forks" ]
-            self.__forks = [
-                Gist( self.__requester, element, completed = False )
+            self._forks = [
+                Gist( self._requester, element, completed = False )
                 for element in attributes[ "forks" ]
             ]
         if "git_pull_url" in attributes and attributes[ "git_pull_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "git_pull_url" ], ( str, unicode ) ), attributes[ "git_pull_url" ]
-            self.__git_pull_url = attributes[ "git_pull_url" ]
+            self._git_pull_url = attributes[ "git_pull_url" ]
         if "git_push_url" in attributes and attributes[ "git_push_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "git_push_url" ], ( str, unicode ) ), attributes[ "git_push_url" ]
-            self.__git_push_url = attributes[ "git_push_url" ]
+            self._git_push_url = attributes[ "git_push_url" ]
         if "history" in attributes and attributes[ "history" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "history" ] ), attributes[ "history" ]
-            self.__history = [
-                GistHistoryState.GistHistoryState( self.__requester, element, completed = False )
+            self._history = [
+                GistHistoryState.GistHistoryState( self._requester, element, completed = False )
                 for element in attributes[ "history" ]
             ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
-            self.__html_url = attributes[ "html_url" ]
+            self._html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], ( str, unicode ) ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "public" in attributes and attributes[ "public" ] is not None: # pragma no branch
             assert isinstance( attributes[ "public" ], bool ), attributes[ "public" ]
-            self.__public = attributes[ "public" ]
+            self._public = attributes[ "public" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self.__updated_at = attributes[ "updated_at" ]
+            self._updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completed = False )
+            self._user = NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )

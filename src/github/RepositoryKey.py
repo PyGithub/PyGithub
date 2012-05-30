@@ -1,16 +1,12 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
+import GithubObject
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
-class RepositoryKey( object ):
+class RepositoryKey( GithubObject.GithubObject ):
     def __init__( self, requester, attributes, completed, repoUrl ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-        self.__completed = completed
+        GithubObject.GithubObject.__init__( self, requester, attributes, completed )
         self.__repoUrl = repoUrl
 
     @property
@@ -19,38 +15,32 @@ class RepositoryKey( object ):
 
     @property
     def id( self ):
-        self.__completeIfNeeded( self.__id )
-        return self.__id
+        return self._id
 
     @property
     def key( self ):
-        self.__completeIfNeeded( self.__key )
-        return self.__key
+        return self._key
 
     @property
     def title( self ):
-        self.__completeIfNeeded( self.__title )
-        return self.__title
+        return self._title
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
-        return self.__url
+        return self._url
 
     @property
     def verified( self ):
-        self.__completeIfNeeded( self.__verified )
-        return self.__verified
+        return self._verified
 
     def delete( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             self.__customUrl,
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def edit( self, title = DefaultValueForOptionalParameters, key = DefaultValueForOptionalParameters ):
         if title is not DefaultValueForOptionalParameters:
@@ -62,50 +52,35 @@ class RepositoryKey( object ):
             post_parameters[ "title" ] = title
         if key is not DefaultValueForOptionalParameters:
             post_parameters[ "key" ] = key
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             self.__customUrl,
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
-    def __initAttributes( self ):
-        self.__id = None
-        self.__key = None
-        self.__title = None
-        self.__url = None
-        self.__verified = None
+    def _initAttributes( self ):
+        self._id = None
+        self._key = None
+        self._title = None
+        self._url = None
+        self._verified = None
 
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "key" in attributes and attributes[ "key" ] is not None: # pragma no branch
             assert isinstance( attributes[ "key" ], ( str, unicode ) ), attributes[ "key" ]
-            self.__key = attributes[ "key" ]
+            self._key = attributes[ "key" ]
         if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
             assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
-            self.__title = attributes[ "title" ]
+            self._title = attributes[ "title" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]
         if "verified" in attributes and attributes[ "verified" ] is not None: # pragma no branch
             assert isinstance( attributes[ "verified" ], bool ), attributes[ "verified" ]
-            self.__verified = attributes[ "verified" ]
+            self._verified = attributes[ "verified" ]

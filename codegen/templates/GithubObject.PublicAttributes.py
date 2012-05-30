@@ -2,7 +2,7 @@
     @property
     def {{ attribute.name }}( self ):
 {% if class.isCompletable %}
-        self.__completeIfNeeded( self.__{{ attribute.name }} )
+        self._completeIfNeeded( self._{{ attribute.name }} )
 {% endif %}
-        return self.__{{ attribute.name }}
+        return self._{{ attribute.name }}
 {% endfor %}

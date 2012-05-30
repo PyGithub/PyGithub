@@ -38,7 +38,7 @@
         }
 {% endif %}
 
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "{{ method.request.verb }}",
             {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
 {% if method.request.urlParameters or not method.request.postParameters and method.optionalParameters %}

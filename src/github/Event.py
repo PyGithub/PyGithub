@@ -1,82 +1,76 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+import GithubObject
+##########
 import Organization
 import Repository
 import NamedUser
 
-class Event( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class Event( GithubObject.GithubObject ):
     @property
     def actor( self ):
-        return self.__actor
+        return self._actor
 
     @property
     def created_at( self ):
-        return self.__created_at
+        return self._created_at
 
     @property
     def id( self ):
-        return self.__id
+        return self._id
 
     @property
     def org( self ):
-        return self.__org
+        return self._org
 
     @property
     def payload( self ):
-        return self.__payload
+        return self._payload
 
     @property
     def public( self ):
-        return self.__public
+        return self._public
 
     @property
     def repo( self ):
-        return self.__repo
+        return self._repo
 
     @property
     def type( self ):
-        return self.__type
+        return self._type
 
-    def __initAttributes( self ):
-        self.__actor = None
-        self.__created_at = None
-        self.__id = None
-        self.__org = None
-        self.__payload = None
-        self.__public = None
-        self.__repo = None
-        self.__type = None
+    def _initAttributes( self ):
+        self._actor = None
+        self._created_at = None
+        self._id = None
+        self._org = None
+        self._payload = None
+        self._public = None
+        self._repo = None
+        self._type = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
             assert isinstance( attributes[ "actor" ], dict ), attributes[ "actor" ]
-            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completed = False )
+            self._actor = NamedUser.NamedUser( self._requester, attributes[ "actor" ], completed = False )
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self.__created_at = attributes[ "created_at" ]
+            self._created_at = attributes[ "created_at" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], ( str, unicode ) ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "org" in attributes and attributes[ "org" ] is not None: # pragma no branch
             assert isinstance( attributes[ "org" ], dict ), attributes[ "org" ]
-            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completed = False )
+            self._org = Organization.Organization( self._requester, attributes[ "org" ], completed = False )
         if "payload" in attributes and attributes[ "payload" ] is not None: # pragma no branch
-            self.__payload = attributes[ "payload" ]
+            self._payload = attributes[ "payload" ]
         if "public" in attributes and attributes[ "public" ] is not None: # pragma no branch
             assert isinstance( attributes[ "public" ], bool ), attributes[ "public" ]
-            self.__public = attributes[ "public" ]
+            self._public = attributes[ "public" ]
         if "repo" in attributes and attributes[ "repo" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repo" ], dict ), attributes[ "repo" ]
-            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completed = False )
+            self._repo = Repository.Repository( self._requester, attributes[ "repo" ], completed = False )
         if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
             assert isinstance( attributes[ "type" ], ( str, unicode ) ), attributes[ "type" ]
-            self.__type = attributes[ "type" ]
+            self._type = attributes[ "type" ]

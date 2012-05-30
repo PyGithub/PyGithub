@@ -1,10 +1,9 @@
 {% if method.type.name != "bool" %}
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 {% endif %}
 
 {% if method.isMutation %}
-        self.__useAttributes( data )
+        self._useAttributes( data )
 {% endif %}
 
 {% if method.type.simple %}
@@ -28,13 +27,13 @@
 {% else %}
 
     {% if method.type.cardinality == "scalar" %}
-        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self.__requester, data, completed = True )
+        return {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }}( self._requester, data, completed = True )
     {% endif %}
 
     {% if method.type.cardinality == "list" %}
         return PaginatedList.PaginatedList( 
             {% if method.type.name != class.name %}{{ method.type.name }}.{% endif %}{{ method.type.name }},
-            self.__requester,
+            self._requester,
             headers,
             data
         )

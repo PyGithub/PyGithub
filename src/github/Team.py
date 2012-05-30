@@ -1,80 +1,72 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import GithubObject
 import PaginatedList
-import GithubException
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+##########
 import Repository
 import NamedUser
 
-class Team( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-        self.__completed = completed
-
+class Team( GithubObject.CompletableGithubObject ):
     @property
     def id( self ):
-        self.__completeIfNeeded( self.__id )
-        return self.__id
+        self._completeIfNeeded( self._id )
+        return self._id
 
     @property
     def members_count( self ):
-        self.__completeIfNeeded( self.__members_count )
-        return self.__members_count
+        self._completeIfNeeded( self._members_count )
+        return self._members_count
 
     @property
     def name( self ):
-        self.__completeIfNeeded( self.__name )
-        return self.__name
+        self._completeIfNeeded( self._name )
+        return self._name
 
     @property
     def permission( self ):
-        self.__completeIfNeeded( self.__permission )
-        return self.__permission
+        self._completeIfNeeded( self._permission )
+        return self._permission
 
     @property
     def repos_count( self ):
-        self.__completeIfNeeded( self.__repos_count )
-        return self.__repos_count
+        self._completeIfNeeded( self._repos_count )
+        return self._repos_count
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
-        return self.__url
+        self._completeIfNeeded( self._url )
+        return self._url
 
     def add_to_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PUT",
             str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def add_to_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PUT",
             str( self.url ) + "/repos/" + str( repo._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def delete( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def edit( self, name, permission = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -85,51 +77,48 @@ class Team( object ):
         }
         if permission is not DefaultValueForOptionalParameters:
             post_parameters[ "permission" ] = permission
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             str( self.url ),
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
     def get_members( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/members",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_repos( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/repos",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def has_in_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/members/" + str( member._identity ),
             None,
@@ -139,7 +128,7 @@ class Team( object ):
 
     def has_in_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/repos/" + str( repo._identity ),
             None,
@@ -149,64 +138,48 @@ class Team( object ):
 
     def remove_from_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def remove_from_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ) + "/repos/" + str( repo._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
-    def __initAttributes( self ):
-        self.__id = None
-        self.__members_count = None
-        self.__name = None
-        self.__permission = None
-        self.__repos_count = None
-        self.__url = None
+    def _initAttributes( self ):
+        self._id = None
+        self._members_count = None
+        self._name = None
+        self._permission = None
+        self._repos_count = None
+        self._url = None
 
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "members_count" in attributes and attributes[ "members_count" ] is not None: # pragma no branch
             assert isinstance( attributes[ "members_count" ], int ), attributes[ "members_count" ]
-            self.__members_count = attributes[ "members_count" ]
+            self._members_count = attributes[ "members_count" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self.__name = attributes[ "name" ]
+            self._name = attributes[ "name" ]
         if "permission" in attributes and attributes[ "permission" ] is not None: # pragma no branch
             assert isinstance( attributes[ "permission" ], ( str, unicode ) ), attributes[ "permission" ]
-            self.__permission = attributes[ "permission" ]
+            self._permission = attributes[ "permission" ]
         if "repos_count" in attributes and attributes[ "repos_count" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repos_count" ], int ), attributes[ "repos_count" ]
-            self.__repos_count = attributes[ "repos_count" ]
+            self._repos_count = attributes[ "repos_count" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]

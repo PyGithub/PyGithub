@@ -1,40 +1,33 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+import GithubObject
 
-class GitAuthor( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class GitAuthor( GithubObject.GithubObject ):
     @property
     def date( self ):
-        return self.__date
+        return self._date
 
     @property
     def email( self ):
-        return self.__email
+        return self._email
 
     @property
     def name( self ):
-        return self.__name
+        return self._name
 
-    def __initAttributes( self ):
-        self.__date = None
-        self.__email = None
-        self.__name = None
+    def _initAttributes( self ):
+        self._date = None
+        self._email = None
+        self._name = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "date" in attributes and attributes[ "date" ] is not None: # pragma no branch
             assert isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
-            self.__date = attributes[ "date" ]
+            self._date = attributes[ "date" ]
         if "email" in attributes and attributes[ "email" ] is not None: # pragma no branch
             assert isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
-            self.__email = attributes[ "email" ]
+            self._email = attributes[ "email" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self.__name = attributes[ "name" ]
+            self._name = attributes[ "name" ]

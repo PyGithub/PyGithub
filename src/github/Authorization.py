@@ -1,72 +1,65 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
+import GithubObject
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+##########
 import AuthorizationApplication
 
-class Authorization( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-        self.__completed = completed
-
+class Authorization( GithubObject.CompletableGithubObject ):
     @property
     def app( self ):
-        self.__completeIfNeeded( self.__app )
-        return self.__app
+        self._completeIfNeeded( self._app )
+        return self._app
 
     @property
     def created_at( self ):
-        self.__completeIfNeeded( self.__created_at )
-        return self.__created_at
+        self._completeIfNeeded( self._created_at )
+        return self._created_at
 
     @property
     def id( self ):
-        self.__completeIfNeeded( self.__id )
-        return self.__id
+        self._completeIfNeeded( self._id )
+        return self._id
 
     @property
     def note( self ):
-        self.__completeIfNeeded( self.__note )
-        return self.__note
+        self._completeIfNeeded( self._note )
+        return self._note
 
     @property
     def note_url( self ):
-        self.__completeIfNeeded( self.__note_url )
-        return self.__note_url
+        self._completeIfNeeded( self._note_url )
+        return self._note_url
 
     @property
     def scopes( self ):
-        self.__completeIfNeeded( self.__scopes )
-        return self.__scopes
+        self._completeIfNeeded( self._scopes )
+        return self._scopes
 
     @property
     def token( self ):
-        self.__completeIfNeeded( self.__token )
-        return self.__token
+        self._completeIfNeeded( self._token )
+        return self._token
 
     @property
     def updated_at( self ):
-        self.__completeIfNeeded( self.__updated_at )
-        return self.__updated_at
+        self._completeIfNeeded( self._updated_at )
+        return self._updated_at
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
-        return self.__url
+        self._completeIfNeeded( self._url )
+        return self._url
 
     def delete( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
@@ -90,66 +83,51 @@ class Authorization( object ):
             post_parameters[ "note" ] = note
         if note_url is not DefaultValueForOptionalParameters:
             post_parameters[ "note_url" ] = note_url
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             str( self.url ),
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
-    def __initAttributes( self ):
-        self.__app = None
-        self.__created_at = None
-        self.__id = None
-        self.__note = None
-        self.__note_url = None
-        self.__scopes = None
-        self.__token = None
-        self.__updated_at = None
-        self.__url = None
+    def _initAttributes( self ):
+        self._app = None
+        self._created_at = None
+        self._id = None
+        self._note = None
+        self._note_url = None
+        self._scopes = None
+        self._token = None
+        self._updated_at = None
+        self._url = None
 
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
             assert isinstance( attributes[ "app" ], dict ), attributes[ "app" ]
-            self.__app = AuthorizationApplication.AuthorizationApplication( self.__requester, attributes[ "app" ], completed = False )
+            self._app = AuthorizationApplication.AuthorizationApplication( self._requester, attributes[ "app" ], completed = False )
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self.__created_at = attributes[ "created_at" ]
+            self._created_at = attributes[ "created_at" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "note" in attributes and attributes[ "note" ] is not None: # pragma no branch
             assert isinstance( attributes[ "note" ], ( str, unicode ) ), attributes[ "note" ]
-            self.__note = attributes[ "note" ]
+            self._note = attributes[ "note" ]
         if "note_url" in attributes and attributes[ "note_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
-            self.__note_url = attributes[ "note_url" ]
+            self._note_url = attributes[ "note_url" ]
         if "scopes" in attributes and attributes[ "scopes" ] is not None: # pragma no branch
             assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "scopes" ] ), attributes[ "scopes" ]
-            self.__scopes = attributes[ "scopes" ]
+            self._scopes = attributes[ "scopes" ]
         if "token" in attributes and attributes[ "token" ] is not None: # pragma no branch
             assert isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]
-            self.__token = attributes[ "token" ]
+            self._token = attributes[ "token" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self.__updated_at = attributes[ "updated_at" ]
+            self._updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]

@@ -1,38 +1,32 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
+import GithubObject
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+##########
 import GitObject
 
-class GitRef( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class GitRef( GithubObject.GithubObject ):
     @property
     def object( self ):
-        return self.__object
+        return self._object
 
     @property
     def ref( self ):
-        return self.__ref
+        return self._ref
 
     @property
     def url( self ):
-        return self.__url
+        return self._url
 
     def delete( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def edit( self, sha, force = DefaultValueForOptionalParameters ):
         assert isinstance( sha, ( str, unicode ) ), sha
@@ -43,28 +37,27 @@ class GitRef( object ):
         }
         if force is not DefaultValueForOptionalParameters:
             post_parameters[ "force" ] = force
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             str( self.url ),
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
-    def __initAttributes( self ):
-        self.__object = None
-        self.__ref = None
-        self.__url = None
+    def _initAttributes( self ):
+        self._object = None
+        self._ref = None
+        self._url = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completed = False )
+            self._object = GitObject.GitObject( self._requester, attributes[ "object" ], completed = False )
         if "ref" in attributes and attributes[ "ref" ] is not None: # pragma no branch
             assert isinstance( attributes[ "ref" ], ( str, unicode ) ), attributes[ "ref" ]
-            self.__ref = attributes[ "ref" ]
+            self._ref = attributes[ "ref" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]

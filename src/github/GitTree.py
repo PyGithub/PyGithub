@@ -1,44 +1,38 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+import GithubObject
+##########
 import GitTreeElement
 
-class GitTree( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class GitTree( GithubObject.GithubObject ):
     @property
     def sha( self ):
-        return self.__sha
+        return self._sha
 
     @property
     def tree( self ):
-        return self.__tree
+        return self._tree
 
     @property
     def url( self ):
-        return self.__url
+        return self._url
 
-    def __initAttributes( self ):
-        self.__sha = None
-        self.__tree = None
-        self.__url = None
+    def _initAttributes( self ):
+        self._sha = None
+        self._tree = None
+        self._url = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
-            self.__sha = attributes[ "sha" ]
+            self._sha = attributes[ "sha" ]
         if "tree" in attributes and attributes[ "tree" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "tree" ] ), attributes[ "tree" ]
-            self.__tree = [
-                GitTreeElement.GitTreeElement( self.__requester, element, completed = False )
+            self._tree = [
+                GitTreeElement.GitTreeElement( self._requester, element, completed = False )
                 for element in attributes[ "tree" ]
             ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]

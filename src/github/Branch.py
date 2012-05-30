@@ -1,33 +1,27 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+import GithubObject
+##########
 import Commit
 
-class Branch( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class Branch( GithubObject.GithubObject ):
     @property
     def commit( self ):
-        return self.__commit
+        return self._commit
 
     @property
     def name( self ):
-        return self.__name
+        return self._name
 
-    def __initAttributes( self ):
-        self.__commit = None
-        self.__name = None
+    def _initAttributes( self ):
+        self._commit = None
+        self._name = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
-            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completed = False )
+            self._commit = Commit.Commit( self._requester, attributes[ "commit" ], completed = False )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self.__name = attributes[ "name" ]
+            self._name = attributes[ "name" ]

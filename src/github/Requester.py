@@ -55,9 +55,3 @@ class Requester:
             return None
         else:
             return json.loads( data )
-
-    def parentUrl( self, url ):
-        return "/".join( url.split( "/" )[ : -1 ] )
-
-    def isFailureStatus( self, status ):
-        return status >= 400

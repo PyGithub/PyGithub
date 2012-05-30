@@ -1,56 +1,49 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
-import PaginatedList
-import GithubException
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+import GithubObject
 
-class GitBlob( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-
+class GitBlob( GithubObject.GithubObject ):
     @property
     def content( self ):
-        return self.__content
+        return self._content
 
     @property
     def encoding( self ):
-        return self.__encoding
+        return self._encoding
 
     @property
     def sha( self ):
-        return self.__sha
+        return self._sha
 
     @property
     def size( self ):
-        return self.__size
+        return self._size
 
     @property
     def url( self ):
-        return self.__url
+        return self._url
 
-    def __initAttributes( self ):
-        self.__content = None
-        self.__encoding = None
-        self.__sha = None
-        self.__size = None
-        self.__url = None
+    def _initAttributes( self ):
+        self._content = None
+        self._encoding = None
+        self._sha = None
+        self._size = None
+        self._url = None
 
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "content" in attributes and attributes[ "content" ] is not None: # pragma no branch
             assert isinstance( attributes[ "content" ], ( str, unicode ) ), attributes[ "content" ]
-            self.__content = attributes[ "content" ]
+            self._content = attributes[ "content" ]
         if "encoding" in attributes and attributes[ "encoding" ] is not None: # pragma no branch
             assert isinstance( attributes[ "encoding" ], ( str, unicode ) ), attributes[ "encoding" ]
-            self.__encoding = attributes[ "encoding" ]
+            self._encoding = attributes[ "encoding" ]
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
-            self.__sha = attributes[ "sha" ]
+            self._sha = attributes[ "sha" ]
         if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             assert isinstance( attributes[ "size" ], int ), attributes[ "size" ]
-            self.__size = attributes[ "size" ]
+            self._size = attributes[ "size" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]

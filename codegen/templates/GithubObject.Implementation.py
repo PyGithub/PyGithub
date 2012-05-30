@@ -4,28 +4,12 @@
         return {% include "GithubObject.Concatenation.py" with concatenation=class.identity only  %}
 {% endif %}
 
-    def __initAttributes( self ):
+    def _initAttributes( self ):
 {% for attribute in class.attributes|dictsort:"name" %}
-        self.__{{ attribute.name }} = None
+        self._{{ attribute.name }} = None
 {% endfor %}
 
-{% if class.isCompletable %}
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-{% endif %}
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
 {% for attribute in class.attributes|dictsort:"name" %}
         if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None: # pragma no branch
 
@@ -66,18 +50,18 @@
 {% if attribute.type.cardinality == "scalar" %}
 
     {% if attribute.type.simple %}
-            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
-            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completed = False )
+            self._{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, attributes[ "{{ attribute.name }}" ], completed = False )
     {% endif %}
 
 {% else %}
 
     {% if attribute.type.simple %}
-            self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
-            self.__{{ attribute.name }} = [
-                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, completed = False )
+            self._{{ attribute.name }} = [
+                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, element, completed = False )
                 for element in attributes[ "{{ attribute.name }}" ]
             ]
     {% endif %}

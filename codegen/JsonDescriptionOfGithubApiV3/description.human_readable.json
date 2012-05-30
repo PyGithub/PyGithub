@@ -1757,7 +1757,6 @@
         },
         {
             "name": "RepositoryKey",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "title", "type": "string" },

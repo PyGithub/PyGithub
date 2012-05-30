@@ -1,22 +1,27 @@
 {% if class.needsUrllib %}
 import urllib
+##########
 {% endif %}
 
+import GithubObject
+{% if class.needsPaginatedList %}
 import PaginatedList
-import GithubException
+{% endif %}
+{% if class.needsDefaultValue %}
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+{% endif %}
 
-{% for dependency in class.dependencies %}
+{% if class.dependencies %}
+##########
+    {% for dependency in class.dependencies %}
 import {{ dependency }}
-{% endfor %}
+    {% endfor %}
+{% endif %}
 
-class {{ class.name }}( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
 {% if class.isCompletable %}
-        self.__completed = completed
+class {{ class.name }}( GithubObject.CompletableGithubObject ):
+{% else %}
+class {{ class.name }}( GithubObject.GithubObject ):
 {% endif %}
 
 {% include "GithubObject.PublicAttributes.py" %}

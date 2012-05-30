@@ -2,9 +2,11 @@
 # Do not modify it manually, your work would be lost.
 
 import urllib
+##########
+import GithubObject
 import PaginatedList
-import GithubException
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
+##########
 import Branch
 import IssueEvent
 import Label
@@ -29,185 +31,177 @@ import GitTag
 import Download
 import Event
 
-class Repository( object ):
-    def __init__( self, requester, attributes, completed ):
-        self.__requester = requester
-        self.__initAttributes()
-        self.__useAttributes( attributes )
-        self.__completed = completed
-
+class Repository( GithubObject.CompletableGithubObject ):
     @property
     def clone_url( self ):
-        self.__completeIfNeeded( self.__clone_url )
-        return self.__clone_url
+        self._completeIfNeeded( self._clone_url )
+        return self._clone_url
 
     @property
     def created_at( self ):
-        self.__completeIfNeeded( self.__created_at )
-        return self.__created_at
+        self._completeIfNeeded( self._created_at )
+        return self._created_at
 
     @property
     def description( self ):
-        self.__completeIfNeeded( self.__description )
-        return self.__description
+        self._completeIfNeeded( self._description )
+        return self._description
 
     @property
     def fork( self ):
-        self.__completeIfNeeded( self.__fork )
-        return self.__fork
+        self._completeIfNeeded( self._fork )
+        return self._fork
 
     @property
     def forks( self ):
-        self.__completeIfNeeded( self.__forks )
-        return self.__forks
+        self._completeIfNeeded( self._forks )
+        return self._forks
 
     @property
     def full_name( self ):
-        self.__completeIfNeeded( self.__full_name )
-        return self.__full_name
+        self._completeIfNeeded( self._full_name )
+        return self._full_name
 
     @property
     def git_url( self ):
-        self.__completeIfNeeded( self.__git_url )
-        return self.__git_url
+        self._completeIfNeeded( self._git_url )
+        return self._git_url
 
     @property
     def has_downloads( self ):
-        self.__completeIfNeeded( self.__has_downloads )
-        return self.__has_downloads
+        self._completeIfNeeded( self._has_downloads )
+        return self._has_downloads
 
     @property
     def has_issues( self ):
-        self.__completeIfNeeded( self.__has_issues )
-        return self.__has_issues
+        self._completeIfNeeded( self._has_issues )
+        return self._has_issues
 
     @property
     def has_wiki( self ):
-        self.__completeIfNeeded( self.__has_wiki )
-        return self.__has_wiki
+        self._completeIfNeeded( self._has_wiki )
+        return self._has_wiki
 
     @property
     def homepage( self ):
-        self.__completeIfNeeded( self.__homepage )
-        return self.__homepage
+        self._completeIfNeeded( self._homepage )
+        return self._homepage
 
     @property
     def html_url( self ):
-        self.__completeIfNeeded( self.__html_url )
-        return self.__html_url
+        self._completeIfNeeded( self._html_url )
+        return self._html_url
 
     @property
     def id( self ):
-        self.__completeIfNeeded( self.__id )
-        return self.__id
+        self._completeIfNeeded( self._id )
+        return self._id
 
     @property
     def language( self ):
-        self.__completeIfNeeded( self.__language )
-        return self.__language
+        self._completeIfNeeded( self._language )
+        return self._language
 
     @property
     def master_branch( self ):
-        self.__completeIfNeeded( self.__master_branch )
-        return self.__master_branch
+        self._completeIfNeeded( self._master_branch )
+        return self._master_branch
 
     @property
     def name( self ):
-        self.__completeIfNeeded( self.__name )
-        return self.__name
+        self._completeIfNeeded( self._name )
+        return self._name
 
     @property
     def open_issues( self ):
-        self.__completeIfNeeded( self.__open_issues )
-        return self.__open_issues
+        self._completeIfNeeded( self._open_issues )
+        return self._open_issues
 
     @property
     def organization( self ):
-        self.__completeIfNeeded( self.__organization )
-        return self.__organization
+        self._completeIfNeeded( self._organization )
+        return self._organization
 
     @property
     def owner( self ):
-        self.__completeIfNeeded( self.__owner )
-        return self.__owner
+        self._completeIfNeeded( self._owner )
+        return self._owner
 
     @property
     def parent( self ):
-        self.__completeIfNeeded( self.__parent )
-        return self.__parent
+        self._completeIfNeeded( self._parent )
+        return self._parent
 
     @property
     def permissions( self ):
-        self.__completeIfNeeded( self.__permissions )
-        return self.__permissions
+        self._completeIfNeeded( self._permissions )
+        return self._permissions
 
     @property
     def private( self ):
-        self.__completeIfNeeded( self.__private )
-        return self.__private
+        self._completeIfNeeded( self._private )
+        return self._private
 
     @property
     def pushed_at( self ):
-        self.__completeIfNeeded( self.__pushed_at )
-        return self.__pushed_at
+        self._completeIfNeeded( self._pushed_at )
+        return self._pushed_at
 
     @property
     def size( self ):
-        self.__completeIfNeeded( self.__size )
-        return self.__size
+        self._completeIfNeeded( self._size )
+        return self._size
 
     @property
     def source( self ):
-        self.__completeIfNeeded( self.__source )
-        return self.__source
+        self._completeIfNeeded( self._source )
+        return self._source
 
     @property
     def ssh_url( self ):
-        self.__completeIfNeeded( self.__ssh_url )
-        return self.__ssh_url
+        self._completeIfNeeded( self._ssh_url )
+        return self._ssh_url
 
     @property
     def svn_url( self ):
-        self.__completeIfNeeded( self.__svn_url )
-        return self.__svn_url
+        self._completeIfNeeded( self._svn_url )
+        return self._svn_url
 
     @property
     def updated_at( self ):
-        self.__completeIfNeeded( self.__updated_at )
-        return self.__updated_at
+        self._completeIfNeeded( self._updated_at )
+        return self._updated_at
 
     @property
     def url( self ):
-        self.__completeIfNeeded( self.__url )
-        return self.__url
+        self._completeIfNeeded( self._url )
+        return self._url
 
     @property
     def watchers( self ):
-        self.__completeIfNeeded( self.__watchers )
-        return self.__watchers
+        self._completeIfNeeded( self._watchers )
+        return self._watchers
 
     def add_to_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PUT",
             str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     def compare( self, base, head ):
         assert isinstance( base, ( str, unicode ) ), base
         assert isinstance( head, ( str, unicode ) ), head
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/compare/" + str( base ) + "..." + str( head ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return data
 
     def create_download( self, name, size, description = DefaultValueForOptionalParameters, content_type = DefaultValueForOptionalParameters ):
@@ -225,15 +219,14 @@ class Repository( object ):
             post_parameters[ "description" ] = description
         if content_type is not DefaultValueForOptionalParameters:
             post_parameters[ "content_type" ] = content_type
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/downloads",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Download.Download( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Download.Download( self._requester, data, completed = True )
 
     def create_git_blob( self, content, encoding ):
         assert isinstance( content, ( str, unicode ) ), content
@@ -242,15 +235,14 @@ class Repository( object ):
             "content": content,
             "encoding": encoding,
         }
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/blobs",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitBlob.GitBlob( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitBlob.GitBlob( self._requester, data, completed = True )
 
     def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
         assert isinstance( message, ( str, unicode ) ), message
@@ -264,15 +256,14 @@ class Repository( object ):
             post_parameters[ "author" ] = author
         if committer is not DefaultValueForOptionalParameters:
             post_parameters[ "committer" ] = committer
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/commits",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitCommit.GitCommit( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitCommit.GitCommit( self._requester, data, completed = True )
 
     def create_git_ref( self, ref, sha ):
         assert isinstance( ref, ( str, unicode ) ), ref
@@ -281,15 +272,14 @@ class Repository( object ):
             "ref": ref,
             "sha": sha,
         }
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/refs",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitRef.GitRef( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitRef.GitRef( self._requester, data, completed = True )
 
     def create_git_tag( self, tag, message, object, type, tagger = DefaultValueForOptionalParameters ):
         assert isinstance( tag, ( str, unicode ) ), tag
@@ -304,15 +294,14 @@ class Repository( object ):
         }
         if tagger is not DefaultValueForOptionalParameters:
             post_parameters[ "tagger" ] = tagger
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/tags",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitTag.GitTag( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitTag.GitTag( self._requester, data, completed = True )
 
     def create_git_tree( self, tree, base_tree = DefaultValueForOptionalParameters ):
         post_parameters = {
@@ -320,15 +309,14 @@ class Repository( object ):
         }
         if base_tree is not DefaultValueForOptionalParameters:
             post_parameters[ "base_tree" ] = base_tree
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/trees",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitTree.GitTree( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitTree.GitTree( self._requester, data, completed = True )
 
     def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -344,15 +332,14 @@ class Repository( object ):
             post_parameters[ "events" ] = events
         if active is not DefaultValueForOptionalParameters:
             post_parameters[ "active" ] = active
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/hooks",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Hook.Hook( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Hook.Hook( self._requester, data, completed = True )
 
     def create_issue( self, title, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -375,15 +362,14 @@ class Repository( object ):
             post_parameters[ "milestone" ] = milestone
         if labels is not DefaultValueForOptionalParameters:
             post_parameters[ "labels" ] = labels
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/issues",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Issue.Issue( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Issue.Issue( self._requester, data, completed = True )
 
     def create_key( self, title, key ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -392,15 +378,14 @@ class Repository( object ):
             "title": title,
             "key": key,
         }
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/keys",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return RepositoryKey.RepositoryKey( self.__requester, data, completed = True, repoUrl = self.url )
+        self._checkStatus( status, data )
+        return RepositoryKey.RepositoryKey( self._requester, data, completed = True, repoUrl = self._url )
 
     def create_label( self, name, color ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -409,15 +394,14 @@ class Repository( object ):
             "name": name,
             "color": color,
         }
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/labels",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Label.Label( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Label.Label( self._requester, data, completed = True )
 
     def create_milestone( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -436,15 +420,14 @@ class Repository( object ):
             post_parameters[ "description" ] = description
         if due_on is not DefaultValueForOptionalParameters:
             post_parameters[ "due_on" ] = due_on
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/milestones",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Milestone.Milestone( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Milestone.Milestone( self._requester, data, completed = True )
 
     def create_pull( self, *args, **kwds ):
         if len( args ) + len( kwds ) == 4:
@@ -463,15 +446,14 @@ class Repository( object ):
 
     def __create_pull( self, **kwds ):
         post_parameters = kwds
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "POST",
             str( self.url ) + "/pulls",
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return PullRequest.PullRequest( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return PullRequest.PullRequest( self._requester, data, completed = True )
 
     def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -502,87 +484,81 @@ class Repository( object ):
             post_parameters[ "has_wiki" ] = has_wiki
         if has_downloads is not DefaultValueForOptionalParameters:
             post_parameters[ "has_downloads" ] = has_downloads
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "PATCH",
             str( self.url ),
             None,
             post_parameters
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        self.__useAttributes( data )
+        self._checkStatus( status, data )
+        self._useAttributes( data )
 
     def get_branches( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/branches",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Branch.Branch,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_collaborators( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/collaborators",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return CommitComment.CommitComment( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return CommitComment.CommitComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/comments",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_commit( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/commits/" + str( sha ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Commit.Commit( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Commit.Commit( self._requester, data, completed = True )
 
     def get_commits( self, sha = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters ):
         if sha is not DefaultValueForOptionalParameters:
@@ -594,160 +570,149 @@ class Repository( object ):
             url_parameters[ "sha" ] = sha
         if path is not DefaultValueForOptionalParameters:
             url_parameters[ "path" ] = path
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/commits",
             url_parameters,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Commit.Commit,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_contributors( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/contributors",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_download( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/downloads/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Download.Download( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Download.Download( self._requester, data, completed = True )
 
     def get_downloads( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/downloads",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Download.Download,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_events( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/events",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_forks( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/forks",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_git_blob( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/blobs/" + str( sha ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitBlob.GitBlob( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitBlob.GitBlob( self._requester, data, completed = True )
 
     def get_git_commit( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/commits/" + str( sha ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitCommit.GitCommit( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitCommit.GitCommit( self._requester, data, completed = True )
 
     def get_git_ref( self, ref ):
         assert isinstance( ref, ( str, unicode ) ), ref
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/" + str( ref ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitRef.GitRef( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitRef.GitRef( self._requester, data, completed = True )
 
     def get_git_refs( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/refs",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             GitRef.GitRef,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_git_tag( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/tags/" + str( sha ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitTag.GitTag( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitTag.GitTag( self._requester, data, completed = True )
 
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
         assert isinstance( sha, ( str, unicode ) ), sha
@@ -756,55 +721,51 @@ class Repository( object ):
         url_parameters = dict()
         if recursive is not DefaultValueForOptionalParameters:
             url_parameters[ "recursive" ] = recursive
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/git/trees/" + str( sha ),
             url_parameters,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return GitTree.GitTree( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return GitTree.GitTree( self._requester, data, completed = True )
 
     def get_hook( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/hooks/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Hook.Hook( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Hook.Hook( self._requester, data, completed = True )
 
     def get_hooks( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/hooks",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Hook.Hook,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_issue( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/issues/" + str( number ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Issue.Issue( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Issue.Issue( self._requester, data, completed = True )
 
     def get_issues( self, milestone = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, mentioned = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters, since = DefaultValueForOptionalParameters ):
         if milestone is not DefaultValueForOptionalParameters:
@@ -840,127 +801,118 @@ class Repository( object ):
             url_parameters[ "direction" ] = direction
         if since is not DefaultValueForOptionalParameters:
             url_parameters[ "since" ] = since
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/issues",
             url_parameters,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Issue.Issue,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_issues_event( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/issues/events/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return IssueEvent.IssueEvent( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return IssueEvent.IssueEvent( self._requester, data, completed = True )
 
     def get_issues_events( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/issues/events",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_key( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/keys/" + str( id ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return RepositoryKey.RepositoryKey( self.__requester, data, completed = True, repoUrl = self.url )
+        self._checkStatus( status, data )
+        return RepositoryKey.RepositoryKey( self._requester, data, completed = True, repoUrl = self._url )
 
     def get_keys( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/keys",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
-            lambda r, d, completed: RepositoryKey.RepositoryKey( r, d, completed, repoUrl = self.url ),
-            self.__requester,
+            lambda requester, data, completed: RepositoryKey.RepositoryKey( requester, data, completed, repoUrl = self._url ),
+            self._requester,
             headers,
             data
         )
 
     def get_label( self, name ):
         assert isinstance( name, ( str, unicode ) ), name
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/labels/" + urllib.quote( str( name ) ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Label.Label( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Label.Label( self._requester, data, completed = True )
 
     def get_labels( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/labels",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Label.Label,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_languages( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/languages",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return data
 
     def get_milestone( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/milestones/" + str( number ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return Milestone.Milestone( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return Milestone.Milestone( self._requester, data, completed = True )
 
     def get_milestones( self, state = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
         if state is not DefaultValueForOptionalParameters:
@@ -976,48 +928,45 @@ class Repository( object ):
             url_parameters[ "sort" ] = sort
         if direction is not DefaultValueForOptionalParameters:
             url_parameters[ "direction" ] = direction
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/milestones",
             url_parameters,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Milestone.Milestone,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_network_events( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             "https://api.github.com/networks/" + str( self.owner.login ) + "/" + str( self.name ) + "/events",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_pull( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/pulls/" + str( number ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
-        return PullRequest.PullRequest( self.__requester, data, completed = True )
+        self._checkStatus( status, data )
+        return PullRequest.PullRequest( self._requester, data, completed = True )
 
     def get_pulls( self, state = DefaultValueForOptionalParameters ):
         if state is not DefaultValueForOptionalParameters:
@@ -1025,72 +974,68 @@ class Repository( object ):
         url_parameters = dict()
         if state is not DefaultValueForOptionalParameters:
             url_parameters[ "state" ] = state
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/pulls",
             url_parameters,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             PullRequest.PullRequest,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_tags( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/tags",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Tag.Tag,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_teams( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/teams",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Team.Team,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def get_watchers( self ):
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/watchers",
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
-            self.__requester,
+            self._requester,
             headers,
             data
         )
 
     def has_in_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "GET",
             str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
@@ -1100,153 +1045,138 @@ class Repository( object ):
 
     def remove_from_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self.__requester.request(
+        status, headers, data = self._request(
             "DELETE",
             str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
-        if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        self._checkStatus( status, data )
 
     @property
     def _identity( self ):
         return str( self.owner.login ) + "/" + str( self.name )
 
-    def __initAttributes( self ):
-        self.__clone_url = None
-        self.__created_at = None
-        self.__description = None
-        self.__fork = None
-        self.__forks = None
-        self.__full_name = None
-        self.__git_url = None
-        self.__has_downloads = None
-        self.__has_issues = None
-        self.__has_wiki = None
-        self.__homepage = None
-        self.__html_url = None
-        self.__id = None
-        self.__language = None
-        self.__master_branch = None
-        self.__name = None
-        self.__open_issues = None
-        self.__organization = None
-        self.__owner = None
-        self.__parent = None
-        self.__permissions = None
-        self.__private = None
-        self.__pushed_at = None
-        self.__size = None
-        self.__source = None
-        self.__ssh_url = None
-        self.__svn_url = None
-        self.__updated_at = None
-        self.__url = None
-        self.__watchers = None
+    def _initAttributes( self ):
+        self._clone_url = None
+        self._created_at = None
+        self._description = None
+        self._fork = None
+        self._forks = None
+        self._full_name = None
+        self._git_url = None
+        self._has_downloads = None
+        self._has_issues = None
+        self._has_wiki = None
+        self._homepage = None
+        self._html_url = None
+        self._id = None
+        self._language = None
+        self._master_branch = None
+        self._name = None
+        self._open_issues = None
+        self._organization = None
+        self._owner = None
+        self._parent = None
+        self._permissions = None
+        self._private = None
+        self._pushed_at = None
+        self._size = None
+        self._source = None
+        self._ssh_url = None
+        self._svn_url = None
+        self._updated_at = None
+        self._url = None
+        self._watchers = None
 
-    def __completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
-
-    def __complete( self ): # pragma: no cover
-        status, headers, data = self.__requester.request(
-            "GET",
-            self.__url,
-            None,
-            None
-        )
-        self.__useAttributes( data )
-        self.__completed = True
-
-    def __useAttributes( self, attributes ):
+    def _useAttributes( self, attributes ):
         if "clone_url" in attributes and attributes[ "clone_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "clone_url" ], ( str, unicode ) ), attributes[ "clone_url" ]
-            self.__clone_url = attributes[ "clone_url" ]
+            self._clone_url = attributes[ "clone_url" ]
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self.__created_at = attributes[ "created_at" ]
+            self._created_at = attributes[ "created_at" ]
         if "description" in attributes and attributes[ "description" ] is not None: # pragma no branch
             assert isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
-            self.__description = attributes[ "description" ]
+            self._description = attributes[ "description" ]
         if "fork" in attributes and attributes[ "fork" ] is not None: # pragma no branch
             assert isinstance( attributes[ "fork" ], bool ), attributes[ "fork" ]
-            self.__fork = attributes[ "fork" ]
+            self._fork = attributes[ "fork" ]
         if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
             assert isinstance( attributes[ "forks" ], int ), attributes[ "forks" ]
-            self.__forks = attributes[ "forks" ]
+            self._forks = attributes[ "forks" ]
         if "full_name" in attributes and attributes[ "full_name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "full_name" ], ( str, unicode ) ), attributes[ "full_name" ]
-            self.__full_name = attributes[ "full_name" ]
+            self._full_name = attributes[ "full_name" ]
         if "git_url" in attributes and attributes[ "git_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "git_url" ], ( str, unicode ) ), attributes[ "git_url" ]
-            self.__git_url = attributes[ "git_url" ]
+            self._git_url = attributes[ "git_url" ]
         if "has_downloads" in attributes and attributes[ "has_downloads" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_downloads" ], bool ), attributes[ "has_downloads" ]
-            self.__has_downloads = attributes[ "has_downloads" ]
+            self._has_downloads = attributes[ "has_downloads" ]
         if "has_issues" in attributes and attributes[ "has_issues" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_issues" ], bool ), attributes[ "has_issues" ]
-            self.__has_issues = attributes[ "has_issues" ]
+            self._has_issues = attributes[ "has_issues" ]
         if "has_wiki" in attributes and attributes[ "has_wiki" ] is not None: # pragma no branch
             assert isinstance( attributes[ "has_wiki" ], bool ), attributes[ "has_wiki" ]
-            self.__has_wiki = attributes[ "has_wiki" ]
+            self._has_wiki = attributes[ "has_wiki" ]
         if "homepage" in attributes and attributes[ "homepage" ] is not None: # pragma no branch
             assert isinstance( attributes[ "homepage" ], ( str, unicode ) ), attributes[ "homepage" ]
-            self.__homepage = attributes[ "homepage" ]
+            self._homepage = attributes[ "homepage" ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
-            self.__html_url = attributes[ "html_url" ]
+            self._html_url = attributes[ "html_url" ]
         if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
             assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
-            self.__id = attributes[ "id" ]
+            self._id = attributes[ "id" ]
         if "language" in attributes and attributes[ "language" ] is not None: # pragma no branch
             assert isinstance( attributes[ "language" ], ( str, unicode ) ), attributes[ "language" ]
-            self.__language = attributes[ "language" ]
+            self._language = attributes[ "language" ]
         if "master_branch" in attributes and attributes[ "master_branch" ] is not None: # pragma no branch
             assert isinstance( attributes[ "master_branch" ], ( str, unicode ) ), attributes[ "master_branch" ]
-            self.__master_branch = attributes[ "master_branch" ]
+            self._master_branch = attributes[ "master_branch" ]
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self.__name = attributes[ "name" ]
+            self._name = attributes[ "name" ]
         if "open_issues" in attributes and attributes[ "open_issues" ] is not None: # pragma no branch
             assert isinstance( attributes[ "open_issues" ], int ), attributes[ "open_issues" ]
-            self.__open_issues = attributes[ "open_issues" ]
+            self._open_issues = attributes[ "open_issues" ]
         if "organization" in attributes and attributes[ "organization" ] is not None: # pragma no branch
             assert isinstance( attributes[ "organization" ], dict ), attributes[ "organization" ]
-            self.__organization = Organization.Organization( self.__requester, attributes[ "organization" ], completed = False )
+            self._organization = Organization.Organization( self._requester, attributes[ "organization" ], completed = False )
         if "owner" in attributes and attributes[ "owner" ] is not None: # pragma no branch
             assert isinstance( attributes[ "owner" ], dict ), attributes[ "owner" ]
-            self.__owner = NamedUser.NamedUser( self.__requester, attributes[ "owner" ], completed = False )
+            self._owner = NamedUser.NamedUser( self._requester, attributes[ "owner" ], completed = False )
         if "parent" in attributes and attributes[ "parent" ] is not None: # pragma no branch
             assert isinstance( attributes[ "parent" ], dict ), attributes[ "parent" ]
-            self.__parent = Repository( self.__requester, attributes[ "parent" ], completed = False )
+            self._parent = Repository( self._requester, attributes[ "parent" ], completed = False )
         if "permissions" in attributes and attributes[ "permissions" ] is not None: # pragma no branch
             assert isinstance( attributes[ "permissions" ], dict ), attributes[ "permissions" ]
-            self.__permissions = Permissions.Permissions( self.__requester, attributes[ "permissions" ], completed = False )
+            self._permissions = Permissions.Permissions( self._requester, attributes[ "permissions" ], completed = False )
         if "private" in attributes and attributes[ "private" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private" ], bool ), attributes[ "private" ]
-            self.__private = attributes[ "private" ]
+            self._private = attributes[ "private" ]
         if "pushed_at" in attributes and attributes[ "pushed_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "pushed_at" ], ( str, unicode ) ), attributes[ "pushed_at" ]
-            self.__pushed_at = attributes[ "pushed_at" ]
+            self._pushed_at = attributes[ "pushed_at" ]
         if "size" in attributes and attributes[ "size" ] is not None: # pragma no branch
             assert isinstance( attributes[ "size" ], int ), attributes[ "size" ]
-            self.__size = attributes[ "size" ]
+            self._size = attributes[ "size" ]
         if "source" in attributes and attributes[ "source" ] is not None: # pragma no branch
             assert isinstance( attributes[ "source" ], dict ), attributes[ "source" ]
-            self.__source = Repository( self.__requester, attributes[ "source" ], completed = False )
+            self._source = Repository( self._requester, attributes[ "source" ], completed = False )
         if "ssh_url" in attributes and attributes[ "ssh_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "ssh_url" ], ( str, unicode ) ), attributes[ "ssh_url" ]
-            self.__ssh_url = attributes[ "ssh_url" ]
+            self._ssh_url = attributes[ "ssh_url" ]
         if "svn_url" in attributes and attributes[ "svn_url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "svn_url" ], ( str, unicode ) ), attributes[ "svn_url" ]
-            self.__svn_url = attributes[ "svn_url" ]
+            self._svn_url = attributes[ "svn_url" ]
         if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self.__updated_at = attributes[ "updated_at" ]
+            self._updated_at = attributes[ "updated_at" ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self.__url = attributes[ "url" ]
+            self._url = attributes[ "url" ]
         if "watchers" in attributes and attributes[ "watchers" ] is not None: # pragma no branch
             assert isinstance( attributes[ "watchers" ], int ), attributes[ "watchers" ]
-            self.__watchers = attributes[ "watchers" ]
+            self._watchers = attributes[ "watchers" ]
