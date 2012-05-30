@@ -189,7 +189,7 @@ class Repository( object ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
@@ -513,7 +513,7 @@ class Repository( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/comments" + "/" + str( id ),
+            str( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
@@ -537,7 +537,7 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/commits" + "/" + str( sha ),
+            str( self.url ) + "/commits/" + str( sha ),
             None,
             None
         )
@@ -584,7 +584,7 @@ class Repository( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/downloads" + "/" + str( id ),
+            str( self.url ) + "/downloads/" + str( id ),
             None,
             None
         )
@@ -636,7 +636,7 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/blobs" + "/" + str( sha ),
+            str( self.url ) + "/git/blobs/" + str( sha ),
             None,
             None
         )
@@ -646,7 +646,7 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/commits" + "/" + str( sha ),
+            str( self.url ) + "/git/commits/" + str( sha ),
             None,
             None
         )
@@ -680,7 +680,7 @@ class Repository( object ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/tags" + "/" + str( sha ),
+            str( self.url ) + "/git/tags/" + str( sha ),
             None,
             None
         )
@@ -695,7 +695,7 @@ class Repository( object ):
             url_parameters[ "recursive" ] = recursive
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/git/trees" + "/" + str( sha ),
+            str( self.url ) + "/git/trees/" + str( sha ),
             url_parameters,
             None
         )
@@ -705,7 +705,7 @@ class Repository( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/hooks" + "/" + str( id ),
+            str( self.url ) + "/hooks/" + str( id ),
             None,
             None
         )
@@ -729,7 +729,7 @@ class Repository( object ):
         assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues" + "/" + str( number ),
+            str( self.url ) + "/issues/" + str( number ),
             None,
             None
         )
@@ -786,7 +786,7 @@ class Repository( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/issues/events" + "/" + str( id ),
+            str( self.url ) + "/issues/events/" + str( id ),
             None,
             None
         )
@@ -810,7 +810,7 @@ class Repository( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/keys" + "/" + str( id ),
+            str( self.url ) + "/keys/" + str( id ),
             None,
             None
         )
@@ -867,7 +867,7 @@ class Repository( object ):
         assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/milestones" + "/" + str( number ),
+            str( self.url ) + "/milestones/" + str( number ),
             None,
             None
         )
@@ -918,7 +918,7 @@ class Repository( object ):
         assert isinstance( number, int ), number
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/pulls" + "/" + str( number ),
+            str( self.url ) + "/pulls/" + str( number ),
             None,
             None
         )
@@ -989,7 +989,7 @@ class Repository( object ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )
@@ -999,7 +999,7 @@ class Repository( object ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/collaborators" + "/" + str( collaborator._identity ),
+            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
             None,
             None
         )

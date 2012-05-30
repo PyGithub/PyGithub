@@ -177,7 +177,7 @@ class Issue( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),
+            self.__requester.parentUrl( str( self.url ) ) + "/comments/" + str( id ),
             None,
             None
         )
@@ -229,7 +229,7 @@ class Issue( object ):
         assert isinstance( label, Label.Label ), label
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/labels" + "/" + str( label._identity ),
+            str( self.url ) + "/labels/" + str( label._identity ),
             None,
             None
         )

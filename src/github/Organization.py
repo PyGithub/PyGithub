@@ -140,7 +140,7 @@ class Organization( object ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )
@@ -353,7 +353,7 @@ class Organization( object ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/members" + "/" + str( member._identity ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -363,7 +363,7 @@ class Organization( object ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )
@@ -373,7 +373,7 @@ class Organization( object ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/members" + "/" + str( member._identity ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -382,7 +382,7 @@ class Organization( object ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/public_members" + "/" + str( public_member._identity ),
+            str( self.url ) + "/public_members/" + str( public_member._identity ),
             None,
             None
         )

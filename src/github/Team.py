@@ -47,7 +47,7 @@ class Team( object ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/members" + "/" + str( member._identity ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -56,7 +56,7 @@ class Team( object ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "PUT",
-            str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            str( self.url ) + "/repos/" + str( repo._identity ),
             None,
             None
         )
@@ -118,7 +118,7 @@ class Team( object ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/members" + "/" + str( member._identity ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -128,7 +128,7 @@ class Team( object ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "GET",
-            str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            str( self.url ) + "/repos/" + str( repo._identity ),
             None,
             None
         )
@@ -138,7 +138,7 @@ class Team( object ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/members" + "/" + str( member._identity ),
+            str( self.url ) + "/members/" + str( member._identity ),
             None,
             None
         )
@@ -147,7 +147,7 @@ class Team( object ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self.__requester.request(
             "DELETE",
-            str( self.url ) + "/repos" + "/" + str( repo._identity ),
+            str( self.url ) + "/repos/" + str( repo._identity ),
             None,
             None
         )

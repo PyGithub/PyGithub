@@ -191,7 +191,7 @@ class PullRequest( object ):
         assert isinstance( id, int ), id
         status, headers, data = self.__requester.request(
             "GET",
-            self.__requester.parentUrl( str( self.url ) ) + "/comments" + "/" + str( id ),
+            self.__requester.parentUrl( str( self.url ) ) + "/comments/" + str( id ),
             None,
             None
         )

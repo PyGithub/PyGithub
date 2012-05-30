@@ -82,8 +82,8 @@ class Function:
             # GET parameters from input
             # POST parameters from input
 
-    def __init__( self, desc, *additionalDescs ):
-        desc = mergeDict( desc, *additionalDescs )
+    def __init__( self, *descs ):
+        desc = mergeDict( *descs )
         checkKeys( desc, [ "name", "type", "group", "request" ], [ "url", "isMutation", "mandatoryParameters", "optionalParameters", "variadicParameter", "parameter", "request" ] )
 
         self.name = desc[ "name" ]
@@ -102,10 +102,17 @@ class Function:
             self.variadicParameter = Variable( desc[ "variadicParameter" ] )
         else:
             self.variadicParameter = None
-        if "request" in desc:
-            self.request = desc[ "request" ]
-        else:
-            self.request = None
+        self.request = desc[ "request" ]
+        self.__agregateRequestUrl()
+
+    def __agregateRequestUrl( self ):
+        url = list()
+        for part in self.request[ "url" ]:
+            if len( url ) != 0 and url[ -1 ][ "type" ] == "constant" and part[ "type" ] == "constant":
+                url[ -1 ][ "value" ] += part[ "value" ]
+            else:
+                url.append( dict( part ) )
+        self.request[ "url" ] = url
 
     def ToJson( self ):
         json = {

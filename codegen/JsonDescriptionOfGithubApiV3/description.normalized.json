@@ -359,11 +359,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/authorizations"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/authorizations/"
                             }, 
                             {
                                 "type": "argument", 
@@ -521,11 +517,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/keys"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/keys/"
                             }, 
                             {
                                 "type": "argument", 
@@ -590,11 +582,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/repos"
+                                "value": "https://api.github.com/user/repos"
                             }
                         ], 
                         "information": "status", 
@@ -719,11 +707,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/repos"
+                                "value": "https://api.github.com/user/repos"
                             }
                         ], 
                         "information": "data", 
@@ -782,11 +766,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/emails"
+                                "value": "https://api.github.com/user/emails"
                             }
                         ], 
                         "information": "status", 
@@ -812,11 +792,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/emails"
+                                "value": "https://api.github.com/user/emails"
                             }
                         ], 
                         "information": "data", 
@@ -850,11 +826,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/emails"
+                                "value": "https://api.github.com/user/emails"
                             }
                         ], 
                         "information": "status", 
@@ -890,15 +862,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/watched"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/watched/"
                             }, 
                             {
                                 "type": "argument", 
@@ -930,11 +894,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/watched"
+                                "value": "https://api.github.com/user/watched"
                             }
                         ], 
                         "information": "data", 
@@ -969,15 +929,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/watched"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/watched/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1019,15 +971,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/watched"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/watched/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1069,15 +1013,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/following"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/following/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1109,11 +1045,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/following"
+                                "value": "https://api.github.com/user/following"
                             }
                         ], 
                         "information": "data", 
@@ -1148,15 +1080,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/following"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/following/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1198,15 +1122,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/following"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "https://api.github.com/user/following/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1238,11 +1154,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/followers"
+                                "value": "https://api.github.com/user/followers"
                             }
                         ], 
                         "information": "data", 
@@ -1267,11 +1179,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/orgs"
+                                "value": "https://api.github.com/user/orgs"
                             }
                         ], 
                         "information": "data", 
@@ -3978,11 +3886,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/comments/"
                             }, 
                             {
                                 "type": "argument", 
@@ -4194,11 +4098,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/labels"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/labels/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5817,11 +5717,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5869,11 +5765,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -5921,11 +5813,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/public_members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -6004,11 +5892,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/public_members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -6056,11 +5940,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/public_members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/public_members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -6902,11 +6782,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/comments/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7768,11 +7644,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/collaborators/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7851,11 +7723,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/collaborators/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7903,11 +7771,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/collaborators"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/collaborators/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7954,11 +7818,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/comments"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/comments/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8035,11 +7895,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/commits"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/commits/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8230,11 +8086,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/downloads"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/downloads/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8422,11 +8274,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git/blobs"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/git/blobs/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8546,11 +8394,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git/commits"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/git/commits/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8796,11 +8640,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git/tags"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/git/tags/"
                             }, 
                             {
                                 "type": "argument", 
@@ -8896,11 +8736,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/git/trees"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/git/trees/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9021,11 +8857,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/hooks"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/hooks/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9176,11 +9008,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/issues"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/issues/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9322,11 +9150,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/issues/events"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/issues/events/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9452,11 +9276,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/keys"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/keys/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9730,11 +9550,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/milestones"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/milestones/"
                             }, 
                             {
                                 "type": "argument", 
@@ -9909,11 +9725,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/pulls"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/pulls/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10515,11 +10327,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10598,11 +10406,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10650,11 +10454,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/members"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/members/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10702,11 +10502,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10785,11 +10581,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "argument", 
@@ -10837,11 +10629,7 @@
                             }, 
                             {
                                 "type": "constant", 
-                                "value": "/repos"
-                            }, 
-                            {
-                                "type": "constant", 
-                                "value": "/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "argument", 
