@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
 class Download( object ):
     def __init__( self, requester, attributes, completed ):
@@ -119,7 +120,7 @@ class Download( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__accesskeyid = None

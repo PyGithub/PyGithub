@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import AuthorizationApplication
 
 class Authorization( object ):
@@ -65,7 +66,7 @@ class Authorization( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
         if scopes is not DefaultValueForOptionalParameters:
@@ -96,7 +97,7 @@ class Authorization( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

@@ -3,7 +3,8 @@ import urllib
 {% endif %}
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
 {% for dependency in class.dependencies %}
 import {{ dependency }}

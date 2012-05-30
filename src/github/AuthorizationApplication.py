@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
 class AuthorizationApplication( object ):
     def __init__( self, requester, attributes, completed ):

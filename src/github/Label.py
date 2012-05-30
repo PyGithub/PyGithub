@@ -3,7 +3,8 @@
 
 import urllib
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
 class Label( object ):
     def __init__( self, requester, attributes, completed ):
@@ -31,7 +32,7 @@ class Label( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def edit( self, name, color ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -47,7 +48,7 @@ class Label( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     @property

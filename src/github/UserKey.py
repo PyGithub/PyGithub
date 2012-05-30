@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
 class UserKey( object ):
     def __init__( self, requester, attributes, completed ):
@@ -44,7 +45,7 @@ class UserKey( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def edit( self, title = DefaultValueForOptionalParameters, key = DefaultValueForOptionalParameters ):
         if title is not DefaultValueForOptionalParameters:
@@ -63,7 +64,7 @@ class UserKey( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def __initAttributes( self ):

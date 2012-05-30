@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import Repository
 import IssueEvent
 import Label
@@ -118,7 +119,7 @@ class Issue( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def create_comment( self, body ):
         assert isinstance( body, ( str, unicode ) ), body
@@ -132,7 +133,7 @@ class Issue( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return IssueComment.IssueComment( self.__requester, data, completed = True )
 
     def delete_labels( self ):
@@ -143,7 +144,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
         if title is not DefaultValueForOptionalParameters:
@@ -178,7 +179,7 @@ class Issue( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_comment( self, id ):
@@ -190,7 +191,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return IssueComment.IssueComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -201,7 +202,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             IssueComment.IssueComment,
             self.__requester,
@@ -217,7 +218,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self.__requester,
@@ -233,7 +234,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Label.Label,
             self.__requester,
@@ -250,7 +251,7 @@ class Issue( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def set_labels( self, *labels ):
         assert all( isinstance( label, Label.Label ) for label in labels ), labels
@@ -262,7 +263,7 @@ class Issue( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def __initAttributes( self ):
         self.__assignee = None

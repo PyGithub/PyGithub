@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import CommitFile
 import NamedUser
 import GitCommit
@@ -81,7 +82,7 @@ class Commit( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return CommitComment.CommitComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -92,7 +93,7 @@ class Commit( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self.__requester,

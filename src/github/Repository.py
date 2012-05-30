@@ -3,7 +3,8 @@
 
 import urllib
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import Branch
 import IssueEvent
 import Label
@@ -194,7 +195,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     def compare( self, base, head ):
         assert isinstance( base, ( str, unicode ) ), base
@@ -206,7 +207,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return data
 
     def create_download( self, name, size, description = DefaultValueForOptionalParameters, content_type = DefaultValueForOptionalParameters ):
@@ -231,7 +232,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Download.Download( self.__requester, data, completed = True )
 
     def create_git_blob( self, content, encoding ):
@@ -248,7 +249,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitBlob.GitBlob( self.__requester, data, completed = True )
 
     def create_git_commit( self, message, tree, parents, author = DefaultValueForOptionalParameters, committer = DefaultValueForOptionalParameters ):
@@ -270,7 +271,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitCommit.GitCommit( self.__requester, data, completed = True )
 
     def create_git_ref( self, ref, sha ):
@@ -287,7 +288,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitRef.GitRef( self.__requester, data, completed = True )
 
     def create_git_tag( self, tag, message, object, type, tagger = DefaultValueForOptionalParameters ):
@@ -310,7 +311,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitTag.GitTag( self.__requester, data, completed = True )
 
     def create_git_tree( self, tree, base_tree = DefaultValueForOptionalParameters ):
@@ -326,7 +327,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitTree.GitTree( self.__requester, data, completed = True )
 
     def create_hook( self, name, config, events = DefaultValueForOptionalParameters, active = DefaultValueForOptionalParameters ):
@@ -350,7 +351,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Hook.Hook( self.__requester, data, completed = True )
 
     def create_issue( self, title, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
@@ -381,7 +382,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Issue.Issue( self.__requester, data, completed = True )
 
     def create_key( self, title, key ):
@@ -398,7 +399,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return RepositoryKey.RepositoryKey( self.__requester, data, completed = True, repoUrl = self.url )
 
     def create_label( self, name, color ):
@@ -415,7 +416,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Label.Label( self.__requester, data, completed = True )
 
     def create_milestone( self, title, state = DefaultValueForOptionalParameters, description = DefaultValueForOptionalParameters, due_on = DefaultValueForOptionalParameters ):
@@ -442,7 +443,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Milestone.Milestone( self.__requester, data, completed = True )
 
     def create_pull( self, *args, **kwds ):
@@ -469,7 +470,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PullRequest.PullRequest( self.__requester, data, completed = True )
 
     def edit( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, public = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
@@ -508,7 +509,7 @@ class Repository( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_branches( self ):
@@ -519,7 +520,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Branch.Branch,
             self.__requester,
@@ -535,7 +536,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -552,7 +553,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return CommitComment.CommitComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -563,7 +564,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self.__requester,
@@ -580,7 +581,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Commit.Commit( self.__requester, data, completed = True )
 
     def get_commits( self, sha = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters ):
@@ -600,7 +601,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self.__requester,
@@ -616,7 +617,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -633,7 +634,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Download.Download( self.__requester, data, completed = True )
 
     def get_downloads( self ):
@@ -644,7 +645,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Download.Download,
             self.__requester,
@@ -660,7 +661,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -676,7 +677,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository,
             self.__requester,
@@ -693,7 +694,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitBlob.GitBlob( self.__requester, data, completed = True )
 
     def get_git_commit( self, sha ):
@@ -705,7 +706,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitCommit.GitCommit( self.__requester, data, completed = True )
 
     def get_git_ref( self, ref ):
@@ -717,7 +718,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitRef.GitRef( self.__requester, data, completed = True )
 
     def get_git_refs( self ):
@@ -728,7 +729,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             GitRef.GitRef,
             self.__requester,
@@ -745,7 +746,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitTag.GitTag( self.__requester, data, completed = True )
 
     def get_git_tree( self, sha, recursive = DefaultValueForOptionalParameters ):
@@ -762,7 +763,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return GitTree.GitTree( self.__requester, data, completed = True )
 
     def get_hook( self, id ):
@@ -774,7 +775,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Hook.Hook( self.__requester, data, completed = True )
 
     def get_hooks( self ):
@@ -785,7 +786,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Hook.Hook,
             self.__requester,
@@ -802,7 +803,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Issue.Issue( self.__requester, data, completed = True )
 
     def get_issues( self, milestone = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, mentioned = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters, since = DefaultValueForOptionalParameters ):
@@ -846,7 +847,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self.__requester,
@@ -863,7 +864,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return IssueEvent.IssueEvent( self.__requester, data, completed = True )
 
     def get_issues_events( self ):
@@ -874,7 +875,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self.__requester,
@@ -891,7 +892,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return RepositoryKey.RepositoryKey( self.__requester, data, completed = True, repoUrl = self.url )
 
     def get_keys( self ):
@@ -902,7 +903,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             lambda r, d, completed: RepositoryKey.RepositoryKey( r, d, completed, repoUrl = self.url ),
             self.__requester,
@@ -919,7 +920,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Label.Label( self.__requester, data, completed = True )
 
     def get_labels( self ):
@@ -930,7 +931,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Label.Label,
             self.__requester,
@@ -946,7 +947,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return data
 
     def get_milestone( self, number ):
@@ -958,7 +959,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Milestone.Milestone( self.__requester, data, completed = True )
 
     def get_milestones( self, state = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
@@ -982,7 +983,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Milestone.Milestone,
             self.__requester,
@@ -998,7 +999,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -1015,7 +1016,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PullRequest.PullRequest( self.__requester, data, completed = True )
 
     def get_pulls( self, state = DefaultValueForOptionalParameters ):
@@ -1031,7 +1032,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             PullRequest.PullRequest,
             self.__requester,
@@ -1047,7 +1048,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Tag.Tag,
             self.__requester,
@@ -1063,7 +1064,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Team.Team,
             self.__requester,
@@ -1079,7 +1080,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self.__requester,
@@ -1106,7 +1107,7 @@ class Repository( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 
     @property
     def _identity( self ):

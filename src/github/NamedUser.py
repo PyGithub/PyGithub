@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import Gist
 import Repository
 import NamedUser
@@ -164,7 +165,7 @@ class NamedUser( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Gist.Gist( self.__requester, data, completed = True )
 
     def get_events( self ):
@@ -175,7 +176,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -191,7 +192,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser,
             self.__requester,
@@ -207,7 +208,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             NamedUser,
             self.__requester,
@@ -223,7 +224,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,
@@ -239,7 +240,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Organization.Organization,
             self.__requester,
@@ -255,7 +256,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -271,7 +272,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -287,7 +288,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Event.Event,
             self.__requester,
@@ -304,7 +305,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
@@ -320,7 +321,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,
@@ -336,7 +337,7 @@ class NamedUser( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self.__requester,

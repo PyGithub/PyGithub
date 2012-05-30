@@ -2,7 +2,8 @@
 # Do not modify it manually, your work would be lost.
 
 import PaginatedList
-from GithubObject import *
+import GithubException
+from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import Commit
 import NamedUser
 import PullRequestMergeStatus
@@ -164,7 +165,7 @@ class PullRequest( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PullRequestComment.PullRequestComment( self.__requester, data, completed = True )
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
@@ -188,7 +189,7 @@ class PullRequest( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         self.__useAttributes( data )
 
     def get_comment( self, id ):
@@ -200,7 +201,7 @@ class PullRequest( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PullRequestComment.PullRequestComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
@@ -211,7 +212,7 @@ class PullRequest( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             PullRequestComment.PullRequestComment,
             self.__requester,
@@ -227,7 +228,7 @@ class PullRequest( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self.__requester,
@@ -243,7 +244,7 @@ class PullRequest( object ):
             None
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PaginatedList.PaginatedList(
             PullRequestFile.PullRequestFile,
             self.__requester,
@@ -273,7 +274,7 @@ class PullRequest( object ):
             post_parameters
         )
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
         return PullRequestMergeStatus.PullRequestMergeStatus( self.__requester, data, completed = True )
 
     def __initAttributes( self ):

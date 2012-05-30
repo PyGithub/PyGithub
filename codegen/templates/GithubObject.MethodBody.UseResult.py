@@ -1,6 +1,6 @@
 {% if method.type.name != "bool" %}
         if self.__requester.isFailureStatus( status ): # pragma no branch
-            raise GithubException( status, data ) # pragma no cover
+            raise GithubException.GithubException( status, data ) # pragma no cover
 {% endif %}
 
 {% if method.isMutation %}
