@@ -6,7 +6,7 @@ from GithubObject import *
 import GitObject
 
 class GitRef( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -56,7 +56,7 @@ class GitRef( object ):
     def __useAttributes( self, attributes ):
         if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
+            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completed = False )
         if "ref" in attributes and attributes[ "ref" ] is not None: # pragma no branch
             assert isinstance( attributes[ "ref" ], ( str, unicode ) ), attributes[ "ref" ]
             self.__ref = attributes[ "ref" ]

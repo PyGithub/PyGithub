@@ -8,7 +8,7 @@ import Repository
 import NamedUser
 
 class Event( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -58,7 +58,7 @@ class Event( object ):
     def __useAttributes( self, attributes ):
         if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
             assert isinstance( attributes[ "actor" ], dict ), attributes[ "actor" ]
-            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completion = LazyCompletion )
+            self.__actor = NamedUser.NamedUser( self.__requester, attributes[ "actor" ], completed = False )
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]
@@ -67,7 +67,7 @@ class Event( object ):
             self.__id = attributes[ "id" ]
         if "org" in attributes and attributes[ "org" ] is not None: # pragma no branch
             assert isinstance( attributes[ "org" ], dict ), attributes[ "org" ]
-            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completion = LazyCompletion )
+            self.__org = Organization.Organization( self.__requester, attributes[ "org" ], completed = False )
         if "payload" in attributes and attributes[ "payload" ] is not None: # pragma no branch
             self.__payload = attributes[ "payload" ]
         if "public" in attributes and attributes[ "public" ] is not None: # pragma no branch
@@ -75,7 +75,7 @@ class Event( object ):
             self.__public = attributes[ "public" ]
         if "repo" in attributes and attributes[ "repo" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repo" ], dict ), attributes[ "repo" ]
-            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completion = LazyCompletion )
+            self.__repo = Repository.Repository( self.__requester, attributes[ "repo" ], completed = False )
         if "type" in attributes and attributes[ "type" ] is not None: # pragma no branch
             assert isinstance( attributes[ "type" ], ( str, unicode ) ), attributes[ "type" ]
             self.__type = attributes[ "type" ]

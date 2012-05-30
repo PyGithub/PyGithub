@@ -6,7 +6,7 @@ import PaginatedList
 from GithubObject import *
 
 class Label( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )

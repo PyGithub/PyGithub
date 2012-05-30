@@ -10,13 +10,11 @@ import PullRequestComment
 import PullRequestFile
 
 class PullRequest( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def additions( self ):
@@ -165,7 +163,7 @@ class PullRequest( object ):
             None,
             post_parameters
         )
-        return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
+        return PullRequestComment.PullRequestComment( self.__requester, data, completed = True )
 
     def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
         if title is not DefaultValueForOptionalParameters:
@@ -197,7 +195,7 @@ class PullRequest( object ):
             None,
             None
         )
-        return PullRequestComment.PullRequestComment( self.__requester, data, completion = NoCompletion )
+        return PullRequestComment.PullRequestComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -262,7 +260,7 @@ class PullRequest( object ):
             None,
             post_parameters
         )
-        return PullRequestMergeStatus.PullRequestMergeStatus( self.__requester, data, completion = NoCompletion )
+        return PullRequestMergeStatus.PullRequestMergeStatus( self.__requester, data, completed = True )
 
     def __initAttributes( self ):
         self.__additions = None
@@ -358,7 +356,7 @@ class PullRequest( object ):
             self.__merged_at = attributes[ "merged_at" ]
         if "merged_by" in attributes and attributes[ "merged_by" ] is not None: # pragma no branch
             assert isinstance( attributes[ "merged_by" ], dict ), attributes[ "merged_by" ]
-            self.__merged_by = NamedUser.NamedUser( self.__requester, attributes[ "merged_by" ], completion = LazyCompletion )
+            self.__merged_by = NamedUser.NamedUser( self.__requester, attributes[ "merged_by" ], completed = False )
         if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
             assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
@@ -382,4 +380,4 @@ class PullRequest( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completed = False )

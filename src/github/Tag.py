@@ -6,7 +6,7 @@ from GithubObject import *
 import Commit
 
 class Tag( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -36,7 +36,7 @@ class Tag( object ):
     def __useAttributes( self, attributes ):
         if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
             assert isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
-            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completion = LazyCompletion )
+            self.__commit = Commit.Commit( self.__requester, attributes[ "commit" ], completed = False )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]

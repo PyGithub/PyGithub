@@ -6,7 +6,7 @@ from GithubObject import *
 import GitTreeElement
 
 class GitTree( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -35,7 +35,7 @@ class GitTree( object ):
         if "tree" in attributes and attributes[ "tree" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "tree" ] ), attributes[ "tree" ]
             self.__tree = [
-                GitTreeElement.GitTreeElement( self.__requester, element, completion = LazyCompletion )
+                GitTreeElement.GitTreeElement( self.__requester, element, completed = False )
                 for element in attributes[ "tree" ]
             ]
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch

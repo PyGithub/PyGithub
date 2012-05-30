@@ -5,13 +5,11 @@ import PaginatedList
 from GithubObject import *
 
 class RepositoryKey( object ):
-    def __init__( self, requester, attributes, completion, repoUrl ):
+    def __init__( self, requester, attributes, completed, repoUrl ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
         self.__repoUrl = repoUrl
 
     @property

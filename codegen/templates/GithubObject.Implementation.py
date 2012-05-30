@@ -68,7 +68,7 @@
     {% if attribute.type.simple %}
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
-            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completion = LazyCompletion )
+            self.__{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, attributes[ "{{ attribute.name }}" ], completed = False )
     {% endif %}
 
 {% else %}
@@ -77,7 +77,7 @@
             self.__{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
             self.__{{ attribute.name }} = [
-                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, completion = LazyCompletion )
+                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self.__requester, element, completed = False )
                 for element in attributes[ "{{ attribute.name }}" ]
             ]
     {% endif %}

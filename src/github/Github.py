@@ -4,7 +4,6 @@ import NamedUser
 import Organization
 import Gist
 import PaginatedList
-from GithubObject import LazyCompletion, ImmediateCompletion
 
 class Github( object ):
     def __init__( self, login_or_token = None, password = None ):
@@ -16,30 +15,33 @@ class Github( object ):
 
     def get_user( self, login = None ):
         if login is None:
-            attributes = {
-                "url": "https://api.github.com/user",
-            }
-            return AuthenticatedUser.AuthenticatedUser( self.__requester, attributes, completion = LazyCompletion )
+            return AuthenticatedUser.AuthenticatedUser( self.__requester, { "url": "https://api.github.com/user" }, completed = False )
         else:
-            attributes = {
-                "url": "https://api.github.com/users/" + login,
-                "login": login,
-            }
-            return NamedUser.NamedUser( self.__requester, attributes, completion = ImmediateCompletion )
+            status, headers, data = self.__requester.request(
+                "GET",
+                "https://api.github.com/users/" + login,
+                None,
+                None
+            )
+            return NamedUser.NamedUser( self.__requester, data, completed = True )
 
     def get_organization( self, login ):
-        attributes = {
-            "url": "https://api.github.com/orgs/" + login,
-            "login": login,
-        }
-        return Organization.Organization( self.__requester, attributes, completion = ImmediateCompletion )
+        status, headers, data = self.__requester.request(
+            "GET",
+            "https://api.github.com/orgs/" + login,
+            None,
+            None
+        )
+        return Organization.Organization( self.__requester, data, completed = True )
 
     def get_gist( self, id ):
-        attributes = {
-            "url": "https://api.github.com/gists/" + str( id ),
-            "id": id,
-        }
-        return Gist.Gist( self.__requester, attributes, completion = ImmediateCompletion )
+        status, headers, data = self.__requester.request(
+            "GET",
+            "https://api.github.com/gists/" + str( id ),
+            None,
+            None
+        )
+        return Gist.Gist( self.__requester, data, completed = True )
 
     def get_gists( self ):
         status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None, None )

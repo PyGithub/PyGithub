@@ -1,5 +1,3 @@
-from GithubObject import LazyCompletion
-
 class PaginatedList:
     def __init__( self, contentClass, requester, headers, data ):
         self.__requester = requester
@@ -61,7 +59,7 @@ class PaginatedList:
             self.__nextUrl = None
 
         newElements = [
-            self.__contentClass( self.__requester, element, completion = LazyCompletion )
+            self.__contentClass( self.__requester, element, completed = False )
             for element in data
         ]
         self.__elements += newElements

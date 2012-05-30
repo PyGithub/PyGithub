@@ -14,13 +14,11 @@ import Event
 import Authorization
 
 class AuthenticatedUser( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def avatar_url( self ):
@@ -195,7 +193,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
+        return Authorization.Authorization( self.__requester, data, completed = True )
 
     def create_fork( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
@@ -205,7 +203,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def create_gist( self, public, files, description = DefaultValueForOptionalParameters ):
         assert isinstance( public, bool ), public
@@ -223,7 +221,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Gist.Gist( self.__requester, data, completion = NoCompletion )
+        return Gist.Gist( self.__requester, data, completed = True )
 
     def create_key( self, title, key ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -240,7 +238,7 @@ class AuthenticatedUser( object ):
         )
         if self.__requester.isFailureStatus( status ):
             raise GithubException( status, data )
-        return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
+        return UserKey.UserKey( self.__requester, data, completed = True )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -277,7 +275,7 @@ class AuthenticatedUser( object ):
             None,
             post_parameters
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def edit( self, name = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, hireable = DefaultValueForOptionalParameters, bio = DefaultValueForOptionalParameters ):
         if name is not DefaultValueForOptionalParameters:
@@ -325,7 +323,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Authorization.Authorization( self.__requester, data, completion = NoCompletion )
+        return Authorization.Authorization( self.__requester, data, completed = True )
 
     def get_authorizations( self ):
         status, headers, data = self.__requester.request(
@@ -428,7 +426,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return UserKey.UserKey( self.__requester, data, completion = NoCompletion )
+        return UserKey.UserKey( self.__requester, data, completed = True )
 
     def get_keys( self ):
         status, headers, data = self.__requester.request(
@@ -481,7 +479,7 @@ class AuthenticatedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters, sort = DefaultValueForOptionalParameters, direction = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
@@ -684,7 +682,7 @@ class AuthenticatedUser( object ):
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None: # pragma no branch
             assert isinstance( attributes[ "plan" ], dict ), attributes[ "plan" ]
-            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completed = False )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private_gists" ], int ), attributes[ "private_gists" ]
             self.__private_gists = attributes[ "private_gists" ]

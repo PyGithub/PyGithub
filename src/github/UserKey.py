@@ -5,13 +5,11 @@ import PaginatedList
 from GithubObject import *
 
 class UserKey( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def id( self ):

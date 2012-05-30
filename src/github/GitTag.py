@@ -7,7 +7,7 @@ import GitAuthor
 import GitObject
 
 class GitTag( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -50,7 +50,7 @@ class GitTag( object ):
             self.__message = attributes[ "message" ]
         if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
             assert isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
-            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completion = LazyCompletion )
+            self.__object = GitObject.GitObject( self.__requester, attributes[ "object" ], completed = False )
         if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
             assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self.__sha = attributes[ "sha" ]
@@ -59,7 +59,7 @@ class GitTag( object ):
             self.__tag = attributes[ "tag" ]
         if "tagger" in attributes and attributes[ "tagger" ] is not None: # pragma no branch
             assert isinstance( attributes[ "tagger" ], dict ), attributes[ "tagger" ]
-            self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], completion = LazyCompletion )
+            self.__tagger = GitAuthor.GitAuthor( self.__requester, attributes[ "tagger" ], completed = False )
         if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
             assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self.__url = attributes[ "url" ]

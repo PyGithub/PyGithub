@@ -6,7 +6,7 @@ from GithubObject import *
 import NamedUser
 
 class IssueComment( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -82,4 +82,4 @@ class IssueComment( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completed = False )

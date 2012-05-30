@@ -9,13 +9,11 @@ import Gist
 import GistComment
 
 class Gist( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def comments( self ):
@@ -103,7 +101,7 @@ class Gist( object ):
             None,
             post_parameters
         )
-        return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
+        return GistComment.GistComment( self.__requester, data, completed = True )
 
     def create_fork( self ):
         status, headers, data = self.__requester.request(
@@ -112,7 +110,7 @@ class Gist( object ):
             None,
             None
         )
-        return Gist( self.__requester, data, completion = NoCompletion )
+        return Gist( self.__requester, data, completed = True )
 
     def delete( self ):
         status, headers, data = self.__requester.request(
@@ -146,7 +144,7 @@ class Gist( object ):
             None,
             None
         )
-        return GistComment.GistComment( self.__requester, data, completion = NoCompletion )
+        return GistComment.GistComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -232,11 +230,11 @@ class Gist( object ):
             self.__files = attributes[ "files" ]
         if "fork_of" in attributes and attributes[ "fork_of" ] is not None: # pragma no branch
             assert isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
-            self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completion = LazyCompletion )
+            self.__fork_of = Gist( self.__requester, attributes[ "fork_of" ], completed = False )
         if "forks" in attributes and attributes[ "forks" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "forks" ] ), attributes[ "forks" ]
             self.__forks = [
-                Gist( self.__requester, element, completion = LazyCompletion )
+                Gist( self.__requester, element, completed = False )
                 for element in attributes[ "forks" ]
             ]
         if "git_pull_url" in attributes and attributes[ "git_pull_url" ] is not None: # pragma no branch
@@ -248,7 +246,7 @@ class Gist( object ):
         if "history" in attributes and attributes[ "history" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "history" ] ), attributes[ "history" ]
             self.__history = [
-                GistHistoryState.GistHistoryState( self.__requester, element, completion = LazyCompletion )
+                GistHistoryState.GistHistoryState( self.__requester, element, completed = False )
                 for element in attributes[ "history" ]
             ]
         if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
@@ -268,4 +266,4 @@ class Gist( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completed = False )

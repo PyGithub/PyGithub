@@ -6,13 +6,11 @@ from GithubObject import *
 import AuthorizationApplication
 
 class Authorization( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def app( self ):
@@ -125,7 +123,7 @@ class Authorization( object ):
     def __useAttributes( self, attributes ):
         if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
             assert isinstance( attributes[ "app" ], dict ), attributes[ "app" ]
-            self.__app = AuthorizationApplication.AuthorizationApplication( self.__requester, attributes[ "app" ], completion = LazyCompletion )
+            self.__app = AuthorizationApplication.AuthorizationApplication( self.__requester, attributes[ "app" ], completed = False )
         if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
             assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self.__created_at = attributes[ "created_at" ]

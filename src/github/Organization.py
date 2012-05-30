@@ -10,13 +10,11 @@ import Repository
 import NamedUser
 
 class Organization( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def avatar_url( self ):
@@ -158,7 +156,7 @@ class Organization( object ):
             url_parameters,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def create_repo( self, name, description = DefaultValueForOptionalParameters, homepage = DefaultValueForOptionalParameters, private = DefaultValueForOptionalParameters, has_issues = DefaultValueForOptionalParameters, has_wiki = DefaultValueForOptionalParameters, has_downloads = DefaultValueForOptionalParameters, team_id = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -199,7 +197,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def create_team( self, name, repo_names = DefaultValueForOptionalParameters, permission = DefaultValueForOptionalParameters ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -220,7 +218,7 @@ class Organization( object ):
             None,
             post_parameters
         )
-        return Team.Team( self.__requester, data, completion = NoCompletion )
+        return Team.Team( self.__requester, data, completed = True )
 
     def edit( self, billing_email = DefaultValueForOptionalParameters, blog = DefaultValueForOptionalParameters, company = DefaultValueForOptionalParameters, email = DefaultValueForOptionalParameters, location = DefaultValueForOptionalParameters, name = DefaultValueForOptionalParameters ):
         if billing_email is not DefaultValueForOptionalParameters:
@@ -306,7 +304,7 @@ class Organization( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
@@ -335,7 +333,7 @@ class Organization( object ):
             None,
             None
         )
-        return Team.Team( self.__requester, data, completion = NoCompletion )
+        return Team.Team( self.__requester, data, completed = True )
 
     def get_teams( self ):
         status, headers, data = self.__requester.request(
@@ -483,7 +481,7 @@ class Organization( object ):
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None: # pragma no branch
             assert isinstance( attributes[ "plan" ], dict ), attributes[ "plan" ]
-            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completed = False )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private_gists" ], int ), attributes[ "private_gists" ]
             self.__private_gists = attributes[ "private_gists" ]

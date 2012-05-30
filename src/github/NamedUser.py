@@ -11,13 +11,11 @@ import Organization
 import Event
 
 class NamedUser( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def avatar_url( self ):
@@ -165,7 +163,7 @@ class NamedUser( object ):
             None,
             post_parameters
         )
-        return Gist.Gist( self.__requester, data, completion = NoCompletion )
+        return Gist.Gist( self.__requester, data, completed = True )
 
     def get_events( self ):
         status, headers, data = self.__requester.request(
@@ -287,7 +285,7 @@ class NamedUser( object ):
             None,
             None
         )
-        return Repository.Repository( self.__requester, data, completion = NoCompletion )
+        return Repository.Repository( self.__requester, data, completed = True )
 
     def get_repos( self, type = DefaultValueForOptionalParameters ):
         if type is not DefaultValueForOptionalParameters:
@@ -428,7 +426,7 @@ class NamedUser( object ):
             self.__owned_private_repos = attributes[ "owned_private_repos" ]
         if "plan" in attributes and attributes[ "plan" ] is not None: # pragma no branch
             assert isinstance( attributes[ "plan" ], dict ), attributes[ "plan" ]
-            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completion = LazyCompletion )
+            self.__plan = Plan.Plan( self.__requester, attributes[ "plan" ], completed = False )
         if "private_gists" in attributes and attributes[ "private_gists" ] is not None: # pragma no branch
             assert isinstance( attributes[ "private_gists" ], int ), attributes[ "private_gists" ]
             self.__private_gists = attributes[ "private_gists" ]

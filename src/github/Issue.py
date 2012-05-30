@@ -12,13 +12,11 @@ import IssueComment
 import IssuePullRequest
 
 class Issue( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
-        self.__completed = completion != LazyCompletion
-        if completion == ImmediateCompletion:
-            self.__complete() # pragma: no cover
+        self.__completed = completed
 
     @property
     def assignee( self ):
@@ -131,7 +129,7 @@ class Issue( object ):
             None,
             post_parameters
         )
-        return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
+        return IssueComment.IssueComment( self.__requester, data, completed = True )
 
     def delete_labels( self ):
         status, headers, data = self.__requester.request(
@@ -183,7 +181,7 @@ class Issue( object ):
             None,
             None
         )
-        return IssueComment.IssueComment( self.__requester, data, completion = NoCompletion )
+        return IssueComment.IssueComment( self.__requester, data, completed = True )
 
     def get_comments( self ):
         status, headers, data = self.__requester.request(
@@ -283,7 +281,7 @@ class Issue( object ):
     def __useAttributes( self, attributes ):
         if "assignee" in attributes and attributes[ "assignee" ] is not None: # pragma no branch
             assert isinstance( attributes[ "assignee" ], dict ), attributes[ "assignee" ]
-            self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completion = LazyCompletion )
+            self.__assignee = NamedUser.NamedUser( self.__requester, attributes[ "assignee" ], completed = False )
         if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
             assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self.__body = attributes[ "body" ]
@@ -292,7 +290,7 @@ class Issue( object ):
             self.__closed_at = attributes[ "closed_at" ]
         if "closed_by" in attributes and attributes[ "closed_by" ] is not None: # pragma no branch
             assert isinstance( attributes[ "closed_by" ], dict ), attributes[ "closed_by" ]
-            self.__closed_by = NamedUser.NamedUser( self.__requester, attributes[ "closed_by" ], completion = LazyCompletion )
+            self.__closed_by = NamedUser.NamedUser( self.__requester, attributes[ "closed_by" ], completed = False )
         if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
             assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self.__comments = attributes[ "comments" ]
@@ -308,21 +306,21 @@ class Issue( object ):
         if "labels" in attributes and attributes[ "labels" ] is not None: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "labels" ] ), attributes[ "labels" ]
             self.__labels = [
-                Label.Label( self.__requester, element, completion = LazyCompletion )
+                Label.Label( self.__requester, element, completed = False )
                 for element in attributes[ "labels" ]
             ]
         if "milestone" in attributes and attributes[ "milestone" ] is not None: # pragma no branch
             assert isinstance( attributes[ "milestone" ], dict ), attributes[ "milestone" ]
-            self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], completion = LazyCompletion )
+            self.__milestone = Milestone.Milestone( self.__requester, attributes[ "milestone" ], completed = False )
         if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
             assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self.__number = attributes[ "number" ]
         if "pull_request" in attributes and attributes[ "pull_request" ] is not None: # pragma no branch
             assert isinstance( attributes[ "pull_request" ], dict ), attributes[ "pull_request" ]
-            self.__pull_request = IssuePullRequest.IssuePullRequest( self.__requester, attributes[ "pull_request" ], completion = LazyCompletion )
+            self.__pull_request = IssuePullRequest.IssuePullRequest( self.__requester, attributes[ "pull_request" ], completed = False )
         if "repository" in attributes and attributes[ "repository" ] is not None: # pragma no branch
             assert isinstance( attributes[ "repository" ], dict ), attributes[ "repository" ]
-            self.__repository = Repository.Repository( self.__requester, attributes[ "repository" ], completion = LazyCompletion )
+            self.__repository = Repository.Repository( self.__requester, attributes[ "repository" ], completed = False )
         if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
             assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self.__state = attributes[ "state" ]
@@ -337,4 +335,4 @@ class Issue( object ):
             self.__url = attributes[ "url" ]
         if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
             assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completion = LazyCompletion )
+            self.__user = NamedUser.NamedUser( self.__requester, attributes[ "user" ], completed = False )

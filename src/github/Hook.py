@@ -6,7 +6,7 @@ from GithubObject import *
 import HookResponse
 
 class Hook( object ):
-    def __init__( self, requester, attributes, completion ):
+    def __init__( self, requester, attributes, completed ):
         self.__requester = requester
         self.__initAttributes()
         self.__useAttributes( attributes )
@@ -121,7 +121,7 @@ class Hook( object ):
             self.__id = attributes[ "id" ]
         if "last_response" in attributes and attributes[ "last_response" ] is not None: # pragma no branch
             assert isinstance( attributes[ "last_response" ], dict ), attributes[ "last_response" ]
-            self.__last_response = HookResponse.HookResponse( self.__requester, attributes[ "last_response" ], completion = LazyCompletion )
+            self.__last_response = HookResponse.HookResponse( self.__requester, attributes[ "last_response" ], completed = False )
         if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
             assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self.__name = attributes[ "name" ]
