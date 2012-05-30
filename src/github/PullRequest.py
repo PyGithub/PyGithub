@@ -5,6 +5,7 @@ import PaginatedList
 from GithubObject import *
 import Commit
 import NamedUser
+import PullRequestMergeStatus
 import PullRequestComment
 import PullRequestFile
 
@@ -261,6 +262,7 @@ class PullRequest( object ):
             None,
             post_parameters
         )
+        return PullRequestMergeStatus.PullRequestMergeStatus( self.__requester, data, completion = NoCompletion )
 
     def __initAttributes( self ):
         self.__additions = None

@@ -58,6 +58,9 @@ class PullRequest( Framework.TestCase ):
     def testMerge( self ):
         self.assertFalse( self.pull.is_merged() )
         status = self.pull.merge()
+        self.assertEqual( status.sha, "688208b1a5a074871d0e9376119556897439697d" )
+        self.assertEqual( status.merged, True )
+        self.assertEqual( status.message, "Pull Request successfully merged" )
         self.assertTrue( self.pull.is_merged() )
 
     def testMergeWithCommitMessage( self ):

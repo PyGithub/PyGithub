@@ -1126,6 +1126,14 @@
             ]
         },
         {
+            "name": "PullRequestMergeStatus",
+            "attributes": [
+                { "name": "sha", "type": "string" },
+                { "name": "merged", "type": "bool" },
+                { "name": "message", "type": "string" }
+            ]
+        },
+        {
             "name": "PullRequest",
             "isCompletable": true,
             "edit": {
@@ -1223,7 +1231,7 @@
                 },
                 {
                     "name": [ "merge" ],
-                    "type": "void",
+                    "type": "PullRequestMergeStatus",
                     "group": "merging",
                     "optionalParameters": [
                         { "name": "commit_message", "type": "string" }

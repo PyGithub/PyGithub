@@ -7085,9 +7085,9 @@
                         }
                     ], 
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "void"
+                        "name": "PullRequestMergeStatus"
                     }
                 }
             ]
@@ -7327,6 +7327,37 @@
             ], 
             "isCompletable": false, 
             "name": "PullRequestFile", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }, 
+                    "name": "merged"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "message"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "sha"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "PullRequestMergeStatus", 
             "methods": []
         }, 
         {

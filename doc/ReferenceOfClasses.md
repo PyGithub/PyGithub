@@ -914,7 +914,7 @@ Files
 Merging
 -------
 * `is_merged()`: bool
-* `merge( [commit_message] )`
+* `merge( [commit_message] )`: `PullRequestMergeStatus`
     * `commit_message`: string
 
 Modification
@@ -964,6 +964,15 @@ Attributes
 * `raw_url`: string
 * `sha`: string
 * `status`: string
+
+Class `PullRequestMergeStatus`
+==============================
+
+Attributes
+----------
+* `merged`: bool
+* `message`: string
+* `sha`: string
 
 Class `Repository`
 ==================
