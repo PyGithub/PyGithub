@@ -19,9 +19,9 @@ import {{ dependency }}
 {% endif %}
 
 {% if class.isCompletable %}
-class {{ class.name }}( GithubObject.CompletableGithubObject ):
-{% else %}
 class {{ class.name }}( GithubObject.GithubObject ):
+{% else %}
+class {{ class.name }}( GithubObject.BasicGithubObject ):
 {% endif %}
 
 {% include "GithubObject.PublicAttributes.py" %}

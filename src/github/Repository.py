@@ -31,7 +31,7 @@ import GitTag
 import Download
 import Event
 
-class Repository( GithubObject.CompletableGithubObject ):
+class Repository( GithubObject.GithubObject ):
     @property
     def clone_url( self ):
         self._completeIfNeeded( self._clone_url )

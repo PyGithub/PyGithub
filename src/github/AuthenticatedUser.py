@@ -15,7 +15,7 @@ import Issue
 import Event
 import Authorization
 
-class AuthenticatedUser( GithubObject.CompletableGithubObject ):
+class AuthenticatedUser( GithubObject.GithubObject ):
     @property
     def avatar_url( self ):
         self._completeIfNeeded( self._avatar_url )

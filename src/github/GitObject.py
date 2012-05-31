@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class GitObject( GithubObject.GithubObject ):
+class GitObject( GithubObject.BasicGithubObject ):
     @property
     def sha( self ):
         return self._sha

@@ -11,7 +11,7 @@ import Event
 import Repository
 import NamedUser
 
-class Organization( GithubObject.CompletableGithubObject ):
+class Organization( GithubObject.GithubObject ):
     @property
     def avatar_url( self ):
         self._completeIfNeeded( self._avatar_url )

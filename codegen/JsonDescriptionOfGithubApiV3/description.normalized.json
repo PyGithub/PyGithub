@@ -1594,7 +1594,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "AuthorizationApplication", 
             "methods": []
         }, 
@@ -2808,7 +2808,7 @@
                     "name": "user"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GistComment", 
             "methods": [
                 {
@@ -2918,7 +2918,7 @@
                     "name": "version"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GistHistoryState", 
             "methods": []
         }, 
@@ -2996,7 +2996,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GitBlob", 
             "methods": []
         }, 
@@ -3059,7 +3059,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GitCommit", 
             "methods": []
         }, 
@@ -3121,7 +3121,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GitRef", 
             "methods": [
                 {
@@ -3248,7 +3248,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GitTag", 
             "methods": []
         }, 
@@ -3279,7 +3279,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "GitTree", 
             "methods": []
         }, 
@@ -3413,7 +3413,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "Hook", 
             "methods": [
                 {
@@ -4205,7 +4205,7 @@
                     "name": "user"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "IssueComment", 
             "methods": [
                 {
@@ -4393,7 +4393,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "Label", 
             "identity": [
                 {
@@ -4572,7 +4572,7 @@
                     "name": "url"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "Milestone", 
             "methods": [
                 {
@@ -10046,7 +10046,7 @@
                     "name": "verified"
                 }
             ], 
-            "isCompletable": false, 
+            "isCompletable": true, 
             "name": "RepositoryKey", 
             "methods": [
                 {

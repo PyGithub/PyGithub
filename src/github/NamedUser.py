@@ -12,7 +12,7 @@ import Plan
 import Organization
 import Event
 
-class NamedUser( GithubObject.CompletableGithubObject ):
+class NamedUser( GithubObject.GithubObject ):
     @property
     def avatar_url( self ):
         self._completeIfNeeded( self._avatar_url )

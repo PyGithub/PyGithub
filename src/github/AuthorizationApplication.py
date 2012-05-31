@@ -6,10 +6,12 @@ import GithubObject
 class AuthorizationApplication( GithubObject.GithubObject ):
     @property
     def name( self ):
+        self._completeIfNeeded( self._name )
         return self._name
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def _initAttributes( self ):

@@ -10,30 +10,37 @@ import GitTree
 class GitCommit( GithubObject.GithubObject ):
     @property
     def author( self ):
+        self._completeIfNeeded( self._author )
         return self._author
 
     @property
     def committer( self ):
+        self._completeIfNeeded( self._committer )
         return self._committer
 
     @property
     def message( self ):
+        self._completeIfNeeded( self._message )
         return self._message
 
     @property
     def parents( self ):
+        self._completeIfNeeded( self._parents )
         return self._parents
 
     @property
     def sha( self ):
+        self._completeIfNeeded( self._sha )
         return self._sha
 
     @property
     def tree( self ):
+        self._completeIfNeeded( self._tree )
         return self._tree
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def _initAttributes( self ):

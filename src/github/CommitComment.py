@@ -5,7 +5,7 @@ import GithubObject
 ##########
 import NamedUser
 
-class CommitComment( GithubObject.CompletableGithubObject ):
+class CommitComment( GithubObject.GithubObject ):
     @property
     def body( self ):
         self._completeIfNeeded( self._body )

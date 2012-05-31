@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class Permissions( GithubObject.GithubObject ):
+class Permissions( GithubObject.BasicGithubObject ):
     @property
     def admin( self ):
         return self._admin

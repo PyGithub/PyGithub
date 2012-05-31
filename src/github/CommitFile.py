@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class CommitFile( GithubObject.GithubObject ):
+class CommitFile( GithubObject.BasicGithubObject ):
     @property
     def additions( self ):
         return self._additions

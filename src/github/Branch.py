@@ -5,7 +5,7 @@ import GithubObject
 ##########
 import Commit
 
-class Branch( GithubObject.GithubObject ):
+class Branch( GithubObject.BasicGithubObject ):
     @property
     def commit( self ):
         return self._commit

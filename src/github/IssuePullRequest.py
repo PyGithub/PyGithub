@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class IssuePullRequest( GithubObject.GithubObject ):
+class IssuePullRequest( GithubObject.BasicGithubObject ):
     @property
     def diff_url( self ):
         return self._diff_url

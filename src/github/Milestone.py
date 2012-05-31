@@ -11,46 +11,57 @@ import Label
 class Milestone( GithubObject.GithubObject ):
     @property
     def closed_issues( self ):
+        self._completeIfNeeded( self._closed_issues )
         return self._closed_issues
 
     @property
     def created_at( self ):
+        self._completeIfNeeded( self._created_at )
         return self._created_at
 
     @property
     def creator( self ):
+        self._completeIfNeeded( self._creator )
         return self._creator
 
     @property
     def description( self ):
+        self._completeIfNeeded( self._description )
         return self._description
 
     @property
     def due_on( self ):
+        self._completeIfNeeded( self._due_on )
         return self._due_on
 
     @property
     def id( self ):
+        self._completeIfNeeded( self._id )
         return self._id
 
     @property
     def number( self ):
+        self._completeIfNeeded( self._number )
         return self._number
 
     @property
     def open_issues( self ):
+        self._completeIfNeeded( self._open_issues )
         return self._open_issues
 
     @property
     def state( self ):
+        self._completeIfNeeded( self._state )
         return self._state
 
     @property
     def title( self ):
+        self._completeIfNeeded( self._title )
         return self._title
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def delete( self ):

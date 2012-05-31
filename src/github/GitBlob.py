@@ -6,22 +6,27 @@ import GithubObject
 class GitBlob( GithubObject.GithubObject ):
     @property
     def content( self ):
+        self._completeIfNeeded( self._content )
         return self._content
 
     @property
     def encoding( self ):
+        self._completeIfNeeded( self._encoding )
         return self._encoding
 
     @property
     def sha( self ):
+        self._completeIfNeeded( self._sha )
         return self._sha
 
     @property
     def size( self ):
+        self._completeIfNeeded( self._size )
         return self._size
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def _initAttributes( self ):

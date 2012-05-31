@@ -6,7 +6,7 @@ import GithubObject
 import Issue
 import NamedUser
 
-class IssueEvent( GithubObject.CompletableGithubObject ):
+class IssueEvent( GithubObject.GithubObject ):
     @property
     def actor( self ):
         self._completeIfNeeded( self._actor )

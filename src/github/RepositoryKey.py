@@ -15,22 +15,27 @@ class RepositoryKey( GithubObject.GithubObject ):
 
     @property
     def id( self ):
+        self._completeIfNeeded( self._id )
         return self._id
 
     @property
     def key( self ):
+        self._completeIfNeeded( self._key )
         return self._key
 
     @property
     def title( self ):
+        self._completeIfNeeded( self._title )
         return self._title
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     @property
     def verified( self ):
+        self._completeIfNeeded( self._verified )
         return self._verified
 
     def delete( self ):

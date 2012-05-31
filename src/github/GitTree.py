@@ -8,14 +8,17 @@ import GitTreeElement
 class GitTree( GithubObject.GithubObject ):
     @property
     def sha( self ):
+        self._completeIfNeeded( self._sha )
         return self._sha
 
     @property
     def tree( self ):
+        self._completeIfNeeded( self._tree )
         return self._tree
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def _initAttributes( self ):

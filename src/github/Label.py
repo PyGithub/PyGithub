@@ -8,14 +8,17 @@ import GithubObject
 class Label( GithubObject.GithubObject ):
     @property
     def color( self ):
+        self._completeIfNeeded( self._color )
         return self._color
 
     @property
     def name( self ):
+        self._completeIfNeeded( self._name )
         return self._name
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def delete( self ):

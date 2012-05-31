@@ -4,7 +4,7 @@
 import GithubObject
 from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 
-class UserKey( GithubObject.CompletableGithubObject ):
+class UserKey( GithubObject.GithubObject ):
     @property
     def id( self ):
         self._completeIfNeeded( self._id )

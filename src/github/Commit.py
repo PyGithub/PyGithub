@@ -12,7 +12,7 @@ import CommitStats
 import Commit
 import CommitComment
 
-class Commit( GithubObject.CompletableGithubObject ):
+class Commit( GithubObject.GithubObject ):
     @property
     def author( self ):
         self._completeIfNeeded( self._author )

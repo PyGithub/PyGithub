@@ -5,7 +5,7 @@ import GithubObject
 ##########
 import NamedUser
 
-class PullRequestComment( GithubObject.CompletableGithubObject ):
+class PullRequestComment( GithubObject.GithubObject ):
     @property
     def body( self ):
         self._completeIfNeeded( self._body )

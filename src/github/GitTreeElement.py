@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class GitTreeElement( GithubObject.GithubObject ):
+class GitTreeElement( GithubObject.BasicGithubObject ):
     @property
     def mode( self ):
         return self._mode

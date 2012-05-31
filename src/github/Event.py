@@ -7,7 +7,7 @@ import Organization
 import Repository
 import NamedUser
 
-class Event( GithubObject.GithubObject ):
+class Event( GithubObject.BasicGithubObject ):
     @property
     def actor( self ):
         return self._actor

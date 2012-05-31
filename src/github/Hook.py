@@ -9,38 +9,47 @@ import HookResponse
 class Hook( GithubObject.GithubObject ):
     @property
     def active( self ):
+        self._completeIfNeeded( self._active )
         return self._active
 
     @property
     def config( self ):
+        self._completeIfNeeded( self._config )
         return self._config
 
     @property
     def created_at( self ):
+        self._completeIfNeeded( self._created_at )
         return self._created_at
 
     @property
     def events( self ):
+        self._completeIfNeeded( self._events )
         return self._events
 
     @property
     def id( self ):
+        self._completeIfNeeded( self._id )
         return self._id
 
     @property
     def last_response( self ):
+        self._completeIfNeeded( self._last_response )
         return self._last_response
 
     @property
     def name( self ):
+        self._completeIfNeeded( self._name )
         return self._name
 
     @property
     def updated_at( self ):
+        self._completeIfNeeded( self._updated_at )
         return self._updated_at
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def delete( self ):

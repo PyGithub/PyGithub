@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class Plan( GithubObject.GithubObject ):
+class Plan( GithubObject.BasicGithubObject ):
     @property
     def collaborators( self ):
         return self._collaborators

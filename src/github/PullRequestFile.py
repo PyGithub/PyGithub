@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class PullRequestFile( GithubObject.GithubObject ):
+class PullRequestFile( GithubObject.BasicGithubObject ):
     @property
     def additions( self ):
         return self._additions

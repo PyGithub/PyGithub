@@ -10,7 +10,7 @@ import NamedUser
 import Gist
 import GistComment
 
-class Gist( GithubObject.CompletableGithubObject ):
+class Gist( GithubObject.GithubObject ):
     @property
     def comments( self ):
         self._completeIfNeeded( self._comments )

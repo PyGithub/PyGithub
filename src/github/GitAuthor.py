@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class GitAuthor( GithubObject.GithubObject ):
+class GitAuthor( GithubObject.BasicGithubObject ):
     @property
     def date( self ):
         return self._date

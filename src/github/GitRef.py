@@ -9,14 +9,17 @@ import GitObject
 class GitRef( GithubObject.GithubObject ):
     @property
     def object( self ):
+        self._completeIfNeeded( self._object )
         return self._object
 
     @property
     def ref( self ):
+        self._completeIfNeeded( self._ref )
         return self._ref
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def delete( self ):

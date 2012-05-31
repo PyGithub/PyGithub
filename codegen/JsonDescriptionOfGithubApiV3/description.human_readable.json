@@ -11,7 +11,6 @@
         },
         {
             "name": "AuthenticatedUser",
-            "isCompletable": true,
             "url": [
                 { "type": "constant", "value": "https://api.github.com/user" }
             ],
@@ -248,7 +247,6 @@
         },
         {
             "name": "AuthorizationApplication",
-            "isCompletable": false,
             "attributes": [
                 { "name": "url", "type": "string" },
                 { "name": "name", "type": "string" }
@@ -256,7 +254,6 @@
         },
         {
             "name": "Authorization",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "scopes", "type": "list:string" },
@@ -310,7 +307,6 @@
         },
         {
             "name": "Commit",
-            "isCompletable": true,
             "attributes": [
                 { "name": "files", "type": "list:CommitFile" },
                 { "name": "parents", "type": "list:Commit" },
@@ -342,7 +338,6 @@
         },
         {
             "name": "CommitComment",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "body", "type": "string" }
@@ -365,7 +360,6 @@
         },
         {
             "name": "Download",
-            "isCompletable": true,
             "delete": true,
             "attributes": [
                 { "name": "accesskeyid", "type": "string" },
@@ -415,7 +409,6 @@
         },
         {
             "name": "Gist",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "description", "type": "string" },
@@ -556,6 +549,7 @@
         },
         {
             "name": "GitObject",
+            "isCompletable": false,
             "attributes": [
                 { "name": "sha", "type": "string" },
                 { "name": "type", "type": "string" },
@@ -592,6 +586,7 @@
         },
         {
             "name": "GitTreeElement",
+            "isCompletable": false,
             "attributes": [
                 { "name": "mode", "type": "string" },
                 { "name": "path", "type": "string" },
@@ -619,7 +614,6 @@
         },
         {
             "name": "HookResponse",
-            "isCompletable": false,
             "attributes": [
                 { "name": "status", "type": "string" },
                 { "name": "message", "type": "string" },
@@ -670,7 +664,6 @@
         },
         {
             "name": "IssuePullRequest",
-            "isCompletable": false,
             "attributes": [
                 { "name": "diff_url", "type": "string" },
                 { "name": "patch_url", "type": "string" },
@@ -679,7 +672,6 @@
         },
         {
             "name": "Issue",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "title", "type": "string" },
@@ -775,7 +767,6 @@
         },
         {
             "name": "IssueEvent",
-            "isCompletable": true,
             "attributes": [
                 { "name": "commit_id", "type": "string" },
                 { "name": "created_at", "type": "string" },
@@ -846,7 +837,6 @@
         },
         {
             "name": "NamedUser",
-            "isCompletable": true,
             "attributes": [
                 { "name": "avatar_url", "type": "string" },
                 { "name": "bio", "type": "string" },
@@ -983,7 +973,6 @@
         },
         {
             "name": "Organization",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "billing_email", "type": "string" },
@@ -1135,7 +1124,6 @@
         },
         {
             "name": "PullRequest",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "title", "type": "string" },
@@ -1250,7 +1238,6 @@
         },
         {
             "name": "PullRequestComment",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "body", "type": "string" }
@@ -1295,7 +1282,6 @@
         },
         {
             "name": "Repository",
-            "isCompletable": true,
             "identity": [
                 { "type": "attribute", "value": [ "owner", "login" ] },
                 { "type": "constant", "value": "/" },
@@ -1783,7 +1769,6 @@
         },
         {
             "name": "Team",
-            "isCompletable": true,
             "edit": {
                 "mandatoryParameters": [
                     { "name": "name", "type": "string" }
@@ -1824,7 +1809,6 @@
         },
         {
             "name": "UserKey",
-            "isCompletable": true,
             "edit": {
                 "optionalParameters": [
                     { "name": "title", "type": "string" },

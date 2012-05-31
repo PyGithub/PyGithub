@@ -6,7 +6,7 @@ from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import AuthorizationApplication
 
-class Authorization( GithubObject.CompletableGithubObject ):
+class Authorization( GithubObject.GithubObject ):
     @property
     def app( self ):
         self._completeIfNeeded( self._app )

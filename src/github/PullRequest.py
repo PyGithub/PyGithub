@@ -11,7 +11,7 @@ import PullRequestMergeStatus
 import PullRequestComment
 import PullRequestFile
 
-class PullRequest( GithubObject.CompletableGithubObject ):
+class PullRequest( GithubObject.GithubObject ):
     @property
     def additions( self ):
         self._completeIfNeeded( self._additions )

@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class Download( GithubObject.CompletableGithubObject ):
+class Download( GithubObject.GithubObject ):
     @property
     def accesskeyid( self ):
         self._completeIfNeeded( self._accesskeyid )

@@ -13,7 +13,7 @@ import Milestone
 import IssueComment
 import IssuePullRequest
 
-class Issue( GithubObject.CompletableGithubObject ):
+class Issue( GithubObject.GithubObject ):
     @property
     def assignee( self ):
         self._completeIfNeeded( self._assignee )

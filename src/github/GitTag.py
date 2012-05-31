@@ -9,26 +9,32 @@ import GitObject
 class GitTag( GithubObject.GithubObject ):
     @property
     def message( self ):
+        self._completeIfNeeded( self._message )
         return self._message
 
     @property
     def object( self ):
+        self._completeIfNeeded( self._object )
         return self._object
 
     @property
     def sha( self ):
+        self._completeIfNeeded( self._sha )
         return self._sha
 
     @property
     def tag( self ):
+        self._completeIfNeeded( self._tag )
         return self._tag
 
     @property
     def tagger( self ):
+        self._completeIfNeeded( self._tagger )
         return self._tagger
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     def _initAttributes( self ):

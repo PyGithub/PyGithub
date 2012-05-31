@@ -8,26 +8,32 @@ import NamedUser
 class GistComment( GithubObject.GithubObject ):
     @property
     def body( self ):
+        self._completeIfNeeded( self._body )
         return self._body
 
     @property
     def created_at( self ):
+        self._completeIfNeeded( self._created_at )
         return self._created_at
 
     @property
     def id( self ):
+        self._completeIfNeeded( self._id )
         return self._id
 
     @property
     def updated_at( self ):
+        self._completeIfNeeded( self._updated_at )
         return self._updated_at
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     @property
     def user( self ):
+        self._completeIfNeeded( self._user )
         return self._user
 
     def delete( self ):

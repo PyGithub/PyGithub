@@ -296,7 +296,7 @@ class Class:
             ],
             key = lambda class_: class_.name
         )
-        self.isCompletable = "isCompletable" in desc and desc[ "isCompletable" ]
+        self.isCompletable = ( "isCompletable" not in desc or desc[ "isCompletable" ] ) and any( attribute.name == "url" for attribute in self.attributes )
         self.methods = []
         if "identity" in desc:
             self.identity = desc[ "identity" ]

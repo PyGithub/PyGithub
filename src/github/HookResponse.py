@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class HookResponse( GithubObject.GithubObject ):
+class HookResponse( GithubObject.BasicGithubObject ):
     @property
     def code( self ):
         return self._code

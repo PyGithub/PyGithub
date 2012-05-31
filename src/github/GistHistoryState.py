@@ -9,22 +9,27 @@ import CommitStats
 class GistHistoryState( GithubObject.GithubObject ):
     @property
     def change_status( self ):
+        self._completeIfNeeded( self._change_status )
         return self._change_status
 
     @property
     def committed_at( self ):
+        self._completeIfNeeded( self._committed_at )
         return self._committed_at
 
     @property
     def url( self ):
+        self._completeIfNeeded( self._url )
         return self._url
 
     @property
     def user( self ):
+        self._completeIfNeeded( self._user )
         return self._user
 
     @property
     def version( self ):
+        self._completeIfNeeded( self._version )
         return self._version
 
     def _initAttributes( self ):

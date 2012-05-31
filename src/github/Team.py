@@ -8,7 +8,7 @@ from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 import Repository
 import NamedUser
 
-class Team( GithubObject.CompletableGithubObject ):
+class Team( GithubObject.GithubObject ):
     @property
     def id( self ):
         self._completeIfNeeded( self._id )

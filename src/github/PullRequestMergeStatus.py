@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class PullRequestMergeStatus( GithubObject.GithubObject ):
+class PullRequestMergeStatus( GithubObject.BasicGithubObject ):
     @property
     def merged( self ):
         return self._merged

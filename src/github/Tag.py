@@ -5,7 +5,7 @@ import GithubObject
 ##########
 import Commit
 
-class Tag( GithubObject.GithubObject ):
+class Tag( GithubObject.BasicGithubObject ):
     @property
     def commit( self ):
         return self._commit

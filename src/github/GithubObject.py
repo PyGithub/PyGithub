@@ -1,6 +1,6 @@
 import GithubException
 
-class GithubObject( object ):
+class BasicGithubObject( object ):
     def __init__( self, requester, attributes, completed ): ### 'completed' may be removed if I find a way
         self._requester = requester
         self._initAttributes()
@@ -16,9 +16,9 @@ class GithubObject( object ):
         if status >= 400: # pragma no branch
             raise GithubException.GithubException( status, data ) # pragma no cover
 
-class CompletableGithubObject( GithubObject ):
+class GithubObject( BasicGithubObject ):
     def __init__( self, requester, attributes, completed ):
-        GithubObject.__init__( self, requester, attributes, completed )
+        BasicGithubObject.__init__( self, requester, attributes, completed )
         self.__completed = completed
 
     def _completeIfNeeded( self, testedAttribute ):

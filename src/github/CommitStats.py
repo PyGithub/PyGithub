@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class CommitStats( GithubObject.GithubObject ):
+class CommitStats( GithubObject.BasicGithubObject ):
     @property
     def additions( self ):
         return self._additions
