@@ -200,7 +200,7 @@ Attributes
 * `author`: `NamedUser`
 * `commit`: `GitCommit`
 * `committer`: `NamedUser`
-* `files`: list of `CommitFile`
+* `files`: list of `File`
 * `parents`: list of `Commit`
 * `sha`: string
 * `stats`: `CommitStats`
@@ -241,21 +241,6 @@ Modification
 * `edit( body )`
     * `body`: string
 
-Class `CommitFile`
-==================
-
-Attributes
-----------
-* `additions`: integer
-* `blob_url`: string
-* `changes`: integer
-* `deletions`: integer
-* `filename`: string
-* `patch`: string
-* `raw_url`: string
-* `sha`: string
-* `status`: string
-
 Class `CommitStats`
 ===================
 
@@ -264,6 +249,24 @@ Attributes
 * `additions`: integer
 * `deletions`: integer
 * `total`: integer
+
+Class `Comparison`
+==================
+
+Attributes
+----------
+* `ahead_by`: integer
+* `base_commit`: `Commit`
+* `behind_by`: integer
+* `commits`: list of `Commit`
+* `diff_url`: string
+* `files`: list of `File`
+* `html_url`: string
+* `patch_url`: string
+* `permalink_url`: string
+* `status`: string
+* `total_commits`: integer
+* `url`: string
 
 Class `Download`
 ================
@@ -308,6 +311,21 @@ Attributes
 * `public`: bool
 * `repo`: `Repository`
 * `type`: string
+
+Class `File`
+============
+
+Attributes
+----------
+* `additions`: integer
+* `blob_url`: string
+* `changes`: integer
+* `deletions`: integer
+* `filename`: string
+* `patch`: string
+* `raw_url`: string
+* `sha`: string
+* `status`: string
 
 Class `Gist`
 ============
@@ -866,7 +884,7 @@ Class `PullRequest`
 Attributes
 ----------
 * `additions`: integer
-* `base`
+* `base`: `PullRequestPart`
 * `body`: string
 * `changed_files`: integer
 * `closed_at`: string
@@ -875,7 +893,7 @@ Attributes
 * `created_at`: string
 * `deletions`: integer
 * `diff_url`: string
-* `head`
+* `head`: `PullRequestPart`
 * `html_url`: string
 * `id`: integer
 * `issue_url`: string
@@ -909,7 +927,7 @@ Commits
 
 Files
 -----
-* `get_files()`: list of `PullRequestFile`
+* `get_files()`: list of `File`
 
 Merging
 -------
@@ -950,21 +968,6 @@ Modification
 * `edit( body )`
     * `body`: string
 
-Class `PullRequestFile`
-=======================
-
-Attributes
-----------
-* `additions`: integer
-* `blob_url`: string
-* `changes`: integer
-* `deletions`: integer
-* `filename`: string
-* `patch`: string
-* `raw_url`: string
-* `sha`: string
-* `status`: string
-
 Class `PullRequestMergeStatus`
 ==============================
 
@@ -973,6 +976,17 @@ Attributes
 * `merged`: bool
 * `message`: string
 * `sha`: string
+
+Class `PullRequestPart`
+=======================
+
+Attributes
+----------
+* `label`: string
+* `ref`: string
+* `repo`: `Repository`
+* `sha`: string
+* `user`: `NamedUser`
 
 Class `Repository`
 ==================
@@ -1012,7 +1026,7 @@ Attributes
 
 Comparison
 ----------
-* `compare( base, head )`
+* `compare( base, head )`: `Comparison`
     * `base`: string
     * `head`: string
 
@@ -1080,7 +1094,7 @@ Git_commits
 -----------
 * `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
     * `message`: string
-    * `tree`
+    * `tree`: string
     * `parents`: list of `GitCommit`
     * `author`
     * `committer`
@@ -1111,7 +1125,7 @@ Git_trees
 ---------
 * `create_git_tree( tree, [base_tree] )`: `GitTree`
     * `tree`
-    * `base_tree`
+    * `base_tree`: string
 * `get_git_tree( sha, [recursive] )`: `GitTree`
     * `sha`: string
     * `recursive`: bool
@@ -1206,8 +1220,8 @@ Pulls
     * `title`: string
     * `body`: string
     * `issue`: integer
-    * `base`
-    * `head`
+    * `base`: string
+    * `head`: string
 * `get_pull( number )`: `PullRequest`
     * `number`: integer
 * `get_pulls( [state] )`: list of `PullRequest`

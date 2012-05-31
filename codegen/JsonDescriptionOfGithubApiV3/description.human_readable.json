@@ -292,7 +292,7 @@
             ]
         },
         {
-            "name": "CommitFile",
+            "name": "File",
             "attributes": [
                 { "name": "additions", "type": "integer" },
                 { "name": "blob_url", "type": "string" },
@@ -308,7 +308,7 @@
         {
             "name": "Commit",
             "attributes": [
-                { "name": "files", "type": "list:CommitFile" },
+                { "name": "files", "type": "list:File" },
                 { "name": "parents", "type": "list:Commit" },
                 { "name": "sha", "type": "string" },
                 { "name": "stats", "type": "CommitStats" },
@@ -1123,6 +1123,16 @@
             ]
         },
         {
+            "name": "PullRequestPart",
+            "attributes": [
+                { "name": "label", "type": "string" },
+                { "name": "ref", "type": "string" },
+                { "name": "sha", "type": "string" },
+                { "name": "user", "type": "NamedUser" },
+                { "name": "repo", "type": "Repository" }
+            ]
+        },
+        {
             "name": "PullRequest",
             "edit": {
                 "optionalParameters": [
@@ -1133,7 +1143,7 @@
             },
             "attributes": [
                 { "name": "additions", "type": "integer" },
-                { "name": "base", "type": "@todo" },
+                { "name": "base", "type": "PullRequestPart" },
                 { "name": "body", "type": "string" },
                 { "name": "changed_files", "type": "integer" },
                 { "name": "closed_at", "type": "string" },
@@ -1142,7 +1152,7 @@
                 { "name": "created_at", "type": "string" },
                 { "name": "deletions", "type": "integer" },
                 { "name": "diff_url", "type": "string" },
-                { "name": "head", "type": "@todo" },
+                { "name": "head", "type": "PullRequestPart" },
                 { "name": "html_url", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "issue_url", "type": "string" },
@@ -1199,7 +1209,7 @@
                 {
                     "name": "files",
                     "singularName": "file",
-                    "type": "PullRequestFile",
+                    "type": "File",
                     "getList": true
                 }
             ],
@@ -1259,25 +1269,28 @@
             ]
         },
         {
-            "name": "PullRequestFile",
-            "attributes": [
-                { "name": "additions", "type": "integer" },
-                { "name": "blob_url", "type": "string" },
-                { "name": "changes", "type": "integer" },
-                { "name": "deletions", "type": "integer" },
-                { "name": "filename", "type": "string" },
-                { "name": "patch", "type": "string" },
-                { "name": "raw_url", "type": "string" },
-                { "name": "sha", "type": "string" },
-                { "name": "status", "type": "string" }
-            ]
-        },
-        {
             "name": "Permissions",
             "attributes": [
                 { "name": "admin", "type": "bool" },
                 { "name": "pull", "type": "bool" },
                 { "name": "push", "type": "bool" }
+            ]
+        },
+        {
+            "name": "Comparison",
+            "attributes": [
+                { "name": "url", "type": "string" },
+                { "name": "html_url", "type": "string" },
+                { "name": "permalink_url", "type": "string" },
+                { "name": "diff_url", "type": "string" },
+                { "name": "patch_url", "type": "string" },
+                { "name": "base_commit", "type": "Commit" },
+                { "name": "status", "type": "string" },
+                { "name": "ahead_by", "type": "integer" },
+                { "name": "behind_by", "type": "integer" },
+                { "name": "total_commits", "type": "integer" },
+                { "name": "commits", "type": "list:Commit" },
+                { "name": "files", "type": "list:File" }
             ]
         },
         {
@@ -1436,7 +1449,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "message", "type": "string" },
-                            { "name": "tree", "type": "@todo" },
+                            { "name": "tree", "type": "string" },
                             { "name": "parents", "type": "list:GitCommit" }
                         ],
                         "optionalParameters": [
@@ -1507,7 +1520,7 @@
                             { "name": "tree", "type": "@todo" }
                         ],
                         "optionalParameters": [
-                            { "name": "base_tree", "type": "@todo" }
+                            { "name": "base_tree", "type": "string" }
                         ]
                     },
                     "getElement": {
@@ -1668,8 +1681,8 @@
                             { "name": "title", "type": "string" },
                             { "name": "body", "type": "string" },
                             { "name": "issue", "type": "integer" },
-                            { "name": "base", "type": "@todo" },
-                            { "name": "head", "type": "@todo" }
+                            { "name": "base", "type": "string" },
+                            { "name": "head", "type": "string" }
                         ]
                     }
                 },
@@ -1722,7 +1735,7 @@
                 },
                 {
                     "name": [ "compare" ],
-                    "type": "@todo",
+                    "type": "Comparison",
                     "group": "Comparison",
                     "mandatoryParameters": [
                         { "name": "base", "type": "string" },

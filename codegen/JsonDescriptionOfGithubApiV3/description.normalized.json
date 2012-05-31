@@ -1651,7 +1651,7 @@
                     "type": {
                         "simple": false, 
                         "cardinality": "list", 
-                        "name": "CommitFile"
+                        "name": "File"
                     }, 
                     "name": "files"
                 }, 
@@ -1962,85 +1962,6 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "blob_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "changes"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "deletions"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "filename"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "patch"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "raw_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "sha"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "status"
-                }
-            ], 
-            "isCompletable": false, 
-            "name": "CommitFile", 
-            "methods": []
-        }, 
-        {
-            "attributes": [
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "additions"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
                         "name": "integer"
                     }, 
                     "name": "deletions"
@@ -2056,6 +1977,109 @@
             ], 
             "isCompletable": false, 
             "name": "CommitStats", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "ahead_by"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Commit"
+                    }, 
+                    "name": "base_commit"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "behind_by"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Commit"
+                    }, 
+                    "name": "commits"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "diff_url"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "File"
+                    }, 
+                    "name": "files"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "html_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "patch_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "permalink_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "status"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "total_commits"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "url"
+                }
+            ], 
+            "isCompletable": true, 
+            "name": "Comparison", 
             "methods": []
         }, 
         {
@@ -2321,6 +2345,85 @@
             ], 
             "isCompletable": false, 
             "name": "Event", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "additions"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "blob_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "changes"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "deletions"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "filename"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "patch"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "raw_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "sha"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "status"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "File", 
             "methods": []
         }, 
         {
@@ -6420,9 +6523,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "PullRequestPart"
                     }, 
                     "name": "base"
                 }, 
@@ -6492,9 +6595,9 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "PullRequestPart"
                     }, 
                     "name": "head"
                 }, 
@@ -6880,7 +6983,7 @@
                     "type": {
                         "simple": false, 
                         "cardinality": "list", 
-                        "name": "PullRequestFile"
+                        "name": "File"
                     }
                 }, 
                 {
@@ -7120,85 +7223,6 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "additions"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "blob_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "changes"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "integer"
-                    }, 
-                    "name": "deletions"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "filename"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "patch"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "raw_url"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "sha"
-                }, 
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "string"
-                    }, 
-                    "name": "status"
-                }
-            ], 
-            "isCompletable": false, 
-            "name": "PullRequestFile", 
-            "methods": []
-        }, 
-        {
-            "attributes": [
-                {
-                    "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
                         "name": "bool"
                     }, 
                     "name": "merged"
@@ -7222,6 +7246,53 @@
             ], 
             "isCompletable": false, 
             "name": "PullRequestMergeStatus", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "label"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "ref"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Repository"
+                    }, 
+                    "name": "repo"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "sha"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "NamedUser"
+                    }, 
+                    "name": "user"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "PullRequestPart", 
             "methods": []
         }, 
         {
@@ -8298,7 +8369,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "tree"
                         }, 
@@ -8684,7 +8755,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "base_tree"
                         }
@@ -9665,7 +9736,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "base"
                         }, 
@@ -9673,7 +9744,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "string"
                             }, 
                             "name": "head"
                         }
@@ -9996,9 +10067,9 @@
                     "isMutation": false, 
                     "optionalParameters": [], 
                     "type": {
-                        "simple": true, 
+                        "simple": false, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "Comparison"
                     }
                 }
             ]

@@ -4,9 +4,9 @@
 import GithubObject
 import PaginatedList
 ##########
-import CommitFile
-import NamedUser
 import GitCommit
+import NamedUser
+import File
 import CommitStats
 import Commit
 import CommitComment
@@ -113,7 +113,7 @@ class Commit( GithubObject.GithubObject ):
         if "files" in attributes: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
             self._files = [
-                CommitFile.CommitFile( self._requester, element, completed = False )
+                File.File( self._requester, element, completed = False )
                 for element in attributes[ "files" ]
             ]
         if "parents" in attributes: # pragma no branch

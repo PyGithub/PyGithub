@@ -10,7 +10,7 @@ import Branch
 import IssueEvent
 import Label
 import GitBlob
-import Commit
+import Organization
 import GitRef
 import Issue
 import Repository
@@ -19,10 +19,11 @@ import RepositoryKey
 import NamedUser
 import Milestone
 import Permissions
+import Comparison
 import CommitComment
 import GitCommit
 import Team
-import Organization
+import Commit
 import GitTree
 import Hook
 import Tag
@@ -201,7 +202,7 @@ class Repository( GithubObject.GithubObject ):
             None
         )
         self._checkStatus( status, data )
-        return data
+        return Comparison.Comparison( self._requester, data, completed = True )
 
     def create_download( self, name, size, description = GithubObject.NotSet, content_type = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -243,6 +244,7 @@ class Repository( GithubObject.GithubObject ):
 
     def create_git_commit( self, message, tree, parents, author = GithubObject.NotSet, committer = GithubObject.NotSet ):
         assert isinstance( message, ( str, unicode ) ), message
+        assert isinstance( tree, ( str, unicode ) ), tree
         assert all( isinstance( element, GitCommit.GitCommit ) for element in parents ), parents
         post_parameters = {
             "message": message,
@@ -301,6 +303,7 @@ class Repository( GithubObject.GithubObject ):
         return GitTag.GitTag( self._requester, data, completed = True )
 
     def create_git_tree( self, tree, base_tree = GithubObject.NotSet ):
+        assert base_tree is GithubObject.NotSet or isinstance( base_tree, ( str, unicode ) ), base_tree
         post_parameters = {
             "tree": tree,
         }
@@ -426,10 +429,14 @@ class Repository( GithubObject.GithubObject ):
     def __create_pull_1( self, title, body, base, head ):
         assert isinstance( title, ( str, unicode ) ), title
         assert isinstance( body, ( str, unicode ) ), body
+        assert isinstance( base, ( str, unicode ) ), base
+        assert isinstance( head, ( str, unicode ) ), head
         return self.__create_pull( title = title, body = body, base = base, head = head )
 
     def __create_pull_2( self, issue, base, head ):
         assert isinstance( issue, int ), issue
+        assert isinstance( base, ( str, unicode ) ), base
+        assert isinstance( head, ( str, unicode ) ), head
         return self.__create_pull( issue = issue, base = base, head = head )
 
     def __create_pull( self, **kwds ):

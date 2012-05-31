@@ -3,7 +3,7 @@
 
 import GithubObject
 
-class CommitFile( GithubObject.BasicGithubObject ):
+class File( GithubObject.BasicGithubObject ):
     @property
     def additions( self ):
         return self._NoneIfNotSet( self._additions )

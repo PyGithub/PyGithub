@@ -4,11 +4,12 @@
 import GithubObject
 import PaginatedList
 ##########
-import Commit
-import NamedUser
 import PullRequestMergeStatus
+import NamedUser
 import PullRequestComment
-import PullRequestFile
+import File
+import PullRequestPart
+import Commit
 
 class PullRequest( GithubObject.GithubObject ):
     @property
@@ -231,7 +232,7 @@ class PullRequest( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
-            PullRequestFile.PullRequestFile,
+            File.File,
             self._requester,
             headers,
             data
@@ -293,7 +294,8 @@ class PullRequest( GithubObject.GithubObject ):
             assert attributes[ "additions" ] is None or isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
             self._additions = attributes[ "additions" ]
         if "base" in attributes: # pragma no branch
-            self._base = attributes[ "base" ]
+            assert attributes[ "base" ] is None or isinstance( attributes[ "base" ], dict ), attributes[ "base" ]
+            self._base = None if attributes[ "base" ] is None else PullRequestPart.PullRequestPart( self._requester, attributes[ "base" ], completed = False )
         if "body" in attributes: # pragma no branch
             assert attributes[ "body" ] is None or isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self._body = attributes[ "body" ]
@@ -319,7 +321,8 @@ class PullRequest( GithubObject.GithubObject ):
             assert attributes[ "diff_url" ] is None or isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
             self._diff_url = attributes[ "diff_url" ]
         if "head" in attributes: # pragma no branch
-            self._head = attributes[ "head" ]
+            assert attributes[ "head" ] is None or isinstance( attributes[ "head" ], dict ), attributes[ "head" ]
+            self._head = None if attributes[ "head" ] is None else PullRequestPart.PullRequestPart( self._requester, attributes[ "head" ], completed = False )
         if "html_url" in attributes: # pragma no branch
             assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self._html_url = attributes[ "html_url" ]
