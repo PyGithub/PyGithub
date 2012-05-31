@@ -64,6 +64,7 @@ class Event( GithubObject.BasicGithubObject ):
             assert attributes[ "org" ] is None or isinstance( attributes[ "org" ], dict ), attributes[ "org" ]
             self._org = None if attributes[ "org" ] is None else Organization.Organization( self._requester, attributes[ "org" ], completed = False )
         if "payload" in attributes: # pragma no branch
+            assert attributes[ "payload" ] is None or isinstance( attributes[ "payload" ], dict ), attributes[ "payload" ]
             self._payload = attributes[ "payload" ]
         if "public" in attributes: # pragma no branch
             assert attributes[ "public" ] is None or isinstance( attributes[ "public" ], bool ), attributes[ "public" ]

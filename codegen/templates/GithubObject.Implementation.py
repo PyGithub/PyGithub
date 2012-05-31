@@ -25,6 +25,9 @@
         {% if attribute.type.name == "bool" %}
             assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], bool ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
+        {% if attribute.type.name == "dict" %}
+            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
+        {% endif %}
     {% else %}
             assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
     {% endif %}

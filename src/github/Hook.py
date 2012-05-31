@@ -62,6 +62,7 @@ class Hook( GithubObject.GithubObject ):
 
     def edit( self, name, config, events = GithubObject.NotSet, add_events = GithubObject.NotSet, remove_events = GithubObject.NotSet, active = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
+        assert isinstance( config, dict ), config
         assert events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in events ), events
         assert add_events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in add_events ), add_events
         assert remove_events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in remove_events ), remove_events
@@ -112,6 +113,7 @@ class Hook( GithubObject.GithubObject ):
             assert attributes[ "active" ] is None or isinstance( attributes[ "active" ], bool ), attributes[ "active" ]
             self._active = attributes[ "active" ]
         if "config" in attributes: # pragma no branch
+            assert attributes[ "config" ] is None or isinstance( attributes[ "config" ], dict ), attributes[ "config" ]
             self._config = attributes[ "config" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]

@@ -307,7 +307,7 @@ Attributes
 * `created_at`: string
 * `id`: string
 * `org`: `Organization`
-* `payload`
+* `payload`: dict
 * `public`: bool
 * `repo`: `Repository`
 * `type`: string
@@ -508,7 +508,7 @@ Class `Hook`
 Attributes
 ----------
 * `active`: bool
-* `config`
+* `config`: dict
 * `created_at`: string
 * `events`: list of string
 * `id`: integer
@@ -525,7 +525,7 @@ Modification
 ------------
 * `edit( name, config, [events, add_events, remove_events, active] )`
     * `name`: string
-    * `config`
+    * `config`: dict
     * `events`: list of string
     * `add_events`: list of string
     * `remove_events`: list of string
@@ -1134,7 +1134,7 @@ Hooks
 -----
 * `create_hook( name, config, [events, active] )`: `Hook`
     * `name`: string
-    * `config`
+    * `config`: dict
     * `events`: list of string
     * `active`: bool
 * `get_hook( id )`: `Hook`

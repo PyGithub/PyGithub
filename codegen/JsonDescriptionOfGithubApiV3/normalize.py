@@ -32,7 +32,7 @@ class Type:
         return {
             "cardinality": self.cardinality,
             "name": self.name,
-            "simple": self.name in [ "void", "string", "integer", "bool", "float", "@todo" ],
+            "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict", "@todo" ],
         }
 
     def __fromString( self, name ):

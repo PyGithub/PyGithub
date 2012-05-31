@@ -320,6 +320,7 @@ class Repository( GithubObject.GithubObject ):
 
     def create_hook( self, name, config, events = GithubObject.NotSet, active = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
+        assert isinstance( config, dict ), config
         assert events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in events ), events
         assert active is GithubObject.NotSet or isinstance( active, bool ), active
         post_parameters = {

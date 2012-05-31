@@ -11,6 +11,9 @@
             {% if parameter.type.name == "bool" %}
         assert isinstance( {{ parameter.name }}, bool ), {{ parameter.name }}
             {% endif %}
+            {% if parameter.type.name == "dict" %}
+        assert isinstance( {{ parameter.name }}, dict ), {{ parameter.name }}
+            {% endif %}
         {% else %}
         assert isinstance( {{ parameter.name }}, {{ parameter.type.name }}.{{ parameter.type.name }} ), {{ parameter.name }}
         {% endif %}
@@ -45,6 +48,9 @@
             {% endif %}
             {% if parameter.type.name == "bool" %}
         assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, bool ), {{ parameter.name }}
+            {% endif %}
+            {% if parameter.type.name == "dict" %}
+        assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, dict ), {{ parameter.name }}
             {% endif %}
         {% else %}
         assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, {{ parameter.type.name }}.{{ parameter.type.name }} ), {{ parameter.name }}

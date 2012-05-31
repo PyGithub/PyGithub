@@ -2314,7 +2314,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "dict"
                     }, 
                     "name": "payload"
                 }, 
@@ -3455,7 +3455,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "@todo"
+                        "name": "dict"
                     }, 
                     "name": "config"
                 }, 
@@ -3537,7 +3537,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "dict"
                             }, 
                             "name": "config"
                         }
@@ -8840,7 +8840,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "dict"
                             }, 
                             "name": "config"
                         }

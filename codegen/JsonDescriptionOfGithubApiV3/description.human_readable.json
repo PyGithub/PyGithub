@@ -390,7 +390,7 @@
                 { "name": "actor", "type": "NamedUser" },
                 { "name": "created_at", "type": "string" },
                 { "name": "id", "type": "string" },
-                { "name": "payload", "type": "@todo" },
+                { "name": "payload", "type": "dict" },
                 { "name": "public", "type": "bool" },
                 { "name": "type", "type": "string" },
                 { "name": "org", "type": "Organization" },
@@ -625,7 +625,7 @@
             "edit": {
                 "mandatoryParameters": [
                     { "name": "name", "type": "string" },
-                    { "name": "config", "type": "@todo" }
+                    { "name": "config", "type": "dict" }
                 ],
                 "optionalParameters": [
                     { "name": "events", "type": "list:string" },
@@ -637,7 +637,7 @@
             "delete": true,
             "attributes": [
                 { "name": "active", "type": "bool" },
-                { "name": "config", "type": "@todo" },
+                { "name": "config", "type": "dict" },
                 { "name": "created_at", "type": "string" },
                 { "name": "events", "type": "list:string" },
                 { "name": "id", "type": "integer" },
@@ -1542,7 +1542,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "name", "type": "string" },
-                            { "name": "config", "type": "@todo" }
+                            { "name": "config", "type": "dict" }
                         ],
                         "optionalParameters": [
                             { "name": "events", "type": "list:string" },
