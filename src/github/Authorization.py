@@ -114,7 +114,7 @@ class Authorization( GithubObject.GithubObject ):
             assert attributes[ "note_url" ] is None or isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
             self._note_url = attributes[ "note_url" ]
         if "scopes" in attributes: # pragma no branch
-            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "scopes" ] ), attributes[ "scopes" ]
+            assert attributes[ "scopes" ] is None or all( isinstance( element, ( str, unicode ) ) for element in attributes[ "scopes" ] ), attributes[ "scopes" ]
             self._scopes = attributes[ "scopes" ]
         if "token" in attributes: # pragma no branch
             assert attributes[ "token" ] is None or isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]

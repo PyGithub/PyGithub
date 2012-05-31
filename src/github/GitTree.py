@@ -31,8 +31,8 @@ class GitTree( GithubObject.GithubObject ):
             assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self._sha = attributes[ "sha" ]
         if "tree" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "tree" ] ), attributes[ "tree" ]
-            self._tree = [
+            assert attributes[ "tree" ] is None or all( isinstance( element, dict ) for element in attributes[ "tree" ] ), attributes[ "tree" ]
+            self._tree = None if attributes[ "tree" ] is None else [
                 GitTreeElement.GitTreeElement( self._requester, element, completed = False )
                 for element in attributes[ "tree" ]
             ]

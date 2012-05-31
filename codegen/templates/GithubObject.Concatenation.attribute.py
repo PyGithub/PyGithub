@@ -1,0 +1,1 @@
+str( self.{{ value|join:"." }} )

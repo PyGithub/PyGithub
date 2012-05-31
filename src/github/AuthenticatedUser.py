@@ -141,7 +141,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def add_to_emails( self, *emails ):
-        assert all( isinstance( email, ( str, unicode ) ) for email in emails ), emails
+        assert all( isinstance( element, ( str, unicode ) ) for element in emails ), emails
         post_parameters = emails
         status, headers, data = self._request(
             "POST",
@@ -555,7 +555,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return status == 204
 
     def remove_from_emails( self, *emails ):
-        assert all( isinstance( email, ( str, unicode ) ) for email in emails ), emails
+        assert all( isinstance( element, ( str, unicode ) ) for element in emails ), emails
         post_parameters = emails
         status, headers, data = self._request(
             "DELETE",

@@ -92,8 +92,8 @@ class Comparison( GithubObject.GithubObject ):
             assert attributes[ "behind_by" ] is None or isinstance( attributes[ "behind_by" ], int ), attributes[ "behind_by" ]
             self._behind_by = attributes[ "behind_by" ]
         if "commits" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "commits" ] ), attributes[ "commits" ]
-            self._commits = [
+            assert attributes[ "commits" ] is None or all( isinstance( element, dict ) for element in attributes[ "commits" ] ), attributes[ "commits" ]
+            self._commits = None if attributes[ "commits" ] is None else [
                 Commit.Commit( self._requester, element, completed = False )
                 for element in attributes[ "commits" ]
             ]
@@ -101,8 +101,8 @@ class Comparison( GithubObject.GithubObject ):
             assert attributes[ "diff_url" ] is None or isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
             self._diff_url = attributes[ "diff_url" ]
         if "files" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
-            self._files = [
+            assert attributes[ "files" ] is None or all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
+            self._files = None if attributes[ "files" ] is None else [
                 File.File( self._requester, element, completed = False )
                 for element in attributes[ "files" ]
             ]

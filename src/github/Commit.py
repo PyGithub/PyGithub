@@ -111,14 +111,14 @@ class Commit( GithubObject.GithubObject ):
             assert attributes[ "committer" ] is None or isinstance( attributes[ "committer" ], dict ), attributes[ "committer" ]
             self._committer = None if attributes[ "committer" ] is None else NamedUser.NamedUser( self._requester, attributes[ "committer" ], completed = False )
         if "files" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
-            self._files = [
+            assert attributes[ "files" ] is None or all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
+            self._files = None if attributes[ "files" ] is None else [
                 File.File( self._requester, element, completed = False )
                 for element in attributes[ "files" ]
             ]
         if "parents" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
-            self._parents = [
+            assert attributes[ "parents" ] is None or all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
+            self._parents = None if attributes[ "parents" ] is None else [
                 Commit( self._requester, element, completed = False )
                 for element in attributes[ "parents" ]
             ]

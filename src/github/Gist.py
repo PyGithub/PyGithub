@@ -216,7 +216,8 @@ class Gist( GithubObject.GithubObject ):
             assert attributes[ "description" ] is None or isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self._description = attributes[ "description" ]
         if "files" in attributes: # pragma no branch
-            self._files = {
+            assert attributes[ "files" ] is None or all( isinstance( element, dict ) for element in attributes[ "files" ].itervalues() ), attributes[ "files" ]
+            self._files = None if attributes[ "files" ] is None else {
                 key : GistFile.GistFile( self._requester, element, completed = False )
                 for key, element in attributes[ "files" ].iteritems()
             }
@@ -224,8 +225,8 @@ class Gist( GithubObject.GithubObject ):
             assert attributes[ "fork_of" ] is None or isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
             self._fork_of = None if attributes[ "fork_of" ] is None else Gist( self._requester, attributes[ "fork_of" ], completed = False )
         if "forks" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "forks" ] ), attributes[ "forks" ]
-            self._forks = [
+            assert attributes[ "forks" ] is None or all( isinstance( element, dict ) for element in attributes[ "forks" ] ), attributes[ "forks" ]
+            self._forks = None if attributes[ "forks" ] is None else [
                 Gist( self._requester, element, completed = False )
                 for element in attributes[ "forks" ]
             ]
@@ -236,8 +237,8 @@ class Gist( GithubObject.GithubObject ):
             assert attributes[ "git_push_url" ] is None or isinstance( attributes[ "git_push_url" ], ( str, unicode ) ), attributes[ "git_push_url" ]
             self._git_push_url = attributes[ "git_push_url" ]
         if "history" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "history" ] ), attributes[ "history" ]
-            self._history = [
+            assert attributes[ "history" ] is None or all( isinstance( element, dict ) for element in attributes[ "history" ] ), attributes[ "history" ]
+            self._history = None if attributes[ "history" ] is None else [
                 GistHistoryState.GistHistoryState( self._requester, element, completed = False )
                 for element in attributes[ "history" ]
             ]

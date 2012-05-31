@@ -104,7 +104,7 @@ class Issue( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._user )
 
     def add_to_labels( self, *labels ):
-        assert all( isinstance( label, Label.Label ) for label in labels ), labels
+        assert all( isinstance( element, Label.Label ) for element in labels ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self._request(
             "POST",
@@ -233,7 +233,7 @@ class Issue( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def set_labels( self, *labels ):
-        assert all( isinstance( label, Label.Label ) for label in labels ), labels
+        assert all( isinstance( element, Label.Label ) for element in labels ), labels
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self._request(
             "PUT",
@@ -289,8 +289,8 @@ class Issue( GithubObject.GithubObject ):
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
         if "labels" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "labels" ] ), attributes[ "labels" ]
-            self._labels = [
+            assert attributes[ "labels" ] is None or all( isinstance( element, dict ) for element in attributes[ "labels" ] ), attributes[ "labels" ]
+            self._labels = None if attributes[ "labels" ] is None else [
                 Label.Label( self._requester, element, completed = False )
                 for element in attributes[ "labels" ]
             ]

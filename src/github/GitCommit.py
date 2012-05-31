@@ -63,8 +63,8 @@ class GitCommit( GithubObject.GithubObject ):
             assert attributes[ "message" ] is None or isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
             self._message = attributes[ "message" ]
         if "parents" in attributes: # pragma no branch
-            assert all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
-            self._parents = [
+            assert attributes[ "parents" ] is None or all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
+            self._parents = None if attributes[ "parents" ] is None else [
                 GitCommit( self._requester, element, completed = False )
                 for element in attributes[ "parents" ]
             ]

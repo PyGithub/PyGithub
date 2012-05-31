@@ -119,7 +119,7 @@ class Hook( GithubObject.GithubObject ):
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
         if "events" in attributes: # pragma no branch
-            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "events" ] ), attributes[ "events" ]
+            assert attributes[ "events" ] is None or all( isinstance( element, ( str, unicode ) ) for element in attributes[ "events" ] ), attributes[ "events" ]
             self._events = attributes[ "events" ]
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]

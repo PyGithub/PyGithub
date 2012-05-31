@@ -11,71 +11,20 @@
 
     def _useAttributes( self, attributes ):
 {% for attribute in class.attributes|dictsort:"name" %}
+
+    {% if attribute.type.name != "@todo" %}
+        {% with simple_or_complex=attribute.type.simple|yesno:"simple,complex_as_dict" %}
         if "{{ attribute.name }}" in attributes: # pragma no branch
-
-{% if attribute.type.cardinality == "scalar" %}
-    {% if attribute.type.simple %}
-        {% if attribute.type.name == "string" %}
-            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-        {% if attribute.type.name == "integer" %}
-            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], int ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-        {% if attribute.type.name == "bool" %}
-            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], bool ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-        {% if attribute.type.name == "dict" %}
-            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-    {% else %}
-            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
+            {% with template_name="GithubObject.IsInstance."|add:attribute.type.cardinality|add:"."|add:simple_or_complex|add:".py" %}
+            assert attributes[ "{{ attribute.name }}" ] is None or {% include template_name with variable="attributes[ \""|add:attribute.name|add:"\" ]"|safe type=attribute.type only %}, attributes[ "{{ attribute.name }}" ]
+            {% endwith %}
+        {% endwith %}
     {% endif %}
-{% endif %}
 
-{% if attribute.type.cardinality == "list" %}
-    {% if attribute.type.simple %}
-        {% if attribute.type.name == "string" %}
-            assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-        {% if attribute.type.name == "integer" %}
-            assert all( isinstance( element, int ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-        {% if attribute.type.name == "bool" %}
-            assert all( isinstance( element, bool ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
-        {% endif %}
-    {% else %}
-            assert all( isinstance( element, dict ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
-    {% endif %}
-{% endif %}
-
-{% if attribute.type.cardinality == "scalar" %}
-    {% if attribute.type.simple %}
-            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
-    {% else %}
-            self._{{ attribute.name }} = None if attributes[ "{{ attribute.name }}" ] is None else {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, attributes[ "{{ attribute.name }}" ], completed = False )
-    {% endif %}
-{% endif %}
-
-{% if attribute.type.cardinality == "list" %}
-    {% if attribute.type.simple %}
-            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
-    {% else %}
-            self._{{ attribute.name }} = [
-                {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, element, completed = False )
-                for element in attributes[ "{{ attribute.name }}" ]
-            ]
-    {% endif %}
-{% endif %}
-
-{% if attribute.type.cardinality == "dict" %}
-    {% if attribute.type.simple %}
-            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
-    {% else %}
-            self._{{ attribute.name }} = {
-                key : {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, element, completed = False )
-                for key, element in attributes[ "{{ attribute.name }}" ].iteritems()
-            }
-    {% endif %}
-{% endif %}
+    {% with simple_or_complex=attribute.type.simple|yesno:"simple,complex" %}
+        {% with template_name="GithubObject.AttributeValue."|add:simple_or_complex|add:".py" %}
+            self._{{ attribute.name }} = {% include template_name %}
+        {% endwith %}
+    {% endwith %}
 
 {% endfor %}
