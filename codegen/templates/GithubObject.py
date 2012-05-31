@@ -7,9 +7,6 @@ import GithubObject
 {% if class.needsPaginatedList %}
 import PaginatedList
 {% endif %}
-{% if class.needsDefaultValue %}
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
-{% endif %}
 
 {% if class.dependencies %}
 ##########

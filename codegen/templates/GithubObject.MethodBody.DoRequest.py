@@ -16,7 +16,7 @@
         post_parameters = dict()
         {% endif %}
         {% for parameter in method.optionalParameters %}
-        if {{ parameter.name }} is not DefaultValueForOptionalParameters:
+        if {{ parameter.name }} is not GithubObject.NotSet:
             post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
         {% endfor %}
     {% endif %}
@@ -24,7 +24,7 @@
     {% if method.optionalParameters %}
         url_parameters = dict()
         {% for parameter in method.optionalParameters %}
-        if {{ parameter.name }} is not DefaultValueForOptionalParameters:
+        if {{ parameter.name }} is not GithubObject.NotSet:
             url_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
         {% endfor %}
     {% endif %}

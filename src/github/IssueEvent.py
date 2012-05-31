@@ -9,67 +9,67 @@ import NamedUser
 class IssueEvent( GithubObject.GithubObject ):
     @property
     def actor( self ):
-        self._completeIfNeeded( self._actor )
-        return self._actor
+        self._completeIfNotSet( self._actor )
+        return self._NoneIfNotSet( self._actor )
 
     @property
     def commit_id( self ):
-        self._completeIfNeeded( self._commit_id )
-        return self._commit_id
+        self._completeIfNotSet( self._commit_id )
+        return self._NoneIfNotSet( self._commit_id )
 
     @property
     def created_at( self ):
-        self._completeIfNeeded( self._created_at )
-        return self._created_at
+        self._completeIfNotSet( self._created_at )
+        return self._NoneIfNotSet( self._created_at )
 
     @property
     def event( self ):
-        self._completeIfNeeded( self._event )
-        return self._event
+        self._completeIfNotSet( self._event )
+        return self._NoneIfNotSet( self._event )
 
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def issue( self ):
-        self._completeIfNeeded( self._issue )
-        return self._issue
+        self._completeIfNotSet( self._issue )
+        return self._NoneIfNotSet( self._issue )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     def _initAttributes( self ):
-        self._actor = None
-        self._commit_id = None
-        self._created_at = None
-        self._event = None
-        self._id = None
-        self._issue = None
-        self._url = None
+        self._actor = GithubObject.NotSet
+        self._commit_id = GithubObject.NotSet
+        self._created_at = GithubObject.NotSet
+        self._event = GithubObject.NotSet
+        self._id = GithubObject.NotSet
+        self._issue = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "actor" in attributes and attributes[ "actor" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "actor" ], dict ), attributes[ "actor" ]
-            self._actor = NamedUser.NamedUser( self._requester, attributes[ "actor" ], completed = False )
-        if "commit_id" in attributes and attributes[ "commit_id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commit_id" ], ( str, unicode ) ), attributes[ "commit_id" ]
+        if "actor" in attributes: # pragma no branch
+            assert attributes[ "actor" ] is None or isinstance( attributes[ "actor" ], dict ), attributes[ "actor" ]
+            self._actor = None if attributes[ "actor" ] is None else NamedUser.NamedUser( self._requester, attributes[ "actor" ], completed = False )
+        if "commit_id" in attributes: # pragma no branch
+            assert attributes[ "commit_id" ] is None or isinstance( attributes[ "commit_id" ], ( str, unicode ) ), attributes[ "commit_id" ]
             self._commit_id = attributes[ "commit_id" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
+        if "created_at" in attributes: # pragma no branch
+            assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
-        if "event" in attributes and attributes[ "event" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "event" ], ( str, unicode ) ), attributes[ "event" ]
+        if "event" in attributes: # pragma no branch
+            assert attributes[ "event" ] is None or isinstance( attributes[ "event" ], ( str, unicode ) ), attributes[ "event" ]
             self._event = attributes[ "event" ]
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "issue" in attributes and attributes[ "issue" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "issue" ], dict ), attributes[ "issue" ]
-            self._issue = Issue.Issue( self._requester, attributes[ "issue" ], completed = False )
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "issue" in attributes: # pragma no branch
+            assert attributes[ "issue" ] is None or isinstance( attributes[ "issue" ], dict ), attributes[ "issue" ]
+            self._issue = None if attributes[ "issue" ] is None else Issue.Issue( self._requester, attributes[ "issue" ], completed = False )
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

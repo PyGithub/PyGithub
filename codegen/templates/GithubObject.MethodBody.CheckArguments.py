@@ -35,7 +35,7 @@
 {% endfor %}
 {% for parameter in method.optionalParameters %}
     {% if parameter.type.name != "@todo" %}
-        if {{ parameter.name }} is not DefaultValueForOptionalParameters:
+        if {{ parameter.name }} is not GithubObject.NotSet:
     {% endif %}
 
     {% if parameter.type.cardinality == "scalar" %}

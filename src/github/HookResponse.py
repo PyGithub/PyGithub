@@ -6,28 +6,28 @@ import GithubObject
 class HookResponse( GithubObject.BasicGithubObject ):
     @property
     def code( self ):
-        return self._code
+        return self._NoneIfNotSet( self._code )
 
     @property
     def message( self ):
-        return self._message
+        return self._NoneIfNotSet( self._message )
 
     @property
     def status( self ):
-        return self._status
+        return self._NoneIfNotSet( self._status )
 
     def _initAttributes( self ):
-        self._code = None
-        self._message = None
-        self._status = None
+        self._code = GithubObject.NotSet
+        self._message = GithubObject.NotSet
+        self._status = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "code" in attributes and attributes[ "code" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "code" ], int ), attributes[ "code" ]
+        if "code" in attributes: # pragma no branch
+            assert attributes[ "code" ] is None or isinstance( attributes[ "code" ], int ), attributes[ "code" ]
             self._code = attributes[ "code" ]
-        if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
+        if "message" in attributes: # pragma no branch
+            assert attributes[ "message" ] is None or isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
             self._message = attributes[ "message" ]
-        if "status" in attributes and attributes[ "status" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "status" ], ( str, unicode ) ), attributes[ "status" ]
+        if "status" in attributes: # pragma no branch
+            assert attributes[ "status" ] is None or isinstance( attributes[ "status" ], ( str, unicode ) ), attributes[ "status" ]
             self._status = attributes[ "status" ]

@@ -8,18 +8,18 @@ import GithubObject
 class Label( GithubObject.GithubObject ):
     @property
     def color( self ):
-        self._completeIfNeeded( self._color )
-        return self._color
+        self._completeIfNotSet( self._color )
+        return self._NoneIfNotSet( self._color )
 
     @property
     def name( self ):
-        self._completeIfNeeded( self._name )
-        return self._name
+        self._completeIfNotSet( self._name )
+        return self._NoneIfNotSet( self._name )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     def delete( self ):
         status, headers, data = self._request(
@@ -51,17 +51,17 @@ class Label( GithubObject.GithubObject ):
         return urllib.quote( str( self.name ) )
 
     def _initAttributes( self ):
-        self._color = None
-        self._name = None
-        self._url = None
+        self._color = GithubObject.NotSet
+        self._name = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "color" in attributes and attributes[ "color" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "color" ], ( str, unicode ) ), attributes[ "color" ]
+        if "color" in attributes: # pragma no branch
+            assert attributes[ "color" ] is None or isinstance( attributes[ "color" ], ( str, unicode ) ), attributes[ "color" ]
             self._color = attributes[ "color" ]
-        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
+        if "name" in attributes: # pragma no branch
+            assert attributes[ "name" ] is None or isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self._name = attributes[ "name" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

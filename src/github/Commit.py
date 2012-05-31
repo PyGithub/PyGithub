@@ -3,7 +3,6 @@
 
 import GithubObject
 import PaginatedList
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import CommitFile
 import NamedUser
@@ -15,60 +14,60 @@ import CommitComment
 class Commit( GithubObject.GithubObject ):
     @property
     def author( self ):
-        self._completeIfNeeded( self._author )
-        return self._author
+        self._completeIfNotSet( self._author )
+        return self._NoneIfNotSet( self._author )
 
     @property
     def commit( self ):
-        self._completeIfNeeded( self._commit )
-        return self._commit
+        self._completeIfNotSet( self._commit )
+        return self._NoneIfNotSet( self._commit )
 
     @property
     def committer( self ):
-        self._completeIfNeeded( self._committer )
-        return self._committer
+        self._completeIfNotSet( self._committer )
+        return self._NoneIfNotSet( self._committer )
 
     @property
     def files( self ):
-        self._completeIfNeeded( self._files )
-        return self._files
+        self._completeIfNotSet( self._files )
+        return self._NoneIfNotSet( self._files )
 
     @property
     def parents( self ):
-        self._completeIfNeeded( self._parents )
-        return self._parents
+        self._completeIfNotSet( self._parents )
+        return self._NoneIfNotSet( self._parents )
 
     @property
     def sha( self ):
-        self._completeIfNeeded( self._sha )
-        return self._sha
+        self._completeIfNotSet( self._sha )
+        return self._NoneIfNotSet( self._sha )
 
     @property
     def stats( self ):
-        self._completeIfNeeded( self._stats )
-        return self._stats
+        self._completeIfNotSet( self._stats )
+        return self._NoneIfNotSet( self._stats )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
-    def create_comment( self, body, line = DefaultValueForOptionalParameters, path = DefaultValueForOptionalParameters, position = DefaultValueForOptionalParameters ):
+    def create_comment( self, body, line = GithubObject.NotSet, path = GithubObject.NotSet, position = GithubObject.NotSet ):
         assert isinstance( body, ( str, unicode ) ), body
-        if line is not DefaultValueForOptionalParameters:
+        if line is not GithubObject.NotSet:
             assert isinstance( line, int ), line
-        if path is not DefaultValueForOptionalParameters:
+        if path is not GithubObject.NotSet:
             assert isinstance( path, ( str, unicode ) ), path
-        if position is not DefaultValueForOptionalParameters:
+        if position is not GithubObject.NotSet:
             assert isinstance( position, int ), position
         post_parameters = {
             "body": body,
         }
-        if line is not DefaultValueForOptionalParameters:
+        if line is not GithubObject.NotSet:
             post_parameters[ "line" ] = line
-        if path is not DefaultValueForOptionalParameters:
+        if path is not GithubObject.NotSet:
             post_parameters[ "path" ] = path
-        if position is not DefaultValueForOptionalParameters:
+        if position is not GithubObject.NotSet:
             post_parameters[ "position" ] = position
         status, headers, data = self._request(
             "POST",
@@ -95,43 +94,43 @@ class Commit( GithubObject.GithubObject ):
         )
 
     def _initAttributes( self ):
-        self._author = None
-        self._commit = None
-        self._committer = None
-        self._files = None
-        self._parents = None
-        self._sha = None
-        self._stats = None
-        self._url = None
+        self._author = GithubObject.NotSet
+        self._commit = GithubObject.NotSet
+        self._committer = GithubObject.NotSet
+        self._files = GithubObject.NotSet
+        self._parents = GithubObject.NotSet
+        self._sha = GithubObject.NotSet
+        self._stats = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "author" in attributes and attributes[ "author" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "author" ], dict ), attributes[ "author" ]
-            self._author = NamedUser.NamedUser( self._requester, attributes[ "author" ], completed = False )
-        if "commit" in attributes and attributes[ "commit" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
-            self._commit = GitCommit.GitCommit( self._requester, attributes[ "commit" ], completed = False )
-        if "committer" in attributes and attributes[ "committer" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "committer" ], dict ), attributes[ "committer" ]
-            self._committer = NamedUser.NamedUser( self._requester, attributes[ "committer" ], completed = False )
-        if "files" in attributes and attributes[ "files" ] is not None: # pragma no branch
+        if "author" in attributes: # pragma no branch
+            assert attributes[ "author" ] is None or isinstance( attributes[ "author" ], dict ), attributes[ "author" ]
+            self._author = None if attributes[ "author" ] is None else NamedUser.NamedUser( self._requester, attributes[ "author" ], completed = False )
+        if "commit" in attributes: # pragma no branch
+            assert attributes[ "commit" ] is None or isinstance( attributes[ "commit" ], dict ), attributes[ "commit" ]
+            self._commit = None if attributes[ "commit" ] is None else GitCommit.GitCommit( self._requester, attributes[ "commit" ], completed = False )
+        if "committer" in attributes: # pragma no branch
+            assert attributes[ "committer" ] is None or isinstance( attributes[ "committer" ], dict ), attributes[ "committer" ]
+            self._committer = None if attributes[ "committer" ] is None else NamedUser.NamedUser( self._requester, attributes[ "committer" ], completed = False )
+        if "files" in attributes: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "files" ] ), attributes[ "files" ]
             self._files = [
                 CommitFile.CommitFile( self._requester, element, completed = False )
                 for element in attributes[ "files" ]
             ]
-        if "parents" in attributes and attributes[ "parents" ] is not None: # pragma no branch
+        if "parents" in attributes: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
             self._parents = [
                 Commit( self._requester, element, completed = False )
                 for element in attributes[ "parents" ]
             ]
-        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
+        if "sha" in attributes: # pragma no branch
+            assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self._sha = attributes[ "sha" ]
-        if "stats" in attributes and attributes[ "stats" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "stats" ], dict ), attributes[ "stats" ]
-            self._stats = CommitStats.CommitStats( self._requester, attributes[ "stats" ], completed = False )
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "stats" in attributes: # pragma no branch
+            assert attributes[ "stats" ] is None or isinstance( attributes[ "stats" ], dict ), attributes[ "stats" ]
+            self._stats = None if attributes[ "stats" ] is None else CommitStats.CommitStats( self._requester, attributes[ "stats" ], completed = False )
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

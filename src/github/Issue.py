@@ -3,7 +3,6 @@
 
 import GithubObject
 import PaginatedList
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import Repository
 import IssueEvent
@@ -16,93 +15,93 @@ import IssuePullRequest
 class Issue( GithubObject.GithubObject ):
     @property
     def assignee( self ):
-        self._completeIfNeeded( self._assignee )
-        return self._assignee
+        self._completeIfNotSet( self._assignee )
+        return self._NoneIfNotSet( self._assignee )
 
     @property
     def body( self ):
-        self._completeIfNeeded( self._body )
-        return self._body
+        self._completeIfNotSet( self._body )
+        return self._NoneIfNotSet( self._body )
 
     @property
     def closed_at( self ):
-        self._completeIfNeeded( self._closed_at )
-        return self._closed_at
+        self._completeIfNotSet( self._closed_at )
+        return self._NoneIfNotSet( self._closed_at )
 
     @property
     def closed_by( self ):
-        self._completeIfNeeded( self._closed_by )
-        return self._closed_by
+        self._completeIfNotSet( self._closed_by )
+        return self._NoneIfNotSet( self._closed_by )
 
     @property
     def comments( self ):
-        self._completeIfNeeded( self._comments )
-        return self._comments
+        self._completeIfNotSet( self._comments )
+        return self._NoneIfNotSet( self._comments )
 
     @property
     def created_at( self ):
-        self._completeIfNeeded( self._created_at )
-        return self._created_at
+        self._completeIfNotSet( self._created_at )
+        return self._NoneIfNotSet( self._created_at )
 
     @property
     def html_url( self ):
-        self._completeIfNeeded( self._html_url )
-        return self._html_url
+        self._completeIfNotSet( self._html_url )
+        return self._NoneIfNotSet( self._html_url )
 
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def labels( self ):
-        self._completeIfNeeded( self._labels )
-        return self._labels
+        self._completeIfNotSet( self._labels )
+        return self._NoneIfNotSet( self._labels )
 
     @property
     def milestone( self ):
-        self._completeIfNeeded( self._milestone )
-        return self._milestone
+        self._completeIfNotSet( self._milestone )
+        return self._NoneIfNotSet( self._milestone )
 
     @property
     def number( self ):
-        self._completeIfNeeded( self._number )
-        return self._number
+        self._completeIfNotSet( self._number )
+        return self._NoneIfNotSet( self._number )
 
     @property
     def pull_request( self ):
-        self._completeIfNeeded( self._pull_request )
-        return self._pull_request
+        self._completeIfNotSet( self._pull_request )
+        return self._NoneIfNotSet( self._pull_request )
 
     @property
     def repository( self ):
-        self._completeIfNeeded( self._repository )
-        return self._repository
+        self._completeIfNotSet( self._repository )
+        return self._NoneIfNotSet( self._repository )
 
     @property
     def state( self ):
-        self._completeIfNeeded( self._state )
-        return self._state
+        self._completeIfNotSet( self._state )
+        return self._NoneIfNotSet( self._state )
 
     @property
     def title( self ):
-        self._completeIfNeeded( self._title )
-        return self._title
+        self._completeIfNotSet( self._title )
+        return self._NoneIfNotSet( self._title )
 
     @property
     def updated_at( self ):
-        self._completeIfNeeded( self._updated_at )
-        return self._updated_at
+        self._completeIfNotSet( self._updated_at )
+        return self._NoneIfNotSet( self._updated_at )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     @property
     def user( self ):
-        self._completeIfNeeded( self._user )
-        return self._user
+        self._completeIfNotSet( self._user )
+        return self._NoneIfNotSet( self._user )
 
     def add_to_labels( self, *labels ):
         assert all( isinstance( label, Label.Label ) for label in labels ), labels
@@ -138,31 +137,31 @@ class Issue( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
 
-    def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, assignee = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters, milestone = DefaultValueForOptionalParameters, labels = DefaultValueForOptionalParameters ):
-        if title is not DefaultValueForOptionalParameters:
+    def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, assignee = GithubObject.NotSet, state = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
+        if title is not GithubObject.NotSet:
             assert isinstance( title, ( str, unicode ) ), title
-        if body is not DefaultValueForOptionalParameters:
+        if body is not GithubObject.NotSet:
             assert isinstance( body, ( str, unicode ) ), body
-        if assignee is not DefaultValueForOptionalParameters:
+        if assignee is not GithubObject.NotSet:
             assert isinstance( assignee, ( str, unicode ) ), assignee
-        if state is not DefaultValueForOptionalParameters:
+        if state is not GithubObject.NotSet:
             assert isinstance( state, ( str, unicode ) ), state
-        if milestone is not DefaultValueForOptionalParameters:
+        if milestone is not GithubObject.NotSet:
             assert isinstance( milestone, int ), milestone
-        if labels is not DefaultValueForOptionalParameters:
+        if labels is not GithubObject.NotSet:
             assert all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = dict()
-        if title is not DefaultValueForOptionalParameters:
+        if title is not GithubObject.NotSet:
             post_parameters[ "title" ] = title
-        if body is not DefaultValueForOptionalParameters:
+        if body is not GithubObject.NotSet:
             post_parameters[ "body" ] = body
-        if assignee is not DefaultValueForOptionalParameters:
+        if assignee is not GithubObject.NotSet:
             post_parameters[ "assignee" ] = assignee
-        if state is not DefaultValueForOptionalParameters:
+        if state is not GithubObject.NotSet:
             post_parameters[ "state" ] = state
-        if milestone is not DefaultValueForOptionalParameters:
+        if milestone is not GithubObject.NotSet:
             post_parameters[ "milestone" ] = milestone
-        if labels is not DefaultValueForOptionalParameters:
+        if labels is not GithubObject.NotSet:
             post_parameters[ "labels" ] = labels
         status, headers, data = self._request(
             "PATCH",
@@ -251,80 +250,80 @@ class Issue( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def _initAttributes( self ):
-        self._assignee = None
-        self._body = None
-        self._closed_at = None
-        self._closed_by = None
-        self._comments = None
-        self._created_at = None
-        self._html_url = None
-        self._id = None
-        self._labels = None
-        self._milestone = None
-        self._number = None
-        self._pull_request = None
-        self._repository = None
-        self._state = None
-        self._title = None
-        self._updated_at = None
-        self._url = None
-        self._user = None
+        self._assignee = GithubObject.NotSet
+        self._body = GithubObject.NotSet
+        self._closed_at = GithubObject.NotSet
+        self._closed_by = GithubObject.NotSet
+        self._comments = GithubObject.NotSet
+        self._created_at = GithubObject.NotSet
+        self._html_url = GithubObject.NotSet
+        self._id = GithubObject.NotSet
+        self._labels = GithubObject.NotSet
+        self._milestone = GithubObject.NotSet
+        self._number = GithubObject.NotSet
+        self._pull_request = GithubObject.NotSet
+        self._repository = GithubObject.NotSet
+        self._state = GithubObject.NotSet
+        self._title = GithubObject.NotSet
+        self._updated_at = GithubObject.NotSet
+        self._url = GithubObject.NotSet
+        self._user = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "assignee" in attributes and attributes[ "assignee" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "assignee" ], dict ), attributes[ "assignee" ]
-            self._assignee = NamedUser.NamedUser( self._requester, attributes[ "assignee" ], completed = False )
-        if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
+        if "assignee" in attributes: # pragma no branch
+            assert attributes[ "assignee" ] is None or isinstance( attributes[ "assignee" ], dict ), attributes[ "assignee" ]
+            self._assignee = None if attributes[ "assignee" ] is None else NamedUser.NamedUser( self._requester, attributes[ "assignee" ], completed = False )
+        if "body" in attributes: # pragma no branch
+            assert attributes[ "body" ] is None or isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self._body = attributes[ "body" ]
-        if "closed_at" in attributes and attributes[ "closed_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
+        if "closed_at" in attributes: # pragma no branch
+            assert attributes[ "closed_at" ] is None or isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
             self._closed_at = attributes[ "closed_at" ]
-        if "closed_by" in attributes and attributes[ "closed_by" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_by" ], dict ), attributes[ "closed_by" ]
-            self._closed_by = NamedUser.NamedUser( self._requester, attributes[ "closed_by" ], completed = False )
-        if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
+        if "closed_by" in attributes: # pragma no branch
+            assert attributes[ "closed_by" ] is None or isinstance( attributes[ "closed_by" ], dict ), attributes[ "closed_by" ]
+            self._closed_by = None if attributes[ "closed_by" ] is None else NamedUser.NamedUser( self._requester, attributes[ "closed_by" ], completed = False )
+        if "comments" in attributes: # pragma no branch
+            assert attributes[ "comments" ] is None or isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self._comments = attributes[ "comments" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
+        if "created_at" in attributes: # pragma no branch
+            assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
+        if "html_url" in attributes: # pragma no branch
+            assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self._html_url = attributes[ "html_url" ]
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "labels" in attributes and attributes[ "labels" ] is not None: # pragma no branch
+        if "labels" in attributes: # pragma no branch
             assert all( isinstance( element, dict ) for element in attributes[ "labels" ] ), attributes[ "labels" ]
             self._labels = [
                 Label.Label( self._requester, element, completed = False )
                 for element in attributes[ "labels" ]
             ]
-        if "milestone" in attributes and attributes[ "milestone" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "milestone" ], dict ), attributes[ "milestone" ]
-            self._milestone = Milestone.Milestone( self._requester, attributes[ "milestone" ], completed = False )
-        if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
+        if "milestone" in attributes: # pragma no branch
+            assert attributes[ "milestone" ] is None or isinstance( attributes[ "milestone" ], dict ), attributes[ "milestone" ]
+            self._milestone = None if attributes[ "milestone" ] is None else Milestone.Milestone( self._requester, attributes[ "milestone" ], completed = False )
+        if "number" in attributes: # pragma no branch
+            assert attributes[ "number" ] is None or isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self._number = attributes[ "number" ]
-        if "pull_request" in attributes and attributes[ "pull_request" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "pull_request" ], dict ), attributes[ "pull_request" ]
-            self._pull_request = IssuePullRequest.IssuePullRequest( self._requester, attributes[ "pull_request" ], completed = False )
-        if "repository" in attributes and attributes[ "repository" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "repository" ], dict ), attributes[ "repository" ]
-            self._repository = Repository.Repository( self._requester, attributes[ "repository" ], completed = False )
-        if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
+        if "pull_request" in attributes: # pragma no branch
+            assert attributes[ "pull_request" ] is None or isinstance( attributes[ "pull_request" ], dict ), attributes[ "pull_request" ]
+            self._pull_request = None if attributes[ "pull_request" ] is None else IssuePullRequest.IssuePullRequest( self._requester, attributes[ "pull_request" ], completed = False )
+        if "repository" in attributes: # pragma no branch
+            assert attributes[ "repository" ] is None or isinstance( attributes[ "repository" ], dict ), attributes[ "repository" ]
+            self._repository = None if attributes[ "repository" ] is None else Repository.Repository( self._requester, attributes[ "repository" ], completed = False )
+        if "state" in attributes: # pragma no branch
+            assert attributes[ "state" ] is None or isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self._state = attributes[ "state" ]
-        if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
+        if "title" in attributes: # pragma no branch
+            assert attributes[ "title" ] is None or isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self._title = attributes[ "title" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
+        if "updated_at" in attributes: # pragma no branch
+            assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self._updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]
-        if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self._user = NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )
+        if "user" in attributes: # pragma no branch
+            assert attributes[ "user" ] is None or isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
+            self._user = None if attributes[ "user" ] is None else NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )

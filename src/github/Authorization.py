@@ -2,55 +2,54 @@
 # Do not modify it manually, your work would be lost.
 
 import GithubObject
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import AuthorizationApplication
 
 class Authorization( GithubObject.GithubObject ):
     @property
     def app( self ):
-        self._completeIfNeeded( self._app )
-        return self._app
+        self._completeIfNotSet( self._app )
+        return self._NoneIfNotSet( self._app )
 
     @property
     def created_at( self ):
-        self._completeIfNeeded( self._created_at )
-        return self._created_at
+        self._completeIfNotSet( self._created_at )
+        return self._NoneIfNotSet( self._created_at )
 
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def note( self ):
-        self._completeIfNeeded( self._note )
-        return self._note
+        self._completeIfNotSet( self._note )
+        return self._NoneIfNotSet( self._note )
 
     @property
     def note_url( self ):
-        self._completeIfNeeded( self._note_url )
-        return self._note_url
+        self._completeIfNotSet( self._note_url )
+        return self._NoneIfNotSet( self._note_url )
 
     @property
     def scopes( self ):
-        self._completeIfNeeded( self._scopes )
-        return self._scopes
+        self._completeIfNotSet( self._scopes )
+        return self._NoneIfNotSet( self._scopes )
 
     @property
     def token( self ):
-        self._completeIfNeeded( self._token )
-        return self._token
+        self._completeIfNotSet( self._token )
+        return self._NoneIfNotSet( self._token )
 
     @property
     def updated_at( self ):
-        self._completeIfNeeded( self._updated_at )
-        return self._updated_at
+        self._completeIfNotSet( self._updated_at )
+        return self._NoneIfNotSet( self._updated_at )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     def delete( self ):
         status, headers, data = self._request(
@@ -61,27 +60,27 @@ class Authorization( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
 
-    def edit( self, scopes = DefaultValueForOptionalParameters, add_scopes = DefaultValueForOptionalParameters, remove_scopes = DefaultValueForOptionalParameters, note = DefaultValueForOptionalParameters, note_url = DefaultValueForOptionalParameters ):
-        if scopes is not DefaultValueForOptionalParameters:
+    def edit( self, scopes = GithubObject.NotSet, add_scopes = GithubObject.NotSet, remove_scopes = GithubObject.NotSet, note = GithubObject.NotSet, note_url = GithubObject.NotSet ):
+        if scopes is not GithubObject.NotSet:
             assert all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
-        if add_scopes is not DefaultValueForOptionalParameters:
+        if add_scopes is not GithubObject.NotSet:
             assert all( isinstance( element, ( str, unicode ) ) for element in add_scopes ), add_scopes
-        if remove_scopes is not DefaultValueForOptionalParameters:
+        if remove_scopes is not GithubObject.NotSet:
             assert all( isinstance( element, ( str, unicode ) ) for element in remove_scopes ), remove_scopes
-        if note is not DefaultValueForOptionalParameters:
+        if note is not GithubObject.NotSet:
             assert isinstance( note, ( str, unicode ) ), note
-        if note_url is not DefaultValueForOptionalParameters:
+        if note_url is not GithubObject.NotSet:
             assert isinstance( note_url, ( str, unicode ) ), note_url
         post_parameters = dict()
-        if scopes is not DefaultValueForOptionalParameters:
+        if scopes is not GithubObject.NotSet:
             post_parameters[ "scopes" ] = scopes
-        if add_scopes is not DefaultValueForOptionalParameters:
+        if add_scopes is not GithubObject.NotSet:
             post_parameters[ "add_scopes" ] = add_scopes
-        if remove_scopes is not DefaultValueForOptionalParameters:
+        if remove_scopes is not GithubObject.NotSet:
             post_parameters[ "remove_scopes" ] = remove_scopes
-        if note is not DefaultValueForOptionalParameters:
+        if note is not GithubObject.NotSet:
             post_parameters[ "note" ] = note
-        if note_url is not DefaultValueForOptionalParameters:
+        if note_url is not GithubObject.NotSet:
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self._request(
             "PATCH",
@@ -93,41 +92,41 @@ class Authorization( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def _initAttributes( self ):
-        self._app = None
-        self._created_at = None
-        self._id = None
-        self._note = None
-        self._note_url = None
-        self._scopes = None
-        self._token = None
-        self._updated_at = None
-        self._url = None
+        self._app = GithubObject.NotSet
+        self._created_at = GithubObject.NotSet
+        self._id = GithubObject.NotSet
+        self._note = GithubObject.NotSet
+        self._note_url = GithubObject.NotSet
+        self._scopes = GithubObject.NotSet
+        self._token = GithubObject.NotSet
+        self._updated_at = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "app" in attributes and attributes[ "app" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "app" ], dict ), attributes[ "app" ]
-            self._app = AuthorizationApplication.AuthorizationApplication( self._requester, attributes[ "app" ], completed = False )
-        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
+        if "app" in attributes: # pragma no branch
+            assert attributes[ "app" ] is None or isinstance( attributes[ "app" ], dict ), attributes[ "app" ]
+            self._app = None if attributes[ "app" ] is None else AuthorizationApplication.AuthorizationApplication( self._requester, attributes[ "app" ], completed = False )
+        if "created_at" in attributes: # pragma no branch
+            assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "note" in attributes and attributes[ "note" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "note" ], ( str, unicode ) ), attributes[ "note" ]
+        if "note" in attributes: # pragma no branch
+            assert attributes[ "note" ] is None or isinstance( attributes[ "note" ], ( str, unicode ) ), attributes[ "note" ]
             self._note = attributes[ "note" ]
-        if "note_url" in attributes and attributes[ "note_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
+        if "note_url" in attributes: # pragma no branch
+            assert attributes[ "note_url" ] is None or isinstance( attributes[ "note_url" ], ( str, unicode ) ), attributes[ "note_url" ]
             self._note_url = attributes[ "note_url" ]
-        if "scopes" in attributes and attributes[ "scopes" ] is not None: # pragma no branch
+        if "scopes" in attributes: # pragma no branch
             assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "scopes" ] ), attributes[ "scopes" ]
             self._scopes = attributes[ "scopes" ]
-        if "token" in attributes and attributes[ "token" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]
+        if "token" in attributes: # pragma no branch
+            assert attributes[ "token" ] is None or isinstance( attributes[ "token" ], ( str, unicode ) ), attributes[ "token" ]
             self._token = attributes[ "token" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
+        if "updated_at" in attributes: # pragma no branch
+            assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self._updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

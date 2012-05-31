@@ -8,33 +8,33 @@ import NamedUser
 class GistComment( GithubObject.GithubObject ):
     @property
     def body( self ):
-        self._completeIfNeeded( self._body )
-        return self._body
+        self._completeIfNotSet( self._body )
+        return self._NoneIfNotSet( self._body )
 
     @property
     def created_at( self ):
-        self._completeIfNeeded( self._created_at )
-        return self._created_at
+        self._completeIfNotSet( self._created_at )
+        return self._NoneIfNotSet( self._created_at )
 
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def updated_at( self ):
-        self._completeIfNeeded( self._updated_at )
-        return self._updated_at
+        self._completeIfNotSet( self._updated_at )
+        return self._NoneIfNotSet( self._updated_at )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     @property
     def user( self ):
-        self._completeIfNeeded( self._user )
-        return self._user
+        self._completeIfNotSet( self._user )
+        return self._NoneIfNotSet( self._user )
 
     def delete( self ):
         status, headers, data = self._request(
@@ -60,29 +60,29 @@ class GistComment( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def _initAttributes( self ):
-        self._body = None
-        self._created_at = None
-        self._id = None
-        self._updated_at = None
-        self._url = None
-        self._user = None
+        self._body = GithubObject.NotSet
+        self._created_at = GithubObject.NotSet
+        self._id = GithubObject.NotSet
+        self._updated_at = GithubObject.NotSet
+        self._url = GithubObject.NotSet
+        self._user = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
+        if "body" in attributes: # pragma no branch
+            assert attributes[ "body" ] is None or isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self._body = attributes[ "body" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
+        if "created_at" in attributes: # pragma no branch
+            assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
+        if "updated_at" in attributes: # pragma no branch
+            assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self._updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]
-        if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self._user = NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )
+        if "user" in attributes: # pragma no branch
+            assert attributes[ "user" ] is None or isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
+            self._user = None if attributes[ "user" ] is None else NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )

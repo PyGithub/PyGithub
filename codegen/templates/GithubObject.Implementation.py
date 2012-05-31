@@ -6,27 +6,27 @@
 
     def _initAttributes( self ):
 {% for attribute in class.attributes|dictsort:"name" %}
-        self._{{ attribute.name }} = None
+        self._{{ attribute.name }} = GithubObject.NotSet
 {% endfor %}
 
     def _useAttributes( self, attributes ):
 {% for attribute in class.attributes|dictsort:"name" %}
-        if "{{ attribute.name }}" in attributes and attributes[ "{{ attribute.name }}" ] is not None: # pragma no branch
+        if "{{ attribute.name }}" in attributes: # pragma no branch
 
 {% if attribute.type.cardinality == "scalar" %}
 
     {% if attribute.type.simple %}
         {% if attribute.type.name == "string" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) ), attributes[ "{{ attribute.name }}" ]
+            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
         {% if attribute.type.name == "integer" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], int ), attributes[ "{{ attribute.name }}" ]
+            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], int ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
         {% if attribute.type.name == "bool" %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], bool ), attributes[ "{{ attribute.name }}" ]
+            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], bool ), attributes[ "{{ attribute.name }}" ]
         {% endif %}
     {% else %}
-            assert isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
+            assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
     {% endif %}
 
 {% else %}
@@ -52,7 +52,7 @@
     {% if attribute.type.simple %}
             self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
-            self._{{ attribute.name }} = {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, attributes[ "{{ attribute.name }}" ], completed = False )
+            self._{{ attribute.name }} = None if attributes[ "{{ attribute.name }}" ] is None else {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, attributes[ "{{ attribute.name }}" ], completed = False )
     {% endif %}
 
 {% else %}

@@ -3,7 +3,6 @@
 
 import GithubObject
 import PaginatedList
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import Commit
 import NamedUser
@@ -14,133 +13,133 @@ import PullRequestFile
 class PullRequest( GithubObject.GithubObject ):
     @property
     def additions( self ):
-        self._completeIfNeeded( self._additions )
-        return self._additions
+        self._completeIfNotSet( self._additions )
+        return self._NoneIfNotSet( self._additions )
 
     @property
     def base( self ):
-        self._completeIfNeeded( self._base )
-        return self._base
+        self._completeIfNotSet( self._base )
+        return self._NoneIfNotSet( self._base )
 
     @property
     def body( self ):
-        self._completeIfNeeded( self._body )
-        return self._body
+        self._completeIfNotSet( self._body )
+        return self._NoneIfNotSet( self._body )
 
     @property
     def changed_files( self ):
-        self._completeIfNeeded( self._changed_files )
-        return self._changed_files
+        self._completeIfNotSet( self._changed_files )
+        return self._NoneIfNotSet( self._changed_files )
 
     @property
     def closed_at( self ):
-        self._completeIfNeeded( self._closed_at )
-        return self._closed_at
+        self._completeIfNotSet( self._closed_at )
+        return self._NoneIfNotSet( self._closed_at )
 
     @property
     def comments( self ):
-        self._completeIfNeeded( self._comments )
-        return self._comments
+        self._completeIfNotSet( self._comments )
+        return self._NoneIfNotSet( self._comments )
 
     @property
     def commits( self ):
-        self._completeIfNeeded( self._commits )
-        return self._commits
+        self._completeIfNotSet( self._commits )
+        return self._NoneIfNotSet( self._commits )
 
     @property
     def created_at( self ):
-        self._completeIfNeeded( self._created_at )
-        return self._created_at
+        self._completeIfNotSet( self._created_at )
+        return self._NoneIfNotSet( self._created_at )
 
     @property
     def deletions( self ):
-        self._completeIfNeeded( self._deletions )
-        return self._deletions
+        self._completeIfNotSet( self._deletions )
+        return self._NoneIfNotSet( self._deletions )
 
     @property
     def diff_url( self ):
-        self._completeIfNeeded( self._diff_url )
-        return self._diff_url
+        self._completeIfNotSet( self._diff_url )
+        return self._NoneIfNotSet( self._diff_url )
 
     @property
     def head( self ):
-        self._completeIfNeeded( self._head )
-        return self._head
+        self._completeIfNotSet( self._head )
+        return self._NoneIfNotSet( self._head )
 
     @property
     def html_url( self ):
-        self._completeIfNeeded( self._html_url )
-        return self._html_url
+        self._completeIfNotSet( self._html_url )
+        return self._NoneIfNotSet( self._html_url )
 
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def issue_url( self ):
-        self._completeIfNeeded( self._issue_url )
-        return self._issue_url
+        self._completeIfNotSet( self._issue_url )
+        return self._NoneIfNotSet( self._issue_url )
 
     @property
     def mergeable( self ):
-        self._completeIfNeeded( self._mergeable )
-        return self._mergeable
+        self._completeIfNotSet( self._mergeable )
+        return self._NoneIfNotSet( self._mergeable )
 
     @property
     def merged( self ):
-        self._completeIfNeeded( self._merged )
-        return self._merged
+        self._completeIfNotSet( self._merged )
+        return self._NoneIfNotSet( self._merged )
 
     @property
     def merged_at( self ):
-        self._completeIfNeeded( self._merged_at )
-        return self._merged_at
+        self._completeIfNotSet( self._merged_at )
+        return self._NoneIfNotSet( self._merged_at )
 
     @property
     def merged_by( self ):
-        self._completeIfNeeded( self._merged_by )
-        return self._merged_by
+        self._completeIfNotSet( self._merged_by )
+        return self._NoneIfNotSet( self._merged_by )
 
     @property
     def number( self ):
-        self._completeIfNeeded( self._number )
-        return self._number
+        self._completeIfNotSet( self._number )
+        return self._NoneIfNotSet( self._number )
 
     @property
     def patch_url( self ):
-        self._completeIfNeeded( self._patch_url )
-        return self._patch_url
+        self._completeIfNotSet( self._patch_url )
+        return self._NoneIfNotSet( self._patch_url )
 
     @property
     def review_comments( self ):
-        self._completeIfNeeded( self._review_comments )
-        return self._review_comments
+        self._completeIfNotSet( self._review_comments )
+        return self._NoneIfNotSet( self._review_comments )
 
     @property
     def state( self ):
-        self._completeIfNeeded( self._state )
-        return self._state
+        self._completeIfNotSet( self._state )
+        return self._NoneIfNotSet( self._state )
 
     @property
     def title( self ):
-        self._completeIfNeeded( self._title )
-        return self._title
+        self._completeIfNotSet( self._title )
+        return self._NoneIfNotSet( self._title )
 
     @property
     def updated_at( self ):
-        self._completeIfNeeded( self._updated_at )
-        return self._updated_at
+        self._completeIfNotSet( self._updated_at )
+        return self._NoneIfNotSet( self._updated_at )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     @property
     def user( self ):
-        self._completeIfNeeded( self._user )
-        return self._user
+        self._completeIfNotSet( self._user )
+        return self._NoneIfNotSet( self._user )
 
     def create_comment( self, body, commit_id, path, position ):
         assert isinstance( body, ( str, unicode ) ), body
@@ -162,19 +161,19 @@ class PullRequest( GithubObject.GithubObject ):
         self._checkStatus( status, data )
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
 
-    def edit( self, title = DefaultValueForOptionalParameters, body = DefaultValueForOptionalParameters, state = DefaultValueForOptionalParameters ):
-        if title is not DefaultValueForOptionalParameters:
+    def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, state = GithubObject.NotSet ):
+        if title is not GithubObject.NotSet:
             assert isinstance( title, ( str, unicode ) ), title
-        if body is not DefaultValueForOptionalParameters:
+        if body is not GithubObject.NotSet:
             assert isinstance( body, ( str, unicode ) ), body
-        if state is not DefaultValueForOptionalParameters:
+        if state is not GithubObject.NotSet:
             assert isinstance( state, ( str, unicode ) ), state
         post_parameters = dict()
-        if title is not DefaultValueForOptionalParameters:
+        if title is not GithubObject.NotSet:
             post_parameters[ "title" ] = title
-        if body is not DefaultValueForOptionalParameters:
+        if body is not GithubObject.NotSet:
             post_parameters[ "body" ] = body
-        if state is not DefaultValueForOptionalParameters:
+        if state is not GithubObject.NotSet:
             post_parameters[ "state" ] = state
         status, headers, data = self._request(
             "PATCH",
@@ -250,11 +249,11 @@ class PullRequest( GithubObject.GithubObject ):
         )
         return status == 204
 
-    def merge( self, commit_message = DefaultValueForOptionalParameters ):
-        if commit_message is not DefaultValueForOptionalParameters:
+    def merge( self, commit_message = GithubObject.NotSet ):
+        if commit_message is not GithubObject.NotSet:
             assert isinstance( commit_message, ( str, unicode ) ), commit_message
         post_parameters = dict()
-        if commit_message is not DefaultValueForOptionalParameters:
+        if commit_message is not GithubObject.NotSet:
             post_parameters[ "commit_message" ] = commit_message
         status, headers, data = self._request(
             "PUT",
@@ -266,107 +265,107 @@ class PullRequest( GithubObject.GithubObject ):
         return PullRequestMergeStatus.PullRequestMergeStatus( self._requester, data, completed = True )
 
     def _initAttributes( self ):
-        self._additions = None
-        self._base = None
-        self._body = None
-        self._changed_files = None
-        self._closed_at = None
-        self._comments = None
-        self._commits = None
-        self._created_at = None
-        self._deletions = None
-        self._diff_url = None
-        self._head = None
-        self._html_url = None
-        self._id = None
-        self._issue_url = None
-        self._mergeable = None
-        self._merged = None
-        self._merged_at = None
-        self._merged_by = None
-        self._number = None
-        self._patch_url = None
-        self._review_comments = None
-        self._state = None
-        self._title = None
-        self._updated_at = None
-        self._url = None
-        self._user = None
+        self._additions = GithubObject.NotSet
+        self._base = GithubObject.NotSet
+        self._body = GithubObject.NotSet
+        self._changed_files = GithubObject.NotSet
+        self._closed_at = GithubObject.NotSet
+        self._comments = GithubObject.NotSet
+        self._commits = GithubObject.NotSet
+        self._created_at = GithubObject.NotSet
+        self._deletions = GithubObject.NotSet
+        self._diff_url = GithubObject.NotSet
+        self._head = GithubObject.NotSet
+        self._html_url = GithubObject.NotSet
+        self._id = GithubObject.NotSet
+        self._issue_url = GithubObject.NotSet
+        self._mergeable = GithubObject.NotSet
+        self._merged = GithubObject.NotSet
+        self._merged_at = GithubObject.NotSet
+        self._merged_by = GithubObject.NotSet
+        self._number = GithubObject.NotSet
+        self._patch_url = GithubObject.NotSet
+        self._review_comments = GithubObject.NotSet
+        self._state = GithubObject.NotSet
+        self._title = GithubObject.NotSet
+        self._updated_at = GithubObject.NotSet
+        self._url = GithubObject.NotSet
+        self._user = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "additions" in attributes and attributes[ "additions" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
+        if "additions" in attributes: # pragma no branch
+            assert attributes[ "additions" ] is None or isinstance( attributes[ "additions" ], int ), attributes[ "additions" ]
             self._additions = attributes[ "additions" ]
-        if "base" in attributes and attributes[ "base" ] is not None: # pragma no branch
+        if "base" in attributes: # pragma no branch
             self._base = attributes[ "base" ]
-        if "body" in attributes and attributes[ "body" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
+        if "body" in attributes: # pragma no branch
+            assert attributes[ "body" ] is None or isinstance( attributes[ "body" ], ( str, unicode ) ), attributes[ "body" ]
             self._body = attributes[ "body" ]
-        if "changed_files" in attributes and attributes[ "changed_files" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "changed_files" ], int ), attributes[ "changed_files" ]
+        if "changed_files" in attributes: # pragma no branch
+            assert attributes[ "changed_files" ] is None or isinstance( attributes[ "changed_files" ], int ), attributes[ "changed_files" ]
             self._changed_files = attributes[ "changed_files" ]
-        if "closed_at" in attributes and attributes[ "closed_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
+        if "closed_at" in attributes: # pragma no branch
+            assert attributes[ "closed_at" ] is None or isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
             self._closed_at = attributes[ "closed_at" ]
-        if "comments" in attributes and attributes[ "comments" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
+        if "comments" in attributes: # pragma no branch
+            assert attributes[ "comments" ] is None or isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self._comments = attributes[ "comments" ]
-        if "commits" in attributes and attributes[ "commits" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "commits" ], int ), attributes[ "commits" ]
+        if "commits" in attributes: # pragma no branch
+            assert attributes[ "commits" ] is None or isinstance( attributes[ "commits" ], int ), attributes[ "commits" ]
             self._commits = attributes[ "commits" ]
-        if "created_at" in attributes and attributes[ "created_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
+        if "created_at" in attributes: # pragma no branch
+            assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
             self._created_at = attributes[ "created_at" ]
-        if "deletions" in attributes and attributes[ "deletions" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
+        if "deletions" in attributes: # pragma no branch
+            assert attributes[ "deletions" ] is None or isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
             self._deletions = attributes[ "deletions" ]
-        if "diff_url" in attributes and attributes[ "diff_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
+        if "diff_url" in attributes: # pragma no branch
+            assert attributes[ "diff_url" ] is None or isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
             self._diff_url = attributes[ "diff_url" ]
-        if "head" in attributes and attributes[ "head" ] is not None: # pragma no branch
+        if "head" in attributes: # pragma no branch
             self._head = attributes[ "head" ]
-        if "html_url" in attributes and attributes[ "html_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
+        if "html_url" in attributes: # pragma no branch
+            assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self._html_url = attributes[ "html_url" ]
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "issue_url" in attributes and attributes[ "issue_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "issue_url" ], ( str, unicode ) ), attributes[ "issue_url" ]
+        if "issue_url" in attributes: # pragma no branch
+            assert attributes[ "issue_url" ] is None or isinstance( attributes[ "issue_url" ], ( str, unicode ) ), attributes[ "issue_url" ]
             self._issue_url = attributes[ "issue_url" ]
-        if "mergeable" in attributes and attributes[ "mergeable" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "mergeable" ], bool ), attributes[ "mergeable" ]
+        if "mergeable" in attributes: # pragma no branch
+            assert attributes[ "mergeable" ] is None or isinstance( attributes[ "mergeable" ], bool ), attributes[ "mergeable" ]
             self._mergeable = attributes[ "mergeable" ]
-        if "merged" in attributes and attributes[ "merged" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "merged" ], bool ), attributes[ "merged" ]
+        if "merged" in attributes: # pragma no branch
+            assert attributes[ "merged" ] is None or isinstance( attributes[ "merged" ], bool ), attributes[ "merged" ]
             self._merged = attributes[ "merged" ]
-        if "merged_at" in attributes and attributes[ "merged_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "merged_at" ], ( str, unicode ) ), attributes[ "merged_at" ]
+        if "merged_at" in attributes: # pragma no branch
+            assert attributes[ "merged_at" ] is None or isinstance( attributes[ "merged_at" ], ( str, unicode ) ), attributes[ "merged_at" ]
             self._merged_at = attributes[ "merged_at" ]
-        if "merged_by" in attributes and attributes[ "merged_by" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "merged_by" ], dict ), attributes[ "merged_by" ]
-            self._merged_by = NamedUser.NamedUser( self._requester, attributes[ "merged_by" ], completed = False )
-        if "number" in attributes and attributes[ "number" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "number" ], int ), attributes[ "number" ]
+        if "merged_by" in attributes: # pragma no branch
+            assert attributes[ "merged_by" ] is None or isinstance( attributes[ "merged_by" ], dict ), attributes[ "merged_by" ]
+            self._merged_by = None if attributes[ "merged_by" ] is None else NamedUser.NamedUser( self._requester, attributes[ "merged_by" ], completed = False )
+        if "number" in attributes: # pragma no branch
+            assert attributes[ "number" ] is None or isinstance( attributes[ "number" ], int ), attributes[ "number" ]
             self._number = attributes[ "number" ]
-        if "patch_url" in attributes and attributes[ "patch_url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "patch_url" ], ( str, unicode ) ), attributes[ "patch_url" ]
+        if "patch_url" in attributes: # pragma no branch
+            assert attributes[ "patch_url" ] is None or isinstance( attributes[ "patch_url" ], ( str, unicode ) ), attributes[ "patch_url" ]
             self._patch_url = attributes[ "patch_url" ]
-        if "review_comments" in attributes and attributes[ "review_comments" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "review_comments" ], int ), attributes[ "review_comments" ]
+        if "review_comments" in attributes: # pragma no branch
+            assert attributes[ "review_comments" ] is None or isinstance( attributes[ "review_comments" ], int ), attributes[ "review_comments" ]
             self._review_comments = attributes[ "review_comments" ]
-        if "state" in attributes and attributes[ "state" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
+        if "state" in attributes: # pragma no branch
+            assert attributes[ "state" ] is None or isinstance( attributes[ "state" ], ( str, unicode ) ), attributes[ "state" ]
             self._state = attributes[ "state" ]
-        if "title" in attributes and attributes[ "title" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
+        if "title" in attributes: # pragma no branch
+            assert attributes[ "title" ] is None or isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
             self._title = attributes[ "title" ]
-        if "updated_at" in attributes and attributes[ "updated_at" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
+        if "updated_at" in attributes: # pragma no branch
+            assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
             self._updated_at = attributes[ "updated_at" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]
-        if "user" in attributes and attributes[ "user" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
-            self._user = NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )
+        if "user" in attributes: # pragma no branch
+            assert attributes[ "user" ] is None or isinstance( attributes[ "user" ], dict ), attributes[ "user" ]
+            self._user = None if attributes[ "user" ] is None else NamedUser.NamedUser( self._requester, attributes[ "user" ], completed = False )

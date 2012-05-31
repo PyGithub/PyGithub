@@ -6,28 +6,28 @@ import GithubObject
 class PullRequestMergeStatus( GithubObject.BasicGithubObject ):
     @property
     def merged( self ):
-        return self._merged
+        return self._NoneIfNotSet( self._merged )
 
     @property
     def message( self ):
-        return self._message
+        return self._NoneIfNotSet( self._message )
 
     @property
     def sha( self ):
-        return self._sha
+        return self._NoneIfNotSet( self._sha )
 
     def _initAttributes( self ):
-        self._merged = None
-        self._message = None
-        self._sha = None
+        self._merged = GithubObject.NotSet
+        self._message = GithubObject.NotSet
+        self._sha = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "merged" in attributes and attributes[ "merged" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "merged" ], bool ), attributes[ "merged" ]
+        if "merged" in attributes: # pragma no branch
+            assert attributes[ "merged" ] is None or isinstance( attributes[ "merged" ], bool ), attributes[ "merged" ]
             self._merged = attributes[ "merged" ]
-        if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
+        if "message" in attributes: # pragma no branch
+            assert attributes[ "message" ] is None or isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
             self._message = attributes[ "message" ]
-        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
+        if "sha" in attributes: # pragma no branch
+            assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self._sha = attributes[ "sha" ]

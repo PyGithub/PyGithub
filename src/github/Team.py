@@ -3,7 +3,6 @@
 
 import GithubObject
 import PaginatedList
-from DefaultValueForOptionalParameters import DefaultValueForOptionalParameters
 ##########
 import Repository
 import NamedUser
@@ -11,33 +10,33 @@ import NamedUser
 class Team( GithubObject.GithubObject ):
     @property
     def id( self ):
-        self._completeIfNeeded( self._id )
-        return self._id
+        self._completeIfNotSet( self._id )
+        return self._NoneIfNotSet( self._id )
 
     @property
     def members_count( self ):
-        self._completeIfNeeded( self._members_count )
-        return self._members_count
+        self._completeIfNotSet( self._members_count )
+        return self._NoneIfNotSet( self._members_count )
 
     @property
     def name( self ):
-        self._completeIfNeeded( self._name )
-        return self._name
+        self._completeIfNotSet( self._name )
+        return self._NoneIfNotSet( self._name )
 
     @property
     def permission( self ):
-        self._completeIfNeeded( self._permission )
-        return self._permission
+        self._completeIfNotSet( self._permission )
+        return self._NoneIfNotSet( self._permission )
 
     @property
     def repos_count( self ):
-        self._completeIfNeeded( self._repos_count )
-        return self._repos_count
+        self._completeIfNotSet( self._repos_count )
+        return self._NoneIfNotSet( self._repos_count )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     def add_to_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
@@ -68,14 +67,14 @@ class Team( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
 
-    def edit( self, name, permission = DefaultValueForOptionalParameters ):
+    def edit( self, name, permission = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if permission is not DefaultValueForOptionalParameters:
+        if permission is not GithubObject.NotSet:
             assert isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }
-        if permission is not DefaultValueForOptionalParameters:
+        if permission is not GithubObject.NotSet:
             post_parameters[ "permission" ] = permission
         status, headers, data = self._request(
             "PATCH",
@@ -157,29 +156,29 @@ class Team( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def _initAttributes( self ):
-        self._id = None
-        self._members_count = None
-        self._name = None
-        self._permission = None
-        self._repos_count = None
-        self._url = None
+        self._id = GithubObject.NotSet
+        self._members_count = GithubObject.NotSet
+        self._name = GithubObject.NotSet
+        self._permission = GithubObject.NotSet
+        self._repos_count = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "id" in attributes and attributes[ "id" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "id" ], int ), attributes[ "id" ]
+        if "id" in attributes: # pragma no branch
+            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
-        if "members_count" in attributes and attributes[ "members_count" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "members_count" ], int ), attributes[ "members_count" ]
+        if "members_count" in attributes: # pragma no branch
+            assert attributes[ "members_count" ] is None or isinstance( attributes[ "members_count" ], int ), attributes[ "members_count" ]
             self._members_count = attributes[ "members_count" ]
-        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
+        if "name" in attributes: # pragma no branch
+            assert attributes[ "name" ] is None or isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self._name = attributes[ "name" ]
-        if "permission" in attributes and attributes[ "permission" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "permission" ], ( str, unicode ) ), attributes[ "permission" ]
+        if "permission" in attributes: # pragma no branch
+            assert attributes[ "permission" ] is None or isinstance( attributes[ "permission" ], ( str, unicode ) ), attributes[ "permission" ]
             self._permission = attributes[ "permission" ]
-        if "repos_count" in attributes and attributes[ "repos_count" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "repos_count" ], int ), attributes[ "repos_count" ]
+        if "repos_count" in attributes: # pragma no branch
+            assert attributes[ "repos_count" ] is None or isinstance( attributes[ "repos_count" ], int ), attributes[ "repos_count" ]
             self._repos_count = attributes[ "repos_count" ]
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

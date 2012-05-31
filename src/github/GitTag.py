@@ -9,58 +9,58 @@ import GitObject
 class GitTag( GithubObject.GithubObject ):
     @property
     def message( self ):
-        self._completeIfNeeded( self._message )
-        return self._message
+        self._completeIfNotSet( self._message )
+        return self._NoneIfNotSet( self._message )
 
     @property
     def object( self ):
-        self._completeIfNeeded( self._object )
-        return self._object
+        self._completeIfNotSet( self._object )
+        return self._NoneIfNotSet( self._object )
 
     @property
     def sha( self ):
-        self._completeIfNeeded( self._sha )
-        return self._sha
+        self._completeIfNotSet( self._sha )
+        return self._NoneIfNotSet( self._sha )
 
     @property
     def tag( self ):
-        self._completeIfNeeded( self._tag )
-        return self._tag
+        self._completeIfNotSet( self._tag )
+        return self._NoneIfNotSet( self._tag )
 
     @property
     def tagger( self ):
-        self._completeIfNeeded( self._tagger )
-        return self._tagger
+        self._completeIfNotSet( self._tagger )
+        return self._NoneIfNotSet( self._tagger )
 
     @property
     def url( self ):
-        self._completeIfNeeded( self._url )
-        return self._url
+        self._completeIfNotSet( self._url )
+        return self._NoneIfNotSet( self._url )
 
     def _initAttributes( self ):
-        self._message = None
-        self._object = None
-        self._sha = None
-        self._tag = None
-        self._tagger = None
-        self._url = None
+        self._message = GithubObject.NotSet
+        self._object = GithubObject.NotSet
+        self._sha = GithubObject.NotSet
+        self._tag = GithubObject.NotSet
+        self._tagger = GithubObject.NotSet
+        self._url = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "message" in attributes and attributes[ "message" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
+        if "message" in attributes: # pragma no branch
+            assert attributes[ "message" ] is None or isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
             self._message = attributes[ "message" ]
-        if "object" in attributes and attributes[ "object" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
-            self._object = GitObject.GitObject( self._requester, attributes[ "object" ], completed = False )
-        if "sha" in attributes and attributes[ "sha" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
+        if "object" in attributes: # pragma no branch
+            assert attributes[ "object" ] is None or isinstance( attributes[ "object" ], dict ), attributes[ "object" ]
+            self._object = None if attributes[ "object" ] is None else GitObject.GitObject( self._requester, attributes[ "object" ], completed = False )
+        if "sha" in attributes: # pragma no branch
+            assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
             self._sha = attributes[ "sha" ]
-        if "tag" in attributes and attributes[ "tag" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "tag" ], ( str, unicode ) ), attributes[ "tag" ]
+        if "tag" in attributes: # pragma no branch
+            assert attributes[ "tag" ] is None or isinstance( attributes[ "tag" ], ( str, unicode ) ), attributes[ "tag" ]
             self._tag = attributes[ "tag" ]
-        if "tagger" in attributes and attributes[ "tagger" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "tagger" ], dict ), attributes[ "tagger" ]
-            self._tagger = GitAuthor.GitAuthor( self._requester, attributes[ "tagger" ], completed = False )
-        if "url" in attributes and attributes[ "url" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
+        if "tagger" in attributes: # pragma no branch
+            assert attributes[ "tagger" ] is None or isinstance( attributes[ "tagger" ], dict ), attributes[ "tagger" ]
+            self._tagger = None if attributes[ "tagger" ] is None else GitAuthor.GitAuthor( self._requester, attributes[ "tagger" ], completed = False )
+        if "url" in attributes: # pragma no branch
+            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

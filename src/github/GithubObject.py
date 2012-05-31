@@ -1,5 +1,9 @@
 import GithubException
 
+class _NotSetType:
+    pass
+NotSet = _NotSetType()
+
 class BasicGithubObject( object ):
     def __init__( self, requester, attributes, completed ): ### 'completed' may be removed if I find a way
         self._requester = requester
@@ -13,19 +17,25 @@ class BasicGithubObject( object ):
         return "/".join( url.split( "/" )[ : -1 ] )
 
     def _checkStatus( self, status, data ):
-        if status >= 400: # pragma no branch
-            raise GithubException.GithubException( status, data ) # pragma no cover
+        if status >= 400:
+            raise GithubException.GithubException( status, data )
+
+    def _NoneIfNotSet( self, value ):
+        if value is NotSet:
+            return None
+        else:
+            return value
 
 class GithubObject( BasicGithubObject ):
     def __init__( self, requester, attributes, completed ):
         BasicGithubObject.__init__( self, requester, attributes, completed )
         self.__completed = completed
 
-    def _completeIfNeeded( self, testedAttribute ):
-        if not self.__completed and testedAttribute is None:
-            self.__complete() # pragma: no cover
+    def _completeIfNotSet( self, value ):
+        if not self.__completed and value is NotSet:
+            self.__complete()
 
-    def __complete( self ): # pragma: no cover
+    def __complete( self ):
         status, headers, data = self._request(
             "GET",
             self._url,

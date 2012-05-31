@@ -6,28 +6,28 @@ import GithubObject
 class GitAuthor( GithubObject.BasicGithubObject ):
     @property
     def date( self ):
-        return self._date
+        return self._NoneIfNotSet( self._date )
 
     @property
     def email( self ):
-        return self._email
+        return self._NoneIfNotSet( self._email )
 
     @property
     def name( self ):
-        return self._name
+        return self._NoneIfNotSet( self._name )
 
     def _initAttributes( self ):
-        self._date = None
-        self._email = None
-        self._name = None
+        self._date = GithubObject.NotSet
+        self._email = GithubObject.NotSet
+        self._name = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
-        if "date" in attributes and attributes[ "date" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
+        if "date" in attributes: # pragma no branch
+            assert attributes[ "date" ] is None or isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
             self._date = attributes[ "date" ]
-        if "email" in attributes and attributes[ "email" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
+        if "email" in attributes: # pragma no branch
+            assert attributes[ "email" ] is None or isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
             self._email = attributes[ "email" ]
-        if "name" in attributes and attributes[ "name" ] is not None: # pragma no branch
-            assert isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
+        if "name" in attributes: # pragma no branch
+            assert attributes[ "name" ] is None or isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
             self._name = attributes[ "name" ]
