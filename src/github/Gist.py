@@ -4,8 +4,9 @@
 import GithubObject
 import PaginatedList
 ##########
-import GistHistoryState
 import NamedUser
+import GistHistoryState
+import GistFile
 import Gist
 import GistComment
 
@@ -215,7 +216,10 @@ class Gist( GithubObject.GithubObject ):
             assert attributes[ "description" ] is None or isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self._description = attributes[ "description" ]
         if "files" in attributes: # pragma no branch
-            self._files = attributes[ "files" ]
+            self._files = {
+                key : GistFile.GistFile( self._requester, element, completed = False )
+                for key, element in attributes[ "files" ].iteritems()
+            }
         if "fork_of" in attributes: # pragma no branch
             assert attributes[ "fork_of" ] is None or isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
             self._fork_of = None if attributes[ "fork_of" ] is None else Gist( self._requester, attributes[ "fork_of" ], completed = False )

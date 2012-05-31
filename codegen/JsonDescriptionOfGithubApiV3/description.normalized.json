@@ -2454,9 +2454,10 @@
                 }, 
                 {
                     "type": {
-                        "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "simple": false, 
+                        "key_name": "string", 
+                        "cardinality": "dict", 
+                        "name": "GistFile"
                     }, 
                     "name": "files"
                 }, 
@@ -2977,6 +2978,53 @@
                     }
                 }
             ]
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "content"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "filename"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "language"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "raw_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "size"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "GistFile", 
+            "methods": []
         }, 
         {
             "attributes": [
@@ -10006,8 +10054,9 @@
                     "optionalParameters": [], 
                     "type": {
                         "simple": true, 
-                        "cardinality": "scalar", 
-                        "name": "@todo"
+                        "key_name": "string", 
+                        "cardinality": "dict", 
+                        "name": "integer"
                     }
                 }, 
                 {

@@ -335,7 +335,7 @@ Attributes
 * `comments`: integer
 * `created_at`: string
 * `description`: string
-* `files`
+* `files`: dict of string to `GistFile`
 * `fork_of`: `Gist`
 * `forks`: list of `Gist`
 * `git_pull_url`: string
@@ -396,6 +396,17 @@ Modification
 ------------
 * `edit( body )`
     * `body`: string
+
+Class `GistFile`
+================
+
+Attributes
+----------
+* `content`: string
+* `filename`: string
+* `language`: string
+* `raw_url`: string
+* `size`: integer
 
 Class `GistHistoryState`
 ========================
@@ -1187,7 +1198,7 @@ Labels
 
 Languages
 ---------
-* `get_languages()`
+* `get_languages()`: dict of string to integer
 
 Milestones
 ----------

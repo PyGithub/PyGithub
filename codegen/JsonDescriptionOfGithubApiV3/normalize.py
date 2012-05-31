@@ -29,17 +29,27 @@ class Type:
             self.__fromDesc( arg )
 
     def ToJson( self ):
-        return {
+        json = {
             "cardinality": self.cardinality,
             "name": self.name,
             "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict", "@todo" ],
         }
+        if self.keyName is not None:
+            json[ "key_name" ] = self.keyName
+        return json
 
     def __fromString( self, name ):
         listPrefix = "list:"
+        dictPrefix = "dict:"
+        self.keyName = None
         if name.startswith( listPrefix ):
             self.cardinality = "list"
             self.name = name[ len( listPrefix ) : ]
+        elif name.startswith( dictPrefix ):
+            self.cardinality = "dict"
+            key, value = name[ len( dictPrefix ) : ].split( "-" )
+            self.name = value
+            self.keyName = key
         else:
             self.cardinality = "scalar"
             self.name = name
@@ -49,6 +59,7 @@ class Type:
 
         self.cardinality = desc[ "cardinality" ]
         self.name = desc[ "name" ]
+        self.keyName = desc[ "key_name" ] if "key_name" in desc else None
 
 class Variable:
     def __init__( self, desc ):

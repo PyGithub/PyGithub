@@ -20,7 +20,7 @@
 
     {% endif %}
 
-    {% if method.type.cardinality == "list" %}
+    {% if method.type.cardinality == "list" or method.type.cardinality == "dict" %}
         return data
     {% endif %}
 

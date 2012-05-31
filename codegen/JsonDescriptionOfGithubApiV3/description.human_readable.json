@@ -408,6 +408,16 @@
             ]
         },
         {
+            "name": "GistFile",
+            "attributes": [
+                { "name": "size", "type": "integer" },
+                { "name": "filename", "type": "string" },
+                { "name": "raw_url", "type": "string" },
+                { "name": "language", "type": "string" },
+                { "name": "content", "type": "string" }
+            ]
+        },
+        {
             "name": "Gist",
             "edit": {
                 "optionalParameters": [
@@ -420,7 +430,7 @@
                 { "name": "comments", "type": "integer" },
                 { "name": "created_at", "type": "string" },
                 { "name": "description", "type": "string" },
-                { "name": "files", "type": "@todo" },
+                { "name": "files", "type": "dict:string-GistFile" },
                 { "name": "fork_of", "type": "Gist" },
                 { "name": "forks", "type": "list:Gist" },
                 { "name": "git_pull_url", "type": "string" },
@@ -1723,7 +1733,7 @@
                 },
                 {
                     "name": [ "get", "languages" ],
-                    "type": "@todo",
+                    "type": "dict:string-integer",
                     "group": "languages",
                     "request": {
                         "verb": "GET",

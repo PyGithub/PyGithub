@@ -1,1 +1,1 @@
-{% if type.name != "void" and type.name != "@todo" %}: {% if type.cardinality == "list" %}list of {% endif %}{% if not type.simple %}`{% endif %}{{ type.name }}{% if not type.simple %}`{% endif %}{% endif %}
+{% if type.name != "void" and type.name != "@todo" %}: {% if type.cardinality == "list" %}list of {% endif %}{% if type.cardinality == "dict" %}dict of {{ type.key_name }} to {% endif %}{% if not type.simple %}`{% endif %}{{ type.name }}{% if not type.simple %}`{% endif %}{% endif %}

@@ -14,7 +14,6 @@
         if "{{ attribute.name }}" in attributes: # pragma no branch
 
 {% if attribute.type.cardinality == "scalar" %}
-
     {% if attribute.type.simple %}
         {% if attribute.type.name == "string" %}
             assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], ( str, unicode ) ), attributes[ "{{ attribute.name }}" ]
@@ -31,9 +30,9 @@
     {% else %}
             assert attributes[ "{{ attribute.name }}" ] is None or isinstance( attributes[ "{{ attribute.name }}" ], dict ), attributes[ "{{ attribute.name }}" ]
     {% endif %}
+{% endif %}
 
-{% else %}
-
+{% if attribute.type.cardinality == "list" %}
     {% if attribute.type.simple %}
         {% if attribute.type.name == "string" %}
             assert all( isinstance( element, ( str, unicode ) ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
@@ -47,19 +46,17 @@
     {% else %}
             assert all( isinstance( element, dict ) for element in attributes[ "{{ attribute.name }}" ] ), attributes[ "{{ attribute.name }}" ]
     {% endif %}
-
 {% endif %}
 
 {% if attribute.type.cardinality == "scalar" %}
-
     {% if attribute.type.simple %}
             self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
             self._{{ attribute.name }} = None if attributes[ "{{ attribute.name }}" ] is None else {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, attributes[ "{{ attribute.name }}" ], completed = False )
     {% endif %}
+{% endif %}
 
-{% else %}
-
+{% if attribute.type.cardinality == "list" %}
     {% if attribute.type.simple %}
             self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
     {% else %}
@@ -68,7 +65,17 @@
                 for element in attributes[ "{{ attribute.name }}" ]
             ]
     {% endif %}
+{% endif %}
 
+{% if attribute.type.cardinality == "dict" %}
+    {% if attribute.type.simple %}
+            self._{{ attribute.name }} = attributes[ "{{ attribute.name }}" ]
+    {% else %}
+            self._{{ attribute.name }} = {
+                key : {% if attribute.type.name != class.name %}{{ attribute.type.name }}.{% endif %}{{ attribute.type.name }}( self._requester, element, completed = False )
+                for key, element in attributes[ "{{ attribute.name }}" ].iteritems()
+            }
+    {% endif %}
 {% endif %}
 
 {% endfor %}
