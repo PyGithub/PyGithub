@@ -32,8 +32,7 @@ class GitRef( GithubObject.GithubObject ):
 
     def edit( self, sha, force = GithubObject.NotSet ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        if force is not GithubObject.NotSet:
-            assert isinstance( force, bool ), force
+        assert force is GithubObject.NotSet or isinstance( force, bool ), force
         post_parameters = {
             "sha": sha,
         }

@@ -62,14 +62,10 @@ class Hook( GithubObject.GithubObject ):
 
     def edit( self, name, config, events = GithubObject.NotSet, add_events = GithubObject.NotSet, remove_events = GithubObject.NotSet, active = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if events is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in events ), events
-        if add_events is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in add_events ), add_events
-        if remove_events is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in remove_events ), remove_events
-        if active is not GithubObject.NotSet:
-            assert isinstance( active, bool ), active
+        assert events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in events ), events
+        assert add_events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in add_events ), add_events
+        assert remove_events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in remove_events ), remove_events
+        assert active is GithubObject.NotSet or isinstance( active, bool ), active
         post_parameters = {
             "name": name,
             "config": config,

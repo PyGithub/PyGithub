@@ -138,18 +138,12 @@ class Issue( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, assignee = GithubObject.NotSet, state = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
-        if title is not GithubObject.NotSet:
-            assert isinstance( title, ( str, unicode ) ), title
-        if body is not GithubObject.NotSet:
-            assert isinstance( body, ( str, unicode ) ), body
-        if assignee is not GithubObject.NotSet:
-            assert isinstance( assignee, ( str, unicode ) ), assignee
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
-        if milestone is not GithubObject.NotSet:
-            assert isinstance( milestone, int ), milestone
-        if labels is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
+        assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
+        assert body is GithubObject.NotSet or isinstance( body, ( str, unicode ) ), body
+        assert assignee is GithubObject.NotSet or isinstance( assignee, ( str, unicode ) ), assignee
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
+        assert milestone is GithubObject.NotSet or isinstance( milestone, int ), milestone
+        assert labels is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = dict()
         if title is not GithubObject.NotSet:
             post_parameters[ "title" ] = title

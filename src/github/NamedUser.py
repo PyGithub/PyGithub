@@ -144,8 +144,7 @@ class NamedUser( GithubObject.GithubObject ):
 
     def create_gist( self, public, files, description = GithubObject.NotSet ):
         assert isinstance( public, bool ), public
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
             "files": files,
@@ -293,8 +292,7 @@ class NamedUser( GithubObject.GithubObject ):
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet ):
-        if type is not GithubObject.NotSet:
-            assert isinstance( type, ( str, unicode ) ), type
+        assert type is GithubObject.NotSet or isinstance( type, ( str, unicode ) ), type
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type

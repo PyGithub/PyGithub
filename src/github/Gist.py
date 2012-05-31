@@ -119,8 +119,7 @@ class Gist( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def edit( self, description = GithubObject.NotSet, files = GithubObject.NotSet ):
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
         post_parameters = dict()
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description

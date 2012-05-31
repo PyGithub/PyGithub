@@ -206,10 +206,8 @@ class Repository( GithubObject.GithubObject ):
     def create_download( self, name, size, description = GithubObject.NotSet, content_type = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
         assert isinstance( size, int ), size
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if content_type is not GithubObject.NotSet:
-            assert isinstance( content_type, ( str, unicode ) ), content_type
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert content_type is GithubObject.NotSet or isinstance( content_type, ( str, unicode ) ), content_type
         post_parameters = {
             "name": name,
             "size": size,
@@ -319,10 +317,8 @@ class Repository( GithubObject.GithubObject ):
 
     def create_hook( self, name, config, events = GithubObject.NotSet, active = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if events is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in events ), events
-        if active is not GithubObject.NotSet:
-            assert isinstance( active, bool ), active
+        assert events is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in events ), events
+        assert active is GithubObject.NotSet or isinstance( active, bool ), active
         post_parameters = {
             "name": name,
             "config": config,
@@ -342,14 +338,10 @@ class Repository( GithubObject.GithubObject ):
 
     def create_issue( self, title, body = GithubObject.NotSet, assignee = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
         assert isinstance( title, ( str, unicode ) ), title
-        if body is not GithubObject.NotSet:
-            assert isinstance( body, ( str, unicode ) ), body
-        if assignee is not GithubObject.NotSet:
-            assert isinstance( assignee, ( str, unicode ) ), assignee
-        if milestone is not GithubObject.NotSet:
-            assert isinstance( milestone, int ), milestone
-        if labels is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
+        assert body is GithubObject.NotSet or isinstance( body, ( str, unicode ) ), body
+        assert assignee is GithubObject.NotSet or isinstance( assignee, ( str, unicode ) ), assignee
+        assert milestone is GithubObject.NotSet or isinstance( milestone, int ), milestone
+        assert labels is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = {
             "title": title,
         }
@@ -404,12 +396,9 @@ class Repository( GithubObject.GithubObject ):
 
     def create_milestone( self, title, state = GithubObject.NotSet, description = GithubObject.NotSet, due_on = GithubObject.NotSet ):
         assert isinstance( title, ( str, unicode ) ), title
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if due_on is not GithubObject.NotSet:
-            assert isinstance( due_on, ( str, unicode ) ), due_on
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert due_on is GithubObject.NotSet or isinstance( due_on, ( str, unicode ) ), due_on
         post_parameters = {
             "title": title,
         }
@@ -456,18 +445,12 @@ class Repository( GithubObject.GithubObject ):
 
     def edit( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, public = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if homepage is not GithubObject.NotSet:
-            assert isinstance( homepage, ( str, unicode ) ), homepage
-        if public is not GithubObject.NotSet:
-            assert isinstance( public, bool ), public
-        if has_issues is not GithubObject.NotSet:
-            assert isinstance( has_issues, bool ), has_issues
-        if has_wiki is not GithubObject.NotSet:
-            assert isinstance( has_wiki, bool ), has_wiki
-        if has_downloads is not GithubObject.NotSet:
-            assert isinstance( has_downloads, bool ), has_downloads
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert homepage is GithubObject.NotSet or isinstance( homepage, ( str, unicode ) ), homepage
+        assert public is GithubObject.NotSet or isinstance( public, bool ), public
+        assert has_issues is GithubObject.NotSet or isinstance( has_issues, bool ), has_issues
+        assert has_wiki is GithubObject.NotSet or isinstance( has_wiki, bool ), has_wiki
+        assert has_downloads is GithubObject.NotSet or isinstance( has_downloads, bool ), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -560,10 +543,8 @@ class Repository( GithubObject.GithubObject ):
         return Commit.Commit( self._requester, data, completed = True )
 
     def get_commits( self, sha = GithubObject.NotSet, path = GithubObject.NotSet ):
-        if sha is not GithubObject.NotSet:
-            assert isinstance( sha, ( str, unicode ) ), sha
-        if path is not GithubObject.NotSet:
-            assert isinstance( path, ( str, unicode ) ), path
+        assert sha is GithubObject.NotSet or isinstance( sha, ( str, unicode ) ), sha
+        assert path is GithubObject.NotSet or isinstance( path, ( str, unicode ) ), path
         url_parameters = dict()
         if sha is not GithubObject.NotSet:
             url_parameters[ "sha" ] = sha
@@ -715,8 +696,7 @@ class Repository( GithubObject.GithubObject ):
 
     def get_git_tree( self, sha, recursive = GithubObject.NotSet ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        if recursive is not GithubObject.NotSet:
-            assert isinstance( recursive, bool ), recursive
+        assert recursive is GithubObject.NotSet or isinstance( recursive, bool ), recursive
         url_parameters = dict()
         if recursive is not GithubObject.NotSet:
             url_parameters[ "recursive" ] = recursive
@@ -767,22 +747,14 @@ class Repository( GithubObject.GithubObject ):
         return Issue.Issue( self._requester, data, completed = True )
 
     def get_issues( self, milestone = GithubObject.NotSet, state = GithubObject.NotSet, assignee = GithubObject.NotSet, mentioned = GithubObject.NotSet, labels = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet, since = GithubObject.NotSet ):
-        if milestone is not GithubObject.NotSet:
-            assert isinstance( milestone, int ), milestone
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
-        if assignee is not GithubObject.NotSet:
-            assert isinstance( assignee, ( str, unicode ) ), assignee
-        if mentioned is not GithubObject.NotSet:
-            assert isinstance( mentioned, ( str, unicode ) ), mentioned
-        if labels is not GithubObject.NotSet:
-            assert isinstance( labels, ( str, unicode ) ), labels
-        if sort is not GithubObject.NotSet:
-            assert isinstance( sort, ( str, unicode ) ), sort
-        if direction is not GithubObject.NotSet:
-            assert isinstance( direction, ( str, unicode ) ), direction
-        if since is not GithubObject.NotSet:
-            assert isinstance( since, ( str, unicode ) ), since
+        assert milestone is GithubObject.NotSet or isinstance( milestone, int ), milestone
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
+        assert assignee is GithubObject.NotSet or isinstance( assignee, ( str, unicode ) ), assignee
+        assert mentioned is GithubObject.NotSet or isinstance( mentioned, ( str, unicode ) ), mentioned
+        assert labels is GithubObject.NotSet or isinstance( labels, ( str, unicode ) ), labels
+        assert sort is GithubObject.NotSet or isinstance( sort, ( str, unicode ) ), sort
+        assert direction is GithubObject.NotSet or isinstance( direction, ( str, unicode ) ), direction
+        assert since is GithubObject.NotSet or isinstance( since, ( str, unicode ) ), since
         url_parameters = dict()
         if milestone is not GithubObject.NotSet:
             url_parameters[ "milestone" ] = milestone
@@ -914,12 +886,9 @@ class Repository( GithubObject.GithubObject ):
         return Milestone.Milestone( self._requester, data, completed = True )
 
     def get_milestones( self, state = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet ):
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
-        if sort is not GithubObject.NotSet:
-            assert isinstance( sort, ( str, unicode ) ), sort
-        if direction is not GithubObject.NotSet:
-            assert isinstance( direction, ( str, unicode ) ), direction
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
+        assert sort is GithubObject.NotSet or isinstance( sort, ( str, unicode ) ), sort
+        assert direction is GithubObject.NotSet or isinstance( direction, ( str, unicode ) ), direction
         url_parameters = dict()
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state
@@ -968,8 +937,7 @@ class Repository( GithubObject.GithubObject ):
         return PullRequest.PullRequest( self._requester, data, completed = True )
 
     def get_pulls( self, state = GithubObject.NotSet ):
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
         url_parameters = dict()
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state

@@ -74,12 +74,9 @@ class Milestone( GithubObject.GithubObject ):
 
     def edit( self, title, state = GithubObject.NotSet, description = GithubObject.NotSet, due_on = GithubObject.NotSet ):
         assert isinstance( title, ( str, unicode ) ), title
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if due_on is not GithubObject.NotSet:
-            assert isinstance( due_on, ( str, unicode ) ), due_on
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert due_on is GithubObject.NotSet or isinstance( due_on, ( str, unicode ) ), due_on
         post_parameters = {
             "title": title,
         }

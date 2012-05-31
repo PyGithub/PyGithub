@@ -34,40 +34,36 @@
     {% endif %}
 {% endfor %}
 {% for parameter in method.optionalParameters %}
-    {% if parameter.type.name != "@todo" %}
-        if {{ parameter.name }} is not GithubObject.NotSet:
-    {% endif %}
-
     {% if parameter.type.cardinality == "scalar" %}
 
         {% if parameter.type.simple %}
             {% if parameter.type.name == "string" %}
-            assert isinstance( {{ parameter.name }}, ( str, unicode ) ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, ( str, unicode ) ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "integer" %}
-            assert isinstance( {{ parameter.name }}, int ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, int ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "bool" %}
-            assert isinstance( {{ parameter.name }}, bool ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, bool ), {{ parameter.name }}
             {% endif %}
         {% else %}
-            assert isinstance( {{ parameter.name }}, {{ parameter.type.name }}.{{ parameter.type.name }} ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or isinstance( {{ parameter.name }}, {{ parameter.type.name }}.{{ parameter.type.name }} ), {{ parameter.name }}
         {% endif %}
 
     {% else %}
 
         {% if parameter.type.simple %}
             {% if parameter.type.name == "string" %}
-            assert all( isinstance( element, ( str, unicode ) ) for element in {{ parameter.name }} ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "integer" %}
-            assert all( isinstance( element, int ) for element in {{ parameter.name }} ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or all( isinstance( element, int ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
             {% if parameter.type.name == "bool" %}
-            assert all( isinstance( element, bool ) for element in {{ parameter.name }} ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or all( isinstance( element, bool ) for element in {{ parameter.name }} ), {{ parameter.name }}
             {% endif %}
         {% else %}
-            assert all( isinstance( element, {{ parameter.type.name }}.{{ parameter.type.name }} ) for element in {{ parameter.name }} ), {{ parameter.name }}
+        assert {{ parameter.name }} is GithubObject.NotSet or all( isinstance( element, {{ parameter.type.name }}.{{ parameter.type.name }} ) for element in {{ parameter.name }} ), {{ parameter.name }}
         {% endif %}
 
     {% endif %}

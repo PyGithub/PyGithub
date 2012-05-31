@@ -162,12 +162,9 @@ class PullRequest( GithubObject.GithubObject ):
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
 
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, state = GithubObject.NotSet ):
-        if title is not GithubObject.NotSet:
-            assert isinstance( title, ( str, unicode ) ), title
-        if body is not GithubObject.NotSet:
-            assert isinstance( body, ( str, unicode ) ), body
-        if state is not GithubObject.NotSet:
-            assert isinstance( state, ( str, unicode ) ), state
+        assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
+        assert body is GithubObject.NotSet or isinstance( body, ( str, unicode ) ), body
+        assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
         post_parameters = dict()
         if title is not GithubObject.NotSet:
             post_parameters[ "title" ] = title
@@ -250,8 +247,7 @@ class PullRequest( GithubObject.GithubObject ):
         return status == 204
 
     def merge( self, commit_message = GithubObject.NotSet ):
-        if commit_message is not GithubObject.NotSet:
-            assert isinstance( commit_message, ( str, unicode ) ), commit_message
+        assert commit_message is GithubObject.NotSet or isinstance( commit_message, ( str, unicode ) ), commit_message
         post_parameters = dict()
         if commit_message is not GithubObject.NotSet:
             post_parameters[ "commit_message" ] = commit_message

@@ -157,20 +157,13 @@ class Organization( GithubObject.GithubObject ):
 
     def create_repo( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, private = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet, team_id = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if homepage is not GithubObject.NotSet:
-            assert isinstance( homepage, ( str, unicode ) ), homepage
-        if private is not GithubObject.NotSet:
-            assert isinstance( private, bool ), private
-        if has_issues is not GithubObject.NotSet:
-            assert isinstance( has_issues, bool ), has_issues
-        if has_wiki is not GithubObject.NotSet:
-            assert isinstance( has_wiki, bool ), has_wiki
-        if has_downloads is not GithubObject.NotSet:
-            assert isinstance( has_downloads, bool ), has_downloads
-        if team_id is not GithubObject.NotSet:
-            assert isinstance( team_id, int ), team_id
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert homepage is GithubObject.NotSet or isinstance( homepage, ( str, unicode ) ), homepage
+        assert private is GithubObject.NotSet or isinstance( private, bool ), private
+        assert has_issues is GithubObject.NotSet or isinstance( has_issues, bool ), has_issues
+        assert has_wiki is GithubObject.NotSet or isinstance( has_wiki, bool ), has_wiki
+        assert has_downloads is GithubObject.NotSet or isinstance( has_downloads, bool ), has_downloads
+        assert team_id is GithubObject.NotSet or isinstance( team_id, int ), team_id
         post_parameters = {
             "name": name,
         }
@@ -199,10 +192,8 @@ class Organization( GithubObject.GithubObject ):
 
     def create_team( self, name, repo_names = GithubObject.NotSet, permission = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if repo_names is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in repo_names ), repo_names
-        if permission is not GithubObject.NotSet:
-            assert isinstance( permission, ( str, unicode ) ), permission
+        assert repo_names is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in repo_names ), repo_names
+        assert permission is GithubObject.NotSet or isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }
@@ -220,18 +211,12 @@ class Organization( GithubObject.GithubObject ):
         return Team.Team( self._requester, data, completed = True )
 
     def edit( self, billing_email = GithubObject.NotSet, blog = GithubObject.NotSet, company = GithubObject.NotSet, email = GithubObject.NotSet, location = GithubObject.NotSet, name = GithubObject.NotSet ):
-        if billing_email is not GithubObject.NotSet:
-            assert isinstance( billing_email, ( str, unicode ) ), billing_email
-        if blog is not GithubObject.NotSet:
-            assert isinstance( blog, ( str, unicode ) ), blog
-        if company is not GithubObject.NotSet:
-            assert isinstance( company, ( str, unicode ) ), company
-        if email is not GithubObject.NotSet:
-            assert isinstance( email, ( str, unicode ) ), email
-        if location is not GithubObject.NotSet:
-            assert isinstance( location, ( str, unicode ) ), location
-        if name is not GithubObject.NotSet:
-            assert isinstance( name, ( str, unicode ) ), name
+        assert billing_email is GithubObject.NotSet or isinstance( billing_email, ( str, unicode ) ), billing_email
+        assert blog is GithubObject.NotSet or isinstance( blog, ( str, unicode ) ), blog
+        assert company is GithubObject.NotSet or isinstance( company, ( str, unicode ) ), company
+        assert email is GithubObject.NotSet or isinstance( email, ( str, unicode ) ), email
+        assert location is GithubObject.NotSet or isinstance( location, ( str, unicode ) ), location
+        assert name is GithubObject.NotSet or isinstance( name, ( str, unicode ) ), name
         post_parameters = dict()
         if billing_email is not GithubObject.NotSet:
             post_parameters[ "billing_email" ] = billing_email
@@ -311,8 +296,7 @@ class Organization( GithubObject.GithubObject ):
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet ):
-        if type is not GithubObject.NotSet:
-            assert isinstance( type, ( str, unicode ) ), type
+        assert type is GithubObject.NotSet or isinstance( type, ( str, unicode ) ), type
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type

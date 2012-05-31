@@ -39,10 +39,8 @@ class UserKey( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def edit( self, title = GithubObject.NotSet, key = GithubObject.NotSet ):
-        if title is not GithubObject.NotSet:
-            assert isinstance( title, ( str, unicode ) ), title
-        if key is not GithubObject.NotSet:
-            assert isinstance( key, ( str, unicode ) ), key
+        assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
+        assert key is GithubObject.NotSet or isinstance( key, ( str, unicode ) ), key
         post_parameters = dict()
         if title is not GithubObject.NotSet:
             post_parameters[ "title" ] = title

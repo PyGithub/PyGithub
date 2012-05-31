@@ -61,16 +61,11 @@ class Authorization( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def edit( self, scopes = GithubObject.NotSet, add_scopes = GithubObject.NotSet, remove_scopes = GithubObject.NotSet, note = GithubObject.NotSet, note_url = GithubObject.NotSet ):
-        if scopes is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
-        if add_scopes is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in add_scopes ), add_scopes
-        if remove_scopes is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in remove_scopes ), remove_scopes
-        if note is not GithubObject.NotSet:
-            assert isinstance( note, ( str, unicode ) ), note
-        if note_url is not GithubObject.NotSet:
-            assert isinstance( note_url, ( str, unicode ) ), note_url
+        assert scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
+        assert add_scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in add_scopes ), add_scopes
+        assert remove_scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in remove_scopes ), remove_scopes
+        assert note is GithubObject.NotSet or isinstance( note, ( str, unicode ) ), note
+        assert note_url is GithubObject.NotSet or isinstance( note_url, ( str, unicode ) ), note_url
         post_parameters = dict()
         if scopes is not GithubObject.NotSet:
             post_parameters[ "scopes" ] = scopes

@@ -172,12 +172,9 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         self._checkStatus( status, data )
 
     def create_authorization( self, scopes = GithubObject.NotSet, note = GithubObject.NotSet, note_url = GithubObject.NotSet ):
-        if scopes is not GithubObject.NotSet:
-            assert all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
-        if note is not GithubObject.NotSet:
-            assert isinstance( note, ( str, unicode ) ), note
-        if note_url is not GithubObject.NotSet:
-            assert isinstance( note_url, ( str, unicode ) ), note_url
+        assert scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
+        assert note is GithubObject.NotSet or isinstance( note, ( str, unicode ) ), note
+        assert note_url is GithubObject.NotSet or isinstance( note_url, ( str, unicode ) ), note_url
         post_parameters = dict()
         if scopes is not GithubObject.NotSet:
             post_parameters[ "scopes" ] = scopes
@@ -207,8 +204,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def create_gist( self, public, files, description = GithubObject.NotSet ):
         assert isinstance( public, bool ), public
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
             "files": files,
@@ -242,18 +238,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def create_repo( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, private = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if description is not GithubObject.NotSet:
-            assert isinstance( description, ( str, unicode ) ), description
-        if homepage is not GithubObject.NotSet:
-            assert isinstance( homepage, ( str, unicode ) ), homepage
-        if private is not GithubObject.NotSet:
-            assert isinstance( private, bool ), private
-        if has_issues is not GithubObject.NotSet:
-            assert isinstance( has_issues, bool ), has_issues
-        if has_wiki is not GithubObject.NotSet:
-            assert isinstance( has_wiki, bool ), has_wiki
-        if has_downloads is not GithubObject.NotSet:
-            assert isinstance( has_downloads, bool ), has_downloads
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert homepage is GithubObject.NotSet or isinstance( homepage, ( str, unicode ) ), homepage
+        assert private is GithubObject.NotSet or isinstance( private, bool ), private
+        assert has_issues is GithubObject.NotSet or isinstance( has_issues, bool ), has_issues
+        assert has_wiki is GithubObject.NotSet or isinstance( has_wiki, bool ), has_wiki
+        assert has_downloads is GithubObject.NotSet or isinstance( has_downloads, bool ), has_downloads
         post_parameters = {
             "name": name,
         }
@@ -279,20 +269,13 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return Repository.Repository( self._requester, data, completed = True )
 
     def edit( self, name = GithubObject.NotSet, email = GithubObject.NotSet, blog = GithubObject.NotSet, company = GithubObject.NotSet, location = GithubObject.NotSet, hireable = GithubObject.NotSet, bio = GithubObject.NotSet ):
-        if name is not GithubObject.NotSet:
-            assert isinstance( name, ( str, unicode ) ), name
-        if email is not GithubObject.NotSet:
-            assert isinstance( email, ( str, unicode ) ), email
-        if blog is not GithubObject.NotSet:
-            assert isinstance( blog, ( str, unicode ) ), blog
-        if company is not GithubObject.NotSet:
-            assert isinstance( company, ( str, unicode ) ), company
-        if location is not GithubObject.NotSet:
-            assert isinstance( location, ( str, unicode ) ), location
-        if hireable is not GithubObject.NotSet:
-            assert isinstance( hireable, bool ), hireable
-        if bio is not GithubObject.NotSet:
-            assert isinstance( bio, ( str, unicode ) ), bio
+        assert name is GithubObject.NotSet or isinstance( name, ( str, unicode ) ), name
+        assert email is GithubObject.NotSet or isinstance( email, ( str, unicode ) ), email
+        assert blog is GithubObject.NotSet or isinstance( blog, ( str, unicode ) ), blog
+        assert company is GithubObject.NotSet or isinstance( company, ( str, unicode ) ), company
+        assert location is GithubObject.NotSet or isinstance( location, ( str, unicode ) ), location
+        assert hireable is GithubObject.NotSet or isinstance( hireable, bool ), hireable
+        assert bio is GithubObject.NotSet or isinstance( bio, ( str, unicode ) ), bio
         post_parameters = dict()
         if name is not GithubObject.NotSet:
             post_parameters[ "name" ] = name
@@ -497,12 +480,9 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet ):
-        if type is not GithubObject.NotSet:
-            assert isinstance( type, ( str, unicode ) ), type
-        if sort is not GithubObject.NotSet:
-            assert isinstance( sort, ( str, unicode ) ), sort
-        if direction is not GithubObject.NotSet:
-            assert isinstance( direction, ( str, unicode ) ), direction
+        assert type is GithubObject.NotSet or isinstance( type, ( str, unicode ) ), type
+        assert sort is GithubObject.NotSet or isinstance( sort, ( str, unicode ) ), sort
+        assert direction is GithubObject.NotSet or isinstance( direction, ( str, unicode ) ), direction
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type

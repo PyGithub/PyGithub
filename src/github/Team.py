@@ -69,8 +69,7 @@ class Team( GithubObject.GithubObject ):
 
     def edit( self, name, permission = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        if permission is not GithubObject.NotSet:
-            assert isinstance( permission, ( str, unicode ) ), permission
+        assert permission is GithubObject.NotSet or isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }
