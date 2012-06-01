@@ -110,6 +110,10 @@ class Milestone( GithubObject.GithubObject ):
             data
         )
 
+    @property
+    def _identity( self ):
+        return self.number
+
     def _initAttributes( self ):
         self._closed_issues = GithubObject.NotSet
         self._created_at = GithubObject.NotSet

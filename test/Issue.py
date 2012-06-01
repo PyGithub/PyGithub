@@ -31,7 +31,9 @@ class Issue( Framework.TestCase ):
         self.issue.edit()
 
     def testEditWithAllParameters( self ):
-        self.issue.edit( "Title edited by PyGithub", "Body edited by PyGithub", "jacquev6", "open", 2, [ "Bug" ] )
+        user = self.g.get_user( "jacquev6" )
+        milestone = self.repo.get_milestone( 2 )
+        self.issue.edit( "Title edited by PyGithub", "Body edited by PyGithub", user, "open", milestone, [ "Bug" ] )
         self.assertEqual( self.issue.assignee.login, "jacquev6" )
         self.assertEqual( self.issue.body, "Body edited by PyGithub" )
         self.assertEqual( self.issue.state, "open" )

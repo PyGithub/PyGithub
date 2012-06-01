@@ -607,9 +607,9 @@ Modification
 * `edit( [title, body, assignee, state, milestone, labels] )`
     * `title`: string
     * `body`: string
-    * `assignee`: string
+    * `assignee`: `NamedUser`
     * `state`: string
-    * `milestone`: integer
+    * `milestone`: `Milestone`
     * `labels`: list of string
 
 Class `IssueComment`

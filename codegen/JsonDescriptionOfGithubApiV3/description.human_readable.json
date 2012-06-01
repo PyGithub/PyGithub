@@ -689,9 +689,9 @@
                 "optionalParameters": [
                     { "name": "title", "type": "string" },
                     { "name": "body", "type": "string" },
-                    { "name": "assignee", "type": "string" },
+                    { "name": "assignee", "type": "NamedUser" },
                     { "name": "state", "type": "string" },
-                    { "name": "milestone", "type": "integer" },
+                    { "name": "milestone", "type": "Milestone" },
                     { "name": "labels", "type": "list:string" }
                 ]
             },
@@ -846,6 +846,9 @@
                     "type": "Label",
                     "getList": true
                 }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "number" ] }
             ]
         },
         {

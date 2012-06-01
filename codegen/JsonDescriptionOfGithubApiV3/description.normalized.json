@@ -3932,9 +3932,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "NamedUser"
                             }, 
                             "name": "assignee"
                         }, 
@@ -3948,9 +3948,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "integer"
+                                "name": "Milestone"
                             }, 
                             "name": "milestone"
                         }, 
@@ -4735,6 +4735,14 @@
             ], 
             "isCompletable": true, 
             "name": "Milestone", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "number"
+                    ]
+                }
+            ], 
             "methods": [
                 {
                     "group": "modification", 
