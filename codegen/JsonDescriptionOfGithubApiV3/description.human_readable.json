@@ -555,6 +555,9 @@
                 { "name": "sha", "type": "string" },
                 { "name": "url", "type": "string" },
                 { "name": "tree", "type": "GitTree" }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "sha" ] }
             ]
         },
         {

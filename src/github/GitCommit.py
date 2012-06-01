@@ -43,6 +43,10 @@ class GitCommit( GithubObject.GithubObject ):
         self._completeIfNotSet( self._url )
         return self._NoneIfNotSet( self._url )
 
+    @property
+    def _identity( self ):
+        return str( self.sha )
+
     def _initAttributes( self ):
         self._author = GithubObject.NotSet
         self._committer = GithubObject.NotSet

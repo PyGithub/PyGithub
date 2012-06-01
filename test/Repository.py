@@ -163,6 +163,14 @@ class Repository( Framework.TestCase ):
         commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [] )
         self.assertEqual( commit.sha, "0b820628236ab8bab3890860fc414fa757ca15f4" )
 
+    def testCreateGitCommitWithParents( self ):
+        parents = [
+            self.repo.get_git_commit( "7248e66831d4ffe09ef1f30a1df59ec0a9331ece" ),
+            self.repo.get_git_commit( "12d427464f8d91c8e981043a86ba8a2a9e7319ea" ),
+        ]
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", "fae707821159639589bf94f3fb0a7154ec5d441b", parents )
+        self.assertEqual( commit.sha, "6adf9ea25ff8a8f2a42bcb1c09e42526339037cd" )
+
     def testCreateGitCommitWithAllArguments( self ):
         commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [], github.InputGitAuthor( "John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ), github.InputGitAuthor( "John Doe",  "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ) )
         self.assertEqual( commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea" )

@@ -9,7 +9,7 @@
         {% if method.mandatoryParameters %}
         post_parameters = {
             {% for parameter in method.mandatoryParameters %}
-            "{{ parameter.name }}": {{ parameter.name }},
+            "{{ parameter.name }}": {% if parameter.type.simple %}{{ parameter.name }}{% else %}{% if parameter.type.cardinality == "list" %}[ element._identity for element in {{ parameter.name }} ]{% else %}dict( ( key, value._identity ) for key, value in {{ parameter.name }}.iteritems() ){% endif %}{% endif %},
             {% endfor %}
         }
         {% else %}
@@ -17,7 +17,7 @@
         {% endif %}
         {% for parameter in method.optionalParameters %}
         if {{ parameter.name }} is not GithubObject.NotSet:
-            post_parameters[ "{{ parameter.name }}" ] = {{ parameter.name }}
+            post_parameters[ "{{ parameter.name }}" ] = {% if parameter.type.simple %}{{ parameter.name }}{% else %}{% if parameter.type.cardinality == "dict" %}dict( ( key, value._identity ) for key, value in {{ parameter.name }}.iteritems() ){% else %}{{ parameter.name }}._identity{% endif %}{% endif %}
         {% endfor %}
     {% endif %}
 {% else %}

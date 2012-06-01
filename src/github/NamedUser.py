@@ -149,7 +149,7 @@ class NamedUser( GithubObject.GithubObject ):
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
-            "files": dict( ( key, value._identity() ) for key, value in files.iteritems() ),
+            "files": dict( ( key, value._identity ) for key, value in files.iteritems() ),
         }
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description

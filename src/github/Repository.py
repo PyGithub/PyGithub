@@ -253,12 +253,12 @@ class Repository( GithubObject.GithubObject ):
         post_parameters = {
             "message": message,
             "tree": tree,
-            "parents": parents,
+            "parents": [ element._identity for element in parents ],
         }
         if author is not GithubObject.NotSet:
-            post_parameters[ "author" ] = author._identity()
+            post_parameters[ "author" ] = author._identity
         if committer is not GithubObject.NotSet:
-            post_parameters[ "committer" ] = committer._identity()
+            post_parameters[ "committer" ] = committer._identity
         status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/commits",
@@ -297,7 +297,7 @@ class Repository( GithubObject.GithubObject ):
             "type": type,
         }
         if tagger is not GithubObject.NotSet:
-            post_parameters[ "tagger" ] = tagger._identity()
+            post_parameters[ "tagger" ] = tagger._identity
         status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/tags",
@@ -311,7 +311,7 @@ class Repository( GithubObject.GithubObject ):
         assert all( isinstance( element, InputGitTreeElement.InputGitTreeElement ) for element in tree ), tree
         assert base_tree is GithubObject.NotSet or isinstance( base_tree, ( str, unicode ) ), base_tree
         post_parameters = {
-            "tree": [ element._identity() for element in tree ],
+            "tree": [ element._identity for element in tree ],
         }
         if base_tree is not GithubObject.NotSet:
             post_parameters[ "base_tree" ] = base_tree

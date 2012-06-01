@@ -3214,6 +3214,14 @@
             ], 
             "isCompletable": true, 
             "name": "GitCommit", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "sha"
+                    ]
+                }
+            ], 
             "methods": []
         }, 
         {

@@ -1,6 +1,6 @@
 import GithubObject
 
-class InputGitTreeElement:
+class InputGitTreeElement( object ):
     def __init__( self, path, mode, type, content = GithubObject.NotSet, sha = GithubObject.NotSet ):
         self.__path = path
         self.__mode = mode
@@ -8,6 +8,7 @@ class InputGitTreeElement:
         self.__content = content
         self.__sha = sha
 
+    @property
     def _identity( self ):
         identity = {
             "path": self.__path,

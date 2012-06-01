@@ -127,7 +127,7 @@ class Gist( GithubObject.GithubObject ):
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
         if files is not GithubObject.NotSet:
-            post_parameters[ "files" ] = dict( ( key, value._identity() ) for key, value in files.iteritems() )
+            post_parameters[ "files" ] = dict( ( key, value._identity ) for key, value in files.iteritems() )
         status, headers, data = self._request(
             "PATCH",
             str( self.url ),
