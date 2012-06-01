@@ -127,7 +127,7 @@ class Gist( GithubObject.GithubObject ):
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
         if files is not GithubObject.NotSet:
-            post_parameters[ "files" ] = { key : value._identity() for key, value in files.iteritems() }
+            post_parameters[ "files" ] = dict( ( key, value._identity() ) for key, value in files.iteritems() )
         status, headers, data = self._request(
             "PATCH",
             str( self.url ),
@@ -219,10 +219,10 @@ class Gist( GithubObject.GithubObject ):
             self._description = attributes[ "description" ]
         if "files" in attributes: # pragma no branch
             assert attributes[ "files" ] is None or all( isinstance( element, dict ) for element in attributes[ "files" ].itervalues() ), attributes[ "files" ]
-            self._files = None if attributes[ "files" ] is None else {
-                key : GistFile.GistFile( self._requester, element, completed = False )
+            self._files = None if attributes[ "files" ] is None else dict(
+                ( key, GistFile.GistFile( self._requester, element, completed = False ) )
                 for key, element in attributes[ "files" ].iteritems()
-            }
+            )
         if "fork_of" in attributes: # pragma no branch
             assert attributes[ "fork_of" ] is None or isinstance( attributes[ "fork_of" ], dict ), attributes[ "fork_of" ]
             self._fork_of = None if attributes[ "fork_of" ] is None else Gist( self._requester, attributes[ "fork_of" ], completed = False )

@@ -4,20 +4,22 @@ import Framework
 
 class Exceptions( Framework.TestCase ):
     def testInvalidInput( self ):
-        with self.assertRaises( github.GithubException ) as cm:
+        try: # Stay compatible with Python 2.6: do not use self.assertRaises with only one argument
             self.g.get_user().create_key( "Bad key", "xxx" )
-        self.assertEqual( cm.exception.status, 422 )
-        self.assertEqual(
-            cm.exception.data,
-            { 
-                "errors": [
-                    {
-                        "code": "custom",
-                        "field": "key",
-                        "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
-                        "resource": "PublicKey"
-                    }
-                ],
-                "message": "Validation Failed"
-            }
-        )
+            self.fail( "Should have raised" )
+        except github.GithubException, exception:
+            self.assertEqual( exception.status, 422 )
+            self.assertEqual(
+                exception.data,
+                {
+                    "errors": [
+                        {
+                            "code": "custom",
+                            "field": "key",
+                            "message": "key is invalid. It must begin with 'ssh-rsa' or 'ssh-dss'. Check that you're copying the public half of the key",
+                            "resource": "PublicKey"
+                        }
+                    ],
+                    "message": "Validation Failed"
+                }
+            )
