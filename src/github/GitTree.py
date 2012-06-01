@@ -21,6 +21,10 @@ class GitTree( GithubObject.GithubObject ):
         self._completeIfNotSet( self._url )
         return self._NoneIfNotSet( self._url )
 
+    @property
+    def _identity( self ):
+        return self.sha
+
     def _initAttributes( self ):
         self._sha = GithubObject.NotSet
         self._tree = GithubObject.NotSet

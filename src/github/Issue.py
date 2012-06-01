@@ -243,6 +243,10 @@ class Issue( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
 
+    @property
+    def _identity( self ):
+        return self.number
+
     def _initAttributes( self ):
         self._assignee = GithubObject.NotSet
         self._body = GithubObject.NotSet

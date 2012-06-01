@@ -3,7 +3,8 @@ import Framework
 class PullRequest( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.pull = self.g.get_user().get_repo( "PyGithub" ).get_pull( 31 )
+        self.repo = self.g.get_user().get_repo( "PyGithub" )
+        self.pull = self.repo.get_pull( 31 )
 
     def testAttributes( self ):
         self.assertEqual( self.pull.additions, 511 )
@@ -38,7 +39,8 @@ class PullRequest( Framework.TestCase ):
         self.assertEqual( self.pull.user.login, "jacquev6" )
 
     def testCreateComment( self ):
-        comment = self.pull.create_comment( "Comment created by PyGithub", "8a4f306d4b223682dd19410d4a9150636ebe4206", "src/github/Issue.py", 5 )
+        commit = self.repo.get_commit( "8a4f306d4b223682dd19410d4a9150636ebe4206" )
+        comment = self.pull.create_comment( "Comment created by PyGithub", commit, "src/github/Issue.py", 5 )
         self.assertEqual( comment.id, 886298 )
 
     def testGetComments( self ):

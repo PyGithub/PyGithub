@@ -334,6 +334,9 @@
                         ]
                     }
                 }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "sha" ] }
             ]
         },
         {
@@ -615,6 +618,9 @@
                 { "name": "sha", "type": "string" },
                 { "name": "tree", "type": "list:GitTreeElement" },
                 { "name": "url", "type": "string" }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "sha" ] }
             ]
         },
         {
@@ -759,6 +765,9 @@
                     "setList": true,
                     "deleteList": true
                 }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "number" ] }
             ]
         },
         {
@@ -1078,7 +1087,7 @@
                             { "name": "has_issues", "type": "bool" },
                             { "name": "has_wiki", "type": "bool" },
                             { "name": "has_downloads", "type": "bool" },
-                            { "name": "team_id", "type": "integer" }
+                            { "name": "team_id", "type": "Team" }
                         ]
                     }
                 },
@@ -1092,7 +1101,7 @@
                             { "name": "name", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "repo_names", "type": "list:string" },
+                            { "name": "repo_names", "type": "list:Repository" },
                             { "name": "permission", "type": "string" }
                         ]
                     },
@@ -1210,7 +1219,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "body", "type": "string" },
-                            { "name": "commit_id", "type": "string" },
+                            { "name": "commit_id", "type": "Commit" },
                             { "name": "path", "type": "string" },
                             { "name": "position", "type": "integer" }
                         ]
@@ -1465,7 +1474,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "message", "type": "string" },
-                            { "name": "tree", "type": "string" },
+                            { "name": "tree", "type": "GitTree" },
                             { "name": "parents", "type": "list:GitCommit" }
                         ],
                         "optionalParameters": [
@@ -1536,7 +1545,7 @@
                             { "name": "tree", "type": "list:InputGitTreeElement" }
                         ],
                         "optionalParameters": [
-                            { "name": "base_tree", "type": "string" }
+                            { "name": "base_tree", "type": "GitTree" }
                         ]
                     },
                     "getElement": {
@@ -1575,11 +1584,11 @@
                     "type": "Issue",
                     "getList": {
                         "optionalParameters": [
-                            { "name": "milestone", "type": "integer" },
+                            { "name": "milestone", "type": "Milestone" },
                             { "name": "state", "type": "string" },
-                            { "name": "assignee", "type": "string" },
-                            { "name": "mentioned", "type": "string" },
-                            { "name": "labels", "type": "string" },
+                            { "name": "assignee", "type": "NamedUser" },
+                            { "name": "mentioned", "type": "NamedUser" },
+                            { "name": "labels", "type": "list:Label" },
                             { "name": "sort", "type": "string" },
                             { "name": "direction", "type": "string" },
                             { "name": "since", "type": "string" }
@@ -1591,9 +1600,9 @@
                         ],
                         "optionalParameters": [
                             { "name": "body", "type": "string" },
-                            { "name": "assignee", "type": "string" },
-                            { "name": "milestone", "type": "integer" },
-                            { "name": "labels", "type": "list:string" }
+                            { "name": "assignee", "type": "NamedUser" },
+                            { "name": "milestone", "type": "Milestone" },
+                            { "name": "labels", "type": "list:Label" }
                         ]
                     },
                     "getElement": {
@@ -1696,7 +1705,7 @@
                         "optionalParameters": [
                             { "name": "title", "type": "string" },
                             { "name": "body", "type": "string" },
-                            { "name": "issue", "type": "integer" },
+                            { "name": "issue", "type": "Issue" },
                             { "name": "base", "type": "string" },
                             { "name": "head", "type": "string" }
                         ]
@@ -1834,6 +1843,9 @@
                     "hasElement": true,
                     "removeElement": true
                 }
+            ],
+            "identity": [
+                { "type": "attribute", "value": [ "id" ] }
             ]
         },
         {

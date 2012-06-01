@@ -854,7 +854,7 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
-    * `team_id`: integer
+    * `team_id`: `Team`
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: list of `Repository`
@@ -864,7 +864,7 @@ Teams
 -----
 * `create_team( name, [repo_names, permission] )`: `Team`
     * `name`: string
-    * `repo_names`: list of string
+    * `repo_names`: list of `Repository`
     * `permission`: string
 * `get_team( id )`: `Team`
     * `id`: integer
@@ -925,7 +925,7 @@ Comments
 --------
 * `create_comment( body, commit_id, path, position )`: `PullRequestComment`
     * `body`: string
-    * `commit_id`: string
+    * `commit_id`: `Commit`
     * `path`: string
     * `position`: integer
 * `get_comment( id )`: `PullRequestComment`
@@ -1105,7 +1105,7 @@ Git_commits
 -----------
 * `create_git_commit( message, tree, parents, [author, committer] )`: `GitCommit`
     * `message`: string
-    * `tree`: string
+    * `tree`: `GitTree`
     * `parents`: list of `GitCommit`
     * `author`: `InputGitAuthor`
     * `committer`: `InputGitAuthor`
@@ -1136,7 +1136,7 @@ Git_trees
 ---------
 * `create_git_tree( tree, [base_tree] )`: `GitTree`
     * `tree`: list of `InputGitTreeElement`
-    * `base_tree`: string
+    * `base_tree`: `GitTree`
 * `get_git_tree( sha, [recursive] )`: `GitTree`
     * `sha`: string
     * `recursive`: bool
@@ -1157,17 +1157,17 @@ Issues
 * `create_issue( title, [body, assignee, milestone, labels] )`: `Issue`
     * `title`: string
     * `body`: string
-    * `assignee`: string
-    * `milestone`: integer
-    * `labels`: list of string
+    * `assignee`: `NamedUser`
+    * `milestone`: `Milestone`
+    * `labels`: list of `Label`
 * `get_issue( number )`: `Issue`
     * `number`: integer
 * `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
-    * `milestone`: integer
+    * `milestone`: `Milestone`
     * `state`: string
-    * `assignee`: string
-    * `mentioned`: string
-    * `labels`: string
+    * `assignee`: `NamedUser`
+    * `mentioned`: `NamedUser`
+    * `labels`: list of `Label`
     * `sort`: string
     * `direction`: string
     * `since`: string
@@ -1230,7 +1230,7 @@ Pulls
 * `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
     * `title`: string
     * `body`: string
-    * `issue`: integer
+    * `issue`: `Issue`
     * `base`: string
     * `head`: string
 * `get_pull( number )`: `PullRequest`

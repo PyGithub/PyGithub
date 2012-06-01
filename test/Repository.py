@@ -66,7 +66,10 @@ class Repository( Framework.TestCase ):
         self.assertEqual( issue.number, 28 )
 
     def testCreateIssueWithAllArguments( self ):
-        issue = self.repo.create_issue( "Issue also created by PyGithub", "Body created by PyGithub", "jacquev6", 2, [ "Question" ] )
+        user = self.g.get_user( "jacquev6" )
+        milestone = self.repo.get_milestone( 2 )
+        question = self.repo.get_label( "Question" )
+        issue = self.repo.create_issue( "Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [ question ] )
         self.assertEqual( issue.number, 30 )
 
     def testCreateLabel( self ):
@@ -137,6 +140,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b" )
 
     def testCreateGitTreeWithBaseTree( self ):
+        base_tree = self.repo.get_git_tree( "41cf8c178c636a018d537cb20daae09391efd70b" )
         tree = self.repo.create_git_tree(
             [ github.InputGitTreeElement(
                 "Barbaz.txt",
@@ -144,7 +148,7 @@ class Repository( Framework.TestCase ):
                 "blob",
                 content = "File also created by PyGithub"
             ) ],
-            "41cf8c178c636a018d537cb20daae09391efd70b"
+            base_tree
         )
         self.assertEqual( tree.sha, "107139a922f33bab6fbeb9f9eb8787e7f19e0528" )
 
@@ -160,7 +164,8 @@ class Repository( Framework.TestCase ):
         self.assertEqual( tree.sha, "fae707821159639589bf94f3fb0a7154ec5d441b" )
 
     def testCreateGitCommit( self ):
-        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [] )
+        tree = self.repo.get_git_tree( "107139a922f33bab6fbeb9f9eb8787e7f19e0528" )
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", tree, [] )
         self.assertEqual( commit.sha, "0b820628236ab8bab3890860fc414fa757ca15f4" )
 
     def testCreateGitCommitWithParents( self ):
@@ -168,11 +173,13 @@ class Repository( Framework.TestCase ):
             self.repo.get_git_commit( "7248e66831d4ffe09ef1f30a1df59ec0a9331ece" ),
             self.repo.get_git_commit( "12d427464f8d91c8e981043a86ba8a2a9e7319ea" ),
         ]
-        commit = self.repo.create_git_commit( "Commit created by PyGithub", "fae707821159639589bf94f3fb0a7154ec5d441b", parents )
+        tree = self.repo.get_git_tree( "fae707821159639589bf94f3fb0a7154ec5d441b" )
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", tree, parents )
         self.assertEqual( commit.sha, "6adf9ea25ff8a8f2a42bcb1c09e42526339037cd" )
 
     def testCreateGitCommitWithAllArguments( self ):
-        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [], github.InputGitAuthor( "John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ), github.InputGitAuthor( "John Doe",  "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ) )
+        tree = self.repo.get_git_tree( "107139a922f33bab6fbeb9f9eb8787e7f19e0528" )
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", tree, [], github.InputGitAuthor( "John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ), github.InputGitAuthor( "John Doe",  "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ) )
         self.assertEqual( commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea" )
 
     def testCreateGitTag( self ):
@@ -253,11 +260,15 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_issues(), lambda i: i.id, [ 4769659, 4639931, 4452000, 4356743, 3716033, 3715946, 3643837, 3628022, 3624595, 3624570, 3624561, 3624556, 3619973, 3527266, 3527245, 3527231 ] )
 
     def testGetIssuesWithArguments( self ):
-        self.assertListKeyEqual( self.repo.get_issues( 3, "closed" ), lambda i: i.id, [ 3624472, 3620132, 3619658, 3561926 ] )
-        self.assertListKeyEqual( self.repo.get_issues( labels = "Bug" ), lambda i: i.id, [ 4780155 ] )
-        self.assertListKeyEqual( self.repo.get_issues( assignee = "jacquev6", sort = "comments", direction = "asc" ), lambda i: i.id, [ 4793106, 3527231, 3527266, 3624556, 4793216, 3619973, 3624595, 4452000, 3643837, 3628022, 3527245, 4793162, 4356743, 4780155 ] )
+        milestone = self.repo.get_milestone( 3 )
+        user = self.g.get_user( "jacquev6" )
+        otherUser = self.g.get_user( "Lyloa" )
+        bug = self.repo.get_label( "Bug" )
+        self.assertListKeyEqual( self.repo.get_issues( milestone, "closed" ), lambda i: i.id, [ 3624472, 3620132, 3619658, 3561926 ] )
+        self.assertListKeyEqual( self.repo.get_issues( labels = [ bug ] ), lambda i: i.id, [ 4780155 ] )
+        self.assertListKeyEqual( self.repo.get_issues( assignee = user, sort = "comments", direction = "asc" ), lambda i: i.id, [ 4793106, 3527231, 3527266, 3624556, 4793216, 3619973, 3624595, 4452000, 3643837, 3628022, 3527245, 4793162, 4356743, 4780155 ] )
         self.assertListKeyEqual( self.repo.get_issues( since = "2012-05-28T23:00:00Z" ), lambda i: i.id, [ 4793216, 4793162, 4793106, 3624556, 3619973, 3527266 ] )
-        self.assertListKeyEqual( self.repo.get_issues( mentioned = "Lyloa" ), lambda i: i.id, [ 4793162 ] )
+        self.assertListKeyEqual( self.repo.get_issues( mentioned = otherUser ), lambda i: i.id, [ 4793162 ] )
 
     def testGetKeys( self ):
         self.assertListKeyEqual( self.repo.get_keys(), lambda k: k.title, [ "Key added through PyGithub" ] )
@@ -292,7 +303,8 @@ class Repository( Framework.TestCase ):
         self.assertEqual( pull.id, 1436215 )
 
     def testCreatePullFromIssue( self ):
-        pull = self.repo.create_pull( 32, "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
+        issue = self.repo.get_issue( 32 )
+        pull = self.repo.create_pull( issue, "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
         self.assertEqual( pull.id, 1436310 )
 
     def testGetPulls( self ):

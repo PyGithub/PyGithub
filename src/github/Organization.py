@@ -163,7 +163,7 @@ class Organization( GithubObject.GithubObject ):
         assert has_issues is GithubObject.NotSet or isinstance( has_issues, bool ), has_issues
         assert has_wiki is GithubObject.NotSet or isinstance( has_wiki, bool ), has_wiki
         assert has_downloads is GithubObject.NotSet or isinstance( has_downloads, bool ), has_downloads
-        assert team_id is GithubObject.NotSet or isinstance( team_id, int ), team_id
+        assert team_id is GithubObject.NotSet or isinstance( team_id, Team.Team ), team_id
         post_parameters = {
             "name": name,
         }
@@ -180,7 +180,7 @@ class Organization( GithubObject.GithubObject ):
         if has_downloads is not GithubObject.NotSet:
             post_parameters[ "has_downloads" ] = has_downloads
         if team_id is not GithubObject.NotSet:
-            post_parameters[ "team_id" ] = team_id
+            post_parameters[ "team_id" ] = team_id._identity
         status, headers, data = self._request(
             "POST",
             self.url + "/repos",
@@ -192,13 +192,13 @@ class Organization( GithubObject.GithubObject ):
 
     def create_team( self, name, repo_names = GithubObject.NotSet, permission = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
-        assert repo_names is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in repo_names ), repo_names
+        assert repo_names is GithubObject.NotSet or all( isinstance( element, Repository.Repository ) for element in repo_names ), repo_names
         assert permission is GithubObject.NotSet or isinstance( permission, ( str, unicode ) ), permission
         post_parameters = {
             "name": name,
         }
         if repo_names is not GithubObject.NotSet:
-            post_parameters[ "repo_names" ] = repo_names
+            post_parameters[ "repo_names" ] = [ element._identity for element in repo_names ]
         if permission is not GithubObject.NotSet:
             post_parameters[ "permission" ] = permission
         status, headers, data = self._request(

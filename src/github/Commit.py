@@ -90,6 +90,10 @@ class Commit( GithubObject.GithubObject ):
             data
         )
 
+    @property
+    def _identity( self ):
+        return self.sha
+
     def _initAttributes( self ):
         self._author = GithubObject.NotSet
         self._commit = GithubObject.NotSet

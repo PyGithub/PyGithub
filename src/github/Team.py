@@ -154,6 +154,10 @@ class Team( GithubObject.GithubObject ):
         )
         self._checkStatus( status, data )
 
+    @property
+    def _identity( self ):
+        return self.id
+
     def _initAttributes( self ):
         self._id = GithubObject.NotSet
         self._members_count = GithubObject.NotSet

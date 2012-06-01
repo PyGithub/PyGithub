@@ -50,7 +50,8 @@ class Organization( Framework.TestCase ):
         self.assertEqual( team.id, 189850 )
 
     def testCreateTeamWithAllArguments( self ):
-        team = self.org.create_team( "Team also created by PyGithub", [ "BeaverSoftware/FatherBeaver" ], "push" )
+        repo = self.org.get_repo( "FatherBeaver" )
+        team = self.org.create_team( "Team also created by PyGithub", [ repo ], "push" )
         self.assertEqual( team.id, 189852 )
 
     def testPublicMembers( self ):
@@ -90,7 +91,8 @@ class Organization( Framework.TestCase ):
         self.assertEqual( repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub" )
 
     def testCreateRepoWithAllArguments( self ):
-        repo = self.org.create_repo( "TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, 141496 )
+        team = self.org.get_team( 141496 )
+        repo = self.org.create_repo( "TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, team )
         self.assertEqual( repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2" )
 
     def testCreateFork( self ):

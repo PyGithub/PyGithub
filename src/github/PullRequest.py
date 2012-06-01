@@ -144,12 +144,12 @@ class PullRequest( GithubObject.GithubObject ):
 
     def create_comment( self, body, commit_id, path, position ):
         assert isinstance( body, ( str, unicode ) ), body
-        assert isinstance( commit_id, ( str, unicode ) ), commit_id
+        assert isinstance( commit_id, Commit.Commit ), commit_id
         assert isinstance( path, ( str, unicode ) ), path
         assert isinstance( position, int ), position
         post_parameters = {
             "body": body,
-            "commit_id": commit_id,
+            "commit_id": commit_id._identity,
             "path": path,
             "position": position,
         }

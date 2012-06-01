@@ -246,13 +246,13 @@ class Repository( GithubObject.GithubObject ):
 
     def create_git_commit( self, message, tree, parents, author = GithubObject.NotSet, committer = GithubObject.NotSet ):
         assert isinstance( message, ( str, unicode ) ), message
-        assert isinstance( tree, ( str, unicode ) ), tree
+        assert isinstance( tree, GitTree.GitTree ), tree
         assert all( isinstance( element, GitCommit.GitCommit ) for element in parents ), parents
         assert author is GithubObject.NotSet or isinstance( author, InputGitAuthor.InputGitAuthor ), author
         assert committer is GithubObject.NotSet or isinstance( committer, InputGitAuthor.InputGitAuthor ), committer
         post_parameters = {
             "message": message,
-            "tree": tree,
+            "tree": tree._identity,
             "parents": [ element._identity for element in parents ],
         }
         if author is not GithubObject.NotSet:
@@ -309,12 +309,12 @@ class Repository( GithubObject.GithubObject ):
 
     def create_git_tree( self, tree, base_tree = GithubObject.NotSet ):
         assert all( isinstance( element, InputGitTreeElement.InputGitTreeElement ) for element in tree ), tree
-        assert base_tree is GithubObject.NotSet or isinstance( base_tree, ( str, unicode ) ), base_tree
+        assert base_tree is GithubObject.NotSet or isinstance( base_tree, GitTree.GitTree ), base_tree
         post_parameters = {
             "tree": [ element._identity for element in tree ],
         }
         if base_tree is not GithubObject.NotSet:
-            post_parameters[ "base_tree" ] = base_tree
+            post_parameters[ "base_tree" ] = base_tree._identity
         status, headers, data = self._request(
             "POST",
             self.url + "/git/trees",
@@ -349,20 +349,20 @@ class Repository( GithubObject.GithubObject ):
     def create_issue( self, title, body = GithubObject.NotSet, assignee = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
         assert isinstance( title, ( str, unicode ) ), title
         assert body is GithubObject.NotSet or isinstance( body, ( str, unicode ) ), body
-        assert assignee is GithubObject.NotSet or isinstance( assignee, ( str, unicode ) ), assignee
-        assert milestone is GithubObject.NotSet or isinstance( milestone, int ), milestone
-        assert labels is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
+        assert assignee is GithubObject.NotSet or isinstance( assignee, NamedUser.NamedUser ), assignee
+        assert milestone is GithubObject.NotSet or isinstance( milestone, Milestone.Milestone ), milestone
+        assert labels is GithubObject.NotSet or all( isinstance( element, Label.Label ) for element in labels ), labels
         post_parameters = {
             "title": title,
         }
         if body is not GithubObject.NotSet:
             post_parameters[ "body" ] = body
         if assignee is not GithubObject.NotSet:
-            post_parameters[ "assignee" ] = assignee
+            post_parameters[ "assignee" ] = assignee._identity
         if milestone is not GithubObject.NotSet:
-            post_parameters[ "milestone" ] = milestone
+            post_parameters[ "milestone" ] = milestone._identity
         if labels is not GithubObject.NotSet:
-            post_parameters[ "labels" ] = labels
+            post_parameters[ "labels" ] = [ element._identity for element in labels ]
         status, headers, data = self._request(
             "POST",
             self.url + "/issues",
@@ -441,10 +441,10 @@ class Repository( GithubObject.GithubObject ):
         return self.__create_pull( title = title, body = body, base = base, head = head )
 
     def __create_pull_2( self, issue, base, head ):
-        assert isinstance( issue, int ), issue
+        assert isinstance( issue, Issue.Issue ), issue
         assert isinstance( base, ( str, unicode ) ), base
         assert isinstance( head, ( str, unicode ) ), head
-        return self.__create_pull( issue = issue, base = base, head = head )
+        return self.__create_pull( issue = issue._identity, base = base, head = head )
 
     def __create_pull( self, **kwds ):
         post_parameters = kwds
@@ -761,25 +761,25 @@ class Repository( GithubObject.GithubObject ):
         return Issue.Issue( self._requester, data, completed = True )
 
     def get_issues( self, milestone = GithubObject.NotSet, state = GithubObject.NotSet, assignee = GithubObject.NotSet, mentioned = GithubObject.NotSet, labels = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet, since = GithubObject.NotSet ):
-        assert milestone is GithubObject.NotSet or isinstance( milestone, int ), milestone
+        assert milestone is GithubObject.NotSet or isinstance( milestone, Milestone.Milestone ), milestone
         assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
-        assert assignee is GithubObject.NotSet or isinstance( assignee, ( str, unicode ) ), assignee
-        assert mentioned is GithubObject.NotSet or isinstance( mentioned, ( str, unicode ) ), mentioned
-        assert labels is GithubObject.NotSet or isinstance( labels, ( str, unicode ) ), labels
+        assert assignee is GithubObject.NotSet or isinstance( assignee, NamedUser.NamedUser ), assignee
+        assert mentioned is GithubObject.NotSet or isinstance( mentioned, NamedUser.NamedUser ), mentioned
+        assert labels is GithubObject.NotSet or all( isinstance( element, Label.Label ) for element in labels ), labels
         assert sort is GithubObject.NotSet or isinstance( sort, ( str, unicode ) ), sort
         assert direction is GithubObject.NotSet or isinstance( direction, ( str, unicode ) ), direction
         assert since is GithubObject.NotSet or isinstance( since, ( str, unicode ) ), since
         url_parameters = dict()
         if milestone is not GithubObject.NotSet:
-            url_parameters[ "milestone" ] = milestone
+            url_parameters[ "milestone" ] = milestone._identity
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state
         if assignee is not GithubObject.NotSet:
-            url_parameters[ "assignee" ] = assignee
+            url_parameters[ "assignee" ] = assignee._identity
         if mentioned is not GithubObject.NotSet:
-            url_parameters[ "mentioned" ] = mentioned
+            url_parameters[ "mentioned" ] = mentioned._identity
         if labels is not GithubObject.NotSet:
-            url_parameters[ "labels" ] = labels
+            url_parameters[ "labels" ] = ",".join( label._identity for label in labels )
         if sort is not GithubObject.NotSet:
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:

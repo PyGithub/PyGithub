@@ -1691,6 +1691,14 @@
             ], 
             "isCompletable": true, 
             "name": "Commit", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "sha"
+                    ]
+                }
+            ], 
             "methods": [
                 {
                     "group": "comments", 
@@ -3442,6 +3450,14 @@
             ], 
             "isCompletable": true, 
             "name": "GitTree", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "sha"
+                    ]
+                }
+            ], 
             "methods": []
         }, 
         {
@@ -3892,6 +3908,14 @@
             ], 
             "isCompletable": true, 
             "name": "Issue", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "number"
+                    ]
+                }
+            ], 
             "methods": [
                 {
                     "group": "modification", 
@@ -6204,9 +6228,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "integer"
+                                "name": "Team"
                             }, 
                             "name": "team_id"
                         }
@@ -6344,9 +6368,9 @@
                     "optionalParameters": [
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "list", 
-                                "name": "string"
+                                "name": "Repository"
                             }, 
                             "name": "repo_names"
                         }, 
@@ -6861,9 +6885,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "Commit"
                             }, 
                             "name": "commit_id"
                         }, 
@@ -8434,9 +8458,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "GitTree"
                             }, 
                             "name": "tree"
                         }, 
@@ -8820,9 +8844,9 @@
                     "optionalParameters": [
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "GitTree"
                             }, 
                             "name": "base_tree"
                         }
@@ -9076,25 +9100,25 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "NamedUser"
                             }, 
                             "name": "assignee"
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "integer"
+                                "name": "Milestone"
                             }, 
                             "name": "milestone"
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "list", 
-                                "name": "string"
+                                "name": "Label"
                             }, 
                             "name": "labels"
                         }
@@ -9178,9 +9202,9 @@
                     "optionalParameters": [
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "integer"
+                                "name": "Milestone"
                             }, 
                             "name": "milestone"
                         }, 
@@ -9194,25 +9218,25 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "NamedUser"
                             }, 
                             "name": "assignee"
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "NamedUser"
                             }, 
                             "name": "mentioned"
                         }, 
                         {
                             "type": {
-                                "simple": true, 
-                                "cardinality": "scalar", 
-                                "name": "string"
+                                "simple": false, 
+                                "cardinality": "list", 
+                                "name": "Label"
                             }, 
                             "name": "labels"
                         }, 
@@ -9793,9 +9817,9 @@
                         }, 
                         {
                             "type": {
-                                "simple": true, 
+                                "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "integer"
+                                "name": "Issue"
                             }, 
                             "name": "issue"
                         }, 
@@ -10352,6 +10376,14 @@
             ], 
             "isCompletable": true, 
             "name": "Team", 
+            "identity": [
+                {
+                    "type": "attribute", 
+                    "value": [
+                        "id"
+                    ]
+                }
+            ], 
             "methods": [
                 {
                     "group": "modification", 
