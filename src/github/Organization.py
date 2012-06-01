@@ -135,7 +135,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/public_members/" + str( public_member._identity ),
+            self.url + "/public_members/" + public_member._identity,
             None,
             None
         )
@@ -144,11 +144,11 @@ class Organization( GithubObject.GithubObject ):
     def create_fork( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
         url_parameters = {
-            "org": str( self.login ),
+            "org": self.login,
         }
         status, headers, data = self._request(
             "POST",
-            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
+            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             url_parameters,
             None
         )
@@ -183,7 +183,7 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "team_id" ] = team_id
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/repos",
+            self.url + "/repos",
             None,
             post_parameters
         )
@@ -203,7 +203,7 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "permission" ] = permission
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/teams",
+            self.url + "/teams",
             None,
             post_parameters
         )
@@ -232,7 +232,7 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "name" ] = name
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -242,7 +242,7 @@ class Organization( GithubObject.GithubObject ):
     def get_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/events",
+            self.url + "/events",
             None,
             None
         )
@@ -257,7 +257,7 @@ class Organization( GithubObject.GithubObject ):
     def get_members( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/members",
+            self.url + "/members",
             None,
             None
         )
@@ -272,7 +272,7 @@ class Organization( GithubObject.GithubObject ):
     def get_public_members( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/public_members",
+            self.url + "/public_members",
             None,
             None
         )
@@ -288,7 +288,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
+            "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
@@ -302,7 +302,7 @@ class Organization( GithubObject.GithubObject ):
             url_parameters[ "type" ] = type
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/repos",
+            self.url + "/repos",
             url_parameters,
             None
         )
@@ -328,7 +328,7 @@ class Organization( GithubObject.GithubObject ):
     def get_teams( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/teams",
+            self.url + "/teams",
             None,
             None
         )
@@ -344,7 +344,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/members/" + str( member._identity ),
+            self.url + "/members/" + member._identity,
             None,
             None
         )
@@ -354,7 +354,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/public_members/" + str( public_member._identity ),
+            self.url + "/public_members/" + public_member._identity,
             None,
             None
         )
@@ -364,7 +364,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/members/" + str( member._identity ),
+            self.url + "/members/" + member._identity,
             None,
             None
         )
@@ -374,7 +374,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/public_members/" + str( public_member._identity ),
+            self.url + "/public_members/" + public_member._identity,
             None,
             None
         )

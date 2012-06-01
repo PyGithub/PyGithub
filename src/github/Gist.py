@@ -94,7 +94,7 @@ class Gist( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             post_parameters
         )
@@ -104,7 +104,7 @@ class Gist( GithubObject.GithubObject ):
     def create_fork( self ):
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/fork",
+            self.url + "/fork",
             None,
             None
         )
@@ -114,7 +114,7 @@ class Gist( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -130,7 +130,7 @@ class Gist( GithubObject.GithubObject ):
             post_parameters[ "files" ] = dict( ( key, value._identity ) for key, value in files.iteritems() )
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -151,7 +151,7 @@ class Gist( GithubObject.GithubObject ):
     def get_comments( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             None
         )
@@ -166,7 +166,7 @@ class Gist( GithubObject.GithubObject ):
     def is_starred( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/star",
+            self.url + "/star",
             None,
             None
         )
@@ -175,7 +175,7 @@ class Gist( GithubObject.GithubObject ):
     def reset_starred( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/star",
+            self.url + "/star",
             None,
             None
         )
@@ -184,7 +184,7 @@ class Gist( GithubObject.GithubObject ):
     def set_starred( self ):
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/star",
+            self.url + "/star",
             None,
             None
         )

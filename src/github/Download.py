@@ -107,7 +107,7 @@ class Download( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )

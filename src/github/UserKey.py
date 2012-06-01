@@ -32,7 +32,7 @@ class UserKey( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -48,7 +48,7 @@ class UserKey( GithubObject.GithubObject ):
             post_parameters[ "key" ] = key
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )

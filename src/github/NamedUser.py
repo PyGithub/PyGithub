@@ -155,7 +155,7 @@ class NamedUser( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/gists",
+            self.url + "/gists",
             None,
             post_parameters
         )
@@ -165,7 +165,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/events",
+            self.url + "/events",
             None,
             None
         )
@@ -180,7 +180,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_followers( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/followers",
+            self.url + "/followers",
             None,
             None
         )
@@ -195,7 +195,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_following( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/following",
+            self.url + "/following",
             None,
             None
         )
@@ -210,7 +210,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_gists( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/gists",
+            self.url + "/gists",
             None,
             None
         )
@@ -225,7 +225,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_orgs( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/orgs",
+            self.url + "/orgs",
             None,
             None
         )
@@ -240,7 +240,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_public_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/events/public",
+            self.url + "/events/public",
             None,
             None
         )
@@ -255,7 +255,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_public_received_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/received_events/public",
+            self.url + "/received_events/public",
             None,
             None
         )
@@ -270,7 +270,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_received_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/received_events",
+            self.url + "/received_events",
             None,
             None
         )
@@ -286,7 +286,7 @@ class NamedUser( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
+            "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
@@ -300,7 +300,7 @@ class NamedUser( GithubObject.GithubObject ):
             url_parameters[ "type" ] = type
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/repos",
+            self.url + "/repos",
             url_parameters,
             None
         )
@@ -315,7 +315,7 @@ class NamedUser( GithubObject.GithubObject ):
     def get_watched( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/watched",
+            self.url + "/watched",
             None,
             None
         )
@@ -329,7 +329,7 @@ class NamedUser( GithubObject.GithubObject ):
 
     @property
     def _identity( self ):
-        return str( self.login )
+        return self.login
 
     def _initAttributes( self ):
         self._avatar_url = GithubObject.NotSet

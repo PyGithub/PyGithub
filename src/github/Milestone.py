@@ -66,7 +66,7 @@ class Milestone( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -88,7 +88,7 @@ class Milestone( GithubObject.GithubObject ):
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -98,7 +98,7 @@ class Milestone( GithubObject.GithubObject ):
     def get_labels( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             None
         )

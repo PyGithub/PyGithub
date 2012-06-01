@@ -45,7 +45,7 @@ class GitCommit( GithubObject.GithubObject ):
 
     @property
     def _identity( self ):
-        return str( self.sha )
+        return self.sha
 
     def _initAttributes( self ):
         self._author = GithubObject.NotSet

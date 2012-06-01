@@ -188,7 +188,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            self.url + "/collaborators/" + collaborator._identity,
             None,
             None
         )
@@ -199,7 +199,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( head, ( str, unicode ) ), head
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/compare/" + str( base ) + "..." + str( head ),
+            self.url + "/compare/" + base + "..." + head,
             None,
             None
         )
@@ -221,7 +221,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "content_type" ] = content_type
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/downloads",
+            self.url + "/downloads",
             None,
             post_parameters
         )
@@ -237,7 +237,7 @@ class Repository( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/git/blobs",
+            self.url + "/git/blobs",
             None,
             post_parameters
         )
@@ -261,7 +261,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "committer" ] = committer._identity
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/git/commits",
+            self.url + "/git/commits",
             None,
             post_parameters
         )
@@ -277,7 +277,7 @@ class Repository( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/git/refs",
+            self.url + "/git/refs",
             None,
             post_parameters
         )
@@ -300,7 +300,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "tagger" ] = tagger._identity
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/git/tags",
+            self.url + "/git/tags",
             None,
             post_parameters
         )
@@ -317,7 +317,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "base_tree" ] = base_tree
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/git/trees",
+            self.url + "/git/trees",
             None,
             post_parameters
         )
@@ -339,7 +339,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "active" ] = active
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/hooks",
+            self.url + "/hooks",
             None,
             post_parameters
         )
@@ -365,7 +365,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "labels" ] = labels
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/issues",
+            self.url + "/issues",
             None,
             post_parameters
         )
@@ -381,7 +381,7 @@ class Repository( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/keys",
+            self.url + "/keys",
             None,
             post_parameters
         )
@@ -397,7 +397,7 @@ class Repository( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             post_parameters
         )
@@ -420,7 +420,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "due_on" ] = due_on
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/milestones",
+            self.url + "/milestones",
             None,
             post_parameters
         )
@@ -450,7 +450,7 @@ class Repository( GithubObject.GithubObject ):
         post_parameters = kwds
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/pulls",
+            self.url + "/pulls",
             None,
             post_parameters
         )
@@ -482,7 +482,7 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "has_downloads" ] = has_downloads
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -492,7 +492,7 @@ class Repository( GithubObject.GithubObject ):
     def get_branches( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/branches",
+            self.url + "/branches",
             None,
             None
         )
@@ -507,7 +507,7 @@ class Repository( GithubObject.GithubObject ):
     def get_collaborators( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/collaborators",
+            self.url + "/collaborators",
             None,
             None
         )
@@ -523,7 +523,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments/" + str( id ),
+            self.url + "/comments/" + str( id ),
             None,
             None
         )
@@ -533,7 +533,7 @@ class Repository( GithubObject.GithubObject ):
     def get_comments( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             None
         )
@@ -549,7 +549,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/commits/" + str( sha ),
+            self.url + "/commits/" + sha,
             None,
             None
         )
@@ -566,7 +566,7 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "path" ] = path
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/commits",
+            self.url + "/commits",
             url_parameters,
             None
         )
@@ -581,7 +581,7 @@ class Repository( GithubObject.GithubObject ):
     def get_contributors( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/contributors",
+            self.url + "/contributors",
             None,
             None
         )
@@ -597,7 +597,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/downloads/" + str( id ),
+            self.url + "/downloads/" + str( id ),
             None,
             None
         )
@@ -607,7 +607,7 @@ class Repository( GithubObject.GithubObject ):
     def get_downloads( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/downloads",
+            self.url + "/downloads",
             None,
             None
         )
@@ -622,7 +622,7 @@ class Repository( GithubObject.GithubObject ):
     def get_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/events",
+            self.url + "/events",
             None,
             None
         )
@@ -637,7 +637,7 @@ class Repository( GithubObject.GithubObject ):
     def get_forks( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/forks",
+            self.url + "/forks",
             None,
             None
         )
@@ -653,7 +653,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/blobs/" + str( sha ),
+            self.url + "/git/blobs/" + sha,
             None,
             None
         )
@@ -664,7 +664,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/commits/" + str( sha ),
+            self.url + "/git/commits/" + sha,
             None,
             None
         )
@@ -675,7 +675,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( ref, ( str, unicode ) ), ref
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/" + str( ref ),
+            self.url + "/git/" + ref,
             None,
             None
         )
@@ -685,7 +685,7 @@ class Repository( GithubObject.GithubObject ):
     def get_git_refs( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/refs",
+            self.url + "/git/refs",
             None,
             None
         )
@@ -701,7 +701,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( sha, ( str, unicode ) ), sha
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/tags/" + str( sha ),
+            self.url + "/git/tags/" + sha,
             None,
             None
         )
@@ -716,7 +716,7 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "recursive" ] = recursive
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/git/trees/" + str( sha ),
+            self.url + "/git/trees/" + sha,
             url_parameters,
             None
         )
@@ -727,7 +727,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/hooks/" + str( id ),
+            self.url + "/hooks/" + str( id ),
             None,
             None
         )
@@ -737,7 +737,7 @@ class Repository( GithubObject.GithubObject ):
     def get_hooks( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/hooks",
+            self.url + "/hooks",
             None,
             None
         )
@@ -753,7 +753,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( number, int ), number
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/issues/" + str( number ),
+            self.url + "/issues/" + str( number ),
             None,
             None
         )
@@ -788,7 +788,7 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "since" ] = since
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/issues",
+            self.url + "/issues",
             url_parameters,
             None
         )
@@ -804,7 +804,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/issues/events/" + str( id ),
+            self.url + "/issues/events/" + str( id ),
             None,
             None
         )
@@ -814,7 +814,7 @@ class Repository( GithubObject.GithubObject ):
     def get_issues_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/issues/events",
+            self.url + "/issues/events",
             None,
             None
         )
@@ -830,7 +830,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/keys/" + str( id ),
+            self.url + "/keys/" + str( id ),
             None,
             None
         )
@@ -840,7 +840,7 @@ class Repository( GithubObject.GithubObject ):
     def get_keys( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/keys",
+            self.url + "/keys",
             None,
             None
         )
@@ -856,7 +856,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/labels/" + urllib.quote( str( name ) ),
+            self.url + "/labels/" + urllib.quote( name ),
             None,
             None
         )
@@ -866,7 +866,7 @@ class Repository( GithubObject.GithubObject ):
     def get_labels( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             None
         )
@@ -881,7 +881,7 @@ class Repository( GithubObject.GithubObject ):
     def get_languages( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/languages",
+            self.url + "/languages",
             None,
             None
         )
@@ -892,7 +892,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( number, int ), number
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/milestones/" + str( number ),
+            self.url + "/milestones/" + str( number ),
             None,
             None
         )
@@ -912,7 +912,7 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "direction" ] = direction
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/milestones",
+            self.url + "/milestones",
             url_parameters,
             None
         )
@@ -927,7 +927,7 @@ class Repository( GithubObject.GithubObject ):
     def get_network_events( self ):
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/networks/" + str( self.owner.login ) + "/" + str( self.name ) + "/events",
+            "https://api.github.com/networks/" + self.owner.login + "/" + self.name + "/events",
             None,
             None
         )
@@ -943,7 +943,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( number, int ), number
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/pulls/" + str( number ),
+            self.url + "/pulls/" + str( number ),
             None,
             None
         )
@@ -957,7 +957,7 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "state" ] = state
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/pulls",
+            self.url + "/pulls",
             url_parameters,
             None
         )
@@ -972,7 +972,7 @@ class Repository( GithubObject.GithubObject ):
     def get_tags( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/tags",
+            self.url + "/tags",
             None,
             None
         )
@@ -987,7 +987,7 @@ class Repository( GithubObject.GithubObject ):
     def get_teams( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/teams",
+            self.url + "/teams",
             None,
             None
         )
@@ -1002,7 +1002,7 @@ class Repository( GithubObject.GithubObject ):
     def get_watchers( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/watchers",
+            self.url + "/watchers",
             None,
             None
         )
@@ -1018,7 +1018,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            self.url + "/collaborators/" + collaborator._identity,
             None,
             None
         )
@@ -1028,7 +1028,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/collaborators/" + str( collaborator._identity ),
+            self.url + "/collaborators/" + collaborator._identity,
             None,
             None
         )
@@ -1036,7 +1036,7 @@ class Repository( GithubObject.GithubObject ):
 
     @property
     def _identity( self ):
-        return str( self.owner.login ) + "/" + str( self.name )
+        return self.owner.login + "/" + self.name
 
     def _initAttributes( self ):
         self._clone_url = GithubObject.NotSet

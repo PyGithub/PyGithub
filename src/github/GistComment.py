@@ -39,7 +39,7 @@ class GistComment( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -52,7 +52,7 @@ class GistComment( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )

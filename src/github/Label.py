@@ -24,7 +24,7 @@ class Label( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -39,7 +39,7 @@ class Label( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -48,7 +48,7 @@ class Label( GithubObject.GithubObject ):
 
     @property
     def _identity( self ):
-        return urllib.quote( str( self.name ) )
+        return urllib.quote( self.name )
 
     def _initAttributes( self ):
         self._color = GithubObject.NotSet

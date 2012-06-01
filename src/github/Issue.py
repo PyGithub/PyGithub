@@ -108,7 +108,7 @@ class Issue( GithubObject.GithubObject ):
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             post_parameters
         )
@@ -121,7 +121,7 @@ class Issue( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             post_parameters
         )
@@ -131,7 +131,7 @@ class Issue( GithubObject.GithubObject ):
     def delete_labels( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             None
         )
@@ -159,7 +159,7 @@ class Issue( GithubObject.GithubObject ):
             post_parameters[ "labels" ] = labels
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -170,7 +170,7 @@ class Issue( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            self._parentUrl( str( self.url ) ) + "/comments/" + str( id ),
+            self._parentUrl( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
@@ -180,7 +180,7 @@ class Issue( GithubObject.GithubObject ):
     def get_comments( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             None
         )
@@ -195,7 +195,7 @@ class Issue( GithubObject.GithubObject ):
     def get_events( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/events",
+            self.url + "/events",
             None,
             None
         )
@@ -210,7 +210,7 @@ class Issue( GithubObject.GithubObject ):
     def get_labels( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             None
         )
@@ -226,7 +226,7 @@ class Issue( GithubObject.GithubObject ):
         assert isinstance( label, Label.Label ), label
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/labels/" + str( label._identity ),
+            self.url + "/labels/" + label._identity,
             None,
             None
         )
@@ -237,7 +237,7 @@ class Issue( GithubObject.GithubObject ):
         post_parameters = [ label._identity for label in labels ]
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/labels",
+            self.url + "/labels",
             None,
             post_parameters
         )

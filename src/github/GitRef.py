@@ -24,7 +24,7 @@ class GitRef( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -40,7 +40,7 @@ class GitRef( GithubObject.GithubObject ):
             post_parameters[ "force" ] = force
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )

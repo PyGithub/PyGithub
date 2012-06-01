@@ -156,7 +156,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self._request(
             "PUT",
-            "https://api.github.com/user/following/" + str( following._identity ),
+            "https://api.github.com/user/following/" + following._identity,
             None,
             None
         )
@@ -166,7 +166,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self._request(
             "PUT",
-            "https://api.github.com/user/watched/" + str( watched._identity ),
+            "https://api.github.com/user/watched/" + watched._identity,
             None,
             None
         )
@@ -196,7 +196,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self._request(
             "POST",
-            "https://api.github.com/repos/" + str( repo.owner.login ) + "/" + str( repo.name ) + "/forks",
+            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
             None
         )
@@ -443,7 +443,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( org, Organization.Organization ), org
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/users/" + str( self.login ) + "/events/orgs/" + str( org.login ),
+            "https://api.github.com/users/" + self.login + "/events/orgs/" + org.login,
             None,
             None
         )
@@ -474,7 +474,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/repos/" + str( self.login ) + "/" + str( name ),
+            "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
@@ -540,7 +540,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/user/following/" + str( following._identity ),
+            "https://api.github.com/user/following/" + following._identity,
             None,
             None
         )
@@ -550,7 +550,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self._request(
             "GET",
-            "https://api.github.com/user/watched/" + str( watched._identity ),
+            "https://api.github.com/user/watched/" + watched._identity,
             None,
             None
         )
@@ -571,7 +571,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self._request(
             "DELETE",
-            "https://api.github.com/user/following/" + str( following._identity ),
+            "https://api.github.com/user/following/" + following._identity,
             None,
             None
         )
@@ -581,7 +581,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self._request(
             "DELETE",
-            "https://api.github.com/user/watched/" + str( watched._identity ),
+            "https://api.github.com/user/watched/" + watched._identity,
             None,
             None
         )

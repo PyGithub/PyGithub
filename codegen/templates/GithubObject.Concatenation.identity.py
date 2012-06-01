@@ -1,1 +1,1 @@
-str( {{ value|join:"." }}._identity )
+{{ value|join:"." }}._identity

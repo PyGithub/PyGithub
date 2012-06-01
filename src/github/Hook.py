@@ -54,7 +54,7 @@ class Hook( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -81,7 +81,7 @@ class Hook( GithubObject.GithubObject ):
             post_parameters[ "active" ] = active
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -91,7 +91,7 @@ class Hook( GithubObject.GithubObject ):
     def test( self ):
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/test",
+            self.url + "/test",
             None,
             None
         )

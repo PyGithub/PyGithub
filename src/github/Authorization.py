@@ -54,7 +54,7 @@ class Authorization( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -79,7 +79,7 @@ class Authorization( GithubObject.GithubObject ):
             post_parameters[ "note_url" ] = note_url
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )

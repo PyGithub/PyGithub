@@ -1,1 +1,1 @@
-str( {{ value|join:"." }} )
+{{ value|join:"." }}

@@ -42,7 +42,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/members/" + str( member._identity ),
+            self.url + "/members/" + member._identity,
             None,
             None
         )
@@ -52,7 +52,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            self.url + "/repos/" + repo._identity,
             None,
             None
         )
@@ -61,7 +61,7 @@ class Team( GithubObject.GithubObject ):
     def delete( self ):
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ),
+            self.url,
             None,
             None
         )
@@ -77,7 +77,7 @@ class Team( GithubObject.GithubObject ):
             post_parameters[ "permission" ] = permission
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -87,7 +87,7 @@ class Team( GithubObject.GithubObject ):
     def get_members( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/members",
+            self.url + "/members",
             None,
             None
         )
@@ -102,7 +102,7 @@ class Team( GithubObject.GithubObject ):
     def get_repos( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/repos",
+            self.url + "/repos",
             None,
             None
         )
@@ -118,7 +118,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/members/" + str( member._identity ),
+            self.url + "/members/" + member._identity,
             None,
             None
         )
@@ -128,7 +128,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            self.url + "/repos/" + repo._identity,
             None,
             None
         )
@@ -138,7 +138,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( member, NamedUser.NamedUser ), member
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/members/" + str( member._identity ),
+            self.url + "/members/" + member._identity,
             None,
             None
         )
@@ -148,7 +148,7 @@ class Team( GithubObject.GithubObject ):
         assert isinstance( repo, Repository.Repository ), repo
         status, headers, data = self._request(
             "DELETE",
-            str( self.url ) + "/repos/" + str( repo._identity ),
+            self.url + "/repos/" + repo._identity,
             None,
             None
         )

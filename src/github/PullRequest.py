@@ -155,7 +155,7 @@ class PullRequest( GithubObject.GithubObject ):
         }
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             post_parameters
         )
@@ -175,7 +175,7 @@ class PullRequest( GithubObject.GithubObject ):
             post_parameters[ "state" ] = state
         status, headers, data = self._request(
             "PATCH",
-            str( self.url ),
+            self.url,
             None,
             post_parameters
         )
@@ -186,7 +186,7 @@ class PullRequest( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         status, headers, data = self._request(
             "GET",
-            self._parentUrl( str( self.url ) ) + "/comments/" + str( id ),
+            self._parentUrl( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
@@ -196,7 +196,7 @@ class PullRequest( GithubObject.GithubObject ):
     def get_comments( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             None
         )
@@ -211,7 +211,7 @@ class PullRequest( GithubObject.GithubObject ):
     def get_commits( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/commits",
+            self.url + "/commits",
             None,
             None
         )
@@ -226,7 +226,7 @@ class PullRequest( GithubObject.GithubObject ):
     def get_files( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/files",
+            self.url + "/files",
             None,
             None
         )
@@ -241,7 +241,7 @@ class PullRequest( GithubObject.GithubObject ):
     def is_merged( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/merge",
+            self.url + "/merge",
             None,
             None
         )
@@ -254,7 +254,7 @@ class PullRequest( GithubObject.GithubObject ):
             post_parameters[ "commit_message" ] = commit_message
         status, headers, data = self._request(
             "PUT",
-            str( self.url ) + "/merge",
+            self.url + "/merge",
             None,
             post_parameters
         )

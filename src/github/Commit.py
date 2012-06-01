@@ -68,7 +68,7 @@ class Commit( GithubObject.GithubObject ):
             post_parameters[ "position" ] = position
         status, headers, data = self._request(
             "POST",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             post_parameters
         )
@@ -78,7 +78,7 @@ class Commit( GithubObject.GithubObject ):
     def get_comments( self ):
         status, headers, data = self._request(
             "GET",
-            str( self.url ) + "/comments",
+            self.url + "/comments",
             None,
             None
         )
