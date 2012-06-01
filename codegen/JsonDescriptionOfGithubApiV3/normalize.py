@@ -19,7 +19,7 @@ def mergeDict( base, *additions ):
 
 def checkKeys( d, mandatoryKeys, optionalKeys = [] ):
     assert set( d.keys() ) >= set( mandatoryKeys ), d.keys()
-    assert set( d.keys() ) <= set( mandatoryKeys ) | set( optionalKeys ) | set( [ "@todo" ] ), d.keys()
+    assert set( d.keys() ) <= set( mandatoryKeys ) | set( optionalKeys ), d.keys()
 
 class Type:
     def __init__( self, arg ):
@@ -32,7 +32,7 @@ class Type:
         json = {
             "cardinality": self.cardinality,
             "name": self.name,
-            "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict", "@todo" ],
+            "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict" ],
         }
         if self.keyName is not None:
             json[ "key_name" ] = self.keyName
@@ -325,7 +325,7 @@ class Class:
                     "request": {
                         "verb": "PATCH",
                         "url": url,
-                        "postParameters": True, # @todo
+                        "postParameters": True,
                         "information": "data",
                     },
                 }
