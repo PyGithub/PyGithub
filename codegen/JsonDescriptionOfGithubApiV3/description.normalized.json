@@ -1205,8 +1205,9 @@
                         {
                             "type": {
                                 "simple": false, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "key_name": "string", 
+                                "cardinality": "dict", 
+                                "name": "InputFileContent"
                             }, 
                             "name": "files"
                         }
@@ -2585,8 +2586,9 @@
                         {
                             "type": {
                                 "simple": false, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "key_name": "string", 
+                                "cardinality": "dict", 
+                                "name": "InputFileContent"
                             }, 
                             "name": "files"
                         }
@@ -5331,8 +5333,9 @@
                         {
                             "type": {
                                 "simple": false, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "key_name": "string", 
+                                "cardinality": "dict", 
+                                "name": "InputFileContent"
                             }, 
                             "name": "files"
                         }
@@ -8453,7 +8456,7 @@
                             "type": {
                                 "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "InputGitAuthor"
                             }, 
                             "name": "author"
                         }, 
@@ -8461,7 +8464,7 @@
                             "type": {
                                 "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "InputGitAuthor"
                             }, 
                             "name": "committer"
                         }
@@ -8707,7 +8710,7 @@
                             "type": {
                                 "simple": false, 
                                 "cardinality": "scalar", 
-                                "name": "@todo"
+                                "name": "InputGitAuthor"
                             }, 
                             "name": "tagger"
                         }
@@ -8774,8 +8777,8 @@
                         {
                             "type": {
                                 "simple": false, 
-                                "cardinality": "scalar", 
-                                "name": "@todo"
+                                "cardinality": "list", 
+                                "name": "InputGitTreeElement"
                             }, 
                             "name": "tree"
                         }

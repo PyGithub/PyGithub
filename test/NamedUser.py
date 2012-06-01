@@ -1,5 +1,7 @@
 import Framework
 
+import github
+
 class NamedUser( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
@@ -64,11 +66,11 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( self.user.url, "https://api.github.com/users/jacquev6" )
 
     def testCreateGist( self ):
-        gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } }, "Gist created by PyGithub on a NamedUser" )
+        gist = self.user.create_gist( True, { "foobar.txt": github.InputFileContent( "File created by PyGithub" ) }, "Gist created by PyGithub on a NamedUser" )
         self.assertEqual( gist.description, "Gist created by PyGithub on a NamedUser" )
 
     def testCreateGistWithoutDescription( self ):
-        gist = self.user.create_gist( True, { "foobar.txt": { "content": "File created by PyGithub" } } )
+        gist = self.user.create_gist( True, { "foobar.txt": github.InputFileContent( "File created by PyGithub" ) } )
         self.assertEqual( gist.description, None )
 
     def testGetGists( self ):

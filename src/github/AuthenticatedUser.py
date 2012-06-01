@@ -4,6 +4,7 @@
 import GithubObject
 import PaginatedList
 ##########
+import InputFileContent
 import Gist
 import Repository
 import NamedUser
@@ -204,10 +205,11 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def create_gist( self, public, files, description = GithubObject.NotSet ):
         assert isinstance( public, bool ), public
+        assert all( isinstance( element, InputFileContent.InputFileContent ) for element in files.itervalues() ), files
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
         post_parameters = {
             "public": public,
-            "files": files,
+            "files": { key : value._identity() for key, value in files.iteritems() },
         }
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description

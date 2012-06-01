@@ -182,7 +182,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
-                            { "name": "files", "type": "@todo" }
+                            { "name": "files", "type": "dict:string-InputFileContent" }
                         ],
                         "optionalParameters": [
                             { "name": "description", "type": "string" }
@@ -422,7 +422,7 @@
             "edit": {
                 "optionalParameters": [
                     { "name": "description", "type": "string" },
-                    { "name": "files", "type": "@todo" }
+                    { "name": "files", "type": "dict:string-InputFileContent" }
                 ]
             },
             "delete": true,
@@ -934,7 +934,7 @@
                     "createElement": {
                         "mandatoryParameters": [
                             { "name": "public", "type": "bool" },
-                            { "name": "files", "type": "@todo" }
+                            { "name": "files", "type": "dict:string-InputFileContent" }
                         ],
                         "optionalParameters": [
                             { "name": "description", "type": "string" }
@@ -1463,8 +1463,8 @@
                             { "name": "parents", "type": "list:GitCommit" }
                         ],
                         "optionalParameters": [
-                            { "name": "author", "type": "@todo" },
-                            { "name": "committer", "type": "@todo" }
+                            { "name": "author", "type": "InputGitAuthor" },
+                            { "name": "committer", "type": "InputGitAuthor" }
                         ]
                     },
                     "url": [
@@ -1510,7 +1510,7 @@
                             { "name": "type", "type": "string" }
                         ],
                         "optionalParameters": [
-                            { "name": "tagger", "type": "@todo" }
+                            { "name": "tagger", "type": "InputGitAuthor" }
                         ]
                     },
                     "getElement": {
@@ -1527,7 +1527,7 @@
                     "type": "GitTree",
                     "createElement": {
                         "mandatoryParameters": [
-                            { "name": "tree", "type": "@todo" }
+                            { "name": "tree", "type": "list:InputGitTreeElement" }
                         ],
                         "optionalParameters": [
                             { "name": "base_tree", "type": "string" }

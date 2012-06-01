@@ -1,5 +1,7 @@
 import Framework
 
+import github
+
 class Gist( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
@@ -39,7 +41,7 @@ class Gist( Framework.TestCase ):
         self.assertEquals( self.gist.updated_at, "2012-05-19T07:00:58Z" )
 
     def testEditWithAllParameters( self ):
-        self.gist.edit( "Description edited by PyGithub", { "barbaz.txt": { "content": "File also created by PyGithub" } } )
+        self.gist.edit( "Description edited by PyGithub", { "barbaz.txt": github.InputFileContent( "File also created by PyGithub" ) } )
         self.assertEquals( self.gist.description, "Description edited by PyGithub" )
         self.assertEquals( self.gist.updated_at, "2012-05-19T07:06:10Z" )
         self.assertEquals( self.gist.files.keys(), [ "foobar.txt", "barbaz.txt" ] )

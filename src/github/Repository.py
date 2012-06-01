@@ -9,6 +9,7 @@ import PaginatedList
 import Branch
 import IssueEvent
 import Label
+import InputGitAuthor
 import GitBlob
 import Organization
 import GitRef
@@ -18,7 +19,7 @@ import PullRequest
 import RepositoryKey
 import NamedUser
 import Milestone
-import Permissions
+import InputGitTreeElement
 import Comparison
 import CommitComment
 import GitCommit
@@ -29,6 +30,7 @@ import Hook
 import Tag
 import GitTag
 import Download
+import Permissions
 import Event
 
 class Repository( GithubObject.GithubObject ):
@@ -246,15 +248,17 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( message, ( str, unicode ) ), message
         assert isinstance( tree, ( str, unicode ) ), tree
         assert all( isinstance( element, GitCommit.GitCommit ) for element in parents ), parents
+        assert author is GithubObject.NotSet or isinstance( author, InputGitAuthor.InputGitAuthor ), author
+        assert committer is GithubObject.NotSet or isinstance( committer, InputGitAuthor.InputGitAuthor ), committer
         post_parameters = {
             "message": message,
             "tree": tree,
             "parents": parents,
         }
         if author is not GithubObject.NotSet:
-            post_parameters[ "author" ] = author
+            post_parameters[ "author" ] = author._identity()
         if committer is not GithubObject.NotSet:
-            post_parameters[ "committer" ] = committer
+            post_parameters[ "committer" ] = committer._identity()
         status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/commits",
@@ -285,6 +289,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( message, ( str, unicode ) ), message
         assert isinstance( object, ( str, unicode ) ), object
         assert isinstance( type, ( str, unicode ) ), type
+        assert tagger is GithubObject.NotSet or isinstance( tagger, InputGitAuthor.InputGitAuthor ), tagger
         post_parameters = {
             "tag": tag,
             "message": message,
@@ -292,7 +297,7 @@ class Repository( GithubObject.GithubObject ):
             "type": type,
         }
         if tagger is not GithubObject.NotSet:
-            post_parameters[ "tagger" ] = tagger
+            post_parameters[ "tagger" ] = tagger._identity()
         status, headers, data = self._request(
             "POST",
             str( self.url ) + "/git/tags",
@@ -303,9 +308,10 @@ class Repository( GithubObject.GithubObject ):
         return GitTag.GitTag( self._requester, data, completed = True )
 
     def create_git_tree( self, tree, base_tree = GithubObject.NotSet ):
+        assert all( isinstance( element, InputGitTreeElement.InputGitTreeElement ) for element in tree ), tree
         assert base_tree is GithubObject.NotSet or isinstance( base_tree, ( str, unicode ) ), base_tree
         post_parameters = {
-            "tree": tree,
+            "tree": [ element._identity() for element in tree ],
         }
         if base_tree is not GithubObject.NotSet:
             post_parameters[ "base_tree" ] = base_tree

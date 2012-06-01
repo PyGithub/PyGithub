@@ -4,11 +4,12 @@
 import GithubObject
 import PaginatedList
 ##########
-import NamedUser
-import GistHistoryState
-import GistFile
 import Gist
 import GistComment
+import NamedUser
+import GistFile
+import InputFileContent
+import GistHistoryState
 
 class Gist( GithubObject.GithubObject ):
     @property
@@ -121,11 +122,12 @@ class Gist( GithubObject.GithubObject ):
 
     def edit( self, description = GithubObject.NotSet, files = GithubObject.NotSet ):
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        assert files is GithubObject.NotSet or all( isinstance( element, InputFileContent.InputFileContent ) for element in files.itervalues() ), files
         post_parameters = dict()
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
         if files is not GithubObject.NotSet:
-            post_parameters[ "files" ] = files
+            post_parameters[ "files" ] = { key : value._identity() for key, value in files.iteritems() }
         status, headers, data = self._request(
             "PATCH",
             str( self.url ),

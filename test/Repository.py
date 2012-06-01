@@ -1,5 +1,7 @@
 import Framework
 
+import github
+
 class Repository( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
@@ -125,33 +127,44 @@ class Repository( Framework.TestCase ):
 
     def testCreateGitTree( self ):
         tree = self.repo.create_git_tree(
-            [ {
-                "path": "Foobar.txt",
-                "mode": "100644",
-                "type": "blob",
-                "content": "File created by PyGithub"
-            } ] 
+            [ github.InputGitTreeElement(
+                "Foobar.txt",
+                "100644",
+                "blob",
+                content = "File created by PyGithub"
+            ) ]
         )
         self.assertEqual( tree.sha, "41cf8c178c636a018d537cb20daae09391efd70b" )
 
     def testCreateGitTreeWithBaseTree( self ):
         tree = self.repo.create_git_tree(
-            [ {
-                "path": "Barbaz.txt",
-                "mode": "100644",
-                "type": "blob",
-                "content": "File also created by PyGithub"
-            } ], 
+            [ github.InputGitTreeElement(
+                "Barbaz.txt",
+                "100644",
+                "blob",
+                content = "File also created by PyGithub"
+            ) ],
             "41cf8c178c636a018d537cb20daae09391efd70b"
         )
         self.assertEqual( tree.sha, "107139a922f33bab6fbeb9f9eb8787e7f19e0528" )
+
+    def testCreateGitTreeWithSha( self ):
+        tree = self.repo.create_git_tree(
+            [ github.InputGitTreeElement(
+                "Barbaz.txt",
+                "100644",
+                "blob",
+                sha = "5dd930f591cd5188e9ea7200e308ad355182a1d8"
+            ) ]
+        )
+        self.assertEqual( tree.sha, "fae707821159639589bf94f3fb0a7154ec5d441b" )
 
     def testCreateGitCommit( self ):
         commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [] )
         self.assertEqual( commit.sha, "0b820628236ab8bab3890860fc414fa757ca15f4" )
 
     def testCreateGitCommitWithAllArguments( self ):
-        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [], { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" }, { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" } )
+        commit = self.repo.create_git_commit( "Commit created by PyGithub", "107139a922f33bab6fbeb9f9eb8787e7f19e0528", [], github.InputGitAuthor( "John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ), github.InputGitAuthor( "John Doe",  "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ) )
         self.assertEqual( commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea" )
 
     def testCreateGitTag( self ):
@@ -159,7 +172,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a" )
 
     def testCreateGitTagWithAllArguments( self ):
-        tag = self.repo.create_git_tag( "TaggedByPyGithub2", "Tag also created by PyGithub", "526946197ae9da59c6507cacd13ad6f1cfb686ea", "commit", { "name" : "John Doe", "email" : "j.doe@vincent-jacques.net", "date": "2008-07-09T16:13:30+12:00" } )
+        tag = self.repo.create_git_tag( "TaggedByPyGithub2", "Tag also created by PyGithub", "526946197ae9da59c6507cacd13ad6f1cfb686ea", "commit", github.InputGitAuthor( "John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00" ) )
         self.assertEqual( tag.sha, "f0e99a8335fbc84c53366c4a681118468f266625" )
 
     def testCreateKey( self ):

@@ -88,7 +88,7 @@ Gists
 -----
 * `create_gist( public, files, [description] )`: `Gist`
     * `public`: bool
-    * `files`
+    * `files`: dict of string to `InputFileContent`
     * `description`: string
 * `get_gists()`: list of `Gist`
 * `get_starred_gists()`: list of `Gist`
@@ -368,7 +368,7 @@ Modification
 ------------
 * `edit( [description, files] )`
     * `description`: string
-    * `files`
+    * `files`: dict of string to `InputFileContent`
 
 Starring
 --------
@@ -758,7 +758,7 @@ Gists
 -----
 * `create_gist( public, files, [description] )`: `Gist`
     * `public`: bool
-    * `files`
+    * `files`: dict of string to `InputFileContent`
     * `description`: string
 * `get_gists()`: list of `Gist`
 
@@ -1107,8 +1107,8 @@ Git_commits
     * `message`: string
     * `tree`: string
     * `parents`: list of `GitCommit`
-    * `author`
-    * `committer`
+    * `author`: `InputGitAuthor`
+    * `committer`: `InputGitAuthor`
 * `get_git_commit( sha )`: `GitCommit`
     * `sha`: string
 
@@ -1128,14 +1128,14 @@ Git_tags
     * `message`: string
     * `object`: string
     * `type`: string
-    * `tagger`
+    * `tagger`: `InputGitAuthor`
 * `get_git_tag( sha )`: `GitTag`
     * `sha`: string
 
 Git_trees
 ---------
 * `create_git_tree( tree, [base_tree] )`: `GitTree`
-    * `tree`
+    * `tree`: list of `InputGitTreeElement`
     * `base_tree`: string
 * `get_git_tree( sha, [recursive] )`: `GitTree`
     * `sha`: string

@@ -19,20 +19,25 @@ description = json.load( open( os.path.join( os.path.dirname( __file__ ), "JsonD
 
 for class_ in description[ "classes" ]:
     dependencies = set()
-
     class_[ "needsPaginatedList" ] = False
     class_[ "needsDefaultValue" ] = False
+
     for method in class_[ "methods" ]:
         if method[ "type" ][ "cardinality" ] == "list":
             class_[ "needsPaginatedList" ] = True
         if len( method[ "optionalParameters" ] ) != 0:
             class_[ "needsDefaultValue" ] = True
+        if not method[ "type" ][ "simple" ]:
+            dependencies.add( method[ "type" ][ "name" ] )
+        for parameter in itertools.chain( method[ "mandatoryParameters" ], method[ "optionalParameters" ] ):
+            if not parameter[ "type" ][ "simple" ]:
+                dependencies.add( parameter[ "type" ][ "name" ] )
 
-    for thing in itertools.chain( class_[ "methods" ], class_[ "attributes" ] ):
-        if not thing[ "type" ][ "simple" ]:
-            dependencies.add( thing[ "type" ][ "name" ] )
+    for attribute in class_[ "attributes" ]:
+        if not attribute[ "type" ][ "simple" ]:
+            dependencies.add( attribute[ "type" ][ "name" ] )
+
     class_[ "dependencies" ] = list( dependencies )
-
     class_[ "needsUrllib" ] = class_[ "name" ] in [ "Label", "Repository" ]
 
 githubObjectTemplate = django.template.loader.get_template( "GithubObject.py" )
