@@ -1,14 +1,34 @@
 You don't normaly create instances of any class but `Github`.
 You obtain instances through calls to `get_` and `create_` methods.
+
 Class `Github`
 ==============
-* Constructed from user's login and password or OAuth token
+
+Constructed from user's login and password or OAuth token or nothing:
+
+    g = Github( login, password )
+    g = Github( token )
+    g = Github()
+
+Attributes
+----------
+* `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
+
+Methods
+-------
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
 * `get_gists()`: list of `Gist`
-* `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
+
+Class `GithubException`
+=======================
+
+Attributes
+----------
+* `status`: integer
+* `data`: dict
 
 Class `AuthenticatedUser`
 =========================

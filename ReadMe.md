@@ -1,12 +1,15 @@
 This is a Python library to access the [Github API v3](http://developer.github.com/v3).
 
-With it, you can manage your Github resources (repositories, user profiles, organizations, etc.) from Python scripts.
+With it, you can manage your [Github](http://github.com) resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
-It is still a work in progress, but it already covers the **full** API in version 0.5.
+It covers the **full** API, and all methods have been tested against the real Github site.
 
-Next version (1.0) will focus on creating a really homogeneous and meaningful public interface. See the [milestone on Github](https://github.com/jacquev6/PyGithub/issues?milestone=2).
+Should you have any question, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please [open an issue](https://github.com/jacquev6/PyGithub/issues).
 
-Should you have any question, or if you find a bug, please [open an issue on Github](https://github.com/jacquev6/PyGithub/issues).
+News (on June 3rd, 2012)
+========================
+
+Version 1.0 is out! You can now consider PyGithub stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
 
 Download and install
 ====================
@@ -29,8 +32,30 @@ Then play with your Github objects:
         print repo.name
         repo.edit( has_wiki = False )
 
+You can also create a Github instance with an OAuth token:
+
+    g = Github( token )
+
+Or without authentication:
+
+    g = Github()
+
 History
 =======
+
+Version 1.0 (June 3rd, 2012)
+----------------------------
+
+* Complete rewrite, with no more complicated meta-description
+* Full typing of attributes and parameters
+* Full documentation of attributes and parameters
+* More usable exceptions raised in case on problems with the API
+* Some bugs and limitations fixed, special thanks to [bilderbuchi](https://github.com/bilderbuchi), [roskakori](https://github.com/roskakori) and [tallforasmurf](https://github.com/tallforasmurf) for reporting them!
+
+Version 0.7 (May 26th, 2012)
+----------------------------
+
+* Use PyGithub with OAuth authentication or with no authentication at all
 
 Version 0.6 (April 17th, 2012)
 ------------------------------

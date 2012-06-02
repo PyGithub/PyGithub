@@ -5,7 +5,7 @@ import textwrap
 
 setup(
     name = 'PyGithub',
-    version = '0.7',
+    version = '1.0',
     description = 'Use the full Github API v3',
     author = 'Vincent Jacques',
     author_email = 'vincent@vincent-jacques.net',
@@ -26,13 +26,13 @@ setup(
                 print repo.name
                 repo.edit( has_wiki = False )
 
-        You can also create a Github instance without authentication::
-
-            g = Github( "user", "password" )
-
-        Or with an OAuth token::
+        You can also create a Github instance with an OAuth token::
 
             g = Github( token )
+
+        Or without authentication::
+
+            g = Github()
 
         Reference documentation
         =======================
@@ -40,11 +40,9 @@ setup(
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
         'github',
-        'github.GithubObjects',
-        'github.GithubObjects.GithubObject',
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
