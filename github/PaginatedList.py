@@ -1,3 +1,5 @@
+import GithubObject
+
 class PaginatedList:
     def __init__( self, contentClass, requester, headers, data ):
         self.__requester = requester
@@ -49,6 +51,7 @@ class PaginatedList:
 
     def __fetchNextPage( self ):
         status, headers, data = self.__requester.request( "GET", self.__nextUrl, None, None )
+        GithubObject.GithubObject._checkStatus( status, data )
         return self.__appendData( headers, data )
 
     def __appendData( self, headers, data ):

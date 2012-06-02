@@ -23,6 +23,7 @@ class Github( object ):
                 None,
                 None
             )
+            NamedUser.NamedUser._checkStatus( status, data )
             return NamedUser.NamedUser( self.__requester, data, completed = True )
 
     def get_organization( self, login ):
@@ -32,6 +33,7 @@ class Github( object ):
             None,
             None
         )
+        Organization.Organization._checkStatus( status, data )
         return Organization.Organization( self.__requester, data, completed = True )
 
     def get_gist( self, id ):
@@ -41,10 +43,12 @@ class Github( object ):
             None,
             None
         )
+        Gist.Gist._checkStatus( status, data )
         return Gist.Gist( self.__requester, data, completed = True )
 
     def get_gists( self ):
         status, headers, data = self.__requester.request( "GET", "https://api.github.com/gists/public", None, None )
+        Gist.Gist._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,

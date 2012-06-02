@@ -13,14 +13,17 @@ class BasicGithubObject( object ):
     def _request( self, verb, url, parameters, input ):
         return self._requester.request( verb, url, parameters, input )
 
-    def _parentUrl( self, url ):
+    @staticmethod
+    def _parentUrl( url ):
         return "/".join( url.split( "/" )[ : -1 ] )
 
-    def _checkStatus( self, status, data ):
+    @staticmethod
+    def _checkStatus( status, data ):
         if status >= 400:
             raise GithubException.GithubException( status, data )
 
-    def _NoneIfNotSet( self, value ):
+    @staticmethod
+    def _NoneIfNotSet( value ):
         if value is NotSet:
             return None
         else:
@@ -42,5 +45,6 @@ class GithubObject( BasicGithubObject ):
             None,
             None
         )
+        self._checkStatus( status, data )
         self._useAttributes( data )
         self._completed = True

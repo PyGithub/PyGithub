@@ -39,7 +39,8 @@ class Requester:
 
         cnx.close()
 
-        self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
+        if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
+            self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
         # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
         return status, headers, output
