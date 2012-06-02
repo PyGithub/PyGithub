@@ -5,7 +5,7 @@ import httplib
 import traceback
 import itertools
 
-sys.path = [ os.path.join( os.path.dirname( __file__ ), "..", "src" ) ] + sys.path
+sys.path = [ os.path.join( os.path.dirname( __file__ ), ".." ) ] + sys.path
 import github
 
 class FakeHttpResponse:

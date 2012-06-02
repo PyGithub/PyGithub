@@ -11,6 +11,6 @@ echo "=============="
 echo "|| Coverage ||"
 echo "=============="
 
-coverage report -m --include=../src/*
+coverage report -m --include=../github/*
 
-coverage html --include=../src/*
+coverage html --include=../github/*
