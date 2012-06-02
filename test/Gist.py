@@ -1,6 +1,7 @@
 import Framework
 
 import github
+import datetime
 
 class Gist( Framework.TestCase ):
     def setUp( self ):
@@ -9,7 +10,7 @@ class Gist( Framework.TestCase ):
 
     def testAttributes( self ):
         self.assertEquals( self.gist.comments, 0 )
-        self.assertEquals( self.gist.created_at, "2012-02-29T16:47:12Z" )
+        self.assertEquals( self.gist.created_at, datetime.datetime( 2012, 2, 29, 16, 47, 12 ) )
         self.assertEquals( self.gist.description, "How to error 500 Github API v3, as requested by Rick (GitHub Staff)" )
         self.assertEquals( self.gist.files.keys(), [ "fail_github.py" ] )
         self.assertEquals( self.gist.files[ "fail_github.py" ].size, 1636 )
@@ -24,26 +25,26 @@ class Gist( Framework.TestCase ):
         self.assertEquals( self.gist.history[ 0 ].change_status.additions, 52 )
         self.assertEquals( self.gist.history[ 0 ].change_status.deletions, 0 )
         self.assertEquals( self.gist.history[ 0 ].change_status.total, 52 )
-        self.assertEquals( self.gist.history[ 0 ].committed_at, "2012-02-29T16:47:12Z" )
+        self.assertEquals( self.gist.history[ 0 ].committed_at, datetime.datetime( 2012, 2, 29, 16, 47, 12 ) )
         self.assertEquals( self.gist.history[ 0 ].url, "https://api.github.com/gists/2729810/a40de483e42ba33bda308371c0ef8383db73be9e" )
         self.assertEquals( self.gist.history[ 0 ].user.login, "jacquev6" )
         self.assertEquals( self.gist.history[ 0 ].version, "a40de483e42ba33bda308371c0ef8383db73be9e" )
         self.assertEquals( self.gist.html_url, "https://gist.github.com/2729810" )
         self.assertEquals( self.gist.id, "2729810" )
         self.assertEquals( self.gist.public, True )
-        self.assertEquals( self.gist.updated_at, "2012-02-29T16:47:12Z" )
+        self.assertEquals( self.gist.updated_at, datetime.datetime( 2012, 2, 29, 16, 47, 12 ) )
         self.assertEquals( self.gist.url, "https://api.github.com/gists/2729810" )
         self.assertEquals( self.gist.user.login, "jacquev6" )
 
     def testEditWithoutParameters( self ):
         self.gist.edit()
         self.assertEquals( self.gist.description, "Gist created by PyGithub" )
-        self.assertEquals( self.gist.updated_at, "2012-05-19T07:00:58Z" )
+        self.assertEquals( self.gist.updated_at, datetime.datetime( 2012, 5, 19, 7, 0, 58 ) )
 
     def testEditWithAllParameters( self ):
         self.gist.edit( "Description edited by PyGithub", { "barbaz.txt": github.InputFileContent( "File also created by PyGithub" ) } )
         self.assertEquals( self.gist.description, "Description edited by PyGithub" )
-        self.assertEquals( self.gist.updated_at, "2012-05-19T07:06:10Z" )
+        self.assertEquals( self.gist.updated_at, datetime.datetime( 2012, 5, 19, 7, 6, 10 ) )
         self.assertEquals( self.gist.files.keys(), [ "foobar.txt", "barbaz.txt" ] )
 
     def testCreateComment( self ):

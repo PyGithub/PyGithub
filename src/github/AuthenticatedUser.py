@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 import PaginatedList
 ##########
@@ -632,7 +634,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             self._company = attributes[ "company" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = attributes[ "created_at" ]
+            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "disk_usage" in attributes: # pragma no branch
             assert attributes[ "disk_usage" ] is None or isinstance( attributes[ "disk_usage" ], int ), attributes[ "disk_usage" ]
             self._disk_usage = attributes[ "disk_usage" ]

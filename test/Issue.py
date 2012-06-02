@@ -1,5 +1,7 @@
 import Framework
 
+import datetime
+
 class Issue( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
@@ -9,10 +11,10 @@ class Issue( Framework.TestCase ):
     def testAttributes( self ):
         self.assertEqual( self.issue.assignee.login, "jacquev6" )
         self.assertEqual( self.issue.body, "Body edited by PyGithub" )
-        self.assertEqual( self.issue.closed_at, "2012-05-26T14:59:33Z" )
+        self.assertEqual( self.issue.closed_at, datetime.datetime( 2012, 5, 26, 14, 59, 33 ) )
         self.assertEqual( self.issue.closed_by.login, "jacquev6" )
         self.assertEqual( self.issue.comments, 0 )
-        self.assertEqual( self.issue.created_at, "2012-05-19T10:38:23Z" )
+        self.assertEqual( self.issue.created_at, datetime.datetime( 2012, 5, 19, 10, 38, 23 ) )
         self.assertEqual( self.issue.html_url, "https://github.com/jacquev6/PyGithub/issues/28" )
         self.assertEqual( self.issue.id, 4653757 )
         self.assertListKeyEqual( self.issue.labels, lambda l: l.name, [ "Bug", "Project management", "Question" ] )
@@ -23,7 +25,7 @@ class Issue( Framework.TestCase ):
         self.assertEqual( self.issue.pull_request.html_url, None )
         self.assertEqual( self.issue.state, "closed" )
         self.assertEqual( self.issue.title, "Issue created by PyGithub" )
-        self.assertEqual( self.issue.updated_at, "2012-05-26T14:59:33Z" )
+        self.assertEqual( self.issue.updated_at, datetime.datetime( 2012, 5, 26, 14, 59, 33 ) )
         self.assertEqual( self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28" )
         self.assertEqual( self.issue.user.login, "jacquev6" )
 

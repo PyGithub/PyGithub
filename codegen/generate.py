@@ -36,6 +36,8 @@ for class_ in description[ "classes" ]:
     for attribute in class_[ "attributes" ]:
         if not attribute[ "type" ][ "simple" ]:
             dependencies.add( attribute[ "type" ][ "name" ] )
+        if attribute[ "type" ][ "name" ] == "datetime":
+            class_[ "needsDatetime" ] = True
 
     class_[ "dependencies" ] = list( dependencies )
     class_[ "needsUrllib" ] = class_[ "name" ] in [ "Label", "Repository" ]

@@ -32,7 +32,7 @@ class Type:
         json = {
             "cardinality": self.cardinality,
             "name": self.name,
-            "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict" ],
+            "simple": self.name in [ "void", "string", "integer", "bool", "float", "dict", "datetime", "date" ],
         }
         if self.keyName is not None:
             json[ "key_name" ] = self.keyName

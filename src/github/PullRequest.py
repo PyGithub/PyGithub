@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 import PaginatedList
 ##########
@@ -304,7 +306,7 @@ class PullRequest( GithubObject.GithubObject ):
             self._changed_files = attributes[ "changed_files" ]
         if "closed_at" in attributes: # pragma no branch
             assert attributes[ "closed_at" ] is None or isinstance( attributes[ "closed_at" ], ( str, unicode ) ), attributes[ "closed_at" ]
-            self._closed_at = attributes[ "closed_at" ]
+            self._closed_at = None if attributes[ "closed_at" ] is None else datetime.datetime.strptime( attributes[ "closed_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "comments" in attributes: # pragma no branch
             assert attributes[ "comments" ] is None or isinstance( attributes[ "comments" ], int ), attributes[ "comments" ]
             self._comments = attributes[ "comments" ]
@@ -313,7 +315,7 @@ class PullRequest( GithubObject.GithubObject ):
             self._commits = attributes[ "commits" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = attributes[ "created_at" ]
+            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "deletions" in attributes: # pragma no branch
             assert attributes[ "deletions" ] is None or isinstance( attributes[ "deletions" ], int ), attributes[ "deletions" ]
             self._deletions = attributes[ "deletions" ]
@@ -340,7 +342,7 @@ class PullRequest( GithubObject.GithubObject ):
             self._merged = attributes[ "merged" ]
         if "merged_at" in attributes: # pragma no branch
             assert attributes[ "merged_at" ] is None or isinstance( attributes[ "merged_at" ], ( str, unicode ) ), attributes[ "merged_at" ]
-            self._merged_at = attributes[ "merged_at" ]
+            self._merged_at = None if attributes[ "merged_at" ] is None else datetime.datetime.strptime( attributes[ "merged_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "merged_by" in attributes: # pragma no branch
             assert attributes[ "merged_by" ] is None or isinstance( attributes[ "merged_by" ], dict ), attributes[ "merged_by" ]
             self._merged_by = None if attributes[ "merged_by" ] is None else NamedUser.NamedUser( self._requester, attributes[ "merged_by" ], completed = False )
@@ -361,7 +363,7 @@ class PullRequest( GithubObject.GithubObject ):
             self._title = attributes[ "title" ]
         if "updated_at" in attributes: # pragma no branch
             assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self._updated_at = attributes[ "updated_at" ]
+            self._updated_at = None if attributes[ "updated_at" ] is None else datetime.datetime.strptime( attributes[ "updated_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

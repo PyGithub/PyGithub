@@ -1,6 +1,7 @@
 import Framework
 
 import github
+import datetime
 
 class Repository( Framework.TestCase ):
     def setUp( self ):
@@ -9,7 +10,7 @@ class Repository( Framework.TestCase ):
 
     def testAttributes( self ):
         self.assertEqual( self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git" )
-        self.assertEqual( self.repo.created_at, "2012-02-25T12:53:47Z" )
+        self.assertEqual( self.repo.created_at, datetime.datetime( 2012, 2, 25, 12, 53, 47 ) )
         self.assertEqual( self.repo.description, "Python library implementing the full Github API v3" )
         self.assertEqual( self.repo.fork, False )
         self.assertEqual( self.repo.forks, 3 )
@@ -32,12 +33,12 @@ class Repository( Framework.TestCase ):
         self.assertEqual( self.repo.permissions.pull, True )
         self.assertEqual( self.repo.permissions.push, True )
         self.assertEqual( self.repo.private, False )
-        self.assertEqual( self.repo.pushed_at, "2012-05-27T06:00:28Z" )
+        self.assertEqual( self.repo.pushed_at, datetime.datetime( 2012, 5, 27, 6, 0, 28 ) )
         self.assertEqual( self.repo.size, 308 )
         self.assertEqual( self.repo.source, None )
         self.assertEqual( self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git" )
         self.assertEqual( self.repo.svn_url, "https://github.com/jacquev6/PyGithub" )
-        self.assertEqual( self.repo.updated_at, "2012-05-27T06:55:28Z" )
+        self.assertEqual( self.repo.updated_at, datetime.datetime( 2012, 5, 27, 6, 55, 28 ) )
         self.assertEqual( self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub" )
         self.assertEqual( self.repo.watchers, 15 )
 
@@ -54,7 +55,7 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_contributors(), lambda c: ( c.login, c.contributions ), [ ( "jacquev6", 355 ) ] )
 
     def testCreateMilestone( self ):
-        milestone = self.repo.create_milestone( "Milestone created by PyGithub", state = "open", description = "Description created by PyGithub", due_on = "2012-06-15" )
+        milestone = self.repo.create_milestone( "Milestone created by PyGithub", state = "open", description = "Description created by PyGithub", due_on = datetime.date( 2012, 6, 15 ) )
         self.assertEqual( milestone.number, 5 )
 
     def testCreateMilestoneWithMinimalArguments( self ):
@@ -103,10 +104,10 @@ class Repository( Framework.TestCase ):
         self.assertEqual( download.acl, "public-read" )
         self.assertEqual( download.bucket, "github" )
         self.assertEqual( download.content_type, "text/richtext" )
-        self.assertEqual( download.created_at, "2012-05-22T19:11:49Z" )
+        self.assertEqual( download.created_at, datetime.datetime( 2012, 5, 22, 19, 11, 49 ) )
         self.assertEqual( download.description, "Download created by PyGithub" )
         self.assertEqual( download.download_count, 0 )
-        self.assertEqual( download.expirationdate, "2112-05-22T19:11:49.000Z" )
+        self.assertEqual( download.expirationdate, datetime.datetime( 2112, 5, 22, 19, 11, 49 ) )
         self.assertEqual( download.html_url, "https://github.com/downloads/jacquev6/PyGithub/Foobar.txt" )
         self.assertEqual( download.id, 242556 )
         self.assertEqual( download.mime_type, "text/richtext" )
@@ -267,7 +268,7 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_issues( milestone, "closed" ), lambda i: i.id, [ 3624472, 3620132, 3619658, 3561926 ] )
         self.assertListKeyEqual( self.repo.get_issues( labels = [ bug ] ), lambda i: i.id, [ 4780155 ] )
         self.assertListKeyEqual( self.repo.get_issues( assignee = user, sort = "comments", direction = "asc" ), lambda i: i.id, [ 4793106, 3527231, 3527266, 3624556, 4793216, 3619973, 3624595, 4452000, 3643837, 3628022, 3527245, 4793162, 4356743, 4780155 ] )
-        self.assertListKeyEqual( self.repo.get_issues( since = "2012-05-28T23:00:00Z" ), lambda i: i.id, [ 4793216, 4793162, 4793106, 3624556, 3619973, 3527266 ] )
+        self.assertListKeyEqual( self.repo.get_issues( since = datetime.datetime( 2012, 5, 28, 23, 0, 0 ) ), lambda i: i.id, [ 4793216, 4793162, 4793106, 3624556, 3619973, 3527266 ] )
         self.assertListKeyEqual( self.repo.get_issues( mentioned = otherUser ), lambda i: i.id, [ 4793162 ] )
 
     def testGetIssuesWithWildcards( self ):

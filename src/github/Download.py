@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 
 class Download( GithubObject.GithubObject ):
@@ -150,7 +152,7 @@ class Download( GithubObject.GithubObject ):
             self._content_type = attributes[ "content_type" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = attributes[ "created_at" ]
+            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "description" in attributes: # pragma no branch
             assert attributes[ "description" ] is None or isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self._description = attributes[ "description" ]
@@ -159,7 +161,7 @@ class Download( GithubObject.GithubObject ):
             self._download_count = attributes[ "download_count" ]
         if "expirationdate" in attributes: # pragma no branch
             assert attributes[ "expirationdate" ] is None or isinstance( attributes[ "expirationdate" ], ( str, unicode ) ), attributes[ "expirationdate" ]
-            self._expirationdate = attributes[ "expirationdate" ]
+            self._expirationdate = None if attributes[ "expirationdate" ] is None else datetime.datetime.strptime( attributes[ "expirationdate" ], "%Y-%m-%dT%H:%M:%S.000Z" )
         if "html_url" in attributes: # pragma no branch
             assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self._html_url = attributes[ "html_url" ]

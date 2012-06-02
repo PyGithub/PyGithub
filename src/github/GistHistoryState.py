@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 ##########
 import NamedUser
@@ -45,7 +47,7 @@ class GistHistoryState( GithubObject.GithubObject ):
             self._change_status = None if attributes[ "change_status" ] is None else CommitStats.CommitStats( self._requester, attributes[ "change_status" ], completed = False )
         if "committed_at" in attributes: # pragma no branch
             assert attributes[ "committed_at" ] is None or isinstance( attributes[ "committed_at" ], ( str, unicode ) ), attributes[ "committed_at" ]
-            self._committed_at = attributes[ "committed_at" ]
+            self._committed_at = None if attributes[ "committed_at" ] is None else datetime.datetime.strptime( attributes[ "committed_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

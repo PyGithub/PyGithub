@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 ##########
 import NamedUser
@@ -73,13 +75,13 @@ class IssueComment( GithubObject.GithubObject ):
             self._body = attributes[ "body" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = attributes[ "created_at" ]
+            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
         if "updated_at" in attributes: # pragma no branch
             assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self._updated_at = attributes[ "updated_at" ]
+            self._updated_at = None if attributes[ "updated_at" ] is None else datetime.datetime.strptime( attributes[ "updated_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

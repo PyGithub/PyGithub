@@ -1,6 +1,7 @@
 import Framework
 
 import github
+import datetime
 
 class AuthenticatedUser( Framework.TestCase ):
     def setUp( self ):
@@ -13,7 +14,7 @@ class AuthenticatedUser( Framework.TestCase ):
         self.assertEqual( self.user.blog, "http://vincent-jacques.net" )
         self.assertEqual( self.user.collaborators, 0 )
         self.assertEqual( self.user.company, "Criteo" )
-        self.assertEqual( self.user.created_at, "2010-07-09T06:10:06Z" )
+        self.assertEqual( self.user.created_at, datetime.datetime( 2010, 7, 9, 6, 10, 6 ) )
         self.assertEqual( self.user.disk_usage, 16692 )
         self.assertEqual( self.user.email, "vincent@vincent-jacques.net" )
         self.assertEqual( self.user.followers, 13 )

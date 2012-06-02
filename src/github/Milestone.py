@@ -1,6 +1,8 @@
 # WARNING: this file is generated automaticaly.
 # Do not modify it manually, your work would be lost.
 
+import datetime
+##########
 import GithubObject
 import PaginatedList
 ##########
@@ -76,7 +78,7 @@ class Milestone( GithubObject.GithubObject ):
         assert isinstance( title, ( str, unicode ) ), title
         assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
-        assert due_on is GithubObject.NotSet or isinstance( due_on, ( str, unicode ) ), due_on
+        assert due_on is GithubObject.NotSet or isinstance( due_on, datetime.date ), due_on
         post_parameters = {
             "title": title,
         }
@@ -85,7 +87,7 @@ class Milestone( GithubObject.GithubObject ):
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
         if due_on is not GithubObject.NotSet:
-            post_parameters[ "due_on" ] = due_on
+            post_parameters[ "due_on" ] = due_on.strftime( "%Y-%m-%d" )
         status, headers, data = self._request(
             "PATCH",
             self.url,
@@ -133,7 +135,7 @@ class Milestone( GithubObject.GithubObject ):
             self._closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = attributes[ "created_at" ]
+            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "creator" in attributes: # pragma no branch
             assert attributes[ "creator" ] is None or isinstance( attributes[ "creator" ], dict ), attributes[ "creator" ]
             self._creator = None if attributes[ "creator" ] is None else NamedUser.NamedUser( self._requester, attributes[ "creator" ], completed = False )
@@ -142,7 +144,7 @@ class Milestone( GithubObject.GithubObject ):
             self._description = attributes[ "description" ]
         if "due_on" in attributes: # pragma no branch
             assert attributes[ "due_on" ] is None or isinstance( attributes[ "due_on" ], ( str, unicode ) ), attributes[ "due_on" ]
-            self._due_on = attributes[ "due_on" ]
+            self._due_on = None if attributes[ "due_on" ] is None else datetime.datetime.strptime( attributes[ "due_on" ], "%Y-%m-%dT%H:%M:%SZ" )
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]

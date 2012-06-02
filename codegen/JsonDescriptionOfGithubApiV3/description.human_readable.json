@@ -31,7 +31,7 @@
                 { "name": "blog", "type": "string" },
                 { "name": "collaborators", "type": "integer" },
                 { "name": "company", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "disk_usage", "type": "integer" },
                 { "name": "email", "type": "string" },
                 { "name": "followers", "type": "integer" },
@@ -266,13 +266,13 @@
             "delete": true,
             "attributes": [
                 { "name": "app", "type": "AuthorizationApplication" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "id", "type": "integer" },
                 { "name": "note_url", "type": "string" },
                 { "name": "note", "type": "string" },
                 { "name": "scopes", "type": "list:string" },
                 { "name": "token", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" }
             ]
         },
@@ -350,13 +350,13 @@
             "attributes": [
                 { "name": "body", "type": "string" },
                 { "name": "commit_id", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "html_url", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "line", "type": "integer" },
                 { "name": "path", "type": "string" },
                 { "name": "position", "type": "integer" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ]
@@ -369,10 +369,10 @@
                 { "name": "acl", "type": "string" },
                 { "name": "bucket", "type": "string" },
                 { "name": "content_type", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "description", "type": "string" },
                 { "name": "download_count", "type": "integer" },
-                { "name": "expirationdate", "type": "string" },
+                { "name": "expirationdate", "type": "datetime" },
                 { "name": "html_url", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "mime_type", "type": "string" },
@@ -391,7 +391,7 @@
             "name": "Event",
             "attributes": [
                 { "name": "actor", "type": "NamedUser" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "id", "type": "string" },
                 { "name": "payload", "type": "dict" },
                 { "name": "public", "type": "bool" },
@@ -404,7 +404,7 @@
             "name": "GistHistoryState",
             "attributes": [
                 { "name": "change_status", "type": "CommitStats" },
-                { "name": "committed_at", "type": "string" },
+                { "name": "committed_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" },
                 { "name": "version", "type": "string" }
@@ -431,7 +431,7 @@
             "delete": true,
             "attributes": [
                 { "name": "comments", "type": "integer" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "description", "type": "string" },
                 { "name": "files", "type": "dict:string-GistFile" },
                 { "name": "fork_of", "type": "Gist" },
@@ -442,7 +442,7 @@
                 { "name": "html_url", "type": "string" },
                 { "name": "id", "type": "string" },
                 { "name": "public", "type": "bool" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ],
@@ -531,9 +531,9 @@
             "delete": true,
             "attributes": [
                 { "name": "body", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "id", "type": "integer" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ]
@@ -657,12 +657,12 @@
             "attributes": [
                 { "name": "active", "type": "bool" },
                 { "name": "config", "type": "dict" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "events", "type": "list:string" },
                 { "name": "id", "type": "integer" },
                 { "name": "last_response", "type": "HookResponse" },
                 { "name": "name", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" }
             ],
             "additionalMethods": [
@@ -704,10 +704,10 @@
             "attributes": [
                 { "name": "assignee", "type": "NamedUser" },
                 { "name": "body", "type": "string" },
-                { "name": "closed_at", "type": "string" },
+                { "name": "closed_at", "type": "datetime" },
                 { "name": "closed_by", "type": "NamedUser" },
                 { "name": "comments", "type": "integer" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "html_url", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "labels", "type": "list:Label" },
@@ -717,7 +717,7 @@
                 { "name": "repository", "type": "Repository" },
                 { "name": "state", "type": "string" },
                 { "name": "title", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ],
@@ -780,9 +780,9 @@
             "delete": true,
             "attributes": [
                 { "name": "body", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "id", "type": "integer" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ]
@@ -791,7 +791,7 @@
             "name": "IssueEvent",
             "attributes": [
                 { "name": "commit_id", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "event", "type": "string" },
                 { "name": "id", "type": "integer" },
                 { "name": "issue", "type": "Issue" },
@@ -831,15 +831,15 @@
                 "optionalParameters": [
                     { "name": "state", "type": "string" },
                     { "name": "description", "type": "string" },
-                    { "name": "due_on", "type": "string" }
+                    { "name": "due_on", "type": "date" }
                 ]
             },
             "delete": true,
             "attributes": [
                 { "name": "closed_issues", "type": "integer" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "description", "type": "string" },
-                { "name": "due_on", "type": "string" },
+                { "name": "due_on", "type": "datetime" },
                 { "name": "id", "type": "integer" },
                 { "name": "number", "type": "integer" },
                 { "name": "open_issues", "type": "integer" },
@@ -869,7 +869,7 @@
                 { "name": "collaborators", "type": "integer" },
                 { "name": "company", "type": "string" },
                 { "name": "contributions", "type": "integer" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "disk_usage", "type": "integer" },
                 { "name": "email", "type": "string" },
                 { "name": "followers", "type": "integer" },
@@ -1014,7 +1014,7 @@
                 { "name": "blog", "type": "string" },
                 { "name": "collaborators", "type": "integer" },
                 { "name": "company", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "disk_usage", "type": "integer" },
                 { "name": "email", "type": "string" },
                 { "name": "followers", "type": "integer" },
@@ -1171,10 +1171,10 @@
                 { "name": "base", "type": "PullRequestPart" },
                 { "name": "body", "type": "string" },
                 { "name": "changed_files", "type": "integer" },
-                { "name": "closed_at", "type": "string" },
+                { "name": "closed_at", "type": "datetime" },
                 { "name": "comments", "type": "integer" },
                 { "name": "commits", "type": "integer" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "deletions", "type": "integer" },
                 { "name": "diff_url", "type": "string" },
                 { "name": "head", "type": "PullRequestPart" },
@@ -1182,7 +1182,7 @@
                 { "name": "id", "type": "integer" },
                 { "name": "issue_url", "type": "string" },
                 { "name": "mergeable", "type": "bool" },
-                { "name": "merged_at", "type": "string" },
+                { "name": "merged_at", "type": "datetime" },
                 { "name": "merged_by", "type": "NamedUser" },
                 { "name": "merged", "type": "bool" },
                 { "name": "number", "type": "integer" },
@@ -1190,7 +1190,7 @@
                 { "name": "review_comments", "type": "integer" },
                 { "name": "state", "type": "string" },
                 { "name": "title", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ],
@@ -1282,13 +1282,13 @@
             "attributes": [
                 { "name": "body", "type": "string" },
                 { "name": "commit_id", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "id", "type": "integer" },
                 { "name": "path", "type": "string" },
                 { "name": "position", "type": "integer" },
                 { "name": "original_position", "type": "integer" },
                 { "name": "original_commit_id", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "user", "type": "NamedUser" }
             ]
@@ -1340,7 +1340,7 @@
             },
             "attributes": [
                 { "name": "clone_url", "type": "string" },
-                { "name": "created_at", "type": "string" },
+                { "name": "created_at", "type": "datetime" },
                 { "name": "description", "type": "string" },
                 { "name": "fork", "type": "bool" },
                 { "name": "forks", "type": "integer" },
@@ -1361,12 +1361,12 @@
                 { "name": "parent", "type": "Repository" },
                 { "name": "permissions", "type": "Permissions" },
                 { "name": "private", "type": "bool" },
-                { "name": "pushed_at", "type": "string" },
+                { "name": "pushed_at", "type": "datetime" },
                 { "name": "size", "type": "integer" },
                 { "name": "source", "type": "Repository" },
                 { "name": "ssh_url", "type": "string" },
                 { "name": "svn_url", "type": "string" },
-                { "name": "updated_at", "type": "string" },
+                { "name": "updated_at", "type": "datetime" },
                 { "name": "url", "type": "string" },
                 { "name": "watchers", "type": "integer" }
             ],
@@ -1591,7 +1591,7 @@
                             { "name": "labels", "type": "list:Label" },
                             { "name": "sort", "type": "string" },
                             { "name": "direction", "type": "string" },
-                            { "name": "since", "type": "string" }
+                            { "name": "since", "type": "datetime" }
                         ]
                     },
                     "createElement": {
@@ -1682,7 +1682,7 @@
                         "optionalParameters": [
                             { "name": "state", "type": "string" },
                             { "name": "description", "type": "string" },
-                            { "name": "due_on", "type": "string" }
+                            { "name": "due_on", "type": "date" }
                         ]
                     },
                     "getElement": {

@@ -1,5 +1,7 @@
 import Framework
 
+import datetime
+
 class Organization( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
@@ -11,7 +13,7 @@ class Organization( Framework.TestCase ):
         self.assertEqual( self.org.blog, None )
         self.assertEqual( self.org.collaborators, 0 )
         self.assertEqual( self.org.company, None )
-        self.assertEqual( self.org.created_at, "2012-02-09T19:20:12Z" )
+        self.assertEqual( self.org.created_at, datetime.datetime( 2012, 2, 9, 19, 20, 12 ) )
         self.assertEqual( self.org.disk_usage, 112 )
         self.assertEqual( self.org.email, None )
         self.assertEqual( self.org.followers, 0 )

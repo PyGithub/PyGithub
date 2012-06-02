@@ -46,7 +46,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -1416,7 +1416,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -1464,7 +1464,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -1821,7 +1821,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -1869,7 +1869,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -2129,7 +2129,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -2153,7 +2153,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "expirationdate"
                 }, 
@@ -2299,7 +2299,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -2449,7 +2449,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -2538,7 +2538,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -2885,7 +2885,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -2901,7 +2901,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -3050,7 +3050,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "committed_at"
                 }, 
@@ -3537,7 +3537,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -3577,7 +3577,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -3781,7 +3781,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "closed_at"
                 }, 
@@ -3805,7 +3805,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -3885,7 +3885,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -4353,7 +4353,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -4369,7 +4369,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -4479,7 +4479,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -4680,7 +4680,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -4704,7 +4704,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "due_on"
                 }, 
@@ -4818,7 +4818,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "date"
                             }, 
                             "name": "due_on"
                         }
@@ -4942,7 +4942,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -5587,7 +5587,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -6640,7 +6640,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "closed_at"
                 }, 
@@ -6664,7 +6664,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -6736,7 +6736,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "merged_at"
                 }, 
@@ -6792,7 +6792,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -7172,7 +7172,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -7220,7 +7220,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -7400,7 +7400,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "created_at"
                 }, 
@@ -7568,7 +7568,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "pushed_at"
                 }, 
@@ -7608,7 +7608,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "updated_at"
                 }, 
@@ -9260,7 +9260,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "datetime"
                             }, 
                             "name": "since"
                         }
@@ -9660,7 +9660,7 @@
                             "type": {
                                 "simple": true, 
                                 "cardinality": "scalar", 
-                                "name": "string"
+                                "name": "date"
                             }, 
                             "name": "due_on"
                         }

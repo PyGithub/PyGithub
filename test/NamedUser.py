@@ -1,6 +1,7 @@
 import Framework
 
 import github
+import datetime
 
 class NamedUser( Framework.TestCase ):
     def setUp( self ):
@@ -14,7 +15,7 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( self.user.blog, "http://nvie.com" )
         self.assertEqual( self.user.collaborators, None )
         self.assertEqual( self.user.company, "3rd Cloud" )
-        self.assertEqual( self.user.created_at, "2009-05-12T21:19:38Z" )
+        self.assertEqual( self.user.created_at, datetime.datetime( 2009, 5, 12, 21, 19, 38 ) )
         self.assertEqual( self.user.disk_usage, None )
         self.assertEqual( self.user.email, "vincent@3rdcloud.com" )
         self.assertEqual( self.user.followers, 296 )
@@ -41,7 +42,7 @@ class NamedUser( Framework.TestCase ):
         self.assertEqual( self.user.blog, "http://vincent-jacques.net" )
         self.assertEqual( self.user.collaborators, 0 )
         self.assertEqual( self.user.company, "Criteo" )
-        self.assertEqual( self.user.created_at, "2010-07-09T06:10:06Z" )
+        self.assertEqual( self.user.created_at, datetime.datetime( 2010, 7, 9, 6, 10, 6 ) )
         self.assertEqual( self.user.disk_usage, 17080 )
         self.assertEqual( self.user.email, "vincent@vincent-jacques.net" )
         self.assertEqual( self.user.followers, 13 )
