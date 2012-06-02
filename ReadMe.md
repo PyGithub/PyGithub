@@ -2,7 +2,7 @@ This is a Python library to access the [Github API v3](http://developer.github.c
 
 With it, you can manage your [Github](http://github.com) resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
-It covers the **full** API, and all methods have been tested against the real Github site.
+It covers the **full** API, and all methods are tested against the real Github site.
 
 Should you have any question, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please [open an issue](https://github.com/jacquev6/PyGithub/issues).
 
@@ -43,7 +43,7 @@ Or without authentication:
 Projects using PyGithub
 =======================
 
-([open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
+([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
 
