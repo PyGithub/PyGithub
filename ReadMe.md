@@ -40,6 +40,13 @@ Or without authentication:
 
     g = Github()
 
+Projects using PyGithub
+=======================
+
+([open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
+
+* [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
+
 History
 =======
 
