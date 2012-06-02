@@ -23,3 +23,4 @@ class Exceptions( Framework.TestCase ):
                     "message": "Validation Failed"
                 }
             )
+            self.assertEqual( str( exception ), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}" )
