@@ -270,6 +270,12 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_issues( since = "2012-05-28T23:00:00Z" ), lambda i: i.id, [ 4793216, 4793162, 4793106, 3624556, 3619973, 3527266 ] )
         self.assertListKeyEqual( self.repo.get_issues( mentioned = otherUser ), lambda i: i.id, [ 4793162 ] )
 
+    def testGetIssuesWithWildcards( self ):
+        self.assertListKeyEqual( self.repo.get_issues( milestone = "*" ), lambda i: i.id, [ 4809786, 4793216, 4789817, 4452000, 3628022, 3624595, 3619973, 3527231 ] )
+        self.assertListKeyEqual( self.repo.get_issues( milestone = "none" ), lambda i: i.id, [ 4823331, 4809803, 4809778, 4793106, 3643837, 3527245 ] )
+        self.assertListKeyEqual( self.repo.get_issues( assignee = "*" ), lambda i: i.id, [ 4823331, 4809803, 4809786, 4809778, 4793216, 4793106, 4789817, 4452000, 3643837, 3628022, 3624595, 3527245, 3527231 ] )
+        self.assertListKeyEqual( self.repo.get_issues( assignee = "none" ), lambda i: i.id, [ 3619973 ] )
+
     def testGetKeys( self ):
         self.assertListKeyEqual( self.repo.get_keys(), lambda k: k.title, [ "Key added through PyGithub" ] )
 

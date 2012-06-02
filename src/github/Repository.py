@@ -761,9 +761,9 @@ class Repository( GithubObject.GithubObject ):
         return Issue.Issue( self._requester, data, completed = True )
 
     def get_issues( self, milestone = GithubObject.NotSet, state = GithubObject.NotSet, assignee = GithubObject.NotSet, mentioned = GithubObject.NotSet, labels = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet, since = GithubObject.NotSet ):
-        assert milestone is GithubObject.NotSet or isinstance( milestone, Milestone.Milestone ), milestone
+        assert milestone is GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance( milestone, Milestone.Milestone ), milestone
         assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
-        assert assignee is GithubObject.NotSet or isinstance( assignee, NamedUser.NamedUser ), assignee
+        assert assignee is GithubObject.NotSet or assignee == "*" or assignee == "none" or isinstance( assignee, NamedUser.NamedUser ), assignee
         assert mentioned is GithubObject.NotSet or isinstance( mentioned, NamedUser.NamedUser ), mentioned
         assert labels is GithubObject.NotSet or all( isinstance( element, Label.Label ) for element in labels ), labels
         assert sort is GithubObject.NotSet or isinstance( sort, ( str, unicode ) ), sort
@@ -771,11 +771,17 @@ class Repository( GithubObject.GithubObject ):
         assert since is GithubObject.NotSet or isinstance( since, ( str, unicode ) ), since
         url_parameters = dict()
         if milestone is not GithubObject.NotSet:
-            url_parameters[ "milestone" ] = milestone._identity
+            if isinstance( milestone, str ):
+                url_parameters[ "milestone" ] = milestone
+            else:
+                url_parameters[ "milestone" ] = milestone._identity
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state
         if assignee is not GithubObject.NotSet:
-            url_parameters[ "assignee" ] = assignee._identity
+            if isinstance( assignee, str ):
+                url_parameters[ "assignee" ] = assignee
+            else:
+                url_parameters[ "assignee" ] = assignee._identity
         if mentioned is not GithubObject.NotSet:
             url_parameters[ "mentioned" ] = mentioned._identity
         if labels is not GithubObject.NotSet:

@@ -1163,9 +1163,9 @@ Issues
 * `get_issue( number )`: `Issue`
     * `number`: integer
 * `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: list of `Issue`
-    * `milestone`: `Milestone`
+    * `milestone`: `Milestone` or "none" or "*"
     * `state`: string
-    * `assignee`: `NamedUser`
+    * `assignee`: `NamedUser` or "none" or "*"
     * `mentioned`: `NamedUser`
     * `labels`: list of `Label`
     * `sort`: string
