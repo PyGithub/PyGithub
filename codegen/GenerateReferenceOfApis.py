@@ -58,6 +58,6 @@ for url in sorted( verbsByUrl.keys() ):
             if ( url, verb ) in functionsByUrlVerb:
                 function = functionsByUrlVerb[ ( url, verb ) ]
             else:
-                function = "(TODO)"
+                function = "(TOTO)"
             print "* " + verb + ": " + function
     print
