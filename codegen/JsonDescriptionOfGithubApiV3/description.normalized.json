@@ -362,9 +362,14 @@
                                 "value": "https://api.github.com/authorizations/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -520,9 +525,14 @@
                                 "value": "https://api.github.com/user/keys/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -2697,9 +2707,14 @@
                                 "value": "https://api.github.com/gists/comments/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -4068,9 +4083,14 @@
                                 "value": "/comments/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -6412,9 +6432,14 @@
                                 "value": "https://api.github.com/teams/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -6967,9 +6992,14 @@
                                 "value": "/comments/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -7968,9 +7998,14 @@
                                 "value": "/comments/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -8236,9 +8271,14 @@
                                 "value": "/downloads/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9007,9 +9047,14 @@
                                 "value": "/hooks/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9158,9 +9203,14 @@
                                 "value": "/issues/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "number"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9300,9 +9350,14 @@
                                 "value": "/issues/events/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9426,9 +9481,14 @@
                                 "value": "/keys/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "id"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9700,9 +9760,14 @@
                                 "value": "/milestones/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "number"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 
@@ -9875,9 +9940,14 @@
                                 "value": "/pulls/"
                             }, 
                             {
-                                "type": "argument", 
+                                "type": "stringOf", 
                                 "value": [
-                                    "number"
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
                                 ]
                             }
                         ], 

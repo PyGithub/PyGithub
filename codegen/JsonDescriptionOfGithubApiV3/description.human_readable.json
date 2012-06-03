@@ -456,7 +456,10 @@
                         "parameter": { "name": "id", "type": "integer" },
                         "url": [
                             { "type": "constant", "value": "https://api.github.com/gists/comments/" },
-                            { "type": "argument", "value": [ "id" ] }
+                            {
+                                "type": "stringOf",
+                                "value": [ { "type": "argument", "value": [ "id" ] } ]
+                            }
                         ]
                     },
                     "createElement": {
@@ -739,7 +742,12 @@
                                 },
                                 { "type": "constant", "value": "/comments" },
                                 { "type": "constant", "value": "/" },
-                                { "type": "argument", "value": [ "id" ] }
+                                {
+                                    "type": "stringOf",
+                                    "value": [
+                                        { "type": "argument", "value": [ "id" ] }
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -1109,7 +1117,10 @@
                         "parameter": { "name": "id", "type": "integer" },
                         "url" : [
                             { "type": "constant", "value": "https://api.github.com/teams/" },
-                            { "type": "argument", "value": [ "id" ] }
+                            {
+                                "type": "stringOf",
+                                "value": [ { "type": "argument", "value": [ "id" ] } ]
+                            }
                         ]
                     }
                 }
@@ -1211,8 +1222,13 @@
                                     ]
                                 },
                                 { "type": "constant", "value": "/comments" }, 
-                                { "type": "constant", "value": "/" }, 
-                                { "type": "argument", "value": [ "id" ] }
+                                { "type": "constant", "value": "/" },
+                                {
+                                    "type": "stringOf",
+                                    "value": [
+                                        { "type": "argument", "value": [ "id" ] }
+                                    ]
+                                }
                             ]
                         }
                     },

@@ -210,9 +210,13 @@ class Collection:
             if "url" in desc[ "getElement" ]:
                 urlForGetElement = desc[ "getElement" ][ "url" ]
             else:
+                if desc[ "getElement" ][ "parameter" ][ "type" ] == "string":
+                    partForArgument = { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] }
+                else:
+                    partForArgument = { "type": "stringOf", "value": [ { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] } ] }
                 urlForGetElement = self.__url + [
                     { "type": "constant", "value": "/" },
-                    { "type": "argument", "value": [ desc[ "getElement" ][ "parameter" ][ "name" ] ] },
+                    partForArgument,
                 ]
 
             self.methods.append( Function(
