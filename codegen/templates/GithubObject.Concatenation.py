@@ -1,0 +1,1 @@
+{% for part in concatenation %}{% if forloop.counter0 > 0 %} + {% endif %}{% with part_template_name="GithubObject.Concatenation."|add:part.type|add:".py" %}{% include part_template_name with value=part.value only %}{% endwith %}{% endfor %}

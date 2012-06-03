@@ -1,0 +1,1 @@
+{% include "GithubObject.IsInstance.py" with variable=variable type="int" only %}
