@@ -28,7 +28,6 @@ for fileName in developerDotGithubDotComContentFiles:
                     "/repos/:user/:repo/git/trees/:sha?recursive=1",
                     "/repos/octocat/Hello-World/git/refs/heads/feature-a",
                     "/repos/octocat/Hello-World/git/refs/tags/v1.0",
-                    "",
                 ]:
                     continue
                 
@@ -38,7 +37,7 @@ for fileName in developerDotGithubDotComContentFiles:
 
 functionsByUrlVerb = dict()
 url = None
-with open( "ReferenceOfApis.md" ) as f:
+with open( "doc/ReferenceOfApis.md" ) as f:
     for line in f:
         m = re.match( "^API `(.*)`$", line )
         if m:
