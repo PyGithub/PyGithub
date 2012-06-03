@@ -1,10 +1,22 @@
+# Copyright 2012 Vincent Jacques
+# vincent@vincent-jacques.net
+
+# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+
+# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+
 import httplib
 import json
 import base64
 import urllib
 
-class UnknownGithubObject( Exception ):
-    pass
+import GithubException
 
 class Requester:
     def __init__( self, login_or_token, password ):
@@ -16,42 +28,18 @@ class Requester:
             self.__authorizationHeader = "token " + token
         else:
             self.__authorizationHeader = None
+        self.rate_limiting = ( 5000, 5000 )
 
-    def dataRequest( self, verb, url, parameters, input ):
-        if parameters is None:
-            parameters = dict()
-
-        headers, output = self.__statusCheckedRequest( verb, url, parameters, input )
-
-        obviouslyFinished = False
-        pageCount = 1
-        while "link" in headers and "next" in headers[ "link" ] and not obviouslyFinished and pageCount < 10:
-            for link in headers[ "link" ].split( "," ):
-                if "next" in link:
-                    linkUrl = link.split( ";" )[ 0 ][ : -1 ]
-                    params = linkUrl.split( "?" )[ 1 ]
-                    parameters.update( dict( p.split( "=" ) for p in params.split( "&" ) ) )
-                    break
-            headers, newOutput = self.__statusCheckedRequest( verb, url, parameters, input )
-            pageCount += 1
-            if len( newOutput ) == 0:
-                obviouslyFinished = True
-            output += newOutput
-
-        return output
-
-    def __statusCheckedRequest( self, verb, url, parameters, input ):
-        status, headers, output = self.__rawRequest( verb, url, parameters, input )
-        if status < 200 or status >= 300:
-            raise UnknownGithubObject()
+    def requestAndCheck( self, verb, url, parameters, input ):
+        status, headers, output = self.requestRaw( verb, url, parameters, input )
+        if status >= 400:
+            raise GithubException.GithubException( status, output )
         return headers, output
 
-    def statusRequest( self, verb, url, parameters, input ):
-        status, headers, output = self.__rawRequest( verb, url, parameters, input )
-        return status
-
-    def __rawRequest( self, verb, url, parameters, input ):
+    def requestRaw( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
+        assert url.startswith( "https://api.github.com" )
+        url = url[ len( "https://api.github.com" ) : ]
 
         headers = dict()
         if self.__authorizationHeader is not None:
@@ -68,9 +56,12 @@ class Requester:
 
         status = response.status
         headers = dict( response.getheaders() )
-        output = self.__strucutredFromJson( response.read() )
+        output = self.__structuredFromJson( response.read() )
 
         cnx.close()
+
+        if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
+            self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
         # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
         return status, headers, output
@@ -81,7 +72,7 @@ class Requester:
         else:
             return url + "?" + urllib.urlencode( parameters )
 
-    def __strucutredFromJson( self, data ):
+    def __structuredFromJson( self, data ):
         if len( data ) == 0:
             return None
         else:

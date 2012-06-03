@@ -1,15 +1,28 @@
 #!/usr/bin/env python
 
+# Copyright 2012 Vincent Jacques
+# vincent@vincent-jacques.net
+
+# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+
+# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+
+# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+
 from distutils.core import setup
 import textwrap
 
 setup(
-    name = 'PyGithub',
-    version = '0.7',
-    description = 'Use the full Github API v3',
-    author = 'Vincent Jacques',
-    author_email = 'vincent@vincent-jacques.net',
-    url = 'http://vincent-jacques.net/PyGithub',
+    name = "PyGithub",
+    version = "1.0",
+    description = "Use the full Github API v3",
+    author = "Vincent Jacques",
+    author_email = "vincent@vincent-jacques.net",
+    url = "http://vincent-jacques.net/PyGithub",
     long_description = textwrap.dedent( """\
         Tutorial
         ========
@@ -26,25 +39,26 @@ setup(
                 print repo.name
                 repo.edit( has_wiki = False )
 
-        You can also create a Github instance without authentication::
-
-            g = Github( "user", "password" )
-
-        Or with an OAuth token::
+        You can also create a Github instance with an OAuth token::
 
             g = Github( token )
+
+        Or without authentication::
+
+            g = Github()
 
         Reference documentation
         =======================
 
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
-        'github',
-        'github.GithubObjects',
-        'github.GithubObjects.GithubObject',
+        "github",
+    ],
+    data_files = [
+        ( "", [ "ReadMe.md", "COPYING", "COPYING.LESSER", "doc/ReferenceOfClasses.md", "doc/ReferenceOfApis.md", "doc/Design.md" ] ),
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",

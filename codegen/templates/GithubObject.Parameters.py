@@ -1,0 +1,1 @@
+self{% for parameter in function.mandatoryParameters %}, {{ parameter.name }}{% endfor %}{% for parameter in function.optionalParameters %}, {{ parameter.name }} = GithubObject.NotSet{% endfor %}{% if function.variadicParameter %}, *{{ function.variadicParameter.name }}s{% endif %}
