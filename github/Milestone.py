@@ -66,13 +66,12 @@ class Milestone( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, title, state = GithubObject.NotSet, description = GithubObject.NotSet, due_on = GithubObject.NotSet ):
         assert isinstance( title, ( str, unicode ) ), title
@@ -88,23 +87,21 @@ class Milestone( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         if due_on is not GithubObject.NotSet:
             post_parameters[ "due_on" ] = due_on.strftime( "%Y-%m-%d" )
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_labels( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/labels",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,

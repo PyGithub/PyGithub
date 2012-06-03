@@ -22,13 +22,12 @@ class Label( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, name, color ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -37,13 +36,12 @@ class Label( GithubObject.GithubObject ):
             "name": name,
             "color": color,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     @property

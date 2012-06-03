@@ -107,13 +107,12 @@ class Download( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def _initAttributes( self ):
         self._accesskeyid = GithubObject.NotSet

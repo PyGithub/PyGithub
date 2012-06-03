@@ -54,13 +54,12 @@ class Hook( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, name, config, events = GithubObject.NotSet, add_events = GithubObject.NotSet, remove_events = GithubObject.NotSet, active = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -81,23 +80,21 @@ class Hook( GithubObject.GithubObject ):
             post_parameters[ "remove_events" ] = remove_events
         if active is not GithubObject.NotSet:
             post_parameters[ "active" ] = active
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def test( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/test",
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def _initAttributes( self ):
         self._active = GithubObject.NotSet

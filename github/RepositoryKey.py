@@ -38,13 +38,12 @@ class RepositoryKey( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._verified )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.__customUrl,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, title = GithubObject.NotSet, key = GithubObject.NotSet ):
         assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
@@ -54,13 +53,12 @@ class RepositoryKey( GithubObject.GithubObject ):
             post_parameters[ "title" ] = title
         if key is not GithubObject.NotSet:
             post_parameters[ "key" ] = key
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.__customUrl,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def _initAttributes( self ):

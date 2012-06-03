@@ -39,26 +39,24 @@ class IssueComment( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._user )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, body ):
         assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def _initAttributes( self ):

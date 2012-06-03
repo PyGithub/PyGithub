@@ -6,8 +6,8 @@ import datetime
 import GithubObject
 import PaginatedList
 ##########
-import Team
 import Plan
+import Team
 import Event
 import Repository
 import NamedUser
@@ -135,26 +135,24 @@ class Organization( GithubObject.GithubObject ):
 
     def add_to_public_members( self, public_member ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/public_members/" + public_member._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def create_fork( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
         url_parameters = {
             "org": self.login,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def create_repo( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, private = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet, team_id = GithubObject.NotSet ):
@@ -183,13 +181,12 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "has_downloads" ] = has_downloads
         if team_id is not GithubObject.NotSet:
             post_parameters[ "team_id" ] = team_id._identity
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/repos",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def create_team( self, name, repo_names = GithubObject.NotSet, permission = GithubObject.NotSet ):
@@ -203,13 +200,12 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "repo_names" ] = [ element._identity for element in repo_names ]
         if permission is not GithubObject.NotSet:
             post_parameters[ "permission" ] = permission
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/teams",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Team.Team( self._requester, data, completed = True )
 
     def edit( self, billing_email = GithubObject.NotSet, blog = GithubObject.NotSet, company = GithubObject.NotSet, email = GithubObject.NotSet, location = GithubObject.NotSet, name = GithubObject.NotSet ):
@@ -232,23 +228,21 @@ class Organization( GithubObject.GithubObject ):
             post_parameters[ "location" ] = location
         if name is not GithubObject.NotSet:
             post_parameters[ "name" ] = name
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -257,13 +251,12 @@ class Organization( GithubObject.GithubObject ):
         )
 
     def get_members( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/members",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -272,13 +265,12 @@ class Organization( GithubObject.GithubObject ):
         )
 
     def get_public_members( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/public_members",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -288,13 +280,12 @@ class Organization( GithubObject.GithubObject ):
 
     def get_repo( self, name ):
         assert isinstance( name, ( str, unicode ) ), name
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet ):
@@ -302,13 +293,12 @@ class Organization( GithubObject.GithubObject ):
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/repos",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
@@ -318,23 +308,21 @@ class Organization( GithubObject.GithubObject ):
 
     def get_team( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/teams/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Team.Team( self._requester, data, completed = True )
 
     def get_teams( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/teams",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Team.Team,
             self._requester,
@@ -344,7 +332,7 @@ class Organization( GithubObject.GithubObject ):
 
     def has_in_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/members/" + member._identity,
             None,
@@ -354,7 +342,7 @@ class Organization( GithubObject.GithubObject ):
 
     def has_in_public_members( self, public_member ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/public_members/" + public_member._identity,
             None,
@@ -364,23 +352,21 @@ class Organization( GithubObject.GithubObject ):
 
     def remove_from_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def remove_from_public_members( self, public_member ):
         assert isinstance( public_member, NamedUser.NamedUser ), public_member
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/public_members/" + public_member._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def _initAttributes( self ):
         self._avatar_url = GithubObject.NotSet

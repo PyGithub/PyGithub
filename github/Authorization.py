@@ -54,13 +54,12 @@ class Authorization( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._url )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, scopes = GithubObject.NotSet, add_scopes = GithubObject.NotSet, remove_scopes = GithubObject.NotSet, note = GithubObject.NotSet, note_url = GithubObject.NotSet ):
         assert scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
@@ -79,13 +78,12 @@ class Authorization( GithubObject.GithubObject ):
             post_parameters[ "note" ] = note
         if note_url is not GithubObject.NotSet:
             post_parameters[ "note_url" ] = note_url
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def _initAttributes( self ):

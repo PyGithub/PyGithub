@@ -146,33 +146,30 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def add_to_emails( self, *emails ):
         assert all( isinstance( element, ( str, unicode ) ) for element in emails ), emails
         post_parameters = emails
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/user/emails",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
 
     def add_to_following( self, following ):
         assert isinstance( following, NamedUser.NamedUser ), following
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             "https://api.github.com/user/following/" + following._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def add_to_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             "https://api.github.com/user/watched/" + watched._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def create_authorization( self, scopes = GithubObject.NotSet, note = GithubObject.NotSet, note_url = GithubObject.NotSet ):
         assert scopes is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in scopes ), scopes
@@ -185,24 +182,22 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "note" ] = note
         if note_url is not GithubObject.NotSet:
             post_parameters[ "note_url" ] = note_url
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/authorizations",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Authorization.Authorization( self._requester, data, completed = True )
 
     def create_fork( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
             None
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def create_gist( self, public, files, description = GithubObject.NotSet ):
@@ -215,13 +210,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         }
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/gists",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Gist.Gist( self._requester, data, completed = True )
 
     def create_key( self, title, key ):
@@ -231,13 +225,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             "title": title,
             "key": key,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/user/keys",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return UserKey.UserKey( self._requester, data, completed = True )
 
     def create_repo( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, private = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
@@ -263,13 +256,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "has_wiki" ] = has_wiki
         if has_downloads is not GithubObject.NotSet:
             post_parameters[ "has_downloads" ] = has_downloads
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             "https://api.github.com/user/repos",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def edit( self, name = GithubObject.NotSet, email = GithubObject.NotSet, blog = GithubObject.NotSet, company = GithubObject.NotSet, location = GithubObject.NotSet, hireable = GithubObject.NotSet, bio = GithubObject.NotSet ):
@@ -295,34 +287,31 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "hireable" ] = hireable
         if bio is not GithubObject.NotSet:
             post_parameters[ "bio" ] = bio
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             "https://api.github.com/user",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_authorization( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/authorizations/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Authorization.Authorization( self._requester, data, completed = True )
 
     def get_authorizations( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/authorizations",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Authorization.Authorization,
             self._requester,
@@ -331,23 +320,21 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_emails( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/emails",
             None,
             None
         )
-        self._checkStatus( status, data )
         return data
 
     def get_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -356,13 +343,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_followers( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/followers",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -371,13 +357,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_following( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/following",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -386,13 +371,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_gists( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/gists",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self._requester,
@@ -401,13 +385,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_issues( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/issues",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self._requester,
@@ -417,23 +400,21 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def get_key( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/keys/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return UserKey.UserKey( self._requester, data, completed = True )
 
     def get_keys( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/keys",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             UserKey.UserKey,
             self._requester,
@@ -443,13 +424,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def get_organization_events( self, org ):
         assert isinstance( org, Organization.Organization ), org
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/users/" + self.login + "/events/orgs/" + org.login,
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -458,13 +438,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_orgs( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/orgs",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Organization.Organization,
             self._requester,
@@ -474,13 +453,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def get_repo( self, name ):
         assert isinstance( name, ( str, unicode ) ), name
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet ):
@@ -494,13 +472,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:
             url_parameters[ "direction" ] = direction
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/repos",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
@@ -509,13 +486,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_starred_gists( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/gists/starred",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self._requester,
@@ -524,13 +500,12 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
 
     def get_watched( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/user/watched",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
@@ -540,7 +515,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def has_in_following( self, following ):
         assert isinstance( following, NamedUser.NamedUser ), following
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             "https://api.github.com/user/following/" + following._identity,
             None,
@@ -550,7 +525,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
 
     def has_in_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             "https://api.github.com/user/watched/" + watched._identity,
             None,
@@ -561,33 +536,30 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def remove_from_emails( self, *emails ):
         assert all( isinstance( element, ( str, unicode ) ) for element in emails ), emails
         post_parameters = emails
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             "https://api.github.com/user/emails",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
 
     def remove_from_following( self, following ):
         assert isinstance( following, NamedUser.NamedUser ), following
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             "https://api.github.com/user/following/" + following._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def remove_from_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             "https://api.github.com/user/watched/" + watched._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def _initAttributes( self ):
         self._avatar_url = GithubObject.NotSet

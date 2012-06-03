@@ -40,32 +40,29 @@ class Team( GithubObject.GithubObject ):
 
     def add_to_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/members/" + member._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def add_to_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/repos/" + repo._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, name, permission = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
@@ -75,23 +72,21 @@ class Team( GithubObject.GithubObject ):
         }
         if permission is not GithubObject.NotSet:
             post_parameters[ "permission" ] = permission
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_members( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/members",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -100,13 +95,12 @@ class Team( GithubObject.GithubObject ):
         )
 
     def get_repos( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/repos",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
@@ -116,7 +110,7 @@ class Team( GithubObject.GithubObject ):
 
     def has_in_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/members/" + member._identity,
             None,
@@ -126,7 +120,7 @@ class Team( GithubObject.GithubObject ):
 
     def has_in_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/repos/" + repo._identity,
             None,
@@ -136,23 +130,21 @@ class Team( GithubObject.GithubObject ):
 
     def remove_from_members( self, member ):
         assert isinstance( member, NamedUser.NamedUser ), member
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def remove_from_repos( self, repo ):
         assert isinstance( repo, Repository.Repository ), repo
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/repos/" + repo._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     @property
     def _identity( self ):

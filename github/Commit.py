@@ -66,23 +66,21 @@ class Commit( GithubObject.GithubObject ):
             post_parameters[ "path" ] = path
         if position is not GithubObject.NotSet:
             post_parameters[ "position" ] = position
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/comments",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return CommitComment.CommitComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self._requester,

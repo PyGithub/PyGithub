@@ -3,6 +3,8 @@ import json
 import base64
 import urllib
 
+import GithubException
+
 class Requester:
     def __init__( self, login_or_token, password ):
         if password is not None:
@@ -15,7 +17,13 @@ class Requester:
             self.__authorizationHeader = None
         self.rate_limiting = ( 5000, 5000 )
 
-    def request( self, verb, url, parameters, input ):
+    def requestAndCheck( self, verb, url, parameters, input ):
+        status, headers, output = self.requestRaw( verb, url, parameters, input )
+        if status >= 400:
+            raise GithubException.GithubException( status, output )
+        return headers, output
+
+    def requestRaw( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
         assert url.startswith( "https://api.github.com" )
         url = url[ len( "https://api.github.com" ) : ]

@@ -155,13 +155,12 @@ class PullRequest( GithubObject.GithubObject ):
             "path": path,
             "position": position,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/comments",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
 
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, state = GithubObject.NotSet ):
@@ -175,34 +174,31 @@ class PullRequest( GithubObject.GithubObject ):
             post_parameters[ "body" ] = body
         if state is not GithubObject.NotSet:
             post_parameters[ "state" ] = state
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self._parentUrl( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             PullRequestComment.PullRequestComment,
             self._requester,
@@ -211,13 +207,12 @@ class PullRequest( GithubObject.GithubObject ):
         )
 
     def get_commits( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/commits",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self._requester,
@@ -226,13 +221,12 @@ class PullRequest( GithubObject.GithubObject ):
         )
 
     def get_files( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/files",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             File.File,
             self._requester,
@@ -241,7 +235,7 @@ class PullRequest( GithubObject.GithubObject ):
         )
 
     def is_merged( self ):
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/merge",
             None,
@@ -254,13 +248,12 @@ class PullRequest( GithubObject.GithubObject ):
         post_parameters = dict()
         if commit_message is not GithubObject.NotSet:
             post_parameters[ "commit_message" ] = commit_message
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/merge",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return PullRequestMergeStatus.PullRequestMergeStatus( self._requester, data, completed = True )
 
     def _initAttributes( self ):

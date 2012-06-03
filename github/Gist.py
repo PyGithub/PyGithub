@@ -94,33 +94,30 @@ class Gist( GithubObject.GithubObject ):
         post_parameters = {
             "body": body,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/comments",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GistComment.GistComment( self._requester, data, completed = True )
 
     def create_fork( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/fork",
             None,
             None
         )
-        self._checkStatus( status, data )
         return Gist( self._requester, data, completed = True )
 
     def delete( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, description = GithubObject.NotSet, files = GithubObject.NotSet ):
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
@@ -130,34 +127,31 @@ class Gist( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         if files is not GithubObject.NotSet:
             post_parameters[ "files" ] = dict( ( key, value._identity ) for key, value in files.iteritems() )
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/gists/comments/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return GistComment.GistComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             GistComment.GistComment,
             self._requester,
@@ -166,7 +160,7 @@ class Gist( GithubObject.GithubObject ):
         )
 
     def is_starred( self ):
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/star",
             None,
@@ -175,22 +169,20 @@ class Gist( GithubObject.GithubObject ):
         return status == 204
 
     def reset_starred( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/star",
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def set_starred( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/star",
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def _initAttributes( self ):
         self._comments = GithubObject.NotSet

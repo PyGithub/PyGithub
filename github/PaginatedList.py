@@ -50,8 +50,7 @@ class PaginatedList:
             self.__fetchNextPage()
 
     def __fetchNextPage( self ):
-        status, headers, data = self.__requester.request( "GET", self.__nextUrl, None, None )
-        GithubObject.GithubObject._checkStatus( status, data )
+        headers, data = self.__requester.requestAndCheck( "GET", self.__nextUrl, None, None )
         return self.__appendData( headers, data )
 
     def __appendData( self, headers, data ):

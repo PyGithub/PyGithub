@@ -155,23 +155,21 @@ class NamedUser( GithubObject.GithubObject ):
         }
         if description is not GithubObject.NotSet:
             post_parameters[ "description" ] = description
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/gists",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Gist.Gist( self._requester, data, completed = True )
 
     def get_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -180,13 +178,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_followers( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/followers",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser,
             self._requester,
@@ -195,13 +192,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_following( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/following",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser,
             self._requester,
@@ -210,13 +206,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_gists( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/gists",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self._requester,
@@ -225,13 +220,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_orgs( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/orgs",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Organization.Organization,
             self._requester,
@@ -240,13 +234,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_public_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/events/public",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -255,13 +248,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_public_received_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/received_events/public",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -270,13 +262,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_received_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/received_events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -286,13 +277,12 @@ class NamedUser( GithubObject.GithubObject ):
 
     def get_repo( self, name ):
         assert isinstance( name, ( str, unicode ) ), name
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/repos/" + self.login + "/" + name,
             None,
             None
         )
-        self._checkStatus( status, data )
         return Repository.Repository( self._requester, data, completed = True )
 
     def get_repos( self, type = GithubObject.NotSet ):
@@ -300,13 +290,12 @@ class NamedUser( GithubObject.GithubObject ):
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/repos",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
@@ -315,13 +304,12 @@ class NamedUser( GithubObject.GithubObject ):
         )
 
     def get_watched( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/watched",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,

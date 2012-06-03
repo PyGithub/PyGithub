@@ -38,7 +38,11 @@
         }
 {% endif %}
 
-        status, headers, data = self._request(
+{% if method.type.name == "bool" %}
+        status, headers, data = self._requester.requestRaw(
+{% else %}
+        headers, data = self._requester.requestAndCheck(
+{% endif %}
             "{{ method.request.verb }}",
             {% include "GithubObject.Concatenation.py" with concatenation=method.request.url only %},
 {% if method.request.urlParameters or not method.request.postParameters and method.optionalParameters %}

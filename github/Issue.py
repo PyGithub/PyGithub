@@ -108,36 +108,33 @@ class Issue( GithubObject.GithubObject ):
     def add_to_labels( self, *labels ):
         assert all( isinstance( element, Label.Label ) for element in labels ), labels
         post_parameters = [ label._identity for label in labels ]
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/labels",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
 
     def create_comment( self, body ):
         assert isinstance( body, ( str, unicode ) ), body
         post_parameters = {
             "body": body,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/comments",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def delete_labels( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/labels",
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, assignee = GithubObject.NotSet, state = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
         assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
@@ -159,34 +156,31 @@ class Issue( GithubObject.GithubObject ):
             post_parameters[ "milestone" ] = milestone._identity
         if labels is not GithubObject.NotSet:
             post_parameters[ "labels" ] = labels
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self._parentUrl( self.url ) + "/comments/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             IssueComment.IssueComment,
             self._requester,
@@ -195,13 +189,12 @@ class Issue( GithubObject.GithubObject ):
         )
 
     def get_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self._requester,
@@ -210,13 +203,12 @@ class Issue( GithubObject.GithubObject ):
         )
 
     def get_labels( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/labels",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
@@ -226,24 +218,22 @@ class Issue( GithubObject.GithubObject ):
 
     def remove_from_labels( self, label ):
         assert isinstance( label, Label.Label ), label
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/labels/" + label._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def set_labels( self, *labels ):
         assert all( isinstance( element, Label.Label ) for element in labels ), labels
         post_parameters = [ label._identity for label in labels ]
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/labels",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
 
     @property
     def _identity( self ):

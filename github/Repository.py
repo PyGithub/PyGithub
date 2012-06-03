@@ -187,24 +187,22 @@ class Repository( GithubObject.GithubObject ):
 
     def add_to_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     def compare( self, base, head ):
         assert isinstance( base, ( str, unicode ) ), base
         assert isinstance( head, ( str, unicode ) ), head
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/compare/" + base + "..." + head,
             None,
             None
         )
-        self._checkStatus( status, data )
         return Comparison.Comparison( self._requester, data, completed = True )
 
     def create_download( self, name, size, description = GithubObject.NotSet, content_type = GithubObject.NotSet ):
@@ -220,13 +218,12 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         if content_type is not GithubObject.NotSet:
             post_parameters[ "content_type" ] = content_type
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/downloads",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Download.Download( self._requester, data, completed = True )
 
     def create_git_blob( self, content, encoding ):
@@ -236,13 +233,12 @@ class Repository( GithubObject.GithubObject ):
             "content": content,
             "encoding": encoding,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/git/blobs",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GitBlob.GitBlob( self._requester, data, completed = True )
 
     def create_git_commit( self, message, tree, parents, author = GithubObject.NotSet, committer = GithubObject.NotSet ):
@@ -260,13 +256,12 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "author" ] = author._identity
         if committer is not GithubObject.NotSet:
             post_parameters[ "committer" ] = committer._identity
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/git/commits",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GitCommit.GitCommit( self._requester, data, completed = True )
 
     def create_git_ref( self, ref, sha ):
@@ -276,13 +271,12 @@ class Repository( GithubObject.GithubObject ):
             "ref": ref,
             "sha": sha,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/git/refs",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GitRef.GitRef( self._requester, data, completed = True )
 
     def create_git_tag( self, tag, message, object, type, tagger = GithubObject.NotSet ):
@@ -299,13 +293,12 @@ class Repository( GithubObject.GithubObject ):
         }
         if tagger is not GithubObject.NotSet:
             post_parameters[ "tagger" ] = tagger._identity
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/git/tags",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GitTag.GitTag( self._requester, data, completed = True )
 
     def create_git_tree( self, tree, base_tree = GithubObject.NotSet ):
@@ -316,13 +309,12 @@ class Repository( GithubObject.GithubObject ):
         }
         if base_tree is not GithubObject.NotSet:
             post_parameters[ "base_tree" ] = base_tree._identity
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/git/trees",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return GitTree.GitTree( self._requester, data, completed = True )
 
     def create_hook( self, name, config, events = GithubObject.NotSet, active = GithubObject.NotSet ):
@@ -338,13 +330,12 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "events" ] = events
         if active is not GithubObject.NotSet:
             post_parameters[ "active" ] = active
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/hooks",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Hook.Hook( self._requester, data, completed = True )
 
     def create_issue( self, title, body = GithubObject.NotSet, assignee = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
@@ -364,13 +355,12 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "milestone" ] = milestone._identity
         if labels is not GithubObject.NotSet:
             post_parameters[ "labels" ] = [ element._identity for element in labels ]
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/issues",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Issue.Issue( self._requester, data, completed = True )
 
     def create_key( self, title, key ):
@@ -380,13 +370,12 @@ class Repository( GithubObject.GithubObject ):
             "title": title,
             "key": key,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/keys",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return RepositoryKey.RepositoryKey( self._requester, data, completed = True, repoUrl = self._url )
 
     def create_label( self, name, color ):
@@ -396,13 +385,12 @@ class Repository( GithubObject.GithubObject ):
             "name": name,
             "color": color,
         }
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/labels",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Label.Label( self._requester, data, completed = True )
 
     def create_milestone( self, title, state = GithubObject.NotSet, description = GithubObject.NotSet, due_on = GithubObject.NotSet ):
@@ -419,13 +407,12 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         if due_on is not GithubObject.NotSet:
             post_parameters[ "due_on" ] = due_on.strftime( "%Y-%m-%d" )
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/milestones",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return Milestone.Milestone( self._requester, data, completed = True )
 
     def create_pull( self, *args, **kwds ):
@@ -449,13 +436,12 @@ class Repository( GithubObject.GithubObject ):
 
     def __create_pull( self, **kwds ):
         post_parameters = kwds
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/pulls",
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         return PullRequest.PullRequest( self._requester, data, completed = True )
 
     def edit( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, public = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
@@ -481,23 +467,21 @@ class Repository( GithubObject.GithubObject ):
             post_parameters[ "has_wiki" ] = has_wiki
         if has_downloads is not GithubObject.NotSet:
             post_parameters[ "has_downloads" ] = has_downloads
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._checkStatus( status, data )
         self._useAttributes( data )
 
     def get_branches( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/branches",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Branch.Branch,
             self._requester,
@@ -506,13 +490,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_collaborators( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/collaborators",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -522,23 +505,21 @@ class Repository( GithubObject.GithubObject ):
 
     def get_comment( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return CommitComment.CommitComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self._requester,
@@ -548,13 +529,12 @@ class Repository( GithubObject.GithubObject ):
 
     def get_commit( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/commits/" + sha,
             None,
             None
         )
-        self._checkStatus( status, data )
         return Commit.Commit( self._requester, data, completed = True )
 
     def get_commits( self, sha = GithubObject.NotSet, path = GithubObject.NotSet ):
@@ -565,13 +545,12 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "sha" ] = sha
         if path is not GithubObject.NotSet:
             url_parameters[ "path" ] = path
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/commits",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self._requester,
@@ -580,13 +559,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_contributors( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/contributors",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -596,23 +574,21 @@ class Repository( GithubObject.GithubObject ):
 
     def get_download( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/downloads/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Download.Download( self._requester, data, completed = True )
 
     def get_downloads( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/downloads",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Download.Download,
             self._requester,
@@ -621,13 +597,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -636,13 +611,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_forks( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/forks",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Repository,
             self._requester,
@@ -652,45 +626,41 @@ class Repository( GithubObject.GithubObject ):
 
     def get_git_blob( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/blobs/" + sha,
             None,
             None
         )
-        self._checkStatus( status, data )
         return GitBlob.GitBlob( self._requester, data, completed = True )
 
     def get_git_commit( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/commits/" + sha,
             None,
             None
         )
-        self._checkStatus( status, data )
         return GitCommit.GitCommit( self._requester, data, completed = True )
 
     def get_git_ref( self, ref ):
         assert isinstance( ref, ( str, unicode ) ), ref
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/" + ref,
             None,
             None
         )
-        self._checkStatus( status, data )
         return GitRef.GitRef( self._requester, data, completed = True )
 
     def get_git_refs( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/refs",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             GitRef.GitRef,
             self._requester,
@@ -700,13 +670,12 @@ class Repository( GithubObject.GithubObject ):
 
     def get_git_tag( self, sha ):
         assert isinstance( sha, ( str, unicode ) ), sha
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/tags/" + sha,
             None,
             None
         )
-        self._checkStatus( status, data )
         return GitTag.GitTag( self._requester, data, completed = True )
 
     def get_git_tree( self, sha, recursive = GithubObject.NotSet ):
@@ -715,34 +684,31 @@ class Repository( GithubObject.GithubObject ):
         url_parameters = dict()
         if recursive is not GithubObject.NotSet:
             url_parameters[ "recursive" ] = recursive
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/git/trees/" + sha,
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return GitTree.GitTree( self._requester, data, completed = True )
 
     def get_hook( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/hooks/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Hook.Hook( self._requester, data, completed = True )
 
     def get_hooks( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/hooks",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Hook.Hook,
             self._requester,
@@ -752,13 +718,12 @@ class Repository( GithubObject.GithubObject ):
 
     def get_issue( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues/" + str( number ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Issue.Issue( self._requester, data, completed = True )
 
     def get_issues( self, milestone = GithubObject.NotSet, state = GithubObject.NotSet, assignee = GithubObject.NotSet, mentioned = GithubObject.NotSet, labels = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet, since = GithubObject.NotSet ):
@@ -793,13 +758,12 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "direction" ] = direction
         if since is not GithubObject.NotSet:
             url_parameters[ "since" ] = since.strftime( "%Y-%m-%dT%H:%M:%SZ" )
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self._requester,
@@ -809,23 +773,21 @@ class Repository( GithubObject.GithubObject ):
 
     def get_issues_event( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues/events/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return IssueEvent.IssueEvent( self._requester, data, completed = True )
 
     def get_issues_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self._requester,
@@ -835,23 +797,21 @@ class Repository( GithubObject.GithubObject ):
 
     def get_key( self, id ):
         assert isinstance( id, int ), id
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/keys/" + str( id ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return RepositoryKey.RepositoryKey( self._requester, data, completed = True, repoUrl = self._url )
 
     def get_keys( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/keys",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             lambda requester, data, completed: RepositoryKey.RepositoryKey( requester, data, completed, repoUrl = self._url ),
             self._requester,
@@ -861,23 +821,21 @@ class Repository( GithubObject.GithubObject ):
 
     def get_label( self, name ):
         assert isinstance( name, ( str, unicode ) ), name
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/labels/" + urllib.quote( name ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Label.Label( self._requester, data, completed = True )
 
     def get_labels( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/labels",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
@@ -886,24 +844,22 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_languages( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/languages",
             None,
             None
         )
-        self._checkStatus( status, data )
         return data
 
     def get_milestone( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/milestones/" + str( number ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return Milestone.Milestone( self._requester, data, completed = True )
 
     def get_milestones( self, state = GithubObject.NotSet, sort = GithubObject.NotSet, direction = GithubObject.NotSet ):
@@ -917,13 +873,12 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:
             url_parameters[ "direction" ] = direction
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/milestones",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Milestone.Milestone,
             self._requester,
@@ -932,13 +887,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_network_events( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             "https://api.github.com/networks/" + self.owner.login + "/" + self.name + "/events",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
@@ -948,13 +902,12 @@ class Repository( GithubObject.GithubObject ):
 
     def get_pull( self, number ):
         assert isinstance( number, int ), number
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/pulls/" + str( number ),
             None,
             None
         )
-        self._checkStatus( status, data )
         return PullRequest.PullRequest( self._requester, data, completed = True )
 
     def get_pulls( self, state = GithubObject.NotSet ):
@@ -962,13 +915,12 @@ class Repository( GithubObject.GithubObject ):
         url_parameters = dict()
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/pulls",
             url_parameters,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             PullRequest.PullRequest,
             self._requester,
@@ -977,13 +929,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_tags( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/tags",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Tag.Tag,
             self._requester,
@@ -992,13 +943,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_teams( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/teams",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             Team.Team,
             self._requester,
@@ -1007,13 +957,12 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def get_watchers( self ):
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/watchers",
             None,
             None
         )
-        self._checkStatus( status, data )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
@@ -1023,7 +972,7 @@ class Repository( GithubObject.GithubObject ):
 
     def has_in_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self._request(
+        status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/collaborators/" + collaborator._identity,
             None,
@@ -1033,13 +982,12 @@ class Repository( GithubObject.GithubObject ):
 
     def remove_from_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        status, headers, data = self._request(
+        headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/collaborators/" + collaborator._identity,
             None,
             None
         )
-        self._checkStatus( status, data )
 
     @property
     def _identity( self ):
