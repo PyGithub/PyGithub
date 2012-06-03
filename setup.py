@@ -17,12 +17,12 @@ from distutils.core import setup
 import textwrap
 
 setup(
-    name = 'PyGithub',
-    version = '1.0',
-    description = 'Use the full Github API v3',
-    author = 'Vincent Jacques',
-    author_email = 'vincent@vincent-jacques.net',
-    url = 'http://vincent-jacques.net/PyGithub',
+    name = "PyGithub",
+    version = "1.0",
+    description = "Use the full Github API v3",
+    author = "Vincent Jacques",
+    author_email = "vincent@vincent-jacques.net",
+    url = "http://vincent-jacques.net/PyGithub",
     long_description = textwrap.dedent( """\
         Tutorial
         ========
@@ -52,7 +52,10 @@ setup(
 
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
-        'github',
+        "github",
+    ],
+    data_files = [
+        ( "", [ "ReadMe.md", "COPYING", "COPYING.LESSER", "doc/ReferenceOfClasses.md", "doc/ReferenceOfApis.md", "doc/Design.md" ] ),
     ],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
