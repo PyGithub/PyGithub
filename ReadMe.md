@@ -40,6 +40,12 @@ Or without authentication:
 
     g = Github()
 
+Licensing
+=========
+
+PyGithub is distributed under the GNU Lesser General Public Licence.
+See files COPYING and COPYING.LESSER, as requested by [GNU](http://www.gnu.org/licenses/gpl-howto.html).
+
 Projects using PyGithub
 =======================
 
