@@ -12,9 +12,13 @@
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
 import httplib
-import json
 import base64
 import urllib
+
+try:
+    import json
+except ImportError:
+    import simplejson as json 
 
 import GithubException
 
