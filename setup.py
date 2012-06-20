@@ -18,7 +18,7 @@ import textwrap
 
 setup(
     name = "PyGithub",
-    version = "1.0",
+    version = "1.1",
     description = "Use the full Github API v3",
     author = "Vincent Jacques",
     author_email = "vincent@vincent-jacques.net",
@@ -57,7 +57,7 @@ setup(
     data_files = [
         ( "", [ "ReadMe.md", "COPYING", "COPYING.LESSER", "doc/ReferenceOfClasses.md", "doc/ReferenceOfApis.md", "doc/Design.md" ] ),
     ],
-    classifiers=[
+    classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
