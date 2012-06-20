@@ -54,9 +54,9 @@ setup(
     packages = [
         "github",
     ],
-    data_files = [
-        ( "", [ "ReadMe.md", "COPYING", "COPYING.LESSER", "doc/ReferenceOfClasses.md", "doc/ReferenceOfApis.md", "doc/Design.md" ] ),
-    ],
+    package_data = {
+        "github": [ "../ReadMe.md", "../COPYING*", "../doc/*.md" ]
+    },
     classifiers = [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",

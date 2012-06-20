@@ -60,6 +60,8 @@ Version 1.1 (June 20th, 2012)
 -----------------------------
 
 * Restore compatibility with Python 2.5, thank you [pmuilu](https://github.com/pmuilu)
+* Use `package_data` instead of `data_files` for documentation files in `setup.py`, thank you [malexw](https://github.com/malexw) for reporting
+
 Version 1.0 (June 3rd, 2012)
 ----------------------------
 
