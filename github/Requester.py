@@ -17,8 +17,8 @@ import urllib
 
 try:
     import json
-except ImportError:
-    import simplejson as json 
+except ImportError: #pragma no cover: only for Python 2.5
+    import simplejson as json #pragma no cover
 
 import GithubException
 
