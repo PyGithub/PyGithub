@@ -1,0 +1,10 @@
+GET /repos/jacquev6/PyGithub/labels/Label%20with%20spaces%20and%20strange%20characters%20%28%26%2A%23%24%29 {'Authorization': 'Basic login_and_password_removed'} null
+200
+[('status', '200 OK'), ('x-ratelimit-remaining', '4928'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '197'), ('server', 'nginx/1.0.13'), ('last-modified', 'Thu, 28 Jun 2012 19:29:52 GMT'), ('connection', 'keep-alive'), ('etag', '"c536d81e7479c8c9acfa7deeddeb6e72"'), ('cache-control', 'private, max-age=60'), ('date', 'Thu, 28 Jun 2012 19:48:05 GMT'), ('content-type', 'application/json; charset=utf-8')]
+{"color":"ffff00","name":"Label with spaces and strange characters (&*#$)","url":"https://api.github.com/repos/jacquev6/PyGithub/labels/Label+with+spaces+and+strange+characters+%28%26%2A%23%24%29"}
+
+GET /repos/jacquev6/PyGithub/issues?labels=Label%2520with%2520spaces%2520and%2520strange%2520characters%2520%2528%2526%252A%2523%2524%2529 {'Authorization': 'Basic login_and_password_removed'} null
+200
+[('status', '200 OK'), ('content-length', '2'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4927'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"d751713988987e9331980363e24189ce"'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Thu, 28 Jun 2012 19:48:05 GMT'), ('content-type', 'application/json; charset=utf-8')]
+[]
+
