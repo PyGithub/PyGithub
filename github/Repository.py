@@ -1003,7 +1003,20 @@ class Repository( GithubObject.GithubObject ):
         )
 
     def search_issues( self, state, keyword ):
-        pass
+        assert state in [ "open", "closed" ], state
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Issue.Issue,
+            self._requester,
+            headers,
+            data[ "issues" ]
+        )
 
     @property
     def _identity( self ):

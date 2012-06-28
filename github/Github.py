@@ -17,6 +17,7 @@ import NamedUser
 import Organization
 import Gist
 import PaginatedList
+import Repository
 
 class Github( object ):
     def __init__( self, login_or_token = None, password = None ):
@@ -66,10 +67,41 @@ class Github( object ):
         )
 
     def search_repos( self, keyword ):
-        pass
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/repos/search/" + keyword,
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self.__requester,
+            headers,
+            data[ "repositories" ]
+        )
 
     def search_users( self, keyword ):
-        pass
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/user/search/" + keyword,
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self.__requester,
+            headers,
+            data[ "users" ]
+        )
 
     def search_user_by_email( self, email ):
-        pass
+        assert isinstance( email, ( str, unicode ) ), email
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/user/email/" + email,
+            None,
+            None
+        )
+        return NamedUser.NamedUser( self.__requester, data[ "user" ], completed = False )
