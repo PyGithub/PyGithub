@@ -64,3 +64,12 @@ class Github( object ):
             headers,
             data
         )
+
+    def search_repos( self, keyword ):
+        pass
+
+    def search_users( self, keyword ):
+        pass
+
+    def search_user_by_email( self, email ):
+        pass

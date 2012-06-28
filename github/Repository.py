@@ -1002,6 +1002,9 @@ class Repository( GithubObject.GithubObject ):
             None
         )
 
+    def search_issues( self, state, keyword ):
+        pass
+
     @property
     def _identity( self ):
         return self.owner.login + "/" + self.name

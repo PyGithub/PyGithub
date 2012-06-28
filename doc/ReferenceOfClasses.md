@@ -20,7 +20,14 @@ Methods
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
+    * `id`: integer
 * `get_gists()`: list of `Gist`
+* `search_repos( keyword )`: list of `Repository`
+    * `keyword`: string
+* `search_users( keyword )`: list of `NamedUser`
+    * `keyword`: string
+* `search_user_by_email( email )`: `NamedUser`
+    * `email`: string
 
 Class `GithubException`
 =======================
@@ -1191,6 +1198,9 @@ Issues
     * `sort`: string
     * `direction`: string
     * `since`: datetime
+* `search_issues( state, keyword )`: list of `Issue`
+    * `state`: "open" or "closed"
+    * `keyword`: string
 
 Issues_events
 -------------
