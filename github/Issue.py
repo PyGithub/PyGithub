@@ -120,7 +120,7 @@ class Issue( GithubObject.GithubObject ):
 
     def add_to_labels( self, *labels ):
         assert all( isinstance( element, Label.Label ) for element in labels ), labels
-        post_parameters = [ label._identity for label in labels ]
+        post_parameters = [ label.name for label in labels ]
         headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/labels",
@@ -240,7 +240,7 @@ class Issue( GithubObject.GithubObject ):
 
     def set_labels( self, *labels ):
         assert all( isinstance( element, Label.Label ) for element in labels ), labels
-        post_parameters = [ label._identity for label in labels ]
+        post_parameters = [ label.name for label in labels ]
         headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/labels",
