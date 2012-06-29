@@ -13,22 +13,39 @@
 
 import GithubObject
 
-class PaginatedList:
-    def __init__( self, contentClass, requester, headers, data ):
-        self.__requester = requester
-        self.__contentClass = contentClass
-        self.__elements = []
-        self.__appendData( headers, data )
+class PaginatedListBase:
+    def __init__( self, firstElements ):
+        self.__elements = firstElements
+
+    def __getitem__( self, index ):
+        assert isinstance( index, ( int, slice ) )
+        if isinstance( index, int ):
+            self.__fetchToIndex( index )
+            return self.__elements[ index ]
+        else:
+            return self._Slice( self, index )
 
     def __iter__( self ):
         for element in self.__elements:
             yield element
-        while self.__nextUrl is not None:
-            newElements = self.__fetchNextPage()
+        while self._couldGrow():
+            newElements = self.__grow()
             for element in newElements:
                 yield element
 
-    class __Slice:
+    def _isBiggerThan( self, index ):
+        return len( self.__elements ) > index or self._couldGrow()
+
+    def __fetchToIndex( self, index ):
+        while len( self.__elements ) <= index and self._couldGrow():
+            self.__grow()
+
+    def __grow( self ):
+        newElements = self._fetchNextPage()
+        self.__elements += newElements
+        return newElements
+
+    class _Slice:
         def __init__( self, theList, theSlice ):
             self.__list = theList
             self.__start = theSlice.start or 0
@@ -47,39 +64,30 @@ class PaginatedList:
         def __finished( self, index ):
             return self.__stop is not None and index >= self.__stop
 
-    def __getitem__( self, index ):
-        assert isinstance( index, ( int, slice ) )
-        if isinstance( index, int ):
-            self.__fetchToIndex( index )
-            return self.__elements[ index ]
-        else:
-            return self.__Slice( self, index )
+class PaginatedList( PaginatedListBase ):
+    def __init__( self, contentClass, requester, headers, data ):
+        self.__requester = requester
+        self.__contentClass = contentClass
+        PaginatedListBase.__init__( self, self.__extractNewElements( headers, data ) )
 
-    def _isBiggerThan( self, index ):
-        return len( self.__elements ) > index or self.__nextUrl is not None
+    def _couldGrow( self ):
+        return self.__nextUrl is not None
 
-    def __fetchToIndex( self, index ):
-        while len( self.__elements ) <= index and self.__nextUrl is not None:
-            self.__fetchNextPage()
-
-    def __fetchNextPage( self ):
+    def _fetchNextPage( self ):
         headers, data = self.__requester.requestAndCheck( "GET", self.__nextUrl, None, None )
-        return self.__appendData( headers, data )
+        return self.__extractNewElements( headers, data )
 
-    def __appendData( self, headers, data ):
+    def __extractNewElements( self, headers, data ):
         links = self.__parseLinkHeader( headers )
         if len( data ) > 0 and "next" in links:
             self.__nextUrl = links[ "next" ]
         else:
             self.__nextUrl = None
 
-        newElements = [
+        return [
             self.__contentClass( self.__requester, element, completed = False )
             for element in data
         ]
-        self.__elements += newElements
-
-        return newElements
 
     def __parseLinkHeader( self, headers ):
         links = {}
