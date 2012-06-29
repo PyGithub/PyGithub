@@ -1006,14 +1006,16 @@ class Repository( GithubObject.GithubObject ):
     def legacy_search_issues( self, state, keyword ):
         assert state in [ "open", "closed" ], state
         assert isinstance( keyword, ( str, unicode ) ), keyword
-        return Legacy.PaginatedList(
+        headers, data = self._requester.requestAndCheck(
+            "GET",
             "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
             {},
-            self._requester,
-            "issues",
-            Legacy.convertIssue,
-            Issue.Issue,
+            None
         )
+        return [
+            Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
+            for element in data[ "issues" ]
+        ]
 
     @property
     def _identity( self ):

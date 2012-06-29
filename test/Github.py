@@ -34,6 +34,9 @@ class Github( Framework.TestCase ):
     def testLegacySearchUsers( self ):
         self.assertListKeyBegin( self.g.legacy_search_users( "vincent" ), lambda u: u.login, [ "nvie", "obra", "lusis" ] )
 
+    def testLegacySearchUsersPagination( self ):
+        self.assertEqual( len( list( self.g.legacy_search_users( "Lucy" ) ) ), 146 )
+
     def testLegacySearchUserByEmail( self ):
         user = self.g.legacy_search_user_by_email( "vincent@vincent-jacques.net" )
         self.assertEqual( user.login, "jacquev6" )
