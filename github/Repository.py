@@ -46,6 +46,7 @@ import GitTag
 import Download
 import Permissions
 import Event
+import Legacy
 
 class Repository( GithubObject.GithubObject ):
     @property
@@ -1001,6 +1002,20 @@ class Repository( GithubObject.GithubObject ):
             None,
             None
         )
+
+    def legacy_search_issues( self, state, keyword ):
+        assert state in [ "open", "closed" ], state
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
+            {},
+            None
+        )
+        return [
+            Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
+            for element in data[ "issues" ]
+        ]
 
     @property
     def _identity( self ):
