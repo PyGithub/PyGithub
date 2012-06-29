@@ -46,6 +46,7 @@ import GitTag
 import Download
 import Permissions
 import Event
+import Legacy
 
 class Repository( GithubObject.GithubObject ):
     @property
@@ -1011,7 +1012,8 @@ class Repository( GithubObject.GithubObject ):
             None,
             None
         )
-        return PaginatedList.PaginatedList(
+        return Legacy.PaginatedList(
+            Legacy.convertIssue,
             Issue.Issue,
             self._requester,
             headers,

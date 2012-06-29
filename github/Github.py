@@ -18,6 +18,7 @@ import Organization
 import Gist
 import PaginatedList
 import Repository
+import Legacy
 
 class Github( object ):
     def __init__( self, login_or_token = None, password = None ):
@@ -74,7 +75,8 @@ class Github( object ):
             None,
             None
         )
-        return PaginatedList.PaginatedList(
+        return Legacy.PaginatedList(
+            Legacy.convertRepo,
             Repository.Repository,
             self.__requester,
             headers,
@@ -89,7 +91,8 @@ class Github( object ):
             None,
             None
         )
-        return PaginatedList.PaginatedList(
+        return Legacy.PaginatedList(
+            Legacy.convertUser,
             NamedUser.NamedUser,
             self.__requester,
             headers,
@@ -104,4 +107,4 @@ class Github( object ):
             None,
             None
         )
-        return NamedUser.NamedUser( self.__requester, data[ "user" ], completed = False )
+        return NamedUser.NamedUser( self.__requester, Legacy.convertUser( data[ "user" ] ), completed = False )
