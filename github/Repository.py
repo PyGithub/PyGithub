@@ -46,6 +46,7 @@ import GitTag
 import Download
 import Permissions
 import Event
+import Legacy
 
 class Repository( GithubObject.GithubObject ):
     @property
@@ -367,7 +368,7 @@ class Repository( GithubObject.GithubObject ):
         if milestone is not GithubObject.NotSet:
             post_parameters[ "milestone" ] = milestone._identity
         if labels is not GithubObject.NotSet:
-            post_parameters[ "labels" ] = [ element._identity for element in labels ]
+            post_parameters[ "labels" ] = [ element.name for element in labels ]
         headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/issues",
@@ -764,7 +765,7 @@ class Repository( GithubObject.GithubObject ):
         if mentioned is not GithubObject.NotSet:
             url_parameters[ "mentioned" ] = mentioned._identity
         if labels is not GithubObject.NotSet:
-            url_parameters[ "labels" ] = ",".join( label._identity for label in labels )
+            url_parameters[ "labels" ] = ",".join( label.name for label in labels )
         if sort is not GithubObject.NotSet:
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:
@@ -1001,6 +1002,20 @@ class Repository( GithubObject.GithubObject ):
             None,
             None
         )
+
+    def legacy_search_issues( self, state, keyword ):
+        assert state in [ "open", "closed" ], state
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
+            {},
+            None
+        )
+        return [
+            Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
+            for element in data[ "issues" ]
+        ]
 
     @property
     def _identity( self ):

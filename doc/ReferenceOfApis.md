@@ -57,6 +57,22 @@ API `/issues`
 =============
 * GET: `AuthenticatedUser.get_issues`
 
+API `/legacy/issues/search/:owner/:repository/:state/:keyword`
+==============================================================
+* GET: `Repository.search_issues`
+
+API `/legacy/repos/search/:keyword`
+==============================================================
+* GET: `Github.search_repos`
+
+API `/legacy/user/search/:keyword`
+==============================================================
+* GET: `Github.search_users`
+
+API `/legacy/user/email/:email`
+==============================================================
+* GET: `Github.search_user_by_email`
+
 API `/networks/:user/:repo/events`
 ==================================
 * GET: `Repository.get_network_events`

@@ -51,6 +51,7 @@ from UserKey import *
 
 from PaginatedList import *
 from Issue33 import *
+from Issue50 import *
 from Exceptions import *
 
 Framework.main()
