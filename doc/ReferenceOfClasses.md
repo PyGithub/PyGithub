@@ -1,5 +1,5 @@
 You don't normaly create instances of any class but `Github`.
-You obtain instances through calls to `get_` and `create_` methods.
+You obtain instances through calls to `search_`, `get_` and `create_` methods.
 
 Methods returning an "iterator of `SomeType`" return an iterator which yields instances of `SomeType`.
 This implements lazy [pagination requests](http://developer.github.com/v3/#pagination).

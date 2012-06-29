@@ -56,6 +56,13 @@ Projects using PyGithub
 History
 =======
 
+Version 1.2 (June 29th, 2012)
+-----------------------------
+
+* Implement [legacy search APIs](http://developer.github.com/v3/search/), thank you [kukuts](https://github.com/kukuts) for telling me Github had released them
+* Fix a bug with issue labels containing spaces, thank you [philipkimmey](https://github.com/philipkimmey) for detecting the bug and fixing it
+* Clarify how collections of objects are returned by `get_*` methods, thank you [bilderbuchi](https://github.com/bilderbuchi) for asking
+
 Version 1.1 (June 20th, 2012)
 -----------------------------
 
