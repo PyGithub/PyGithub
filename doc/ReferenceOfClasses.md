@@ -23,10 +23,12 @@ Methods
     * `id`: integer
 * `get_gists()`: list of `Gist`
 * `search_repos( keyword )`: list of `Repository`
+* `legacy_search_repos( keyword, [language] )`: list of `Repository`
     * `keyword`: string
-* `search_users( keyword )`: list of `NamedUser`
+    * `language`: string
+* `legacy_search_users( keyword )`: list of `NamedUser`
     * `keyword`: string
-* `search_user_by_email( email )`: `NamedUser`
+* `legacy_search_user_by_email( email )`: `NamedUser`
     * `email`: string
 
 Class `GithubException`
@@ -1198,7 +1200,7 @@ Issues
     * `sort`: string
     * `direction`: string
     * `since`: datetime
-* `search_issues( state, keyword )`: list of `Issue`
+* `legacy_search_issues( state, keyword )`: list of `Issue`
     * `state`: "open" or "closed"
     * `keyword`: string
 

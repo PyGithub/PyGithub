@@ -11,31 +11,42 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-def PaginatedList( convert, contentClass, requester, headers, data ):
+def PaginatedList( url, args, requester, key, convert, contentClass ):
+    headers, data = requester.requestAndCheck(
+        "GET",
+        url,
+        args,
+        None
+    )
     return [
         contentClass( requester, convert( element ), completed = False )
-        for element in data
+        for element in data[ key ]
     ]
 
 def convertUser( attributes ):
-    attributes[ "created_at" ] = attributes[ "created_at" ][ : 19 ] + "Z"
-    if not isinstance( attributes[ "id" ], int ):
-        attributes[ "id" ] = int( attributes[ "id" ][ 5 : ] )
-    return attributes
+    login = attributes[ "login" ]
+    return {
+        "login": login,
+        "url": "https://api.github.com/users/" + login,
+    }
 
 def convertRepo( attributes ):
-    attributes[ "created_at" ] = attributes[ "created_at" ][ : 19 ] + "Z"
-    if "pushed_at" in attributes:
-        attributes[ "pushed_at" ] = attributes[ "pushed_at" ][ : 19 ] + "Z"
-    attributes[ "owner" ] = { "login": attributes[ "owner" ] }
-    if "organization" in attributes:
-        attributes[ "organization" ] = { "login": attributes[ "organization" ] }
-    attributes[ "url" ] = "https://api.github.com/repos/" + "/".join( attributes[ "url" ].split( "/" )[ -2 : ] )
-    return attributes
+    owner = attributes[ "owner" ]
+    name = attributes[ "name" ]
+    return {
+        "owner": { "login": owner },
+        "name": name,
+        "url": "https://api.github.com/repos/" + owner + "/" + name,
+    }
 
 def convertIssue( attributes ):
-    attributes[ "created_at" ] = attributes[ "created_at" ][ : 19 ] + "Z"
-    attributes[ "updated_at" ] = attributes[ "updated_at" ][ : 19 ] + "Z"
-    attributes[ "labels" ] = [ { "name": label } for label in attributes[ "labels" ] ]
-    attributes[ "user" ] = { "login": attributes[ "user" ] }
-    return attributes
+    number = attributes[ "number" ]
+    title = attributes[ "title" ]
+    html_url = attributes[ "html_url" ]
+    assert html_url.startswith( "https://github.com/" )
+    url = html_url.replace( "https://github.com/", "https://api.github.com/repos/" )
+    return {
+        "title": title,
+        "number": number,
+        "url": url,
+    }

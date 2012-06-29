@@ -1003,21 +1003,16 @@ class Repository( GithubObject.GithubObject ):
             None
         )
 
-    def search_issues( self, state, keyword ):
+    def legacy_search_issues( self, state, keyword ):
         assert state in [ "open", "closed" ], state
         assert isinstance( keyword, ( str, unicode ) ), keyword
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
-            None,
-            None
-        )
         return Legacy.PaginatedList(
+            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
+            {},
+            self._requester,
+            "issues",
             Legacy.convertIssue,
             Issue.Issue,
-            self._requester,
-            headers,
-            data[ "issues" ]
         )
 
     @property

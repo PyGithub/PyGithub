@@ -19,6 +19,7 @@ import Gist
 import PaginatedList
 import Repository
 import Legacy
+import GithubObject
 
 class Github( object ):
     def __init__( self, login_or_token = None, password = None ):
@@ -67,39 +68,31 @@ class Github( object ):
             data
         )
 
-    def search_repos( self, keyword ):
+    def legacy_search_repos( self, keyword, language = GithubObject.NotSet ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
-        headers, data = self.__requester.requestAndCheck(
-            "GET",
-            "https://api.github.com/legacy/repos/search/" + keyword,
-            None,
-            None
-        )
+        assert language is GithubObject.NotSet or isinstance( language, ( str, unicode ) ), language
+        args = {} if language is GithubObject.NotSet else { "language": language }
         return Legacy.PaginatedList(
+            "https://api.github.com/legacy/repos/search/" + keyword,
+            args,
+            self.__requester,
+            "repositories",
             Legacy.convertRepo,
             Repository.Repository,
-            self.__requester,
-            headers,
-            data[ "repositories" ]
         )
 
-    def search_users( self, keyword ):
+    def legacy_search_users( self, keyword ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
-        headers, data = self.__requester.requestAndCheck(
-            "GET",
-            "https://api.github.com/legacy/user/search/" + keyword,
-            None,
-            None
-        )
         return Legacy.PaginatedList(
+            "https://api.github.com/legacy/user/search/" + keyword,
+            {},
+            self.__requester,
+            "users",
             Legacy.convertUser,
             NamedUser.NamedUser,
-            self.__requester,
-            headers,
-            data[ "users" ]
         )
 
-    def search_user_by_email( self, email ):
+    def legacy_search_user_by_email( self, email ):
         assert isinstance( email, ( str, unicode ) ), email
         headers, data = self.__requester.requestAndCheck(
             "GET",

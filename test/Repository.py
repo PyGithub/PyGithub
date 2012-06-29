@@ -333,5 +333,5 @@ class Repository( Framework.TestCase ):
     def testGetPullsWithArguments( self ):
         self.assertListKeyEqual( self.repo.get_pulls( "closed" ), lambda p: p.id, [ 1448168, 1436310, 1436215 ] )
 
-    def testSearchIssues( self ):
-        self.assertListKeyEqual( self.repo.search_issues( "open", "search" ), lambda i: i.title, [ "Support new Search API" ] )
+    def testLegacySearchIssues( self ):
+        self.assertListKeyEqual( self.repo.legacy_search_issues( "open", "search" ), lambda i: i.title, [ "Support new Search API" ] )
