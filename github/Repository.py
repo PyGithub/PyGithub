@@ -1008,7 +1008,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + keyword,
+            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
             {},
             None
         )

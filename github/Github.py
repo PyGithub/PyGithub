@@ -11,6 +11,8 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import urllib
+
 from Requester import Requester
 import AuthenticatedUser
 import NamedUser
@@ -73,7 +75,7 @@ class Github( object ):
         assert language is GithubObject.NotSet or isinstance( language, ( str, unicode ) ), language
         args = {} if language is GithubObject.NotSet else { "language": language }
         return Legacy.PaginatedList(
-            "https://api.github.com/legacy/repos/search/" + keyword,
+            "https://api.github.com/legacy/repos/search/" + urllib.quote( keyword ),
             args,
             self.__requester,
             "repositories",
@@ -84,7 +86,7 @@ class Github( object ):
     def legacy_search_users( self, keyword ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
         return Legacy.PaginatedList(
-            "https://api.github.com/legacy/user/search/" + keyword,
+            "https://api.github.com/legacy/user/search/" + urllib.quote( keyword ),
             {},
             self.__requester,
             "users",
