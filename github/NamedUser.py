@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 import PaginatedList
 
@@ -383,7 +381,7 @@ class NamedUser( GithubObject.GithubObject ):
             self._contributions = attributes[ "contributions" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "disk_usage" in attributes: # pragma no branch
             assert attributes[ "disk_usage" ] is None or isinstance( attributes[ "disk_usage" ], int ), attributes[ "disk_usage" ]
             self._disk_usage = attributes[ "disk_usage" ]

@@ -22,6 +22,10 @@ class GitAuthor( GithubObject.BasicGithubObject ):
         return self._NoneIfNotSet( self._date )
 
     @property
+    def timezone( self ):
+        return self._NoneIfNotSet( self._timezone )
+
+    @property
     def email( self ):
         return self._NoneIfNotSet( self._email )
 
@@ -31,13 +35,15 @@ class GitAuthor( GithubObject.BasicGithubObject ):
 
     def _initAttributes( self ):
         self._date = GithubObject.NotSet
+        self._timezone = GithubObject.NotSet
         self._email = GithubObject.NotSet
         self._name = GithubObject.NotSet
 
     def _useAttributes( self, attributes ):
         if "date" in attributes: # pragma no branch
             assert attributes[ "date" ] is None or isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
-            self._date = attributes[ "date" ]
+            self._date = self._parseDatetime( attributes[ "date" ] )
+            self._timezone = self._parseTimezone( attributes[ "date" ] )
         if "email" in attributes: # pragma no branch
             assert attributes[ "email" ] is None or isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
             self._email = attributes[ "email" ]

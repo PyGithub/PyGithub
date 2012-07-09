@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 
 class Download( GithubObject.GithubObject ):
@@ -164,7 +162,7 @@ class Download( GithubObject.GithubObject ):
             self._content_type = attributes[ "content_type" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "description" in attributes: # pragma no branch
             assert attributes[ "description" ] is None or isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self._description = attributes[ "description" ]
@@ -173,7 +171,7 @@ class Download( GithubObject.GithubObject ):
             self._download_count = attributes[ "download_count" ]
         if "expirationdate" in attributes: # pragma no branch
             assert attributes[ "expirationdate" ] is None or isinstance( attributes[ "expirationdate" ], ( str, unicode ) ), attributes[ "expirationdate" ]
-            self._expirationdate = None if attributes[ "expirationdate" ] is None else datetime.datetime.strptime( attributes[ "expirationdate" ], "%Y-%m-%dT%H:%M:%S.000Z" )
+            self._expirationdate = self._parseDatetime( attributes[ "expirationdate" ] )
         if "html_url" in attributes: # pragma no branch
             assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
             self._html_url = attributes[ "html_url" ]

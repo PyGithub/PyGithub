@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 
 import NamedUser
@@ -119,7 +117,7 @@ class PullRequestComment( GithubObject.GithubObject ):
             self._commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]
@@ -137,7 +135,7 @@ class PullRequestComment( GithubObject.GithubObject ):
             self._position = attributes[ "position" ]
         if "updated_at" in attributes: # pragma no branch
             assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self._updated_at = None if attributes[ "updated_at" ] is None else datetime.datetime.strptime( attributes[ "updated_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._updated_at = self._parseDatetime( attributes[ "updated_at" ] )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

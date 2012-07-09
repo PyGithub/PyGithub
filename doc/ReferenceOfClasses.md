@@ -460,7 +460,8 @@ Class `GitAuthor`
 
 Attributes
 ----------
-* `date`: string
+* `date`: datetime
+* `timezone`: integer
 * `email`: string
 * `name`: string
 

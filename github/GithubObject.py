@@ -11,6 +11,8 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
+
 import GithubException
 
 class _NotSetType:
@@ -33,6 +35,22 @@ class BasicGithubObject( object ):
             return None
         else:
             return value
+
+    @staticmethod
+    def _parseDatetime( s ):
+        if s is None:
+            return None
+        elif len( s ) == 24:
+            return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%S.000Z" )
+        elif len( s ) == 25:
+            return datetime.datetime.strptime( s[ : 19 ], "%Y-%m-%dT%H:%M:%S" )
+        else:
+            return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%SZ" )
+
+    @staticmethod
+    def _parseTimezone( s ):
+        assert len( s ) == 25
+        return int( s[ 19 : 22 ] ) + int( s[ 23 : 25 ] ) / 60.
 
 class GithubObject( BasicGithubObject ):
     def __init__( self, requester, attributes, completed ):

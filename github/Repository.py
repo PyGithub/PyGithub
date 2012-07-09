@@ -1059,7 +1059,7 @@ class Repository( GithubObject.GithubObject ):
             self._clone_url = attributes[ "clone_url" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "description" in attributes: # pragma no branch
             assert attributes[ "description" ] is None or isinstance( attributes[ "description" ], ( str, unicode ) ), attributes[ "description" ]
             self._description = attributes[ "description" ]
@@ -1122,7 +1122,7 @@ class Repository( GithubObject.GithubObject ):
             self._private = attributes[ "private" ]
         if "pushed_at" in attributes: # pragma no branch
             assert attributes[ "pushed_at" ] is None or isinstance( attributes[ "pushed_at" ], ( str, unicode ) ), attributes[ "pushed_at" ]
-            self._pushed_at = None if attributes[ "pushed_at" ] is None else datetime.datetime.strptime( attributes[ "pushed_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._pushed_at = self._parseDatetime( attributes[ "pushed_at" ] )
         if "size" in attributes: # pragma no branch
             assert attributes[ "size" ] is None or isinstance( attributes[ "size" ], int ), attributes[ "size" ]
             self._size = attributes[ "size" ]
@@ -1137,7 +1137,7 @@ class Repository( GithubObject.GithubObject ):
             self._svn_url = attributes[ "svn_url" ]
         if "updated_at" in attributes: # pragma no branch
             assert attributes[ "updated_at" ] is None or isinstance( attributes[ "updated_at" ], ( str, unicode ) ), attributes[ "updated_at" ]
-            self._updated_at = None if attributes[ "updated_at" ] is None else datetime.datetime.strptime( attributes[ "updated_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._updated_at = self._parseDatetime( attributes[ "updated_at" ] )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

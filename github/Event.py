@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 
 import Organization
@@ -71,7 +69,7 @@ class Event( GithubObject.BasicGithubObject ):
             self._actor = None if attributes[ "actor" ] is None else NamedUser.NamedUser( self._requester, attributes[ "actor" ], completed = False )
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], ( str, unicode ) ), attributes[ "id" ]
             self._id = attributes[ "id" ]
