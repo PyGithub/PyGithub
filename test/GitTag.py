@@ -28,7 +28,7 @@ class GitTag( Framework.TestCase ):
         self.assertEqual( self.tag.sha, "f5f37322407b02a80de4526ad88d5f188977bc3c" )
         self.assertEqual( self.tag.tag, "v0.6" )
         self.assertEqual( self.tag.tagger.date, datetime.datetime( 2012, 5, 10, 11, 14, 15 ) )
-        self.assertEqual( self.tag.tagger.timezone, -7 )
+        self.assertEqual( self.tag.tagger.timezone, datetime.timedelta( hours = -7 ) )
         self.assertEqual( self.tag.tagger.email, "vincent@vincent-jacques.net" )
         self.assertEqual( self.tag.tagger.name, "Vincent Jacques" )
         self.assertEqual( self.tag.url, "https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c" )

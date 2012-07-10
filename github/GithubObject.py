@@ -50,7 +50,7 @@ class BasicGithubObject( object ):
     @staticmethod
     def _parseTimezone( s ):
         assert len( s ) == 25
-        return int( s[ 19 : 22 ] ) + int( s[ 23 : 25 ] ) / 60.
+        return ( -1 if s[ 19 ] == '-' else 1 ) * datetime.timedelta( hours = int( s[ 20 : 22 ] ), minutes = int( s[ 23 : 25 ] ) )
 
 class GithubObject( BasicGithubObject ):
     def __init__( self, requester, attributes, completed ):
