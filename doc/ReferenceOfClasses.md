@@ -27,7 +27,7 @@ Methods
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
-    * `id`: integer
+    * `id`: string
 * `get_gists()`: iterator of `Gist`
 * `search_repos( keyword )`: iterator of `Repository`
 * `legacy_search_repos( keyword, [language] )`: iterator of `Repository`
