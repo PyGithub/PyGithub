@@ -31,8 +31,9 @@ class Github( object ):
     def rate_limiting( self ):
         return self.__requester.rate_limiting
 
-    def get_user( self, login = None ):
-        if login is None:
+    def get_user( self, login = GithubObject.NotSet ):
+        assert login is GithubObject.NotSet or isinstance( login, ( str, unicode ) ), login
+        if login is GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser( self.__requester, { "url": "https://api.github.com/user" }, completed = False )
         else:
             headers, data = self.__requester.requestAndCheck(
@@ -44,6 +45,7 @@ class Github( object ):
             return NamedUser.NamedUser( self.__requester, data, completed = True )
 
     def get_organization( self, login ):
+        assert isinstance( login, ( str, unicode ) ), login
         headers, data = self.__requester.requestAndCheck(
             "GET",
             "https://api.github.com/orgs/" + login,
@@ -53,9 +55,10 @@ class Github( object ):
         return Organization.Organization( self.__requester, data, completed = True )
 
     def get_gist( self, id ):
+        assert isinstance( id, ( str, unicode ) ), id
         headers, data = self.__requester.requestAndCheck(
             "GET",
-            "https://api.github.com/gists/" + str( id ),
+            "https://api.github.com/gists/" + id,
             None,
             None
         )
@@ -103,3 +106,20 @@ class Github( object ):
             None
         )
         return NamedUser.NamedUser( self.__requester, Legacy.convertUser( data[ "user" ] ), completed = False )
+
+    def render_markdown( self, text, context = GithubObject.NotSet ):
+        assert isinstance( text, ( str, unicode ) ), text
+        assert context is GithubObject.NotSet or isinstance( context, Repository.Repository ), context
+        post_parameters = {
+            "text": text
+        }
+        if context is not GithubObject.NotSet:
+            post_parameters[ "mode" ] = "gfm"
+            post_parameters[ "context" ] = context._identity
+        status, headers, data = self.__requester.requestRaw(
+            "POST",
+            "https://api.github.com/markdown",
+            None,
+            post_parameters
+        )
+        return data

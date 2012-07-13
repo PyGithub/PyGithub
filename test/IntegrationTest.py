@@ -48,10 +48,12 @@ from RepositoryKey import *
 from Tag import *
 from Team import *
 from UserKey import *
+from Markdown import *
 
 from PaginatedList import *
 from Issue33 import *
 from Issue50 import *
+from Issue54 import *
 from Exceptions import *
 
 Framework.main()

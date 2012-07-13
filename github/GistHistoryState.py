@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 
 import NamedUser
@@ -60,7 +58,7 @@ class GistHistoryState( GithubObject.GithubObject ):
             self._change_status = None if attributes[ "change_status" ] is None else CommitStats.CommitStats( self._requester, attributes[ "change_status" ], completed = False )
         if "committed_at" in attributes: # pragma no branch
             assert attributes[ "committed_at" ] is None or isinstance( attributes[ "committed_at" ], ( str, unicode ) ), attributes[ "committed_at" ]
-            self._committed_at = None if attributes[ "committed_at" ] is None else datetime.datetime.strptime( attributes[ "committed_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._committed_at = self._parseDatetime( attributes[ "committed_at" ] )
         if "url" in attributes: # pragma no branch
             assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
             self._url = attributes[ "url" ]

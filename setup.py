@@ -55,7 +55,7 @@ setup(
         "github",
     ],
     package_data = {
-        "github": [ "../ReadMe.md", "../COPYING*", "../doc/*.md" ]
+        "github": [ "ReadMe.md", "COPYING*", "doc/*.md" ]
     },
     classifiers = [
         "Development Status :: 5 - Production/Stable",
