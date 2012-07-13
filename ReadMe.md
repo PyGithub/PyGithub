@@ -53,15 +53,15 @@ Projects using PyGithub
 History
 =======
 
-Version 1.3 (July 13th, 2012)
------------------------------
+[Version 1.3](https://github.com/jacquev6/PyGithub/issues?milestone=7&state=closed) (July 13th, 2012)
+-----------------------------------------------------------------------------------------------------
 
 * Implement [markdown rendering](http://developer.github.com/v3/markdown/)
 * `GitAuthor.date` is now a datetime, thank you [bilderbuchi](https://github.com/bilderbuchi)
 * Fix documentation of `Github.get_gist`: `id` is a string, not an integer
 
-Version 1.2 (June 29th, 2012)
------------------------------
+[Version 1.2](https://github.com/jacquev6/PyGithub/issues?milestone=6&state=closed) (June 29th, 2012)
+-----------------------------------------------------------------------------------------------------
 
 * Implement [legacy search APIs](http://developer.github.com/v3/search/), thank you [kukuts](https://github.com/kukuts) for telling me Github had released them
 * Fix a bug with issue labels containing spaces, thank you [philipkimmey](https://github.com/philipkimmey) for detecting the bug and fixing it
@@ -73,8 +73,8 @@ Version 1.1 (June 20th, 2012)
 * Restore compatibility with Python 2.5, thank you [pmuilu](https://github.com/pmuilu)
 * Use `package_data` instead of `data_files` for documentation files in `setup.py`, thank you [malexw](https://github.com/malexw) for reporting
 
-Version 1.0 (June 3rd, 2012)
-----------------------------
+[Version 1.0](https://github.com/jacquev6/PyGithub/issues?milestone=2&state=closed) (June 3rd, 2012)
+----------------------------------------------------------------------------------------------------
 
 * Complete rewrite, with no more complicated meta-description
 * Full typing of attributes and parameters
@@ -82,26 +82,26 @@ Version 1.0 (June 3rd, 2012)
 * More usable exceptions raised in case on problems with the API
 * Some bugs and limitations fixed, special thanks to [bilderbuchi](https://github.com/bilderbuchi), [roskakori](https://github.com/roskakori) and [tallforasmurf](https://github.com/tallforasmurf) for reporting them!
 
-Version 0.7 (May 26th, 2012)
-----------------------------
+[Version 0.7](https://github.com/jacquev6/PyGithub/issues?milestone=5&state=closed) (May 26th, 2012)
+----------------------------------------------------------------------------------------------------
 
 * Use PyGithub with OAuth authentication or with no authentication at all
 
-Version 0.6 (April 17th, 2012)
-------------------------------
+[Version 0.6](https://github.com/jacquev6/PyGithub/issues?milestone=4&state=closed) (April 17th, 2012)
+------------------------------------------------------------------------------------------------------
 
 * Fix [issue 21](https://github.com/jacquev6/PyGithub/issues/21) (KeyError when accessing repositories)
 * Re-completed the API with NamedUser.create_gist
 
 
-Version 0.5 (March 19th, 2012)
-------------------------------
+[Version 0.5](https://github.com/jacquev6/PyGithub/issues?milestone=3&state=closed) (March 19th, 2012)
+------------------------------------------------------------------------------------------------------
 
 * Major achievement: **all APIs are implemented**
 * More refactoring, of course
 
-Version 0.4 (March 12th, 2012)
-------------------------------
+[Version 0.4](https://github.com/jacquev6/PyGithub/issues?milestone=1&state=closed) (March 12th, 2012)
+------------------------------------------------------------------------------------------------------
 
 * The list of the not implemented APIs is shorter than the list of the implemented APIs
 * APIs *not implemented*:
