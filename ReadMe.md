@@ -6,10 +6,7 @@ It covers the **full** API, and all methods are tested against the real Github s
 
 Should you have any question, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please [open an issue](https://github.com/jacquev6/PyGithub/issues).
 
-News (on June 3rd, 2012)
-========================
-
-Version 1.0 is out! You can now consider PyGithub stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
+PyGithub is stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
 
 Download and install
 ====================
