@@ -18,22 +18,9 @@ import Framework
 class Issue54( Framework.TestCase ):
     def setUp( self ):
         Framework.TestCase.setUp( self )
-        self.repo = self.g.get_user().get_repo( "PyGithub" )
+        self.repo = self.g.get_user().get_repo( "TestRepo" )
 
-    def testPositiveIntegerTimezone( self ):
-        commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
-        self.assertEqual( commit.author.timezone, datetime.timedelta( hours = 7 ) )
-
-    def testNegativeIntegerTimezone( self ):
-        commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
-        self.assertEqual( commit.author.timezone, datetime.timedelta( hours = -7 ) )
-
-    # I was not able to find a real commit with an half integer timezone, so I *forged* the associated responses from Github.
-    # I *hope* they are what Github would send in that case
-    def testPositiveHalfIntegerTimezone( self ):
-        commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
-        self.assertEqual( commit.author.timezone, datetime.timedelta( hours = 7, minutes = 30 ) )
-
-    def testNegativeHalfIntegerTimezone( self ):
-        commit = self.repo.get_git_commit( "4303c5b90e2216d927155e9609436ccb8984c495" )
-        self.assertEqual( commit.author.timezone, datetime.timedelta( hours = -7, minutes = -30 ) )
+    def testConversion( self ):
+        commit = self.repo.get_git_commit( "73f320ae06cd565cf38faca34b6a482addfc721b" )
+        self.assertEqual( commit.message, "Test commit created around Fri, 13 Jul 2012 18:43:21 GMT, that is vendredi 13 juillet 2012 20:43:21 GMT+2\n" )
+        self.assertEqual( commit.author.date, datetime.datetime( 2012, 7, 13, 18, 47, 10 ) )

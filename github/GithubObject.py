@@ -43,14 +43,9 @@ class BasicGithubObject( object ):
         elif len( s ) == 24:
             return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%S.000Z" )
         elif len( s ) == 25:
-            return datetime.datetime.strptime( s[ : 19 ], "%Y-%m-%dT%H:%M:%S" )
+            return datetime.datetime.strptime( s[ : 19 ], "%Y-%m-%dT%H:%M:%S" ) + ( 1 if s[ 19 ] == '-' else -1 ) * datetime.timedelta( hours = int( s[ 20 : 22 ] ), minutes = int( s[ 23 : 25 ] ) )
         else:
             return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%SZ" )
-
-    @staticmethod
-    def _parseTimezone( s ):
-        assert len( s ) == 25
-        return ( -1 if s[ 19 ] == '-' else 1 ) * datetime.timedelta( hours = int( s[ 20 : 22 ] ), minutes = int( s[ 23 : 25 ] ) )
 
 class GithubObject( BasicGithubObject ):
     def __init__( self, requester, attributes, completed ):

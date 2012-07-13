@@ -461,7 +461,6 @@ Class `GitAuthor`
 Attributes
 ----------
 * `date`: datetime.datetime
-* `timezone`: datetime.timedelta
 * `email`: string
 * `name`: string
 
