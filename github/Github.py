@@ -103,3 +103,20 @@ class Github( object ):
             None
         )
         return NamedUser.NamedUser( self.__requester, Legacy.convertUser( data[ "user" ] ), completed = False )
+
+    def render_markdown( self, text, context = GithubObject.NotSet ):
+        assert isinstance( text, ( str, unicode ) ), text
+        assert context is GithubObject.NotSet or isinstance( context, Repository.Repository ), context
+        post_parameters = {
+            "text": text
+        }
+        if context is not GithubObject.NotSet:
+            post_parameters[ "mode" ] = "gfm"
+            post_parameters[ "context" ] = context._identity
+        status, headers, data = self.__requester.requestRaw(
+            "POST",
+            "https://api.github.com/markdown",
+            None,
+            post_parameters
+        )
+        return data

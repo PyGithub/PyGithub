@@ -73,6 +73,14 @@ API `/legacy/user/email/:email`
 ==============================================================
 * GET: `Github.search_user_by_email`
 
+API `/markdown`
+===============
+* POST: `Github.render_markdown`
+
+API `/markdown/raw`
+===================
+* POST: see API `/markdown`
+
 API `/networks/:user/:repo/events`
 ==================================
 * GET: `Repository.get_network_events`
