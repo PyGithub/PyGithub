@@ -22,5 +22,5 @@ cp -r *.md doc COPYING* github
 python setup.py sdist upload
 rm -rf github/*.md github/doc github/COPYING*
 
-git push
+git push origin master master:develop
 git push --tags
