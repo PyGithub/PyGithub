@@ -56,6 +56,13 @@ Projects using PyGithub
 History
 =======
 
+Version 1.3 (July 13th, 2012)
+-----------------------------
+
+* Implement [markdown rendering](http://developer.github.com/v3/markdown/)
+* `GitAuthor.date` is now a datetime, thank you [bilderbuchi](https://github.com/bilderbuchi)
+* Fix documentation of `Github.get_gist`: `id` is a string, not an integer
+
 Version 1.2 (June 29th, 2012)
 -----------------------------
 
