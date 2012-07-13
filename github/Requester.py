@@ -36,6 +36,7 @@ class Requester:
 
     def requestAndCheck( self, verb, url, parameters, input ):
         status, headers, output = self.requestRaw( verb, url, parameters, input )
+        output = self.__structuredFromJson( output )
         if status >= 400:
             raise GithubException.GithubException( status, output )
         return headers, output
@@ -60,7 +61,7 @@ class Requester:
 
         status = response.status
         headers = dict( response.getheaders() )
-        output = self.__structuredFromJson( response.read() )
+        output = response.read()
 
         cnx.close()
 

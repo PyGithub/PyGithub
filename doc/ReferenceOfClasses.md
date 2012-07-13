@@ -37,6 +37,9 @@ Methods
     * `keyword`: string
 * `legacy_search_user_by_email( email )`: `NamedUser`
     * `email`: string
+* `render_markdown( text, [context] )`: string
+    * `text`: string
+    * `context`: `Repository`
 
 Class `GithubException`
 =======================
