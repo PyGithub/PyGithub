@@ -14,8 +14,6 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import datetime
-
 import GithubObject
 
 import Issue
@@ -75,7 +73,7 @@ class IssueEvent( GithubObject.GithubObject ):
             self._commit_id = attributes[ "commit_id" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "event" in attributes: # pragma no branch
             assert attributes[ "event" ] is None or isinstance( attributes[ "event" ], ( str, unicode ) ), attributes[ "event" ]
             self._event = attributes[ "event" ]

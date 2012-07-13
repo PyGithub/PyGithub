@@ -145,7 +145,7 @@ class Milestone( GithubObject.GithubObject ):
             self._closed_issues = attributes[ "closed_issues" ]
         if "created_at" in attributes: # pragma no branch
             assert attributes[ "created_at" ] is None or isinstance( attributes[ "created_at" ], ( str, unicode ) ), attributes[ "created_at" ]
-            self._created_at = None if attributes[ "created_at" ] is None else datetime.datetime.strptime( attributes[ "created_at" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._created_at = self._parseDatetime( attributes[ "created_at" ] )
         if "creator" in attributes: # pragma no branch
             assert attributes[ "creator" ] is None or isinstance( attributes[ "creator" ], dict ), attributes[ "creator" ]
             self._creator = None if attributes[ "creator" ] is None else NamedUser.NamedUser( self._requester, attributes[ "creator" ], completed = False )
@@ -154,7 +154,7 @@ class Milestone( GithubObject.GithubObject ):
             self._description = attributes[ "description" ]
         if "due_on" in attributes: # pragma no branch
             assert attributes[ "due_on" ] is None or isinstance( attributes[ "due_on" ], ( str, unicode ) ), attributes[ "due_on" ]
-            self._due_on = None if attributes[ "due_on" ] is None else datetime.datetime.strptime( attributes[ "due_on" ], "%Y-%m-%dT%H:%M:%SZ" )
+            self._due_on = self._parseDatetime( attributes[ "due_on" ] )
         if "id" in attributes: # pragma no branch
             assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
             self._id = attributes[ "id" ]

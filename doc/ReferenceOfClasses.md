@@ -59,7 +59,7 @@ Attributes
 * `blog`: string
 * `collaborators`: integer
 * `company`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `disk_usage`: integer
 * `email`: string
 * `followers`: integer
@@ -193,13 +193,13 @@ Class `Authorization`
 Attributes
 ----------
 * `app`: `AuthorizationApplication`
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `id`: integer
 * `note`: string
 * `note_url`: string
 * `scopes`: list of string
 * `token`: string
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 
 Deletion
@@ -261,13 +261,13 @@ Attributes
 ----------
 * `body`: string
 * `commit_id`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `html_url`: string
 * `id`: integer
 * `line`: integer
 * `path`: string
 * `position`: integer
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -316,10 +316,10 @@ Attributes
 * `acl`: string
 * `bucket`: string
 * `content_type`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `description`: string
 * `download_count`: integer
-* `expirationdate`: datetime
+* `expirationdate`: datetime.datetime
 * `html_url`: string
 * `id`: integer
 * `mime_type`: string
@@ -343,7 +343,7 @@ Class `Event`
 Attributes
 ----------
 * `actor`: `NamedUser`
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `id`: string
 * `org`: `Organization`
 * `payload`: dict
@@ -372,7 +372,7 @@ Class `Gist`
 Attributes
 ----------
 * `comments`: integer
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `description`: string
 * `files`: dict of string to `GistFile`
 * `fork_of`: `Gist`
@@ -383,7 +383,7 @@ Attributes
 * `html_url`: string
 * `id`: string
 * `public`: bool
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -421,9 +421,9 @@ Class `GistComment`
 Attributes
 ----------
 * `body`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `id`: integer
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -453,7 +453,7 @@ Class `GistHistoryState`
 Attributes
 ----------
 * `change_status`: `CommitStats`
-* `committed_at`: datetime
+* `committed_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 * `version`: string
@@ -463,7 +463,7 @@ Class `GitAuthor`
 
 Attributes
 ----------
-* `date`: string
+* `date`: datetime.datetime
 * `email`: string
 * `name`: string
 
@@ -559,12 +559,12 @@ Attributes
 ----------
 * `active`: bool
 * `config`: dict
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `events`: list of string
 * `id`: integer
 * `last_response`: `HookResponse`
 * `name`: string
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 
 Deletion
@@ -601,10 +601,10 @@ Attributes
 ----------
 * `assignee`: `NamedUser`
 * `body`: string
-* `closed_at`: datetime
+* `closed_at`: datetime.datetime
 * `closed_by`: `NamedUser`
 * `comments`: integer
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `html_url`: string
 * `id`: integer
 * `labels`: list of `Label`
@@ -614,7 +614,7 @@ Attributes
 * `repository`: `Repository`
 * `state`: string
 * `title`: string
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -657,9 +657,9 @@ Class `IssueComment`
 Attributes
 ----------
 * `body`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `id`: integer
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -679,7 +679,7 @@ Attributes
 ----------
 * `actor`: `NamedUser`
 * `commit_id`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `event`: string
 * `id`: integer
 * `issue`: `Issue`
@@ -719,10 +719,10 @@ Class `Milestone`
 Attributes
 ----------
 * `closed_issues`: integer
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `creator`: `NamedUser`
 * `description`: string
-* `due_on`: datetime
+* `due_on`: datetime.datetime
 * `id`: integer
 * `number`: integer
 * `open_issues`: integer
@@ -757,7 +757,7 @@ Attributes
 * `collaborators`: integer
 * `company`: string
 * `contributions`: integer
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `disk_usage`: integer
 * `email`: string
 * `followers`: integer
@@ -826,7 +826,7 @@ Attributes
 * `blog`: string
 * `collaborators`: integer
 * `company`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `disk_usage`: integer
 * `email`: string
 * `followers`: integer
@@ -937,10 +937,10 @@ Attributes
 * `base`: `PullRequestPart`
 * `body`: string
 * `changed_files`: integer
-* `closed_at`: datetime
+* `closed_at`: datetime.datetime
 * `comments`: integer
 * `commits`: integer
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `deletions`: integer
 * `diff_url`: string
 * `head`: `PullRequestPart`
@@ -949,14 +949,14 @@ Attributes
 * `issue_url`: string
 * `mergeable`: bool
 * `merged`: bool
-* `merged_at`: datetime
+* `merged_at`: datetime.datetime
 * `merged_by`: `NamedUser`
 * `number`: integer
 * `patch_url`: string
 * `review_comments`: integer
 * `state`: string
 * `title`: string
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -999,13 +999,13 @@ Attributes
 ----------
 * `body`: string
 * `commit_id`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `id`: integer
 * `original_commit_id`: string
 * `original_position`: integer
 * `path`: string
 * `position`: integer
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `user`: `NamedUser`
 
@@ -1044,7 +1044,7 @@ Class `Repository`
 Attributes
 ----------
 * `clone_url`: string
-* `created_at`: datetime
+* `created_at`: datetime.datetime
 * `description`: string
 * `fork`: bool
 * `forks`: integer
@@ -1065,12 +1065,12 @@ Attributes
 * `parent`: `Repository`
 * `permissions`: `Permissions`
 * `private`: bool
-* `pushed_at`: datetime
+* `pushed_at`: datetime.datetime
 * `size`: integer
 * `source`: `Repository`
 * `ssh_url`: string
 * `svn_url`: string
-* `updated_at`: datetime
+* `updated_at`: datetime.datetime
 * `url`: string
 * `watchers`: integer
 
@@ -1209,7 +1209,7 @@ Issues
     * `labels`: list of `Label`
     * `sort`: string
     * `direction`: string
-    * `since`: datetime
+    * `since`: datetime.datetime
 * `legacy_search_issues( state, keyword )`: iterator of `Issue`
     * `state`: "open" or "closed"
     * `keyword`: string

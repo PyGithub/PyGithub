@@ -11,6 +11,8 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
+
 import Framework
 
 class GitTag( Framework.TestCase ):
@@ -25,7 +27,8 @@ class GitTag( Framework.TestCase ):
         self.assertEqual( self.tag.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495" )
         self.assertEqual( self.tag.sha, "f5f37322407b02a80de4526ad88d5f188977bc3c" )
         self.assertEqual( self.tag.tag, "v0.6" )
-        self.assertEqual( self.tag.tagger.date, "2012-05-10T11:14:15-07:00" )
+        self.assertEqual( self.tag.tagger.date, datetime.datetime( 2012, 5, 10, 11, 14, 15 ) )
+        self.assertEqual( self.tag.tagger.timezone, datetime.timedelta( hours = -7 ) )
         self.assertEqual( self.tag.tagger.email, "vincent@vincent-jacques.net" )
         self.assertEqual( self.tag.tagger.name, "Vincent Jacques" )
         self.assertEqual( self.tag.url, "https://api.github.com/repos/jacquev6/PyGithub/git/tags/f5f37322407b02a80de4526ad88d5f188977bc3c" )

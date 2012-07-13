@@ -11,6 +11,8 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
+
 import Framework
 
 class GitCommit( Framework.TestCase ):
@@ -21,10 +23,12 @@ class GitCommit( Framework.TestCase ):
     def testAttributes( self ):
         self.assertEqual( self.commit.author.name, "Vincent Jacques" )
         self.assertEqual( self.commit.author.email, "vincent@vincent-jacques.net" )
-        self.assertEqual( self.commit.author.date, "2012-04-17T10:55:16-07:00" )
+        self.assertEqual( self.commit.author.date, datetime.datetime( 2012, 4, 17, 10, 55, 16 ) )
+        self.assertEqual( self.commit.author.timezone, datetime.timedelta( hours = -7 ) )
         self.assertEqual( self.commit.committer.name, "Vincent Jacques" )
         self.assertEqual( self.commit.committer.email, "vincent@vincent-jacques.net" )
-        self.assertEqual( self.commit.committer.date, "2012-04-17T10:55:16-07:00" )
+        self.assertEqual( self.commit.committer.date, datetime.datetime( 2012, 4, 17, 10, 55, 16 ) )
+        self.assertEqual( self.commit.committer.timezone, datetime.timedelta( hours = -7 ) )
         self.assertEqual( self.commit.message, "Merge branch 'develop'\n" )
         self.assertEqual( len( self.commit.parents ), 2 )
         self.assertEqual( self.commit.parents[ 0 ].sha, "936f4a97f1a86392637ec002bbf89ff036a5062d" )

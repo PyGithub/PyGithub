@@ -1,1 +1,1 @@
-{% if attribute.type.name == "datetime" %}None if attributes[ "{{ attribute.name }}" ] is None else datetime.datetime.strptime( attributes[ "{{ attribute.name }}" ], "%Y-%m-%dT%H:%M:%SZ" ){% else %}attributes[ "{{ attribute.name }}" ]{% endif %}
+{% if attribute.type.name == "datetime" %}self._parseDatetime( attributes[ "{{ attribute.name }}" ] ){% else %}attributes[ "{{ attribute.name }}" ]{% endif %}

@@ -37,7 +37,7 @@ class GitAuthor( GithubObject.BasicGithubObject ):
     def _useAttributes( self, attributes ):
         if "date" in attributes: # pragma no branch
             assert attributes[ "date" ] is None or isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
-            self._date = attributes[ "date" ]
+            self._date = self._parseDatetime( attributes[ "date" ] )
         if "email" in attributes: # pragma no branch
             assert attributes[ "email" ] is None or isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
             self._email = attributes[ "email" ]
