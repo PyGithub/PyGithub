@@ -111,6 +111,7 @@ class BasicTestCase( unittest.TestCase ):
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"
+        httplib.HTTPConnection = httplib.HTTPSConnection
 
     def tearDown( self ):
         unittest.TestCase.tearDown( self )

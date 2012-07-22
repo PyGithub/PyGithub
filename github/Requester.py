@@ -44,7 +44,7 @@ class Requester:
         elif o.scheme == "http":
             self.__connection_class = httplib.HTTPConnection
         else:
-            assert( False )
+            assert( False ) #pragma no cover
 
         self.rate_limiting = ( 5000, 5000 )
 
@@ -65,7 +65,7 @@ class Requester:
         elif url.startswith( "/" ):
             url = url
         else:
-            assert( False )
+            assert( False ) #pragma no cover
         
         headers = dict()
         if self.__authorizationHeader is not None:
