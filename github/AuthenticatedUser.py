@@ -159,7 +159,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         post_parameters = emails
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/user/emails",
+            "/user/emails",
             None,
             post_parameters
         )
@@ -168,7 +168,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         headers, data = self._requester.requestAndCheck(
             "PUT",
-            "https://api.github.com/user/following/" + following._identity,
+            "/user/following/" + following._identity,
             None,
             None
         )
@@ -177,7 +177,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         headers, data = self._requester.requestAndCheck(
             "PUT",
-            "https://api.github.com/user/watched/" + watched._identity,
+            "/user/watched/" + watched._identity,
             None,
             None
         )
@@ -195,7 +195,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "note_url" ] = note_url
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/authorizations",
+            "/authorizations",
             None,
             post_parameters
         )
@@ -205,7 +205,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( repo, Repository.Repository ), repo
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
             None
         )
@@ -223,7 +223,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "description" ] = description
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/gists",
+            "/gists",
             None,
             post_parameters
         )
@@ -238,7 +238,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         }
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/user/keys",
+            "/user/keys",
             None,
             post_parameters
         )
@@ -269,7 +269,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "has_downloads" ] = has_downloads
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/user/repos",
+            "/user/repos",
             None,
             post_parameters
         )
@@ -300,7 +300,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             post_parameters[ "bio" ] = bio
         headers, data = self._requester.requestAndCheck(
             "PATCH",
-            "https://api.github.com/user",
+            "/user",
             None,
             post_parameters
         )
@@ -310,7 +310,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/authorizations/" + str( id ),
+            "/authorizations/" + str( id ),
             None,
             None
         )
@@ -319,7 +319,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_authorizations( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/authorizations",
+            "/authorizations",
             None,
             None
         )
@@ -333,7 +333,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_emails( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/emails",
+            "/user/emails",
             None,
             None
         )
@@ -342,7 +342,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_events( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/events",
+            "/events",
             None,
             None
         )
@@ -356,7 +356,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_followers( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/followers",
+            "/user/followers",
             None,
             None
         )
@@ -370,7 +370,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_following( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/following",
+            "/user/following",
             None,
             None
         )
@@ -384,7 +384,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_gists( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/gists",
+            "/gists",
             None,
             None
         )
@@ -398,7 +398,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_issues( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/issues",
+            "/issues",
             None,
             None
         )
@@ -413,7 +413,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/keys/" + str( id ),
+            "/user/keys/" + str( id ),
             None,
             None
         )
@@ -422,7 +422,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_keys( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/keys",
+            "/user/keys",
             None,
             None
         )
@@ -437,7 +437,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( org, Organization.Organization ), org
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/users/" + self.login + "/events/orgs/" + org.login,
+            "/users/" + self.login + "/events/orgs/" + org.login,
             None,
             None
         )
@@ -451,7 +451,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_orgs( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/orgs",
+            "/user/orgs",
             None,
             None
         )
@@ -466,7 +466,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/repos/" + self.login + "/" + name,
+            "/repos/" + self.login + "/" + name,
             None,
             None
         )
@@ -485,7 +485,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             url_parameters[ "direction" ] = direction
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/repos",
+            "/user/repos",
             url_parameters,
             None
         )
@@ -499,7 +499,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_starred_gists( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/gists/starred",
+            "/gists/starred",
             None,
             None
         )
@@ -513,7 +513,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
     def get_watched( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/user/watched",
+            "/user/watched",
             None,
             None
         )
@@ -528,7 +528,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         status, headers, data = self._requester.requestRaw(
             "GET",
-            "https://api.github.com/user/following/" + following._identity,
+            "/user/following/" + following._identity,
             None,
             None
         )
@@ -538,7 +538,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self._requester.requestRaw(
             "GET",
-            "https://api.github.com/user/watched/" + watched._identity,
+            "/user/watched/" + watched._identity,
             None,
             None
         )
@@ -549,7 +549,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         post_parameters = emails
         headers, data = self._requester.requestAndCheck(
             "DELETE",
-            "https://api.github.com/user/emails",
+            "/user/emails",
             None,
             post_parameters
         )
@@ -558,7 +558,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( following, NamedUser.NamedUser ), following
         headers, data = self._requester.requestAndCheck(
             "DELETE",
-            "https://api.github.com/user/following/" + following._identity,
+            "/user/following/" + following._identity,
             None,
             None
         )
@@ -567,7 +567,7 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         assert isinstance( watched, Repository.Repository ), watched
         headers, data = self._requester.requestAndCheck(
             "DELETE",
-            "https://api.github.com/user/watched/" + watched._identity,
+            "/user/watched/" + watched._identity,
             None,
             None
         )

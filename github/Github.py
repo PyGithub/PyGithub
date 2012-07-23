@@ -23,9 +23,11 @@ import Repository
 import Legacy
 import GithubObject
 
+DEFAULT_BASE_URL = "https://api.github.com"
+
 class Github( object ):
-    def __init__( self, login_or_token = None, password = None ):
-        self.__requester = Requester( login_or_token, password )
+    def __init__( self, login_or_token = None, password = None, base_url = DEFAULT_BASE_URL ):
+        self.__requester = Requester( login_or_token, password, base_url )
 
     @property
     def rate_limiting( self ):
@@ -34,11 +36,11 @@ class Github( object ):
     def get_user( self, login = GithubObject.NotSet ):
         assert login is GithubObject.NotSet or isinstance( login, ( str, unicode ) ), login
         if login is GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser( self.__requester, { "url": "https://api.github.com/user" }, completed = False )
+            return AuthenticatedUser.AuthenticatedUser( self.__requester, { "url": "/user" }, completed = False )
         else:
             headers, data = self.__requester.requestAndCheck(
                 "GET",
-                "https://api.github.com/users/" + login,
+                "/users/" + login,
                 None,
                 None
             )
@@ -48,7 +50,7 @@ class Github( object ):
         assert isinstance( login, ( str, unicode ) ), login
         headers, data = self.__requester.requestAndCheck(
             "GET",
-            "https://api.github.com/orgs/" + login,
+            "/orgs/" + login,
             None,
             None
         )
@@ -58,14 +60,14 @@ class Github( object ):
         assert isinstance( id, ( str, unicode ) ), id
         headers, data = self.__requester.requestAndCheck(
             "GET",
-            "https://api.github.com/gists/" + id,
+            "/gists/" + id,
             None,
             None
         )
         return Gist.Gist( self.__requester, data, completed = True )
 
     def get_gists( self ):
-        headers, data = self.__requester.requestAndCheck( "GET", "https://api.github.com/gists/public", None, None )
+        headers, data = self.__requester.requestAndCheck( "GET", "/gists/public", None, None )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,
@@ -78,7 +80,7 @@ class Github( object ):
         assert language is GithubObject.NotSet or isinstance( language, ( str, unicode ) ), language
         args = {} if language is GithubObject.NotSet else { "language": language }
         return Legacy.PaginatedList(
-            "https://api.github.com/legacy/repos/search/" + urllib.quote( keyword ),
+            "/legacy/repos/search/" + urllib.quote( keyword ),
             args,
             self.__requester,
             "repositories",
@@ -89,7 +91,7 @@ class Github( object ):
     def legacy_search_users( self, keyword ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
         return Legacy.PaginatedList(
-            "https://api.github.com/legacy/user/search/" + urllib.quote( keyword ),
+            "/legacy/user/search/" + urllib.quote( keyword ),
             {},
             self.__requester,
             "users",
@@ -101,7 +103,7 @@ class Github( object ):
         assert isinstance( email, ( str, unicode ) ), email
         headers, data = self.__requester.requestAndCheck(
             "GET",
-            "https://api.github.com/legacy/user/email/" + email,
+            "/legacy/user/email/" + email,
             None,
             None
         )
@@ -118,7 +120,7 @@ class Github( object ):
             post_parameters[ "context" ] = context._identity
         status, headers, data = self.__requester.requestRaw(
             "POST",
-            "https://api.github.com/markdown",
+            "/markdown",
             None,
             post_parameters
         )

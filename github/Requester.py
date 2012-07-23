@@ -14,6 +14,7 @@
 import httplib
 import base64
 import urllib
+import urlparse
 
 try:
     import json
@@ -23,7 +24,7 @@ except ImportError: #pragma no cover: only for Python 2.5
 import GithubException
 
 class Requester:
-    def __init__( self, login_or_token, password ):
+    def __init__( self, login_or_token, password, base_url ):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
@@ -32,6 +33,19 @@ class Requester:
             self.__authorizationHeader = "token " + token
         else:
             self.__authorizationHeader = None
+
+        self.__base_url = base_url
+        o = urlparse.urlparse( base_url )
+        self.__hostname = o.hostname
+        self.__port = o.port
+        self.__prefix = o.path
+        if o.scheme == "https":
+            self.__connection_class = httplib.HTTPSConnection
+        elif o.scheme == "http":
+            self.__connection_class = httplib.HTTPConnection
+        else:
+            assert( False )
+
         self.rate_limiting = ( 5000, 5000 )
 
     def requestAndCheck( self, verb, url, parameters, input ):
@@ -43,14 +57,21 @@ class Requester:
 
     def requestRaw( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
-        assert url.startswith( "https://api.github.com" )
-        url = url[ len( "https://api.github.com" ) : ]
-
+        
+        #URLs generated locally will be relative to __base_url
+        #URLs returned from the server will start with __base_url
+        if url.startswith( self.__base_url ):
+            url = url[ len(self.__base_url): ]
+        elif url.startswith( "/" ):
+            url = url
+        else:
+            assert( False )
+        
         headers = dict()
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = httplib.HTTPSConnection( "api.github.com", strict = True )
+        cnx = self.__connection_class( host = self.__hostname, port = self.__port, strict = True )
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
@@ -73,9 +94,9 @@ class Requester:
 
     def __completeUrl( self, url, parameters ):
         if parameters is None or len( parameters ) == 0:
-            return url
+            return self.__prefix + url
         else:
-            return url + "?" + urllib.urlencode( parameters )
+            return self.__prefix + url + "?" + urllib.urlencode( parameters )
 
     def __structuredFromJson( self, data ):
         if len( data ) == 0:
