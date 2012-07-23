@@ -903,7 +903,7 @@ class Repository( GithubObject.GithubObject ):
     def get_network_events( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/networks/" + self.owner.login + "/" + self.name + "/events",
+            "/networks/" + self.owner.login + "/" + self.name + "/events",
             None,
             None
         )
@@ -1008,7 +1008,7 @@ class Repository( GithubObject.GithubObject ):
         assert isinstance( keyword, ( str, unicode ) ), keyword
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
+            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
             {},
             None
         )
