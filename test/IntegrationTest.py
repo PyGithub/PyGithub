@@ -55,5 +55,6 @@ from Issue33 import *
 from Issue50 import *
 from Issue54 import *
 from Exceptions import *
+from Enterprise import *
 
 Framework.main()

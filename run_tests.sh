@@ -7,9 +7,9 @@ cd test
 coverage erase
 coverage run --branch IntegrationTest.py
 
-echo "=============="
-echo "|| Coverage ||"
-echo "=============="
+echo "=============================="
+echo "|| Coverage (shall be 100%) ||"
+echo "=============================="
 
 coverage report -m --include=../github/*
 

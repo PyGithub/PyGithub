@@ -42,18 +42,19 @@ def fixAuthorizationHeader( headers ):
         else:
             del headers[ "Authorization" ] # Do not let sensitive info in git :-p
 
-class RecordingHttpsConnection:
-    __realHttpsConnection = httplib.HTTPSConnection
-
-    def __init__( self, file, *args, **kwds ):
+class RecordingConnection:
+    def __init__( self, file, protocol, host, port, *args, **kwds ):
         self.__file = file
-        self.__cnx = self.__realHttpsConnection( *args, **kwds )
+        self.__protocol = protocol
+        self.__host = host
+        self.__port = str( port )
+        self.__cnx = self._realConnection( host, port, *args, **kwds )
 
     def request( self, verb, url, input, headers ):
         print verb, url, input, headers,
         self.__cnx.request( verb, url, input, headers )
         fixAuthorizationHeader( headers )
-        self.__file.write( verb + " " + url + " " + str( headers ) + " " + input + "\n" )
+        self.__file.write( self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str( headers ) + " " + input + "\n" )
 
     def getresponse( self ):
         res = self.__cnx.getresponse()
@@ -73,15 +74,30 @@ class RecordingHttpsConnection:
         self.__file.write( "\n" )
         return self.__cnx.close()
 
-class ReplayingHttpsConnection:
-    def __init__( self, testCase, file ):
+class RecordingHttpConnection( RecordingConnection ):
+    _realConnection = httplib.HTTPConnection
+
+    def __init__( self, file, host, port, *args, **kwds ):
+        RecordingConnection.__init__( self, file, "http", host, port, *args, **kwds )
+
+class RecordingHttpsConnection( RecordingConnection ):
+    _realConnection = httplib.HTTPSConnection
+
+    def __init__( self, file, host, port, *args, **kwds ):
+        RecordingConnection.__init__( self, file, "https", host, port, *args, **kwds )
+
+class ReplayingConnection:
+    def __init__( self, testCase, file, protocol, host, port, *args, **kwds ):
         self.__testCase = testCase
         self.__file = file
+        self.__protocol = protocol
+        self.__host = host
+        self.__port = str( port )
 
     def request( self, verb, url, input, headers ):
         fixAuthorizationHeader( headers )
         expectation = self.__file.readline().strip()
-        self.__testCase.assertEqual( verb + " " + url + " " + str( headers ) + " " + input, expectation )
+        self.__testCase.assertEqual( self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str( headers ) + " " + input, expectation )
 
     def getresponse( self ):
         status = int( self.__file.readline().strip() )
@@ -93,6 +109,12 @@ class ReplayingHttpsConnection:
     def close( self ):
         self.__file.readline()
 
+def ReplayingHttpConnection( testCase, file, *args, **kwds ):
+    return ReplayingConnection( testCase, file, "http", *args, **kwds )
+
+def ReplayingHttpsConnection( testCase, file, *args, **kwds ):
+    return ReplayingConnection( testCase, file, "https", *args, **kwds )
+
 class BasicTestCase( unittest.TestCase ):
     recordMode = False
 
@@ -102,12 +124,14 @@ class BasicTestCase( unittest.TestCase ):
         self.__file = None
         if self.recordMode:
             httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
+            httplib.HTTPConnection = lambda *args, **kwds: RecordingHttpConnection( self.__openFile( "wb" ), *args, **kwds )
             import GithubCredentials
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
         else:
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ) )
+            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ), *args, **kwds )
+            httplib.HTTPConnection = lambda *args, **kwds: ReplayingHttpConnection( self, self.__openFile( "r" ), *args, **kwds )
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"
