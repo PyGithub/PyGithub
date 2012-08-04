@@ -9,11 +9,11 @@ sed -i -b "s/version = .*/version = \"$version\",/" setup.py
 git add setup.py
 
 echo "Edit ReadMe.md now, then press enter"
-read
+read foobar
 git add ReadMe.md
 
 echo "Breack (Ctrl+c) here if something is wrong. Else, press enter"
-read
+read foobar
 
 git commit -m "Publish version $version"
 git tag -m "Version $version" v$version
