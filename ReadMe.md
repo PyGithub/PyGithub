@@ -53,7 +53,7 @@ Projects using PyGithub
 History
 =======
 
-[Version 1.4](https://github.com/jacquev6/PyGithub/issues?milestone=8&state=closed) (July 29th, 2012)
+[Version 1.4](https://github.com/jacquev6/PyGithub/issues?milestone=8&state=closed) (August 4th, 2012)
 -----------------------------------------------------------------------------------------------------
 
 * Allow connection to a custom Github URL, for Github Enterprise, thank you very much [engie](https://github.com/engie) for the merge request
