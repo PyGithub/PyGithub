@@ -49,7 +49,7 @@ def convertUser( attributes ):
     login = attributes[ "login" ]
     return {
         "login": login,
-        "url": "https://api.github.com/users/" + login,
+        "url": "/users/" + login,
     }
 
 def convertRepo( attributes ):
@@ -58,7 +58,7 @@ def convertRepo( attributes ):
     return {
         "owner": { "login": owner },
         "name": name,
-        "url": "https://api.github.com/repos/" + owner + "/" + name,
+        "url": "/repos/" + owner + "/" + name,
     }
 
 def convertIssue( attributes ):
@@ -66,7 +66,7 @@ def convertIssue( attributes ):
     title = attributes[ "title" ]
     html_url = attributes[ "html_url" ]
     assert html_url.startswith( "https://github.com/" )
-    url = html_url.replace( "https://github.com/", "https://api.github.com/repos/" )
+    url = html_url.replace( "https://github.com/", "/repos/" )
     return {
         "title": title,
         "number": number,

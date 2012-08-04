@@ -160,7 +160,7 @@ class Organization( GithubObject.GithubObject ):
         }
         headers, data = self._requester.requestAndCheck(
             "POST",
-            "https://api.github.com/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             url_parameters,
             None
         )
@@ -293,7 +293,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( name, ( str, unicode ) ), name
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/repos/" + self.login + "/" + name,
+            "/repos/" + self.login + "/" + name,
             None,
             None
         )
@@ -321,7 +321,7 @@ class Organization( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/teams/" + str( id ),
+            "/teams/" + str( id ),
             None,
             None
         )

@@ -17,7 +17,7 @@ You can also clone it on [Github](http://github.com/jacquev6/PyGithub).
 Tutorial
 ========
 
-First create a Gihub instance:
+First create a Gihtub instance:
 
     from github import Github
 
@@ -52,6 +52,11 @@ Projects using PyGithub
 
 History
 =======
+
+[Version 1.4](https://github.com/jacquev6/PyGithub/issues?milestone=8&state=closed) (July 29th, 2012)
+-----------------------------------------------------------------------------------------------------
+
+* Allow connection to a custom Github URL, for Github Enterprise, thank you very much [engie](https://github.com/engie) for the merge request
 
 [Version 1.3](https://github.com/jacquev6/PyGithub/issues?milestone=7&state=closed) (July 13th, 2012)
 -----------------------------------------------------------------------------------------------------

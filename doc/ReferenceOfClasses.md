@@ -17,6 +17,8 @@ Constructed from user's login and password or OAuth token or nothing:
     g = Github( token )
     g = Github()
 
+You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
+
 Attributes
 ----------
 * `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)

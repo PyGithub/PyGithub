@@ -150,7 +150,7 @@ class Gist( GithubObject.GithubObject ):
         assert isinstance( id, int ), id
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "https://api.github.com/gists/comments/" + str( id ),
+            "/gists/comments/" + str( id ),
             None,
             None
         )
