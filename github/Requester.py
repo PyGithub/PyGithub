@@ -24,6 +24,14 @@ except ImportError: #pragma no cover: only for Python 2.5
 import GithubException
 
 class Requester:
+    __httpConnectionClass = httplib.HTTPConnection
+    __httpsConnectionClass = httplib.HTTPSConnection
+
+    @classmethod
+    def injectConnectionClasses( cls, httpConnectionClass, httpsConnectionClass ):
+        cls.__httpConnectionClass = httpConnectionClass
+        cls.__httpsConnectionClass = httpsConnectionClass
+
     def __init__( self, login_or_token, password, base_url ):
         if password is not None:
             login = login_or_token
@@ -40,9 +48,9 @@ class Requester:
         self.__port = o.port
         self.__prefix = o.path
         if o.scheme == "https":
-            self.__connection_class = httplib.HTTPSConnection
+            self.__connectionClass = self.__httpsConnectionClass
         elif o.scheme == "http":
-            self.__connection_class = httplib.HTTPConnection
+            self.__connectionClass = self.__httpConnectionClass
         else:
             assert( False ) #pragma no cover
 
@@ -71,7 +79,7 @@ class Requester:
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = self.__connection_class( host = self.__hostname, port = self.__port, strict = True )
+        cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True )
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
