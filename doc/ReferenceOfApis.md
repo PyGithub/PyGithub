@@ -127,6 +127,7 @@ API `/repos/:user/:repo`
 ========================
 * GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
 * PATCH: `Repository.edit`
+* DELETE: `Repository.delete`
 
 API `/repos/:user/:repo/branches`
 =================================
