@@ -18,6 +18,7 @@ Constructed from user's login and password or OAuth token or nothing:
     g = Github()
 
 You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
+Another argument, that can be passed is `timeout` which has default value `10`.
 
 Attributes
 ----------
