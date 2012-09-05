@@ -49,6 +49,7 @@ Projects using PyGithub
 ([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
+* [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a github project to an Upverter project.
 
 History
 =======
