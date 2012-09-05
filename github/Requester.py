@@ -24,7 +24,7 @@ except ImportError: #pragma no cover: only for Python 2.5
 import GithubException
 
 class Requester:
-    def __init__( self, login_or_token, password, base_url, timeout=10 ):
+    def __init__( self, login_or_token, password, base_url, timeout ):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
