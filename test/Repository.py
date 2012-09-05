@@ -64,6 +64,10 @@ class Repository( Framework.TestCase ):
         self.repo.edit( "PyGithub", "Python library implementing the full Github API v3" )
         self.assertEqual( self.repo.description, "Python library implementing the full Github API v3" )
 
+    def testDelete( self ):
+        repo = self.g.get_user().get_repo( "TestPyGithub" )
+        repo.delete()
+
     def testGetContributors( self ):
         self.assertListKeyEqual( self.repo.get_contributors(), lambda c: ( c.login, c.contributions ), [ ( "jacquev6", 355 ) ] )
 

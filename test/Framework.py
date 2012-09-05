@@ -77,14 +77,15 @@ class RecordingConnection:
 class RecordingHttpConnection( RecordingConnection ):
     _realConnection = httplib.HTTPConnection
 
-    def __init__( self, file, host, port, *args, **kwds ):
-        RecordingConnection.__init__( self, file, "http", host, port, *args, **kwds )
+    def __init__( self, file, *args, **kwds ):
+        RecordingConnection.__init__( self, file, "http", *args, **kwds )
 
 class RecordingHttpsConnection( RecordingConnection ):
     _realConnection = httplib.HTTPSConnection
 
-    def __init__( self, file, host, port, *args, **kwds ):
-        RecordingConnection.__init__( self, file, "https", host, port, *args, **kwds )
+    def __init__( self, file, *args, **kwds ):
+        print args, kwds
+        RecordingConnection.__init__( self, file, "https", *args, **kwds )
 
 class ReplayingConnection:
     def __init__( self, testCase, file, protocol, host, port, *args, **kwds ):
@@ -123,15 +124,19 @@ class BasicTestCase( unittest.TestCase ):
         self.__fileName = ""
         self.__file = None
         if self.recordMode:
-            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
-            httplib.HTTPConnection = lambda *args, **kwds: RecordingHttpConnection( self.__openFile( "wb" ), *args, **kwds )
+            github.Requester.Requester.injectConnectionClasses(
+                lambda ignored, *args, **kwds: RecordingHttpConnection( self.__openFile( "wb" ), *args, **kwds ),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
+            )
             import GithubCredentials
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
         else:
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ), *args, **kwds )
-            httplib.HTTPConnection = lambda *args, **kwds: ReplayingHttpConnection( self, self.__openFile( "r" ), *args, **kwds )
+            github.Requester.Requester.injectConnectionClasses(
+                lambda ignored, *args, **kwds: ReplayingHttpConnection( self, self.__openFile( "r" ), *args, **kwds ),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ), *args, **kwds )
+            )
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"

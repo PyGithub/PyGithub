@@ -1076,6 +1076,10 @@ Attributes
 * `url`: string
 * `watchers`: integer
 
+Deletion
+--------
+* `delete()`
+
 Comparison
 ----------
 * `compare( base, head )`: `Comparison`

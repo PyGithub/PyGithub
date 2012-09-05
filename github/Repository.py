@@ -458,6 +458,14 @@ class Repository( GithubObject.GithubObject ):
         )
         return PullRequest.PullRequest( self._requester, data, completed = True )
 
+    def delete( self ):
+        headers, data = self._requester.requestAndCheck(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
+
     def edit( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, public = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
