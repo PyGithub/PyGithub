@@ -32,7 +32,7 @@ class Requester:
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
-    def __init__( self, login_or_token, password, base_url ):
+    def __init__( self, login_or_token, password, base_url, timeout ):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
@@ -47,13 +47,13 @@ class Requester:
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
+        self.__timeout = timeout
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
         elif o.scheme == "http":
             self.__connectionClass = self.__httpConnectionClass
         else:
             assert( False ) #pragma no cover
-
         self.rate_limiting = ( 5000, 5000 )
 
     def requestAndCheck( self, verb, url, parameters, input ):
@@ -79,7 +79,7 @@ class Requester:
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True )
+        cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout= self.__timeout )
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
