@@ -48,14 +48,20 @@ Projects using PyGithub
 
 ([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
+* [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
-* [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a github project to an Upverter project.
 
 History
 =======
 
+[Version 1.5](https://github.com/jacquev6/PyGithub/issues?milestone=9&state=closed) (September 5th, 2012)
+---------------------------------------------------------------------------------------------------------
+
+* Add a timeout option, thank you much [xobb1t](https://github.com/xobb1t) for the merge request. *This drops Python 2.5 support*. I may be able to restore it in next version.
+* Implement `Repository.delete`, thank you [pmchen](https://github.com/pmchen) for asking
+
 [Version 1.4](https://github.com/jacquev6/PyGithub/issues?milestone=8&state=closed) (August 4th, 2012)
------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
 * Allow connection to a custom Github URL, for Github Enterprise, thank you very much [engie](https://github.com/engie) for the merge request
 
