@@ -65,13 +65,13 @@ API `/legacy/repos/search/:keyword`
 ===================================
 * GET: `Github.search_repos`
 
-API `/legacy/user/search/:keyword`
-==================================
-* GET: `Github.search_users`
-
 API `/legacy/user/email/:email`
 ===============================
 * GET: `Github.search_user_by_email`
+
+API `/legacy/user/search/:keyword`
+==================================
+* GET: `Github.search_users`
 
 API `/markdown`
 ===============

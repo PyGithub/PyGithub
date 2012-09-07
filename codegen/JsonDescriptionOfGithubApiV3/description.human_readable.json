@@ -12,7 +12,7 @@
         {
             "name": "AuthenticatedUser",
             "url": [
-                { "type": "constant", "value": "https://api.github.com/user" }
+                { "type": "constant", "value": "/user" }
             ],
             "edit": {
                 "optionalParameters": [
@@ -58,7 +58,7 @@
                     "singularName": "authorization",
                     "type": "Authorization",
                     "url": [
-                        { "type": "constant", "value": "https://api.github.com/authorizations" }
+                        { "type": "constant", "value": "/authorizations" }
                     ],
                     "createElement": {
                         "optionalParameters": [
@@ -77,20 +77,20 @@
                     "singularName": "event",
                     "type": "Event",
                     "getList": true,
-                    "url": [ { "type": "constant", "value": "https://api.github.com/events" } ]
+                    "url": [ { "type": "constant", "value": "/events" } ]
                 },
                 {
                     "name": "issues",
                     "singularName": "issue",
                     "type": "Issue",
                     "getList": true,
-                    "url": [ { "type": "constant", "value": "https://api.github.com/issues" } ]
+                    "url": [ { "type": "constant", "value": "/issues" } ]
                 },
                 {
                     "name": "keys",
                     "singularName": "key",
                     "type": "UserKey",
-                    "url": [ { "type": "constant", "value": "https://api.github.com/user/keys" } ],
+                    "url": [ { "type": "constant", "value": "/user/keys" } ],
                     "getList": true,
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" }
@@ -116,7 +116,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -189,7 +189,7 @@
                         ]
                     },
                     "url": [
-                        { "type": "constant", "value": "https://api.github.com/gists" }
+                        { "type": "constant", "value": "/gists" }
                     ]
                 }
             ],
@@ -204,7 +204,7 @@
                     "request": {
                         "verb": "POST",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
@@ -223,7 +223,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/users/" },
+                            { "type": "constant", "value": "/users/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/events/orgs/" },
                             { "type": "argument", "value": [ "org", "login" ] }
@@ -238,7 +238,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/gists/starred" }
+                            { "type": "constant", "value": "/gists/starred" }
                         ],
                         "information": "status"
                     }
@@ -455,7 +455,7 @@
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/gists/comments/" },
+                            { "type": "constant", "value": "/gists/comments/" },
                             {
                                 "type": "stringOf",
                                 "value": [ { "type": "argument", "value": [ "id" ] } ]
@@ -629,7 +629,7 @@
         {
             "name": "GitAuthor",
             "attributes": [
-                { "name": "date", "type": "string" },
+                { "name": "date", "type": "datetime" },
                 { "name": "email", "type": "string" },
                 { "name": "name", "type": "string" }
             ]
@@ -930,7 +930,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -1078,7 +1078,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -1116,7 +1116,7 @@
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" },
                         "url" : [
-                            { "type": "constant", "value": "https://api.github.com/teams/" },
+                            { "type": "constant", "value": "/teams/" },
                             {
                                 "type": "stringOf",
                                 "value": [ { "type": "argument", "value": [ "id" ] } ]
@@ -1136,7 +1136,7 @@
                     "request": {
                         "verb": "POST",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
@@ -1354,6 +1354,7 @@
                     { "name": "has_downloads", "type": "bool" }
                 ]
             },
+            "delete": true,
             "attributes": [
                 { "name": "clone_url", "type": "string" },
                 { "name": "created_at", "type": "datetime" },
@@ -1754,7 +1755,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/networks/" },
+                            { "type": "constant", "value": "/networks/" },
                             { "type": "attribute", "value": [ "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "attribute", "value": [ "name" ] },
@@ -1790,6 +1791,28 @@
                             { "type": "argument", "value": [ "base" ] },
                             { "type": "constant", "value": "..." },
                             { "type": "argument", "value": [ "head" ] }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "legacy", "search", "issues" ],
+                    "type": "list:Issue",
+                    "group": "issues",
+                    "mandatoryParameters": [
+                        { "name": "state", "type": "string" },
+                        { "name": "keyword", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "/legacy/issues/search/" },
+                            { "type": "attribute", "value": [ "owner", "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "attribute", "value": [ "name" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "state" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "urlquote", "value": [ { "type": "argument", "value": [ "keyword" ] } ] }
                         ]
                     }
                 }

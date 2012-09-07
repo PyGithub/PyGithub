@@ -17,8 +17,8 @@
 import GithubObject
 import PaginatedList
 
-import Team
 import Plan
+import Team
 import Event
 import Repository
 import NamedUser

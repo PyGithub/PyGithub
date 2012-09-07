@@ -1002,15 +1002,6 @@ class Repository( GithubObject.GithubObject ):
         )
         return status == 204
 
-    def remove_from_collaborators( self, collaborator ):
-        assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
-        headers, data = self._requester.requestAndCheck(
-            "DELETE",
-            self.url + "/collaborators/" + collaborator._identity,
-            None,
-            None
-        )
-
     def legacy_search_issues( self, state, keyword ):
         assert state in [ "open", "closed" ], state
         assert isinstance( keyword, ( str, unicode ) ), keyword
@@ -1024,6 +1015,15 @@ class Repository( GithubObject.GithubObject ):
             Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
             for element in data[ "issues" ]
         ]
+
+    def remove_from_collaborators( self, collaborator ):
+        assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
+        headers, data = self._requester.requestAndCheck(
+            "DELETE",
+            self.url + "/collaborators/" + collaborator._identity,
+            None,
+            None
+        )
 
     @property
     def _identity( self ):

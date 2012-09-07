@@ -1077,10 +1077,6 @@ Attributes
 * `url`: string
 * `watchers`: integer
 
-Deletion
---------
-* `delete()`
-
 Comparison
 ----------
 * `compare( base, head )`: `Comparison`
@@ -1118,6 +1114,10 @@ Commits
 Contributors
 ------------
 * `get_contributors()`: iterator of `NamedUser`
+
+Deletion
+--------
+* `delete()`
 
 Downloads
 ---------
