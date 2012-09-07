@@ -123,15 +123,35 @@ API `/orgs/:org/teams`
 * GET: `Organization.get_teams`
 * POST: `Organization.create_team`
 
+API `/rate_limit`
+=================
+* GET: (TODO)
+
 API `/repos/:user/:repo`
 ========================
 * GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
 * PATCH: `Repository.edit`
 * DELETE: `Repository.delete`
 
+API `/repos/:user/:repo/:archive_format/:ref`
+=============================================
+* GET: (TODO)
+
+API `/repos/:user/:repo/assignees`
+==================================
+* GET: (TODO)
+
+API `/repos/:user/:repo/assignees/:assignee`
+============================================
+* GET: (TODO)
+
 API `/repos/:user/:repo/branches`
 =================================
 * GET: `Repository.get_branches`
+
+API `/repos/:user/:repo/branches/:branch`
+=========================================
+* GET: (TODO)
 
 API `/repos/:user/:repo/collaborators`
 ======================================
@@ -169,6 +189,10 @@ API `/repos/:user/:repo/commits/:sha/comments`
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
 * GET: `Repository.compare`
+
+API `/repos/:user/:repo/contents/:path`
+=======================================
+* GET: (TODO)
 
 API `/repos/:user/:repo/contributors`
 =====================================
@@ -321,6 +345,10 @@ API `/repos/:user/:repo/languages`
 ==================================
 * GET: `Repository.get_languages`
 
+API `/repos/:user/:repo/merges`
+===============================
+* POST: (TODO)
+
 API `/repos/:user/:repo/milestones`
 ===================================
 * GET: `Repository.get_milestones`
@@ -369,6 +397,23 @@ API `/repos/:user/:repo/pulls/comments/:number`
 * GET: `PullRequest.get_comment`
 * PATCH: `PullRequestComment.edit`
 * DELETE: `PullRequestComment.delete`
+
+API `/repos/:user/:repo/readme`
+===============================
+* GET: (TODO)
+
+API `/repos/:user/:repo/stargazers`
+===================================
+* GET: (TODO)
+
+API `/repos/:user/:repo/statuses/:sha`
+======================================
+* GET: (TODO)
+* POST: (TODO)
+
+API `/repos/:user/:repo/subscribers`
+====================================
+* GET: (TODO)
 
 API `/repos/:user/:repo/tags`
 =============================
@@ -453,6 +498,26 @@ API `/user/repos`
 * GET: `AuthenticatedUser.get_repos`
 * POST: `AuthenticatedUser.create_repo`
 
+API `/user/starred`
+===================
+* GET: (TODO)
+
+API `/user/starred/:user/:repo`
+===============================
+* GET: (TODO)
+* PUT: (TODO)
+* DELETE: (TODO)
+
+API `/user/subscriptions`
+=========================
+* GET: (TODO)
+
+API `/user/subscriptions/:user/:repo`
+=====================================
+* GET: (TODO)
+* PUT: (TODO)
+* DELETE: (TODO)
+
 API `/user/watched`
 ===================
 * GET: `AuthenticatedUser.get_watched`
@@ -507,6 +572,14 @@ API `/users/:user/received_events/public`
 API `/users/:user/repos`
 ========================
 * GET: `NamedUser.get_repos`
+
+API `/users/:user/starred`
+==========================
+* GET: (TODO)
+
+API `/users/:user/subscriptions`
+================================
+* GET: (TODO)
 
 API `/users/:user/watched`
 ==========================
