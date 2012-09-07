@@ -173,6 +173,15 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             None
         )
 
+    def add_to_starred( self, starred ):
+        assert isinstance( starred, Repository.Repository ), starred
+        headers, data = self._requester.requestAndCheck(
+            "PUT",
+            "/user/starred/" + starred._identity,
+            None,
+            None
+        )
+
     def add_to_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
         headers, data = self._requester.requestAndCheck(
@@ -496,6 +505,20 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             data
         )
 
+    def get_starred( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "/user/starred",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_starred_gists( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -534,6 +557,16 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         )
         return status == 204
 
+    def has_in_starred( self, starred ):
+        assert isinstance( starred, Repository.Repository ), starred
+        status, headers, data = self._requester.requestRaw(
+            "GET",
+            "/user/starred/" + starred._identity,
+            None,
+            None
+        )
+        return status == 204
+
     def has_in_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
         status, headers, data = self._requester.requestRaw(
@@ -559,6 +592,15 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             "/user/following/" + following._identity,
+            None,
+            None
+        )
+
+    def remove_from_starred( self, starred ):
+        assert isinstance( starred, Repository.Repository ), starred
+        headers, data = self._requester.requestAndCheck(
+            "DELETE",
+            "/user/starred/" + starred._identity,
             None,
             None
         )

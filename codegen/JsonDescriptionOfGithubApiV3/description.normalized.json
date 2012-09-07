@@ -1000,6 +1000,154 @@
                     }
                 }, 
                 {
+                    "group": "starred", 
+                    "name": [
+                        "add", 
+                        "to", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "get", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "remove", 
+                        "from", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
                     "group": "following", 
                     "name": [
                         "add", 
@@ -5331,6 +5479,37 @@
                             {
                                 "type": "constant", 
                                 "value": "/watched"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "get", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/starred"
                             }
                         ], 
                         "information": "data", 
@@ -10186,6 +10365,37 @@
                             {
                                 "type": "constant", 
                                 "value": "/watchers"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
+                    "group": "stargazers", 
+                    "name": [
+                        "get", 
+                        "stargazers"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/stargazers"
                             }
                         ], 
                         "information": "data", 

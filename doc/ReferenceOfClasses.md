@@ -180,6 +180,16 @@ Repos
     * `sort`: string
     * `direction`: string
 
+Starred
+-------
+* `add_to_starred( starred )`
+    * `starred`: `Repository`
+* `get_starred()`: iterator of `Repository`
+* `has_in_starred( starred )`: bool
+    * `starred`: `Repository`
+* `remove_from_starred( starred )`
+    * `starred`: `Repository`
+
 Watched
 -------
 * `add_to_watched( watched )`
@@ -815,6 +825,10 @@ Repos
 * `get_repos( [type] )`: iterator of `Repository`
     * `type`: string
 
+Starred
+-------
+* `get_starred()`: iterator of `Repository`
+
 Watched
 -------
 * `get_watched()`: iterator of `Repository`
@@ -1292,6 +1306,10 @@ Pulls
     * `number`: integer
 * `get_pulls( [state] )`: iterator of `PullRequest`
     * `state`: string
+
+Stargazers
+----------
+* `get_stargazers()`: iterator of `NamedUser`
 
 Tags
 ----

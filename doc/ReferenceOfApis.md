@@ -404,7 +404,7 @@ API `/repos/:user/:repo/readme`
 
 API `/repos/:user/:repo/stargazers`
 ===================================
-* GET: (TODO)
+* GET: `Repository.get_stargazers`
 
 API `/repos/:user/:repo/statuses/:sha`
 ======================================
@@ -500,13 +500,13 @@ API `/user/repos`
 
 API `/user/starred`
 ===================
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_starred`
 
 API `/user/starred/:user/:repo`
 ===============================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.has_in_starred`
+* PUT: `AuthenticatedUser.add_to_starred`
+* DELETE: `AuthenticatedUser.remove_from_starred`
 
 API `/user/subscriptions`
 =========================
@@ -575,7 +575,7 @@ API `/users/:user/repos`
 
 API `/users/:user/starred`
 ==========================
-* GET: (TODO)
+* GET: `NamedUser.get_starred`
 
 API `/users/:user/subscriptions`
 ================================
