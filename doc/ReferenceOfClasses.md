@@ -1083,6 +1083,12 @@ Comparison
     * `base`: string
     * `head`: string
 
+Assignees
+---------
+* `get_assignees()`: iterator of `NamedUser`
+* `has_in_assignees( assignee )`: bool
+    * `assignee`: `NamedUser`
+
 Branches
 --------
 * `get_branches()`: iterator of `Branch`

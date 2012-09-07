@@ -1404,6 +1404,13 @@
                     "removeElement": true
                 },
                 {
+                    "name": "assignees",
+                    "singularName": "assignee",
+                    "type": "NamedUser",
+                    "getList": true,
+                    "hasElement": true
+                },
+                {
                     "name": "comments",
                     "singularName": "comment",
                     "type": "CommitComment",

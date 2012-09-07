@@ -139,11 +139,11 @@ API `/repos/:user/:repo/:archive_format/:ref`
 
 API `/repos/:user/:repo/assignees`
 ==================================
-* GET: (TODO)
+* GET: `Repository.get_assignees`
 
 API `/repos/:user/:repo/assignees/:assignee`
 ============================================
-* GET: (TODO)
+* GET: `Repository.has_in_assignees`
 
 API `/repos/:user/:repo/branches`
 =================================

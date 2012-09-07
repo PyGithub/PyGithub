@@ -7996,6 +7996,84 @@
                     }
                 }, 
                 {
+                    "group": "assignees", 
+                    "name": [
+                        "get", 
+                        "assignees"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/assignees"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
+                    "group": "assignees", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "assignees"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "NamedUser"
+                            }, 
+                            "name": "assignee"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/assignees/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "assignee"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }
+                }, 
+                {
                     "group": "comments", 
                     "name": [
                         "get", 

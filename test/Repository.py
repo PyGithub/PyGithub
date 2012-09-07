@@ -339,3 +339,14 @@ class Repository( Framework.TestCase ):
 
     def testLegacySearchIssues( self ):
         self.assertListKeyEqual( self.repo.legacy_search_issues( "open", "search" ), lambda i: i.title, [ "Support new Search API" ] )
+
+    def testAssignees( self ):
+        lyloa = self.g.get_user( "Lyloa" )
+        jacquev6 = self.g.get_user( "jacquev6" )
+        self.assertTrue( self.repo.has_in_assignees( jacquev6 ) )
+        self.assertFalse( self.repo.has_in_assignees( lyloa ) )
+        self.repo.add_to_collaborators( lyloa )
+        self.assertTrue( self.repo.has_in_assignees( lyloa ) )
+        self.assertListKeyEqual( self.repo.get_assignees(), lambda u: u.login, [ "jacquev6", "Lyloa" ] )
+        self.repo.remove_from_collaborators( lyloa )
+        self.assertFalse( self.repo.has_in_assignees( lyloa ) )

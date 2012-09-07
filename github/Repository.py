@@ -497,6 +497,20 @@ class Repository( GithubObject.GithubObject ):
         )
         self._useAttributes( data )
 
+    def get_assignees( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/assignees",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_branches( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -991,6 +1005,16 @@ class Repository( GithubObject.GithubObject ):
             headers,
             data
         )
+
+    def has_in_assignees( self, assignee ):
+        assert isinstance( assignee, NamedUser.NamedUser ), assignee
+        status, headers, data = self._requester.requestRaw(
+            "GET",
+            self.url + "/assignees/" + assignee._identity,
+            None,
+            None
+        )
+        return status == 204
 
     def has_in_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
