@@ -182,6 +182,15 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             None
         )
 
+    def add_to_subscriptions( self, subscription ):
+        assert isinstance( subscription, Repository.Repository ), subscription
+        headers, data = self._requester.requestAndCheck(
+            "PUT",
+            "/user/subscriptions/" + subscription._identity,
+            None,
+            None
+        )
+
     def add_to_watched( self, watched ):
         assert isinstance( watched, Repository.Repository ), watched
         headers, data = self._requester.requestAndCheck(
@@ -533,6 +542,20 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             data
         )
 
+    def get_subscriptions( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "/user/subscriptions",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_watched( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -562,6 +585,16 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         status, headers, data = self._requester.requestRaw(
             "GET",
             "/user/starred/" + starred._identity,
+            None,
+            None
+        )
+        return status == 204
+
+    def has_in_subscriptions( self, subscription ):
+        assert isinstance( subscription, Repository.Repository ), subscription
+        status, headers, data = self._requester.requestRaw(
+            "GET",
+            "/user/subscriptions/" + subscription._identity,
             None,
             None
         )
@@ -601,6 +634,15 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             "/user/starred/" + starred._identity,
+            None,
+            None
+        )
+
+    def remove_from_subscriptions( self, subscription ):
+        assert isinstance( subscription, Repository.Repository ), subscription
+        headers, data = self._requester.requestAndCheck(
+            "DELETE",
+            "/user/subscriptions/" + subscription._identity,
             None,
             None
         )

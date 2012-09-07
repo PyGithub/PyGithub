@@ -190,6 +190,16 @@ Starred
 * `remove_from_starred( starred )`
     * `starred`: `Repository`
 
+Subscriptions
+-------------
+* `add_to_subscriptions( subscription )`
+    * `subscription`: `Repository`
+* `get_subscriptions()`: iterator of `Repository`
+* `has_in_subscriptions( subscription )`: bool
+    * `subscription`: `Repository`
+* `remove_from_subscriptions( subscription )`
+    * `subscription`: `Repository`
+
 Watched
 -------
 * `add_to_watched( watched )`
@@ -829,6 +839,10 @@ Starred
 -------
 * `get_starred()`: iterator of `Repository`
 
+Subscriptions
+-------------
+* `get_subscriptions()`: iterator of `Repository`
+
 Watched
 -------
 * `get_watched()`: iterator of `Repository`
@@ -1310,6 +1324,10 @@ Pulls
 Stargazers
 ----------
 * `get_stargazers()`: iterator of `NamedUser`
+
+Subscribers
+-----------
+* `get_subscribers()`: iterator of `NamedUser`
 
 Tags
 ----

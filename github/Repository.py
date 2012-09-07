@@ -978,6 +978,20 @@ class Repository( GithubObject.GithubObject ):
             data
         )
 
+    def get_subscribers( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/subscribers",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_tags( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",

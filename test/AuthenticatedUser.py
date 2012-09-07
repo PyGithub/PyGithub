@@ -99,6 +99,15 @@ class AuthenticatedUser( Framework.TestCase ):
         self.user.add_to_starred( gitflow )
         self.assertEqual( self.user.has_in_starred( gitflow ), True )
 
+    def testSubscriptions( self ):
+        gitflow = self.g.get_user( "nvie" ).get_repo( "gitflow" )
+        self.assertListKeyEqual( self.user.get_subscriptions(), lambda r: r.name, [ "gitflow", "ViDE", "Boost.HierarchicalEnum", "QuadProgMm", "DrawSyntax", "DrawTurksHead", "PrivateStuff", "vincent-jacques.net", "Hacking", "C4Planner", "developer.github.com", "PyGithub", "PyGithub", "django", "CinePlanning", "PyGithub", "PyGithub", "PyGithub", "IpMap", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub" ] )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), True )
+        self.user.remove_from_subscriptions( gitflow )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), False )
+        self.user.add_to_subscriptions( gitflow )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), True )
+
     def testGetAuthorizations( self ):
         self.assertListKeyEqual( self.user.get_authorizations(), lambda a: a.id, [ 372294 ] )
 

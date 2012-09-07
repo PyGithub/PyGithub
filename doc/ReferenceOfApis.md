@@ -413,7 +413,7 @@ API `/repos/:user/:repo/statuses/:sha`
 
 API `/repos/:user/:repo/subscribers`
 ====================================
-* GET: (TODO)
+* GET: `Repository.get_subscribers`
 
 API `/repos/:user/:repo/tags`
 =============================
@@ -510,13 +510,13 @@ API `/user/starred/:user/:repo`
 
 API `/user/subscriptions`
 =========================
-* GET: (TODO)
+* GET: `AuthenticatedUser.get_subscriptions`
 
 API `/user/subscriptions/:user/:repo`
 =====================================
-* GET: (TODO)
-* PUT: (TODO)
-* DELETE: (TODO)
+* GET: `AuthenticatedUser.has_in_subscriptions`
+* PUT: `AuthenticatedUser.add_to_subscriptions`
+* DELETE: `AuthenticatedUser.remove_from_subscriptions`
 
 API `/user/watched`
 ===================
@@ -579,7 +579,7 @@ API `/users/:user/starred`
 
 API `/users/:user/subscriptions`
 ================================
-* GET: (TODO)
+* GET: `NamedUser.get_subscriptions`
 
 API `/users/:user/watched`
 ==========================

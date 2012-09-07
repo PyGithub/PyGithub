@@ -1000,6 +1000,154 @@
                     }
                 }, 
                 {
+                    "group": "subscriptions", 
+                    "name": [
+                        "add", 
+                        "to", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "get", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "remove", 
+                        "from", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
                     "group": "starred", 
                     "name": [
                         "add", 
@@ -5479,6 +5627,37 @@
                             {
                                 "type": "constant", 
                                 "value": "/watched"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "get", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/subscriptions"
                             }
                         ], 
                         "information": "data", 
@@ -10365,6 +10544,37 @@
                             {
                                 "type": "constant", 
                                 "value": "/watchers"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
+                    "group": "subscribers", 
+                    "name": [
+                        "get", 
+                        "subscribers"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/subscribers"
                             }
                         ], 
                         "information": "data", 

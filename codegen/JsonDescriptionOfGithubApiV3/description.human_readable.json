@@ -154,6 +154,15 @@
                     "removeElement": true
                 },
                 {
+                    "name": "subscriptions",
+                    "singularName": "subscription",
+                    "type": "Repository",
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
+                },
+                {
                     "name": "starred",
                     "singularName": "starred",
                     "type": "Repository",
@@ -949,6 +958,12 @@
                 {
                     "name": "watched",
                     "singularName": "watched",
+                    "type": "Repository",
+                    "getList": true
+                },
+                {
+                    "name": "subscriptions",
+                    "singularName": "subscription",
                     "type": "Repository",
                     "getList": true
                 },
@@ -1765,6 +1780,12 @@
                 {
                     "name": "watchers",
                     "singularName": "watcher",
+                    "type": "NamedUser",
+                    "getList": true
+                },
+                {
+                    "name": "subscribers",
+                    "singularName": "subscriber",
                     "type": "NamedUser",
                     "getList": true
                 },
