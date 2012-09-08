@@ -277,6 +277,14 @@ Comments
     * `position`: integer
 * `get_comments()`: iterator of `CommitComment`
 
+Statuses
+--------
+* `create_status( state, [target_url, description] )`: `CommitStatus`
+    * `state`: string
+    * `target_url`: string
+    * `description`: string
+* `get_statuses()`: iterator of `CommitStatus`
+
 Class `CommitComment`
 =====================
 
@@ -311,6 +319,19 @@ Attributes
 * `additions`: integer
 * `deletions`: integer
 * `total`: integer
+
+Class `CommitStatus`
+====================
+
+Attributes
+----------
+* `created_at`: datetime.datetime
+* `creator`: `NamedUser`
+* `description`: string
+* `id`: integer
+* `state`: string
+* `target_url`: string
+* `updated_at`: datetime.datetime
 
 Class `Comparison`
 ==================

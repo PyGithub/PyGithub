@@ -408,8 +408,8 @@ API `/repos/:user/:repo/stargazers`
 
 API `/repos/:user/:repo/statuses/:sha`
 ======================================
-* GET: (TODO)
-* POST: (TODO)
+* GET: `Commit.get_statuses`
+* POST: `Commit.create_status`
 
 API `/repos/:user/:repo/subscribers`
 ====================================

@@ -310,6 +310,18 @@
             ]
         },
         {
+            "name": "CommitStatus",
+            "attributes": [
+                { "name": "created_at", "type": "datetime" },
+                { "name": "updated_at", "type": "datetime" },
+                { "name": "state", "type": "string" },
+                { "name": "target_url", "type": "string" },
+                { "name": "description", "type": "string" },
+                { "name": "id", "type": "integer" },
+                { "name": "creator", "type": "NamedUser" }
+            ]
+        },
+        {
             "name": "ContentFile",
             "attributes": [
                 { "name": "type", "type": "string" },
@@ -363,6 +375,26 @@
                             { "name": "position", "type": "integer" }
                         ]
                     }
+                },
+                {
+                    "name": "statuses",
+                    "singularName": "status",
+                    "type": "CommitStatus",
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
+                            { "name": "state", "type": "string" }
+                        ],
+                        "optionalParameters": [
+                            { "name": "target_url", "type": "string" },
+                            { "name": "description", "type": "string" }
+                        ]
+                    },
+                    "url": [
+                        { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                        { "type": "constant", "value": "/statuses/" },
+                        { "type": "attribute", "value": [ "sha" ] }
+                    ]
                 }
             ],
             "identity": [

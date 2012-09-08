@@ -2102,6 +2102,127 @@
                         "cardinality": "list", 
                         "name": "CommitComment"
                     }
+                }, 
+                {
+                    "group": "statuses", 
+                    "name": [
+                        "create", 
+                        "status"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "state"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/statuses/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "target_url"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "description"
+                        }
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "CommitStatus"
+                    }
+                }, 
+                {
+                    "group": "statuses", 
+                    "name": [
+                        "get", 
+                        "statuses"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/statuses/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "CommitStatus"
+                    }
                 }
             ]
         }, 
@@ -2292,6 +2413,69 @@
             ], 
             "isCompletable": false, 
             "name": "CommitStats", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "datetime"
+                    }, 
+                    "name": "created_at"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "NamedUser"
+                    }, 
+                    "name": "creator"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "description"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "id"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "state"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "target_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "datetime"
+                    }, 
+                    "name": "updated_at"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "CommitStatus", 
             "methods": []
         }, 
         {

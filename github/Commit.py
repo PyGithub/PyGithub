@@ -19,6 +19,7 @@ import PaginatedList
 
 import GitCommit
 import NamedUser
+import CommitStatus
 import File
 import CommitStats
 import Commit
@@ -87,6 +88,25 @@ class Commit( GithubObject.GithubObject ):
         )
         return CommitComment.CommitComment( self._requester, data, completed = True )
 
+    def create_status( self, state, target_url = GithubObject.NotSet, description = GithubObject.NotSet ):
+        assert isinstance( state, ( str, unicode ) ), state
+        assert target_url is GithubObject.NotSet or isinstance( target_url, ( str, unicode ) ), target_url
+        assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
+        post_parameters = {
+            "state": state,
+        }
+        if target_url is not GithubObject.NotSet:
+            post_parameters[ "target_url" ] = target_url
+        if description is not GithubObject.NotSet:
+            post_parameters[ "description" ] = description
+        headers, data = self._requester.requestAndCheck(
+            "POST",
+            self._parentUrl( self._parentUrl( self.url ) ) + "/statuses/" + self.sha,
+            None,
+            post_parameters
+        )
+        return CommitStatus.CommitStatus( self._requester, data, completed = True )
+
     def get_comments( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -96,6 +116,20 @@ class Commit( GithubObject.GithubObject ):
         )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
+            self._requester,
+            headers,
+            data
+        )
+
+    def get_statuses( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self._parentUrl( self._parentUrl( self.url ) ) + "/statuses/" + self.sha,
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            CommitStatus.CommitStatus,
             self._requester,
             headers,
             data
