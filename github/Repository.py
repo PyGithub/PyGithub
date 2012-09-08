@@ -1112,6 +1112,27 @@ class Repository( GithubObject.GithubObject ):
             for element in data[ "issues" ]
         ]
 
+    def merge( self, base, head, commit_message = GithubObject.NotSet ):
+        assert isinstance( base, ( str, unicode ) ), base
+        assert isinstance( head, ( str, unicode ) ), head
+        assert commit_message is GithubObject.NotSet or isinstance( commit_message, ( str, unicode ) ), commit_message
+        post_parameters = {
+            "base": base,
+            "head": head,
+        }
+        if commit_message is not GithubObject.NotSet:
+            post_parameters[ "commit_message" ] = commit_message
+        headers, data = self._requester.requestAndCheck(
+            "POST",
+            self.url + "/merges",
+            None,
+            post_parameters
+        )
+        if data is None:
+            return None
+        else:
+            return Commit.Commit( self._requester, data, completed = True )
+
     def remove_from_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         headers, data = self._requester.requestAndCheck(

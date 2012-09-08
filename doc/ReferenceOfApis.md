@@ -347,7 +347,7 @@ API `/repos/:user/:repo/languages`
 
 API `/repos/:user/:repo/merges`
 ===============================
-* POST: (TODO)
+* POST: `Repository.merge`
 
 API `/repos/:user/:repo/milestones`
 ===================================

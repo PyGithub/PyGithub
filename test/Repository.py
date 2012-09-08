@@ -370,3 +370,23 @@ class Repository( Framework.TestCase ):
     def testGetBranch( self ):
         branch = self.repo.get_branch( "develop" )
         self.assertEqual( branch.commit.sha, "03058a36164d2a7d946db205f25538434fa27d94" )
+
+    def testMergeWithoutMessage( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead" )
+        self.assertEqual( commit.commit.message, "Merge branchForHead into branchForBase" )
+
+    def testMergeWithMessage( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead", "Commit message created by PyGithub" )
+        self.assertEqual( commit.commit.message, "Commit message created by PyGithub" )
+
+    def testMergeWithNothingToDo( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead", "Commit message created by PyGithub" )
+        self.assertEqual( commit, None )
+
+    def testMergeWithConflict( self ):
+        try:
+            commit = self.repo.merge( "branchForBase", "branchForHead" )
+            self.fail( "Should have raised" )
+        except github.GithubException, exception:
+            self.assertEqual( exception.status, 409 )
+            self.assertEqual( exception.data, { "message": "Merge conflict" } )

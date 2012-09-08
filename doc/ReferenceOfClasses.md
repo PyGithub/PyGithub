@@ -1323,6 +1323,13 @@ Languages
 ---------
 * `get_languages()`: dict of string to integer
 
+Merging
+-------
+* `merge( base, head, [commit_message] )`: `Commit`
+    * `base`: string
+    * `head`: string
+    * `commit_message`: string
+
 Milestones
 ----------
 * `create_milestone( title, [state, description, due_on] )`: `Milestone`

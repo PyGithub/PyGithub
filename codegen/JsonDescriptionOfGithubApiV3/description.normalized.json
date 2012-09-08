@@ -11130,6 +11130,62 @@
                     }
                 }, 
                 {
+                    "group": "merging", 
+                    "name": [
+                        "merge"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "base"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "head"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/merges"
+                            }
+                        ], 
+                        "postParameters": true, 
+                        "verb": "POST"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "commit_message"
+                        }
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Commit"
+                    }
+                }, 
+                {
                     "group": "Comparison", 
                     "name": [
                         "compare"

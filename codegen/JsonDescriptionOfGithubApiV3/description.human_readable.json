@@ -1921,6 +1921,26 @@
                     }
                 },
                 {
+                    "name": [ "merge" ],
+                    "type": "Commit",
+                    "group": "merging",
+                    "mandatoryParameters": [
+                        { "name": "base", "type": "string" },
+                        { "name": "head", "type": "string" }
+                    ],
+                    "optionalParameters": [
+                        { "name": "commit_message", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/merges" }
+                        ],
+                        "postParameters": true
+                    }
+                },
+                {
                     "name": [ "compare" ],
                     "type": "Comparison",
                     "group": "Comparison",
