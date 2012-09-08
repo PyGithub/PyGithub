@@ -1,20 +1,25 @@
 You don't normaly create instances of any class but `Github`.
 You obtain instances through calls to `search_`, `get_` and `create_` methods.
+
 Methods returning an "iterator of `SomeType`" return an iterator which yields instances of `SomeType`.
 This implements lazy [pagination requests](http://developer.github.com/v3/#pagination).
 You can use this iterator in a `for f in user.get_followers():` loop or with any [itertools](http://docs.python.org/library/itertools.html) functions,
 but you cannot know the number of objects returned before the end of the iteration.
 If that's really what you need, you cant use `len( list( user.get_followers() ) )`, which does all the requests needed to enumerate the user's followers.
 Note that there is often an attribute giving this value (in that case `user.followers`).
+
 Class `Github`
 ==============
 
 Constructed from user's login and password or OAuth token or nothing:
+
     g = Github( login, password )
     g = Github( token )
     g = Github()
+
 You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
 Another argument, that can be passed is `timeout` which has default value `10`.
+
 Attributes
 ----------
 * `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
@@ -1283,16 +1288,16 @@ Issues
 * `get_issue( number )`: `Issue`
     * `number`: integer
 * `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: iterator of `Issue`
-    * `milestone`: `Milestone`
+    * `milestone`: `Milestone` or "none" or "*"
     * `state`: string
-    * `assignee`: `NamedUser`
+    * `assignee`: `NamedUser` or "none" or "*"
     * `mentioned`: `NamedUser`
     * `labels`: list of `Label`
     * `sort`: string
     * `direction`: string
     * `since`: datetime.datetime
 * `legacy_search_issues( state, keyword )`: iterator of `Issue`
-    * `state`: string
+    * `state`: "open" or "closed"
     * `keyword`: string
 
 Issues_events
@@ -1357,7 +1362,7 @@ Modification
 
 Pulls
 -----
-* `create_pull( [title, body, issue, base, head] )`: `PullRequest`
+* `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`
     * `title`: string
     * `body`: string
     * `issue`: `Issue`
