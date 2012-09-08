@@ -125,7 +125,7 @@ API `/orgs/:org/teams`
 
 API `/rate_limit`
 =================
-* GET: (TODO)
+* GET: Not implemented, see `Github.rate_limiting`
 
 API `/repos/:user/:repo`
 ========================
