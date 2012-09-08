@@ -366,3 +366,7 @@ class Repository( Framework.TestCase ):
         self.assertEqual( self.repo.get_archive_link( "zipball" ), "https://nodeload.github.com/jacquev6/PyGithub/zipball/master" )
         self.assertEqual( self.repo.get_archive_link( "zipball", "master" ), "https://nodeload.github.com/jacquev6/PyGithub/zipball/master" )
         self.assertEqual( self.repo.get_archive_link( "tarball", "develop" ), "https://nodeload.github.com/jacquev6/PyGithub/tarball/develop" )
+
+    def testGetBranch( self ):
+        branch = self.repo.get_branch( "develop" )
+        self.assertEqual( branch.commit.sha, "03058a36164d2a7d946db205f25538434fa27d94" )

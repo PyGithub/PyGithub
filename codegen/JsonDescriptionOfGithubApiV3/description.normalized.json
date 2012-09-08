@@ -8401,6 +8401,52 @@
                     "group": "branches", 
                     "name": [
                         "get", 
+                        "branch"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "branch"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/branches/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "branch"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Branch"
+                    }
+                }, 
+                {
+                    "group": "branches", 
+                    "name": [
+                        "get", 
                         "branches"
                     ], 
                     "mandatoryParameters": [], 

@@ -151,7 +151,7 @@ API `/repos/:user/:repo/branches`
 
 API `/repos/:user/:repo/branches/:branch`
 =========================================
-* GET: (TODO)
+* GET: `Repository.get_branch`
 
 API `/repos/:user/:repo/collaborators`
 ======================================

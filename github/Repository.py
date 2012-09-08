@@ -526,6 +526,16 @@ class Repository( GithubObject.GithubObject ):
             data
         )
 
+    def get_branch( self, branch ):
+        assert isinstance( branch, ( str, unicode ) ), branch
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/branches/" + branch,
+            None,
+            None
+        )
+        return Branch.Branch( self._requester, data, completed = True )
+
     def get_branches( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
