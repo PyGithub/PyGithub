@@ -8,6 +8,8 @@ read version
 sed -i -b "s/version = .*/version = \"$version\",/" setup.py
 git add setup.py
 
+git log v$previousVersion.. --oneline
+
 echo "Edit ReadMe.md now, then press enter"
 read foobar
 git add ReadMe.md

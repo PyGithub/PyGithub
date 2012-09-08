@@ -54,6 +54,19 @@ Projects using PyGithub
 History
 =======
 
+[Version 1.6](https://github.com/jacquev6/PyGithub/issues?milestone=10&state=closed) (September 8th, 2012)
+----------------------------------------------------------------------------------------------------------
+
+* Restore support for Python 2.5
+* Implement new APIS:
+    * /hooks (undocumented, but mentioned in http://developer.github.com/v3/repos/hooks/#create-a-hook)
+    * [Merging](http://developer.github.com/v3/repos/merging/)
+    * [Starring](http://developer.github.com/v3/repos/starring/) and [subscriptions](http://developer.github.com/v3/repos/watching/)
+    * [Assignees](http://developer.github.com/v3/issues/assignees/)
+    * [Commit statuses](http://developer.github.com/v3/repos/statuses/)
+    * [Contents](http://developer.github.com/v3/repos/contents/), thank you [berndca](https://github.com/berndca) for asking
+* Clarify issue and review comments on PullRequest, thank you [nixoz2k7](https://github.com/nixoz2k7) for asking
+
 [Version 1.5](https://github.com/jacquev6/PyGithub/issues?milestone=9&state=closed) (September 5th, 2012)
 ---------------------------------------------------------------------------------------------------------
 
