@@ -1865,6 +1865,27 @@
                     }
                 },
                 {
+                    "name": [ "get", "archive", "link" ],
+                    "type": "string",
+                    "group": "contents",
+                    "mandatoryParameters": [
+                        { "name": "archive_format", "type": "string" }
+                    ],
+                    "optionalParameters": [
+                        { "name": "ref", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "archive_format" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "ref" ] }
+                        ]
+                    }
+                },
+                {
                     "name": [ "compare" ],
                     "type": "Comparison",
                     "group": "Comparison",

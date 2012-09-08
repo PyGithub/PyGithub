@@ -498,6 +498,20 @@ class Repository( GithubObject.GithubObject ):
         )
         self._useAttributes( data )
 
+    def get_archive_link( self, archive_format, ref = GithubObject.NotSet ):
+        assert isinstance( archive_format, ( str, unicode ) ), archive_format
+        assert ref is GithubObject.NotSet or isinstance( ref, ( str, unicode ) ), ref
+        url = self.url + "/" + archive_format
+        if ref is not GithubObject.NotSet:
+            url += "/" + ref
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            url,
+            None,
+            None
+        )
+        return headers[ "location" ]
+
     def get_assignees( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",

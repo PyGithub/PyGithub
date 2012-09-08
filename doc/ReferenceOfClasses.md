@@ -1163,6 +1163,9 @@ Contents
 * `get_readme()`: `ContentFile`
 * `get_contents( path )`: `ContentFile`
     * `path`: string
+* `get_archive_link( archive_format, [ref] )`: string
+    * `archive_format`: string
+    * `ref`: string
 
 Contributors
 ------------

@@ -135,7 +135,7 @@ API `/repos/:user/:repo`
 
 API `/repos/:user/:repo/:archive_format/:ref`
 =============================================
-* GET: (TODO)
+* GET: `Repository.get_archive_link`
 
 API `/repos/:user/:repo/assignees`
 ==================================

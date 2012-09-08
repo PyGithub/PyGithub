@@ -10835,6 +10835,71 @@
                     }
                 }, 
                 {
+                    "group": "contents", 
+                    "name": [
+                        "get", 
+                        "archive", 
+                        "link"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "archive_format"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "archive_format"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "ref"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "ref"
+                        }
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }
+                }, 
+                {
                     "group": "Comparison", 
                     "name": [
                         "compare"
