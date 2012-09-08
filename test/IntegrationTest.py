@@ -21,6 +21,7 @@ from Authorization import *
 from Branch import *
 from Commit import *
 from CommitComment import *
+from ContentFile import *
 from Download import *
 from Event import *
 from Gist import *

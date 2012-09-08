@@ -192,7 +192,7 @@ API `/repos/:user/:repo/compare/:base...:head`
 
 API `/repos/:user/:repo/contents/:path`
 =======================================
-* GET: (TODO)
+* GET: `Repository.get_contents`
 
 API `/repos/:user/:repo/contributors`
 =====================================
@@ -400,7 +400,7 @@ API `/repos/:user/:repo/pulls/comments/:number`
 
 API `/repos/:user/:repo/readme`
 ===============================
-* GET: (TODO)
+* GET: `Repository.get_readme`
 
 API `/repos/:user/:repo/stargazers`
 ===================================

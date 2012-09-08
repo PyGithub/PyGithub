@@ -22,6 +22,7 @@ import PaginatedList
 
 import Branch
 import IssueEvent
+import ContentFile
 import Label
 import InputGitAuthor
 import GitBlob
@@ -594,6 +595,16 @@ class Repository( GithubObject.GithubObject ):
             data
         )
 
+    def get_contents( self, path ):
+        assert isinstance( path, ( str, unicode ) ), path
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/contents" + path,
+            None,
+            None
+        )
+        return ContentFile.ContentFile( self._requester, data, completed = True )
+
     def get_contributors( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -963,6 +974,15 @@ class Repository( GithubObject.GithubObject ):
             headers,
             data
         )
+
+    def get_readme( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/readme",
+            None,
+            None
+        )
+        return ContentFile.ContentFile( self._requester, data, completed = True )
 
     def get_stargazers( self ):
         headers, data = self._requester.requestAndCheck(

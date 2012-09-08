@@ -330,6 +330,19 @@ Attributes
 * `total_commits`: integer
 * `url`: string
 
+Class `ContentFile`
+===================
+
+Attributes
+----------
+* `content`: string
+* `encoding`: string
+* `name`: string
+* `path`: string
+* `sha`: string
+* `size`: integer
+* `type`: string
+
 Class `Download`
 ================
 
@@ -1143,6 +1156,12 @@ Commits
     * `sha`: string
 * `get_commits( [sha, path] )`: iterator of `Commit`
     * `sha`: string
+    * `path`: string
+
+Contents
+--------
+* `get_readme()`: `ContentFile`
+* `get_contents( path )`: `ContentFile`
     * `path`: string
 
 Contributors

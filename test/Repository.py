@@ -356,3 +356,7 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_assignees(), lambda u: u.login, [ "jacquev6", "Lyloa" ] )
         self.repo.remove_from_collaborators( lyloa )
         self.assertFalse( self.repo.has_in_assignees( lyloa ) )
+
+    def testGetContents( self ):
+        self.assertEqual( len( self.repo.get_readme().content ), 10212 )
+        self.assertEqual( len( self.repo.get_contents( "doc/ReferenceOfClasses.md" ).content ), 38121 )

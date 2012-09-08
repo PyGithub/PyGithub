@@ -310,6 +310,18 @@
             ]
         },
         {
+            "name": "ContentFile",
+            "attributes": [
+                { "name": "type", "type": "string" },
+                { "name": "encoding", "type": "string" },
+                { "name": "size", "type": "integer" },
+                { "name": "name", "type": "string" },
+                { "name": "path", "type": "string" },
+                { "name": "content", "type": "string" },
+                { "name": "sha", "type": "string" }
+            ]
+        },
+        {
             "name": "File",
             "attributes": [
                 { "name": "additions", "type": "integer" },
@@ -1821,6 +1833,34 @@
                         "url": [
                             { "type": "attribute", "value": [ "url" ] },
                             { "type": "constant", "value": "/languages" }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "get", "readme" ],
+                    "type": "ContentFile",
+                    "group": "contents",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/readme" }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "get", "contents" ],
+                    "type": "ContentFile",
+                    "group": "contents",
+                    "mandatoryParameters": [
+                        { "name": "path", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/contents" },
+                            { "type": "argument", "value": [ "path" ] }
                         ]
                     }
                 },
