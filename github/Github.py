@@ -22,6 +22,7 @@ import PaginatedList
 import Repository
 import Legacy
 import GithubObject
+import HookDescription
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_TIMEOUT = 10
@@ -126,3 +127,12 @@ class Github( object ):
             post_parameters
         )
         return data
+
+    def get_hooks( self ):
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "/hooks",
+            None,
+            None
+        )
+        return [ HookDescription.HookDescription( self.__requester, attributes, completed = True ) for attributes in data ]

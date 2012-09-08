@@ -53,6 +53,10 @@ API `/gists/starred`
 ====================
 * GET: `AuthenticatedUser.get_starred_gists`
 
+API `/hooks`
+====================
+* GET: `Github.get_hooks`
+
 API `/issues`
 =============
 * GET: `AuthenticatedUser.get_issues`

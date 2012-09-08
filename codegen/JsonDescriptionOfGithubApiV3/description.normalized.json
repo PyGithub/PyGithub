@@ -4291,6 +4291,45 @@
                 {
                     "type": {
                         "simple": true, 
+                        "cardinality": "list", 
+                        "name": "string"
+                    }, 
+                    "name": "events"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "name"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "list:string"
+                    }, 
+                    "name": "schema"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "list", 
+                        "name": "string"
+                    }, 
+                    "name": "supported_events"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "HookDescription", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
                         "cardinality": "scalar", 
                         "name": "integer"
                     }, 

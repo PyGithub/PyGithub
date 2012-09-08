@@ -32,6 +32,7 @@ Methods
 * `get_gist( id )`: `Gist`
     * `id`: string
 * `get_gists()`: iterator of `Gist`
+* `get_hooks()`: iterator of `HookDescription`
 * `search_repos( keyword )`: iterator of `Repository`
 * `legacy_search_repos( keyword, [language] )`: iterator of `Repository`
     * `keyword`: string
@@ -641,6 +642,16 @@ Modification
 Testing
 -------
 * `test()`
+
+Class `HookDescription`
+=======================
+
+Attributes
+----------
+* `events`: list of string
+* `name`: string
+* `schema`: list of list of string
+* `supported_events`: list of string
 
 Class `HookResponse`
 ====================

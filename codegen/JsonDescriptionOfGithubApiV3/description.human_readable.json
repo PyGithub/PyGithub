@@ -1,6 +1,15 @@
 {
     "classes": [
         {
+            "name": "HookDescription",
+            "attributes": [
+                { "name": "supported_events", "type": "list:string" },
+                { "name": "events", "type": "list:string" },
+                { "name": "name", "type": "string" },
+                { "name": "schema", "type": "list:list:string" }
+            ]
+        },
+        {
             "name": "Plan",
             "attributes": [
                 { "name": "collaborators", "type": "integer" },
