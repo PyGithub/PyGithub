@@ -15,10 +15,13 @@ import httplib
 import base64
 import urllib
 import urlparse
+import sys
 
-try:
+atLeastPython26 = sys.hexversion >= 0x02060000
+
+if atLeastPython26:
     import json
-except ImportError: #pragma no cover: only for Python 2.5
+else: #pragma no cover
     import simplejson as json #pragma no cover
 
 import GithubException
@@ -78,7 +81,10 @@ class Requester:
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout = self.__timeout )
+        if atLeastPython26:
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout = self.__timeout )
+        else: #pragma no cover
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True ) #pragma no cover
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
