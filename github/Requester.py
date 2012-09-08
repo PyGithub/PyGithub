@@ -15,10 +15,13 @@ import httplib
 import base64
 import urllib
 import urlparse
+import sys
 
-try:
+atLeastPython26 = sys.hexversion >= 0x02060000
+
+if atLeastPython26:
     import json
-except ImportError: #pragma no cover: only for Python 2.5
+else: #pragma no cover
     import simplejson as json #pragma no cover
 
 import GithubException
@@ -65,21 +68,23 @@ class Requester:
 
     def requestRaw( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
-        
+
         #URLs generated locally will be relative to __base_url
         #URLs returned from the server will start with __base_url
         if url.startswith( self.__base_url ):
             url = url[ len(self.__base_url): ]
-        elif url.startswith( "/" ):
-            url = url
         else:
-            assert( False ) #pragma no cover
-        
+            assert url.startswith( "/" )
+        url = self.__prefix + url
+
         headers = dict()
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout= self.__timeout )
+        if atLeastPython26:
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout = self.__timeout )
+        else: #pragma no cover
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True ) #pragma no cover
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
@@ -97,14 +102,14 @@ class Requester:
         if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
             self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
-        # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
+        # print verb, self.__base_url + url, parameters, input, "==>", status, str( headers ), str( output )
         return status, headers, output
 
     def __completeUrl( self, url, parameters ):
         if parameters is None or len( parameters ) == 0:
-            return self.__prefix + url
+            return url
         else:
-            return self.__prefix + url + "?" + urllib.urlencode( parameters )
+            return url + "?" + urllib.urlencode( parameters )
 
     def __structuredFromJson( self, data ):
         if len( data ) == 0:

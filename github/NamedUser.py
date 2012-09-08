@@ -314,6 +314,34 @@ class NamedUser( GithubObject.GithubObject ):
             data
         )
 
+    def get_starred( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/starred",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self._requester,
+            headers,
+            data
+        )
+
+    def get_subscriptions( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/subscriptions",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            Repository.Repository,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_watched( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",

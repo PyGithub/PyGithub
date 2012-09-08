@@ -41,3 +41,11 @@ class Github( Framework.TestCase ):
         user = self.g.legacy_search_user_by_email( "vincent@vincent-jacques.net" )
         self.assertEqual( user.login, "jacquev6" )
         self.assertEqual( user.followers, 13 )
+
+    def testGetHooks( self ):
+        hooks = self.g.get_hooks()
+        hook = hooks[ 0 ]
+        self.assertEqual( hook.name, "activecollab" )
+        self.assertEqual( hook.supported_events, [ "push" ] )
+        self.assertEqual( hook.events, [ "push" ] )
+        self.assertEqual( hook.schema, [ [ "string", "url" ], [ "string", "token" ], [ "string", "project_id" ], [ "string", "milestone_id" ], [ "string", "category_id" ] ] )

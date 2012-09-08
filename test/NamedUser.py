@@ -111,6 +111,12 @@ class NamedUser( Framework.TestCase ):
     def testGetWatched( self ):
         self.assertListKeyEqual( self.user.get_watched(), lambda r: r.name, [ "git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "PyGithub", "django", "django", "TestPyGithub" ] )
 
+    def testGetStarred( self ):
+        self.assertListKeyEqual( self.user.get_starred(), lambda r: r.name, [ "git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "amaunet", "django", "django", "moviePlanning", "folly" ] )
+
+    def testGetSubscriptions( self ):
+        self.assertListKeyEqual( self.user.get_subscriptions(), lambda r: r.name, [ "ViDE", "Boost.HierarchicalEnum", "QuadProgMm", "DrawSyntax", "DrawTurksHead", "PrivateStuff", "vincent-jacques.net", "Hacking", "C4Planner", "developer.github.com", "PyGithub", "PyGithub", "django", "CinePlanning", "PyGithub", "PyGithub", "PyGithub", "IpMap", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub" ] )
+
     def testGetEvents( self ):
         self.assertListKeyBegin( self.user.get_events(), lambda e: e.type, [ "GistEvent", "IssueCommentEvent", "PushEvent", "IssuesEvent" ] )
 

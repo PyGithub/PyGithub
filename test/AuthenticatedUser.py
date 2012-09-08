@@ -90,6 +90,24 @@ class AuthenticatedUser( Framework.TestCase ):
         self.user.add_to_watched( gitflow )
         self.assertEqual( self.user.has_in_watched( gitflow ), True )
 
+    def testStarring( self ):
+        gitflow = self.g.get_user( "nvie" ).get_repo( "gitflow" )
+        self.assertListKeyEqual( self.user.get_starred(), lambda r: r.name, [ "git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "amaunet", "django", "django", "moviePlanning", "folly" ] )
+        self.assertEqual( self.user.has_in_starred( gitflow ), True )
+        self.user.remove_from_starred( gitflow )
+        self.assertEqual( self.user.has_in_starred( gitflow ), False )
+        self.user.add_to_starred( gitflow )
+        self.assertEqual( self.user.has_in_starred( gitflow ), True )
+
+    def testSubscriptions( self ):
+        gitflow = self.g.get_user( "nvie" ).get_repo( "gitflow" )
+        self.assertListKeyEqual( self.user.get_subscriptions(), lambda r: r.name, [ "gitflow", "ViDE", "Boost.HierarchicalEnum", "QuadProgMm", "DrawSyntax", "DrawTurksHead", "PrivateStuff", "vincent-jacques.net", "Hacking", "C4Planner", "developer.github.com", "PyGithub", "PyGithub", "django", "CinePlanning", "PyGithub", "PyGithub", "PyGithub", "IpMap", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub" ] )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), True )
+        self.user.remove_from_subscriptions( gitflow )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), False )
+        self.user.add_to_subscriptions( gitflow )
+        self.assertEqual( self.user.has_in_subscriptions( gitflow ), True )
+
     def testGetAuthorizations( self ):
         self.assertListKeyEqual( self.user.get_authorizations(), lambda a: a.id, [ 372294 ] )
 
