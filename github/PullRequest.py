@@ -19,9 +19,10 @@ import PaginatedList
 
 import PullRequestMergeStatus
 import NamedUser
+import PullRequestPart
 import PullRequestComment
 import File
-import PullRequestPart
+import IssueComment
 import Commit
 
 class PullRequest( GithubObject.GithubObject ):
@@ -156,6 +157,9 @@ class PullRequest( GithubObject.GithubObject ):
         return self._NoneIfNotSet( self._user )
 
     def create_comment( self, body, commit_id, path, position ):
+        return self.create_review_comment( body, commit_id, path, position )
+
+    def create_review_comment( self, body, commit_id, path, position ):
         assert isinstance( body, ( str, unicode ) ), body
         assert isinstance( commit_id, Commit.Commit ), commit_id
         assert isinstance( path, ( str, unicode ) ), path
@@ -173,6 +177,19 @@ class PullRequest( GithubObject.GithubObject ):
             post_parameters
         )
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
+
+    def create_issue_comment( self, body ):
+        assert isinstance( body, ( str, unicode ) ), body
+        post_parameters = {
+            "body": body,
+        }
+        headers, data = self._requester.requestAndCheck(
+            "POST",
+            self._parentUrl( self._parentUrl( self.url ) ) + "/issues/" + str( self.number ) + "/comments",
+            None,
+            post_parameters
+        )
+        return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, state = GithubObject.NotSet ):
         assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
@@ -194,6 +211,9 @@ class PullRequest( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def get_comment( self, id ):
+        return self.get_review_comment( id )
+
+    def get_review_comment( self, id ):
         assert isinstance( id, int ), id
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -204,6 +224,9 @@ class PullRequest( GithubObject.GithubObject ):
         return PullRequestComment.PullRequestComment( self._requester, data, completed = True )
 
     def get_comments( self ):
+        return self.get_review_comments()
+
+    def get_review_comments( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments",
@@ -240,6 +263,30 @@ class PullRequest( GithubObject.GithubObject ):
         )
         return PaginatedList.PaginatedList(
             File.File,
+            self._requester,
+            headers,
+            data
+        )
+
+    def get_issue_comment( self, id ):
+        assert isinstance( id, int ), id
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self._parentUrl( self._parentUrl( self.url ) ) + "/issues/comments/" + str( id ),
+            None,
+            None
+        )
+        return IssueComment.IssueComment( self._requester, data, completed = True )
+
+    def get_issue_comments( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self._parentUrl( self._parentUrl( self.url ) ) + "/issues/" + str( self.number ) + "/comments",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            IssueComment.IssueComment,
             self._requester,
             headers,
             data

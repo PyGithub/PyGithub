@@ -287,8 +287,8 @@ API `/repos/:user/:repo/issues/:number`
 
 API `/repos/:user/:repo/issues/:number/comments`
 ================================================
-* GET: `Issue.get_comments`
-* POST: `Issue.create_comment`
+* GET: `Issue.get_comments` or `PullRequest.get_issue_comments`
+* POST: `Issue.create_comment` or `PullRequest.create_issue_comment`
 
 API `/repos/:user/:repo/issues/:number/events`
 ==============================================
@@ -307,7 +307,7 @@ API `/repos/:user/:repo/issues/:number/labels/:name`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: `Issue.get_comment`
+* GET: `Issue.get_comment` or `PullRequest.get_issue_comment`
 * PATCH: `IssueComment.edit`
 * DELETE: `IssueComment.delete`
 
@@ -376,8 +376,8 @@ API `/repos/:user/:repo/pulls/:number`
 
 API `/repos/:user/:repo/pulls/:number/comments`
 ===============================================
-* GET: `PullRequest.get_comments`
-* POST: `PullRequest.create_comment`
+* GET: `PullRequest.get_comments` or `PullRequest.get_review_comments`
+* POST: `PullRequest.create_comment` or `PullRequest.create_review_comment`
 
 API `/repos/:user/:repo/pulls/:number/commits`
 ==============================================
@@ -394,7 +394,7 @@ API `/repos/:user/:repo/pulls/:number/merge`
 
 API `/repos/:user/:repo/pulls/comments/:number`
 ===============================================
-* GET: `PullRequest.get_comment`
+* GET: `PullRequest.get_comment` or `PullRequest.get_review_comment`
 * PATCH: `PullRequestComment.edit`
 * DELETE: `PullRequestComment.delete`
 

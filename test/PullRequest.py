@@ -61,6 +61,17 @@ class PullRequest( Framework.TestCase ):
     def testGetComments( self ):
         self.assertListKeyEqual( self.pull.get_comments(), lambda c: c.id, [ 886298 ] )
 
+    def testCreateIssueComment( self ):
+        comment = self.pull.create_issue_comment( "Issue comment created by PyGithub" )
+        self.assertEqual( comment.id, 8387331 )
+
+    def testGetIssueComments( self ):
+        self.assertListKeyEqual( self.pull.get_issue_comments(), lambda c: c.id, [ 8387331 ] )
+
+    def testGetIssueComment( self ):
+        comment = self.pull.get_issue_comment( 8387331 )
+        self.assertEqual( comment.body, "Issue comment created by PyGithub" )
+
     def testEditWithoutArguments( self ):
         self.pull.edit()
 

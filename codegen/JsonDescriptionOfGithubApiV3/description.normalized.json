@@ -7651,6 +7651,189 @@
                     }
                 }, 
                 {
+                    "group": "issue_comments", 
+                    "name": [
+                        "create", 
+                        "issue_comment"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "body"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "IssueComment"
+                    }
+                }, 
+                {
+                    "group": "issue_comments", 
+                    "name": [
+                        "get", 
+                        "issue_comment"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "integer"
+                            }, 
+                            "name": "id"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/comments/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "IssueComment"
+                    }
+                }, 
+                {
+                    "group": "issue_comments", 
+                    "name": [
+                        "get", 
+                        "issue_comments"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "IssueComment"
+                    }
+                }, 
+                {
                     "group": "commits", 
                     "name": [
                         "get", 

@@ -1316,6 +1316,49 @@
                     }
                 },
                 {
+                    "name": "issue_comments",
+                    "singularName": "issue_comment",
+                    "type": "IssueComment",
+                    "getList": {
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/" },
+                                { "type": "stringOf", "value": [ { "type": "attribute", "value": [ "number" ] } ] },
+                                { "type": "constant", "value": "/comments" }
+                            ]
+                        }
+                    },
+                    "getElement": {
+                        "parameter": { "name": "id", "type": "integer" },
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/comments/" },
+                                {
+                                    "type": "stringOf",
+                                    "value": [
+                                        { "type": "argument", "value": [ "id" ] }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "createElement": {
+                        "mandatoryParameters": [
+                            { "name": "body", "type": "string" }
+                        ],
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/" },
+                                { "type": "stringOf", "value": [ { "type": "attribute", "value": [ "number" ] } ] },
+                                { "type": "constant", "value": "/comments" }
+                            ]
+                        }
+                    }
+                },
+                {
                     "name": "commits",
                     "singularName": "commit",
                     "type": "Commit",

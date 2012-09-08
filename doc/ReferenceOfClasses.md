@@ -1025,16 +1025,16 @@ Attributes
 * `url`: string
 * `user`: `NamedUser`
 
-Comments
---------
-* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+Review comments
+---------------
+* `create_comment( body, commit_id, path, position )` or `create_review_comment( body, commit_id, path, position )`: `PullRequestComment`
     * `body`: string
     * `commit_id`: `Commit`
     * `path`: string
     * `position`: integer
-* `get_comment( id )`: `PullRequestComment`
+* `get_comment( id )` or `get_review_comment( id )`: `PullRequestComment`
     * `id`: integer
-* `get_comments()`: iterator of `PullRequestComment`
+* `get_comments()` or `get_review_comments()`: iterator of `PullRequestComment`
 
 Commits
 -------
@@ -1043,6 +1043,14 @@ Commits
 Files
 -----
 * `get_files()`: iterator of `File`
+
+Issue_comments
+--------------
+* `create_issue_comment( body )`: `IssueComment`
+    * `body`: string
+* `get_issue_comment( id )`: `IssueComment`
+    * `id`: integer
+* `get_issue_comments()`: iterator of `IssueComment`
 
 Merging
 -------
