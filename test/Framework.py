@@ -40,7 +40,7 @@ def fixAuthorizationHeader( headers ):
         elif headers[ "Authorization" ].startswith( "Basic " ):
             headers[ "Authorization" ] = "Basic login_and_password_removed"
         else:
-            del headers[ "Authorization" ] # Do not let sensitive info in git :-p
+            assert False
 
 class RecordingConnection:
     def __init__( self, file, protocol, host, port, *args, **kwds ):
@@ -147,8 +147,9 @@ class BasicTestCase( unittest.TestCase ):
 
     def __openFile( self, mode ):
         for ( _, _, functionName, _ ) in traceback.extract_stack():
-            if functionName.startswith( "test" ) and functionName != "test" or functionName == "setUp" or functionName == "tearDown":
-                fileName = os.path.join( os.path.dirname( __file__ ), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt" )
+            if functionName.startswith( "test" ) or functionName == "setUp" or functionName == "tearDown":
+                if functionName != "test": # because in class Hook( Framework.TestCase ), method testTest calls Hook.test
+                    fileName = os.path.join( os.path.dirname( __file__ ), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt" )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
@@ -166,14 +167,7 @@ class BasicTestCase( unittest.TestCase ):
         self.assertEqual( realKeys, expectedKeys )
 
     def assertListKeyBegin( self, elements, key, expectedKeys ):
-        def take( sequence, length ):
-            taken = list()
-            for element in elements:
-                taken.append( element )
-                if len( taken ) >= length:
-                    break
-            return taken
-        realKeys = [ key( element ) for element in take( elements, len( expectedKeys ) ) ]
+        realKeys = [ key( element ) for element in elements[ : len( expectedKeys ) ] ]
         self.assertEqual( realKeys, expectedKeys )
 
 class TestCase( BasicTestCase ):

@@ -1060,7 +1060,7 @@ class Repository( GithubObject.GithubObject ):
         headers, data = self._requester.requestAndCheck(
             "GET",
             "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
-            {},
+            None,
             None
         )
         return [
