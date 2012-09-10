@@ -1,6 +1,15 @@
 {
     "classes": [
         {
+            "name": "HookDescription",
+            "attributes": [
+                { "name": "supported_events", "type": "list:string" },
+                { "name": "events", "type": "list:string" },
+                { "name": "name", "type": "string" },
+                { "name": "schema", "type": "list:list:string" }
+            ]
+        },
+        {
             "name": "Plan",
             "attributes": [
                 { "name": "collaborators", "type": "integer" },
@@ -12,7 +21,7 @@
         {
             "name": "AuthenticatedUser",
             "url": [
-                { "type": "constant", "value": "https://api.github.com/user" }
+                { "type": "constant", "value": "/user" }
             ],
             "edit": {
                 "optionalParameters": [
@@ -58,7 +67,7 @@
                     "singularName": "authorization",
                     "type": "Authorization",
                     "url": [
-                        { "type": "constant", "value": "https://api.github.com/authorizations" }
+                        { "type": "constant", "value": "/authorizations" }
                     ],
                     "createElement": {
                         "optionalParameters": [
@@ -77,20 +86,20 @@
                     "singularName": "event",
                     "type": "Event",
                     "getList": true,
-                    "url": [ { "type": "constant", "value": "https://api.github.com/events" } ]
+                    "url": [ { "type": "constant", "value": "/events" } ]
                 },
                 {
                     "name": "issues",
                     "singularName": "issue",
                     "type": "Issue",
                     "getList": true,
-                    "url": [ { "type": "constant", "value": "https://api.github.com/issues" } ]
+                    "url": [ { "type": "constant", "value": "/issues" } ]
                 },
                 {
                     "name": "keys",
                     "singularName": "key",
                     "type": "UserKey",
-                    "url": [ { "type": "constant", "value": "https://api.github.com/user/keys" } ],
+                    "url": [ { "type": "constant", "value": "/user/keys" } ],
                     "getList": true,
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" }
@@ -116,7 +125,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -147,6 +156,24 @@
                 {
                     "name": "watched",
                     "singularName": "watched",
+                    "type": "Repository",
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
+                },
+                {
+                    "name": "subscriptions",
+                    "singularName": "subscription",
+                    "type": "Repository",
+                    "getList": true,
+                    "hasElement": true,
+                    "addElement": true,
+                    "removeElement": true
+                },
+                {
+                    "name": "starred",
+                    "singularName": "starred",
                     "type": "Repository",
                     "getList": true,
                     "hasElement": true,
@@ -189,7 +216,7 @@
                         ]
                     },
                     "url": [
-                        { "type": "constant", "value": "https://api.github.com/gists" }
+                        { "type": "constant", "value": "/gists" }
                     ]
                 }
             ],
@@ -204,7 +231,7 @@
                     "request": {
                         "verb": "POST",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
@@ -223,7 +250,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/users/" },
+                            { "type": "constant", "value": "/users/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/events/orgs/" },
                             { "type": "argument", "value": [ "org", "login" ] }
@@ -238,7 +265,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/gists/starred" }
+                            { "type": "constant", "value": "/gists/starred" }
                         ],
                         "information": "status"
                     }
@@ -292,6 +319,30 @@
             ]
         },
         {
+            "name": "CommitStatus",
+            "attributes": [
+                { "name": "created_at", "type": "datetime" },
+                { "name": "updated_at", "type": "datetime" },
+                { "name": "state", "type": "string" },
+                { "name": "target_url", "type": "string" },
+                { "name": "description", "type": "string" },
+                { "name": "id", "type": "integer" },
+                { "name": "creator", "type": "NamedUser" }
+            ]
+        },
+        {
+            "name": "ContentFile",
+            "attributes": [
+                { "name": "type", "type": "string" },
+                { "name": "encoding", "type": "string" },
+                { "name": "size", "type": "integer" },
+                { "name": "name", "type": "string" },
+                { "name": "path", "type": "string" },
+                { "name": "content", "type": "string" },
+                { "name": "sha", "type": "string" }
+            ]
+        },
+        {
             "name": "File",
             "attributes": [
                 { "name": "additions", "type": "integer" },
@@ -333,6 +384,26 @@
                             { "name": "position", "type": "integer" }
                         ]
                     }
+                },
+                {
+                    "name": "statuses",
+                    "singularName": "status",
+                    "type": "CommitStatus",
+                    "getList": true,
+                    "createElement": {
+                        "mandatoryParameters": [
+                            { "name": "state", "type": "string" }
+                        ],
+                        "optionalParameters": [
+                            { "name": "target_url", "type": "string" },
+                            { "name": "description", "type": "string" }
+                        ]
+                    },
+                    "url": [
+                        { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                        { "type": "constant", "value": "/statuses/" },
+                        { "type": "attribute", "value": [ "sha" ] }
+                    ]
                 }
             ],
             "identity": [
@@ -455,7 +526,7 @@
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/gists/comments/" },
+                            { "type": "constant", "value": "/gists/comments/" },
                             {
                                 "type": "stringOf",
                                 "value": [ { "type": "argument", "value": [ "id" ] } ]
@@ -629,7 +700,7 @@
         {
             "name": "GitAuthor",
             "attributes": [
-                { "name": "date", "type": "string" },
+                { "name": "date", "type": "datetime" },
                 { "name": "email", "type": "string" },
                 { "name": "name", "type": "string" }
             ]
@@ -930,7 +1001,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -940,6 +1011,18 @@
                 {
                     "name": "watched",
                     "singularName": "watched",
+                    "type": "Repository",
+                    "getList": true
+                },
+                {
+                    "name": "subscriptions",
+                    "singularName": "subscription",
+                    "type": "Repository",
+                    "getList": true
+                },
+                {
+                    "name": "starred",
+                    "singularName": "starred",
                     "type": "Repository",
                     "getList": true
                 },
@@ -1078,7 +1161,7 @@
                     "getElement": {
                         "parameter": { "name": "name", "type": "string" },
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "attribute", "value": [ "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "name" ] }
@@ -1116,7 +1199,7 @@
                     "getElement": {
                         "parameter": { "name": "id", "type": "integer" },
                         "url" : [
-                            { "type": "constant", "value": "https://api.github.com/teams/" },
+                            { "type": "constant", "value": "/teams/" },
                             {
                                 "type": "stringOf",
                                 "value": [ { "type": "argument", "value": [ "id" ] } ]
@@ -1136,7 +1219,7 @@
                     "request": {
                         "verb": "POST",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/repos/" },
+                            { "type": "constant", "value": "/repos/" },
                             { "type": "argument", "value": [ "repo", "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "argument", "value": [ "repo", "name" ] },
@@ -1239,6 +1322,49 @@
                             { "name": "path", "type": "string" },
                             { "name": "position", "type": "integer" }
                         ]
+                    }
+                },
+                {
+                    "name": "issue_comments",
+                    "singularName": "issue_comment",
+                    "type": "IssueComment",
+                    "getList": {
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/" },
+                                { "type": "stringOf", "value": [ { "type": "attribute", "value": [ "number" ] } ] },
+                                { "type": "constant", "value": "/comments" }
+                            ]
+                        }
+                    },
+                    "getElement": {
+                        "parameter": { "name": "id", "type": "integer" },
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/comments/" },
+                                {
+                                    "type": "stringOf",
+                                    "value": [
+                                        { "type": "argument", "value": [ "id" ] }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "createElement": {
+                        "mandatoryParameters": [
+                            { "name": "body", "type": "string" }
+                        ],
+                        "request": {
+                            "url": [
+                                { "type": "parentUrl", "value": [ { "type": "parentUrl", "value": [ { "type": "attribute", "value": [ "url" ] } ] } ] },
+                                { "type": "constant", "value": "/issues/" },
+                                { "type": "stringOf", "value": [ { "type": "attribute", "value": [ "number" ] } ] },
+                                { "type": "constant", "value": "/comments" }
+                            ]
+                        }
                     }
                 },
                 {
@@ -1354,6 +1480,7 @@
                     { "name": "has_downloads", "type": "bool" }
                 ]
             },
+            "delete": true,
             "attributes": [
                 { "name": "clone_url", "type": "string" },
                 { "name": "created_at", "type": "datetime" },
@@ -1391,7 +1518,10 @@
                     "name": "branches",
                     "singularName": "branch",
                     "type": "Branch",
-                    "getList": true
+                    "getList": true,
+                    "getElement": {
+                        "parameter": { "name": "branch", "type": "string" }
+                    }
                 },
                 {
                     "name": "collaborators",
@@ -1401,6 +1531,13 @@
                     "hasElement": true,
                     "addElement": true,
                     "removeElement": true
+                },
+                {
+                    "name": "assignees",
+                    "singularName": "assignee",
+                    "type": "NamedUser",
+                    "getList": true,
+                    "hasElement": true
                 },
                 {
                     "name": "comments",
@@ -1744,6 +1881,18 @@
                     "singularName": "watcher",
                     "type": "NamedUser",
                     "getList": true
+                },
+                {
+                    "name": "subscribers",
+                    "singularName": "subscriber",
+                    "type": "NamedUser",
+                    "getList": true
+                },
+                {
+                    "name": "stargazers",
+                    "singularName": "stargazer",
+                    "type": "NamedUser",
+                    "getList": true
                 }
             ],
             "additionalMethods": [
@@ -1754,7 +1903,7 @@
                     "request": {
                         "verb": "GET",
                         "url": [
-                            { "type": "constant", "value": "https://api.github.com/networks/" },
+                            { "type": "constant", "value": "/networks/" },
                             { "type": "attribute", "value": [ "owner", "login" ] },
                             { "type": "constant", "value": "/" },
                             { "type": "attribute", "value": [ "name" ] },
@@ -1775,6 +1924,75 @@
                     }
                 },
                 {
+                    "name": [ "get", "readme" ],
+                    "type": "ContentFile",
+                    "group": "contents",
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/readme" }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "get", "contents" ],
+                    "type": "ContentFile",
+                    "group": "contents",
+                    "mandatoryParameters": [
+                        { "name": "path", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/contents" },
+                            { "type": "argument", "value": [ "path" ] }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "get", "archive", "link" ],
+                    "type": "string",
+                    "group": "contents",
+                    "mandatoryParameters": [
+                        { "name": "archive_format", "type": "string" }
+                    ],
+                    "optionalParameters": [
+                        { "name": "ref", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "archive_format" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "ref" ] }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "merge" ],
+                    "type": "Commit",
+                    "group": "merging",
+                    "mandatoryParameters": [
+                        { "name": "base", "type": "string" },
+                        { "name": "head", "type": "string" }
+                    ],
+                    "optionalParameters": [
+                        { "name": "commit_message", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "POST",
+                        "url": [
+                            { "type": "attribute", "value": [ "url" ] },
+                            { "type": "constant", "value": "/merges" }
+                        ],
+                        "postParameters": true
+                    }
+                },
+                {
                     "name": [ "compare" ],
                     "type": "Comparison",
                     "group": "Comparison",
@@ -1790,6 +2008,28 @@
                             { "type": "argument", "value": [ "base" ] },
                             { "type": "constant", "value": "..." },
                             { "type": "argument", "value": [ "head" ] }
+                        ]
+                    }
+                },
+                {
+                    "name": [ "legacy", "search", "issues" ],
+                    "type": "list:Issue",
+                    "group": "issues",
+                    "mandatoryParameters": [
+                        { "name": "state", "type": "string" },
+                        { "name": "keyword", "type": "string" }
+                    ],
+                    "request": {
+                        "verb": "GET",
+                        "url": [
+                            { "type": "constant", "value": "/legacy/issues/search/" },
+                            { "type": "attribute", "value": [ "owner", "login" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "attribute", "value": [ "name" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "argument", "value": [ "state" ] },
+                            { "type": "constant", "value": "/" },
+                            { "type": "urlquote", "value": [ { "type": "argument", "value": [ "keyword" ] } ] }
                         ]
                     }
                 }

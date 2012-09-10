@@ -41,6 +41,7 @@ for fileName in developerDotGithubDotComContentFiles:
                     "/repos/:user/:repo/git/trees/:sha?recursive=1",
                     "/repos/octocat/Hello-World/git/refs/heads/feature-a",
                     "/repos/octocat/Hello-World/git/refs/tags/v1.0",
+                    "/repos/:user/:repo/git/refs/heads/skunkworkz/featureA",
                 ]:
                     continue
                 
@@ -70,6 +71,6 @@ for url in sorted( verbsByUrl.keys() ):
             if ( url, verb ) in functionsByUrlVerb:
                 function = functionsByUrlVerb[ ( url, verb ) ]
             else:
-                function = "(TOTO)"
+                function = "(TODO)"
             print "* " + verb + ": " + function
     print

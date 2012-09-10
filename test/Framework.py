@@ -40,7 +40,7 @@ def fixAuthorizationHeader( headers ):
         elif headers[ "Authorization" ].startswith( "Basic " ):
             headers[ "Authorization" ] = "Basic login_and_password_removed"
         else:
-            del headers[ "Authorization" ] # Do not let sensitive info in git :-p
+            assert False
 
 class RecordingConnection:
     def __init__( self, file, protocol, host, port, *args, **kwds ):
@@ -77,14 +77,15 @@ class RecordingConnection:
 class RecordingHttpConnection( RecordingConnection ):
     _realConnection = httplib.HTTPConnection
 
-    def __init__( self, file, host, port, *args, **kwds ):
-        RecordingConnection.__init__( self, file, "http", host, port, *args, **kwds )
+    def __init__( self, file, *args, **kwds ):
+        RecordingConnection.__init__( self, file, "http", *args, **kwds )
 
 class RecordingHttpsConnection( RecordingConnection ):
     _realConnection = httplib.HTTPSConnection
 
-    def __init__( self, file, host, port, *args, **kwds ):
-        RecordingConnection.__init__( self, file, "https", host, port, *args, **kwds )
+    def __init__( self, file, *args, **kwds ):
+        print args, kwds
+        RecordingConnection.__init__( self, file, "https", *args, **kwds )
 
 class ReplayingConnection:
     def __init__( self, testCase, file, protocol, host, port, *args, **kwds ):
@@ -123,15 +124,19 @@ class BasicTestCase( unittest.TestCase ):
         self.__fileName = ""
         self.__file = None
         if self.recordMode:
-            httplib.HTTPSConnection = lambda *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
-            httplib.HTTPConnection = lambda *args, **kwds: RecordingHttpConnection( self.__openFile( "wb" ), *args, **kwds )
+            github.Requester.Requester.injectConnectionClasses(
+                lambda ignored, *args, **kwds: RecordingHttpConnection( self.__openFile( "wb" ), *args, **kwds ),
+                lambda ignored, *args, **kwds: RecordingHttpsConnection( self.__openFile( "wb" ), *args, **kwds )
+            )
             import GithubCredentials
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
         else:
-            httplib.HTTPSConnection = lambda *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ), *args, **kwds )
-            httplib.HTTPConnection = lambda *args, **kwds: ReplayingHttpConnection( self, self.__openFile( "r" ), *args, **kwds )
+            github.Requester.Requester.injectConnectionClasses(
+                lambda ignored, *args, **kwds: ReplayingHttpConnection( self, self.__openFile( "r" ), *args, **kwds ),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection( self, self.__openFile( "r" ), *args, **kwds )
+            )
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"
@@ -142,8 +147,9 @@ class BasicTestCase( unittest.TestCase ):
 
     def __openFile( self, mode ):
         for ( _, _, functionName, _ ) in traceback.extract_stack():
-            if functionName.startswith( "test" ) and functionName != "test" or functionName == "setUp" or functionName == "tearDown":
-                fileName = os.path.join( os.path.dirname( __file__ ), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt" )
+            if functionName.startswith( "test" ) or functionName == "setUp" or functionName == "tearDown":
+                if functionName != "test": # because in class Hook( Framework.TestCase ), method testTest calls Hook.test
+                    fileName = os.path.join( os.path.dirname( __file__ ), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt" )
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
@@ -161,14 +167,7 @@ class BasicTestCase( unittest.TestCase ):
         self.assertEqual( realKeys, expectedKeys )
 
     def assertListKeyBegin( self, elements, key, expectedKeys ):
-        def take( sequence, length ):
-            taken = list()
-            for element in elements:
-                taken.append( element )
-                if len( taken ) >= length:
-                    break
-            return taken
-        realKeys = [ key( element ) for element in take( elements, len( expectedKeys ) ) ]
+        realKeys = [ key( element ) for element in elements[ : len( expectedKeys ) ] ]
         self.assertEqual( realKeys, expectedKeys )
 
 class TestCase( BasicTestCase ):

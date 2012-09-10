@@ -64,3 +64,17 @@ class Commit( Framework.TestCase ):
         self.assertEqual( comment.line, None )
         self.assertEqual( comment.path, "codegen/templates/GithubObject.MethodBody.UseResult.py" )
         self.assertEqual( comment.position, 3 )
+
+    def testCreateStatusWithoutOptionalParameters( self ):
+        status = self.commit.create_status( "pending" )
+        self.assertEqual( status.id, 277031 )
+        self.assertEqual( status.state, "pending" )
+        self.assertEqual( status.target_url, None )
+        self.assertEqual( status.description, None )
+
+    def testCreateStatusWithAllParameters( self ):
+        status = self.commit.create_status( "success", "https://github.com/jacquev6/PyGithub/issues/67", "Status successfuly created by PyGithub" )
+        self.assertEqual( status.id, 277040 )
+        self.assertEqual( status.state, "success" )
+        self.assertEqual( status.target_url, "https://github.com/jacquev6/PyGithub/issues/67" )
+        self.assertEqual( status.description, "Status successfuly created by PyGithub" )

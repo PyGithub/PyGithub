@@ -14,11 +14,6 @@
 
 {% if class.needsUrllib %}
 import urllib
-{% endif %}
-{% if class.needsDatetime %}
-import datetime
-{% endif %}
-{% if class.needsUrllib or class.needsDatetime %}
 ##########
 {% endif %}
 

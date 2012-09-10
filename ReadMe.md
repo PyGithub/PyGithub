@@ -48,13 +48,33 @@ Projects using PyGithub
 
 ([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
+* [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
 
 History
 =======
 
+[Version 1.6](https://github.com/jacquev6/PyGithub/issues?milestone=10&state=closed) (September 8th, 2012)
+----------------------------------------------------------------------------------------------------------
+
+* Restore support for Python 2.5
+* Implement new APIS:
+    * /hooks (undocumented, but mentioned in http://developer.github.com/v3/repos/hooks/#create-a-hook)
+    * [Merging](http://developer.github.com/v3/repos/merging/)
+    * [Starring](http://developer.github.com/v3/repos/starring/) and [subscriptions](http://developer.github.com/v3/repos/watching/)
+    * [Assignees](http://developer.github.com/v3/issues/assignees/)
+    * [Commit statuses](http://developer.github.com/v3/repos/statuses/)
+    * [Contents](http://developer.github.com/v3/repos/contents/), thank you [berndca](https://github.com/berndca) for asking
+* Clarify issue and review comments on PullRequest, thank you [nixoz2k7](https://github.com/nixoz2k7) for asking
+
+[Version 1.5](https://github.com/jacquev6/PyGithub/issues?milestone=9&state=closed) (September 5th, 2012)
+---------------------------------------------------------------------------------------------------------
+
+* Add a timeout option, thank you much [xobb1t](https://github.com/xobb1t) for the merge request. *This drops Python 2.5 support*. I may be able to restore it in next version.
+* Implement `Repository.delete`, thank you [pmchen](https://github.com/pmchen) for asking
+
 [Version 1.4](https://github.com/jacquev6/PyGithub/issues?milestone=8&state=closed) (August 4th, 2012)
------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
 * Allow connection to a custom Github URL, for Github Enterprise, thank you very much [engie](https://github.com/engie) for the merge request
 

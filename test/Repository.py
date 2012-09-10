@@ -64,6 +64,10 @@ class Repository( Framework.TestCase ):
         self.repo.edit( "PyGithub", "Python library implementing the full Github API v3" )
         self.assertEqual( self.repo.description, "Python library implementing the full Github API v3" )
 
+    def testDelete( self ):
+        repo = self.g.get_user().get_repo( "TestPyGithub" )
+        repo.delete()
+
     def testGetContributors( self ):
         self.assertListKeyEqual( self.repo.get_contributors(), lambda c: ( c.login, c.contributions ), [ ( "jacquev6", 355 ) ] )
 
@@ -318,6 +322,12 @@ class Repository( Framework.TestCase ):
     def testGetWatchers( self ):
         self.assertListKeyEqual( self.repo.get_watchers(), lambda u: u.login, [ "Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "BeaverSoftware" ] )
 
+    def testGetStargazers( self ):
+        self.assertListKeyEqual( self.repo.get_stargazers(), lambda u: u.login, [ "Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca" ] )
+
+    def testGetSubscribers( self ):
+        self.assertListKeyEqual( self.repo.get_subscribers(), lambda u: u.login, [ "jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa" ] )
+
     def testCreatePull( self ):
         pull = self.repo.create_pull( "Pull request created by PyGithub", "Body of the pull request", "topic/RewriteWithGeneratedCode", "BeaverSoftware:master" )
         self.assertEqual( pull.id, 1436215 )
@@ -335,3 +345,48 @@ class Repository( Framework.TestCase ):
 
     def testLegacySearchIssues( self ):
         self.assertListKeyEqual( self.repo.legacy_search_issues( "open", "search" ), lambda i: i.title, [ "Support new Search API" ] )
+
+    def testAssignees( self ):
+        lyloa = self.g.get_user( "Lyloa" )
+        jacquev6 = self.g.get_user( "jacquev6" )
+        self.assertTrue( self.repo.has_in_assignees( jacquev6 ) )
+        self.assertFalse( self.repo.has_in_assignees( lyloa ) )
+        self.repo.add_to_collaborators( lyloa )
+        self.assertTrue( self.repo.has_in_assignees( lyloa ) )
+        self.assertListKeyEqual( self.repo.get_assignees(), lambda u: u.login, [ "jacquev6", "Lyloa" ] )
+        self.repo.remove_from_collaborators( lyloa )
+        self.assertFalse( self.repo.has_in_assignees( lyloa ) )
+
+    def testGetContents( self ):
+        self.assertEqual( len( self.repo.get_readme().content ), 10212 )
+        self.assertEqual( len( self.repo.get_contents( "doc/ReferenceOfClasses.md" ).content ), 38121 )
+
+    def testGetArchiveLink( self ):
+        self.assertEqual( self.repo.get_archive_link( "tarball" ), "https://nodeload.github.com/jacquev6/PyGithub/tarball/master" )
+        self.assertEqual( self.repo.get_archive_link( "zipball" ), "https://nodeload.github.com/jacquev6/PyGithub/zipball/master" )
+        self.assertEqual( self.repo.get_archive_link( "zipball", "master" ), "https://nodeload.github.com/jacquev6/PyGithub/zipball/master" )
+        self.assertEqual( self.repo.get_archive_link( "tarball", "develop" ), "https://nodeload.github.com/jacquev6/PyGithub/tarball/develop" )
+
+    def testGetBranch( self ):
+        branch = self.repo.get_branch( "develop" )
+        self.assertEqual( branch.commit.sha, "03058a36164d2a7d946db205f25538434fa27d94" )
+
+    def testMergeWithoutMessage( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead" )
+        self.assertEqual( commit.commit.message, "Merge branchForHead into branchForBase" )
+
+    def testMergeWithMessage( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead", "Commit message created by PyGithub" )
+        self.assertEqual( commit.commit.message, "Commit message created by PyGithub" )
+
+    def testMergeWithNothingToDo( self ):
+        commit = self.repo.merge( "branchForBase", "branchForHead", "Commit message created by PyGithub" )
+        self.assertEqual( commit, None )
+
+    def testMergeWithConflict( self ):
+        try:
+            commit = self.repo.merge( "branchForBase", "branchForHead" )
+            self.fail( "Should have raised" )
+        except github.GithubException, exception:
+            self.assertEqual( exception.status, 409 )
+            self.assertEqual( exception.data, { "message": "Merge conflict" } )

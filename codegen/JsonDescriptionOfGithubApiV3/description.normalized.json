@@ -216,7 +216,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user"
+                                "value": "/user"
                             }
                         ], 
                         "postParameters": true, 
@@ -299,7 +299,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/authorizations"
+                                "value": "/authorizations"
                             }
                         ], 
                         "information": "status", 
@@ -359,7 +359,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/authorizations/"
+                                "value": "/authorizations/"
                             }, 
                             {
                                 "type": "stringOf", 
@@ -395,7 +395,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/authorizations"
+                                "value": "/authorizations"
                             }
                         ], 
                         "information": "data", 
@@ -420,7 +420,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/events"
+                                "value": "/events"
                             }
                         ], 
                         "information": "data", 
@@ -445,7 +445,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/issues"
+                                "value": "/issues"
                             }
                         ], 
                         "information": "data", 
@@ -487,7 +487,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/keys"
+                                "value": "/user/keys"
                             }
                         ], 
                         "information": "status", 
@@ -522,7 +522,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/keys/"
+                                "value": "/user/keys/"
                             }, 
                             {
                                 "type": "stringOf", 
@@ -558,7 +558,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/keys"
+                                "value": "/user/keys"
                             }
                         ], 
                         "information": "data", 
@@ -592,7 +592,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/repos"
+                                "value": "/user/repos"
                             }
                         ], 
                         "information": "status", 
@@ -676,7 +676,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/repos/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "attribute", 
@@ -717,7 +717,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/repos"
+                                "value": "/user/repos"
                             }
                         ], 
                         "information": "data", 
@@ -776,7 +776,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/emails"
+                                "value": "/user/emails"
                             }
                         ], 
                         "information": "status", 
@@ -802,7 +802,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/emails"
+                                "value": "/user/emails"
                             }
                         ], 
                         "information": "data", 
@@ -836,7 +836,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/emails"
+                                "value": "/user/emails"
                             }
                         ], 
                         "information": "status", 
@@ -872,7 +872,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/watched/"
+                                "value": "/user/watched/"
                             }, 
                             {
                                 "type": "identity", 
@@ -903,7 +903,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/watched"
+                                "value": "/user/watched"
                             }
                         ], 
                         "information": "data", 
@@ -938,7 +938,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/watched/"
+                                "value": "/user/watched/"
                             }, 
                             {
                                 "type": "identity", 
@@ -979,12 +979,308 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/watched/"
+                                "value": "/user/watched/"
                             }, 
                             {
                                 "type": "identity", 
                                 "value": [
                                     "watched"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "add", 
+                        "to", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "get", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "remove", 
+                        "from", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "subscription"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/subscriptions/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "subscription"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "DELETE"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "add", 
+                        "to", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "PUT"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "get", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "remove", 
+                        "from", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "Repository"
+                            }, 
+                            "name": "starred"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/user/starred/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "starred"
                                 ]
                             }
                         ], 
@@ -1020,7 +1316,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/following/"
+                                "value": "/user/following/"
                             }, 
                             {
                                 "type": "identity", 
@@ -1051,7 +1347,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/following"
+                                "value": "/user/following"
                             }
                         ], 
                         "information": "data", 
@@ -1086,7 +1382,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/following/"
+                                "value": "/user/following/"
                             }, 
                             {
                                 "type": "identity", 
@@ -1127,7 +1423,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/following/"
+                                "value": "/user/following/"
                             }, 
                             {
                                 "type": "identity", 
@@ -1158,7 +1454,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/followers"
+                                "value": "/user/followers"
                             }
                         ], 
                         "information": "data", 
@@ -1183,7 +1479,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/user/orgs"
+                                "value": "/user/orgs"
                             }
                         ], 
                         "information": "data", 
@@ -1226,7 +1522,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/gists"
+                                "value": "/gists"
                             }
                         ], 
                         "information": "status", 
@@ -1261,7 +1557,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/gists"
+                                "value": "/gists"
                             }
                         ], 
                         "information": "data", 
@@ -1295,7 +1591,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/repos/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "argument", 
@@ -1353,7 +1649,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/users/"
+                                "value": "/users/"
                             }, 
                             {
                                 "type": "attribute", 
@@ -1396,7 +1692,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/gists/starred"
+                                "value": "/gists/starred"
                             }
                         ], 
                         "information": "status", 
@@ -1806,6 +2102,127 @@
                         "cardinality": "list", 
                         "name": "CommitComment"
                     }
+                }, 
+                {
+                    "group": "statuses", 
+                    "name": [
+                        "create", 
+                        "status"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "state"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/statuses/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "target_url"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "description"
+                        }
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "CommitStatus"
+                    }
+                }, 
+                {
+                    "group": "statuses", 
+                    "name": [
+                        "get", 
+                        "statuses"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/statuses/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "sha"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "CommitStatus"
+                    }
                 }
             ]
         }, 
@@ -2004,6 +2421,69 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
+                        "name": "datetime"
+                    }, 
+                    "name": "created_at"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "NamedUser"
+                    }, 
+                    "name": "creator"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "description"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "id"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "state"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "target_url"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "datetime"
+                    }, 
+                    "name": "updated_at"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "CommitStatus", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
                         "name": "integer"
                     }, 
                     "name": "ahead_by"
@@ -2099,6 +2579,69 @@
             ], 
             "isCompletable": true, 
             "name": "Comparison", 
+            "methods": []
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "content"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "encoding"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "name"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "path"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "sha"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "integer"
+                    }, 
+                    "name": "size"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "type"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "ContentFile", 
             "methods": []
         }, 
         {
@@ -2704,7 +3247,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/gists/comments/"
+                                "value": "/gists/comments/"
                             }, 
                             {
                                 "type": "stringOf", 
@@ -3104,7 +3647,7 @@
                     "type": {
                         "simple": true, 
                         "cardinality": "scalar", 
-                        "name": "string"
+                        "name": "datetime"
                     }, 
                     "name": "date"
                 }, 
@@ -3742,6 +4285,45 @@
                     }
                 }
             ]
+        }, 
+        {
+            "attributes": [
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "list", 
+                        "name": "string"
+                    }, 
+                    "name": "events"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }, 
+                    "name": "name"
+                }, 
+                {
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "list:string"
+                    }, 
+                    "name": "schema"
+                }, 
+                {
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "list", 
+                        "name": "string"
+                    }, 
+                    "name": "supported_events"
+                }
+            ], 
+            "isCompletable": false, 
+            "name": "HookDescription", 
+            "methods": []
         }, 
         {
             "attributes": [
@@ -5243,7 +5825,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/repos/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "attribute", 
@@ -5331,6 +5913,68 @@
                             {
                                 "type": "constant", 
                                 "value": "/watched"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "subscriptions", 
+                    "name": [
+                        "get", 
+                        "subscriptions"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/subscriptions"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Repository"
+                    }
+                }, 
+                {
+                    "group": "starred", 
+                    "name": [
+                        "get", 
+                        "starred"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/starred"
                             }
                         ], 
                         "information": "data", 
@@ -6281,7 +6925,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/repos/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "attribute", 
@@ -6429,7 +7073,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/teams/"
+                                "value": "/teams/"
                             }, 
                             {
                                 "type": "stringOf", 
@@ -6505,7 +7149,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/repos/"
+                                "value": "/repos/"
                             }, 
                             {
                                 "type": "argument", 
@@ -7043,6 +7687,189 @@
                         "simple": false, 
                         "cardinality": "list", 
                         "name": "PullRequestComment"
+                    }
+                }, 
+                {
+                    "group": "issue_comments", 
+                    "name": [
+                        "create", 
+                        "issue_comment"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "body"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "POST", 
+                        "postParameters": true
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "IssueComment"
+                    }
+                }, 
+                {
+                    "group": "issue_comments", 
+                    "name": [
+                        "get", 
+                        "issue_comment"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "integer"
+                            }, 
+                            "name": "id"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/comments/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "id"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "IssueComment"
+                    }
+                }, 
+                {
+                    "group": "issue_comments", 
+                    "name": [
+                        "get", 
+                        "issue_comments"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "parentUrl", 
+                                "value": [
+                                    {
+                                        "type": "parentUrl", 
+                                        "value": [
+                                            {
+                                                "type": "attribute", 
+                                                "value": [
+                                                    "url"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/issues/"
+                            }, 
+                            {
+                                "type": "stringOf", 
+                                "value": [
+                                    {
+                                        "type": "attribute", 
+                                        "value": [
+                                            "number"
+                                        ]
+                                    }
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/comments"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "IssueComment"
                     }
                 }, 
                 {
@@ -7767,6 +8594,78 @@
                     }
                 }, 
                 {
+                    "group": "deletion", 
+                    "name": [
+                        "delete"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "DELETE"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "void"
+                    }
+                }, 
+                {
+                    "group": "branches", 
+                    "name": [
+                        "get", 
+                        "branch"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "branch"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/branches/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "branch"
+                                ]
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Branch"
+                    }
+                }, 
+                {
                     "group": "branches", 
                     "name": [
                         "get", 
@@ -7967,6 +8866,84 @@
                         "simple": true, 
                         "cardinality": "scalar", 
                         "name": "void"
+                    }
+                }, 
+                {
+                    "group": "assignees", 
+                    "name": [
+                        "get", 
+                        "assignees"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/assignees"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
+                    "group": "assignees", 
+                    "name": [
+                        "has", 
+                        "in", 
+                        "assignees"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": false, 
+                                "cardinality": "scalar", 
+                                "name": "NamedUser"
+                            }, 
+                            "name": "assignee"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/assignees/"
+                            }, 
+                            {
+                                "type": "identity", 
+                                "value": [
+                                    "assignee"
+                                ]
+                            }
+                        ], 
+                        "information": "status", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "bool"
                     }
                 }, 
                 {
@@ -10096,6 +11073,68 @@
                     }
                 }, 
                 {
+                    "group": "subscribers", 
+                    "name": [
+                        "get", 
+                        "subscribers"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/subscribers"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
+                    "group": "stargazers", 
+                    "name": [
+                        "get", 
+                        "stargazers"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/stargazers"
+                            }
+                        ], 
+                        "information": "data", 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "NamedUser"
+                    }
+                }, 
+                {
                     "group": "events", 
                     "name": [
                         "get", 
@@ -10107,7 +11146,7 @@
                         "url": [
                             {
                                 "type": "constant", 
-                                "value": "https://api.github.com/networks/"
+                                "value": "/networks/"
                             }, 
                             {
                                 "type": "attribute", 
@@ -10173,6 +11212,202 @@
                     }
                 }, 
                 {
+                    "group": "contents", 
+                    "name": [
+                        "get", 
+                        "readme"
+                    ], 
+                    "mandatoryParameters": [], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/readme"
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "ContentFile"
+                    }
+                }, 
+                {
+                    "group": "contents", 
+                    "name": [
+                        "get", 
+                        "contents"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "path"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/contents"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "path"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "ContentFile"
+                    }
+                }, 
+                {
+                    "group": "contents", 
+                    "name": [
+                        "get", 
+                        "archive", 
+                        "link"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "archive_format"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "archive_format"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "ref"
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "ref"
+                        }
+                    ], 
+                    "type": {
+                        "simple": true, 
+                        "cardinality": "scalar", 
+                        "name": "string"
+                    }
+                }, 
+                {
+                    "group": "merging", 
+                    "name": [
+                        "merge"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "base"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "head"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "url"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/merges"
+                            }
+                        ], 
+                        "postParameters": true, 
+                        "verb": "POST"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "commit_message"
+                        }
+                    ], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "scalar", 
+                        "name": "Commit"
+                    }
+                }, 
+                {
                     "group": "Comparison", 
                     "name": [
                         "compare"
@@ -10232,6 +11467,90 @@
                         "simple": false, 
                         "cardinality": "scalar", 
                         "name": "Comparison"
+                    }
+                }, 
+                {
+                    "group": "issues", 
+                    "name": [
+                        "legacy", 
+                        "search", 
+                        "issues"
+                    ], 
+                    "mandatoryParameters": [
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "state"
+                        }, 
+                        {
+                            "type": {
+                                "simple": true, 
+                                "cardinality": "scalar", 
+                                "name": "string"
+                            }, 
+                            "name": "keyword"
+                        }
+                    ], 
+                    "request": {
+                        "url": [
+                            {
+                                "type": "constant", 
+                                "value": "/legacy/issues/search/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "owner", 
+                                    "login"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "attribute", 
+                                "value": [
+                                    "name"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "argument", 
+                                "value": [
+                                    "state"
+                                ]
+                            }, 
+                            {
+                                "type": "constant", 
+                                "value": "/"
+                            }, 
+                            {
+                                "type": "urlquote", 
+                                "value": [
+                                    {
+                                        "type": "argument", 
+                                        "value": [
+                                            "keyword"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ], 
+                        "verb": "GET"
+                    }, 
+                    "isMutation": false, 
+                    "optionalParameters": [], 
+                    "type": {
+                        "simple": false, 
+                        "cardinality": "list", 
+                        "name": "Issue"
                     }
                 }
             ]

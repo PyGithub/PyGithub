@@ -18,6 +18,7 @@ Constructed from user's login and password or OAuth token or nothing:
     g = Github()
 
 You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
+Another argument, that can be passed is `timeout` which has default value `10`.
 
 Attributes
 ----------
@@ -31,6 +32,7 @@ Methods
 * `get_gist( id )`: `Gist`
     * `id`: string
 * `get_gists()`: iterator of `Gist`
+* `get_hooks()`: iterator of `HookDescription`
 * `search_repos( keyword )`: iterator of `Repository`
 * `legacy_search_repos( keyword, [language] )`: iterator of `Repository`
     * `keyword`: string
@@ -179,6 +181,26 @@ Repos
     * `sort`: string
     * `direction`: string
 
+Starred
+-------
+* `add_to_starred( starred )`
+    * `starred`: `Repository`
+* `get_starred()`: iterator of `Repository`
+* `has_in_starred( starred )`: bool
+    * `starred`: `Repository`
+* `remove_from_starred( starred )`
+    * `starred`: `Repository`
+
+Subscriptions
+-------------
+* `add_to_subscriptions( subscription )`
+    * `subscription`: `Repository`
+* `get_subscriptions()`: iterator of `Repository`
+* `has_in_subscriptions( subscription )`: bool
+    * `subscription`: `Repository`
+* `remove_from_subscriptions( subscription )`
+    * `subscription`: `Repository`
+
 Watched
 -------
 * `add_to_watched( watched )`
@@ -256,6 +278,14 @@ Comments
     * `position`: integer
 * `get_comments()`: iterator of `CommitComment`
 
+Statuses
+--------
+* `create_status( state, [target_url, description] )`: `CommitStatus`
+    * `state`: string
+    * `target_url`: string
+    * `description`: string
+* `get_statuses()`: iterator of `CommitStatus`
+
 Class `CommitComment`
 =====================
 
@@ -291,6 +321,19 @@ Attributes
 * `deletions`: integer
 * `total`: integer
 
+Class `CommitStatus`
+====================
+
+Attributes
+----------
+* `created_at`: datetime.datetime
+* `creator`: `NamedUser`
+* `description`: string
+* `id`: integer
+* `state`: string
+* `target_url`: string
+* `updated_at`: datetime.datetime
+
 Class `Comparison`
 ==================
 
@@ -308,6 +351,19 @@ Attributes
 * `status`: string
 * `total_commits`: integer
 * `url`: string
+
+Class `ContentFile`
+===================
+
+Attributes
+----------
+* `content`: string
+* `encoding`: string
+* `name`: string
+* `path`: string
+* `sha`: string
+* `size`: integer
+* `type`: string
 
 Class `Download`
 ================
@@ -587,6 +643,16 @@ Testing
 -------
 * `test()`
 
+Class `HookDescription`
+=======================
+
+Attributes
+----------
+* `events`: list of string
+* `name`: string
+* `schema`: list of list of string
+* `supported_events`: list of string
+
 Class `HookResponse`
 ====================
 
@@ -814,6 +880,14 @@ Repos
 * `get_repos( [type] )`: iterator of `Repository`
     * `type`: string
 
+Starred
+-------
+* `get_starred()`: iterator of `Repository`
+
+Subscriptions
+-------------
+* `get_subscriptions()`: iterator of `Repository`
+
 Watched
 -------
 * `get_watched()`: iterator of `Repository`
@@ -962,16 +1036,16 @@ Attributes
 * `url`: string
 * `user`: `NamedUser`
 
-Comments
---------
-* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
+Review comments
+---------------
+* `create_comment( body, commit_id, path, position )` or `create_review_comment( body, commit_id, path, position )`: `PullRequestComment`
     * `body`: string
     * `commit_id`: `Commit`
     * `path`: string
     * `position`: integer
-* `get_comment( id )`: `PullRequestComment`
+* `get_comment( id )` or `get_review_comment( id )`: `PullRequestComment`
     * `id`: integer
-* `get_comments()`: iterator of `PullRequestComment`
+* `get_comments()` or `get_review_comments()`: iterator of `PullRequestComment`
 
 Commits
 -------
@@ -980,6 +1054,14 @@ Commits
 Files
 -----
 * `get_files()`: iterator of `File`
+
+Issue_comments
+--------------
+* `create_issue_comment( body )`: `IssueComment`
+    * `body`: string
+* `get_issue_comment( id )`: `IssueComment`
+    * `id`: integer
+* `get_issue_comments()`: iterator of `IssueComment`
 
 Merging
 -------
@@ -1082,8 +1164,16 @@ Comparison
     * `base`: string
     * `head`: string
 
+Assignees
+---------
+* `get_assignees()`: iterator of `NamedUser`
+* `has_in_assignees( assignee )`: bool
+    * `assignee`: `NamedUser`
+
 Branches
 --------
+* `get_branch( branch )`: `Branch`
+    * `branch`: string
 * `get_branches()`: iterator of `Branch`
 
 Collaborators
@@ -1110,9 +1200,22 @@ Commits
     * `sha`: string
     * `path`: string
 
+Contents
+--------
+* `get_readme()`: `ContentFile`
+* `get_contents( path )`: `ContentFile`
+    * `path`: string
+* `get_archive_link( archive_format, [ref] )`: string
+    * `archive_format`: string
+    * `ref`: string
+
 Contributors
 ------------
 * `get_contributors()`: iterator of `NamedUser`
+
+Deletion
+--------
+* `delete()`
 
 Downloads
 ---------
@@ -1244,6 +1347,13 @@ Languages
 ---------
 * `get_languages()`: dict of string to integer
 
+Merging
+-------
+* `merge( base, head, [commit_message] )`: `Commit`
+    * `base`: string
+    * `head`: string
+    * `commit_message`: string
+
 Milestones
 ----------
 * `create_milestone( title, [state, description, due_on] )`: `Milestone`
@@ -1281,6 +1391,14 @@ Pulls
     * `number`: integer
 * `get_pulls( [state] )`: iterator of `PullRequest`
     * `state`: string
+
+Stargazers
+----------
+* `get_stargazers()`: iterator of `NamedUser`
+
+Subscribers
+-----------
+* `get_subscribers()`: iterator of `NamedUser`
 
 Tags
 ----

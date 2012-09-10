@@ -22,6 +22,7 @@ import PaginatedList
 
 import Branch
 import IssueEvent
+import ContentFile
 import Label
 import InputGitAuthor
 import GitBlob
@@ -458,6 +459,14 @@ class Repository( GithubObject.GithubObject ):
         )
         return PullRequest.PullRequest( self._requester, data, completed = True )
 
+    def delete( self ):
+        headers, data = self._requester.requestAndCheck(
+            "DELETE",
+            self.url,
+            None,
+            None
+        )
+
     def edit( self, name, description = GithubObject.NotSet, homepage = GithubObject.NotSet, public = GithubObject.NotSet, has_issues = GithubObject.NotSet, has_wiki = GithubObject.NotSet, has_downloads = GithubObject.NotSet ):
         assert isinstance( name, ( str, unicode ) ), name
         assert description is GithubObject.NotSet or isinstance( description, ( str, unicode ) ), description
@@ -488,6 +497,44 @@ class Repository( GithubObject.GithubObject ):
             post_parameters
         )
         self._useAttributes( data )
+
+    def get_archive_link( self, archive_format, ref = GithubObject.NotSet ):
+        assert isinstance( archive_format, ( str, unicode ) ), archive_format
+        assert ref is GithubObject.NotSet or isinstance( ref, ( str, unicode ) ), ref
+        url = self.url + "/" + archive_format
+        if ref is not GithubObject.NotSet:
+            url += "/" + ref
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            url,
+            None,
+            None
+        )
+        return headers[ "location" ]
+
+    def get_assignees( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/assignees",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self._requester,
+            headers,
+            data
+        )
+
+    def get_branch( self, branch ):
+        assert isinstance( branch, ( str, unicode ) ), branch
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/branches/" + branch,
+            None,
+            None
+        )
+        return Branch.Branch( self._requester, data, completed = True )
 
     def get_branches( self ):
         headers, data = self._requester.requestAndCheck(
@@ -571,6 +618,16 @@ class Repository( GithubObject.GithubObject ):
             headers,
             data
         )
+
+    def get_contents( self, path ):
+        assert isinstance( path, ( str, unicode ) ), path
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/contents" + path,
+            None,
+            None
+        )
+        return ContentFile.ContentFile( self._requester, data, completed = True )
 
     def get_contributors( self ):
         headers, data = self._requester.requestAndCheck(
@@ -942,6 +999,43 @@ class Repository( GithubObject.GithubObject ):
             data
         )
 
+    def get_readme( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/readme",
+            None,
+            None
+        )
+        return ContentFile.ContentFile( self._requester, data, completed = True )
+
+    def get_stargazers( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/stargazers",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self._requester,
+            headers,
+            data
+        )
+
+    def get_subscribers( self ):
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            self.url + "/subscribers",
+            None,
+            None
+        )
+        return PaginatedList.PaginatedList(
+            NamedUser.NamedUser,
+            self._requester,
+            headers,
+            data
+        )
+
     def get_tags( self ):
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -984,6 +1078,16 @@ class Repository( GithubObject.GithubObject ):
             data
         )
 
+    def has_in_assignees( self, assignee ):
+        assert isinstance( assignee, NamedUser.NamedUser ), assignee
+        status, headers, data = self._requester.requestRaw(
+            "GET",
+            self.url + "/assignees/" + assignee._identity,
+            None,
+            None
+        )
+        return status == 204
+
     def has_in_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         status, headers, data = self._requester.requestRaw(
@@ -994,6 +1098,41 @@ class Repository( GithubObject.GithubObject ):
         )
         return status == 204
 
+    def legacy_search_issues( self, state, keyword ):
+        assert state in [ "open", "closed" ], state
+        assert isinstance( keyword, ( str, unicode ) ), keyword
+        headers, data = self._requester.requestAndCheck(
+            "GET",
+            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
+            None,
+            None
+        )
+        return [
+            Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
+            for element in data[ "issues" ]
+        ]
+
+    def merge( self, base, head, commit_message = GithubObject.NotSet ):
+        assert isinstance( base, ( str, unicode ) ), base
+        assert isinstance( head, ( str, unicode ) ), head
+        assert commit_message is GithubObject.NotSet or isinstance( commit_message, ( str, unicode ) ), commit_message
+        post_parameters = {
+            "base": base,
+            "head": head,
+        }
+        if commit_message is not GithubObject.NotSet:
+            post_parameters[ "commit_message" ] = commit_message
+        headers, data = self._requester.requestAndCheck(
+            "POST",
+            self.url + "/merges",
+            None,
+            post_parameters
+        )
+        if data is None:
+            return None
+        else:
+            return Commit.Commit( self._requester, data, completed = True )
+
     def remove_from_collaborators( self, collaborator ):
         assert isinstance( collaborator, NamedUser.NamedUser ), collaborator
         headers, data = self._requester.requestAndCheck(
@@ -1002,20 +1141,6 @@ class Repository( GithubObject.GithubObject ):
             None,
             None
         )
-
-    def legacy_search_issues( self, state, keyword ):
-        assert state in [ "open", "closed" ], state
-        assert isinstance( keyword, ( str, unicode ) ), keyword
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote( keyword ),
-            {},
-            None
-        )
-        return [
-            Issue.Issue( self._requester, Legacy.convertIssue( element ), completed = False )
-            for element in data[ "issues" ]
-        ]
 
     @property
     def _identity( self ):

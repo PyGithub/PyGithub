@@ -15,16 +15,27 @@ import httplib
 import base64
 import urllib
 import urlparse
+import sys
 
-try:
+atLeastPython26 = sys.hexversion >= 0x02060000
+
+if atLeastPython26:
     import json
-except ImportError: #pragma no cover: only for Python 2.5
+else: #pragma no cover
     import simplejson as json #pragma no cover
 
 import GithubException
 
 class Requester:
-    def __init__( self, login_or_token, password, base_url ):
+    __httpConnectionClass = httplib.HTTPConnection
+    __httpsConnectionClass = httplib.HTTPSConnection
+
+    @classmethod
+    def injectConnectionClasses( cls, httpConnectionClass, httpsConnectionClass ):
+        cls.__httpConnectionClass = httpConnectionClass
+        cls.__httpsConnectionClass = httpsConnectionClass
+
+    def __init__( self, login_or_token, password, base_url, timeout ):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode( login + ":" + password ).replace( '\n', '' )
@@ -39,13 +50,13 @@ class Requester:
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
+        self.__timeout = timeout
         if o.scheme == "https":
-            self.__connection_class = httplib.HTTPSConnection
+            self.__connectionClass = self.__httpsConnectionClass
         elif o.scheme == "http":
-            self.__connection_class = httplib.HTTPConnection
+            self.__connectionClass = self.__httpConnectionClass
         else:
             assert( False ) #pragma no cover
-
         self.rate_limiting = ( 5000, 5000 )
 
     def requestAndCheck( self, verb, url, parameters, input ):
@@ -57,21 +68,23 @@ class Requester:
 
     def requestRaw( self, verb, url, parameters, input ):
         assert verb in [ "HEAD", "GET", "POST", "PATCH", "PUT", "DELETE" ]
-        
+
         #URLs generated locally will be relative to __base_url
         #URLs returned from the server will start with __base_url
         if url.startswith( self.__base_url ):
             url = url[ len(self.__base_url): ]
-        elif url.startswith( "/" ):
-            url = url
         else:
-            assert( False ) #pragma no cover
-        
+            assert url.startswith( "/" )
+        url = self.__prefix + url
+
         headers = dict()
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
 
-        cnx = self.__connection_class( host = self.__hostname, port = self.__port, strict = True )
+        if atLeastPython26:
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout = self.__timeout )
+        else: #pragma no cover
+            cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True ) #pragma no cover
         cnx.request(
             verb,
             self.__completeUrl( url, parameters ),
@@ -89,14 +102,14 @@ class Requester:
         if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
             self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
-        # print verb, url, parameters, input, "==>", status, str( headers )[ :30 ], str( output )[ :30 ]
+        # print verb, self.__base_url + url, parameters, input, "==>", status, str( headers ), str( output )
         return status, headers, output
 
     def __completeUrl( self, url, parameters ):
         if parameters is None or len( parameters ) == 0:
-            return self.__prefix + url
+            return url
         else:
-            return self.__prefix + url + "?" + urllib.urlencode( parameters )
+            return url + "?" + urllib.urlencode( parameters )
 
     def __structuredFromJson( self, data ):
         if len( data ) == 0:

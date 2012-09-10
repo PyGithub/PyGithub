@@ -53,6 +53,10 @@ API `/gists/starred`
 ====================
 * GET: `AuthenticatedUser.get_starred_gists`
 
+API `/hooks`
+====================
+* GET: `Github.get_hooks`
+
 API `/issues`
 =============
 * GET: `AuthenticatedUser.get_issues`
@@ -65,13 +69,13 @@ API `/legacy/repos/search/:keyword`
 ===================================
 * GET: `Github.search_repos`
 
-API `/legacy/user/search/:keyword`
-==================================
-* GET: `Github.search_users`
-
 API `/legacy/user/email/:email`
 ===============================
 * GET: `Github.search_user_by_email`
+
+API `/legacy/user/search/:keyword`
+==================================
+* GET: `Github.search_users`
 
 API `/markdown`
 ===============
@@ -123,14 +127,35 @@ API `/orgs/:org/teams`
 * GET: `Organization.get_teams`
 * POST: `Organization.create_team`
 
+API `/rate_limit`
+=================
+* GET: Not implemented, see `Github.rate_limiting`
+
 API `/repos/:user/:repo`
 ========================
 * GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
 * PATCH: `Repository.edit`
+* DELETE: `Repository.delete`
+
+API `/repos/:user/:repo/:archive_format/:ref`
+=============================================
+* GET: `Repository.get_archive_link`
+
+API `/repos/:user/:repo/assignees`
+==================================
+* GET: `Repository.get_assignees`
+
+API `/repos/:user/:repo/assignees/:assignee`
+============================================
+* GET: `Repository.has_in_assignees`
 
 API `/repos/:user/:repo/branches`
 =================================
 * GET: `Repository.get_branches`
+
+API `/repos/:user/:repo/branches/:branch`
+=========================================
+* GET: `Repository.get_branch`
 
 API `/repos/:user/:repo/collaborators`
 ======================================
@@ -168,6 +193,10 @@ API `/repos/:user/:repo/commits/:sha/comments`
 API `/repos/:user/:repo/compare/:base...:head`
 ==============================================
 * GET: `Repository.compare`
+
+API `/repos/:user/:repo/contents/:path`
+=======================================
+* GET: `Repository.get_contents`
 
 API `/repos/:user/:repo/contributors`
 =====================================
@@ -262,8 +291,8 @@ API `/repos/:user/:repo/issues/:number`
 
 API `/repos/:user/:repo/issues/:number/comments`
 ================================================
-* GET: `Issue.get_comments`
-* POST: `Issue.create_comment`
+* GET: `Issue.get_comments` or `PullRequest.get_issue_comments`
+* POST: `Issue.create_comment` or `PullRequest.create_issue_comment`
 
 API `/repos/:user/:repo/issues/:number/events`
 ==============================================
@@ -282,7 +311,7 @@ API `/repos/:user/:repo/issues/:number/labels/:name`
 
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
-* GET: `Issue.get_comment`
+* GET: `Issue.get_comment` or `PullRequest.get_issue_comment`
 * PATCH: `IssueComment.edit`
 * DELETE: `IssueComment.delete`
 
@@ -320,6 +349,10 @@ API `/repos/:user/:repo/languages`
 ==================================
 * GET: `Repository.get_languages`
 
+API `/repos/:user/:repo/merges`
+===============================
+* POST: `Repository.merge`
+
 API `/repos/:user/:repo/milestones`
 ===================================
 * GET: `Repository.get_milestones`
@@ -347,8 +380,8 @@ API `/repos/:user/:repo/pulls/:number`
 
 API `/repos/:user/:repo/pulls/:number/comments`
 ===============================================
-* GET: `PullRequest.get_comments`
-* POST: `PullRequest.create_comment`
+* GET: `PullRequest.get_comments` or `PullRequest.get_review_comments`
+* POST: `PullRequest.create_comment` or `PullRequest.create_review_comment`
 
 API `/repos/:user/:repo/pulls/:number/commits`
 ==============================================
@@ -365,9 +398,26 @@ API `/repos/:user/:repo/pulls/:number/merge`
 
 API `/repos/:user/:repo/pulls/comments/:number`
 ===============================================
-* GET: `PullRequest.get_comment`
+* GET: `PullRequest.get_comment` or `PullRequest.get_review_comment`
 * PATCH: `PullRequestComment.edit`
 * DELETE: `PullRequestComment.delete`
+
+API `/repos/:user/:repo/readme`
+===============================
+* GET: `Repository.get_readme`
+
+API `/repos/:user/:repo/stargazers`
+===================================
+* GET: `Repository.get_stargazers`
+
+API `/repos/:user/:repo/statuses/:sha`
+======================================
+* GET: `Commit.get_statuses`
+* POST: `Commit.create_status`
+
+API `/repos/:user/:repo/subscribers`
+====================================
+* GET: `Repository.get_subscribers`
 
 API `/repos/:user/:repo/tags`
 =============================
@@ -452,6 +502,26 @@ API `/user/repos`
 * GET: `AuthenticatedUser.get_repos`
 * POST: `AuthenticatedUser.create_repo`
 
+API `/user/starred`
+===================
+* GET: `AuthenticatedUser.get_starred`
+
+API `/user/starred/:user/:repo`
+===============================
+* GET: `AuthenticatedUser.has_in_starred`
+* PUT: `AuthenticatedUser.add_to_starred`
+* DELETE: `AuthenticatedUser.remove_from_starred`
+
+API `/user/subscriptions`
+=========================
+* GET: `AuthenticatedUser.get_subscriptions`
+
+API `/user/subscriptions/:user/:repo`
+=====================================
+* GET: `AuthenticatedUser.has_in_subscriptions`
+* PUT: `AuthenticatedUser.add_to_subscriptions`
+* DELETE: `AuthenticatedUser.remove_from_subscriptions`
+
 API `/user/watched`
 ===================
 * GET: `AuthenticatedUser.get_watched`
@@ -506,6 +576,14 @@ API `/users/:user/received_events/public`
 API `/users/:user/repos`
 ========================
 * GET: `NamedUser.get_repos`
+
+API `/users/:user/starred`
+==========================
+* GET: `NamedUser.get_starred`
+
+API `/users/:user/subscriptions`
+================================
+* GET: `NamedUser.get_subscriptions`
 
 API `/users/:user/watched`
 ==========================
