@@ -21,6 +21,12 @@ class PaginatedList( Framework.TestCase ):
     def testIteration( self ):
         self.assertEqual( len( list( self.list ) ), 333 )
 
+    def testSeveralIterations( self ):
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+
     def testIntIndexingInFirstPage( self ):
         self.assertEqual( self.list[ 0 ].id, 4772349 )
         self.assertEqual( self.list[ 24 ].id, 4286936 )
