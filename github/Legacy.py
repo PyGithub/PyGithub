@@ -22,20 +22,26 @@ class PaginatedList( PaginatedListBase ):
         self.__key = key
         self.__convert = convert
         self.__contentClass = contentClass
-        self.__nextPage = 1
+        self.__nextPage = 0
         self.__continue = True
 
     def _couldGrow( self ):
         return self.__continue
 
     def _fetchNextPage( self ):
-        if self.__nextPage != 1:
-            self.__args[ "start_page" ] = self.__nextPage
+        page = self.__nextPage
         self.__nextPage += 1
+        return self.get_page( page )
+
+    def get_page( self, page ):
+        assert isinstance( page, int ), page
+        args = dict( self.__args )
+        if page != 0:
+            args[ "start_page" ] = page + 1
         headers, data = self.__requester.requestAndCheck(
             "GET",
             self.__url,
-            self.__args,
+            args,
             None
         )
         self.__continue = len( data[ self.__key ] ) > 0
