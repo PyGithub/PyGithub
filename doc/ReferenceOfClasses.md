@@ -33,7 +33,6 @@ Methods
     * `id`: string
 * `get_gists()`: iterator of `Gist`
 * `get_hooks()`: iterator of `HookDescription`
-* `search_repos( keyword )`: iterator of `Repository`
 * `legacy_search_repos( keyword, [language] )`: iterator of `Repository`
     * `keyword`: string
     * `language`: string
