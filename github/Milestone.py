@@ -106,17 +106,11 @@ class Milestone( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def get_labels( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/labels",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
-            headers,
-            data
+            self.url + "/labels",
+            None
         )
 
     @property

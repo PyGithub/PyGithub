@@ -183,45 +183,27 @@ class Issue( GithubObject.GithubObject ):
         return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueComment.IssueComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def get_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self._requester,
-            headers,
-            data
+            self.url + "/events",
+            None
         )
 
     def get_labels( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/labels",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
-            headers,
-            data
+            self.url + "/labels",
+            None
         )
 
     def remove_from_labels( self, label ):

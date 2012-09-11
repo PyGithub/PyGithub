@@ -154,17 +154,11 @@ class Gist( GithubObject.GithubObject ):
         return GistComment.GistComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             GistComment.GistComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def is_starred( self ):

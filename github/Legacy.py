@@ -15,7 +15,7 @@ from PaginatedList import PaginatedListBase
 
 class PaginatedList( PaginatedListBase ):
     def __init__( self, url, args, requester, key, convert, contentClass ):
-        PaginatedListBase.__init__( self, list() )
+        PaginatedListBase.__init__( self )
         self.__url = url
         self.__args = args
         self.__requester = requester
@@ -24,7 +24,6 @@ class PaginatedList( PaginatedListBase ):
         self.__contentClass = contentClass
         self.__nextPage = 1
         self.__continue = True
-        self.__elements = list()
 
     def _couldGrow( self ):
         return self.__continue

@@ -69,12 +69,11 @@ class Github( object ):
         return Gist.Gist( self.__requester, data, completed = True )
 
     def get_gists( self ):
-        headers, data = self.__requester.requestAndCheck( "GET", "/gists/public", None, None )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self.__requester,
-            headers,
-            data
+            "/gists/public",
+            None
         )
 
     def legacy_search_repos( self, keyword, language = GithubObject.NotSet ):
