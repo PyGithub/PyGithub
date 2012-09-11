@@ -714,9 +714,9 @@ Modification
 * `edit( [title, body, assignee, state, milestone, labels] )`
     * `title`: string
     * `body`: string
-    * `assignee`: `NamedUser`
+    * `assignee`: `NamedUser` or None
     * `state`: string
-    * `milestone`: `Milestone`
+    * `milestone`: `Milestone` or None
     * `labels`: list of string
 
 Class `IssueComment`
