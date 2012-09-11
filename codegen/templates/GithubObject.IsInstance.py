@@ -1,1 +1,0 @@
-isinstance( {{ variable }}, {{ type }} )

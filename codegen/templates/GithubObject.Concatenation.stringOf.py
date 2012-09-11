@@ -1,1 +1,0 @@
-str( {% include "GithubObject.Concatenation.py" with concatenation=value only %} )

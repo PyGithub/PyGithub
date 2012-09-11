@@ -1,1 +1,0 @@
-all( {% include "GithubObject.IsInstance.py" with variable="element" type="dict" only %} for element in {{ variable }} )
