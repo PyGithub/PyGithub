@@ -46,29 +46,56 @@ class PaginatedList( PaginatedListBase ):
         ]
 
 def convertUser( attributes ):
-    login = attributes[ "login" ]
-    return {
-        "login": login,
-        "url": "/users/" + login,
+    convertedAttributes = {
+        "name": attributes[ "name" ],
+        "created_at": attributes[ "created_at" ],
+        "location": attributes[ "location" ],
+
+        "login": attributes[ "login" ],
+        "url": "/users/" + attributes[ "login" ],
     }
+    if "gravatar_id" in attributes: convertedAttributes[ "gravatar_id" ] = attributes[ "gravatar_id" ]
+    if "followers" in attributes: convertedAttributes[ "followers" ] = attributes[ "followers" ]
+    if "repos" in attributes: convertedAttributes[ "public_repos" ] = attributes[ "repos" ]
+    return convertedAttributes
 
 def convertRepo( attributes ):
-    owner = attributes[ "owner" ]
-    name = attributes[ "name" ]
-    return {
-        "owner": { "login": owner },
-        "name": name,
-        "url": "/repos/" + owner + "/" + name,
+    convertedAttributes = {
+        "created_at": attributes[ "created_at" ],
+        "watchers": attributes[ "watchers" ],
+        "has_downloads": attributes[ "has_downloads" ],
+        "fork": attributes[ "fork" ],
+        "has_issues": attributes[ "has_issues" ],
+        "has_wiki": attributes[ "has_wiki" ],
+        "forks": attributes[ "forks" ],
+        "size": attributes[ "size" ],
+        "private": attributes[ "private" ],
+        "open_issues": attributes[ "open_issues" ],
+        "description": attributes[ "description" ],
+        "language": attributes[ "language" ],
+        "name": attributes[ "name" ],
+
+        "owner": { "login": attributes[ "owner" ], "url": "/users/" + attributes[ "owner" ] },
+        "url": "/repos/" + attributes[ "owner" ] + "/" + attributes[ "name" ],
     }
+    if "pushed_at" in attributes: convertedAttributes[ "pushed_at" ] = attributes[ "pushed_at" ]
+    if "homepage" in attributes: convertedAttributes[ "homepage" ] = attributes[ "homepage" ]
+    return convertedAttributes
 
 def convertIssue( attributes ):
-    number = attributes[ "number" ]
-    title = attributes[ "title" ]
     html_url = attributes[ "html_url" ]
     assert html_url.startswith( "https://github.com/" )
     url = html_url.replace( "https://github.com/", "/repos/" )
     return {
-        "title": title,
-        "number": number,
+        "title": attributes[ "title" ],
+        "number": attributes[ "number" ],
+        "created_at": attributes[ "created_at" ],
+        "comments": attributes[ "comments" ],
+        "body": attributes[ "body" ],
+        "updated_at": attributes[ "updated_at" ],
+        "state": attributes[ "state" ],
+
         "url": url,
+        "user": { "login": attributes[ "user" ], "url": "/users/" + attributes[ "user" ] },
+        "labels": [ { "name": label } for label in attributes[ "labels" ] ],
     }
