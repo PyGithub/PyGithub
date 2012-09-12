@@ -65,12 +65,14 @@ class PaginatedListBase:
             return self.__stop is not None and index >= self.__stop
 
 class PaginatedList( PaginatedListBase ):
-    def __init__( self, contentClass, requester, nextUrl, nextParams ):
+    def __init__( self, contentClass, requester, firstUrl, firstParams ):
         PaginatedListBase.__init__( self )
         self.__requester = requester
         self.__contentClass = contentClass
-        self.__nextUrl = nextUrl
-        self.__nextParams = nextParams
+        self.__firstUrl = firstUrl
+        self.__firstParams = firstParams
+        self.__nextUrl = firstUrl
+        self.__nextParams = firstParams
 
     def _couldGrow( self ):
         return self.__nextUrl is not None
@@ -100,3 +102,14 @@ class PaginatedList( PaginatedListBase ):
                 rel = rel[ 5 : -1 ]
                 links[ rel ] = url
         return links
+
+    def get_page( self, page ):
+        params = dict( self.__firstParams )
+        if page != 0:
+            params[ "page" ] = page + 1
+        headers, data = self.__requester.requestAndCheck( "GET", self.__firstUrl, params, None )
+
+        return [
+            self.__contentClass( self.__requester, element, completed = False )
+            for element in data
+        ]
