@@ -344,7 +344,20 @@ class Repository( Framework.TestCase ):
         self.assertListKeyEqual( self.repo.get_pulls( "closed" ), lambda p: p.id, [ 1448168, 1436310, 1436215 ] )
 
     def testLegacySearchIssues( self ):
-        self.assertListKeyEqual( self.repo.legacy_search_issues( "open", "search" ), lambda i: i.title, [ "Support new Search API" ] )
+        issues = self.repo.legacy_search_issues( "open", "search" )
+        self.assertListKeyEqual( issues, lambda i: i.title, [ "Support new Search API" ] )
+
+        # Attributes retrieved from legacy API without lazy completion call
+        self.assertEqual( issues[ 0 ].number, 49 )
+        self.assertEqual( issues[ 0 ].created_at, datetime.datetime( 2012, 6, 21, 12, 27, 38 ) )
+        self.assertEqual( issues[ 0 ].comments, 4 )
+        self.assertEqual( issues[ 0 ].body[ : 20 ], "New API ported from " )
+        self.assertEqual( issues[ 0 ].title, "Support new Search API" )
+        self.assertEqual( issues[ 0 ].updated_at, datetime.datetime( 2012, 6, 28, 21, 13, 25 ) )
+        self.assertEqual( issues[ 0 ].user.login, "kukuts" )
+        self.assertEqual( issues[ 0 ].user.url, "/users/kukuts" )
+        self.assertListKeyEqual( issues[ 0 ].labels, lambda l: l.name, [ "Functionalities", "RequestedByUser" ] )
+        self.assertEqual( issues[ 0 ].state, "open" )
 
     def testAssignees( self ):
         lyloa = self.g.get_user( "Lyloa" )

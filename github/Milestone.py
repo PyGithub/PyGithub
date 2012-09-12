@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -109,17 +106,11 @@ class Milestone( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def get_labels( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/labels",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
-            headers,
-            data
+            self.url + "/labels",
+            None
         )
 
     @property

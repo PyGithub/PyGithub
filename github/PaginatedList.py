@@ -14,8 +14,8 @@
 import GithubObject
 
 class PaginatedListBase:
-    def __init__( self, firstElements ):
-        self.__elements = firstElements
+    def __init__( self ):
+        self.__elements = list()
 
     def __getitem__( self, index ):
         assert isinstance( index, ( int, slice ) )
@@ -65,24 +65,27 @@ class PaginatedListBase:
             return self.__stop is not None and index >= self.__stop
 
 class PaginatedList( PaginatedListBase ):
-    def __init__( self, contentClass, requester, headers, data ):
+    def __init__( self, contentClass, requester, firstUrl, firstParams ):
+        PaginatedListBase.__init__( self )
         self.__requester = requester
         self.__contentClass = contentClass
-        PaginatedListBase.__init__( self, self.__extractNewElements( headers, data ) )
+        self.__firstUrl = firstUrl
+        self.__firstParams = firstParams
+        self.__nextUrl = firstUrl
+        self.__nextParams = firstParams
 
     def _couldGrow( self ):
         return self.__nextUrl is not None
 
     def _fetchNextPage( self ):
-        headers, data = self.__requester.requestAndCheck( "GET", self.__nextUrl, None, None )
-        return self.__extractNewElements( headers, data )
+        headers, data = self.__requester.requestAndCheck( "GET", self.__nextUrl, self.__nextParams, None )
 
-    def __extractNewElements( self, headers, data ):
         links = self.__parseLinkHeader( headers )
         if len( data ) > 0 and "next" in links:
             self.__nextUrl = links[ "next" ]
         else:
             self.__nextUrl = None
+        self.__nextParams = None
 
         return [
             self.__contentClass( self.__requester, element, completed = False )
@@ -99,3 +102,14 @@ class PaginatedList( PaginatedListBase ):
                 rel = rel[ 5 : -1 ]
                 links[ rel ] = url
         return links
+
+    def get_page( self, page ):
+        params = dict( self.__firstParams )
+        if page != 0:
+            params[ "page" ] = page + 1
+        headers, data = self.__requester.requestAndCheck( "GET", self.__firstUrl, params, None )
+
+        return [
+            self.__contentClass( self.__requester, element, completed = False )
+            for element in data
+        ]

@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -227,45 +224,27 @@ class PullRequest( GithubObject.GithubObject ):
         return self.get_review_comments()
 
     def get_review_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             PullRequestComment.PullRequestComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def get_commits( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/commits",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self._requester,
-            headers,
-            data
+            self.url + "/commits",
+            None
         )
 
     def get_files( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/files",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             File.File,
             self._requester,
-            headers,
-            data
+            self.url + "/files",
+            None
         )
 
     def get_issue_comment( self, id ):
@@ -279,17 +258,11 @@ class PullRequest( GithubObject.GithubObject ):
         return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def get_issue_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self._parentUrl( self._parentUrl( self.url ) ) + "/issues/" + str( self.number ) + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueComment.IssueComment,
             self._requester,
-            headers,
-            data
+            self._parentUrl( self._parentUrl( self.url ) ) + "/issues/" + str( self.number ) + "/comments",
+            None
         )
 
     def is_merged( self ):

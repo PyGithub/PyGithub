@@ -63,19 +63,19 @@ API `/issues`
 
 API `/legacy/issues/search/:owner/:repository/:state/:keyword`
 ==============================================================
-* GET: `Repository.search_issues`
+* GET: `Repository.legacy_search_issues`
 
 API `/legacy/repos/search/:keyword`
 ===================================
-* GET: `Github.search_repos`
+* GET: `Github.legacy_search_repos`
 
 API `/legacy/user/email/:email`
 ===============================
-* GET: `Github.search_user_by_email`
+* GET: `Github.legacy_search_user_by_email`
 
 API `/legacy/user/search/:keyword`
 ==================================
-* GET: `Github.search_users`
+* GET: `Github.legacy_search_users`
 
 API `/markdown`
 ===============

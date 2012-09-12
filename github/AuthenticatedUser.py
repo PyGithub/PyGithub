@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -335,17 +332,11 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return Authorization.Authorization( self._requester, data, completed = True )
 
     def get_authorizations( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/authorizations",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Authorization.Authorization,
             self._requester,
-            headers,
-            data
+            "/authorizations",
+            None
         )
 
     def get_emails( self ):
@@ -358,73 +349,43 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return data
 
     def get_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
-            headers,
-            data
+            "/events",
+            None
         )
 
     def get_followers( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/followers",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            "/user/followers",
+            None
         )
 
     def get_following( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/following",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            "/user/following",
+            None
         )
 
     def get_gists( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/gists",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self._requester,
-            headers,
-            data
+            "/gists",
+            None
         )
 
     def get_issues( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/issues",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self._requester,
-            headers,
-            data
+            "/issues",
+            None
         )
 
     def get_key( self, id ):
@@ -438,46 +399,28 @@ class AuthenticatedUser( GithubObject.GithubObject ):
         return UserKey.UserKey( self._requester, data, completed = True )
 
     def get_keys( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/keys",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             UserKey.UserKey,
             self._requester,
-            headers,
-            data
+            "/user/keys",
+            None
         )
 
     def get_organization_events( self, org ):
         assert isinstance( org, Organization.Organization ), org
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/users/" + self.login + "/events/orgs/" + org.login,
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
-            headers,
-            data
+            "/users/" + self.login + "/events/orgs/" + org.login,
+            None
         )
 
     def get_orgs( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/orgs",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Organization.Organization,
             self._requester,
-            headers,
-            data
+            "/user/orgs",
+            None
         )
 
     def get_repo( self, name ):
@@ -501,73 +444,43 @@ class AuthenticatedUser( GithubObject.GithubObject ):
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:
             url_parameters[ "direction" ] = direction
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/repos",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            "/user/repos",
+            url_parameters
         )
 
     def get_starred( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/starred",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            "/user/starred",
+            None
         )
 
     def get_starred_gists( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/gists/starred",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Gist.Gist,
             self._requester,
-            headers,
-            data
+            "/gists/starred",
+            None
         )
 
     def get_subscriptions( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/subscriptions",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            "/user/subscriptions",
+            None
         )
 
     def get_watched( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/user/watched",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            "/user/watched",
+            None
         )
 
     def has_in_following( self, following ):

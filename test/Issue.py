@@ -55,6 +55,16 @@ class Issue( Framework.TestCase ):
         self.assertEqual( self.issue.title, "Title edited by PyGithub" )
         self.assertListKeyEqual( self.issue.labels, lambda l: l.name, [ "Bug" ] )
 
+    def testEditResetMilestone( self ):
+        self.assertEqual( self.issue.milestone.title, "Version 0.4" )
+        self.issue.edit( milestone = None )
+        self.assertEqual( self.issue.milestone, None )
+
+    def testEditResetAssignee( self ):
+        self.assertEqual( self.issue.assignee.login, "jacquev6" )
+        self.issue.edit( assignee = None )
+        self.assertEqual( self.issue.assignee, None )
+
     def testCreateComment( self ):
         comment = self.issue.create_comment( "Comment created by PyGithub" )
         self.assertEqual( comment.id, 5808311 )

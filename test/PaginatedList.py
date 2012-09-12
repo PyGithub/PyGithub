@@ -21,6 +21,12 @@ class PaginatedList( Framework.TestCase ):
     def testIteration( self ):
         self.assertEqual( len( list( self.list ) ), 333 )
 
+    def testSeveralIterations( self ):
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+        self.assertEqual( len( list( self.list ) ), 333 )
+
     def testIntIndexingInFirstPage( self ):
         self.assertEqual( self.list[ 0 ].id, 4772349 )
         self.assertEqual( self.list[ 24 ].id, 4286936 )
@@ -28,6 +34,12 @@ class PaginatedList( Framework.TestCase ):
     def testIntIndexingInThirdPage( self ):
         self.assertEqual( self.list[ 50 ].id, 3911629 )
         self.assertEqual( self.list[ 74 ].id, 3605277 )
+
+    def testGetFirstPage( self ):
+        self.assertListKeyEqual( self.list.get_page( 0 ), lambda i: i.id, [ 4772349, 4767675, 4758608, 4700182, 4662873, 4608132, 4604661, 4588997, 4557803, 4554058, 4539985, 4507572, 4507492, 4507416, 4447561, 4406584, 4384548, 4383465, 4373361, 4373201, 4370619, 4356530, 4352401, 4317009, 4286936 ] )
+
+    def testGetThirdPage( self ):
+        self.assertListKeyEqual( self.list.get_page( 2 ), lambda i: i.id, [ 3911629, 3911537, 3910580, 3910555, 3910549, 3897090, 3883598, 3856005, 3850655, 3825582, 3813852, 3812318, 3812275, 3807459, 3799872, 3799653, 3795495, 3754055, 3710293, 3662214, 3647640, 3631618, 3627067, 3614231, 3605277 ] )
 
     def testIntIndexingAfterIteration( self ):
         self.assertEqual( len( list( self.list ) ), 333 )

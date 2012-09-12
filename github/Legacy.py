@@ -11,32 +11,39 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import urlparse
+
 from PaginatedList import PaginatedListBase
 
 class PaginatedList( PaginatedListBase ):
     def __init__( self, url, args, requester, key, convert, contentClass ):
-        PaginatedListBase.__init__( self, list() )
+        PaginatedListBase.__init__( self )
         self.__url = url
         self.__args = args
         self.__requester = requester
         self.__key = key
         self.__convert = convert
         self.__contentClass = contentClass
-        self.__nextPage = 1
+        self.__nextPage = 0
         self.__continue = True
-        self.__elements = list()
 
     def _couldGrow( self ):
         return self.__continue
 
     def _fetchNextPage( self ):
-        if self.__nextPage != 1:
-            self.__args[ "start_page" ] = self.__nextPage
+        page = self.__nextPage
         self.__nextPage += 1
+        return self.get_page( page )
+
+    def get_page( self, page ):
+        assert isinstance( page, int ), page
+        args = dict( self.__args )
+        if page != 0:
+            args[ "start_page" ] = page + 1
         headers, data = self.__requester.requestAndCheck(
             "GET",
             self.__url,
-            self.__args,
+            args,
             None
         )
         self.__continue = len( data[ self.__key ] ) > 0
@@ -46,29 +53,51 @@ class PaginatedList( PaginatedListBase ):
         ]
 
 def convertUser( attributes ):
-    login = attributes[ "login" ]
-    return {
-        "login": login,
-        "url": "/users/" + login,
+    convertedAttributes = {
+        "login": attributes[ "login" ],
+        "url": "/users/" + attributes[ "login" ],
     }
+    if "gravatar_id" in attributes: convertedAttributes[ "gravatar_id" ] = attributes[ "gravatar_id" ]
+    if "followers" in attributes: convertedAttributes[ "followers" ] = attributes[ "followers" ]
+    if "repos" in attributes: convertedAttributes[ "public_repos" ] = attributes[ "repos" ]
+    if "name" in attributes: convertedAttributes[ "name" ] = attributes[ "name" ]
+    if "created_at" in attributes: convertedAttributes[ "created_at" ] = attributes[ "created_at" ]
+    if "location" in attributes: convertedAttributes[ "location" ] = attributes[ "location" ]
+    return convertedAttributes
 
 def convertRepo( attributes ):
-    owner = attributes[ "owner" ]
-    name = attributes[ "name" ]
-    return {
-        "owner": { "login": owner },
-        "name": name,
-        "url": "/repos/" + owner + "/" + name,
+    convertedAttributes = {
+        "owner": { "login": attributes[ "owner" ], "url": "/users/" + attributes[ "owner" ] },
+        "url": "/repos/" + attributes[ "owner" ] + "/" + attributes[ "name" ],
     }
+    if "pushed_at" in attributes: convertedAttributes[ "pushed_at" ] = attributes[ "pushed_at" ]
+    if "homepage" in attributes: convertedAttributes[ "homepage" ] = attributes[ "homepage" ]
+    if "created_at" in attributes: convertedAttributes[ "created_at" ] = attributes[ "created_at" ]
+    if "watchers" in attributes: convertedAttributes[ "watchers" ] = attributes[ "watchers" ]
+    if "has_downloads" in attributes: convertedAttributes[ "has_downloads" ] = attributes[ "has_downloads" ]
+    if "fork" in attributes: convertedAttributes[ "fork" ] = attributes[ "fork" ]
+    if "has_issues" in attributes: convertedAttributes[ "has_issues" ] = attributes[ "has_issues" ]
+    if "has_wiki" in attributes: convertedAttributes[ "has_wiki" ] = attributes[ "has_wiki" ]
+    if "forks" in attributes: convertedAttributes[ "forks" ] = attributes[ "forks" ]
+    if "size" in attributes: convertedAttributes[ "size" ] = attributes[ "size" ]
+    if "private" in attributes: convertedAttributes[ "private" ] = attributes[ "private" ]
+    if "open_issues" in attributes: convertedAttributes[ "open_issues" ] = attributes[ "open_issues" ]
+    if "description" in attributes: convertedAttributes[ "description" ] = attributes[ "description" ]
+    if "language" in attributes: convertedAttributes[ "language" ] = attributes[ "language" ]
+    if "name" in attributes: convertedAttributes[ "name" ] = attributes[ "name" ]
+    return convertedAttributes
 
 def convertIssue( attributes ):
-    number = attributes[ "number" ]
-    title = attributes[ "title" ]
-    html_url = attributes[ "html_url" ]
-    assert html_url.startswith( "https://github.com/" )
-    url = html_url.replace( "https://github.com/", "/repos/" )
-    return {
-        "title": title,
-        "number": number,
-        "url": url,
+    convertedAttributes = {
+        "number": attributes[ "number" ],
+        "url": "/repos" + urlparse.urlparse( attributes[ "html_url" ] ).path,
+        "user": { "login": attributes[ "user" ], "url": "/users/" + attributes[ "user" ] },
     }
+    if "labels" in attributes: convertedAttributes[ "labels" ] = [ { "name": label } for label in attributes[ "labels" ] ]
+    if "title" in attributes: convertedAttributes[ "title" ] = attributes[ "title" ]
+    if "created_at" in attributes: convertedAttributes[ "created_at" ] = attributes[ "created_at" ]
+    if "comments" in attributes: convertedAttributes[ "comments" ] = attributes[ "comments" ]
+    if "body" in attributes: convertedAttributes[ "body" ] = attributes[ "body" ]
+    if "updated_at" in attributes: convertedAttributes[ "updated_at" ] = attributes[ "updated_at" ]
+    if "state" in attributes: convertedAttributes[ "state" ] = attributes[ "state" ]
+    return convertedAttributes

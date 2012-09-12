@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -150,9 +147,9 @@ class Issue( GithubObject.GithubObject ):
     def edit( self, title = GithubObject.NotSet, body = GithubObject.NotSet, assignee = GithubObject.NotSet, state = GithubObject.NotSet, milestone = GithubObject.NotSet, labels = GithubObject.NotSet ):
         assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
         assert body is GithubObject.NotSet or isinstance( body, ( str, unicode ) ), body
-        assert assignee is GithubObject.NotSet or isinstance( assignee, NamedUser.NamedUser ), assignee
+        assert assignee is GithubObject.NotSet or assignee is None or isinstance( assignee, NamedUser.NamedUser ), assignee
         assert state is GithubObject.NotSet or isinstance( state, ( str, unicode ) ), state
-        assert milestone is GithubObject.NotSet or isinstance( milestone, Milestone.Milestone ), milestone
+        assert milestone is GithubObject.NotSet or milestone is None or isinstance( milestone, Milestone.Milestone ), milestone
         assert labels is GithubObject.NotSet or all( isinstance( element, ( str, unicode ) ) for element in labels ), labels
         post_parameters = dict()
         if title is not GithubObject.NotSet:
@@ -160,11 +157,11 @@ class Issue( GithubObject.GithubObject ):
         if body is not GithubObject.NotSet:
             post_parameters[ "body" ] = body
         if assignee is not GithubObject.NotSet:
-            post_parameters[ "assignee" ] = assignee._identity
+            post_parameters[ "assignee" ] = assignee._identity if assignee else ''
         if state is not GithubObject.NotSet:
             post_parameters[ "state" ] = state
         if milestone is not GithubObject.NotSet:
-            post_parameters[ "milestone" ] = milestone._identity
+            post_parameters[ "milestone" ] = milestone._identity if milestone else ''
         if labels is not GithubObject.NotSet:
             post_parameters[ "labels" ] = labels
         headers, data = self._requester.requestAndCheck(
@@ -186,45 +183,27 @@ class Issue( GithubObject.GithubObject ):
         return IssueComment.IssueComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueComment.IssueComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def get_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self._requester,
-            headers,
-            data
+            self.url + "/events",
+            None
         )
 
     def get_labels( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/labels",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
-            headers,
-            data
+            self.url + "/labels",
+            None
         )
 
     def remove_from_labels( self, label ):

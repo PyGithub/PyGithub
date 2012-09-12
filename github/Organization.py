@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -248,45 +245,27 @@ class Organization( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def get_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
-            headers,
-            data
+            self.url + "/events",
+            None
         )
 
     def get_members( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/members",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/members",
+            None
         )
 
     def get_public_members( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/public_members",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/public_members",
+            None
         )
 
     def get_repo( self, name ):
@@ -304,17 +283,11 @@ class Organization( GithubObject.GithubObject ):
         url_parameters = dict()
         if type is not GithubObject.NotSet:
             url_parameters[ "type" ] = type
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/repos",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            self.url + "/repos",
+            url_parameters
         )
 
     def get_team( self, id ):
@@ -328,17 +301,11 @@ class Organization( GithubObject.GithubObject ):
         return Team.Team( self._requester, data, completed = True )
 
     def get_teams( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/teams",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Team.Team,
             self._requester,
-            headers,
-            data
+            self.url + "/teams",
+            None
         )
 
     def has_in_members( self, member ):

@@ -1,6 +1,3 @@
-# WARNING: this file is generated automaticaly.
-# Do not modify it manually, your work would be lost.
-
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -513,17 +510,11 @@ class Repository( GithubObject.GithubObject ):
         return headers[ "location" ]
 
     def get_assignees( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/assignees",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/assignees",
+            None
         )
 
     def get_branch( self, branch ):
@@ -537,31 +528,19 @@ class Repository( GithubObject.GithubObject ):
         return Branch.Branch( self._requester, data, completed = True )
 
     def get_branches( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/branches",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Branch.Branch,
             self._requester,
-            headers,
-            data
+            self.url + "/branches",
+            None
         )
 
     def get_collaborators( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/collaborators",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/collaborators",
+            None
         )
 
     def get_comment( self, id ):
@@ -575,17 +554,11 @@ class Repository( GithubObject.GithubObject ):
         return CommitComment.CommitComment( self._requester, data, completed = True )
 
     def get_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def get_commit( self, sha ):
@@ -606,17 +579,11 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "sha" ] = sha
         if path is not GithubObject.NotSet:
             url_parameters[ "path" ] = path
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/commits",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             Commit.Commit,
             self._requester,
-            headers,
-            data
+            self.url + "/commits",
+            url_parameters
         )
 
     def get_contents( self, path ):
@@ -630,17 +597,11 @@ class Repository( GithubObject.GithubObject ):
         return ContentFile.ContentFile( self._requester, data, completed = True )
 
     def get_contributors( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/contributors",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/contributors",
+            None
         )
 
     def get_download( self, id ):
@@ -654,45 +615,27 @@ class Repository( GithubObject.GithubObject ):
         return Download.Download( self._requester, data, completed = True )
 
     def get_downloads( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/downloads",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Download.Download,
             self._requester,
-            headers,
-            data
+            self.url + "/downloads",
+            None
         )
 
     def get_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
-            headers,
-            data
+            self.url + "/events",
+            None
         )
 
     def get_forks( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/forks",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository,
             self._requester,
-            headers,
-            data
+            self.url + "/forks",
+            None
         )
 
     def get_git_blob( self, sha ):
@@ -726,17 +669,11 @@ class Repository( GithubObject.GithubObject ):
         return GitRef.GitRef( self._requester, data, completed = True )
 
     def get_git_refs( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/git/refs",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             GitRef.GitRef,
             self._requester,
-            headers,
-            data
+            self.url + "/git/refs",
+            None
         )
 
     def get_git_tag( self, sha ):
@@ -774,17 +711,11 @@ class Repository( GithubObject.GithubObject ):
         return Hook.Hook( self._requester, data, completed = True )
 
     def get_hooks( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/hooks",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Hook.Hook,
             self._requester,
-            headers,
-            data
+            self.url + "/hooks",
+            None
         )
 
     def get_issue( self, number ):
@@ -829,17 +760,11 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "direction" ] = direction
         if since is not GithubObject.NotSet:
             url_parameters[ "since" ] = since.strftime( "%Y-%m-%dT%H:%M:%SZ" )
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/issues",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             Issue.Issue,
             self._requester,
-            headers,
-            data
+            self.url + "/issues",
+            url_parameters
         )
 
     def get_issues_event( self, id ):
@@ -853,17 +778,11 @@ class Repository( GithubObject.GithubObject ):
         return IssueEvent.IssueEvent( self._requester, data, completed = True )
 
     def get_issues_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/issues/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             IssueEvent.IssueEvent,
             self._requester,
-            headers,
-            data
+            self.url + "/issues/events",
+            None
         )
 
     def get_key( self, id ):
@@ -877,17 +796,11 @@ class Repository( GithubObject.GithubObject ):
         return RepositoryKey.RepositoryKey( self._requester, data, completed = True, repoUrl = self._url )
 
     def get_keys( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/keys",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             lambda requester, data, completed: RepositoryKey.RepositoryKey( requester, data, completed, repoUrl = self._url ),
             self._requester,
-            headers,
-            data
+            self.url + "/keys",
+            None
         )
 
     def get_label( self, name ):
@@ -901,17 +814,11 @@ class Repository( GithubObject.GithubObject ):
         return Label.Label( self._requester, data, completed = True )
 
     def get_labels( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/labels",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Label.Label,
             self._requester,
-            headers,
-            data
+            self.url + "/labels",
+            None
         )
 
     def get_languages( self ):
@@ -944,31 +851,19 @@ class Repository( GithubObject.GithubObject ):
             url_parameters[ "sort" ] = sort
         if direction is not GithubObject.NotSet:
             url_parameters[ "direction" ] = direction
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/milestones",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             Milestone.Milestone,
             self._requester,
-            headers,
-            data
+            self.url + "/milestones",
+            url_parameters
         )
 
     def get_network_events( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            "/networks/" + self.owner.login + "/" + self.name + "/events",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Event.Event,
             self._requester,
-            headers,
-            data
+            "/networks/" + self.owner.login + "/" + self.name + "/events",
+            None
         )
 
     def get_pull( self, number ):
@@ -986,17 +881,11 @@ class Repository( GithubObject.GithubObject ):
         url_parameters = dict()
         if state is not GithubObject.NotSet:
             url_parameters[ "state" ] = state
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/pulls",
-            url_parameters,
-            None
-        )
         return PaginatedList.PaginatedList(
             PullRequest.PullRequest,
             self._requester,
-            headers,
-            data
+            self.url + "/pulls",
+            url_parameters
         )
 
     def get_readme( self ):
@@ -1009,73 +898,43 @@ class Repository( GithubObject.GithubObject ):
         return ContentFile.ContentFile( self._requester, data, completed = True )
 
     def get_stargazers( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/stargazers",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/stargazers",
+            None
         )
 
     def get_subscribers( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/subscribers",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/subscribers",
+            None
         )
 
     def get_tags( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/tags",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Tag.Tag,
             self._requester,
-            headers,
-            data
+            self.url + "/tags",
+            None
         )
 
     def get_teams( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/teams",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Team.Team,
             self._requester,
-            headers,
-            data
+            self.url + "/teams",
+            None
         )
 
     def get_watchers( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/watchers",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/watchers",
+            None
         )
 
     def has_in_assignees( self, assignee ):

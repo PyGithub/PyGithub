@@ -10,11 +10,11 @@ git add setup.py
 
 git log v$previousVersion.. --oneline
 
-echo "Edit ReadMe.md now, then press enter"
+echo "Edit ReadMe.md and doc/ChangeLog.md now, then press enter"
 read foobar
-git add ReadMe.md
+git add ReadMe.md doc/ChangeLog.md
 
-echo "Breack (Ctrl+c) here if something is wrong. Else, press enter"
+echo "Break (Ctrl+c) here if something is wrong. Else, press enter"
 read foobar
 
 git commit -m "Publish version $version"

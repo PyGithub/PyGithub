@@ -1,13 +1,6 @@
 You don't normaly create instances of any class but `Github`.
 You obtain instances through calls to `search_`, `get_` and `create_` methods.
 
-Methods returning an "iterator of `SomeType`" return an iterator which yields instances of `SomeType`.
-This implements lazy [pagination requests](http://developer.github.com/v3/#pagination).
-You can use this iterator in a `for f in user.get_followers():` loop or with any [itertools](http://docs.python.org/library/itertools.html) functions,
-but you cannot know the number of objects returned before the end of the iteration.
-If that's really what you need, you cant use `len( list( user.get_followers() ) )`, which does all the requests needed to enumerate the user's followers.
-Note that there is often an attribute giving this value (in that case `user.followers`).
-
 Class `Github`
 ==============
 
@@ -31,19 +24,30 @@ Methods
 * `get_organization( login )`: `Organization`
 * `get_gist( id )`: `Gist`
     * `id`: string
-* `get_gists()`: iterator of `Gist`
-* `get_hooks()`: iterator of `HookDescription`
-* `search_repos( keyword )`: iterator of `Repository`
-* `legacy_search_repos( keyword, [language] )`: iterator of `Repository`
+* `get_gists()`: `PaginatedList` of `Gist`
+* `get_hooks()`: `PaginatedList` of `HookDescription`
+* `legacy_search_repos( keyword, [language] )`: `PaginatedList` of `Repository`
     * `keyword`: string
     * `language`: string
-* `legacy_search_users( keyword )`: iterator of `NamedUser`
+* `legacy_search_users( keyword )`: `PaginatedList` of `NamedUser`
     * `keyword`: string
 * `legacy_search_user_by_email( email )`: `NamedUser`
     * `email`: string
 * `render_markdown( text, [context] )`: string
     * `text`: string
     * `context`: `Repository`
+
+Class `PaginatedList`
+=====================
+
+This class implements lazy [pagination requests](http://developer.github.com/v3/#pagination) and hides pagination from you. It is the return type of `get_` methods that return a collection.
+
+You can iterate on it in a `for f in user.get_followers():` loop or with any [itertools](http://docs.python.org/library/itertools.html) functions.
+
+You cannot know the number of objects returned before the end of the iteration. If that's *really* what you need, you cant use `len( list( user.get_followers() ) )`,
+which does all the requests needed to enumerate the user's followers. Note that there is often an attribute giving this value (in that case `user.followers`).
+
+You can also call `get_page( page )` where `page` is an integer starting at 0, to explicitely get a specific page if you don't want to hide pagination.
 
 Class `GithubException`
 =======================
@@ -92,7 +96,7 @@ Authorizations
     * `note_url`: string
 * `get_authorization( id )`: `Authorization`
     * `id`: integer
-* `get_authorizations()`: iterator of `Authorization`
+* `get_authorizations()`: `PaginatedList` of `Authorization`
 
 Emails
 ------
@@ -104,19 +108,19 @@ Emails
 
 Events
 ------
-* `get_events()`: iterator of `Event`
-* `get_organization_events( org )`: iterator of `Event`
+* `get_events()`: `PaginatedList` of `Event`
+* `get_organization_events( org )`: `PaginatedList` of `Event`
     * `org`: `Organization`
 
 Followers
 ---------
-* `get_followers()`: iterator of `NamedUser`
+* `get_followers()`: `PaginatedList` of `NamedUser`
 
 Following
 ---------
 * `add_to_following( following )`
     * `following`: `NamedUser`
-* `get_following()`: iterator of `NamedUser`
+* `get_following()`: `PaginatedList` of `NamedUser`
 * `has_in_following( following )`: bool
     * `following`: `NamedUser`
 * `remove_from_following( following )`
@@ -133,12 +137,12 @@ Gists
     * `public`: bool
     * `files`: dict of string to `InputFileContent`
     * `description`: string
-* `get_gists()`: iterator of `Gist`
-* `get_starred_gists()`: iterator of `Gist`
+* `get_gists()`: `PaginatedList` of `Gist`
+* `get_starred_gists()`: `PaginatedList` of `Gist`
 
 Issues
 ------
-* `get_issues()`: iterator of `Issue`
+* `get_issues()`: `PaginatedList` of `Issue`
 
 Keys
 ----
@@ -147,7 +151,7 @@ Keys
     * `key`: string
 * `get_key( id )`: `UserKey`
     * `id`: integer
-* `get_keys()`: iterator of `UserKey`
+* `get_keys()`: `PaginatedList` of `UserKey`
 
 Modification
 ------------
@@ -162,7 +166,7 @@ Modification
 
 Orgs
 ----
-* `get_orgs()`: iterator of `Organization`
+* `get_orgs()`: `PaginatedList` of `Organization`
 
 Repos
 -----
@@ -176,7 +180,7 @@ Repos
     * `has_downloads`: bool
 * `get_repo( name )`: `Repository`
     * `name`: string
-* `get_repos( [type, sort, direction] )`: iterator of `Repository`
+* `get_repos( [type, sort, direction] )`: `PaginatedList` of `Repository`
     * `type`: string
     * `sort`: string
     * `direction`: string
@@ -185,7 +189,7 @@ Starred
 -------
 * `add_to_starred( starred )`
     * `starred`: `Repository`
-* `get_starred()`: iterator of `Repository`
+* `get_starred()`: `PaginatedList` of `Repository`
 * `has_in_starred( starred )`: bool
     * `starred`: `Repository`
 * `remove_from_starred( starred )`
@@ -195,7 +199,7 @@ Subscriptions
 -------------
 * `add_to_subscriptions( subscription )`
     * `subscription`: `Repository`
-* `get_subscriptions()`: iterator of `Repository`
+* `get_subscriptions()`: `PaginatedList` of `Repository`
 * `has_in_subscriptions( subscription )`: bool
     * `subscription`: `Repository`
 * `remove_from_subscriptions( subscription )`
@@ -205,7 +209,7 @@ Watched
 -------
 * `add_to_watched( watched )`
     * `watched`: `Repository`
-* `get_watched()`: iterator of `Repository`
+* `get_watched()`: `PaginatedList` of `Repository`
 * `has_in_watched( watched )`: bool
     * `watched`: `Repository`
 * `remove_from_watched( watched )`
@@ -276,7 +280,7 @@ Comments
     * `line`: integer
     * `path`: string
     * `position`: integer
-* `get_comments()`: iterator of `CommitComment`
+* `get_comments()`: `PaginatedList` of `CommitComment`
 
 Statuses
 --------
@@ -284,7 +288,7 @@ Statuses
     * `state`: string
     * `target_url`: string
     * `description`: string
-* `get_statuses()`: iterator of `CommitStatus`
+* `get_statuses()`: `PaginatedList` of `CommitStatus`
 
 Class `CommitComment`
 =====================
@@ -451,7 +455,7 @@ Comments
     * `body`: string
 * `get_comment( id )`: `GistComment`
     * `id`: integer
-* `get_comments()`: iterator of `GistComment`
+* `get_comments()`: `PaginatedList` of `GistComment`
 
 Deletion
 --------
@@ -692,18 +696,18 @@ Comments
     * `body`: string
 * `get_comment( id )`: `IssueComment`
     * `id`: integer
-* `get_comments()`: iterator of `IssueComment`
+* `get_comments()`: `PaginatedList` of `IssueComment`
 
 Events
 ------
-* `get_events()`: iterator of `IssueEvent`
+* `get_events()`: `PaginatedList` of `IssueEvent`
 
 Labels
 ------
 * `add_to_labels( label, ... )`
     * `label`: `Label`
 * `delete_labels()`
-* `get_labels()`: iterator of `Label`
+* `get_labels()`: `PaginatedList` of `Label`
 * `remove_from_labels( label )`
     * `label`: `Label`
 * `set_labels( label, ... )`
@@ -714,9 +718,9 @@ Modification
 * `edit( [title, body, assignee, state, milestone, labels] )`
     * `title`: string
     * `body`: string
-    * `assignee`: `NamedUser`
+    * `assignee`: `NamedUser` or None
     * `state`: string
-    * `milestone`: `Milestone`
+    * `milestone`: `Milestone` or None
     * `labels`: list of string
 
 Class `IssueComment`
@@ -804,7 +808,7 @@ Deletion
 
 Labels
 ------
-* `get_labels()`: iterator of `Label`
+* `get_labels()`: `PaginatedList` of `Label`
 
 Modification
 ------------
@@ -848,18 +852,18 @@ Attributes
 
 Events
 ------
-* `get_events()`: iterator of `Event`
-* `get_public_events()`: iterator of `Event`
-* `get_received_events()`: iterator of `Event`
-* `get_public_received_events()`: iterator of `Event`
+* `get_events()`: `PaginatedList` of `Event`
+* `get_public_events()`: `PaginatedList` of `Event`
+* `get_received_events()`: `PaginatedList` of `Event`
+* `get_public_received_events()`: `PaginatedList` of `Event`
 
 Followers
 ---------
-* `get_followers()`: iterator of `NamedUser`
+* `get_followers()`: `PaginatedList` of `NamedUser`
 
 Following
 ---------
-* `get_following()`: iterator of `NamedUser`
+* `get_following()`: `PaginatedList` of `NamedUser`
 
 Gists
 -----
@@ -867,30 +871,30 @@ Gists
     * `public`: bool
     * `files`: dict of string to `InputFileContent`
     * `description`: string
-* `get_gists()`: iterator of `Gist`
+* `get_gists()`: `PaginatedList` of `Gist`
 
 Orgs
 ----
-* `get_orgs()`: iterator of `Organization`
+* `get_orgs()`: `PaginatedList` of `Organization`
 
 Repos
 -----
 * `get_repo( name )`: `Repository`
     * `name`: string
-* `get_repos( [type] )`: iterator of `Repository`
+* `get_repos( [type] )`: `PaginatedList` of `Repository`
     * `type`: string
 
 Starred
 -------
-* `get_starred()`: iterator of `Repository`
+* `get_starred()`: `PaginatedList` of `Repository`
 
 Subscriptions
 -------------
-* `get_subscriptions()`: iterator of `Repository`
+* `get_subscriptions()`: `PaginatedList` of `Repository`
 
 Watched
 -------
-* `get_watched()`: iterator of `Repository`
+* `get_watched()`: `PaginatedList` of `Repository`
 
 Class `Organization`
 ====================
@@ -924,7 +928,7 @@ Attributes
 
 Events
 ------
-* `get_events()`: iterator of `Event`
+* `get_events()`: `PaginatedList` of `Event`
 
 Forking
 -------
@@ -933,7 +937,7 @@ Forking
 
 Members
 -------
-* `get_members()`: iterator of `NamedUser`
+* `get_members()`: `PaginatedList` of `NamedUser`
 * `has_in_members( member )`: bool
     * `member`: `NamedUser`
 * `remove_from_members( member )`
@@ -953,7 +957,7 @@ Public_members
 --------------
 * `add_to_public_members( public_member )`
     * `public_member`: `NamedUser`
-* `get_public_members()`: iterator of `NamedUser`
+* `get_public_members()`: `PaginatedList` of `NamedUser`
 * `has_in_public_members( public_member )`: bool
     * `public_member`: `NamedUser`
 * `remove_from_public_members( public_member )`
@@ -972,7 +976,7 @@ Repos
     * `team_id`: `Team`
 * `get_repo( name )`: `Repository`
     * `name`: string
-* `get_repos( [type] )`: iterator of `Repository`
+* `get_repos( [type] )`: `PaginatedList` of `Repository`
     * `type`: string
 
 Teams
@@ -983,7 +987,7 @@ Teams
     * `permission`: string
 * `get_team( id )`: `Team`
     * `id`: integer
-* `get_teams()`: iterator of `Team`
+* `get_teams()`: `PaginatedList` of `Team`
 
 Class `Permissions`
 ===================
@@ -1045,15 +1049,15 @@ Review comments
     * `position`: integer
 * `get_comment( id )` or `get_review_comment( id )`: `PullRequestComment`
     * `id`: integer
-* `get_comments()` or `get_review_comments()`: iterator of `PullRequestComment`
+* `get_comments()` or `get_review_comments()`: `PaginatedList` of `PullRequestComment`
 
 Commits
 -------
-* `get_commits()`: iterator of `Commit`
+* `get_commits()`: `PaginatedList` of `Commit`
 
 Files
 -----
-* `get_files()`: iterator of `File`
+* `get_files()`: `PaginatedList` of `File`
 
 Issue_comments
 --------------
@@ -1061,7 +1065,7 @@ Issue_comments
     * `body`: string
 * `get_issue_comment( id )`: `IssueComment`
     * `id`: integer
-* `get_issue_comments()`: iterator of `IssueComment`
+* `get_issue_comments()`: `PaginatedList` of `IssueComment`
 
 Merging
 -------
@@ -1166,7 +1170,7 @@ Comparison
 
 Assignees
 ---------
-* `get_assignees()`: iterator of `NamedUser`
+* `get_assignees()`: `PaginatedList` of `NamedUser`
 * `has_in_assignees( assignee )`: bool
     * `assignee`: `NamedUser`
 
@@ -1174,13 +1178,13 @@ Branches
 --------
 * `get_branch( branch )`: `Branch`
     * `branch`: string
-* `get_branches()`: iterator of `Branch`
+* `get_branches()`: `PaginatedList` of `Branch`
 
 Collaborators
 -------------
 * `add_to_collaborators( collaborator )`
     * `collaborator`: `NamedUser`
-* `get_collaborators()`: iterator of `NamedUser`
+* `get_collaborators()`: `PaginatedList` of `NamedUser`
 * `has_in_collaborators( collaborator )`: bool
     * `collaborator`: `NamedUser`
 * `remove_from_collaborators( collaborator )`
@@ -1190,13 +1194,13 @@ Comments
 --------
 * `get_comment( id )`: `CommitComment`
     * `id`: integer
-* `get_comments()`: iterator of `CommitComment`
+* `get_comments()`: `PaginatedList` of `CommitComment`
 
 Commits
 -------
 * `get_commit( sha )`: `Commit`
     * `sha`: string
-* `get_commits( [sha, path] )`: iterator of `Commit`
+* `get_commits( [sha, path] )`: `PaginatedList` of `Commit`
     * `sha`: string
     * `path`: string
 
@@ -1211,7 +1215,7 @@ Contents
 
 Contributors
 ------------
-* `get_contributors()`: iterator of `NamedUser`
+* `get_contributors()`: `PaginatedList` of `NamedUser`
 
 Deletion
 --------
@@ -1226,16 +1230,16 @@ Downloads
     * `content_type`: string
 * `get_download( id )`: `Download`
     * `id`: integer
-* `get_downloads()`: iterator of `Download`
+* `get_downloads()`: `PaginatedList` of `Download`
 
 Events
 ------
-* `get_events()`: iterator of `Event`
-* `get_network_events()`: iterator of `Event`
+* `get_events()`: `PaginatedList` of `Event`
+* `get_network_events()`: `PaginatedList` of `Event`
 
 Forks
 -----
-* `get_forks()`: iterator of `Repository`
+* `get_forks()`: `PaginatedList` of `Repository`
 
 Git_blobs
 ---------
@@ -1263,7 +1267,7 @@ Git_refs
     * `sha`: string
 * `get_git_ref( ref )`: `GitRef`
     * `ref`: string
-* `get_git_refs()`: iterator of `GitRef`
+* `get_git_refs()`: `PaginatedList` of `GitRef`
 
 Git_tags
 --------
@@ -1294,7 +1298,7 @@ Hooks
     * `active`: bool
 * `get_hook( id )`: `Hook`
     * `id`: integer
-* `get_hooks()`: iterator of `Hook`
+* `get_hooks()`: `PaginatedList` of `Hook`
 
 Issues
 ------
@@ -1306,7 +1310,7 @@ Issues
     * `labels`: list of `Label`
 * `get_issue( number )`: `Issue`
     * `number`: integer
-* `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: iterator of `Issue`
+* `get_issues( [milestone, state, assignee, mentioned, labels, sort, direction, since] )`: `PaginatedList` of `Issue`
     * `milestone`: `Milestone` or "none" or "*"
     * `state`: string
     * `assignee`: `NamedUser` or "none" or "*"
@@ -1315,7 +1319,7 @@ Issues
     * `sort`: string
     * `direction`: string
     * `since`: datetime.datetime
-* `legacy_search_issues( state, keyword )`: iterator of `Issue`
+* `legacy_search_issues( state, keyword )`: `PaginatedList` of `Issue`
     * `state`: "open" or "closed"
     * `keyword`: string
 
@@ -1323,7 +1327,7 @@ Issues_events
 -------------
 * `get_issues_event( id )`: `IssueEvent`
     * `id`: integer
-* `get_issues_events()`: iterator of `IssueEvent`
+* `get_issues_events()`: `PaginatedList` of `IssueEvent`
 
 Keys
 ----
@@ -1332,7 +1336,7 @@ Keys
     * `key`: string
 * `get_key( id )`: `RepositoryKey`
     * `id`: integer
-* `get_keys()`: iterator of `RepositoryKey`
+* `get_keys()`: `PaginatedList` of `RepositoryKey`
 
 Labels
 ------
@@ -1341,7 +1345,7 @@ Labels
     * `color`: string
 * `get_label( name )`: `Label`
     * `name`: string
-* `get_labels()`: iterator of `Label`
+* `get_labels()`: `PaginatedList` of `Label`
 
 Languages
 ---------
@@ -1363,7 +1367,7 @@ Milestones
     * `due_on`: date
 * `get_milestone( number )`: `Milestone`
     * `number`: integer
-* `get_milestones( [state, sort, direction] )`: iterator of `Milestone`
+* `get_milestones( [state, sort, direction] )`: `PaginatedList` of `Milestone`
     * `state`: string
     * `sort`: string
     * `direction`: string
@@ -1389,28 +1393,28 @@ Pulls
     * `head`: string
 * `get_pull( number )`: `PullRequest`
     * `number`: integer
-* `get_pulls( [state] )`: iterator of `PullRequest`
+* `get_pulls( [state] )`: `PaginatedList` of `PullRequest`
     * `state`: string
 
 Stargazers
 ----------
-* `get_stargazers()`: iterator of `NamedUser`
+* `get_stargazers()`: `PaginatedList` of `NamedUser`
 
 Subscribers
 -----------
-* `get_subscribers()`: iterator of `NamedUser`
+* `get_subscribers()`: `PaginatedList` of `NamedUser`
 
 Tags
 ----
-* `get_tags()`: iterator of `Tag`
+* `get_tags()`: `PaginatedList` of `Tag`
 
 Teams
 -----
-* `get_teams()`: iterator of `Team`
+* `get_teams()`: `PaginatedList` of `Team`
 
 Watchers
 --------
-* `get_watchers()`: iterator of `NamedUser`
+* `get_watchers()`: `PaginatedList` of `NamedUser`
 
 Class `RepositoryKey`
 =====================
@@ -1463,7 +1467,7 @@ Members
 -------
 * `add_to_members( member )`
     * `member`: `NamedUser`
-* `get_members()`: iterator of `NamedUser`
+* `get_members()`: `PaginatedList` of `NamedUser`
 * `has_in_members( member )`: bool
     * `member`: `NamedUser`
 * `remove_from_members( member )`
@@ -1479,7 +1483,7 @@ Repos
 -----
 * `add_to_repos( repo )`
     * `repo`: `Repository`
-* `get_repos()`: iterator of `Repository`
+* `get_repos()`: `PaginatedList` of `Repository`
 * `has_in_repos( repo )`: bool
     * `repo`: `Repository`
 * `remove_from_repos( repo )`

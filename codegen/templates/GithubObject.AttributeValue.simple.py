@@ -1,1 +1,0 @@
-{% if attribute.type.name == "datetime" %}self._parseDatetime( attributes[ "{{ attribute.name }}" ] ){% else %}attributes[ "{{ attribute.name }}" ]{% endif %}
