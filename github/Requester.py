@@ -51,6 +51,7 @@ class Requester:
         self.__port = o.port
         self.__prefix = o.path
         self.__timeout = timeout
+        self.__scheme = o.scheme
         if o.scheme == "https":
             self.__connectionClass = self.__httpsConnectionClass
         elif o.scheme == "http":
@@ -71,11 +72,17 @@ class Requester:
 
         #URLs generated locally will be relative to __base_url
         #URLs returned from the server will start with __base_url
-        if url.startswith( self.__base_url ):
-            url = url[ len(self.__base_url): ]
+        if url.startswith( "/" ):
+            url = self.__prefix + url
         else:
-            assert url.startswith( "/" )
-        url = self.__prefix + url
+            o = urlparse.urlparse( url )
+            assert o.scheme == self.__scheme or o.scheme == "https" and self.__scheme == "http" # Issue #80
+            assert o.hostname == self.__hostname
+            assert o.path.startswith( self.__prefix )
+            assert o.port == self.__port
+            url = o.path
+            if o.query != "":
+                url += "?" + o.query
 
         headers = dict()
         if self.__authorizationHeader is not None:
