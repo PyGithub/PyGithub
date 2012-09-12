@@ -11,11 +11,14 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-[Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 11th, 2012)
+[Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
 -----------------------------------------------------------------------------------------------------------
 
 * Be able to clear the assignee and the milestone of an Issue. Thank you [quixotique](https://github.com/quixotique) for the merge request
-* Small refactoring (documentation, removal of code generation artifacts)
+* Fix an AssertionFailure in `Organization.get_xxx` when using Github Enterprise. Thank you [mnsanghvi](https://github.com/mnsanghvi) for pointing that
+* Expose pagination to users needing it (`PaginatedList.get_page`). Thank you [kukuts](https://github.com/kukuts) for asking
+* Improve handling of legacy search APIs
+* Small refactoring (documentation, removal of old code generation artifacts)
 
 Previous versions
 -----------------
