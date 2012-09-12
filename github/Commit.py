@@ -105,31 +105,19 @@ class Commit( GithubObject.GithubObject ):
         return CommitStatus.CommitStatus( self._requester, data, completed = True )
 
     def get_comments( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/comments",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             CommitComment.CommitComment,
             self._requester,
-            headers,
-            data
+            self.url + "/comments",
+            None
         )
 
     def get_statuses( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self._parentUrl( self._parentUrl( self.url ) ) + "/statuses/" + self.sha,
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             CommitStatus.CommitStatus,
             self._requester,
-            headers,
-            data
+            self._parentUrl( self._parentUrl( self.url ) ) + "/statuses/" + self.sha,
+            None
         )
 
     @property

@@ -91,31 +91,19 @@ class Team( GithubObject.GithubObject ):
         self._useAttributes( data )
 
     def get_members( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/members",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             NamedUser.NamedUser,
             self._requester,
-            headers,
-            data
+            self.url + "/members",
+            None
         )
 
     def get_repos( self ):
-        headers, data = self._requester.requestAndCheck(
-            "GET",
-            self.url + "/repos",
-            None,
-            None
-        )
         return PaginatedList.PaginatedList(
             Repository.Repository,
             self._requester,
-            headers,
-            data
+            self.url + "/repos",
+            None
         )
 
     def has_in_members( self, member ):
