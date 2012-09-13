@@ -28,7 +28,7 @@ DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_TIMEOUT = 10
 
 class Github( object ):
-    def __init__( self, login_or_token = None, password = None, base_url = DEFAULT_BASE_URL, timeout = DEFAULT_TIMEOUT):
+    def __init__( self, login_or_token = None, password = None, base_url = DEFAULT_BASE_URL, timeout = DEFAULT_TIMEOUT ):
         self.__requester = Requester( login_or_token, password, base_url, timeout )
 
     @property

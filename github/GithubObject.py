@@ -20,7 +20,7 @@ class _NotSetType:
 NotSet = _NotSetType()
 
 class BasicGithubObject( object ):
-    def __init__( self, requester, attributes, completed ): ### 'completed' may be removed if I find a way
+    def __init__( self, requester, attributes ):
         self._requester = requester
         self._initAttributes()
         self._useAttributes( attributes )

@@ -47,7 +47,9 @@ You can iterate on it in a `for f in user.get_followers():` loop or with any [it
 You cannot know the number of objects returned before the end of the iteration. If that's *really* what you need, you cant use `len( list( user.get_followers() ) )`,
 which does all the requests needed to enumerate the user's followers. Note that there is often an attribute giving this value (in that case `user.followers`).
 
-You can also call `get_page( page )` where `page` is an integer starting at 0, to explicitely get a specific page if you don't want to hide pagination.
+You can also call `get_page( page )` to explicitely get a specific page if you don't want to hide pagination. `page` starts at 0.
+* `get_page( page )`: list
+    * `page`: integer
 
 Class `GithubException`
 =======================
@@ -1042,14 +1044,22 @@ Attributes
 
 Review comments
 ---------------
-* `create_comment( body, commit_id, path, position )` or `create_review_comment( body, commit_id, path, position )`: `PullRequestComment`
+* `create_comment( body, commit_id, path, position )`: `PullRequestComment`
     * `body`: string
     * `commit_id`: `Commit`
     * `path`: string
     * `position`: integer
-* `get_comment( id )` or `get_review_comment( id )`: `PullRequestComment`
+* `create_review_comment( body, commit_id, path, position )`: `PullRequestComment`
+    * `body`: string
+    * `commit_id`: `Commit`
+    * `path`: string
+    * `position`: integer
+* `get_comment( id )`: `PullRequestComment`
     * `id`: integer
-* `get_comments()` or `get_review_comments()`: `PaginatedList` of `PullRequestComment`
+* `get_review_comment( id )`: `PullRequestComment`
+    * `id`: integer
+* `get_comments()`: `PaginatedList` of `PullRequestComment`
+* `get_review_comments()`: `PaginatedList` of `PullRequestComment`
 
 Commits
 -------

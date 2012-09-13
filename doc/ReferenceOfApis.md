@@ -133,7 +133,7 @@ API `/rate_limit`
 
 API `/repos/:user/:repo`
 ========================
-* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
+* GET: `AuthenticatedUser.get_repo` or `NamedUser.get_repo` or `Organization.get_repo`
 * PATCH: `Repository.edit`
 * DELETE: `Repository.delete`
 
@@ -219,7 +219,7 @@ API `/repos/:user/:repo/events`
 API `/repos/:user/:repo/forks`
 ==============================
 * GET: `Repository.get_forks`
-* POST: `AuthenticatedUser.create_fork`
+* POST: `AuthenticatedUser.create_fork` or `Organization.create_fork`
 
 API `/repos/:user/:repo/git/blobs`
 ==================================
@@ -433,7 +433,7 @@ API `/repos/:user/:repo/watchers`
 
 API `/teams/:id`
 ================
-* GET: Lazy completion of `Team`
+* GET: `Organization.get_team`
 * PATCH: `Team.edit`
 * DELETE: `Team.delete`
 
