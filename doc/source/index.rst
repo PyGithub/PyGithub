@@ -20,3 +20,8 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+.. automodule:: github.Github
+   :members:
+
+.. automodule:: github.Organization
+   :members:

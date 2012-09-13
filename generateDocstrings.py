@@ -48,7 +48,8 @@ class Generator():
             elif memberName in classDescription.methods:
                 return [
                     "Please edit this generated docstring for method " + className + "." + memberName + ".",
-                    "Calls " + ( classDescription.methods[ memberName ].verb or "WTF" ) + " " + ( classDescription.methods[ memberName ].url or "WTF" )
+                    "Calls " + ( classDescription.methods[ memberName ].verb or "WTF" ) + " " + ( classDescription.methods[ memberName ].url or "WTF" ),
+                    "",
                 ] + [
                     ":param " + parameterName + ": " + parameterType for parameterName, parameterType in classDescription.methods[ memberName ].parameters.items()
                 ] + [
