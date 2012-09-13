@@ -16,7 +16,8 @@ import datetime
 import GithubException
 
 class _NotSetType:
-    pass
+    def __repr__( self ):
+        return "NotSet"
 NotSet = _NotSetType()
 
 class BasicGithubObject( object ):
