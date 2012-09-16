@@ -13,8 +13,21 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup
+from distutils.core import setup, Command
 import textwrap
+
+class TestCommand( Command ):
+    user_options = []
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
+        import sys, subprocess
+        raise SystemExit( subprocess.call( [ sys.executable, "test/IntegrationTest.py" ] ) )
 
 setup(
     name = "PyGithub",
@@ -66,4 +79,5 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development",
     ],
+    cmdclass = { "test": TestCommand },
 )
