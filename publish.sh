@@ -1,6 +1,6 @@
 #!/bin/sh
 
-./run_tests.sh
+python setup.py test
 
 previousVersion=$( grep 'version =' setup.py | sed 's/.*version = \"\(.*\)\".*/\1/' )
 echo "Next version number? (previous: '$previousVersion')"

@@ -16,9 +16,7 @@ import sys
 import unittest
 import httplib
 import traceback
-import itertools
 
-sys.path = [ os.path.join( os.path.dirname( __file__ ), ".." ) ] + sys.path
 import github
 
 class FakeHttpResponse:
@@ -175,8 +173,5 @@ class TestCase( BasicTestCase ):
         BasicTestCase.setUp( self )
         self.g = github.Github( self.login, self.password )
 
-def main():
-    if "--record" in sys.argv:
-        BasicTestCase.recordMode = True
-
-    unittest.main( argv = [ arg for arg in sys.argv if arg != "--record" ] )
+def activateRecordMode():
+    BasicTestCase.recordMode = True

@@ -16,18 +16,18 @@
 from distutils.core import setup, Command
 import textwrap
 
-class TestCommand( Command ):
+class test( Command ):
     user_options = []
 
-    def initialize_options(self):
+    def initialize_options( self ):
         pass
 
-    def finalize_options(self):
+    def finalize_options( self ):
         pass
 
-    def run(self):
-        import sys, subprocess
-        raise SystemExit( subprocess.call( [ sys.executable, "test/IntegrationTest.py" ] ) )
+    def run( self ):
+        import github.tests
+        github.tests.run()
 
 setup(
     name = "PyGithub",
@@ -66,9 +66,10 @@ setup(
         See http://vincent-jacques.net/PyGithub""" ),
     packages = [
         "github",
+        "github.tests",
     ],
     package_data = {
-        "github": [ "ReadMe.md", "COPYING*", "doc/*.md" ]
+        "github": [ "ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt" ]
     },
     classifiers = [
         "Development Status :: 5 - Production/Stable",
@@ -79,5 +80,5 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development",
     ],
-    cmdclass = { "test": TestCommand },
+    cmdclass = { "test": test },
 )
