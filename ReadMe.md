@@ -11,6 +11,11 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+[Next version](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (???, 2012)
+-----------------------------------------------------------------------------------------------------------
+
+* Enable Travis CI
+
 [Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
 -----------------------------------------------------------------------------------------------------------
 
