@@ -81,3 +81,16 @@ Projects using PyGithub
 
 * [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
+* https://github.com/CMB/cligh
+* https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
+* https://gist.github.com/3433798
+* https://github.com/zsiciarz/aquila-dsp.org
+* https://github.com/robcowie/virtualenvwrapper.github
+
+They talk about PyGithub
+========================
+
+* http://stackoverflow.com/questions/10625190/most-suitable-python-library-for-github-api-v3
+* http://stackoverflow.com/questions/12379637/django-social-auth-github-authentication
+* http://www.freebsd.org/cgi/cvsweb.cgi/ports/devel/py-pygithub/
+* http://oddshocks.com/blog/2012/08/02/developing-charsheet/
