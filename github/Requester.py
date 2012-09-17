@@ -114,7 +114,7 @@ class Requester:
 
         logger = Logging.get_logger()
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug(' '.join(map(unicode, [verb, self.__base_url + url, parameters, input, "==>", status, str(headers), str(output)])))
+            logger.debug(' '.join(map(str, [verb, self.__base_url + url, parameters, input, "==>", status, str(headers), str(output)])))
         return status, headers, output
 
     def __completeUrl( self, url, parameters ):
