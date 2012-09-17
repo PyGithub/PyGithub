@@ -26,14 +26,12 @@ else: #pragma no cover
     import simplejson as json #pragma no cover
 
 import GithubException
+import Logging
+
 
 class Requester:
     __httpConnectionClass = httplib.HTTPConnection
     __httpsConnectionClass = httplib.HTTPSConnection
-
-    @staticmethod
-    def __logger():
-        return logging.getLogger('github')
 
     @classmethod
     def injectConnectionClasses( cls, httpConnectionClass, httpsConnectionClass ):
@@ -114,7 +112,7 @@ class Requester:
         if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
             self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
-        logger = self.__logger()
+        logger = Logging.get_logger()
         if logger.isEnabledFor(logging.DEBUG):
             logger.debug(' '.join(map(unicode, [verb, self.__base_url + url, parameters, input, "==>", status, str(headers), str(output)])))
         return status, headers, output
