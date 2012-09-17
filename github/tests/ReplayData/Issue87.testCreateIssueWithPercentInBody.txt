@@ -1,0 +1,5 @@
+https POST api.github.com None /repos/jacquev6/PyGithub/issues {'Authorization': 'Basic login_and_password_removed'} {"body": "Percent % in body", "title": "Issue created by PyGithub"}
+500
+[('date', 'Mon, 17 Sep 2012 18:43:18 GMT'), ('transfer-encoding', 'chunked'), ('connection', 'keep-alive'), ('server', 'nginx')]
+
+

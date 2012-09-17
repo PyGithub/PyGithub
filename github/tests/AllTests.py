@@ -57,3 +57,4 @@ from Issue33 import *
 from Issue50 import *
 from Issue54 import *
 from Issue80 import *
+from Issue87 import *
