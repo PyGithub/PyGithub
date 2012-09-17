@@ -16,3 +16,4 @@ from GithubException import GithubException
 from InputFileContent import InputFileContent
 from InputGitAuthor import InputGitAuthor
 from InputGitTreeElement import InputGitTreeElement
+from Logging import get_logger

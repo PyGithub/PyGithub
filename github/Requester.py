@@ -11,6 +11,7 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import httplib
 import base64
 import urllib
@@ -25,6 +26,8 @@ else: #pragma no cover
     import simplejson as json #pragma no cover
 
 import GithubException
+import Logging
+
 
 class Requester:
     __httpConnectionClass = httplib.HTTPConnection
@@ -109,7 +112,9 @@ class Requester:
         if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
             self.rate_limiting = ( int( headers[ "x-ratelimit-remaining" ] ), int( headers[ "x-ratelimit-limit" ] ) )
 
-        # print verb, self.__base_url + url, parameters, input, "==>", status, str( headers ), str( output )
+        logger = Logging.get_logger()
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(' '.join(map(str, [verb, self.__base_url + url, parameters, input, "==>", status, str(headers), str(output)])))
         return status, headers, output
 
     def __completeUrl( self, url, parameters ):

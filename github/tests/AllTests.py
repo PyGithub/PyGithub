@@ -51,6 +51,7 @@ from UserKey import *
 from PaginatedList import *
 from Exceptions import *
 from Enterprise import *
+from Logging import *
 
 from Issue33 import *
 from Issue50 import *
