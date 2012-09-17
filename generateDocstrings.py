@@ -43,11 +43,13 @@ class Generator():
             if memberName in classDescription.properties:
                 return [
                     "Please edit this generated docstring for property " + className + "." + memberName + ".",
-                    classDescription.properties[ memberName ]
+                    "",
+                    ":type: " + classDescription.properties[ memberName ]
                 ]
             elif memberName in classDescription.methods:
                 return [
                     "Please edit this generated docstring for method " + className + "." + memberName + ".",
+                    "",
                     "Calls " + ( classDescription.methods[ memberName ].verb or "WTF" ) + " " + ( classDescription.methods[ memberName ].url or "WTF" ),
                     "",
                 ] + [

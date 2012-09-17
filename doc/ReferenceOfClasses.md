@@ -21,7 +21,9 @@ Methods
 -------
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
+    * `login`: string
 * `get_organization( login )`: `Organization`
+    * `login`: string
 * `get_gist( id )`: `Gist`
     * `id`: string
 * `get_gists()`: `PaginatedList` of `Gist`
