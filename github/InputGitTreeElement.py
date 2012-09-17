@@ -13,8 +13,9 @@
 
 import GithubObject
 
-class InputGitTreeElement( object ):
-    def __init__( self, path, mode, type, content = GithubObject.NotSet, sha = GithubObject.NotSet ):
+
+class InputGitTreeElement(object):
+    def __init__(self, path, mode, type, content=GithubObject.NotSet, sha=GithubObject.NotSet):
         self.__path = path
         self.__mode = mode
         self.__type = type
@@ -22,14 +23,14 @@ class InputGitTreeElement( object ):
         self.__sha = sha
 
     @property
-    def _identity( self ):
+    def _identity(self):
         identity = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,
         }
         if self.__sha is not GithubObject.NotSet:
-            identity[ "sha" ] = self.__sha
+            identity["sha"] = self.__sha
         if self.__content is not GithubObject.NotSet:
-            identity[ "content" ] = self.__content
+            identity["content"] = self.__content
         return identity

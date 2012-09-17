@@ -1,5 +1,6 @@
 #!/bin/sh
 
+pep8 --ignore=E501 github  # pip install pep8
 python setup.py test
 
 previousVersion=$( grep 'version =' setup.py | sed 's/.*version = \"\(.*\)\".*/\1/' )

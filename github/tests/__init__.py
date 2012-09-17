@@ -15,5 +15,6 @@ import unittest
 
 import AllTests
 
+
 def run():
-    unittest.main( module = AllTests, argv = [ "Dummy Script Name" ] )
+    unittest.main(module=AllTests, argv=["Dummy Script Name"])

@@ -18,16 +18,17 @@ import Framework
 import github
 import datetime
 
-class ContentFile( Framework.TestCase ):
-    def setUp( self ):
-        Framework.TestCase.setUp( self )
-        self.file = self.g.get_user().get_repo( "PyGithub" ).get_readme()
 
-    def testAttributes( self ):
-        self.assertEqual( self.file.type, "file" )
-        self.assertEqual( self.file.encoding, "base64" )
-        self.assertEqual( self.file.size, 7531 )
-        self.assertEqual( self.file.name, "ReadMe.md" )
-        self.assertEqual( self.file.path, "ReadMe.md" )
-        self.assertEqual( len( base64.b64decode( self.file.content ) ), 7531 )
-        self.assertEqual( self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0" )
+class ContentFile(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.file = self.g.get_user().get_repo("PyGithub").get_readme()
+
+    def testAttributes(self):
+        self.assertEqual(self.file.type, "file")
+        self.assertEqual(self.file.encoding, "base64")
+        self.assertEqual(self.file.size, 7531)
+        self.assertEqual(self.file.name, "ReadMe.md")
+        self.assertEqual(self.file.path, "ReadMe.md")
+        self.assertEqual(len(base64.b64decode(self.file.content)), 7531)
+        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
