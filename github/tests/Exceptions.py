@@ -12,8 +12,11 @@
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
 import github
+import sys
 
 import Framework
+
+atLeastPython26 = sys.hexversion >= 0x02060000
 
 # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
 class Exceptions( Framework.TestCase ):
@@ -37,7 +40,10 @@ class Exceptions( Framework.TestCase ):
                     "message": "Validation Failed"
                 }
             )
-            self.assertEqual( str( exception ), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}" )
+            if atLeastPython26:
+                self.assertEqual( str( exception ), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}" )
+            else:
+                self.assertEqual( str( exception ), "422 {\'message\': \'Validation Failed\', \'errors\': [{\'field\': \'key\', \'message\': \"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", \'code\': \'custom\', \'resource\': \'PublicKey\'}]}" )
 
     def testUnknownObject( self ):
         try:
@@ -46,7 +52,10 @@ class Exceptions( Framework.TestCase ):
         except github.GithubException, exception:
             self.assertEqual( exception.status, 404 )
             self.assertEqual( exception.data, { "message": "Not Found" } )
-            self.assertEqual( str( exception ), "404 {u'message': u'Not Found'}" )
+            if atLeastPython26:
+                self.assertEqual( str( exception ), "404 {u'message': u'Not Found'}" )
+            else:
+                self.assertEqual( str( exception ), "404 {'message': 'Not Found'}" )
 
     def testUnknownUser( self ):
         try:
@@ -55,7 +64,10 @@ class Exceptions( Framework.TestCase ):
         except github.GithubException, exception:
             self.assertEqual( exception.status, 404 )
             self.assertEqual( exception.data, { "message": "Not Found" } )
-            self.assertEqual( str( exception ), "404 {u'message': u'Not Found'}" )
+            if atLeastPython26:
+                self.assertEqual( str( exception ), "404 {u'message': u'Not Found'}" )
+            else:
+                self.assertEqual( str( exception ), "404 {'message': 'Not Found'}" )
 
     def testBadAuthentication( self ):
         try:
@@ -64,4 +76,7 @@ class Exceptions( Framework.TestCase ):
         except github.GithubException, exception:
             self.assertEqual( exception.status, 401 )
             self.assertEqual( exception.data, { "message": "Bad credentials" } )
-            self.assertEqual( str( exception ), "401 {u'message': u'Bad credentials'}" )
+            if atLeastPython26:
+                self.assertEqual( str( exception ), "401 {u'message': u'Bad credentials'}" )
+            else:
+                self.assertEqual( str( exception ), "401 {'message': 'Bad credentials'}" )
