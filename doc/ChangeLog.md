@@ -1,3 +1,13 @@
+[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 26th, 2012)
+-------------------------------------------------------------------------------------------------------------
+
+* Enable [Travis CI](http://travis-ci.org/#!/jacquev6/PyGithub)
+* Fix error 500 when json payload contains percent character (`%`). Thank you again [quixotique](https://github.com/quixotique) for pointing that and reporting it to Github
+* Enable debug logging. Logger name is `"github"`. Simple logging can be enabled by `github.enable_console_debug_logging()`. Thank you [quixotique](https://github.com/quixotique) for the merge request and the advice
+* Publish tests in the PyPi source archive to ease QA tests of the [FreeBSD port](http://www.freshports.org/devel/py-pygithub/). Thank you [koobs](https://github.com/koobs) for maintaining this port
+* Switch to [Semantic Versioning](http://semver.org/)
+* Respect [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/)
+
 [Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
 ===========================================================================================================
 
