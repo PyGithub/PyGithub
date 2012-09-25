@@ -26,7 +26,6 @@ else:  # pragma no cover
     import simplejson as json  # pragma no cover
 
 import GithubException
-import Logging
 
 
 class Requester:
@@ -86,12 +85,13 @@ class Requester:
             url = o.path
             if o.query != "":
                 url += "?" + o.query
+        url = self.__completeUrl(url, parameters)
 
-        headers = dict()
+        requestHeaders = dict()
         if input is not None:
-            headers["Content-Type"] = "application/json"
+            requestHeaders["Content-Type"] = "application/json"
         if self.__authorizationHeader is not None:
-            headers["Authorization"] = self.__authorizationHeader
+            requestHeaders["Authorization"] = self.__authorizationHeader
 
         if atLeastPython26:
             cnx = self.__connectionClass(host=self.__hostname, port=self.__port, strict=True, timeout=self.__timeout)
@@ -99,25 +99,33 @@ class Requester:
             cnx = self.__connectionClass(host=self.__hostname, port=self.__port, strict=True)  # pragma no cover
         cnx.request(
             verb,
-            self.__completeUrl(url, parameters),
+            url,
             json.dumps(input),
-            headers
+            requestHeaders
         )
         response = cnx.getresponse()
 
         status = response.status
-        headers = dict(response.getheaders())
+        responseHeaders = dict(response.getheaders())
         output = response.read()
 
         cnx.close()
 
-        if "x-ratelimit-remaining" in headers and "x-ratelimit-limit" in headers:
-            self.rate_limiting = (int(headers["x-ratelimit-remaining"]), int(headers["x-ratelimit-limit"]))
+        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
+            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
 
-        logger = Logging.get_logger()
+        logger = logging.getLogger(__name__)
         if logger.isEnabledFor(logging.DEBUG):
-            logger.debug(' '.join(map(str, [verb, self.__base_url + url, parameters, input, "==>", status, str(headers), str(output)])))
-        return status, headers, output
+            if "Authorization" in requestHeaders:
+                if requestHeaders["Authorization"].startswith("Basic"):
+                    requestHeaders["Authorization"] = "Basic (login and password removed)"
+                elif requestHeaders["Authorization"].startswith("token"):
+                    requestHeaders["Authorization"] = "token (oauth token removed)"
+                else:
+                    requestHeaders["Authorization"] = "Unknown authorization removed"
+            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
+
+        return status, responseHeaders, output
 
     def __completeUrl(self, url, parameters):
         if parameters is None or len(parameters) == 0:
