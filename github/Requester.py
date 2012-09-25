@@ -88,6 +88,8 @@ class Requester:
                 url += "?" + o.query
 
         headers = dict()
+        if input is not None:
+            headers["Content-Type"] = "application/json"
         if self.__authorizationHeader is not None:
             headers["Authorization"] = self.__authorizationHeader
 
