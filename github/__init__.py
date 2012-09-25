@@ -19,6 +19,7 @@ from InputFileContent import InputFileContent
 from InputGitAuthor import InputGitAuthor
 from InputGitTreeElement import InputGitTreeElement
 
+
 def enable_console_debug_logging():
     logger = logging.getLogger("github")
     logger.setLevel(logging.DEBUG)
