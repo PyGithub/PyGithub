@@ -87,6 +87,7 @@ class Requester:
         headers = dict()
         if self.__authorizationHeader is not None:
             headers[ "Authorization" ] = self.__authorizationHeader
+        headers["Content-type"] = "application/json"
 
         if atLeastPython26:
             cnx = self.__connectionClass( host = self.__hostname, port = self.__port, strict = True, timeout = self.__timeout )
