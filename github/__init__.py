@@ -11,8 +11,16 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
+
 from Github import Github
 from GithubException import GithubException
 from InputFileContent import InputFileContent
 from InputGitAuthor import InputGitAuthor
 from InputGitTreeElement import InputGitTreeElement
+
+
+def enable_console_debug_logging():
+    logger = logging.getLogger("github")
+    logger.setLevel(logging.DEBUG)
+    logger.addHandler(logging.StreamHandler())

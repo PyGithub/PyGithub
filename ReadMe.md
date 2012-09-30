@@ -11,14 +11,17 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-[Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
------------------------------------------------------------------------------------------------------------
+[![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
-* Be able to clear the assignee and the milestone of an Issue. Thank you [quixotique](https://github.com/quixotique) for the merge request
-* Fix an AssertionFailure in `Organization.get_xxx` when using Github Enterprise. Thank you [mnsanghvi](https://github.com/mnsanghvi) for pointing that
-* Expose pagination to users needing it (`PaginatedList.get_page`). Thank you [kukuts](https://github.com/kukuts) for asking
-* Improve handling of legacy search APIs
-* Small refactoring (documentation, removal of old code generation artifacts)
+[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 26th, 2012)
+-------------------------------------------------------------------------------------------------------------
+
+* Enable [Travis CI](http://travis-ci.org/#!/jacquev6/PyGithub)
+* Fix error 500 when json payload contains percent character (`%`). Thank you again [quixotique](https://github.com/quixotique) for pointing that and reporting it to Github
+* Enable debug logging. Logger name is `"github"`. Simple logging can be enabled by `github.enable_console_debug_logging()`. Thank you [quixotique](https://github.com/quixotique) for the merge request and the advice
+* Publish tests in the PyPi source archive to ease QA tests of the [FreeBSD port](http://www.freshports.org/devel/py-pygithub/). Thank you [koobs](https://github.com/koobs) for maintaining this port
+* Switch to [Semantic Versioning](http://semver.org/)
+* Respect [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/)
 
 Previous versions
 -----------------
@@ -74,3 +77,16 @@ Projects using PyGithub
 
 * [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
+* https://github.com/CMB/cligh
+* https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
+* https://gist.github.com/3433798
+* https://github.com/zsiciarz/aquila-dsp.org
+* https://github.com/robcowie/virtualenvwrapper.github
+
+They talk about PyGithub
+========================
+
+* http://stackoverflow.com/questions/10625190/most-suitable-python-library-for-github-api-v3
+* http://stackoverflow.com/questions/12379637/django-social-auth-github-authentication
+* http://www.freebsd.org/cgi/cvsweb.cgi/ports/devel/py-pygithub/
+* http://oddshocks.com/blog/2012/08/02/developing-charsheet/

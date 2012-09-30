@@ -15,53 +15,56 @@ import datetime
 
 import GithubException
 
+
 class _NotSetType:
     pass
 NotSet = _NotSetType()
 
-class BasicGithubObject( object ):
-    def __init__( self, requester, attributes, completed ): ### 'completed' may be removed if I find a way
+
+class BasicGithubObject(object):
+    def __init__(self, requester, attributes, completed):  # 'completed' may be removed if I find a way
         self._requester = requester
         self._initAttributes()
-        self._useAttributes( attributes )
+        self._useAttributes(attributes)
 
     @staticmethod
-    def _parentUrl( url ):
-        return "/".join( url.split( "/" )[ : -1 ] )
+    def _parentUrl(url):
+        return "/".join(url.split("/")[: -1])
 
     @staticmethod
-    def _NoneIfNotSet( value ):
+    def _NoneIfNotSet(value):
         if value is NotSet:
             return None
         else:
             return value
 
     @staticmethod
-    def _parseDatetime( s ):
+    def _parseDatetime(s):
         if s is None:
             return None
-        elif len( s ) == 24:
-            return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%S.000Z" )
-        elif len( s ) == 25:
-            return datetime.datetime.strptime( s[ : 19 ], "%Y-%m-%dT%H:%M:%S" ) + ( 1 if s[ 19 ] == '-' else -1 ) * datetime.timedelta( hours = int( s[ 20 : 22 ] ), minutes = int( s[ 23 : 25 ] ) )
+        elif len(s) == 24:
+            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
+        elif len(s) == 25:
+            return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
         else:
-            return datetime.datetime.strptime( s, "%Y-%m-%dT%H:%M:%SZ" )
+            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-class GithubObject( BasicGithubObject ):
-    def __init__( self, requester, attributes, completed ):
-        BasicGithubObject.__init__( self, requester, attributes, completed )
+
+class GithubObject(BasicGithubObject):
+    def __init__(self, requester, attributes, completed):
+        BasicGithubObject.__init__(self, requester, attributes, completed)
         self.__completed = completed
 
-    def _completeIfNotSet( self, value ):
+    def _completeIfNotSet(self, value):
         if not self.__completed and value is NotSet:
             self.__complete()
 
-    def __complete( self ):
+    def __complete(self):
         headers, data = self._requester.requestAndCheck(
             "GET",
             self._url,
             None,
             None
         )
-        self._useAttributes( data )
+        self._useAttributes(data)
         self._completed = True
