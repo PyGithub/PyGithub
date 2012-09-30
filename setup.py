@@ -31,7 +31,7 @@ class test( Command ):
 
 setup(
     name = "PyGithub",
-    version = "1.7",
+    version = "1.8.0",
     description = "Use the full Github API v3",
     author = "Vincent Jacques",
     author_email = "vincent@vincent-jacques.net",

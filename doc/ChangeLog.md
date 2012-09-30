@@ -1,4 +1,4 @@
-[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 26th, 2012)
+[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 30th, 2012)
 -------------------------------------------------------------------------------------------------------------
 
 * Enable [Travis CI](http://travis-ci.org/#!/jacquev6/PyGithub)
