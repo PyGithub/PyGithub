@@ -17,7 +17,7 @@ import Framework
 class GitRef(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.ref = self.g.get_user().get_repo("PyGithub").get_git_ref("refs/heads/BranchCreatedByPyGithub")
+        self.ref = self.g.get_user().get_repo("PyGithub").get_git_ref("heads/BranchCreatedByPyGithub")
 
     def testAttributes(self):
         self.assertEqual(self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")

@@ -663,7 +663,7 @@ class Repository(GithubObject.GithubObject):
         assert isinstance(ref, (str, unicode)), ref
         headers, data = self._requester.requestAndCheck(
             "GET",
-            self.url + "/git/" + ref,
+            self.url + "/git/refs/" + ref,
             None,
             None
         )

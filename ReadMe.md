@@ -13,15 +13,10 @@ What's new?
 
 [![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 30th, 2012)
--------------------------------------------------------------------------------------------------------------
+[Version 1.8.1](https://github.com/jacquev6/PyGithub/issues?milestone=15&state=closed) (October ??th, 2012)
+-----------------------------------------------------------------------------------------------------------
 
-* Enable [Travis CI](http://travis-ci.org/#!/jacquev6/PyGithub)
-* Fix error 500 when json payload contains percent character (`%`). Thank you again [quixotique](https://github.com/quixotique) for pointing that and reporting it to Github
-* Enable debug logging. Logger name is `"github"`. Simple logging can be enabled by `github.enable_console_debug_logging()`. Thank you [quixotique](https://github.com/quixotique) for the merge request and the advice
-* Publish tests in the PyPi source archive to ease QA tests of the [FreeBSD port](http://www.freshports.org/devel/py-pygithub/). Thank you [koobs](https://github.com/koobs) for maintaining this port
-* Switch to [Semantic Versioning](http://semver.org/)
-* Respect [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/)
+* Repository.get_git_ref prepends "refs/" to the requested references. Thank you [simon-weber](https://github.com/simon-weber) for noting the incoherence between documentation and behavior
 
 Previous versions
 -----------------
