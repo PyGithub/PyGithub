@@ -267,6 +267,17 @@ class Repository(Framework.TestCase):
     def testGetGitRefs(self):
         self.assertListKeyEqual(self.repo.get_git_refs(), lambda r: r.ref, ["refs/heads/develop", "refs/heads/master", "refs/heads/topic/DependencyGraph", "refs/heads/topic/RewriteWithGeneratedCode", "refs/tags/v0.1", "refs/tags/v0.2", "refs/tags/v0.3", "refs/tags/v0.4", "refs/tags/v0.5", "refs/tags/v0.6", "refs/tags/v0.7"])
 
+    def testGetGitRef(self):
+        self.assertTrue(self.g.FIX_REPO_GET_GIT_REF)
+        self.assertEqual(self.repo.get_git_ref("heads/master").object.sha, "31110327ec45f3138e58ed247b2cf420fee481ec")
+
+    def testGetGitRefWithIssue102Reverted(self):
+        self.g.FIX_REPO_GET_GIT_REF = False
+        self.assertFalse(self.g.FIX_REPO_GET_GIT_REF)
+        self.assertEqual(self.repo.get_git_ref("refs/heads/master").object.sha, "31110327ec45f3138e58ed247b2cf420fee481ec")
+        self.g.FIX_REPO_GET_GIT_REF = True
+        self.assertTrue(self.g.FIX_REPO_GET_GIT_REF)
+
     def testGetGitTreeWithRecursive(self):
         tree = self.repo.get_git_tree("f492784d8ca837779650d1fb406a1a3587a764ad", True)
         self.assertEqual(len(tree.tree), 90)
