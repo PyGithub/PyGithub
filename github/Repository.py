@@ -660,10 +660,13 @@ class Repository(GithubObject.GithubObject):
         return GitCommit.GitCommit(self._requester, data, completed=True)
 
     def get_git_ref(self, ref):
+        prefix = "/git/refs/"
+        if not self._requester.FIX_REPO_GET_GIT_REF:
+            prefix = "/git/"
         assert isinstance(ref, (str, unicode)), ref
         headers, data = self._requester.requestAndCheck(
             "GET",
-            self.url + "/git/refs/" + ref,
+            self.url + prefix + ref,
             None,
             None
         )

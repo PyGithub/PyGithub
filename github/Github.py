@@ -34,6 +34,14 @@ class Github(object):
         self.__requester = Requester(login_or_token, password, base_url, timeout)
 
     @property
+    def FIX_REPO_GET_GIT_REF(self):
+        return self.__requester.FIX_REPO_GET_GIT_REF
+
+    @FIX_REPO_GET_GIT_REF.setter
+    def FIX_REPO_GET_GIT_REF(self, value):
+        self.__requester.FIX_REPO_GET_GIT_REF = value
+
+    @property
     def rate_limiting(self):
         return self.__requester.rate_limiting
 

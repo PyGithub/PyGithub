@@ -61,6 +61,7 @@ class Requester:
         else:
             assert(False)  # pragma no cover
         self.rate_limiting = (5000, 5000)
+        self.FIX_REPO_GET_GIT_REF = True
 
     def requestAndCheck(self, verb, url, parameters, input):
         status, headers, output = self.requestRaw(verb, url, parameters, input)
