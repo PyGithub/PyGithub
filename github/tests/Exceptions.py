@@ -21,10 +21,11 @@ atLeastPython26 = sys.hexversion >= 0x02060000
 
 class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
     def testInvalidInput(self):
+        raised = False
         try:
             self.g.get_user().create_key("Bad key", "xxx")
-            self.fail("Should have raised")
         except github.GithubException, exception:
+            raised = True
             self.assertEqual(exception.status, 422)
             self.assertEqual(
                 exception.data,
@@ -43,40 +44,47 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             if atLeastPython26:
                 self.assertEqual(str(exception), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}")
             else:
-                self.assertEqual(str(exception), "422 {\'message\': \'Validation Failed\', \'errors\': [{\'field\': \'key\', \'message\': \"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", \'code\': \'custom\', \'resource\': \'PublicKey\'}]}")
+                self.assertEqual(str(exception), "422 {\'message\': \'Validation Failed\', \'errors\': [{\'field\': \'key\', \'message\': \"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", \'code\': \'custom\', \'resource\': \'PublicKey\'}]}")  # pragma no cover
+        self.assertTrue(raised)
 
     def testUnknownObject(self):
+        raised = False
         try:
             self.g.get_user().get_repo("Xxx")
-            self.fail("Should have raised")
         except github.GithubException, exception:
+            raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
             if atLeastPython26:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")
+                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
+        self.assertTrue(raised)
 
     def testUnknownUser(self):
+        raised = False
         try:
             self.g.get_user("ThisUserShouldReallyNotExist")
-            self.fail("Should have raised")
         except github.GithubException, exception:
+            raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
             if atLeastPython26:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")
+                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
+        self.assertTrue(raised)
 
     def testBadAuthentication(self):
+        raised = False
         try:
             github.Github("BadUser", "BadPassword").get_user().login
-            self.fail("Should have raised")
         except github.GithubException, exception:
+            raised = True
             self.assertEqual(exception.status, 401)
             self.assertEqual(exception.data, {"message": "Bad credentials"})
             if atLeastPython26:
                 self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
             else:
-                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")
+                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover
+        self.assertTrue(raised)

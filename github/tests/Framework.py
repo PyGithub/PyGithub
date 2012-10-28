@@ -39,11 +39,11 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "token private_token_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
-        else:
+        else:  # pragma no cover
             assert False
 
 
-class RecordingConnection:
+class RecordingConnection:  # pragma no cover
     def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
@@ -76,14 +76,14 @@ class RecordingConnection:
         return self.__cnx.close()
 
 
-class RecordingHttpConnection(RecordingConnection):
+class RecordingHttpConnection(RecordingConnection):  # pragma no cover
     _realConnection = httplib.HTTPConnection
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
-class RecordingHttpsConnection(RecordingConnection):
+class RecordingHttpsConnection(RecordingConnection):  # pragma no cover
     _realConnection = httplib.HTTPSConnection
 
     def __init__(self, file, *args, **kwds):
@@ -130,7 +130,7 @@ class BasicTestCase(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.__fileName = ""
         self.__file = None
-        if self.recordMode:
+        if self.recordMode:  # pragma no cover
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
                 lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
@@ -165,7 +165,7 @@ class BasicTestCase(unittest.TestCase):
 
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
-            if not self.recordMode:
+            if not self.recordMode:  # pragma no branch
                 self.assertEqual(self.__file.readline(), "")
             self.__file.close()
 
@@ -184,5 +184,5 @@ class TestCase(BasicTestCase):
         self.g = github.Github(self.login, self.password)
 
 
-def activateRecordMode():
+def activateRecordMode():  # pragma no cover
     BasicTestCase.recordMode = True

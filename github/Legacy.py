@@ -59,17 +59,17 @@ def convertUser(attributes):
         "login": attributes["login"],
         "url": "/users/" + attributes["login"],
     }
-    if "gravatar_id" in attributes:
+    if "gravatar_id" in attributes:  # pragma no branch
         convertedAttributes["gravatar_id"] = attributes["gravatar_id"]
-    if "followers" in attributes:
+    if "followers" in attributes:  # pragma no branch
         convertedAttributes["followers"] = attributes["followers"]
-    if "repos" in attributes:
+    if "repos" in attributes:  # pragma no branch
         convertedAttributes["public_repos"] = attributes["repos"]
-    if "name" in attributes:
+    if "name" in attributes:  # pragma no branch
         convertedAttributes["name"] = attributes["name"]
-    if "created_at" in attributes:
+    if "created_at" in attributes:  # pragma no branch
         convertedAttributes["created_at"] = attributes["created_at"]
-    if "location" in attributes:
+    if "location" in attributes:  # pragma no branch
         convertedAttributes["location"] = attributes["location"]
     return convertedAttributes
 
@@ -79,35 +79,35 @@ def convertRepo(attributes):
         "owner": {"login": attributes["owner"], "url": "/users/" + attributes["owner"]},
         "url": "/repos/" + attributes["owner"] + "/" + attributes["name"],
     }
-    if "pushed_at" in attributes:
+    if "pushed_at" in attributes:  # pragma no branch
         convertedAttributes["pushed_at"] = attributes["pushed_at"]
-    if "homepage" in attributes:
+    if "homepage" in attributes:  # pragma no branch
         convertedAttributes["homepage"] = attributes["homepage"]
-    if "created_at" in attributes:
+    if "created_at" in attributes:  # pragma no branch
         convertedAttributes["created_at"] = attributes["created_at"]
-    if "watchers" in attributes:
+    if "watchers" in attributes:  # pragma no branch
         convertedAttributes["watchers"] = attributes["watchers"]
-    if "has_downloads" in attributes:
+    if "has_downloads" in attributes:  # pragma no branch
         convertedAttributes["has_downloads"] = attributes["has_downloads"]
-    if "fork" in attributes:
+    if "fork" in attributes:  # pragma no branch
         convertedAttributes["fork"] = attributes["fork"]
-    if "has_issues" in attributes:
+    if "has_issues" in attributes:  # pragma no branch
         convertedAttributes["has_issues"] = attributes["has_issues"]
-    if "has_wiki" in attributes:
+    if "has_wiki" in attributes:  # pragma no branch
         convertedAttributes["has_wiki"] = attributes["has_wiki"]
-    if "forks" in attributes:
+    if "forks" in attributes:  # pragma no branch
         convertedAttributes["forks"] = attributes["forks"]
-    if "size" in attributes:
+    if "size" in attributes:  # pragma no branch
         convertedAttributes["size"] = attributes["size"]
-    if "private" in attributes:
+    if "private" in attributes:  # pragma no branch
         convertedAttributes["private"] = attributes["private"]
-    if "open_issues" in attributes:
+    if "open_issues" in attributes:  # pragma no branch
         convertedAttributes["open_issues"] = attributes["open_issues"]
-    if "description" in attributes:
+    if "description" in attributes:  # pragma no branch
         convertedAttributes["description"] = attributes["description"]
-    if "language" in attributes:
+    if "language" in attributes:  # pragma no branch
         convertedAttributes["language"] = attributes["language"]
-    if "name" in attributes:
+    if "name" in attributes:  # pragma no branch
         convertedAttributes["name"] = attributes["name"]
     return convertedAttributes
 
@@ -118,18 +118,18 @@ def convertIssue(attributes):
         "url": "/repos" + urlparse.urlparse(attributes["html_url"]).path,
         "user": {"login": attributes["user"], "url": "/users/" + attributes["user"]},
     }
-    if "labels" in attributes:
+    if "labels" in attributes:  # pragma no branch
         convertedAttributes["labels"] = [{"name": label} for label in attributes["labels"]]
-    if "title" in attributes:
+    if "title" in attributes:  # pragma no branch
         convertedAttributes["title"] = attributes["title"]
-    if "created_at" in attributes:
+    if "created_at" in attributes:  # pragma no branch
         convertedAttributes["created_at"] = attributes["created_at"]
-    if "comments" in attributes:
+    if "comments" in attributes:  # pragma no branch
         convertedAttributes["comments"] = attributes["comments"]
-    if "body" in attributes:
+    if "body" in attributes:  # pragma no branch
         convertedAttributes["body"] = attributes["body"]
-    if "updated_at" in attributes:
+    if "updated_at" in attributes:  # pragma no branch
         convertedAttributes["updated_at"] = attributes["updated_at"]
-    if "state" in attributes:
+    if "state" in attributes:  # pragma no branch
         convertedAttributes["state"] = attributes["state"]
     return convertedAttributes

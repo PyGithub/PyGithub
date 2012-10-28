@@ -15,6 +15,8 @@
 
 from distutils.core import setup, Command
 import textwrap
+import sys
+import glob
 
 class test( Command ):
     user_options = []
@@ -26,8 +28,29 @@ class test( Command ):
         pass
 
     def run( self ):
+        try:
+            import coverage
+            analyseCoverage = True
+        except ImportError:
+            print "Unable to import coverage. Running tests without coverage analysis"
+            analyseCoverage = False
+        if analyseCoverage:
+            cov = coverage.coverage(branch=True)
+            cov.start()
+
         import github.tests
-        github.tests.run()
+        testsResult = github.tests.run()
+
+        ok = len( testsResult.failures ) == 0 and len( testsResult.errors ) == 0
+        if analyseCoverage:
+            cov.stop()
+            for f in glob.glob( "github/*.py" ):
+                ok = ok and len( cov.analysis2( f )[ 3 ] ) == 0
+            cov.report(file=sys.stdout, include="github/*")
+        if ok:
+            exit( 0 )
+        else:
+            exit( 1 )
 
 setup(
     name = "PyGithub",
