@@ -39,9 +39,7 @@ class test( Command ):
             cov.start()
 
         import github.tests
-        testsResult = github.tests.run()
-
-        ok = len( testsResult.failures ) == 0 and len( testsResult.errors ) == 0
+        ok = github.tests.run().wasSuccessful()
         if analyseCoverage:
             cov.stop()
             for f in glob.glob( "github/*.py" ):
