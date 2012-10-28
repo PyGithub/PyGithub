@@ -13,10 +13,10 @@ What's new?
 
 [![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.8.1](https://github.com/jacquev6/PyGithub/issues?milestone=15&state=closed) (October ??th, 2012)
+[Version 1.8.1](https://github.com/jacquev6/PyGithub/issues?milestone=15&state=closed) (October 28th, 2012)
 -----------------------------------------------------------------------------------------------------------
 
-* Repository.get_git_ref prepends "refs/" to the requested references. Thank you [simon-weber](https://github.com/simon-weber) for noting the incoherence between documentation and behavior
+* Repository.get_git_ref prepends "refs/" to the requested references. Thank you [simon-weber](https://github.com/simon-weber) for noting the incoherence between documentation and behavior. If you feel like it's a breaking change, please see [this issue](https://github.com/jacquev6/PyGithub/issues/104)
 
 Previous versions
 -----------------
