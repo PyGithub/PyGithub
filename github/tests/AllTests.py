@@ -25,7 +25,7 @@ from Gist import *
 from GistComment import *
 from GitBlob import *
 from GitCommit import *
-from Github import *
+from Github_ import *
 from GitRef import *
 from GitTag import *
 from GitTree import *
@@ -51,7 +51,7 @@ from UserKey import *
 from PaginatedList import *
 from Exceptions import *
 from Enterprise import *
-from Logging import *
+from Logging_ import *
 
 from Issue33 import *
 from Issue50 import *
