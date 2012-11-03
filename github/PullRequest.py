@@ -30,6 +30,11 @@ class PullRequest(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._additions)
 
     @property
+    def assignee(self):
+        self._completeIfNotSet(self._assignee)
+        return self._NoneIfNotSet(self._assignee)
+
+    @property
     def base(self):
         self._completeIfNotSet(self._base)
         return self._NoneIfNotSet(self._base)
@@ -290,6 +295,7 @@ class PullRequest(GithubObject.GithubObject):
 
     def _initAttributes(self):
         self._additions = GithubObject.NotSet
+        self._assignee = GithubObject.NotSet
         self._base = GithubObject.NotSet
         self._body = GithubObject.NotSet
         self._changed_files = GithubObject.NotSet
@@ -320,6 +326,9 @@ class PullRequest(GithubObject.GithubObject):
         if "additions" in attributes:  # pragma no branch
             assert attributes["additions"] is None or isinstance(attributes["additions"], int), attributes["additions"]
             self._additions = attributes["additions"]
+        if "assignee" in attributes:  # pragma no branch
+            assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
+            self._assignee = None if attributes["assignee"] is None else NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
         if "base" in attributes:  # pragma no branch
             assert attributes["base"] is None or isinstance(attributes["base"], dict), attributes["base"]
             self._base = None if attributes["base"] is None else PullRequestPart.PullRequestPart(self._requester, attributes["base"], completed=False)
