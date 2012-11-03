@@ -1014,6 +1014,7 @@ Class `PullRequest`
 Attributes
 ----------
 * `additions`: integer
+* `assignee`: `NamedUser`
 * `base`: `PullRequestPart`
 * `body`: string
 * `changed_files`: integer
