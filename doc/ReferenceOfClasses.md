@@ -170,7 +170,7 @@ Orgs
 
 Repos
 -----
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads] )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, auto_init, gitignore_template] )`: `Repository`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -178,6 +178,8 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
+    * `auto_init`: bool
+    * `gitignore_template`: string
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type, sort, direction] )`: `PaginatedList` of `Repository`
@@ -965,7 +967,7 @@ Public_members
 
 Repos
 -----
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id, auto_init, gitignore_template] )`: `Repository`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -974,6 +976,8 @@ Repos
     * `has_wiki`: bool
     * `has_downloads`: bool
     * `team_id`: `Team`
+    * `auto_init`: bool
+    * `gitignore_template`: string
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: `PaginatedList` of `Repository`

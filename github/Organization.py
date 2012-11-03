@@ -166,7 +166,7 @@ class Organization(GithubObject.GithubObject):
         )
         return Repository.Repository(self._requester, data, completed=True)
 
-    def create_repo(self, name, description=GithubObject.NotSet, homepage=GithubObject.NotSet, private=GithubObject.NotSet, has_issues=GithubObject.NotSet, has_wiki=GithubObject.NotSet, has_downloads=GithubObject.NotSet, team_id=GithubObject.NotSet):
+    def create_repo(self, name, description=GithubObject.NotSet, homepage=GithubObject.NotSet, private=GithubObject.NotSet, has_issues=GithubObject.NotSet, has_wiki=GithubObject.NotSet, has_downloads=GithubObject.NotSet, team_id=GithubObject.NotSet, auto_init=GithubObject.NotSet, gitignore_template=GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
         assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert homepage is GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
@@ -175,6 +175,8 @@ class Organization(GithubObject.GithubObject):
         assert has_wiki is GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert team_id is GithubObject.NotSet or isinstance(team_id, Team.Team), team_id
+        assert auto_init is GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert gitignore_template is GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
         post_parameters = {
             "name": name,
         }
@@ -192,6 +194,10 @@ class Organization(GithubObject.GithubObject):
             post_parameters["has_downloads"] = has_downloads
         if team_id is not GithubObject.NotSet:
             post_parameters["team_id"] = team_id._identity
+        if auto_init is not GithubObject.NotSet:
+            post_parameters["auto_init"] = auto_init
+        if gitignore_template is not GithubObject.NotSet:
+            post_parameters["gitignore_template"] = gitignore_template
         headers, data = self._requester.requestAndCheck(
             "POST",
             self.url + "/repos",
