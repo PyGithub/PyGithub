@@ -67,6 +67,11 @@ class Repository(Framework.TestCase):
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
 
+    def testEditWithDefaultBranch(self):
+        self.assertEqual(self.repo.master_branch, None)
+        self.repo.edit("PyGithub", default_branch="master")
+        self.assertEqual(self.repo.master_branch, "master")
+
     def testDelete(self):
         repo = self.g.get_user().get_repo("TestPyGithub")
         repo.delete()

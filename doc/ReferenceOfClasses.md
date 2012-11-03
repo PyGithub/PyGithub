@@ -1375,7 +1375,7 @@ Milestones
 
 Modification
 ------------
-* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
+* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads, default_branch] )`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -1383,6 +1383,7 @@ Modification
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
+    * `default_branch`: string
 
 Pulls
 -----
