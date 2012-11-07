@@ -37,7 +37,7 @@ class Requester:
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
-    def __init__(self, login_or_token, password, base_url, timeout):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id=None, client_secret=None):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
@@ -62,6 +62,9 @@ class Requester:
             assert(False)  # pragma no cover
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
+
+        self.__client_id = client_id
+        self.__client_secret = client_secret
 
     def requestAndCheck(self, verb, url, parameters, input):
         status, headers, output = self.requestRaw(verb, url, parameters, input)
@@ -129,6 +132,14 @@ class Requester:
         return status, responseHeaders, output
 
     def __completeUrl(self, url, parameters):
+        if self.__client_id and self.__client_secret:
+            client_parameters = {'client_id': self.__client_id, 'client_secret': self.__client_secret}
+            if parameters is None or len(parameters) == 0:
+                return url + '?' + urllib.urlencode(client_parameters)
+            else:
+                return url + "?" + urllib.urlencode(parameters) + '&' + urllib.urlencode(client_parameters)
+
+        #there is no client id and secret
         if parameters is None or len(parameters) == 0:
             return url
         else:
