@@ -32,7 +32,7 @@ You can also clone it on [Github](http://github.com/jacquev6/PyGithub).
 Tutorial
 ========
 
-First create a Gihtub instance:
+First create a Github instance:
 
     from github import Github
 
