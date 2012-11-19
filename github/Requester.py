@@ -65,8 +65,8 @@ class Requester:
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
 
-        self.__client_id = client_id
-        self.__client_secret = client_secret
+        self.__clientId = client_id
+        self.__clientSecret = client_secret
 
     def requestAndCheck(self, verb, url, parameters, input):
         status, headers, output = self.requestRaw(verb, url, parameters, input)
@@ -77,6 +77,12 @@ class Requester:
 
     def requestRaw(self, verb, url, parameters, input):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
+
+        if self.__clientId and self.__clientSecret:
+            if parameters is None:
+                parameters = dict()
+            parameters["client_id"] = self.__clientId
+            parameters["client_secret"] = self.__clientSecret
 
         # URLs generated locally will be relative to __base_url
         # URLs returned from the server will start with __base_url
@@ -134,14 +140,6 @@ class Requester:
         return status, responseHeaders, output
 
     def __completeUrl(self, url, parameters):
-        if self.__client_id and self.__client_secret:
-            client_parameters = {'client_id': self.__client_id, 'client_secret': self.__client_secret}
-            if parameters is None or len(parameters) == 0:
-                return url + '?' + urllib.urlencode(client_parameters)
-            else:
-                return url + "?" + urllib.urlencode(parameters) + '&' + urllib.urlencode(client_parameters)
-
-        #there is no client id and secret
         if parameters is None or len(parameters) == 0:
             return url
         else:
