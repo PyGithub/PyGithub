@@ -141,6 +141,9 @@ class BasicTestCase(unittest.TestCase):
             self.login = GithubCredentials.login
             self.password = GithubCredentials.password
             self.oauth_token = GithubCredentials.oauth_token
+            # @todo Remove client_id and client_secret from ReplayData (as we already remove login, password and oauth_token)
+            # self.client_id = GithubCredentials.client_id
+            # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("r"), *args, **kwds),
@@ -149,6 +152,8 @@ class BasicTestCase(unittest.TestCase):
             self.login = "login"
             self.password = "password"
             self.oauth_token = "oauth_token"
+            self.client_id = "client_id"
+            self.client_secret = "client_secret"
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
