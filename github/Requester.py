@@ -39,7 +39,7 @@ class Requester:
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id=None, client_secret=None):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
         if password is not None:
             login = login_or_token
             self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
@@ -67,6 +67,7 @@ class Requester:
 
         self.__clientId = client_id
         self.__clientSecret = client_secret
+        self.__userAgent = user_agent
 
     def requestAndCheck(self, verb, url, parameters, input):
         status, headers, output = self.requestRaw(verb, url, parameters, input)
@@ -88,6 +89,8 @@ class Requester:
 
         requestHeaders = dict()
         self.__authenticate(requestHeaders, parameters)
+        if self.__userAgent is not None:
+            requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)

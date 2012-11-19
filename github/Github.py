@@ -32,8 +32,8 @@ DEFAULT_TIMEOUT = 10
 
 
 class Github(object):
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None):
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret)
+    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None):
+        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent)
 
     def get_FIX_REPO_GET_GIT_REF(self):
         return self.__requester.FIX_REPO_GET_GIT_REF
