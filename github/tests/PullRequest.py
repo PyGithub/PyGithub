@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -24,6 +26,7 @@ class PullRequest(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
+        self.assertEqual(self.pull.assignee.login, "jacquev6")
         self.assertEqual(self.pull.base.label, "jacquev6:topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "jacquev6")
@@ -32,7 +35,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.body, "Body edited by PyGithub")
         self.assertEqual(self.pull.changed_files, 45)
         self.assertEqual(self.pull.closed_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
-        self.assertEqual(self.pull.comments, 0)
+        self.assertEqual(self.pull.comments, 1)
         self.assertEqual(self.pull.commits, 3)
         self.assertEqual(self.pull.created_at, datetime.datetime(2012, 5, 27, 9, 25, 36))
         self.assertEqual(self.pull.deletions, 384)
@@ -41,7 +44,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.html_url, "https://github.com/jacquev6/PyGithub/pull/31")
         self.assertEqual(self.pull.id, 1436215)
         self.assertEqual(self.pull.issue_url, "https://github.com/jacquev6/PyGithub/issues/31")
-        self.assertEqual(self.pull.mergeable, None)
+        self.assertEqual(self.pull.mergeable, False)
         self.assertEqual(self.pull.merged, True)
         self.assertEqual(self.pull.merged_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
         self.assertEqual(self.pull.merged_by.login, "jacquev6")
@@ -50,7 +53,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.review_comments, 1)
         self.assertEqual(self.pull.state, "closed")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
-        self.assertEqual(self.pull.updated_at, datetime.datetime(2012, 5, 27, 10, 29, 7))
+        self.assertEqual(self.pull.updated_at, datetime.datetime(2012, 11, 3, 8, 19, 40))
         self.assertEqual(self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31")
         self.assertEqual(self.pull.user.login, "jacquev6")
 

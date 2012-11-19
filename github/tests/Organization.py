@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -110,6 +112,10 @@ class Organization(Framework.TestCase):
         team = self.org.get_team(141496)
         repo = self.org.create_repo("TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, team)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
+
+    def testCreateRepositoryWithAutoInit(self):
+        repo = self.org.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
+        self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateFork(self):
         pygithub = self.g.get_user("jacquev6").get_repo("PyGithub")

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -118,6 +120,10 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testCreateRepositoryWithAllArguments(self):
         repo = self.user.create_repo("TestPyGithub", "Repo created by PyGithub", "http://foobar.com", private=False, has_issues=False, has_wiki=False, has_downloads=False)
+        self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
+
+    def testCreateRepositoryWithAutoInit(self):
+        repo = self.user.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateAuthorizationWithoutArguments(self):

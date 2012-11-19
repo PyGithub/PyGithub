@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -148,7 +150,7 @@ class Gist(GithubObject.GithubObject):
         assert isinstance(id, int), id
         headers, data = self._requester.requestAndCheck(
             "GET",
-            "/gists/comments/" + str(id),
+            self.url + "/comments/" + str(id),
             None,
             None
         )

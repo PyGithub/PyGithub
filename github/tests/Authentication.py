@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -26,4 +28,13 @@ class Authentication(Framework.BasicTestCase):
 
     def testOAuthAuthentication(self):
         g = github.Github(self.oauth_token)
+        self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
+
+    # Warning: I don't have a scret key, so the requests for this test are forged
+    def testSecretKeyAuthentication(self):
+        g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
+        self.assertListKeyEqual(g.get_organization("BeaverSoftware").get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])
+
+    def testUserAgent(self):
+        g = github.Github(user_agent="PyGithubTester")
         self.assertEqual(g.get_user("jacquev6").name, "Vincent Jacques")
