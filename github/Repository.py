@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -465,7 +467,7 @@ class Repository(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, name, description=GithubObject.NotSet, homepage=GithubObject.NotSet, public=GithubObject.NotSet, has_issues=GithubObject.NotSet, has_wiki=GithubObject.NotSet, has_downloads=GithubObject.NotSet):
+    def edit(self, name, description=GithubObject.NotSet, homepage=GithubObject.NotSet, public=GithubObject.NotSet, has_issues=GithubObject.NotSet, has_wiki=GithubObject.NotSet, has_downloads=GithubObject.NotSet, default_branch=GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
         assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert homepage is GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
@@ -473,6 +475,7 @@ class Repository(GithubObject.GithubObject):
         assert has_issues is GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
+        assert default_branch is GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
         post_parameters = {
             "name": name,
         }
@@ -488,6 +491,8 @@ class Repository(GithubObject.GithubObject):
             post_parameters["has_wiki"] = has_wiki
         if has_downloads is not GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
+        if default_branch is not GithubObject.NotSet:
+            post_parameters["default_branch"] = default_branch
         headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,

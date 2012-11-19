@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -30,24 +32,24 @@ class Team(Framework.TestCase):
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")
-        self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, [])
+        self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_to_members(user)
         self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
         self.assertTrue(self.team.has_in_members(user))
         self.team.remove_from_members(user)
-        self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, [])
+        self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
 
     def testRepos(self):
         repo = self.org.get_repo("FatherBeaver")
-        self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, [])
+        self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
         self.team.add_to_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, ["FatherBeaver"])
         self.assertTrue(self.team.has_in_repos(repo))
         self.team.remove_from_repos(repo)
-        self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, [])
+        self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
 
     def testEditWithoutArguments(self):

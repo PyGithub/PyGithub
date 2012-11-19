@@ -3,5 +3,5 @@ python:
   - "2.7"
   - "2.6"
   - "2.5"
-install: if [ "$(python --version 2>&1)" == "Python 2.5.6" ]; then pip install -r python25-requirements.txt --use-mirrors; fi
+install: if [ "$(python --version 2>&1)" == "Python 2.5.6" ]; then pip install -r python25-requirements.txt --use-mirrors; fi; if [ "$(python --version 2>&1)" == "Python 2.6.8" ]; then pip install -r python26-requirements.txt --use-mirrors; fi
 script: python ./setup.py test

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -125,7 +127,7 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
-                else:
+                else:  # pragma no cover
                     requestHeaders["Authorization"] = "Unknown authorization removed"
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
 

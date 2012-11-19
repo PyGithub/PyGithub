@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -33,13 +35,13 @@ class Github(object):
     def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None):
         self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret)
 
-    @property
-    def FIX_REPO_GET_GIT_REF(self):
+    def get_FIX_REPO_GET_GIT_REF(self):
         return self.__requester.FIX_REPO_GET_GIT_REF
 
-    @FIX_REPO_GET_GIT_REF.setter
-    def FIX_REPO_GET_GIT_REF(self, value):
+    def set_FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
+
+    FIX_REPO_GET_GIT_REF = property(get_FIX_REPO_GET_GIT_REF, set_FIX_REPO_GET_GIT_REF)
 
     @property
     def rate_limiting(self):

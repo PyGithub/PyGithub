@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -20,7 +22,7 @@ from InputGitAuthor import InputGitAuthor
 from InputGitTreeElement import InputGitTreeElement
 
 
-def enable_console_debug_logging():
+def enable_console_debug_logging():  # pragma no cover
     logger = logging.getLogger("github")
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -95,6 +97,6 @@ class Issue(Framework.TestCase):
         question = self.repo.get_label("Question")
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
         self.issue.delete_labels()
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, [])
+        self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
