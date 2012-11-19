@@ -28,7 +28,7 @@ class GistComment(Framework.TestCase):
         self.assertEquals(self.comment.created_at, datetime.datetime(2012, 5, 19, 7, 7, 57))
         self.assertEquals(self.comment.id, 323629)
         self.assertEquals(self.comment.updated_at, datetime.datetime(2012, 5, 19, 7, 7, 57))
-        self.assertEquals(self.comment.url, "https://api.github.com/gists/comments/323629")
+        self.assertEquals(self.comment.url, "https://api.github.com/gists/2729810/comments/323629")
         self.assertEquals(self.comment.user.login, "jacquev6")
 
     def testEdit(self):
