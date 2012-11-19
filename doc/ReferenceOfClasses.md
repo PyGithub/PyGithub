@@ -10,7 +10,11 @@ Constructed from user's login and password or OAuth token or nothing:
     g = Github( token )
     g = Github()
 
+You can also use your client_id and client_secret:
+    g = github.Github(client_id="YourClientId", client_secret="YourClientSecret")
+
 You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
+You can add an argument `user_agent` to send a custom User-Agent header to Github.
 Another argument, that can be passed is `timeout` which has default value `10`.
 
 Attributes

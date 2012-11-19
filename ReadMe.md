@@ -13,10 +13,21 @@ What's new?
 
 [![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.8.1](https://github.com/jacquev6/PyGithub/issues?milestone=15&state=closed) (October 28th, 2012)
------------------------------------------------------------------------------------------------------------
+[Version 1.9.0](https://github.com/jacquev6/PyGithub/issues?milestone=14&state=closed) (November 19th, 2012)
+------------------------------------------------------------------------------------------------------------
 
-* Repository.get_git_ref prepends "refs/" to the requested references. Thank you [simon-weber](https://github.com/simon-weber) for noting the incoherence between documentation and behavior. If you feel like it's a breaking change, please see [this issue](https://github.com/jacquev6/PyGithub/issues/104)
+* You can now use your client_id and client_secret to increase rate limiting without authentication
+* You can now send a custom User-Agent
+* PullRequest now has its 'assignee' attribute, thank you [mstead](https://github.com/mstead)
+* Repository.edit now has 'default_branch' parameter
+* create_repo has 'auto_init' and 'gitignore_template' parameters
+* GistComment URL is changed (see http://developer.github.com/changes/2012-10-31-gist-comment-uris)
+* A typo in the readme was fixed by [tymofij](https://github.com/tymofij), thank you
+* Internal stuff:
+    * Add encoding comment to Python files, thank you [Zearin](https://github.com/Zearin)
+    * Restore support of Python 2.5
+    * Restore coverage measurement in setup.py test
+    * Small refactoring
 
 Previous versions
 -----------------
