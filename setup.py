@@ -53,7 +53,7 @@ class test( Command ):
 
 setup(
     name = "PyGithub",
-    version = "1.9.0",
+    version = "1.9.1",
     description = "Use the full Github API v3",
     author = "Vincent Jacques",
     author_email = "vincent@vincent-jacques.net",
