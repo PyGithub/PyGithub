@@ -68,9 +68,9 @@ class Commit(GithubObject.GithubObject):
 
     def create_comment(self, body, line=GithubObject.NotSet, path=GithubObject.NotSet, position=GithubObject.NotSet):
         assert isinstance(body, (str, unicode)), body
-        assert line is GithubObject.NotSet or isinstance(line, int), line
+        assert line is GithubObject.NotSet or isinstance(line, (int, long)), line
         assert path is GithubObject.NotSet or isinstance(path, (str, unicode)), path
-        assert position is GithubObject.NotSet or isinstance(position, int), position
+        assert position is GithubObject.NotSet or isinstance(position, (int, long)), position
         post_parameters = {
             "body": body,
         }

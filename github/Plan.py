@@ -41,14 +41,14 @@ class Plan(GithubObject.BasicGithubObject):
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
-            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], int), attributes["collaborators"]
+            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], (int, long)), attributes["collaborators"]
             self._collaborators = attributes["collaborators"]
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
         if "private_repos" in attributes:  # pragma no branch
-            assert attributes["private_repos"] is None or isinstance(attributes["private_repos"], int), attributes["private_repos"]
+            assert attributes["private_repos"] is None or isinstance(attributes["private_repos"], (int, long)), attributes["private_repos"]
             self._private_repos = attributes["private_repos"]
         if "space" in attributes:  # pragma no branch
-            assert attributes["space"] is None or isinstance(attributes["space"], int), attributes["space"]
+            assert attributes["space"] is None or isinstance(attributes["space"], (int, long)), attributes["space"]
             self._space = attributes["space"]

@@ -167,7 +167,7 @@ class Download(GithubObject.GithubObject):
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
             self._description = attributes["description"]
         if "download_count" in attributes:  # pragma no branch
-            assert attributes["download_count"] is None or isinstance(attributes["download_count"], int), attributes["download_count"]
+            assert attributes["download_count"] is None or isinstance(attributes["download_count"], (int, long)), attributes["download_count"]
             self._download_count = attributes["download_count"]
         if "expirationdate" in attributes:  # pragma no branch
             assert attributes["expirationdate"] is None or isinstance(attributes["expirationdate"], (str, unicode)), attributes["expirationdate"]
@@ -176,7 +176,7 @@ class Download(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "mime_type" in attributes:  # pragma no branch
             assert attributes["mime_type"] is None or isinstance(attributes["mime_type"], (str, unicode)), attributes["mime_type"]
@@ -203,7 +203,7 @@ class Download(GithubObject.GithubObject):
             assert attributes["signature"] is None or isinstance(attributes["signature"], (str, unicode)), attributes["signature"]
             self._signature = attributes["signature"]
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], int), attributes["size"]
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
             self._size = attributes["size"]
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]

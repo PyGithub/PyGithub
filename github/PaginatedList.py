@@ -22,7 +22,7 @@ class PaginatedListBase:
 
     def __getitem__(self, index):
         assert isinstance(index, (int, slice))
-        if isinstance(index, int):
+        if isinstance(index, (int, long)):
             self.__fetchToIndex(index)
             return self.__elements[index]
         else:

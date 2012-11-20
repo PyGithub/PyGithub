@@ -78,7 +78,7 @@ class IssueEvent(GithubObject.GithubObject):
             assert attributes["event"] is None or isinstance(attributes["event"], (str, unicode)), attributes["event"]
             self._event = attributes["event"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "issue" in attributes:  # pragma no branch
             assert attributes["issue"] is None or isinstance(attributes["issue"], dict), attributes["issue"]

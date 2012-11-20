@@ -1,3 +1,8 @@
+[Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed) (November 20th, 2012)
+------------------------------------------------------------------------------------------------------------
+
+* Fix an assertion failure when integers returned by Github do not fit in a Python `int`
+
 [Version 1.9.0](https://github.com/jacquev6/PyGithub/issues?milestone=14&state=closed) (November 19th, 2012)
 ------------------------------------------------------------------------------------------------------------
 

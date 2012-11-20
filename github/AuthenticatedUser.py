@@ -331,7 +331,7 @@ class AuthenticatedUser(GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_authorization(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             "/authorizations/" + str(id),
@@ -398,7 +398,7 @@ class AuthenticatedUser(GithubObject.GithubObject):
         )
 
     def get_key(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             "/user/keys/" + str(id),
@@ -616,7 +616,7 @@ class AuthenticatedUser(GithubObject.GithubObject):
             assert attributes["blog"] is None or isinstance(attributes["blog"], (str, unicode)), attributes["blog"]
             self._blog = attributes["blog"]
         if "collaborators" in attributes:  # pragma no branch
-            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], int), attributes["collaborators"]
+            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], (int, long)), attributes["collaborators"]
             self._collaborators = attributes["collaborators"]
         if "company" in attributes:  # pragma no branch
             assert attributes["company"] is None or isinstance(attributes["company"], (str, unicode)), attributes["company"]
@@ -625,16 +625,16 @@ class AuthenticatedUser(GithubObject.GithubObject):
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch
-            assert attributes["disk_usage"] is None or isinstance(attributes["disk_usage"], int), attributes["disk_usage"]
+            assert attributes["disk_usage"] is None or isinstance(attributes["disk_usage"], (int, long)), attributes["disk_usage"]
             self._disk_usage = attributes["disk_usage"]
         if "email" in attributes:  # pragma no branch
             assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
             self._email = attributes["email"]
         if "followers" in attributes:  # pragma no branch
-            assert attributes["followers"] is None or isinstance(attributes["followers"], int), attributes["followers"]
+            assert attributes["followers"] is None or isinstance(attributes["followers"], (int, long)), attributes["followers"]
             self._followers = attributes["followers"]
         if "following" in attributes:  # pragma no branch
-            assert attributes["following"] is None or isinstance(attributes["following"], int), attributes["following"]
+            assert attributes["following"] is None or isinstance(attributes["following"], (int, long)), attributes["following"]
             self._following = attributes["following"]
         if "gravatar_id" in attributes:  # pragma no branch
             assert attributes["gravatar_id"] is None or isinstance(attributes["gravatar_id"], (str, unicode)), attributes["gravatar_id"]
@@ -646,7 +646,7 @@ class AuthenticatedUser(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "location" in attributes:  # pragma no branch
             assert attributes["location"] is None or isinstance(attributes["location"], (str, unicode)), attributes["location"]
@@ -658,22 +658,22 @@ class AuthenticatedUser(GithubObject.GithubObject):
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
         if "owned_private_repos" in attributes:  # pragma no branch
-            assert attributes["owned_private_repos"] is None or isinstance(attributes["owned_private_repos"], int), attributes["owned_private_repos"]
+            assert attributes["owned_private_repos"] is None or isinstance(attributes["owned_private_repos"], (int, long)), attributes["owned_private_repos"]
             self._owned_private_repos = attributes["owned_private_repos"]
         if "plan" in attributes:  # pragma no branch
             assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
             self._plan = None if attributes["plan"] is None else Plan.Plan(self._requester, attributes["plan"], completed=False)
         if "private_gists" in attributes:  # pragma no branch
-            assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], int), attributes["private_gists"]
+            assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
             self._private_gists = attributes["private_gists"]
         if "public_gists" in attributes:  # pragma no branch
-            assert attributes["public_gists"] is None or isinstance(attributes["public_gists"], int), attributes["public_gists"]
+            assert attributes["public_gists"] is None or isinstance(attributes["public_gists"], (int, long)), attributes["public_gists"]
             self._public_gists = attributes["public_gists"]
         if "public_repos" in attributes:  # pragma no branch
-            assert attributes["public_repos"] is None or isinstance(attributes["public_repos"], int), attributes["public_repos"]
+            assert attributes["public_repos"] is None or isinstance(attributes["public_repos"], (int, long)), attributes["public_repos"]
             self._public_repos = attributes["public_repos"]
         if "total_private_repos" in attributes:  # pragma no branch
-            assert attributes["total_private_repos"] is None or isinstance(attributes["total_private_repos"], int), attributes["total_private_repos"]
+            assert attributes["total_private_repos"] is None or isinstance(attributes["total_private_repos"], (int, long)), attributes["total_private_repos"]
             self._total_private_repos = attributes["total_private_repos"]
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]

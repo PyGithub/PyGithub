@@ -222,7 +222,7 @@ class Repository(GithubObject.GithubObject):
 
     def create_download(self, name, size, description=GithubObject.NotSet, content_type=GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
-        assert isinstance(size, int), size
+        assert isinstance(size, (int, long)), size
         assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert content_type is GithubObject.NotSet or isinstance(content_type, (str, unicode)), content_type
         post_parameters = {
@@ -550,7 +550,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_comment(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
@@ -611,7 +611,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_download(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/downloads/" + str(id),
@@ -710,7 +710,7 @@ class Repository(GithubObject.GithubObject):
         return GitTree.GitTree(self._requester, data, completed=True)
 
     def get_hook(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/hooks/" + str(id),
@@ -728,7 +728,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_issue(self, number):
-        assert isinstance(number, int), number
+        assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues/" + str(number),
@@ -777,7 +777,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_issues_event(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/issues/events/" + str(id),
@@ -795,7 +795,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_key(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/keys/" + str(id),
@@ -840,7 +840,7 @@ class Repository(GithubObject.GithubObject):
         return data
 
     def get_milestone(self, number):
-        assert isinstance(number, int), number
+        assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/milestones/" + str(number),
@@ -876,7 +876,7 @@ class Repository(GithubObject.GithubObject):
         )
 
     def get_pull(self, number):
-        assert isinstance(number, int), number
+        assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/pulls/" + str(number),
@@ -1060,7 +1060,7 @@ class Repository(GithubObject.GithubObject):
             assert attributes["fork"] is None or isinstance(attributes["fork"], bool), attributes["fork"]
             self._fork = attributes["fork"]
         if "forks" in attributes:  # pragma no branch
-            assert attributes["forks"] is None or isinstance(attributes["forks"], int), attributes["forks"]
+            assert attributes["forks"] is None or isinstance(attributes["forks"], (int, long)), attributes["forks"]
             self._forks = attributes["forks"]
         if "full_name" in attributes:  # pragma no branch
             assert attributes["full_name"] is None or isinstance(attributes["full_name"], (str, unicode)), attributes["full_name"]
@@ -1084,7 +1084,7 @@ class Repository(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "language" in attributes:  # pragma no branch
             assert attributes["language"] is None or isinstance(attributes["language"], (str, unicode)), attributes["language"]
@@ -1096,7 +1096,7 @@ class Repository(GithubObject.GithubObject):
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
         if "open_issues" in attributes:  # pragma no branch
-            assert attributes["open_issues"] is None or isinstance(attributes["open_issues"], int), attributes["open_issues"]
+            assert attributes["open_issues"] is None or isinstance(attributes["open_issues"], (int, long)), attributes["open_issues"]
             self._open_issues = attributes["open_issues"]
         if "organization" in attributes:  # pragma no branch
             assert attributes["organization"] is None or isinstance(attributes["organization"], dict), attributes["organization"]
@@ -1117,7 +1117,7 @@ class Repository(GithubObject.GithubObject):
             assert attributes["pushed_at"] is None or isinstance(attributes["pushed_at"], (str, unicode)), attributes["pushed_at"]
             self._pushed_at = self._parseDatetime(attributes["pushed_at"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], int), attributes["size"]
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
             self._size = attributes["size"]
         if "source" in attributes:  # pragma no branch
             assert attributes["source"] is None or isinstance(attributes["source"], dict), attributes["source"]
@@ -1135,5 +1135,5 @@ class Repository(GithubObject.GithubObject):
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
         if "watchers" in attributes:  # pragma no branch
-            assert attributes["watchers"] is None or isinstance(attributes["watchers"], int), attributes["watchers"]
+            assert attributes["watchers"] is None or isinstance(attributes["watchers"], (int, long)), attributes["watchers"]
             self._watchers = attributes["watchers"]

@@ -122,16 +122,16 @@ class CommitComment(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "line" in attributes:  # pragma no branch
-            assert attributes["line"] is None or isinstance(attributes["line"], int), attributes["line"]
+            assert attributes["line"] is None or isinstance(attributes["line"], (int, long)), attributes["line"]
             self._line = attributes["line"]
         if "path" in attributes:  # pragma no branch
             assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
             self._path = attributes["path"]
         if "position" in attributes:  # pragma no branch
-            assert attributes["position"] is None or isinstance(attributes["position"], int), attributes["position"]
+            assert attributes["position"] is None or isinstance(attributes["position"], (int, long)), attributes["position"]
             self._position = attributes["position"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]

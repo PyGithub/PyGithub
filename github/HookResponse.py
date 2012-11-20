@@ -36,7 +36,7 @@ class HookResponse(GithubObject.BasicGithubObject):
 
     def _useAttributes(self, attributes):
         if "code" in attributes:  # pragma no branch
-            assert attributes["code"] is None or isinstance(attributes["code"], int), attributes["code"]
+            assert attributes["code"] is None or isinstance(attributes["code"], (int, long)), attributes["code"]
             self._code = attributes["code"]
         if "message" in attributes:  # pragma no branch
             assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]

@@ -58,5 +58,5 @@ class GistFile(GithubObject.BasicGithubObject):
             assert attributes["raw_url"] is None or isinstance(attributes["raw_url"], (str, unicode)), attributes["raw_url"]
             self._raw_url = attributes["raw_url"]
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], int), attributes["size"]
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
             self._size = attributes["size"]

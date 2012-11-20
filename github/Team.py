@@ -161,10 +161,10 @@ class Team(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "members_count" in attributes:  # pragma no branch
-            assert attributes["members_count"] is None or isinstance(attributes["members_count"], int), attributes["members_count"]
+            assert attributes["members_count"] is None or isinstance(attributes["members_count"], (int, long)), attributes["members_count"]
             self._members_count = attributes["members_count"]
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
@@ -173,7 +173,7 @@ class Team(GithubObject.GithubObject):
             assert attributes["permission"] is None or isinstance(attributes["permission"], (str, unicode)), attributes["permission"]
             self._permission = attributes["permission"]
         if "repos_count" in attributes:  # pragma no branch
-            assert attributes["repos_count"] is None or isinstance(attributes["repos_count"], int), attributes["repos_count"]
+            assert attributes["repos_count"] is None or isinstance(attributes["repos_count"], (int, long)), attributes["repos_count"]
             self._repos_count = attributes["repos_count"]
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]

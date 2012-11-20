@@ -75,7 +75,7 @@ class UserKey(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "key" in attributes:  # pragma no branch
             assert attributes["key"] is None or isinstance(attributes["key"], (str, unicode)), attributes["key"]

@@ -119,19 +119,19 @@ class PullRequestComment(GithubObject.GithubObject):
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "original_commit_id" in attributes:  # pragma no branch
             assert attributes["original_commit_id"] is None or isinstance(attributes["original_commit_id"], (str, unicode)), attributes["original_commit_id"]
             self._original_commit_id = attributes["original_commit_id"]
         if "original_position" in attributes:  # pragma no branch
-            assert attributes["original_position"] is None or isinstance(attributes["original_position"], int), attributes["original_position"]
+            assert attributes["original_position"] is None or isinstance(attributes["original_position"], (int, long)), attributes["original_position"]
             self._original_position = attributes["original_position"]
         if "path" in attributes:  # pragma no branch
             assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
             self._path = attributes["path"]
         if "position" in attributes:  # pragma no branch
-            assert attributes["position"] is None or isinstance(attributes["position"], int), attributes["position"]
+            assert attributes["position"] is None or isinstance(attributes["position"], (int, long)), attributes["position"]
             self._position = attributes["position"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]

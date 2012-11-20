@@ -168,7 +168,7 @@ class PullRequest(GithubObject.GithubObject):
         assert isinstance(body, (str, unicode)), body
         assert isinstance(commit_id, Commit.Commit), commit_id
         assert isinstance(path, (str, unicode)), path
-        assert isinstance(position, int), position
+        assert isinstance(position, (int, long)), position
         post_parameters = {
             "body": body,
             "commit_id": commit_id._identity,
@@ -219,7 +219,7 @@ class PullRequest(GithubObject.GithubObject):
         return self.get_review_comment(id)
 
     def get_review_comment(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
@@ -256,7 +256,7 @@ class PullRequest(GithubObject.GithubObject):
         )
 
     def get_issue_comment(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id),
@@ -326,7 +326,7 @@ class PullRequest(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
-            assert attributes["additions"] is None or isinstance(attributes["additions"], int), attributes["additions"]
+            assert attributes["additions"] is None or isinstance(attributes["additions"], (int, long)), attributes["additions"]
             self._additions = attributes["additions"]
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
@@ -338,22 +338,22 @@ class PullRequest(GithubObject.GithubObject):
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
         if "changed_files" in attributes:  # pragma no branch
-            assert attributes["changed_files"] is None or isinstance(attributes["changed_files"], int), attributes["changed_files"]
+            assert attributes["changed_files"] is None or isinstance(attributes["changed_files"], (int, long)), attributes["changed_files"]
             self._changed_files = attributes["changed_files"]
         if "closed_at" in attributes:  # pragma no branch
             assert attributes["closed_at"] is None or isinstance(attributes["closed_at"], (str, unicode)), attributes["closed_at"]
             self._closed_at = self._parseDatetime(attributes["closed_at"])
         if "comments" in attributes:  # pragma no branch
-            assert attributes["comments"] is None or isinstance(attributes["comments"], int), attributes["comments"]
+            assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
         if "commits" in attributes:  # pragma no branch
-            assert attributes["commits"] is None or isinstance(attributes["commits"], int), attributes["commits"]
+            assert attributes["commits"] is None or isinstance(attributes["commits"], (int, long)), attributes["commits"]
             self._commits = attributes["commits"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "deletions" in attributes:  # pragma no branch
-            assert attributes["deletions"] is None or isinstance(attributes["deletions"], int), attributes["deletions"]
+            assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
             self._deletions = attributes["deletions"]
         if "diff_url" in attributes:  # pragma no branch
             assert attributes["diff_url"] is None or isinstance(attributes["diff_url"], (str, unicode)), attributes["diff_url"]
@@ -365,7 +365,7 @@ class PullRequest(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "issue_url" in attributes:  # pragma no branch
             assert attributes["issue_url"] is None or isinstance(attributes["issue_url"], (str, unicode)), attributes["issue_url"]
@@ -383,13 +383,13 @@ class PullRequest(GithubObject.GithubObject):
             assert attributes["merged_by"] is None or isinstance(attributes["merged_by"], dict), attributes["merged_by"]
             self._merged_by = None if attributes["merged_by"] is None else NamedUser.NamedUser(self._requester, attributes["merged_by"], completed=False)
         if "number" in attributes:  # pragma no branch
-            assert attributes["number"] is None or isinstance(attributes["number"], int), attributes["number"]
+            assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "patch_url" in attributes:  # pragma no branch
             assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
             self._patch_url = attributes["patch_url"]
         if "review_comments" in attributes:  # pragma no branch
-            assert attributes["review_comments"] is None or isinstance(attributes["review_comments"], int), attributes["review_comments"]
+            assert attributes["review_comments"] is None or isinstance(attributes["review_comments"], (int, long)), attributes["review_comments"]
             self._review_comments = attributes["review_comments"]
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]

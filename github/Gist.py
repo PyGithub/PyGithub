@@ -147,7 +147,7 @@ class Gist(GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_comment(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
@@ -208,7 +208,7 @@ class Gist(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "comments" in attributes:  # pragma no branch
-            assert attributes["comments"] is None or isinstance(attributes["comments"], int), attributes["comments"]
+            assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]

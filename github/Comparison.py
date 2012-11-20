@@ -96,13 +96,13 @@ class Comparison(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "ahead_by" in attributes:  # pragma no branch
-            assert attributes["ahead_by"] is None or isinstance(attributes["ahead_by"], int), attributes["ahead_by"]
+            assert attributes["ahead_by"] is None or isinstance(attributes["ahead_by"], (int, long)), attributes["ahead_by"]
             self._ahead_by = attributes["ahead_by"]
         if "base_commit" in attributes:  # pragma no branch
             assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
             self._base_commit = None if attributes["base_commit"] is None else Commit.Commit(self._requester, attributes["base_commit"], completed=False)
         if "behind_by" in attributes:  # pragma no branch
-            assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], int), attributes["behind_by"]
+            assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
             self._behind_by = attributes["behind_by"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
@@ -132,7 +132,7 @@ class Comparison(GithubObject.GithubObject):
             assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
             self._status = attributes["status"]
         if "total_commits" in attributes:  # pragma no branch
-            assert attributes["total_commits"] is None or isinstance(attributes["total_commits"], int), attributes["total_commits"]
+            assert attributes["total_commits"] is None or isinstance(attributes["total_commits"], (int, long)), attributes["total_commits"]
             self._total_commits = attributes["total_commits"]
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]

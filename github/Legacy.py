@@ -39,7 +39,7 @@ class PaginatedList(PaginatedListBase):
         return self.get_page(page)
 
     def get_page(self, page):
-        assert isinstance(page, int), page
+        assert isinstance(page, (int, long)), page
         args = dict(self.__args)
         if page != 0:
             args["start_page"] = page + 1

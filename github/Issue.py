@@ -176,7 +176,7 @@ class Issue(GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_comment(self, id):
-        assert isinstance(id, int), id
+        assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
@@ -266,7 +266,7 @@ class Issue(GithubObject.GithubObject):
             assert attributes["closed_by"] is None or isinstance(attributes["closed_by"], dict), attributes["closed_by"]
             self._closed_by = None if attributes["closed_by"] is None else NamedUser.NamedUser(self._requester, attributes["closed_by"], completed=False)
         if "comments" in attributes:  # pragma no branch
-            assert attributes["comments"] is None or isinstance(attributes["comments"], int), attributes["comments"]
+            assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
@@ -275,7 +275,7 @@ class Issue(GithubObject.GithubObject):
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "labels" in attributes:  # pragma no branch
             assert attributes["labels"] is None or all(isinstance(element, dict) for element in attributes["labels"]), attributes["labels"]
@@ -287,7 +287,7 @@ class Issue(GithubObject.GithubObject):
             assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
             self._milestone = None if attributes["milestone"] is None else Milestone.Milestone(self._requester, attributes["milestone"], completed=False)
         if "number" in attributes:  # pragma no branch
-            assert attributes["number"] is None or isinstance(attributes["number"], int), attributes["number"]
+            assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "pull_request" in attributes:  # pragma no branch
             assert attributes["pull_request"] is None or isinstance(attributes["pull_request"], dict), attributes["pull_request"]

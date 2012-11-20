@@ -60,7 +60,7 @@ class GitTreeElement(GithubObject.BasicGithubObject):
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
             self._sha = attributes["sha"]
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], int), attributes["size"]
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
             self._size = attributes["size"]
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]

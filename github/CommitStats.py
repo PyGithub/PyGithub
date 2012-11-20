@@ -36,11 +36,11 @@ class CommitStats(GithubObject.BasicGithubObject):
 
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
-            assert attributes["additions"] is None or isinstance(attributes["additions"], int), attributes["additions"]
+            assert attributes["additions"] is None or isinstance(attributes["additions"], (int, long)), attributes["additions"]
             self._additions = attributes["additions"]
         if "deletions" in attributes:  # pragma no branch
-            assert attributes["deletions"] is None or isinstance(attributes["deletions"], int), attributes["deletions"]
+            assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
             self._deletions = attributes["deletions"]
         if "total" in attributes:  # pragma no branch
-            assert attributes["total"] is None or isinstance(attributes["total"], int), attributes["total"]
+            assert attributes["total"] is None or isinstance(attributes["total"], (int, long)), attributes["total"]
             self._total = attributes["total"]

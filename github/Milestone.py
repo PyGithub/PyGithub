@@ -135,7 +135,7 @@ class Milestone(GithubObject.GithubObject):
 
     def _useAttributes(self, attributes):
         if "closed_issues" in attributes:  # pragma no branch
-            assert attributes["closed_issues"] is None or isinstance(attributes["closed_issues"], int), attributes["closed_issues"]
+            assert attributes["closed_issues"] is None or isinstance(attributes["closed_issues"], (int, long)), attributes["closed_issues"]
             self._closed_issues = attributes["closed_issues"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
@@ -150,13 +150,13 @@ class Milestone(GithubObject.GithubObject):
             assert attributes["due_on"] is None or isinstance(attributes["due_on"], (str, unicode)), attributes["due_on"]
             self._due_on = self._parseDatetime(attributes["due_on"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], int), attributes["id"]
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
         if "number" in attributes:  # pragma no branch
-            assert attributes["number"] is None or isinstance(attributes["number"], int), attributes["number"]
+            assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "open_issues" in attributes:  # pragma no branch
-            assert attributes["open_issues"] is None or isinstance(attributes["open_issues"], int), attributes["open_issues"]
+            assert attributes["open_issues"] is None or isinstance(attributes["open_issues"], (int, long)), attributes["open_issues"]
             self._open_issues = attributes["open_issues"]
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]

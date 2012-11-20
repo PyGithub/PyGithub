@@ -66,16 +66,16 @@ class File(GithubObject.BasicGithubObject):
 
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
-            assert attributes["additions"] is None or isinstance(attributes["additions"], int), attributes["additions"]
+            assert attributes["additions"] is None or isinstance(attributes["additions"], (int, long)), attributes["additions"]
             self._additions = attributes["additions"]
         if "blob_url" in attributes:  # pragma no branch
             assert attributes["blob_url"] is None or isinstance(attributes["blob_url"], (str, unicode)), attributes["blob_url"]
             self._blob_url = attributes["blob_url"]
         if "changes" in attributes:  # pragma no branch
-            assert attributes["changes"] is None or isinstance(attributes["changes"], int), attributes["changes"]
+            assert attributes["changes"] is None or isinstance(attributes["changes"], (int, long)), attributes["changes"]
             self._changes = attributes["changes"]
         if "deletions" in attributes:  # pragma no branch
-            assert attributes["deletions"] is None or isinstance(attributes["deletions"], int), attributes["deletions"]
+            assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
             self._deletions = attributes["deletions"]
         if "filename" in attributes:  # pragma no branch
             assert attributes["filename"] is None or isinstance(attributes["filename"], (str, unicode)), attributes["filename"]
