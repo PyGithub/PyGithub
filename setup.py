@@ -22,18 +22,18 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 if atLeastPython3:
     import setuptools
-    kwds = { "use_2to3": True }
+    kwds = {"use_2to3": True}
 else:
     kwds = dict()
 
 setup(
-    name = "PyGithub",
-    version = "1.9.1",
-    description = "Use the full Github API v3",
-    author = "Vincent Jacques",
-    author_email = "vincent@vincent-jacques.net",
-    url = "http://vincent-jacques.net/PyGithub",
-    long_description = textwrap.dedent( """\
+    name="PyGithub",
+    version="1.9.1",
+    description="Use the full Github API v3",
+    author="Vincent Jacques",
+    author_email="vincent@vincent-jacques.net",
+    url="http://vincent-jacques.net/PyGithub",
+    long_description=textwrap.dedent("""\
         Tutorial
         ========
 
@@ -60,15 +60,15 @@ setup(
         Reference documentation
         =======================
 
-        See http://vincent-jacques.net/PyGithub""" ),
-    packages = [
+        See http://vincent-jacques.net/PyGithub"""),
+    packages=[
         "github",
         "github.tests",
     ],
-    package_data = {
-        "github": [ "ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt" ]
+    package_data={
+        "github": ["ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt"]
     },
-    classifiers = [
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
