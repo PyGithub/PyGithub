@@ -42,7 +42,7 @@ class Requester:
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
         if password is not None:
             login = login_or_token
-            self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
+            self.__authorizationHeader = "Basic " + str(base64.b64encode(bytearray(login + ":" + password, "utf-8"))).replace('\n', '')
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
