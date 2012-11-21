@@ -3,5 +3,10 @@ python:
   - "2.7"
   - "2.6"
   - "2.5"
-install: if [ "$(python --version 2>&1)" == "Python 2.5.6" ]; then pip install -r python25-requirements.txt --use-mirrors; fi; if [ "$(python --version 2>&1)" == "Python 2.6.8" ]; then pip install -r python26-requirements.txt --use-mirrors; fi
-script: python ./setup.py test
+  - "3.2"
+install:
+  - if [ $TRAVIS_PYTHON_VERSION == '2.5' ]; then pip install -r python25-requirements.txt --use-mirrors; fi
+  - if [ $TRAVIS_PYTHON_VERSION == '2.6' ]; then pip install -r python26-requirements.txt --use-mirrors; fi
+script:
+  - if [ $TRAVIS_PYTHON_VERSION == '3.2' ]; then 2to3 . --write --no-diffs --nobackups; fi
+  - python ./setup.py test
