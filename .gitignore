@@ -1,4 +1,6 @@
 *.pyc
 GithubCredentials.py
-/dist
+/dist/
+/build/
 /MANIFEST
+/PyGithub.egg-info/

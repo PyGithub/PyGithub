@@ -17,39 +17,14 @@
 from distutils.core import setup, Command
 import textwrap
 import sys
-import glob
 
-class test( Command ):
-    user_options = []
+atLeastPython3 = sys.hexversion >= 0x03000000
 
-    def initialize_options( self ):
-        pass
-
-    def finalize_options( self ):
-        pass
-
-    def run( self ):
-        try:
-            import coverage
-            analyseCoverage = True
-        except ImportError:
-            print "Unable to import coverage. Running tests without coverage analysis"
-            analyseCoverage = False
-        if analyseCoverage:
-            cov = coverage.coverage(branch=True)
-            cov.start()
-
-        import github.tests
-        ok = github.tests.run().wasSuccessful()
-        if analyseCoverage:
-            cov.stop()
-            for f in glob.glob( "github/*.py" ):
-                ok = ok and len( cov.analysis2( f )[ 3 ] ) == 0
-            cov.report(file=sys.stdout, include="github/*")
-        if ok:
-            exit( 0 )
-        else:
-            exit( 1 )
+if atLeastPython3:
+    import setuptools
+    kwds = { "use_2to3": True }
+else:
+    kwds = dict()
 
 setup(
     name = "PyGithub",
@@ -102,5 +77,5 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development",
     ],
-    cmdclass = { "test": test },
+    **kwds
 )
