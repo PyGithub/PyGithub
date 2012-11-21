@@ -15,12 +15,12 @@
 
 import urlparse
 
-from PaginatedList import PaginatedListBase
+import github.PaginatedList
 
 
-class PaginatedList(PaginatedListBase):
+class PaginatedList(github.PaginatedList.PaginatedListBase):
     def __init__(self, url, args, requester, key, convert, contentClass):
-        PaginatedListBase.__init__(self)
+        github.PaginatedList.PaginatedListBase.__init__(self)
         self.__url = url
         self.__args = args
         self.__requester = requester

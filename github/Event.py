@@ -13,14 +13,14 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import Organization
-import Repository
-import NamedUser
+import github.Organization
+import github.Repository
+import github.NamedUser
 
 
-class Event(GithubObject.BasicGithubObject):
+class Event(github.GithubObject.BasicGithubObject):
     @property
     def actor(self):
         return self._NoneIfNotSet(self._actor)
@@ -54,19 +54,19 @@ class Event(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._type)
 
     def _initAttributes(self):
-        self._actor = GithubObject.NotSet
-        self._created_at = GithubObject.NotSet
-        self._id = GithubObject.NotSet
-        self._org = GithubObject.NotSet
-        self._payload = GithubObject.NotSet
-        self._public = GithubObject.NotSet
-        self._repo = GithubObject.NotSet
-        self._type = GithubObject.NotSet
+        self._actor = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._org = github.GithubObject.NotSet
+        self._payload = github.GithubObject.NotSet
+        self._public = github.GithubObject.NotSet
+        self._repo = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             assert attributes["actor"] is None or isinstance(attributes["actor"], dict), attributes["actor"]
-            self._actor = None if attributes["actor"] is None else NamedUser.NamedUser(self._requester, attributes["actor"], completed=False)
+            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, attributes["actor"], completed=False)
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
@@ -75,7 +75,7 @@ class Event(GithubObject.BasicGithubObject):
             self._id = attributes["id"]
         if "org" in attributes:  # pragma no branch
             assert attributes["org"] is None or isinstance(attributes["org"], dict), attributes["org"]
-            self._org = None if attributes["org"] is None else Organization.Organization(self._requester, attributes["org"], completed=False)
+            self._org = None if attributes["org"] is None else github.Organization.Organization(self._requester, attributes["org"], completed=False)
         if "payload" in attributes:  # pragma no branch
             assert attributes["payload"] is None or isinstance(attributes["payload"], dict), attributes["payload"]
             self._payload = attributes["payload"]
@@ -84,7 +84,7 @@ class Event(GithubObject.BasicGithubObject):
             self._public = attributes["public"]
         if "repo" in attributes:  # pragma no branch
             assert attributes["repo"] is None or isinstance(attributes["repo"], dict), attributes["repo"]
-            self._repo = None if attributes["repo"] is None else Repository.Repository(self._requester, attributes["repo"], completed=False)
+            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, attributes["repo"], completed=False)
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]

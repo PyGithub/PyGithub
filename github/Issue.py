@@ -13,19 +13,19 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
-import PaginatedList
+import github.GithubObject
+import github.PaginatedList
 
-import Repository
-import IssueEvent
-import Label
-import NamedUser
-import Milestone
-import IssueComment
-import IssuePullRequest
+import github.Repository
+import github.IssueEvent
+import github.Label
+import github.NamedUser
+import github.Milestone
+import github.IssueComment
+import github.IssuePullRequest
 
 
-class Issue(GithubObject.GithubObject):
+class Issue(github.GithubObject.GithubObject):
     @property
     def assignee(self):
         self._completeIfNotSet(self._assignee)
@@ -117,7 +117,7 @@ class Issue(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._user)
 
     def add_to_labels(self, *labels):
-        assert all(isinstance(element, Label.Label) for element in labels), labels
+        assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -137,7 +137,7 @@ class Issue(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def delete_labels(self):
         headers, data = self._requester.requestAndCheck(
@@ -147,25 +147,25 @@ class Issue(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, title=GithubObject.NotSet, body=GithubObject.NotSet, assignee=GithubObject.NotSet, state=GithubObject.NotSet, milestone=GithubObject.NotSet, labels=GithubObject.NotSet):
-        assert title is GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is GithubObject.NotSet or assignee is None or isinstance(assignee, NamedUser.NamedUser), assignee
-        assert state is GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert milestone is GithubObject.NotSet or milestone is None or isinstance(milestone, Milestone.Milestone), milestone
-        assert labels is GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
+    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
+        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
+        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
+        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
         post_parameters = dict()
-        if title is not GithubObject.NotSet:
+        if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
-        if body is not GithubObject.NotSet:
+        if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
-        if assignee is not GithubObject.NotSet:
+        if assignee is not github.GithubObject.NotSet:
             post_parameters["assignee"] = assignee._identity if assignee else ''
-        if state is not GithubObject.NotSet:
+        if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
-        if milestone is not GithubObject.NotSet:
+        if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity if milestone else ''
-        if labels is not GithubObject.NotSet:
+        if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = labels
         headers, data = self._requester.requestAndCheck(
             "PATCH",
@@ -183,34 +183,34 @@ class Issue(GithubObject.GithubObject):
             None,
             None
         )
-        return IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def get_comments(self):
-        return PaginatedList.PaginatedList(
-            IssueComment.IssueComment,
+        return github.PaginatedList.PaginatedList(
+            github.IssueComment.IssueComment,
             self._requester,
             self.url + "/comments",
             None
         )
 
     def get_events(self):
-        return PaginatedList.PaginatedList(
-            IssueEvent.IssueEvent,
+        return github.PaginatedList.PaginatedList(
+            github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/events",
             None
         )
 
     def get_labels(self):
-        return PaginatedList.PaginatedList(
-            Label.Label,
+        return github.PaginatedList.PaginatedList(
+            github.Label.Label,
             self._requester,
             self.url + "/labels",
             None
         )
 
     def remove_from_labels(self, label):
-        assert isinstance(label, Label.Label), label
+        assert isinstance(label, github.Label.Label), label
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/labels/" + label._identity,
@@ -219,7 +219,7 @@ class Issue(GithubObject.GithubObject):
         )
 
     def set_labels(self, *labels):
-        assert all(isinstance(element, Label.Label) for element in labels), labels
+        assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
         headers, data = self._requester.requestAndCheck(
             "PUT",
@@ -233,29 +233,29 @@ class Issue(GithubObject.GithubObject):
         return self.number
 
     def _initAttributes(self):
-        self._assignee = GithubObject.NotSet
-        self._body = GithubObject.NotSet
-        self._closed_at = GithubObject.NotSet
-        self._closed_by = GithubObject.NotSet
-        self._comments = GithubObject.NotSet
-        self._created_at = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._id = GithubObject.NotSet
-        self._labels = GithubObject.NotSet
-        self._milestone = GithubObject.NotSet
-        self._number = GithubObject.NotSet
-        self._pull_request = GithubObject.NotSet
-        self._repository = GithubObject.NotSet
-        self._state = GithubObject.NotSet
-        self._title = GithubObject.NotSet
-        self._updated_at = GithubObject.NotSet
-        self._url = GithubObject.NotSet
-        self._user = GithubObject.NotSet
+        self._assignee = github.GithubObject.NotSet
+        self._body = github.GithubObject.NotSet
+        self._closed_at = github.GithubObject.NotSet
+        self._closed_by = github.GithubObject.NotSet
+        self._comments = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._labels = github.GithubObject.NotSet
+        self._milestone = github.GithubObject.NotSet
+        self._number = github.GithubObject.NotSet
+        self._pull_request = github.GithubObject.NotSet
+        self._repository = github.GithubObject.NotSet
+        self._state = github.GithubObject.NotSet
+        self._title = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+        self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = None if attributes["assignee"] is None else NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
+            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
         if "body" in attributes:  # pragma no branch
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
@@ -264,7 +264,7 @@ class Issue(GithubObject.GithubObject):
             self._closed_at = self._parseDatetime(attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
             assert attributes["closed_by"] is None or isinstance(attributes["closed_by"], dict), attributes["closed_by"]
-            self._closed_by = None if attributes["closed_by"] is None else NamedUser.NamedUser(self._requester, attributes["closed_by"], completed=False)
+            self._closed_by = None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, attributes["closed_by"], completed=False)
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
@@ -280,21 +280,21 @@ class Issue(GithubObject.GithubObject):
         if "labels" in attributes:  # pragma no branch
             assert attributes["labels"] is None or all(isinstance(element, dict) for element in attributes["labels"]), attributes["labels"]
             self._labels = None if attributes["labels"] is None else [
-                Label.Label(self._requester, element, completed=False)
+                github.Label.Label(self._requester, element, completed=False)
                 for element in attributes["labels"]
             ]
         if "milestone" in attributes:  # pragma no branch
             assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
-            self._milestone = None if attributes["milestone"] is None else Milestone.Milestone(self._requester, attributes["milestone"], completed=False)
+            self._milestone = None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, attributes["milestone"], completed=False)
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "pull_request" in attributes:  # pragma no branch
             assert attributes["pull_request"] is None or isinstance(attributes["pull_request"], dict), attributes["pull_request"]
-            self._pull_request = None if attributes["pull_request"] is None else IssuePullRequest.IssuePullRequest(self._requester, attributes["pull_request"], completed=False)
+            self._pull_request = None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, attributes["pull_request"], completed=False)
         if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = None if attributes["repository"] is None else Repository.Repository(self._requester, attributes["repository"], completed=False)
+            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
             self._state = attributes["state"]
@@ -309,4 +309,4 @@ class Issue(GithubObject.GithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)

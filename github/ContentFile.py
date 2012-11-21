@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class ContentFile(GithubObject.BasicGithubObject):
+class ContentFile(github.GithubObject.BasicGithubObject):
     @property
     def content(self):
         return self._NoneIfNotSet(self._content)
@@ -46,13 +46,13 @@ class ContentFile(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._type)
 
     def _initAttributes(self):
-        self._content = GithubObject.NotSet
-        self._encoding = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._path = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
-        self._size = GithubObject.NotSet
-        self._type = GithubObject.NotSet
+        self._content = github.GithubObject.NotSet
+        self._encoding = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._path = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch

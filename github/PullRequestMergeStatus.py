@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class PullRequestMergeStatus(GithubObject.BasicGithubObject):
+class PullRequestMergeStatus(github.GithubObject.BasicGithubObject):
     @property
     def merged(self):
         return self._NoneIfNotSet(self._merged)
@@ -30,9 +30,9 @@ class PullRequestMergeStatus(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._sha)
 
     def _initAttributes(self):
-        self._merged = GithubObject.NotSet
-        self._message = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
+        self._merged = github.GithubObject.NotSet
+        self._message = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "merged" in attributes:  # pragma no branch

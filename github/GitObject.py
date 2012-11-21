@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class GitObject(GithubObject.BasicGithubObject):
+class GitObject(github.GithubObject.BasicGithubObject):
     @property
     def sha(self):
         return self._NoneIfNotSet(self._sha)
@@ -30,9 +30,9 @@ class GitObject(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
-        self._sha = GithubObject.NotSet
-        self._type = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch

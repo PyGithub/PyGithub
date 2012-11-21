@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class Permissions(GithubObject.BasicGithubObject):
+class Permissions(github.GithubObject.BasicGithubObject):
     @property
     def admin(self):
         return self._NoneIfNotSet(self._admin)
@@ -30,9 +30,9 @@ class Permissions(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._push)
 
     def _initAttributes(self):
-        self._admin = GithubObject.NotSet
-        self._pull = GithubObject.NotSet
-        self._push = GithubObject.NotSet
+        self._admin = github.GithubObject.NotSet
+        self._pull = github.GithubObject.NotSet
+        self._push = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "admin" in attributes:  # pragma no branch
