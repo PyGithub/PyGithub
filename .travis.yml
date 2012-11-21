@@ -10,4 +10,4 @@ install:
   - python setup.py install
 script:
   - cd # Run installed code (maybe 2to3ed), not code in current directory (always for python2)
-  - python -m github.tests
+  - python -m github.tests.__main__ # __main__ is for Python 2.5 and 2.6
