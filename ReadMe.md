@@ -1,4 +1,4 @@
-This is a Python library to access the [Github API v3](http://developer.github.com/v3).
+This is a Python (2 and 3) library to access the [Github API v3](http://developer.github.com/v3).
 
 With it, you can manage your [Github](http://github.com) resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
@@ -11,14 +11,33 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-[Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
------------------------------------------------------------------------------------------------------------
+[![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
-* Be able to clear the assignee and the milestone of an Issue. Thank you [quixotique](https://github.com/quixotique) for the merge request
-* Fix an AssertionFailure in `Organization.get_xxx` when using Github Enterprise. Thank you [mnsanghvi](https://github.com/mnsanghvi) for pointing that
-* Expose pagination to users needing it (`PaginatedList.get_page`). Thank you [kukuts](https://github.com/kukuts) for asking
-* Improve handling of legacy search APIs
-* Small refactoring (documentation, removal of old code generation artifacts)
+Next version
+------------
+
+* Major improvement: support Python 3! PyGithub is automaticaly tested on [Travis](http://travis-ci.org/jacquev6/PyGithub) with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
+
+[Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed) (November 20th, 2012)
+------------------------------------------------------------------------------------------------------------
+
+* Fix an assertion failure when integers returned by Github do not fit in a Python `int`
+
+[Version 1.9.0](https://github.com/jacquev6/PyGithub/issues?milestone=14&state=closed) (November 19th, 2012)
+------------------------------------------------------------------------------------------------------------
+
+* You can now use your client_id and client_secret to increase rate limiting without authentication
+* You can now send a custom User-Agent
+* PullRequest now has its 'assignee' attribute, thank you [mstead](https://github.com/mstead)
+* Repository.edit now has 'default_branch' parameter
+* create_repo has 'auto_init' and 'gitignore_template' parameters
+* GistComment URL is changed (see http://developer.github.com/changes/2012-10-31-gist-comment-uris)
+* A typo in the readme was fixed by [tymofij](https://github.com/tymofij), thank you
+* Internal stuff:
+    * Add encoding comment to Python files, thank you [Zearin](https://github.com/Zearin)
+    * Restore support of Python 2.5
+    * Restore coverage measurement in setup.py test
+    * Small refactoring
 
 Previous versions
 -----------------
@@ -34,7 +53,7 @@ You can also clone it on [Github](http://github.com/jacquev6/PyGithub).
 Tutorial
 ========
 
-First create a Gihtub instance:
+First create a Github instance:
 
     from github import Github
 
@@ -74,3 +93,16 @@ Projects using PyGithub
 
 * [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
+* https://github.com/CMB/cligh
+* https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
+* https://gist.github.com/3433798
+* https://github.com/zsiciarz/aquila-dsp.org
+* https://github.com/robcowie/virtualenvwrapper.github
+
+They talk about PyGithub
+========================
+
+* http://stackoverflow.com/questions/10625190/most-suitable-python-library-for-github-api-v3
+* http://stackoverflow.com/questions/12379637/django-social-auth-github-authentication
+* http://www.freebsd.org/cgi/cvsweb.cgi/ports/devel/py-pygithub/
+* http://oddshocks.com/blog/2012/08/02/developing-charsheet/

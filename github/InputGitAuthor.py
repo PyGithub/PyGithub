@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,14 +13,15 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-class InputGitAuthor( object ):
-    def __init__( self, name, email, date ):
+
+class InputGitAuthor(object):
+    def __init__(self, name, email, date):
         self.__name = name
         self.__email = email
         self.__date = date
 
     @property
-    def _identity( self ):
+    def _identity(self):
         return {
             "name": self.__name,
             "email": self.__email,

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,49 +13,50 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class GistFile( GithubObject.BasicGithubObject ):
-    @property
-    def content( self ):
-        return self._NoneIfNotSet( self._content )
 
+class GistFile(github.GithubObject.BasicGithubObject):
     @property
-    def filename( self ):
-        return self._NoneIfNotSet( self._filename )
+    def content(self):
+        return self._NoneIfNotSet(self._content)
 
     @property
-    def language( self ):
-        return self._NoneIfNotSet( self._language )
+    def filename(self):
+        return self._NoneIfNotSet(self._filename)
 
     @property
-    def raw_url( self ):
-        return self._NoneIfNotSet( self._raw_url )
+    def language(self):
+        return self._NoneIfNotSet(self._language)
 
     @property
-    def size( self ):
-        return self._NoneIfNotSet( self._size )
+    def raw_url(self):
+        return self._NoneIfNotSet(self._raw_url)
 
-    def _initAttributes( self ):
-        self._content = GithubObject.NotSet
-        self._filename = GithubObject.NotSet
-        self._language = GithubObject.NotSet
-        self._raw_url = GithubObject.NotSet
-        self._size = GithubObject.NotSet
+    @property
+    def size(self):
+        return self._NoneIfNotSet(self._size)
 
-    def _useAttributes( self, attributes ):
-        if "content" in attributes: # pragma no branch
-            assert attributes[ "content" ] is None or isinstance( attributes[ "content" ], ( str, unicode ) ), attributes[ "content" ]
-            self._content = attributes[ "content" ]
-        if "filename" in attributes: # pragma no branch
-            assert attributes[ "filename" ] is None or isinstance( attributes[ "filename" ], ( str, unicode ) ), attributes[ "filename" ]
-            self._filename = attributes[ "filename" ]
-        if "language" in attributes: # pragma no branch
-            assert attributes[ "language" ] is None or isinstance( attributes[ "language" ], ( str, unicode ) ), attributes[ "language" ]
-            self._language = attributes[ "language" ]
-        if "raw_url" in attributes: # pragma no branch
-            assert attributes[ "raw_url" ] is None or isinstance( attributes[ "raw_url" ], ( str, unicode ) ), attributes[ "raw_url" ]
-            self._raw_url = attributes[ "raw_url" ]
-        if "size" in attributes: # pragma no branch
-            assert attributes[ "size" ] is None or isinstance( attributes[ "size" ], int ), attributes[ "size" ]
-            self._size = attributes[ "size" ]
+    def _initAttributes(self):
+        self._content = github.GithubObject.NotSet
+        self._filename = github.GithubObject.NotSet
+        self._language = github.GithubObject.NotSet
+        self._raw_url = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "content" in attributes:  # pragma no branch
+            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
+            self._content = attributes["content"]
+        if "filename" in attributes:  # pragma no branch
+            assert attributes["filename"] is None or isinstance(attributes["filename"], (str, unicode)), attributes["filename"]
+            self._filename = attributes["filename"]
+        if "language" in attributes:  # pragma no branch
+            assert attributes["language"] is None or isinstance(attributes["language"], (str, unicode)), attributes["language"]
+            self._language = attributes["language"]
+        if "raw_url" in attributes:  # pragma no branch
+            assert attributes["raw_url"] is None or isinstance(attributes["raw_url"], (str, unicode)), attributes["raw_url"]
+            self._raw_url = attributes["raw_url"]
+        if "size" in attributes:  # pragma no branch
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
+            self._size = attributes["size"]

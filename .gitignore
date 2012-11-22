@@ -1,6 +1,7 @@
 *.pyc
 GithubCredentials.py
-.coverage
-/dist
+/dist/
+/build/
 /MANIFEST
-/test/htmlcov/
+/PyGithub.egg-info/
+/.coverage

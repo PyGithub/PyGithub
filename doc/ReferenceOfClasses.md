@@ -10,7 +10,11 @@ Constructed from user's login and password or OAuth token or nothing:
     g = Github( token )
     g = Github()
 
+You can also use your client_id and client_secret:
+    g = github.Github(client_id="YourClientId", client_secret="YourClientSecret")
+
 You can add an argument `base_url = "http://my.enterprise.com:8080/path/to/github"` to connect to a local install of Github (ie. Github Enterprise).
+You can add an argument `user_agent` to send a custom User-Agent header to Github.
 Another argument, that can be passed is `timeout` which has default value `10`.
 
 Attributes
@@ -174,7 +178,7 @@ Orgs
 
 Repos
 -----
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads] )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, auto_init, gitignore_template] )`: `Repository`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -182,6 +186,8 @@ Repos
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
+    * `auto_init`: bool
+    * `gitignore_template`: string
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type, sort, direction] )`: `PaginatedList` of `Repository`
@@ -969,7 +975,7 @@ Public_members
 
 Repos
 -----
-* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id] )`: `Repository`
+* `create_repo( name, [description, homepage, private, has_issues, has_wiki, has_downloads, team_id, auto_init, gitignore_template] )`: `Repository`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -978,6 +984,8 @@ Repos
     * `has_wiki`: bool
     * `has_downloads`: bool
     * `team_id`: `Team`
+    * `auto_init`: bool
+    * `gitignore_template`: string
 * `get_repo( name )`: `Repository`
     * `name`: string
 * `get_repos( [type] )`: `PaginatedList` of `Repository`
@@ -1018,6 +1026,7 @@ Class `PullRequest`
 Attributes
 ----------
 * `additions`: integer
+* `assignee`: `NamedUser`
 * `base`: `PullRequestPart`
 * `body`: string
 * `changed_files`: integer
@@ -1386,7 +1395,7 @@ Milestones
 
 Modification
 ------------
-* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads] )`
+* `edit( name, [description, homepage, public, has_issues, has_wiki, has_downloads, default_branch] )`
     * `name`: string
     * `description`: string
     * `homepage`: string
@@ -1394,6 +1403,7 @@ Modification
     * `has_issues`: bool
     * `has_wiki`: bool
     * `has_downloads`: bool
+    * `default_branch`: string
 
 Pulls
 -----

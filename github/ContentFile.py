@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,65 +13,66 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class ContentFile( GithubObject.BasicGithubObject ):
-    @property
-    def content( self ):
-        return self._NoneIfNotSet( self._content )
 
+class ContentFile(github.GithubObject.BasicGithubObject):
     @property
-    def encoding( self ):
-        return self._NoneIfNotSet( self._encoding )
+    def content(self):
+        return self._NoneIfNotSet(self._content)
 
     @property
-    def name( self ):
-        return self._NoneIfNotSet( self._name )
+    def encoding(self):
+        return self._NoneIfNotSet(self._encoding)
 
     @property
-    def path( self ):
-        return self._NoneIfNotSet( self._path )
+    def name(self):
+        return self._NoneIfNotSet(self._name)
 
     @property
-    def sha( self ):
-        return self._NoneIfNotSet( self._sha )
+    def path(self):
+        return self._NoneIfNotSet(self._path)
 
     @property
-    def size( self ):
-        return self._NoneIfNotSet( self._size )
+    def sha(self):
+        return self._NoneIfNotSet(self._sha)
 
     @property
-    def type( self ):
-        return self._NoneIfNotSet( self._type )
+    def size(self):
+        return self._NoneIfNotSet(self._size)
 
-    def _initAttributes( self ):
-        self._content = GithubObject.NotSet
-        self._encoding = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._path = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
-        self._size = GithubObject.NotSet
-        self._type = GithubObject.NotSet
+    @property
+    def type(self):
+        return self._NoneIfNotSet(self._type)
 
-    def _useAttributes( self, attributes ):
-        if "content" in attributes: # pragma no branch
-            assert attributes[ "content" ] is None or isinstance( attributes[ "content" ], ( str, unicode ) ), attributes[ "content" ]
-            self._content = attributes[ "content" ]
-        if "encoding" in attributes: # pragma no branch
-            assert attributes[ "encoding" ] is None or isinstance( attributes[ "encoding" ], ( str, unicode ) ), attributes[ "encoding" ]
-            self._encoding = attributes[ "encoding" ]
-        if "name" in attributes: # pragma no branch
-            assert attributes[ "name" ] is None or isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self._name = attributes[ "name" ]
-        if "path" in attributes: # pragma no branch
-            assert attributes[ "path" ] is None or isinstance( attributes[ "path" ], ( str, unicode ) ), attributes[ "path" ]
-            self._path = attributes[ "path" ]
-        if "sha" in attributes: # pragma no branch
-            assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
-            self._sha = attributes[ "sha" ]
-        if "size" in attributes: # pragma no branch
-            assert attributes[ "size" ] is None or isinstance( attributes[ "size" ], int ), attributes[ "size" ]
-            self._size = attributes[ "size" ]
-        if "type" in attributes: # pragma no branch
-            assert attributes[ "type" ] is None or isinstance( attributes[ "type" ], ( str, unicode ) ), attributes[ "type" ]
-            self._type = attributes[ "type" ]
+    def _initAttributes(self):
+        self._content = github.GithubObject.NotSet
+        self._encoding = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._path = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "content" in attributes:  # pragma no branch
+            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
+            self._content = attributes["content"]
+        if "encoding" in attributes:  # pragma no branch
+            assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
+            self._encoding = attributes["encoding"]
+        if "name" in attributes:  # pragma no branch
+            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
+            self._name = attributes["name"]
+        if "path" in attributes:  # pragma no branch
+            assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
+            self._path = attributes["path"]
+        if "sha" in attributes:  # pragma no branch
+            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
+            self._sha = attributes["sha"]
+        if "size" in attributes:  # pragma no branch
+            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
+            self._size = attributes["size"]
+        if "type" in attributes:  # pragma no branch
+            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
+            self._type = attributes["type"]

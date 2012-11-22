@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,35 +13,36 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class UserKey( GithubObject.GithubObject ):
-    @property
-    def id( self ):
-        self._completeIfNotSet( self._id )
-        return self._NoneIfNotSet( self._id )
 
+class UserKey(github.GithubObject.GithubObject):
     @property
-    def key( self ):
-        self._completeIfNotSet( self._key )
-        return self._NoneIfNotSet( self._key )
+    def id(self):
+        self._completeIfNotSet(self._id)
+        return self._NoneIfNotSet(self._id)
 
     @property
-    def title( self ):
-        self._completeIfNotSet( self._title )
-        return self._NoneIfNotSet( self._title )
+    def key(self):
+        self._completeIfNotSet(self._key)
+        return self._NoneIfNotSet(self._key)
 
     @property
-    def url( self ):
-        self._completeIfNotSet( self._url )
-        return self._NoneIfNotSet( self._url )
+    def title(self):
+        self._completeIfNotSet(self._title)
+        return self._NoneIfNotSet(self._title)
 
     @property
-    def verified( self ):
-        self._completeIfNotSet( self._verified )
-        return self._NoneIfNotSet( self._verified )
+    def url(self):
+        self._completeIfNotSet(self._url)
+        return self._NoneIfNotSet(self._url)
 
-    def delete( self ):
+    @property
+    def verified(self):
+        self._completeIfNotSet(self._verified)
+        return self._NoneIfNotSet(self._verified)
+
+    def delete(self):
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
@@ -47,42 +50,42 @@ class UserKey( GithubObject.GithubObject ):
             None
         )
 
-    def edit( self, title = GithubObject.NotSet, key = GithubObject.NotSet ):
-        assert title is GithubObject.NotSet or isinstance( title, ( str, unicode ) ), title
-        assert key is GithubObject.NotSet or isinstance( key, ( str, unicode ) ), key
+    def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
+        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
+        assert key is github.GithubObject.NotSet or isinstance(key, (str, unicode)), key
         post_parameters = dict()
-        if title is not GithubObject.NotSet:
-            post_parameters[ "title" ] = title
-        if key is not GithubObject.NotSet:
-            post_parameters[ "key" ] = key
+        if title is not github.GithubObject.NotSet:
+            post_parameters["title"] = title
+        if key is not github.GithubObject.NotSet:
+            post_parameters["key"] = key
         headers, data = self._requester.requestAndCheck(
             "PATCH",
             self.url,
             None,
             post_parameters
         )
-        self._useAttributes( data )
+        self._useAttributes(data)
 
-    def _initAttributes( self ):
-        self._id = GithubObject.NotSet
-        self._key = GithubObject.NotSet
-        self._title = GithubObject.NotSet
-        self._url = GithubObject.NotSet
-        self._verified = GithubObject.NotSet
+    def _initAttributes(self):
+        self._id = github.GithubObject.NotSet
+        self._key = github.GithubObject.NotSet
+        self._title = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+        self._verified = github.GithubObject.NotSet
 
-    def _useAttributes( self, attributes ):
-        if "id" in attributes: # pragma no branch
-            assert attributes[ "id" ] is None or isinstance( attributes[ "id" ], int ), attributes[ "id" ]
-            self._id = attributes[ "id" ]
-        if "key" in attributes: # pragma no branch
-            assert attributes[ "key" ] is None or isinstance( attributes[ "key" ], ( str, unicode ) ), attributes[ "key" ]
-            self._key = attributes[ "key" ]
-        if "title" in attributes: # pragma no branch
-            assert attributes[ "title" ] is None or isinstance( attributes[ "title" ], ( str, unicode ) ), attributes[ "title" ]
-            self._title = attributes[ "title" ]
-        if "url" in attributes: # pragma no branch
-            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self._url = attributes[ "url" ]
-        if "verified" in attributes: # pragma no branch
-            assert attributes[ "verified" ] is None or isinstance( attributes[ "verified" ], bool ), attributes[ "verified" ]
-            self._verified = attributes[ "verified" ]
+    def _useAttributes(self, attributes):
+        if "id" in attributes:  # pragma no branch
+            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
+            self._id = attributes["id"]
+        if "key" in attributes:  # pragma no branch
+            assert attributes["key"] is None or isinstance(attributes["key"], (str, unicode)), attributes["key"]
+            self._key = attributes["key"]
+        if "title" in attributes:  # pragma no branch
+            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
+            self._title = attributes["title"]
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]
+        if "verified" in attributes:  # pragma no branch
+            assert attributes["verified"] is None or isinstance(attributes["verified"], bool), attributes["verified"]
+            self._verified = attributes["verified"]

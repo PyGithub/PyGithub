@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,11 +13,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-class GithubException( Exception ):
-    def __init__( self, status, data ):
-        Exception.__init__( self )
+
+class GithubException(Exception):
+    def __init__(self, status, data):
+        Exception.__init__(self)
         self.status = status
         self.data = data
 
-    def __str__( self ):
-        return str( self.status ) + " " + str( self.data )
+    def __str__(self):
+        return str(self.status) + " " + str(self.data)

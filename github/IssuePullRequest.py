@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,33 +13,34 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class IssuePullRequest( GithubObject.BasicGithubObject ):
-    @property
-    def diff_url( self ):
-        return self._NoneIfNotSet( self._diff_url )
 
+class IssuePullRequest(github.GithubObject.BasicGithubObject):
     @property
-    def html_url( self ):
-        return self._NoneIfNotSet( self._html_url )
+    def diff_url(self):
+        return self._NoneIfNotSet(self._diff_url)
 
     @property
-    def patch_url( self ):
-        return self._NoneIfNotSet( self._patch_url )
+    def html_url(self):
+        return self._NoneIfNotSet(self._html_url)
 
-    def _initAttributes( self ):
-        self._diff_url = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._patch_url = GithubObject.NotSet
+    @property
+    def patch_url(self):
+        return self._NoneIfNotSet(self._patch_url)
 
-    def _useAttributes( self, attributes ):
-        if "diff_url" in attributes: # pragma no branch
-            assert attributes[ "diff_url" ] is None or isinstance( attributes[ "diff_url" ], ( str, unicode ) ), attributes[ "diff_url" ]
-            self._diff_url = attributes[ "diff_url" ]
-        if "html_url" in attributes: # pragma no branch
-            assert attributes[ "html_url" ] is None or isinstance( attributes[ "html_url" ], ( str, unicode ) ), attributes[ "html_url" ]
-            self._html_url = attributes[ "html_url" ]
-        if "patch_url" in attributes: # pragma no branch
-            assert attributes[ "patch_url" ] is None or isinstance( attributes[ "patch_url" ], ( str, unicode ) ), attributes[ "patch_url" ]
-            self._patch_url = attributes[ "patch_url" ]
+    def _initAttributes(self):
+        self._diff_url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._patch_url = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "diff_url" in attributes:  # pragma no branch
+            assert attributes["diff_url"] is None or isinstance(attributes["diff_url"], (str, unicode)), attributes["diff_url"]
+            self._diff_url = attributes["diff_url"]
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
+        if "patch_url" in attributes:  # pragma no branch
+            assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
+            self._patch_url = attributes["patch_url"]

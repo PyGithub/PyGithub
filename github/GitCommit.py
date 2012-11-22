@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,83 +13,83 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import GitAuthor
-import GitCommit
-import GitTree
+import github.GitAuthor
+import github.GitTree
 
-class GitCommit( GithubObject.GithubObject ):
+
+class GitCommit(github.GithubObject.GithubObject):
     @property
-    def author( self ):
-        self._completeIfNotSet( self._author )
-        return self._NoneIfNotSet( self._author )
-
-    @property
-    def committer( self ):
-        self._completeIfNotSet( self._committer )
-        return self._NoneIfNotSet( self._committer )
+    def author(self):
+        self._completeIfNotSet(self._author)
+        return self._NoneIfNotSet(self._author)
 
     @property
-    def message( self ):
-        self._completeIfNotSet( self._message )
-        return self._NoneIfNotSet( self._message )
+    def committer(self):
+        self._completeIfNotSet(self._committer)
+        return self._NoneIfNotSet(self._committer)
 
     @property
-    def parents( self ):
-        self._completeIfNotSet( self._parents )
-        return self._NoneIfNotSet( self._parents )
+    def message(self):
+        self._completeIfNotSet(self._message)
+        return self._NoneIfNotSet(self._message)
 
     @property
-    def sha( self ):
-        self._completeIfNotSet( self._sha )
-        return self._NoneIfNotSet( self._sha )
+    def parents(self):
+        self._completeIfNotSet(self._parents)
+        return self._NoneIfNotSet(self._parents)
 
     @property
-    def tree( self ):
-        self._completeIfNotSet( self._tree )
-        return self._NoneIfNotSet( self._tree )
+    def sha(self):
+        self._completeIfNotSet(self._sha)
+        return self._NoneIfNotSet(self._sha)
 
     @property
-    def url( self ):
-        self._completeIfNotSet( self._url )
-        return self._NoneIfNotSet( self._url )
+    def tree(self):
+        self._completeIfNotSet(self._tree)
+        return self._NoneIfNotSet(self._tree)
 
     @property
-    def _identity( self ):
+    def url(self):
+        self._completeIfNotSet(self._url)
+        return self._NoneIfNotSet(self._url)
+
+    @property
+    def _identity(self):
         return self.sha
 
-    def _initAttributes( self ):
-        self._author = GithubObject.NotSet
-        self._committer = GithubObject.NotSet
-        self._message = GithubObject.NotSet
-        self._parents = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
-        self._tree = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+    def _initAttributes(self):
+        self._author = github.GithubObject.NotSet
+        self._committer = github.GithubObject.NotSet
+        self._message = github.GithubObject.NotSet
+        self._parents = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._tree = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
-    def _useAttributes( self, attributes ):
-        if "author" in attributes: # pragma no branch
-            assert attributes[ "author" ] is None or isinstance( attributes[ "author" ], dict ), attributes[ "author" ]
-            self._author = None if attributes[ "author" ] is None else GitAuthor.GitAuthor( self._requester, attributes[ "author" ], completed = False )
-        if "committer" in attributes: # pragma no branch
-            assert attributes[ "committer" ] is None or isinstance( attributes[ "committer" ], dict ), attributes[ "committer" ]
-            self._committer = None if attributes[ "committer" ] is None else GitAuthor.GitAuthor( self._requester, attributes[ "committer" ], completed = False )
-        if "message" in attributes: # pragma no branch
-            assert attributes[ "message" ] is None or isinstance( attributes[ "message" ], ( str, unicode ) ), attributes[ "message" ]
-            self._message = attributes[ "message" ]
-        if "parents" in attributes: # pragma no branch
-            assert attributes[ "parents" ] is None or all( isinstance( element, dict ) for element in attributes[ "parents" ] ), attributes[ "parents" ]
-            self._parents = None if attributes[ "parents" ] is None else [
-                GitCommit( self._requester, element, completed = False )
-                for element in attributes[ "parents" ]
+    def _useAttributes(self, attributes):
+        if "author" in attributes:  # pragma no branch
+            assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
+            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["author"], completed=False)
+        if "committer" in attributes:  # pragma no branch
+            assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
+            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["committer"], completed=False)
+        if "message" in attributes:  # pragma no branch
+            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
+            self._message = attributes["message"]
+        if "parents" in attributes:  # pragma no branch
+            assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
+            self._parents = None if attributes["parents"] is None else [
+                GitCommit(self._requester, element, completed=False)
+                for element in attributes["parents"]
             ]
-        if "sha" in attributes: # pragma no branch
-            assert attributes[ "sha" ] is None or isinstance( attributes[ "sha" ], ( str, unicode ) ), attributes[ "sha" ]
-            self._sha = attributes[ "sha" ]
-        if "tree" in attributes: # pragma no branch
-            assert attributes[ "tree" ] is None or isinstance( attributes[ "tree" ], dict ), attributes[ "tree" ]
-            self._tree = None if attributes[ "tree" ] is None else GitTree.GitTree( self._requester, attributes[ "tree" ], completed = False )
-        if "url" in attributes: # pragma no branch
-            assert attributes[ "url" ] is None or isinstance( attributes[ "url" ], ( str, unicode ) ), attributes[ "url" ]
-            self._url = attributes[ "url" ]
+        if "sha" in attributes:  # pragma no branch
+            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
+            self._sha = attributes["sha"]
+        if "tree" in attributes:  # pragma no branch
+            assert attributes["tree"] is None or isinstance(attributes["tree"], dict), attributes["tree"]
+            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, attributes["tree"], completed=False)
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]

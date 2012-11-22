@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,10 +13,11 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class InputGitTreeElement( object ):
-    def __init__( self, path, mode, type, content = GithubObject.NotSet, sha = GithubObject.NotSet ):
+
+class InputGitTreeElement(object):
+    def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         self.__path = path
         self.__mode = mode
         self.__type = type
@@ -22,14 +25,14 @@ class InputGitTreeElement( object ):
         self.__sha = sha
 
     @property
-    def _identity( self ):
+    def _identity(self):
         identity = {
             "path": self.__path,
             "mode": self.__mode,
             "type": self.__type,
         }
-        if self.__sha is not GithubObject.NotSet:
-            identity[ "sha" ] = self.__sha
-        if self.__content is not GithubObject.NotSet:
-            identity[ "content" ] = self.__content
+        if self.__sha is not github.GithubObject.NotSet:
+            identity["sha"] = self.__sha
+        if self.__content is not github.GithubObject.NotSet:
+            identity["content"] = self.__content
         return identity

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,33 +13,34 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-class GitAuthor( GithubObject.BasicGithubObject ):
-    @property
-    def date( self ):
-        return self._NoneIfNotSet( self._date )
 
+class GitAuthor(github.GithubObject.BasicGithubObject):
     @property
-    def email( self ):
-        return self._NoneIfNotSet( self._email )
+    def date(self):
+        return self._NoneIfNotSet(self._date)
 
     @property
-    def name( self ):
-        return self._NoneIfNotSet( self._name )
+    def email(self):
+        return self._NoneIfNotSet(self._email)
 
-    def _initAttributes( self ):
-        self._date = GithubObject.NotSet
-        self._email = GithubObject.NotSet
-        self._name = GithubObject.NotSet
+    @property
+    def name(self):
+        return self._NoneIfNotSet(self._name)
 
-    def _useAttributes( self, attributes ):
-        if "date" in attributes: # pragma no branch
-            assert attributes[ "date" ] is None or isinstance( attributes[ "date" ], ( str, unicode ) ), attributes[ "date" ]
-            self._date = self._parseDatetime( attributes[ "date" ] )
-        if "email" in attributes: # pragma no branch
-            assert attributes[ "email" ] is None or isinstance( attributes[ "email" ], ( str, unicode ) ), attributes[ "email" ]
-            self._email = attributes[ "email" ]
-        if "name" in attributes: # pragma no branch
-            assert attributes[ "name" ] is None or isinstance( attributes[ "name" ], ( str, unicode ) ), attributes[ "name" ]
-            self._name = attributes[ "name" ]
+    def _initAttributes(self):
+        self._date = github.GithubObject.NotSet
+        self._email = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "date" in attributes:  # pragma no branch
+            assert attributes["date"] is None or isinstance(attributes["date"], (str, unicode)), attributes["date"]
+            self._date = self._parseDatetime(attributes["date"])
+        if "email" in attributes:  # pragma no branch
+            assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
+            self._email = attributes["email"]
+        if "name" in attributes:  # pragma no branch
+            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
+            self._name = attributes["name"]

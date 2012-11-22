@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
@@ -11,12 +13,13 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-class InputFileContent( object ):
-    def __init__( self, content ):
+
+class InputFileContent(object):
+    def __init__(self, content):
         self.__content = content
 
     @property
-    def _identity( self ):
+    def _identity(self):
         return {
             "content": self.__content,
         }

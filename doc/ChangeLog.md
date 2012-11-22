@@ -1,3 +1,39 @@
+[Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed) (November 20th, 2012)
+------------------------------------------------------------------------------------------------------------
+
+* Fix an assertion failure when integers returned by Github do not fit in a Python `int`
+
+[Version 1.9.0](https://github.com/jacquev6/PyGithub/issues?milestone=14&state=closed) (November 19th, 2012)
+------------------------------------------------------------------------------------------------------------
+
+* You can now use your client_id and client_secret to increase rate limiting without authentication
+* You can now send a custom User-Agent
+* PullRequest now has its 'assignee' attribute, thank you [mstead](https://github.com/mstead)
+* Repository.edit now has 'default_branch' parameter
+* create_repo has 'auto_init' and 'gitignore_template' parameters
+* GistComment URL is changed (see http://developer.github.com/changes/2012-10-31-gist-comment-uris)
+* A typo in the readme was fixed by [tymofij](https://github.com/tymofij), thank you
+* Internal stuff:
+    * Add encoding comment to Python files, thank you [Zearin](https://github.com/Zearin)
+    * Restore support of Python 2.5
+    * Restore coverage measurement in setup.py test
+    * Small refactoring
+
+[Version 1.8.1](https://github.com/jacquev6/PyGithub/issues?milestone=15&state=closed) (October 28th, 2012)
+-----------------------------------------------------------------------------------------------------------
+
+* Repository.get_git_ref prepends "refs/" to the requested references. Thank you [simon-weber](https://github.com/simon-weber) for noting the incoherence between documentation and behavior. If you feel like it's a breaking change, please see [this issue](https://github.com/jacquev6/PyGithub/issues/104)
+
+[Version 1.8.0](https://github.com/jacquev6/PyGithub/issues?milestone=13&state=closed) (September 30th, 2012)
+-------------------------------------------------------------------------------------------------------------
+
+* Enable [Travis CI](http://travis-ci.org/#!/jacquev6/PyGithub)
+* Fix error 500 when json payload contains percent character (`%`). Thank you again [quixotique](https://github.com/quixotique) for pointing that and reporting it to Github
+* Enable debug logging. Logger name is `"github"`. Simple logging can be enabled by `github.enable_console_debug_logging()`. Thank you [quixotique](https://github.com/quixotique) for the merge request and the advice
+* Publish tests in the PyPi source archive to ease QA tests of the [FreeBSD port](http://www.freshports.org/devel/py-pygithub/). Thank you [koobs](https://github.com/koobs) for maintaining this port
+* Switch to [Semantic Versioning](http://semver.org/)
+* Respect [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/)
+
 [Version 1.7](https://github.com/jacquev6/PyGithub/issues?milestone=12&state=closed) (September 12th, 2012)
 ===========================================================================================================
 
