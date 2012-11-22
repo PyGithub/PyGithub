@@ -8,7 +8,5 @@ python:
 install:
   - if [ $TRAVIS_PYTHON_VERSION == '2.5' ]; then pip install -r python25-requirements.txt --use-mirrors; fi
   - if [ $TRAVIS_PYTHON_VERSION == '2.6' ]; then pip install -r python26-requirements.txt --use-mirrors; fi
-  - python setup.py install
 script:
-  - cd # Run installed code (maybe 2to3ed), not code in current directory (always for python2)
-  - python -m github.tests.__main__ # __main__ is for Python 2.5 and 2.6
+  - python setup.py test

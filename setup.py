@@ -14,17 +14,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup, Command
+from setuptools import setup, Command
 import textwrap
 import sys
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
-if atLeastPython3:
-    import setuptools
-    kwds = {"use_2to3": True}
-else:
-    kwds = dict()
 
 setup(
     name="PyGithub",
@@ -77,5 +72,6 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development",
     ],
-    **kwds
+    test_suite="github.tests.AllTests",
+    use_2to3=atLeastPython3
 )
