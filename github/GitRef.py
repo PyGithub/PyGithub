@@ -13,12 +13,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import GitObject
+import github.GitObject
 
 
-class GitRef(GithubObject.GithubObject):
+class GitRef(github.GithubObject.GithubObject):
     @property
     def object(self):
         self._completeIfNotSet(self._object)
@@ -42,13 +42,13 @@ class GitRef(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, sha, force=GithubObject.NotSet):
+    def edit(self, sha, force=github.GithubObject.NotSet):
         assert isinstance(sha, (str, unicode)), sha
-        assert force is GithubObject.NotSet or isinstance(force, bool), force
+        assert force is github.GithubObject.NotSet or isinstance(force, bool), force
         post_parameters = {
             "sha": sha,
         }
-        if force is not GithubObject.NotSet:
+        if force is not github.GithubObject.NotSet:
             post_parameters["force"] = force
         headers, data = self._requester.requestAndCheck(
             "PATCH",
@@ -59,14 +59,14 @@ class GitRef(GithubObject.GithubObject):
         self._useAttributes(data)
 
     def _initAttributes(self):
-        self._object = GithubObject.NotSet
-        self._ref = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._object = github.GithubObject.NotSet
+        self._ref = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
             assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = None if attributes["object"] is None else GitObject.GitObject(self._requester, attributes["object"], completed=False)
+            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, attributes["object"], completed=False)
         if "ref" in attributes:  # pragma no branch
             assert attributes["ref"] is None or isinstance(attributes["ref"], (str, unicode)), attributes["ref"]
             self._ref = attributes["ref"]

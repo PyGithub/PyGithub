@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class Plan(GithubObject.BasicGithubObject):
+class Plan(github.GithubObject.BasicGithubObject):
     @property
     def collaborators(self):
         return self._NoneIfNotSet(self._collaborators)
@@ -34,10 +34,10 @@ class Plan(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._space)
 
     def _initAttributes(self):
-        self._collaborators = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._private_repos = GithubObject.NotSet
-        self._space = GithubObject.NotSet
+        self._collaborators = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._private_repos = github.GithubObject.NotSet
+        self._space = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch

@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class AuthorizationApplication(GithubObject.GithubObject):
+class AuthorizationApplication(github.GithubObject.GithubObject):
     @property
     def name(self):
         self._completeIfNotSet(self._name)
@@ -28,8 +28,8 @@ class AuthorizationApplication(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
-        self._name = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "name" in attributes:  # pragma no branch

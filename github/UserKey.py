@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class UserKey(GithubObject.GithubObject):
+class UserKey(github.GithubObject.GithubObject):
     @property
     def id(self):
         self._completeIfNotSet(self._id)
@@ -50,13 +50,13 @@ class UserKey(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, title=GithubObject.NotSet, key=GithubObject.NotSet):
-        assert title is GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert key is GithubObject.NotSet or isinstance(key, (str, unicode)), key
+    def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
+        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
+        assert key is github.GithubObject.NotSet or isinstance(key, (str, unicode)), key
         post_parameters = dict()
-        if title is not GithubObject.NotSet:
+        if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
-        if key is not GithubObject.NotSet:
+        if key is not github.GithubObject.NotSet:
             post_parameters["key"] = key
         headers, data = self._requester.requestAndCheck(
             "PATCH",
@@ -67,11 +67,11 @@ class UserKey(GithubObject.GithubObject):
         self._useAttributes(data)
 
     def _initAttributes(self):
-        self._id = GithubObject.NotSet
-        self._key = GithubObject.NotSet
-        self._title = GithubObject.NotSet
-        self._url = GithubObject.NotSet
-        self._verified = GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._key = github.GithubObject.NotSet
+        self._title = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+        self._verified = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch

@@ -13,11 +13,11 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
 class InputGitTreeElement(object):
-    def __init__(self, path, mode, type, content=GithubObject.NotSet, sha=GithubObject.NotSet):
+    def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         self.__path = path
         self.__mode = mode
         self.__type = type
@@ -31,8 +31,8 @@ class InputGitTreeElement(object):
             "mode": self.__mode,
             "type": self.__type,
         }
-        if self.__sha is not GithubObject.NotSet:
+        if self.__sha is not github.GithubObject.NotSet:
             identity["sha"] = self.__sha
-        if self.__content is not GithubObject.NotSet:
+        if self.__content is not github.GithubObject.NotSet:
             identity["content"] = self.__content
         return identity

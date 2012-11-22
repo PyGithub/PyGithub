@@ -16,16 +16,16 @@
 import sys
 import unittest
 
-import Framework
-import AllTests
+import github.tests.Framework
+import github.tests.AllTests
 
 
 def main(argv):
     if "--record" in argv:
-        Framework.activateRecordMode()
+        github.tests.Framework.activateRecordMode()
         argv = [arg for arg in argv if arg != "--record"]
 
-    unittest.main(module=AllTests, argv=argv)
+    unittest.main(module=github.tests.AllTests, argv=argv)
 
 
 if __name__ == "__main__":

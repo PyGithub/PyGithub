@@ -19,6 +19,7 @@ import sys
 import Framework
 
 atLeastPython26 = sys.hexversion >= 0x02060000
+atMostPython2 = sys.hexversion < 0x03000000
 
 
 class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
@@ -43,7 +44,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
                     "message": "Validation Failed"
                 }
             )
-            if atLeastPython26:
+            if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}")
             else:
                 self.assertEqual(str(exception), "422 {\'message\': \'Validation Failed\', \'errors\': [{\'field\': \'key\', \'message\': \"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", \'code\': \'custom\', \'resource\': \'PublicKey\'}]}")  # pragma no cover
@@ -57,7 +58,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26:
+            if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
@@ -71,7 +72,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26:
+            if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
@@ -85,7 +86,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 401)
             self.assertEqual(exception.data, {"message": "Bad credentials"})
-            if atLeastPython26:
+            if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
             else:
                 self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover
