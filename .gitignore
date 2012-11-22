@@ -4,3 +4,4 @@ GithubCredentials.py
 /build/
 /MANIFEST
 /PyGithub.egg-info/
+/.coverage

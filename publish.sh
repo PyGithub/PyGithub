@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 
 pep8 --ignore=E501 github *.py  # pip install pep8
-python setup.py test
+
+python3 setup.py test
+
+coverage run --branch "--include=github/*.py" "--omit=github/tests/*.py" setup.py test
+coverage report --show-missing
 
 previousVersion=$( grep 'version =' setup.py | sed 's/.*version = \"\(.*\)\".*/\1/' )
 echo "Next version number? (previous: '$previousVersion')"
