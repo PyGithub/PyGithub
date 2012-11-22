@@ -1,4 +1,4 @@
-This is a Python library to access the [Github API v3](http://developer.github.com/v3).
+This is a Python (2 and 3) library to access the [Github API v3](http://developer.github.com/v3).
 
 With it, you can manage your [Github](http://github.com) resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
