@@ -7,6 +7,5 @@ python:
   - "3.2"
 install:
   - if [ $TRAVIS_PYTHON_VERSION == '2.5' ]; then pip install -r python25-requirements.txt --use-mirrors; fi
-  - if [ $TRAVIS_PYTHON_VERSION == '2.6' ]; then pip install -r python26-requirements.txt --use-mirrors; fi
 script:
   - python setup.py test

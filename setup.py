@@ -14,14 +14,11 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-from setuptools import setup, Command
+import setuptools
 import textwrap
-import sys
-
-atLeastPython3 = sys.hexversion >= 0x03000000
 
 
-setup(
+setuptools.setup(
     name="PyGithub",
     version="1.9.1",
     description="Use the full Github API v3",
@@ -74,5 +71,5 @@ setup(
         "Topic :: Software Development",
     ],
     test_suite="github.tests.AllTests",
-    use_2to3=atLeastPython3
+    use_2to3=True
 )
