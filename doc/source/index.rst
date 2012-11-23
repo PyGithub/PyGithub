@@ -6,6 +6,8 @@
 Welcome to PyGithub's documentation!
 ====================================
 
+This is still a draft, do not use it.
+
 Contents:
 
 .. toctree::
