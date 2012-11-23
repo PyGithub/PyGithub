@@ -25,7 +25,7 @@ NotSet = _NotSetType()
 
 
 class BasicGithubObject(object):
-    def __init__(self, requester, attributes):
+    def __init__(self, requester, attributes, completed):
         self._requester = requester
         self._initAttributes()
         self._useAttributes(attributes)
