@@ -17,59 +17,61 @@
 import setuptools
 import textwrap
 
+version = "1.9.1"
 
-setuptools.setup(
-    name="PyGithub",
-    version="1.9.1",
-    description="Use the full Github API v3",
-    author="Vincent Jacques",
-    author_email="vincent@vincent-jacques.net",
-    url="http://vincent-jacques.net/PyGithub",
-    long_description=textwrap.dedent("""\
-        Tutorial
-        ========
+if __name__ == "__main__":
+    setuptools.setup(
+        name="PyGithub",
+        version=version,
+        description="Use the full Github API v3",
+        author="Vincent Jacques",
+        author_email="vincent@vincent-jacques.net",
+        url="http://vincent-jacques.net/PyGithub",
+        long_description=textwrap.dedent("""\
+            Tutorial
+            ========
 
-        First create a Gihub instance::
+            First create a Gihub instance::
 
-            from github import Github
+                from github import Github
 
-            g = Github( "user", "password" )
+                g = Github( "user", "password" )
 
-        Then play with your Github objects::
+            Then play with your Github objects::
 
-            for repo in g.get_user().get_repos():
-                print repo.name
-                repo.edit( has_wiki = False )
+                for repo in g.get_user().get_repos():
+                    print repo.name
+                    repo.edit( has_wiki = False )
 
-        You can also create a Github instance with an OAuth token::
+            You can also create a Github instance with an OAuth token::
 
-            g = Github( token )
+                g = Github( token )
 
-        Or without authentication::
+            Or without authentication::
 
-            g = Github()
+                g = Github()
 
-        Reference documentation
-        =======================
+            Reference documentation
+            =======================
 
-        See http://vincent-jacques.net/PyGithub"""),
-    packages=[
-        "github",
-        "github.tests",
-    ],
-    package_data={
-        "github": ["ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt"]
-    },
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Web Environment",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Topic :: Software Development",
-    ],
-    test_suite="github.tests.AllTests",
-    use_2to3=True
-)
+            See http://vincent-jacques.net/PyGithub"""),
+        packages=[
+            "github",
+            "github.tests",
+        ],
+        package_data={
+            "github": ["ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt"]
+        },
+        classifiers=[
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: Web Environment",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Topic :: Software Development",
+        ],
+        test_suite="github.tests.AllTests",
+        use_2to3=True
+    )
