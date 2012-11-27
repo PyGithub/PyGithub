@@ -16,6 +16,13 @@
 
 class InputFileContent(object):
     def __init__(self, content):
+        """
+        Please edit this generated docstring for method :func:`github.InputFileContent.InputFileContent.__init__`.
+
+        :param content: string
+        """
+
+        assert isinstance(content, (str, unicode)), content
         self.__content = content
 
     @property

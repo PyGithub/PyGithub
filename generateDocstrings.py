@@ -35,7 +35,7 @@ class Generator():
             return []
         else:
             return [
-                "Please edit this generated docstring for class " + className + ".",
+                "Please modify this generated docstring for class :class:`github." + className + "." + className + "`.",
             ]
 
     def getMemberDocstring(self, className, memberName):
@@ -45,20 +45,20 @@ class Generator():
             classDescription = self.classDescriptions[className]
             if memberName in classDescription.properties:
                 return [
-                    "Please edit this generated docstring for property " + className + "." + memberName + ".",
+                    "Please modify this generated docstring for property :attr:`github." + className + "." + className + "." + memberName + "`.",
                     "",
-                    ":type: " + classDescription.properties[memberName]
+                    ":type: " + self.__formatType(classDescription.properties[memberName])
                 ]
             elif memberName in classDescription.methods:
                 return [
-                    "Please edit this generated docstring for method " + className + "." + memberName + ".",
+                    "Please modify this generated docstring for method :func:`github." + className + "." + className + "." + memberName + "`.",
                     "",
-                    "Calls " + (classDescription.methods[memberName].verb or "WTF") + " " + (classDescription.methods[memberName].url or "WTF"),
-                    "",
+                    ":calls: " + (classDescription.methods[memberName].verb or "WTF") + " " + (classDescription.methods[memberName].url or "WTF"),
+                    ":authentication level: please modify",
                 ] + [
-                    ":param " + parameterName + ": " + parameterType for parameterName, parameterType in classDescription.methods[memberName].parameters.items()
+                    ":param " + parameterName + ": " + self.__formatType(parameterType) for parameterName, parameterType in classDescription.methods[memberName].parameters.items()
                 ] + [
-                    ":return: " + str(classDescription.methods[memberName].returnType)
+                    ":rtype: " + self.__formatType(str(classDescription.methods[memberName].returnType))
                 ]
             elif memberName.startswith("_"):  # private member
                 return []
@@ -68,6 +68,34 @@ class Generator():
         else:
             print "Unknown class", className
             return []
+
+    def __formatType(self, type):
+        if type.startswith( "`PaginatedList` of "):
+            return ":class:`github.PaginatedList.PaginatedList` of " + self.__formatType(type[19:])
+        elif type.startswith( "list of "):
+            return "list of " + self.__formatType(type[8:])
+        elif type.startswith( "dict of string to "):
+            return "dict of string to " + self.__formatType(type[18:])
+        elif type.startswith( "`" ) and type.endswith("`"):
+            type = type[1:-1]
+            return ":class:`github." + type + "." + type + "`"
+        elif type == "`Milestone` or \"none\" or \"*\"":
+            return ":class:`github.Milestone.Milestone` or \"none\" or \"*\""
+        elif type == "`NamedUser` or \"none\" or \"*\"":
+            return ":class:`github.NamedUser.NamedUser` or \"none\" or \"*\""
+        elif type == "`Milestone` or None":
+            return ":class:`github.Milestone.Milestone` or None"
+        elif type == "`NamedUser` or None":
+            return ":class:`github.NamedUser.NamedUser` or None"
+        elif type in [
+            "bool", "string", "None", "integer",
+            "datetime.datetime", "date",
+            "\"open\" or \"closed\"",
+            "dict", "(int, int)"
+            ]:
+            return type
+        else:
+            raise Exception( "Unknown type " + type)
 
     def __init__(self):
         pass

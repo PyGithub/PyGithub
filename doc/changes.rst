@@ -1,6 +1,9 @@
 Change log
 ==========
 
+Stable versions
+~~~~~~~~~~~~~~~
+
 `Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone-17&state-closed>`_ (November 20th, 2012)
 --------------------------------------------------------------------------------------------------------------
 
@@ -98,6 +101,9 @@ Version 1.1 (June 20th, 2012)
 * Full documentation of attributes and parameters
 * More usable exceptions raised in case on problems with the API
 * Some bugs and limitations fixed, special thanks to `bilderbuchi <https://github.com/bilderbuchi>`_, `roskakori <https://github.com/roskakori>`_ and `tallforasmurf <https://github.com/tallforasmurf>`_ for reporting them!
+
+Pre-release versions
+~~~~~~~~~~~~~~~~~~~~
 
 `Version 0.7 <https://github.com/jacquev6/PyGithub/issues?milestone-5&state-closed>`_ (May 26th, 2012)
 ------------------------------------------------------------------------------------------------------

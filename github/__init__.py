@@ -13,6 +13,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+"""
+The primary class you will instanciate is :class:`github.Github.Github`.
+From its `get_`, `create_` methods, you will obtain instances of all Github objects
+like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository`.
+"""
+
 import logging
 
 from Github import Github
@@ -23,6 +29,8 @@ from InputGitTreeElement import InputGitTreeElement
 
 
 def enable_console_debug_logging():  # pragma no cover
+    """Is this included"""
+
     logger = logging.getLogger("github")
     logger.setLevel(logging.DEBUG)
     logger.addHandler(logging.StreamHandler())
