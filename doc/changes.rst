@@ -20,10 +20,11 @@ Stable versions
 * GistComment URL is changed (see http://developer.github.com/changes/2012-10-31-gist-comment-uris)
 * A typo in the readme was fixed by `tymofij <https://github.com/tymofij>`_, thank you
 * Internal stuff:
-    * Add encoding comment to Python files, thank you `Zearin <https://github.com/Zearin>`_
-    * Restore support of Python 2.5
-    * Restore coverage measurement in setup.py test
-    * Small refactoring
+
+  + Add encoding comment to Python files, thank you `Zearin <https://github.com/Zearin>`_
+  + Restore support of Python 2.5
+  + Restore coverage measurement in setup.py test
+  + Small refactoring
 
 `Version 1.8.1 <https://github.com/jacquev6/PyGithub/issues?milestone-15&state-closed>`_ (October 28th, 2012)
 -------------------------------------------------------------------------------------------------------------
@@ -54,12 +55,14 @@ Stable versions
 
 * Restore support for Python 2.5
 * Implement new APIS:
-    * /hooks (undocumented, but mentioned in http://developer.github.com/v3/repos/hooks/#create-a-hook)
-    * `Merging <http://developer.github.com/v3/repos/merging>`_
-    * `Starring <http://developer.github.com/v3/repos/starring>`_ and `subscriptions <http://developer.github.com/v3/repos/watching>`_
-    * `Assignees <http://developer.github.com/v3/issues/assignees>`_
-    * `Commit statuses <http://developer.github.com/v3/repos/statuses>`_
-    * `Contents <http://developer.github.com/v3/repos/contents>`_, thank you `berndca <https://github.com/berndca>`_ for asking
+
+  * /hooks (undocumented, but mentioned in http://developer.github.com/v3/repos/hooks/#create-a-hook)
+  * `Merging <http://developer.github.com/v3/repos/merging>`_
+  * `Starring <http://developer.github.com/v3/repos/starring>`_ and `subscriptions <http://developer.github.com/v3/repos/watching>`_
+  * `Assignees <http://developer.github.com/v3/issues/assignees>`_
+  * `Commit statuses <http://developer.github.com/v3/repos/statuses>`_
+  * `Contents <http://developer.github.com/v3/repos/contents>`_, thank you `berndca <https://github.com/berndca>`_ for asking
+
 * Clarify issue and review comments on PullRequest, thank you `nixoz2k7 <https://github.com/nixoz2k7>`_ for asking
 
 `Version 1.5 <https://github.com/jacquev6/PyGithub/issues?milestone-9&state-closed>`_ (September 5th, 2012)
@@ -128,11 +131,13 @@ Pre-release versions
 
 * The list of the not implemented APIs is shorter than the list of the implemented APIs
 * APIs *not implemented*:
-    * GET `/gists/public`
-    * GET `/issues`
-    * GET `/repos/:user/:repo/compare/:base...:head`
-    * GET `/repos/:user/:repo/git/trees/:sha?recursive-1`
-    * POST `/repos/:user/:repo/git/trees?base_tree-`
+
+  * GET `/gists/public`
+  * GET `/issues`
+  * GET `/repos/:user/:repo/compare/:base...:head`
+  * GET `/repos/:user/:repo/git/trees/:sha?recursive-1`
+  * POST `/repos/:user/:repo/git/trees?base_tree-`
+
 * Gists
 * Autorizations
 * Keys
@@ -147,11 +152,15 @@ Version 0.3 (February 26th, 2012)
 * More refactoring
 * Issues, milestones and their labels
 * NamedUser:
-    * emails
+
+  * emails
+
 * Repository:
-    * downloads
-    * tags, branches, commits and comments (not the same as "Git objects" of version 0.2)
-    * pull requests (no automatic merge yet)
+
+  * downloads
+  * tags, branches, commits and comments (not the same as "Git objects" of version 0.2)
+  * pull requests (no automatic merge yet)
+
 * Automatic generation of the reference documentation of classes, with less "see API"s, and less errors
 
 Version 0.2 (February 23rd, 2012)
@@ -159,24 +168,32 @@ Version 0.2 (February 23rd, 2012)
 
 * Refactoring
 * Teams details and modification
-    * basic attributes
-    * list teams in organizations, on repositories
+
+  * basic attributes
+  * list teams in organizations, on repositories
+
 * Git objects
-    * create and get tags, references, commits, trees, blobs
-    * list and edit references
+
+  * create and get tags, references, commits, trees, blobs
+  * list and edit references
 
 Version 0.1 (February 19th, 2012)
 ---------------------------------
 
 * User details and modification
-    * basic attributes
-    * followers, following, watching
-    * organizations
-    * repositories
+
+  * basic attributes
+  * followers, following, watching
+  * organizations
+  * repositories
+
 * Repository details and modification
-    * basic attributes
-    * forking
-    * collaborators, contributors, watchers
+
+  * basic attributes
+  * forking
+  * collaborators, contributors, watchers
+
 * Organization details and modification
-    * basic attributes
-    * members and public members
+
+  * basic attributes
+  * members and public members
