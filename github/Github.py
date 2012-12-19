@@ -70,6 +70,16 @@ class Github(object):
         )
         return Organization.Organization(self.__requester, data, completed=True)
 
+    def get_repo(self, path):
+        assert isinstance(path, (str, unicode)), name
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "/repos/" + path,
+            None,
+            None
+        )
+        return Repository.Repository(self.__requester, data, completed=True)
+
     def get_gist(self, id):
         assert isinstance(id, (str, unicode)), id
         headers, data = self.__requester.requestAndCheck(
