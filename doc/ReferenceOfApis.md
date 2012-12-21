@@ -133,7 +133,7 @@ API `/rate_limit`
 
 API `/repos/:user/:repo`
 ========================
-* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
+* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo`, `Organization.get_repo` or `Github.get_repo`
 * PATCH: `Repository.edit`
 * DELETE: `Repository.delete`
 

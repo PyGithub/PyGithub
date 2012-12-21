@@ -26,6 +26,7 @@ Methods
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
+* `get_repo( full_name )`: `Repository`
 * `get_gist( id )`: `Gist`
     * `id`: string
 * `get_gists()`: `PaginatedList` of `Gist`

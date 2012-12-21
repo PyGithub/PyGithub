@@ -13,6 +13,11 @@ What's new?
 
 [![Build Status](https://secure.travis-ci.org/jacquev6/PyGithub.png)](http://travis-ci.org/jacquev6/PyGithub)
 
+Next version
+------------
+
+* Add a shortcut function `Github.get_repo` to get a repo directly from its full name. thank you [lwc](https://github.com/lwc) for the contribution
+
 [Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed) (November 20th, 2012)
 ------------------------------------------------------------------------------------------------------------
 
