@@ -53,8 +53,16 @@ API `/gists/starred`
 ====================
 * GET: `AuthenticatedUser.get_starred_gists`
 
+API `/gitignore/templates`
+==========================
+* GET: `Github.get_gitignore_templates`
+
+API `/gitignore/templates/:name`
+================================
+* GET: `Github.get_gitignore_template`
+
 API `/hooks`
-====================
+============
 * GET: `Github.get_hooks`
 
 API `/issues`
@@ -133,7 +141,7 @@ API `/rate_limit`
 
 API `/repos/:user/:repo`
 ========================
-* GET: `AuthenticatedUser.get_repo` or `NamedUser.get_repo` or `Organization.get_repo`
+* GET: `AuthenticatedUser.get_repo` or `NamedUser.get_repo` or `Organization.get_repo` or `Github.get_repo`
 * PATCH: `Repository.edit`
 * DELETE: `Repository.delete`
 

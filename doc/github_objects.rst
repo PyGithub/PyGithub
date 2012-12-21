@@ -23,6 +23,7 @@ Github objects
    github_objects/GitBlob
    github_objects/GitCommit
    github_objects/GitObject
+   github_objects/GitignoreTemplate
    github_objects/GitRef
    github_objects/GitTag
    github_objects/GitTree

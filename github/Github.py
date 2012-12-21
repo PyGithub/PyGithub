@@ -25,6 +25,7 @@ import Repository
 import Legacy
 import github.GithubObject
 import HookDescription
+import GitignoreTemplate
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -88,6 +89,16 @@ class Github(object):
             None
         )
         return github.Organization.Organization(self.__requester, data, completed=True)
+
+    def get_repo(self, full_name):
+        assert isinstance(full_name, (str, unicode)), full_name
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "/repos/" + full_name,
+            None,
+            None
+        )
+        return Repository.Repository(self.__requester, data, completed=True)
 
     def get_gist(self, id):
         assert isinstance(id, (str, unicode)), id
@@ -166,3 +177,22 @@ class Github(object):
             None
         )
         return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
+
+    def get_gitignore_templates(self):
+        headers, data = self.__requester.requestAndCheck(
+            "GET",
+            "/gitignore/templates",
+            None,
+            None
+        )
+        return data
+
+    def get_gitignore_template(self, name):
+        assert isinstance(name, (str, unicode)), name
+        headers, attributes = self.__requester.requestAndCheck(
+            "GET",
+            "/gitignore/templates/" + name,
+            None,
+            None
+        )
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, attributes, completed=True)
