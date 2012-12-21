@@ -92,3 +92,6 @@ class Github(Framework.TestCase):
         self.assertEqual(hook.supported_events, ["push"])
         self.assertEqual(hook.events, ["push"])
         self.assertEqual(hook.schema, [["string", "url"], ["string", "token"], ["string", "project_id"], ["string", "milestone_id"], ["string", "category_id"]])
+
+    def testGetRepoFromFullName(self):
+        self.assertEqual(self.g.get_repo("jacquev6/PyGithub").description, "Python library implementing the full Github API v3")
