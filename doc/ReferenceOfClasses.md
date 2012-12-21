@@ -571,6 +571,14 @@ Attributes
 * `type`: string
 * `url`: string
 
+Class `GitignoreTemplate`
+=========================
+
+Attributes
+----------
+* `name`: string
+* `source`: string
+
 Class `GitRef`
 ==============
 
