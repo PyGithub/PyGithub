@@ -53,8 +53,16 @@ API `/gists/starred`
 ====================
 * GET: `AuthenticatedUser.get_starred_gists`
 
+API `/gitignore/templates`
+==========================
+* GET: `Github.get_gitignore_templates`
+
+API `/gitignore/templates/:name`
+================================
+* GET: `Github.get_gitignore_template`
+
 API `/hooks`
-====================
+============
 * GET: `Github.get_hooks`
 
 API `/issues`

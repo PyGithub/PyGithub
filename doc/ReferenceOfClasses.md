@@ -41,6 +41,8 @@ Methods
 * `render_markdown( text, [context] )`: string
     * `text`: string
     * `context`: `Repository`
+* `get_gitignore_templates()`: list of string
+* `get_gitignore_template( name )`: `GitignoreTemplate`
 
 Class `PaginatedList`
 =====================

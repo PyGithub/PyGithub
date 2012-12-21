@@ -18,6 +18,7 @@ Next version
 
 * Major improvement: support Python 3! PyGithub is automaticaly tested on [Travis](http://travis-ci.org/jacquev6/PyGithub) with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
 * Add a shortcut function `Github.get_repo` to get a repo directly from its full name. thank you [lwc](https://github.com/lwc) for the contribution
+* `Github.get_gitignore_templates` and `Github.get_gitignore_template` for APIs `/gitignore/templates`
 
 [Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed) (November 20th, 2012)
 ------------------------------------------------------------------------------------------------------------

@@ -89,7 +89,6 @@ class RecordingHttpsConnection(RecordingConnection):  # pragma no cover
     _realConnection = httplib.HTTPSConnection
 
     def __init__(self, file, *args, **kwds):
-        print args, kwds
         RecordingConnection.__init__(self, file, "https", *args, **kwds)
 
 
