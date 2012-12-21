@@ -52,6 +52,14 @@ class Gist(Framework.TestCase):
         self.assertEqual(self.gist.url, "https://api.github.com/gists/2729810")
         self.assertEqual(self.gist.user.login, "jacquev6")
 
+    def testNewAttributes(self):
+        # For gists after https://github.com/blog/1276-welcome-to-a-new-gist
+        gist = self.g.get_gist("3800341")
+        self.assertEqual(gist.git_pull_url, "https://gist.github.com/3800341.git")
+        self.assertEqual(gist.git_push_url, "https://gist.github.com/3800341.git")
+        self.assertEqual(gist.html_url, "https://gist.github.com/3800341")
+        self.assertEqual(gist.url, "https://api.github.com/gists/3800341")
+
     def testEditWithoutParameters(self):
         self.gist.edit()
         self.assertEqual(self.gist.description, "Gist created by PyGithub")
