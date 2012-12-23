@@ -592,12 +592,16 @@ class Repository(GithubObject.GithubObject):
             url_parameters
         )
 
-    def get_contents(self, path):
+    def get_contents(self, path, ref=GithubObject.NotSet):
         assert isinstance(path, (str, unicode)), path
+        assert ref is GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        url_parameters = dict()
+        if ref is not GithubObject.NotSet:
+            url_parameters["ref"] = ref
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/contents" + path,
-            None,
+            url_parameters,
             None
         )
         return ContentFile.ContentFile(self._requester, data, completed=True)
