@@ -778,6 +778,24 @@ class Repository(github.GithubObject.GithubObject):
             url_parameters
         )
 
+    def get_issues_comments(self, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return github.PaginatedList.PaginatedList(
+            github.IssueComment.IssueComment,
+            self._requester,
+            self.url + "/issues/comments",
+            url_parameters
+        )
+
     def get_issues_event(self, id):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
@@ -896,6 +914,27 @@ class Repository(github.GithubObject.GithubObject):
             github.PullRequest.PullRequest,
             self._requester,
             self.url + "/pulls",
+            url_parameters
+        )
+
+    def get_pulls_comments(self, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+        return self.get_pulls_review_comments(sort, direction, since)
+
+    def get_pulls_review_comments(self, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return github.PaginatedList.PaginatedList(
+            github.IssueComment.IssueComment,
+            self._requester,
+            self.url + "/pulls/comments",
             url_parameters
         )
 

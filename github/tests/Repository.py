@@ -428,3 +428,13 @@ class Repository(Framework.TestCase):
             self.assertEqual(exception.status, 409)
             self.assertEqual(exception.data, {"message": "Merge conflict"})
         self.assertTrue(raised)
+
+    def testGetIssuesComments(self):
+        self.assertListKeyEqual(self.repo.get_issues_comments()[:40], lambda c: c.id, [5168757, 5181640, 5183010, 5186061, 5226090, 5449237, 5518272, 5547576, 5780183, 5781803, 5820199, 5820912, 5924198, 5965724, 5965812, 5965891, 5966555, 5966633, 5981084, 5981232, 5981409, 5981451, 5991965, 6019700, 6088432, 6293572, 6305625, 6357374, 6357422, 6447481, 6467193, 6467312, 6467642, 6481200, 6481392, 6556134, 6557261, 6568164, 6568181, 6568553])
+        self.assertListKeyEqual(self.repo.get_issues_comments(sort="created", direction="asc")[:40], lambda c: c.id, [5168757, 5181640, 5183010, 5186061, 5226090, 5449237, 5518272, 5547576, 5780183, 5781803, 5820199, 5820912, 5924198, 5965724, 5965812, 5965891, 5966555, 5966633, 5981084, 5981232, 5981409, 5981451, 5991965, 6019700, 6088432, 6293572, 6305625, 6357374, 6357422, 6447481, 6467193, 6467312, 6467642, 6481200, 6481392, 6556134, 6557261, 6568164, 6568181, 6568553])
+        self.assertListKeyEqual(self.repo.get_issues_comments(since=datetime.datetime(2012, 5, 28, 23, 0, 0))[:40], lambda c: c.id, [5981084, 5981232, 5981409, 5981451, 5991965, 6019700, 6088432, 6293572, 6305625, 6357374, 6357422, 6447481, 6467193, 6467312, 6467642, 6481200, 6481392, 6556134, 6557261, 6568164, 6568181, 6568553, 6640187, 6640189, 6641223, 6673380, 6710355, 6727553, 6727659, 6727848, 6728069, 6728241, 6728370, 6886561, 6972414, 6994436, 7060818, 7060993, 7211543, 7407798])
+
+    def testGetPullsComments(self):
+        self.assertListKeyEqual(self.repo.get_pulls_comments(), lambda c: c.id, [1580134])
+        self.assertListKeyEqual(self.repo.get_pulls_comments(sort="created", direction="asc"), lambda c: c.id, [1580134])
+        self.assertListKeyEqual(self.repo.get_pulls_comments(since=datetime.datetime(2012, 5, 28, 23, 0, 0)), lambda c: c.id, [1580134])

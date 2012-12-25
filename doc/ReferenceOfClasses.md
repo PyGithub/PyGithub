@@ -1081,7 +1081,7 @@ Files
 -----
 * `get_files()`: `PaginatedList` of `File`
 
-Issue_comments
+Issue comments
 --------------
 * `create_issue_comment( body )`: `IssueComment`
     * `body`: string
@@ -1217,6 +1217,14 @@ Comments
 * `get_comment( id )`: `CommitComment`
     * `id`: integer
 * `get_comments()`: `PaginatedList` of `CommitComment`
+* `get_issues_comments([sort, direction, since])`: `PaginatedList` of `IssueComment`
+    * `sort`: string
+    * `direction`: string
+    * `since`: datetime.datetime
+* `get_pulls_comments([sort, direction, since])` or `get_pulls_review_comments([sort, direction, since])`: `PaginatedList` of `PullRequestComment`
+    * `sort`: string
+    * `direction`: string
+    * `since`: datetime.datetime
 
 Commits
 -------
