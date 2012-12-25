@@ -1226,9 +1226,11 @@ Commits
 
 Contents
 --------
-* `get_readme()`: `ContentFile`
-* `get_contents( path )`: `ContentFile`
+* `get_readme( [ref] )`: `ContentFile`
+    * `ref`: string
+* `get_contents( path, [ref] )`: `ContentFile`
     * `path`: string
+    * `ref`: string
 * `get_archive_link( archive_format, [ref] )`: string
     * `archive_format`: string
     * `ref`: string

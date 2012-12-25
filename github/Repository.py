@@ -590,11 +590,11 @@ class Repository(github.GithubObject.GithubObject):
             url_parameters
         )
 
-    def get_contents(self, path, ref=GithubObject.NotSet):
+    def get_contents(self, path, ref=github.GithubObject.NotSet):
         assert isinstance(path, (str, unicode)), path
-        assert ref is GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
         url_parameters = dict()
-        if ref is not GithubObject.NotSet:
+        if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -899,11 +899,15 @@ class Repository(github.GithubObject.GithubObject):
             url_parameters
         )
 
-    def get_readme(self):
+    def get_readme(self, ref=github.GithubObject.NotSet):
+        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        url_parameters = dict()
+        if ref is not github.GithubObject.NotSet:
+            url_parameters["ref"] = ref
         headers, data = self._requester.requestAndCheck(
             "GET",
             self.url + "/readme",
-            None,
+            url_parameters,
             None
         )
         return github.ContentFile.ContentFile(self._requester, data, completed=True)
