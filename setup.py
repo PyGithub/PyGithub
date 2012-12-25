@@ -14,51 +14,18 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-from distutils.core import setup, Command
+import setuptools
 import textwrap
-import sys
-import glob
 
-class test( Command ):
-    user_options = []
 
-    def initialize_options( self ):
-        pass
-
-    def finalize_options( self ):
-        pass
-
-    def run( self ):
-        try:
-            import coverage
-            analyseCoverage = True
-        except ImportError:
-            print "Unable to import coverage. Running tests without coverage analysis"
-            analyseCoverage = False
-        if analyseCoverage:
-            cov = coverage.coverage(branch=True)
-            cov.start()
-
-        import github.tests
-        ok = github.tests.run().wasSuccessful()
-        if analyseCoverage:
-            cov.stop()
-            for f in glob.glob( "github/*.py" ):
-                ok = ok and len( cov.analysis2( f )[ 3 ] ) == 0
-            cov.report(file=sys.stdout, include="github/*")
-        if ok:
-            exit( 0 )
-        else:
-            exit( 1 )
-
-setup(
-    name = "PyGithub",
-    version = "1.9.1",
-    description = "Use the full Github API v3",
-    author = "Vincent Jacques",
-    author_email = "vincent@vincent-jacques.net",
-    url = "http://vincent-jacques.net/PyGithub",
-    long_description = textwrap.dedent( """\
+setuptools.setup(
+    name="PyGithub",
+    version="1.9.1",
+    description="Use the full Github API v3",
+    author="Vincent Jacques",
+    author_email="vincent@vincent-jacques.net",
+    url="http://vincent-jacques.net/PyGithub",
+    long_description=textwrap.dedent("""\
         Tutorial
         ========
 
@@ -85,22 +52,24 @@ setup(
         Reference documentation
         =======================
 
-        See http://vincent-jacques.net/PyGithub""" ),
-    packages = [
+        See http://vincent-jacques.net/PyGithub"""),
+    packages=[
         "github",
         "github.tests",
     ],
-    package_data = {
-        "github": [ "ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt" ]
+    package_data={
+        "github": ["ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt"]
     },
-    classifiers = [
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         "Topic :: Software Development",
     ],
-    cmdclass = { "test": test },
+    test_suite="github.tests.AllTests",
+    use_2to3=True
 )

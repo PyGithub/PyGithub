@@ -13,12 +13,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import HookResponse
+import github.HookResponse
 
 
-class Hook(GithubObject.GithubObject):
+class Hook(github.GithubObject.GithubObject):
     @property
     def active(self):
         self._completeIfNotSet(self._active)
@@ -72,24 +72,24 @@ class Hook(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, name, config, events=GithubObject.NotSet, add_events=GithubObject.NotSet, remove_events=GithubObject.NotSet, active=GithubObject.NotSet):
+    def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
         assert isinstance(config, dict), config
-        assert events is GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert add_events is GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_events), add_events
-        assert remove_events is GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_events), remove_events
-        assert active is GithubObject.NotSet or isinstance(active, bool), active
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
+        assert add_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_events), add_events
+        assert remove_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_events), remove_events
+        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,
             "config": config,
         }
-        if events is not GithubObject.NotSet:
+        if events is not github.GithubObject.NotSet:
             post_parameters["events"] = events
-        if add_events is not GithubObject.NotSet:
+        if add_events is not github.GithubObject.NotSet:
             post_parameters["add_events"] = add_events
-        if remove_events is not GithubObject.NotSet:
+        if remove_events is not github.GithubObject.NotSet:
             post_parameters["remove_events"] = remove_events
-        if active is not GithubObject.NotSet:
+        if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestAndCheck(
             "PATCH",
@@ -108,15 +108,15 @@ class Hook(GithubObject.GithubObject):
         )
 
     def _initAttributes(self):
-        self._active = GithubObject.NotSet
-        self._config = GithubObject.NotSet
-        self._created_at = GithubObject.NotSet
-        self._events = GithubObject.NotSet
-        self._id = GithubObject.NotSet
-        self._last_response = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._updated_at = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._active = github.GithubObject.NotSet
+        self._config = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._events = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._last_response = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "active" in attributes:  # pragma no branch
@@ -136,7 +136,7 @@ class Hook(GithubObject.GithubObject):
             self._id = attributes["id"]
         if "last_response" in attributes:  # pragma no branch
             assert attributes["last_response"] is None or isinstance(attributes["last_response"], dict), attributes["last_response"]
-            self._last_response = None if attributes["last_response"] is None else HookResponse.HookResponse(self._requester, attributes["last_response"], completed=False)
+            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, attributes["last_response"], completed=False)
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]

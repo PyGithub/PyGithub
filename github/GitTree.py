@@ -13,12 +13,12 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import GitTreeElement
+import github.GitTreeElement
 
 
-class GitTree(GithubObject.GithubObject):
+class GitTree(github.GithubObject.GithubObject):
     @property
     def sha(self):
         self._completeIfNotSet(self._sha)
@@ -39,9 +39,9 @@ class GitTree(GithubObject.GithubObject):
         return self.sha
 
     def _initAttributes(self):
-        self._sha = GithubObject.NotSet
-        self._tree = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._tree = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch
@@ -50,7 +50,7 @@ class GitTree(GithubObject.GithubObject):
         if "tree" in attributes:  # pragma no branch
             assert attributes["tree"] is None or all(isinstance(element, dict) for element in attributes["tree"]), attributes["tree"]
             self._tree = None if attributes["tree"] is None else [
-                GitTreeElement.GitTreeElement(self._requester, element, completed=False)
+                github.GitTreeElement.GitTreeElement(self._requester, element, completed=False)
                 for element in attributes["tree"]
             ]
         if "url" in attributes:  # pragma no branch

@@ -26,6 +26,7 @@ Methods
 * `get_user()`: `AuthenticatedUser`
 * `get_user( login )`: `NamedUser`
 * `get_organization( login )`: `Organization`
+* `get_repo( full_name )`: `Repository`
 * `get_gist( id )`: `Gist`
     * `id`: string
 * `get_gists()`: `PaginatedList` of `Gist`
@@ -40,6 +41,8 @@ Methods
 * `render_markdown( text, [context] )`: string
     * `text`: string
     * `context`: `Repository`
+* `get_gitignore_templates()`: list of string
+* `get_gitignore_template( name )`: `GitignoreTemplate`
 
 Class `PaginatedList`
 =====================
@@ -567,6 +570,14 @@ Attributes
 * `sha`: string
 * `type`: string
 * `url`: string
+
+Class `GitignoreTemplate`
+=========================
+
+Attributes
+----------
+* `name`: string
+* `source`: string
 
 Class `GitRef`
 ==============

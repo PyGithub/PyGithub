@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class Download(GithubObject.GithubObject):
+class Download(github.GithubObject.GithubObject):
     @property
     def accesskeyid(self):
         self._completeIfNotSet(self._accesskeyid)
@@ -126,26 +126,26 @@ class Download(GithubObject.GithubObject):
         )
 
     def _initAttributes(self):
-        self._accesskeyid = GithubObject.NotSet
-        self._acl = GithubObject.NotSet
-        self._bucket = GithubObject.NotSet
-        self._content_type = GithubObject.NotSet
-        self._created_at = GithubObject.NotSet
-        self._description = GithubObject.NotSet
-        self._download_count = GithubObject.NotSet
-        self._expirationdate = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._id = GithubObject.NotSet
-        self._mime_type = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._path = GithubObject.NotSet
-        self._policy = GithubObject.NotSet
-        self._prefix = GithubObject.NotSet
-        self._redirect = GithubObject.NotSet
-        self._s3_url = GithubObject.NotSet
-        self._signature = GithubObject.NotSet
-        self._size = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._accesskeyid = github.GithubObject.NotSet
+        self._acl = github.GithubObject.NotSet
+        self._bucket = github.GithubObject.NotSet
+        self._content_type = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._description = github.GithubObject.NotSet
+        self._download_count = github.GithubObject.NotSet
+        self._expirationdate = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._mime_type = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._path = github.GithubObject.NotSet
+        self._policy = github.GithubObject.NotSet
+        self._prefix = github.GithubObject.NotSet
+        self._redirect = github.GithubObject.NotSet
+        self._s3_url = github.GithubObject.NotSet
+        self._signature = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "accesskeyid" in attributes:  # pragma no branch

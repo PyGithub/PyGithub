@@ -13,13 +13,13 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import Commit
-import File
+import github.Commit
+import github.File
 
 
-class Comparison(GithubObject.GithubObject):
+class Comparison(github.GithubObject.GithubObject):
     @property
     def ahead_by(self):
         self._completeIfNotSet(self._ahead_by)
@@ -81,18 +81,18 @@ class Comparison(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
-        self._ahead_by = GithubObject.NotSet
-        self._base_commit = GithubObject.NotSet
-        self._behind_by = GithubObject.NotSet
-        self._commits = GithubObject.NotSet
-        self._diff_url = GithubObject.NotSet
-        self._files = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._patch_url = GithubObject.NotSet
-        self._permalink_url = GithubObject.NotSet
-        self._status = GithubObject.NotSet
-        self._total_commits = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._ahead_by = github.GithubObject.NotSet
+        self._base_commit = github.GithubObject.NotSet
+        self._behind_by = github.GithubObject.NotSet
+        self._commits = github.GithubObject.NotSet
+        self._diff_url = github.GithubObject.NotSet
+        self._files = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._patch_url = github.GithubObject.NotSet
+        self._permalink_url = github.GithubObject.NotSet
+        self._status = github.GithubObject.NotSet
+        self._total_commits = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "ahead_by" in attributes:  # pragma no branch
@@ -100,14 +100,14 @@ class Comparison(GithubObject.GithubObject):
             self._ahead_by = attributes["ahead_by"]
         if "base_commit" in attributes:  # pragma no branch
             assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
-            self._base_commit = None if attributes["base_commit"] is None else Commit.Commit(self._requester, attributes["base_commit"], completed=False)
+            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, attributes["base_commit"], completed=False)
         if "behind_by" in attributes:  # pragma no branch
             assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
             self._behind_by = attributes["behind_by"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
             self._commits = None if attributes["commits"] is None else [
-                Commit.Commit(self._requester, element, completed=False)
+                github.Commit.Commit(self._requester, element, completed=False)
                 for element in attributes["commits"]
             ]
         if "diff_url" in attributes:  # pragma no branch
@@ -116,7 +116,7 @@ class Comparison(GithubObject.GithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [
-                File.File(self._requester, element, completed=False)
+                github.File.File(self._requester, element, completed=False)
                 for element in attributes["files"]
             ]
         if "html_url" in attributes:  # pragma no branch

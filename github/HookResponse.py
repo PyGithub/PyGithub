@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class HookResponse(GithubObject.BasicGithubObject):
+class HookResponse(github.GithubObject.BasicGithubObject):
     @property
     def code(self):
         return self._NoneIfNotSet(self._code)
@@ -30,9 +30,9 @@ class HookResponse(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._status)
 
     def _initAttributes(self):
-        self._code = GithubObject.NotSet
-        self._message = GithubObject.NotSet
-        self._status = GithubObject.NotSet
+        self._code = github.GithubObject.NotSet
+        self._message = github.GithubObject.NotSet
+        self._status = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "code" in attributes:  # pragma no branch

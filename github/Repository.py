@@ -16,40 +16,38 @@
 import urllib
 import datetime
 
-import GithubObject
-import PaginatedList
+import github.GithubObject
+import github.PaginatedList
 
-import Branch
-import IssueEvent
-import ContentFile
-import Label
-import InputGitAuthor
-import GitBlob
-import Organization
-import GitRef
-import Issue
-import Repository
-import PullRequest
-import RepositoryKey
-import NamedUser
-import Milestone
-import InputGitTreeElement
-import Comparison
-import CommitComment
-import GitCommit
-import Team
-import Commit
-import GitTree
-import Hook
-import Tag
-import GitTag
-import Download
-import Permissions
-import Event
-import Legacy
+import github.Branch
+import github.IssueEvent
+import github.ContentFile
+import github.Label
+import github.GitBlob
+import github.Organization
+import github.GitRef
+import github.Issue
+import github.Repository
+import github.PullRequest
+import github.RepositoryKey
+import github.NamedUser
+import github.Milestone
+import github.Comparison
+import github.CommitComment
+import github.GitCommit
+import github.Team
+import github.Commit
+import github.GitTree
+import github.Hook
+import github.Tag
+import github.GitTag
+import github.Download
+import github.Permissions
+import github.Event
+import github.Legacy
 
 
-class Repository(GithubObject.GithubObject):
+class Repository(github.GithubObject.GithubObject):
     @property
     def clone_url(self):
         self._completeIfNotSet(self._clone_url)
@@ -201,7 +199,7 @@ class Repository(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._watchers)
 
     def add_to_collaborators(self, collaborator):
-        assert isinstance(collaborator, NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         headers, data = self._requester.requestAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator._identity,
@@ -218,20 +216,20 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Comparison.Comparison(self._requester, data, completed=True)
+        return github.Comparison.Comparison(self._requester, data, completed=True)
 
-    def create_download(self, name, size, description=GithubObject.NotSet, content_type=GithubObject.NotSet):
+    def create_download(self, name, size, description=github.GithubObject.NotSet, content_type=github.GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
         assert isinstance(size, (int, long)), size
-        assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert content_type is GithubObject.NotSet or isinstance(content_type, (str, unicode)), content_type
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert content_type is github.GithubObject.NotSet or isinstance(content_type, (str, unicode)), content_type
         post_parameters = {
             "name": name,
             "size": size,
         }
-        if description is not GithubObject.NotSet:
+        if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        if content_type is not GithubObject.NotSet:
+        if content_type is not github.GithubObject.NotSet:
             post_parameters["content_type"] = content_type
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -239,7 +237,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, data, completed=True)
 
     def create_git_blob(self, content, encoding):
         assert isinstance(content, (str, unicode)), content
@@ -254,22 +252,22 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, data, completed=True)
 
-    def create_git_commit(self, message, tree, parents, author=GithubObject.NotSet, committer=GithubObject.NotSet):
+    def create_git_commit(self, message, tree, parents, author=github.GithubObject.NotSet, committer=github.GithubObject.NotSet):
         assert isinstance(message, (str, unicode)), message
-        assert isinstance(tree, GitTree.GitTree), tree
-        assert all(isinstance(element, GitCommit.GitCommit) for element in parents), parents
-        assert author is GithubObject.NotSet or isinstance(author, InputGitAuthor.InputGitAuthor), author
-        assert committer is GithubObject.NotSet or isinstance(committer, InputGitAuthor.InputGitAuthor), committer
+        assert isinstance(tree, github.GitTree.GitTree), tree
+        assert all(isinstance(element, github.GitCommit.GitCommit) for element in parents), parents
+        assert author is github.GithubObject.NotSet or isinstance(author, github.InputGitAuthor), author
+        assert committer is github.GithubObject.NotSet or isinstance(committer, github.InputGitAuthor), committer
         post_parameters = {
             "message": message,
             "tree": tree._identity,
             "parents": [element._identity for element in parents],
         }
-        if author is not GithubObject.NotSet:
+        if author is not github.GithubObject.NotSet:
             post_parameters["author"] = author._identity
-        if committer is not GithubObject.NotSet:
+        if committer is not github.GithubObject.NotSet:
             post_parameters["committer"] = committer._identity
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -277,7 +275,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, data, completed=True)
 
     def create_git_ref(self, ref, sha):
         assert isinstance(ref, (str, unicode)), ref
@@ -292,21 +290,21 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, data, completed=True)
 
-    def create_git_tag(self, tag, message, object, type, tagger=GithubObject.NotSet):
+    def create_git_tag(self, tag, message, object, type, tagger=github.GithubObject.NotSet):
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(message, (str, unicode)), message
         assert isinstance(object, (str, unicode)), object
         assert isinstance(type, (str, unicode)), type
-        assert tagger is GithubObject.NotSet or isinstance(tagger, InputGitAuthor.InputGitAuthor), tagger
+        assert tagger is github.GithubObject.NotSet or isinstance(tagger, github.InputGitAuthor), tagger
         post_parameters = {
             "tag": tag,
             "message": message,
             "object": object,
             "type": type,
         }
-        if tagger is not GithubObject.NotSet:
+        if tagger is not github.GithubObject.NotSet:
             post_parameters["tagger"] = tagger._identity
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -314,15 +312,15 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return GitTag.GitTag(self._requester, data, completed=True)
+        return github.GitTag.GitTag(self._requester, data, completed=True)
 
-    def create_git_tree(self, tree, base_tree=GithubObject.NotSet):
-        assert all(isinstance(element, InputGitTreeElement.InputGitTreeElement) for element in tree), tree
-        assert base_tree is GithubObject.NotSet or isinstance(base_tree, GitTree.GitTree), base_tree
+    def create_git_tree(self, tree, base_tree=github.GithubObject.NotSet):
+        assert all(isinstance(element, github.InputGitTreeElement) for element in tree), tree
+        assert base_tree is github.GithubObject.NotSet or isinstance(base_tree, github.GitTree.GitTree), base_tree
         post_parameters = {
             "tree": [element._identity for element in tree],
         }
-        if base_tree is not GithubObject.NotSet:
+        if base_tree is not github.GithubObject.NotSet:
             post_parameters["base_tree"] = base_tree._identity
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -330,20 +328,20 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, data, completed=True)
 
-    def create_hook(self, name, config, events=GithubObject.NotSet, active=GithubObject.NotSet):
+    def create_hook(self, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
         assert isinstance(config, dict), config
-        assert events is GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert active is GithubObject.NotSet or isinstance(active, bool), active
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
+        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
         post_parameters = {
             "name": name,
             "config": config,
         }
-        if events is not GithubObject.NotSet:
+        if events is not github.GithubObject.NotSet:
             post_parameters["events"] = events
-        if active is not GithubObject.NotSet:
+        if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -351,24 +349,24 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, data, completed=True)
 
-    def create_issue(self, title, body=GithubObject.NotSet, assignee=GithubObject.NotSet, milestone=GithubObject.NotSet, labels=GithubObject.NotSet):
+    def create_issue(self, title, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
         assert isinstance(title, (str, unicode)), title
-        assert body is GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is GithubObject.NotSet or isinstance(assignee, NamedUser.NamedUser), assignee
-        assert milestone is GithubObject.NotSet or isinstance(milestone, Milestone.Milestone), milestone
-        assert labels is GithubObject.NotSet or all(isinstance(element, Label.Label) for element in labels), labels
+        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
+        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = {
             "title": title,
         }
-        if body is not GithubObject.NotSet:
+        if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
-        if assignee is not GithubObject.NotSet:
+        if assignee is not github.GithubObject.NotSet:
             post_parameters["assignee"] = assignee._identity
-        if milestone is not GithubObject.NotSet:
+        if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
-        if labels is not GithubObject.NotSet:
+        if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = [element.name for element in labels]
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -376,7 +374,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, data, completed=True)
 
     def create_key(self, title, key):
         assert isinstance(title, (str, unicode)), title
@@ -391,7 +389,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
 
     def create_label(self, name, color):
         assert isinstance(name, (str, unicode)), name
@@ -406,21 +404,21 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, data, completed=True)
 
-    def create_milestone(self, title, state=GithubObject.NotSet, description=GithubObject.NotSet, due_on=GithubObject.NotSet):
+    def create_milestone(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
         assert isinstance(title, (str, unicode)), title
-        assert state is GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
         post_parameters = {
             "title": title,
         }
-        if state is not GithubObject.NotSet:
+        if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
-        if description is not GithubObject.NotSet:
+        if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        if due_on is not GithubObject.NotSet:
+        if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -428,7 +426,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, data, completed=True)
 
     def create_pull(self, *args, **kwds):
         if len(args) + len(kwds) == 4:
@@ -444,7 +442,7 @@ class Repository(GithubObject.GithubObject):
         return self.__create_pull(title=title, body=body, base=base, head=head)
 
     def __create_pull_2(self, issue, base, head):
-        assert isinstance(issue, Issue.Issue), issue
+        assert isinstance(issue, github.Issue.Issue), issue
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
         return self.__create_pull(issue=issue._identity, base=base, head=head)
@@ -457,7 +455,7 @@ class Repository(GithubObject.GithubObject):
             None,
             post_parameters
         )
-        return PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, data, completed=True)
 
     def delete(self):
         headers, data = self._requester.requestAndCheck(
@@ -467,31 +465,31 @@ class Repository(GithubObject.GithubObject):
             None
         )
 
-    def edit(self, name, description=GithubObject.NotSet, homepage=GithubObject.NotSet, public=GithubObject.NotSet, has_issues=GithubObject.NotSet, has_wiki=GithubObject.NotSet, has_downloads=GithubObject.NotSet, default_branch=GithubObject.NotSet):
+    def edit(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, public=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
         assert isinstance(name, (str, unicode)), name
-        assert description is GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert homepage is GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
-        assert public is GithubObject.NotSet or isinstance(public, bool), public
-        assert has_issues is GithubObject.NotSet or isinstance(has_issues, bool), has_issues
-        assert has_wiki is GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
-        assert has_downloads is GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
-        assert default_branch is GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
+        assert public is github.GithubObject.NotSet or isinstance(public, bool), public
+        assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
+        assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
+        assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
+        assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
         post_parameters = {
             "name": name,
         }
-        if description is not GithubObject.NotSet:
+        if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        if homepage is not GithubObject.NotSet:
+        if homepage is not github.GithubObject.NotSet:
             post_parameters["homepage"] = homepage
-        if public is not GithubObject.NotSet:
+        if public is not github.GithubObject.NotSet:
             post_parameters["public"] = public
-        if has_issues is not GithubObject.NotSet:
+        if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
-        if has_wiki is not GithubObject.NotSet:
+        if has_wiki is not github.GithubObject.NotSet:
             post_parameters["has_wiki"] = has_wiki
-        if has_downloads is not GithubObject.NotSet:
+        if has_downloads is not github.GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
-        if default_branch is not GithubObject.NotSet:
+        if default_branch is not github.GithubObject.NotSet:
             post_parameters["default_branch"] = default_branch
         headers, data = self._requester.requestAndCheck(
             "PATCH",
@@ -501,11 +499,11 @@ class Repository(GithubObject.GithubObject):
         )
         self._useAttributes(data)
 
-    def get_archive_link(self, archive_format, ref=GithubObject.NotSet):
+    def get_archive_link(self, archive_format, ref=github.GithubObject.NotSet):
         assert isinstance(archive_format, (str, unicode)), archive_format
-        assert ref is GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
         url = self.url + "/" + archive_format
-        if ref is not GithubObject.NotSet:
+        if ref is not github.GithubObject.NotSet:
             url += "/" + ref
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -516,8 +514,8 @@ class Repository(GithubObject.GithubObject):
         return headers["location"]
 
     def get_assignees(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/assignees",
             None
@@ -531,19 +529,19 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Branch.Branch(self._requester, data, completed=True)
+        return github.Branch.Branch(self._requester, data, completed=True)
 
     def get_branches(self):
-        return PaginatedList.PaginatedList(
-            Branch.Branch,
+        return github.PaginatedList.PaginatedList(
+            github.Branch.Branch,
             self._requester,
             self.url + "/branches",
             None
         )
 
     def get_collaborators(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/collaborators",
             None
@@ -557,11 +555,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return CommitComment.CommitComment(self._requester, data, completed=True)
+        return github.CommitComment.CommitComment(self._requester, data, completed=True)
 
     def get_comments(self):
-        return PaginatedList.PaginatedList(
-            CommitComment.CommitComment,
+        return github.PaginatedList.PaginatedList(
+            github.CommitComment.CommitComment,
             self._requester,
             self.url + "/comments",
             None
@@ -575,18 +573,18 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Commit.Commit(self._requester, data, completed=True)
+        return github.Commit.Commit(self._requester, data, completed=True)
 
-    def get_commits(self, sha=GithubObject.NotSet, path=GithubObject.NotSet):
-        assert sha is GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
-        assert path is GithubObject.NotSet or isinstance(path, (str, unicode)), path
+    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet):
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
         url_parameters = dict()
-        if sha is not GithubObject.NotSet:
+        if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
-        if path is not GithubObject.NotSet:
+        if path is not github.GithubObject.NotSet:
             url_parameters["path"] = path
-        return PaginatedList.PaginatedList(
-            Commit.Commit,
+        return github.PaginatedList.PaginatedList(
+            github.Commit.Commit,
             self._requester,
             self.url + "/commits",
             url_parameters
@@ -604,11 +602,11 @@ class Repository(GithubObject.GithubObject):
             url_parameters,
             None
         )
-        return ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, data, completed=True)
 
     def get_contributors(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/contributors",
             None
@@ -622,26 +620,26 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, data, completed=True)
 
     def get_downloads(self):
-        return PaginatedList.PaginatedList(
-            Download.Download,
+        return github.PaginatedList.PaginatedList(
+            github.Download.Download,
             self._requester,
             self.url + "/downloads",
             None
         )
 
     def get_events(self):
-        return PaginatedList.PaginatedList(
-            Event.Event,
+        return github.PaginatedList.PaginatedList(
+            github.Event.Event,
             self._requester,
             self.url + "/events",
             None
         )
 
     def get_forks(self):
-        return PaginatedList.PaginatedList(
+        return github.PaginatedList.PaginatedList(
             Repository,
             self._requester,
             self.url + "/forks",
@@ -656,7 +654,7 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, data, completed=True)
 
     def get_git_commit(self, sha):
         assert isinstance(sha, (str, unicode)), sha
@@ -666,7 +664,7 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, data, completed=True)
 
     def get_git_ref(self, ref):
         prefix = "/git/refs/"
@@ -679,11 +677,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, data, completed=True)
 
     def get_git_refs(self):
-        return PaginatedList.PaginatedList(
-            GitRef.GitRef,
+        return github.PaginatedList.PaginatedList(
+            github.GitRef.GitRef,
             self._requester,
             self.url + "/git/refs",
             None
@@ -697,13 +695,13 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return GitTag.GitTag(self._requester, data, completed=True)
+        return github.GitTag.GitTag(self._requester, data, completed=True)
 
-    def get_git_tree(self, sha, recursive=GithubObject.NotSet):
+    def get_git_tree(self, sha, recursive=github.GithubObject.NotSet):
         assert isinstance(sha, (str, unicode)), sha
-        assert recursive is GithubObject.NotSet or isinstance(recursive, bool), recursive
+        assert recursive is github.GithubObject.NotSet or isinstance(recursive, bool), recursive
         url_parameters = dict()
-        if recursive is not GithubObject.NotSet:
+        if recursive is not github.GithubObject.NotSet:
             url_parameters["recursive"] = recursive
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -711,7 +709,7 @@ class Repository(GithubObject.GithubObject):
             url_parameters,
             None
         )
-        return GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, data, completed=True)
 
     def get_hook(self, id):
         assert isinstance(id, (int, long)), id
@@ -721,11 +719,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, data, completed=True)
 
     def get_hooks(self):
-        return PaginatedList.PaginatedList(
-            Hook.Hook,
+        return github.PaginatedList.PaginatedList(
+            github.Hook.Hook,
             self._requester,
             self.url + "/hooks",
             None
@@ -739,42 +737,42 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, data, completed=True)
 
-    def get_issues(self, milestone=GithubObject.NotSet, state=GithubObject.NotSet, assignee=GithubObject.NotSet, mentioned=GithubObject.NotSet, labels=GithubObject.NotSet, sort=GithubObject.NotSet, direction=GithubObject.NotSet, since=GithubObject.NotSet):
-        assert milestone is GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(milestone, Milestone.Milestone), milestone
-        assert state is GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert assignee is GithubObject.NotSet or assignee == "*" or assignee == "none" or isinstance(assignee, NamedUser.NamedUser), assignee
-        assert mentioned is GithubObject.NotSet or isinstance(mentioned, NamedUser.NamedUser), mentioned
-        assert labels is GithubObject.NotSet or all(isinstance(element, Label.Label) for element in labels), labels
-        assert sort is GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
-        assert since is GithubObject.NotSet or isinstance(since, datetime.datetime), since
+    def get_issues(self, milestone=github.GithubObject.NotSet, state=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, mentioned=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+        assert milestone is github.GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(milestone, github.Milestone.Milestone), milestone
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert assignee is github.GithubObject.NotSet or assignee == "*" or assignee == "none" or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert mentioned is github.GithubObject.NotSet or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         url_parameters = dict()
-        if milestone is not GithubObject.NotSet:
+        if milestone is not github.GithubObject.NotSet:
             if isinstance(milestone, str):
                 url_parameters["milestone"] = milestone
             else:
                 url_parameters["milestone"] = milestone._identity
-        if state is not GithubObject.NotSet:
+        if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-        if assignee is not GithubObject.NotSet:
+        if assignee is not github.GithubObject.NotSet:
             if isinstance(assignee, str):
                 url_parameters["assignee"] = assignee
             else:
                 url_parameters["assignee"] = assignee._identity
-        if mentioned is not GithubObject.NotSet:
+        if mentioned is not github.GithubObject.NotSet:
             url_parameters["mentioned"] = mentioned._identity
-        if labels is not GithubObject.NotSet:
+        if labels is not github.GithubObject.NotSet:
             url_parameters["labels"] = ",".join(label.name for label in labels)
-        if sort is not GithubObject.NotSet:
+        if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
-        if direction is not GithubObject.NotSet:
+        if direction is not github.GithubObject.NotSet:
             url_parameters["direction"] = direction
-        if since is not GithubObject.NotSet:
+        if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return PaginatedList.PaginatedList(
-            Issue.Issue,
+        return github.PaginatedList.PaginatedList(
+            github.Issue.Issue,
             self._requester,
             self.url + "/issues",
             url_parameters
@@ -788,11 +786,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return IssueEvent.IssueEvent(self._requester, data, completed=True)
+        return github.IssueEvent.IssueEvent(self._requester, data, completed=True)
 
     def get_issues_events(self):
-        return PaginatedList.PaginatedList(
-            IssueEvent.IssueEvent,
+        return github.PaginatedList.PaginatedList(
+            github.IssueEvent.IssueEvent,
             self._requester,
             self.url + "/issues/events",
             None
@@ -806,11 +804,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
 
     def get_keys(self):
-        return PaginatedList.PaginatedList(
-            lambda requester, data, completed: RepositoryKey.RepositoryKey(requester, data, completed, repoUrl=self._url),
+        return github.PaginatedList.PaginatedList(
+            lambda requester, data, completed: github.RepositoryKey.RepositoryKey(requester, data, completed, repoUrl=self._url),
             self._requester,
             self.url + "/keys",
             None
@@ -824,11 +822,11 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, data, completed=True)
 
     def get_labels(self):
-        return PaginatedList.PaginatedList(
-            Label.Label,
+        return github.PaginatedList.PaginatedList(
+            github.Label.Label,
             self._requester,
             self.url + "/labels",
             None
@@ -851,29 +849,29 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, data, completed=True)
 
-    def get_milestones(self, state=GithubObject.NotSet, sort=GithubObject.NotSet, direction=GithubObject.NotSet):
-        assert state is GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert sort is GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+    def get_milestones(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
-        if state is not GithubObject.NotSet:
+        if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-        if sort is not GithubObject.NotSet:
+        if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
-        if direction is not GithubObject.NotSet:
+        if direction is not github.GithubObject.NotSet:
             url_parameters["direction"] = direction
-        return PaginatedList.PaginatedList(
-            Milestone.Milestone,
+        return github.PaginatedList.PaginatedList(
+            github.Milestone.Milestone,
             self._requester,
             self.url + "/milestones",
             url_parameters
         )
 
     def get_network_events(self):
-        return PaginatedList.PaginatedList(
-            Event.Event,
+        return github.PaginatedList.PaginatedList(
+            github.Event.Event,
             self._requester,
             "/networks/" + self.owner.login + "/" + self.name + "/events",
             None
@@ -887,15 +885,15 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, data, completed=True)
 
-    def get_pulls(self, state=GithubObject.NotSet):
-        assert state is GithubObject.NotSet or isinstance(state, (str, unicode)), state
+    def get_pulls(self, state=github.GithubObject.NotSet):
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         url_parameters = dict()
-        if state is not GithubObject.NotSet:
+        if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
-        return PaginatedList.PaginatedList(
-            PullRequest.PullRequest,
+        return github.PaginatedList.PaginatedList(
+            github.PullRequest.PullRequest,
             self._requester,
             self.url + "/pulls",
             url_parameters
@@ -908,50 +906,50 @@ class Repository(GithubObject.GithubObject):
             None,
             None
         )
-        return ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, data, completed=True)
 
     def get_stargazers(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/stargazers",
             None
         )
 
     def get_subscribers(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/subscribers",
             None
         )
 
     def get_tags(self):
-        return PaginatedList.PaginatedList(
-            Tag.Tag,
+        return github.PaginatedList.PaginatedList(
+            github.Tag.Tag,
             self._requester,
             self.url + "/tags",
             None
         )
 
     def get_teams(self):
-        return PaginatedList.PaginatedList(
-            Team.Team,
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team,
             self._requester,
             self.url + "/teams",
             None
         )
 
     def get_watchers(self):
-        return PaginatedList.PaginatedList(
-            NamedUser.NamedUser,
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
             self._requester,
             self.url + "/watchers",
             None
         )
 
     def has_in_assignees(self, assignee):
-        assert isinstance(assignee, NamedUser.NamedUser), assignee
+        assert isinstance(assignee, github.NamedUser.NamedUser), assignee
         status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/assignees/" + assignee._identity,
@@ -961,7 +959,7 @@ class Repository(GithubObject.GithubObject):
         return status == 204
 
     def has_in_collaborators(self, collaborator):
-        assert isinstance(collaborator, NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/collaborators/" + collaborator._identity,
@@ -980,19 +978,19 @@ class Repository(GithubObject.GithubObject):
             None
         )
         return [
-            Issue.Issue(self._requester, Legacy.convertIssue(element), completed=False)
+            github.Issue.Issue(self._requester, github.Legacy.convertIssue(element), completed=False)
             for element in data["issues"]
         ]
 
-    def merge(self, base, head, commit_message=GithubObject.NotSet):
+    def merge(self, base, head, commit_message=github.GithubObject.NotSet):
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        assert commit_message is GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
+        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
         post_parameters = {
             "base": base,
             "head": head,
         }
-        if commit_message is not GithubObject.NotSet:
+        if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
         headers, data = self._requester.requestAndCheck(
             "POST",
@@ -1003,10 +1001,10 @@ class Repository(GithubObject.GithubObject):
         if data is None:
             return None
         else:
-            return Commit.Commit(self._requester, data, completed=True)
+            return github.Commit.Commit(self._requester, data, completed=True)
 
     def remove_from_collaborators(self, collaborator):
-        assert isinstance(collaborator, NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url + "/collaborators/" + collaborator._identity,
@@ -1019,36 +1017,36 @@ class Repository(GithubObject.GithubObject):
         return self.owner.login + "/" + self.name
 
     def _initAttributes(self):
-        self._clone_url = GithubObject.NotSet
-        self._created_at = GithubObject.NotSet
-        self._description = GithubObject.NotSet
-        self._fork = GithubObject.NotSet
-        self._forks = GithubObject.NotSet
-        self._full_name = GithubObject.NotSet
-        self._git_url = GithubObject.NotSet
-        self._has_downloads = GithubObject.NotSet
-        self._has_issues = GithubObject.NotSet
-        self._has_wiki = GithubObject.NotSet
-        self._homepage = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._id = GithubObject.NotSet
-        self._language = GithubObject.NotSet
-        self._master_branch = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._open_issues = GithubObject.NotSet
-        self._organization = GithubObject.NotSet
-        self._owner = GithubObject.NotSet
-        self._parent = GithubObject.NotSet
-        self._permissions = GithubObject.NotSet
-        self._private = GithubObject.NotSet
-        self._pushed_at = GithubObject.NotSet
-        self._size = GithubObject.NotSet
-        self._source = GithubObject.NotSet
-        self._ssh_url = GithubObject.NotSet
-        self._svn_url = GithubObject.NotSet
-        self._updated_at = GithubObject.NotSet
-        self._url = GithubObject.NotSet
-        self._watchers = GithubObject.NotSet
+        self._clone_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._description = github.GithubObject.NotSet
+        self._fork = github.GithubObject.NotSet
+        self._forks = github.GithubObject.NotSet
+        self._full_name = github.GithubObject.NotSet
+        self._git_url = github.GithubObject.NotSet
+        self._has_downloads = github.GithubObject.NotSet
+        self._has_issues = github.GithubObject.NotSet
+        self._has_wiki = github.GithubObject.NotSet
+        self._homepage = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._id = github.GithubObject.NotSet
+        self._language = github.GithubObject.NotSet
+        self._master_branch = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._open_issues = github.GithubObject.NotSet
+        self._organization = github.GithubObject.NotSet
+        self._owner = github.GithubObject.NotSet
+        self._parent = github.GithubObject.NotSet
+        self._permissions = github.GithubObject.NotSet
+        self._private = github.GithubObject.NotSet
+        self._pushed_at = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._source = github.GithubObject.NotSet
+        self._ssh_url = github.GithubObject.NotSet
+        self._svn_url = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
+        self._watchers = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "clone_url" in attributes:  # pragma no branch
@@ -1104,16 +1102,16 @@ class Repository(GithubObject.GithubObject):
             self._open_issues = attributes["open_issues"]
         if "organization" in attributes:  # pragma no branch
             assert attributes["organization"] is None or isinstance(attributes["organization"], dict), attributes["organization"]
-            self._organization = None if attributes["organization"] is None else Organization.Organization(self._requester, attributes["organization"], completed=False)
+            self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, attributes["organization"], completed=False)
         if "owner" in attributes:  # pragma no branch
             assert attributes["owner"] is None or isinstance(attributes["owner"], dict), attributes["owner"]
-            self._owner = None if attributes["owner"] is None else NamedUser.NamedUser(self._requester, attributes["owner"], completed=False)
+            self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, attributes["owner"], completed=False)
         if "parent" in attributes:  # pragma no branch
             assert attributes["parent"] is None or isinstance(attributes["parent"], dict), attributes["parent"]
             self._parent = None if attributes["parent"] is None else Repository(self._requester, attributes["parent"], completed=False)
         if "permissions" in attributes:  # pragma no branch
             assert attributes["permissions"] is None or isinstance(attributes["permissions"], dict), attributes["permissions"]
-            self._permissions = None if attributes["permissions"] is None else Permissions.Permissions(self._requester, attributes["permissions"], completed=False)
+            self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, attributes["permissions"], completed=False)
         if "private" in attributes:  # pragma no branch
             assert attributes["private"] is None or isinstance(attributes["private"], bool), attributes["private"]
             self._private = attributes["private"]

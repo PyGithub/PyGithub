@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class GitBlob(GithubObject.GithubObject):
+class GitBlob(github.GithubObject.GithubObject):
     @property
     def content(self):
         self._completeIfNotSet(self._content)
@@ -43,11 +43,11 @@ class GitBlob(GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
-        self._content = GithubObject.NotSet
-        self._encoding = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
-        self._size = GithubObject.NotSet
-        self._url = GithubObject.NotSet
+        self._content = github.GithubObject.NotSet
+        self._encoding = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._size = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch

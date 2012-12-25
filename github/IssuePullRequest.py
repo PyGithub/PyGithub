@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class IssuePullRequest(GithubObject.BasicGithubObject):
+class IssuePullRequest(github.GithubObject.BasicGithubObject):
     @property
     def diff_url(self):
         return self._NoneIfNotSet(self._diff_url)
@@ -30,9 +30,9 @@ class IssuePullRequest(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._patch_url)
 
     def _initAttributes(self):
-        self._diff_url = GithubObject.NotSet
-        self._html_url = GithubObject.NotSet
-        self._patch_url = GithubObject.NotSet
+        self._diff_url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
+        self._patch_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "diff_url" in attributes:  # pragma no branch

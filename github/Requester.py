@@ -21,6 +21,7 @@ import urlparse
 import sys
 
 atLeastPython26 = sys.hexversion >= 0x02060000
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 if atLeastPython26:
     import json
@@ -42,7 +43,10 @@ class Requester:
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
         if password is not None:
             login = login_or_token
-            self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
+            if atLeastPython3:
+                self.__authorizationHeader = "Basic " + str(base64.b64encode(bytearray(login + ":" + password, "utf-8"))).replace('\n', '')  # pragma no cover
+            else:
+                self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token

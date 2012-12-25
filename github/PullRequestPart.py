@@ -13,13 +13,13 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
-import Repository
-import NamedUser
+import github.Repository
+import github.NamedUser
 
 
-class PullRequestPart(GithubObject.BasicGithubObject):
+class PullRequestPart(github.GithubObject.BasicGithubObject):
     @property
     def label(self):
         return self._NoneIfNotSet(self._label)
@@ -41,11 +41,11 @@ class PullRequestPart(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._user)
 
     def _initAttributes(self):
-        self._label = GithubObject.NotSet
-        self._ref = GithubObject.NotSet
-        self._repo = GithubObject.NotSet
-        self._sha = GithubObject.NotSet
-        self._user = GithubObject.NotSet
+        self._label = github.GithubObject.NotSet
+        self._ref = github.GithubObject.NotSet
+        self._repo = github.GithubObject.NotSet
+        self._sha = github.GithubObject.NotSet
+        self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "label" in attributes:  # pragma no branch
@@ -56,10 +56,10 @@ class PullRequestPart(GithubObject.BasicGithubObject):
             self._ref = attributes["ref"]
         if "repo" in attributes:  # pragma no branch
             assert attributes["repo"] is None or isinstance(attributes["repo"], dict), attributes["repo"]
-            self._repo = None if attributes["repo"] is None else Repository.Repository(self._requester, attributes["repo"], completed=False)
+            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, attributes["repo"], completed=False)
         if "sha" in attributes:  # pragma no branch
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
             self._sha = attributes["sha"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
