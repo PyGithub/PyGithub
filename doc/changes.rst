@@ -4,6 +4,15 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
+----------------------------------------------------------------------------------------------------------------------------------------
+
+* Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`_ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
+* Add a shortcut function 'Github.get_repo' to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
+* 'Github.get_gitignore_templates' and 'Github.get_gitignore_template' for APIs '/gitignore/templates'
+* Add the optional 'ref' parameter to 'Repository.get_contents' and 'get_readme'. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
+* Get comments for all issues and all pull requests on a repository ('GET /repos/:user/:repo/pulls/comments': 'Repository.get_pulls_comments' or 'Repository.get_pulls_review_comments'; 'GET /repos/:user/:repo/issues/comments': 'Repository.get_issues_comments')
+
 `Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone-17&state-closed>`_ (November 20th, 2012)
 --------------------------------------------------------------------------------------------------------------
 

@@ -317,6 +317,10 @@ API `/repos/:user/:repo/issues/:number/labels/:name`
 ====================================================
 * DELETE: `Issue.remove_from_labels`
 
+API `/repos/:user/:repo/issues/comments`
+============================================
+* GET: `Repository.get_issues_comments`
+
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
 * GET: `Issue.get_comment` or `PullRequest.get_issue_comment`
@@ -403,6 +407,10 @@ API `/repos/:user/:repo/pulls/:number/merge`
 ============================================
 * GET: `PullRequest.is_merged`
 * PUT: `PullRequest.merge`
+
+API `/repos/:user/:repo/pulls/comments`
+===============================================
+* GET: `Repository.get_pulls_comments` or `Repository.get_pulls_review_comments`
 
 API `/repos/:user/:repo/pulls/comments/:number`
 ===============================================

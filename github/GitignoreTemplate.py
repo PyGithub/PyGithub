@@ -15,6 +15,7 @@
 
 import github.GithubObject
 
+
 class GitignoreTemplate(github.GithubObject.BasicGithubObject):
     @property
     def source(self):

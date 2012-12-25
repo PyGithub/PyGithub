@@ -105,6 +105,8 @@ Authorizations
     * `scopes`: list of string
     * `note`: string
     * `note_url`: string
+    * `client_id`: string
+    * `client_secret`: string
 * `get_authorization( id )`: `Authorization`
     * `id`: integer
 * `get_authorizations()`: `PaginatedList` of `Authorization`
@@ -1091,7 +1093,7 @@ Files
 -----
 * `get_files()`: `PaginatedList` of `File`
 
-Issue_comments
+Issue comments
 --------------
 * `create_issue_comment( body )`: `IssueComment`
     * `body`: string
@@ -1227,6 +1229,14 @@ Comments
 * `get_comment( id )`: `CommitComment`
     * `id`: integer
 * `get_comments()`: `PaginatedList` of `CommitComment`
+* `get_issues_comments([sort, direction, since])`: `PaginatedList` of `IssueComment`
+    * `sort`: string
+    * `direction`: string
+    * `since`: datetime.datetime
+* `get_pulls_comments([sort, direction, since])` or `get_pulls_review_comments([sort, direction, since])`: `PaginatedList` of `PullRequestComment`
+    * `sort`: string
+    * `direction`: string
+    * `since`: datetime.datetime
 
 Commits
 -------
@@ -1238,9 +1248,11 @@ Commits
 
 Contents
 --------
-* `get_readme()`: `ContentFile`
-* `get_contents( path )`: `ContentFile`
+* `get_readme( [ref] )`: `ContentFile`
+    * `ref`: string
+* `get_contents( path, [ref] )`: `ContentFile`
     * `path`: string
+    * `ref`: string
 * `get_archive_link( archive_format, [ref] )`: string
     * `archive_format`: string
     * `ref`: string

@@ -199,10 +199,12 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             None
         )
 
-    def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet):
+    def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet):
         assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
         assert note is github.GithubObject.NotSet or isinstance(note, (str, unicode)), note
         assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
+        assert client_id is github.GithubObject.NotSet or isinstance(client_id, (str, unicode)), client_id
+        assert client_secret is github.GithubObject.NotSet or isinstance(client_secret, (str, unicode)), client_secret
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes
@@ -210,6 +212,10 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             post_parameters["note"] = note
         if note_url is not github.GithubObject.NotSet:
             post_parameters["note_url"] = note_url
+        if client_id is not github.GithubObject.NotSet:
+            post_parameters["client_id"] = client_id
+        if client_secret is not github.GithubObject.NotSet:
+            post_parameters["client_secret"] = client_secret
         headers, data = self._requester.requestAndCheck(
             "POST",
             "/authorizations",

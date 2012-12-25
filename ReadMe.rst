@@ -16,30 +16,16 @@ What's new?
 Next version
 ------------
 
+* Much better documentation
+
+`Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
+----------------------------------------------------------------------------------------------------------------------------------------
+
 * Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`_ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
 * Add a shortcut function 'Github.get_repo' to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
 * 'Github.get_gitignore_templates' and 'Github.get_gitignore_template' for APIs '/gitignore/templates'
-
-`Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed>`_ (November 20th, 2012)
---------------------------------------------------------------------------------------------------------------
-
-* Fix an assertion failure when integers returned by Github do not fit in a Python `int`
-
-`Version 1.9.0 <https://github.com/jacquev6/PyGithub/issues?milestone=14&state=closed>`_ (November 19th, 2012)
---------------------------------------------------------------------------------------------------------------
-
-* You can now use your client_id and client_secret to increase rate limiting without authentication
-* You can now send a custom User-Agent
-* PullRequest now has its 'assignee' attribute, thank you `mstead <https://github.com/mstead>`_
-* Repository.edit now has 'default_branch' parameter
-* create_repo has 'auto_init' and 'gitignore_template' parameters
-* GistComment URL is changed (see http://developer.github.com/changes/2012-10-31-gist-comment-uris)
-* A typo in the readme was fixed by `tymofij <https://github.com/tymofij>`_, thank you
-* Internal stuff:
-    * Add encoding comment to Python files, thank you `Zearin <https://github.com/Zearin>`_
-    * Restore support of Python 2.5
-    * Restore coverage measurement in setup.py test
-    * Small refactoring
+* Add the optional 'ref' parameter to 'Repository.get_contents' and 'get_readme'. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
+* Get comments for all issues and all pull requests on a repository ('GET /repos/:user/:repo/pulls/comments': 'Repository.get_pulls_comments' or 'Repository.get_pulls_review_comments'; 'GET /repos/:user/:repo/issues/comments': 'Repository.get_issues_comments')
 
 Previous versions
 -----------------
