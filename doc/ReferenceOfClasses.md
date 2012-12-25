@@ -1233,7 +1233,11 @@ Comments
     * `sort`: string
     * `direction`: string
     * `since`: datetime.datetime
-* `get_pulls_comments([sort, direction, since])` or `get_pulls_review_comments([sort, direction, since])`: `PaginatedList` of `PullRequestComment`
+* `get_pulls_comments([sort, direction, since])`: `PaginatedList` of `PullRequestComment`
+    * `sort`: string
+    * `direction`: string
+    * `since`: datetime.datetime
+* `get_pulls_review_comments([sort, direction, since])`: `PaginatedList` of `PullRequestComment`
     * `sort`: string
     * `direction`: string
     * `since`: datetime.datetime
