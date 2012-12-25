@@ -134,6 +134,11 @@ class AuthenticatedUser(Framework.TestCase):
         authorization = self.user.create_authorization(["repo"], "Note created by PyGithub", "http://vincent-jacques.net/PyGithub")
         self.assertEqual(authorization.id, 372294)
 
+    def testCreateAuthorizationWithClientIdAndSecret(self):
+        # I don't have a client_id and client_secret so the ReplayData for this test is forged
+        authorization = self.user.create_authorization(client_id="01234567890123456789", client_secret="0123456789012345678901234567890123456789")
+        self.assertEqual(authorization.id, 372294)
+
     def testCreateGist(self):
         gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")}, "Gist created by PyGithub")
         self.assertEqual(gist.description, "Gist created by PyGithub")

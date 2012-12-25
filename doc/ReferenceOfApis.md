@@ -53,8 +53,16 @@ API `/gists/starred`
 ====================
 * GET: `AuthenticatedUser.get_starred_gists`
 
+API `/gitignore/templates`
+==========================
+* GET: `Github.get_gitignore_templates`
+
+API `/gitignore/templates/:name`
+================================
+* GET: `Github.get_gitignore_template`
+
 API `/hooks`
-====================
+============
 * GET: `Github.get_hooks`
 
 API `/issues`
@@ -133,7 +141,7 @@ API `/rate_limit`
 
 API `/repos/:user/:repo`
 ========================
-* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo` or `Organization.get_repo`
+* GET: `AuthenticatedUser.get_repo`, `NamedUser.get_repo`, `Organization.get_repo` or `Github.get_repo`
 * PATCH: `Repository.edit`
 * DELETE: `Repository.delete`
 
@@ -309,6 +317,10 @@ API `/repos/:user/:repo/issues/:number/labels/:name`
 ====================================================
 * DELETE: `Issue.remove_from_labels`
 
+API `/repos/:user/:repo/issues/comments`
+============================================
+* GET: `Repository.get_issues_comments`
+
 API `/repos/:user/:repo/issues/comments/:id`
 ============================================
 * GET: `Issue.get_comment` or `PullRequest.get_issue_comment`
@@ -395,6 +407,10 @@ API `/repos/:user/:repo/pulls/:number/merge`
 ============================================
 * GET: `PullRequest.is_merged`
 * PUT: `PullRequest.merge`
+
+API `/repos/:user/:repo/pulls/comments`
+===============================================
+* GET: `Repository.get_pulls_comments` or `Repository.get_pulls_review_comments`
 
 API `/repos/:user/:repo/pulls/comments/:number`
 ===============================================

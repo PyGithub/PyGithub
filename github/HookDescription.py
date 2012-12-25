@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class HookDescription(GithubObject.BasicGithubObject):
+class HookDescription(github.GithubObject.BasicGithubObject):
     @property
     def events(self):
         return self._NoneIfNotSet(self._events)
@@ -34,10 +34,10 @@ class HookDescription(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._supported_events)
 
     def _initAttributes(self):
-        self._events = GithubObject.NotSet
-        self._name = GithubObject.NotSet
-        self._schema = GithubObject.NotSet
-        self._supported_events = GithubObject.NotSet
+        self._events = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
+        self._schema = github.GithubObject.NotSet
+        self._supported_events = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "events" in attributes:  # pragma no branch

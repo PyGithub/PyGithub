@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class GitAuthor(GithubObject.BasicGithubObject):
+class GitAuthor(github.GithubObject.BasicGithubObject):
     @property
     def date(self):
         return self._NoneIfNotSet(self._date)
@@ -30,9 +30,9 @@ class GitAuthor(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._name)
 
     def _initAttributes(self):
-        self._date = GithubObject.NotSet
-        self._email = GithubObject.NotSet
-        self._name = GithubObject.NotSet
+        self._date = github.GithubObject.NotSet
+        self._email = github.GithubObject.NotSet
+        self._name = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "date" in attributes:  # pragma no branch

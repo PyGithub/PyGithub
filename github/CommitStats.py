@@ -13,10 +13,10 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
-import GithubObject
+import github.GithubObject
 
 
-class CommitStats(GithubObject.BasicGithubObject):
+class CommitStats(github.GithubObject.BasicGithubObject):
     @property
     def additions(self):
         return self._NoneIfNotSet(self._additions)
@@ -30,9 +30,9 @@ class CommitStats(GithubObject.BasicGithubObject):
         return self._NoneIfNotSet(self._total)
 
     def _initAttributes(self):
-        self._additions = GithubObject.NotSet
-        self._deletions = GithubObject.NotSet
-        self._total = GithubObject.NotSet
+        self._additions = github.GithubObject.NotSet
+        self._deletions = github.GithubObject.NotSet
+        self._total = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
