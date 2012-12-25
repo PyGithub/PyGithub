@@ -20,6 +20,7 @@ Next version
 * Add a shortcut function `Github.get_repo` to get a repo directly from its full name. thank you [lwc](https://github.com/lwc) for the contribution
 * `Github.get_gitignore_templates` and `Github.get_gitignore_template` for APIs `/gitignore/templates`
 * Add the optional `ref` parameter to `Repository.get_contents` and `get_readme`. Thank you [fixxxeruk](https://github.com/fixxxeruk) for the contribution
+* Get comments for all issues and all pull requests on a repository (`GET /repos/:user/:repo/pulls/comments`: `Repository.get_pulls_comments` or `Repository.get_pulls_review_comments`; `GET /repos/:user/:repo/issues/comments`: `Repository.get_issues_comments`)
 
 [Version 1.9.1](https://github.com/jacquev6/PyGithub/issues?milestone=17&state=closed) (November 20th, 2012)
 ------------------------------------------------------------------------------------------------------------
