@@ -101,6 +101,8 @@ Authorizations
     * `scopes`: list of string
     * `note`: string
     * `note_url`: string
+    * `client_id`: string
+    * `client_secret`: string
 * `get_authorization( id )`: `Authorization`
     * `id`: integer
 * `get_authorizations()`: `PaginatedList` of `Authorization`
