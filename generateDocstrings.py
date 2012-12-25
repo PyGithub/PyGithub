@@ -32,42 +32,36 @@ class Generator():
 
     def getClassDocstring(self, className):
         if className in self.privateClasses:
-            return []
+            return None
         else:
-            return [
-                "Please modify this generated docstring for class :class:`github." + className + "." + className + "`.",
-            ]
+            return []
 
     def getMemberDocstring(self, className, memberName):
         if className in self.privateClasses:
-            return []
+            return None
         elif className in self.classDescriptions:
             classDescription = self.classDescriptions[className]
             if memberName in classDescription.properties:
                 return [
-                    "Please modify this generated docstring for property :attr:`github." + className + "." + className + "." + memberName + "`.",
-                    "",
                     ":type: " + self.__formatType(classDescription.properties[memberName])
                 ]
             elif memberName in classDescription.methods:
                 return [
-                    "Please modify this generated docstring for method :func:`github." + className + "." + className + "." + memberName + "`.",
-                    "",
-                    ":calls: " + (classDescription.methods[memberName].verb or "WTF") + " " + (classDescription.methods[memberName].url or "WTF"),
-                    ":authentication level: please modify",
+                    ":calls: `" + classDescription.methods[memberName].verb + " " + classDescription.methods[memberName].url + " <http://developer.github.com/v3/>`_",
+                    # ":auth. level: ?",
                 ] + [
                     ":param " + parameterName + ": " + self.__formatType(parameterType) for parameterName, parameterType in classDescription.methods[memberName].parameters.items()
                 ] + [
                     ":rtype: " + self.__formatType(str(classDescription.methods[memberName].returnType))
                 ]
             elif memberName.startswith("_"):  # private member
-                return []
+                return None
             else:
                 print "Unknown member", className, memberName
-                return []
+                return None
         else:
             print "Unknown class", className
-            return []
+            return None
 
     def __formatType(self, type):
         if type.startswith( "`PaginatedList` of "):
@@ -173,7 +167,7 @@ class Generator():
             nextDefIsClassMethod = line == "    @classmethod"
 
     def formatDocstring(self, indent, lines):
-        if len(lines) != 0:
+        if lines is not None:
             yield indent + '"""'
             for docStringLine in lines:
                 yield indent + docStringLine

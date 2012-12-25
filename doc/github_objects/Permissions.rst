@@ -1,4 +1,4 @@
 Permissions
-==========================================================
+===========
 
-.. autoclass:: github.Permissions.Permissions
+.. autoclass:: github.Permissions.Permissions()

@@ -1,4 +1,4 @@
 Download
-==========================================================
+========
 
-.. autoclass:: github.Download.Download
+.. autoclass:: github.Download.Download()

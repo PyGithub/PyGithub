@@ -1,4 +1,4 @@
 AuthenticatedUser
-==========================================================
+=================
 
-.. autoclass:: github.AuthenticatedUser.AuthenticatedUser
+.. autoclass:: github.AuthenticatedUser.AuthenticatedUser()

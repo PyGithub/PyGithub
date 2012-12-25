@@ -1,4 +1,4 @@
 GistHistoryState
-==========================================================
+================
 
-.. autoclass:: github.GistHistoryState.GistHistoryState
+.. autoclass:: github.GistHistoryState.GistHistoryState()

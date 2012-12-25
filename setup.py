@@ -17,12 +17,12 @@
 import setuptools
 import textwrap
 
-version = "1.9.1"
+version = "1.10.0"
 
 if __name__ == "__main__":
     setuptools.setup(
         name="PyGithub",
-        version=version,
+        version="version",
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",

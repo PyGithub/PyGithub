@@ -1,4 +1,4 @@
 Tag
-==========================================================
+===
 
-.. autoclass:: github.Tag.Tag
+.. autoclass:: github.Tag.Tag()

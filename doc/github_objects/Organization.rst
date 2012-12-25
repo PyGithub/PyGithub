@@ -1,4 +1,4 @@
 Organization
-==========================================================
+============
 
-.. autoclass:: github.Organization.Organization
+.. autoclass:: github.Organization.Organization()

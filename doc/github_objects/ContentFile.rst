@@ -1,4 +1,4 @@
 ContentFile
-==========================================================
+===========
 
-.. autoclass:: github.ContentFile.ContentFile
+.. autoclass:: github.ContentFile.ContentFile()

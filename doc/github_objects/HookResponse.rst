@@ -1,4 +1,4 @@
 HookResponse
-==========================================================
+============
 
-.. autoclass:: github.HookResponse.HookResponse
+.. autoclass:: github.HookResponse.HookResponse()

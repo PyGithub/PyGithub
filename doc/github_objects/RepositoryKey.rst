@@ -1,4 +1,4 @@
 RepositoryKey
-==========================================================
+=============
 
-.. autoclass:: github.RepositoryKey.RepositoryKey
+.. autoclass:: github.RepositoryKey.RepositoryKey()

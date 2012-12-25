@@ -1,4 +1,4 @@
 Plan
-==========================================================
+====
 
-.. autoclass:: github.Plan.Plan
+.. autoclass:: github.Plan.Plan()

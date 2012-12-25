@@ -1,4 +1,4 @@
 GitRef
-==========================================================
+======
 
-.. autoclass:: github.GitRef.GitRef
+.. autoclass:: github.GitRef.GitRef()

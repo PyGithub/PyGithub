@@ -1,4 +1,4 @@
 GitAuthor
-==========================================================
+=========
 
-.. autoclass:: github.GitAuthor.GitAuthor
+.. autoclass:: github.GitAuthor.GitAuthor()

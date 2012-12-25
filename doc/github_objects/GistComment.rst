@@ -1,4 +1,4 @@
 GistComment
-==========================================================
+===========
 
-.. autoclass:: github.GistComment.GistComment
+.. autoclass:: github.GistComment.GistComment()

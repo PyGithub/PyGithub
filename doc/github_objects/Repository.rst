@@ -1,4 +1,4 @@
 Repository
-==========================================================
+==========
 
-.. autoclass:: github.Repository.Repository
+.. autoclass:: github.Repository.Repository()

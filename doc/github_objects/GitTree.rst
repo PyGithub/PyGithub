@@ -1,4 +1,4 @@
 GitTree
-==========================================================
+=======
 
-.. autoclass:: github.GitTree.GitTree
+.. autoclass:: github.GitTree.GitTree()

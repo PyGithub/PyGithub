@@ -1,4 +1,4 @@
 IssueComment
-==========================================================
+============
 
-.. autoclass:: github.IssueComment.IssueComment
+.. autoclass:: github.IssueComment.IssueComment()

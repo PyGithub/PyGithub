@@ -1,4 +1,4 @@
 IssueEvent
-==========================================================
+==========
 
-.. autoclass:: github.IssueEvent.IssueEvent
+.. autoclass:: github.IssueEvent.IssueEvent()

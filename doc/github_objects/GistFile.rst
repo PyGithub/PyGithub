@@ -1,4 +1,4 @@
 GistFile
-==========================================================
+========
 
-.. autoclass:: github.GistFile.GistFile
+.. autoclass:: github.GistFile.GistFile()

@@ -1,4 +1,4 @@
 GitTag
-==========================================================
+======
 
-.. autoclass:: github.GitTag.GitTag
+.. autoclass:: github.GitTag.GitTag()

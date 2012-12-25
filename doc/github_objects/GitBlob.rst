@@ -1,4 +1,4 @@
 GitBlob
-==========================================================
+=======
 
-.. autoclass:: github.GitBlob.GitBlob
+.. autoclass:: github.GitBlob.GitBlob()

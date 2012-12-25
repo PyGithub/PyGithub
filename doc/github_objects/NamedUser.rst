@@ -1,4 +1,4 @@
 NamedUser
-==========================================================
+=========
 
-.. autoclass:: github.NamedUser.NamedUser
+.. autoclass:: github.NamedUser.NamedUser()

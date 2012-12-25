@@ -1,4 +1,4 @@
 Issue
-==========================================================
+=====
 
-.. autoclass:: github.Issue.Issue
+.. autoclass:: github.Issue.Issue()

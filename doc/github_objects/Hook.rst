@@ -1,4 +1,4 @@
 Hook
-==========================================================
+====
 
-.. autoclass:: github.Hook.Hook
+.. autoclass:: github.Hook.Hook()

@@ -1,4 +1,4 @@
 File
-==========================================================
+====
 
-.. autoclass:: github.File.File
+.. autoclass:: github.File.File()

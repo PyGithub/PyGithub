@@ -1,4 +1,4 @@
 GitignoreTemplate
-==========================================================
+=================
 
-.. autoclass:: github.GitignoreTemplate.GitignoreTemplate
+.. autoclass:: github.GitignoreTemplate.GitignoreTemplate()

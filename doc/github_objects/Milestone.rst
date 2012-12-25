@@ -1,4 +1,4 @@
 Milestone
-==========================================================
+=========
 
-.. autoclass:: github.Milestone.Milestone
+.. autoclass:: github.Milestone.Milestone()

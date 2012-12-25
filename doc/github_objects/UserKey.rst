@@ -1,4 +1,4 @@
 UserKey
-==========================================================
+=======
 
-.. autoclass:: github.UserKey.UserKey
+.. autoclass:: github.UserKey.UserKey()

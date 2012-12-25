@@ -1,4 +1,4 @@
 GitObject
-==========================================================
+=========
 
-.. autoclass:: github.GitObject.GitObject
+.. autoclass:: github.GitObject.GitObject()

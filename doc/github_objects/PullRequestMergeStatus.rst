@@ -1,4 +1,4 @@
 PullRequestMergeStatus
-==========================================================
+======================
 
-.. autoclass:: github.PullRequestMergeStatus.PullRequestMergeStatus
+.. autoclass:: github.PullRequestMergeStatus.PullRequestMergeStatus()

@@ -1,4 +1,4 @@
 PullRequest
-==========================================================
+===========
 
-.. autoclass:: github.PullRequest.PullRequest
+.. autoclass:: github.PullRequest.PullRequest()

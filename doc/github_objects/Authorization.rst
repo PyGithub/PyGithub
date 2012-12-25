@@ -1,4 +1,4 @@
 Authorization
-==========================================================
+=============
 
-.. autoclass:: github.Authorization.Authorization
+.. autoclass:: github.Authorization.Authorization()

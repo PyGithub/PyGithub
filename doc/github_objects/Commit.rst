@@ -1,4 +1,4 @@
 Commit
-==========================================================
+======
 
-.. autoclass:: github.Commit.Commit
+.. autoclass:: github.Commit.Commit()

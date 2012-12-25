@@ -1,4 +1,4 @@
 Comparison
-==========================================================
+==========
 
-.. autoclass:: github.Comparison.Comparison
+.. autoclass:: github.Comparison.Comparison()

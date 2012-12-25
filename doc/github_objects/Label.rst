@@ -1,4 +1,4 @@
 Label
-==========================================================
+=====
 
-.. autoclass:: github.Label.Label
+.. autoclass:: github.Label.Label()

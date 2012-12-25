@@ -1,4 +1,4 @@
 CommitStats
-==========================================================
+===========
 
-.. autoclass:: github.CommitStats.CommitStats
+.. autoclass:: github.CommitStats.CommitStats()

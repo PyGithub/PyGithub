@@ -1,4 +1,4 @@
 IssuePullRequest
-==========================================================
+================
 
-.. autoclass:: github.IssuePullRequest.IssuePullRequest
+.. autoclass:: github.IssuePullRequest.IssuePullRequest()

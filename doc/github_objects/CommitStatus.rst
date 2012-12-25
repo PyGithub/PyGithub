@@ -1,4 +1,4 @@
 CommitStatus
-==========================================================
+============
 
-.. autoclass:: github.CommitStatus.CommitStatus
+.. autoclass:: github.CommitStatus.CommitStatus()

@@ -1,4 +1,4 @@
 PullRequestComment
-==========================================================
+==================
 
-.. autoclass:: github.PullRequestComment.PullRequestComment
+.. autoclass:: github.PullRequestComment.PullRequestComment()

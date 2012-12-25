@@ -1,4 +1,4 @@
 HookDescription
-==========================================================
+===============
 
-.. autoclass:: github.HookDescription.HookDescription
+.. autoclass:: github.HookDescription.HookDescription()

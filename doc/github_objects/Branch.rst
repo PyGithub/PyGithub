@@ -1,4 +1,4 @@
 Branch
-==========================================================
+======
 
-.. autoclass:: github.Branch.Branch
+.. autoclass:: github.Branch.Branch()

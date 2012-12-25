@@ -1,4 +1,4 @@
 Team
-==========================================================
+====
 
-.. autoclass:: github.Team.Team
+.. autoclass:: github.Team.Team()

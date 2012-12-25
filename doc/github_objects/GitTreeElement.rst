@@ -1,4 +1,4 @@
 GitTreeElement
-==========================================================
+==============
 
-.. autoclass:: github.GitTreeElement.GitTreeElement
+.. autoclass:: github.GitTreeElement.GitTreeElement()

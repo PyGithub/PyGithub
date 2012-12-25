@@ -1,4 +1,4 @@
 Event
-==========================================================
+=====
 
-.. autoclass:: github.Event.Event
+.. autoclass:: github.Event.Event()
