@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class PullRequestMergeStatus(github.GithubObject.BasicGithubObject):
+    """
+    This class represents PullRequestMergeStatuss as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def merged(self):
+        """
+        :type: bool
+        """
         return self._NoneIfNotSet(self._merged)
 
     @property
     def message(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._message)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._sha)
 
     def _initAttributes(self):

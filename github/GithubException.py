@@ -15,6 +15,10 @@
 
 
 class GithubException(Exception):
+    """
+    This class represents GithubExceptions as returned for example by http://developer.github.com/v3/todo
+    """
+
     def __init__(self, status, data):
         Exception.__init__(self)
         self.status = status

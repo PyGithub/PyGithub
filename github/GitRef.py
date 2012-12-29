@@ -19,22 +19,39 @@ import github.GitObject
 
 
 class GitRef(github.GithubObject.GithubObject):
+    """
+    This class represents GitRefs as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def object(self):
+        """
+        :type: :class:`github.GitObject.GitObject`
+        """
         self._completeIfNotSet(self._object)
         return self._NoneIfNotSet(self._object)
 
     @property
     def ref(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._ref)
         return self._NoneIfNotSet(self._ref)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
@@ -43,6 +60,12 @@ class GitRef(github.GithubObject.GithubObject):
         )
 
     def edit(self, sha, force=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:user/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
+        :param sha: string
+        :param force: bool
+        :rtype: None
+        """
         assert isinstance(sha, (str, unicode)), sha
         assert force is github.GithubObject.NotSet or isinstance(force, bool), force
         post_parameters = {

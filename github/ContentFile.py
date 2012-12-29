@@ -17,32 +17,57 @@ import github.GithubObject
 
 
 class ContentFile(github.GithubObject.BasicGithubObject):
+    """
+    This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def content(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._content)
 
     @property
     def encoding(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._encoding)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     @property
     def path(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._path)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._sha)
 
     @property
     def size(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._size)
 
     @property
     def type(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._type)
 
     def _initAttributes(self):

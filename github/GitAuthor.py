@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class GitAuthor(github.GithubObject.BasicGithubObject):
+    """
+    This class represents GitAuthors as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def date(self):
+        """
+        :type: datetime.datetime
+        """
         return self._NoneIfNotSet(self._date)
 
     @property
     def email(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._email)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     def _initAttributes(self):

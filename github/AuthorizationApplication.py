@@ -17,13 +17,23 @@ import github.GithubObject
 
 
 class AuthorizationApplication(github.GithubObject.GithubObject):
+    """
+    This class represents AuthorizationApplications as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

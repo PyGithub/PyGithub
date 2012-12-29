@@ -19,20 +19,36 @@ import github.Commit
 
 
 class Tag(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Tags as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
         return self._NoneIfNotSet(self._commit)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     @property
     def tarball_url(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._tarball_url)
 
     @property
     def zipball_url(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._zipball_url)
 
     def _initAttributes(self):

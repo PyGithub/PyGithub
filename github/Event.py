@@ -21,36 +21,64 @@ import github.NamedUser
 
 
 class Event(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Events as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def actor(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         return self._NoneIfNotSet(self._actor)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def id(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._id)
 
     @property
     def org(self):
+        """
+        :type: :class:`github.Organization.Organization`
+        """
         return self._NoneIfNotSet(self._org)
 
     @property
     def payload(self):
+        """
+        :type: dict
+        """
         return self._NoneIfNotSet(self._payload)
 
     @property
     def public(self):
+        """
+        :type: bool
+        """
         return self._NoneIfNotSet(self._public)
 
     @property
     def repo(self):
+        """
+        :type: :class:`github.Repository.Repository`
+        """
         return self._NoneIfNotSet(self._repo)
 
     @property
     def type(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._type)
 
     def _initAttributes(self):

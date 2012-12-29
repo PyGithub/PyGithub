@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class HookResponse(github.GithubObject.BasicGithubObject):
+    """
+    This class represents HookResponses as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def code(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._code)
 
     @property
     def message(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._message)
 
     @property
     def status(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._status)
 
     def _initAttributes(self):

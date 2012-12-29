@@ -17,107 +17,175 @@ import github.GithubObject
 
 
 class Download(github.GithubObject.GithubObject):
+    """
+    This class represents Downloads as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def accesskeyid(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._accesskeyid)
         return self._NoneIfNotSet(self._accesskeyid)
 
     @property
     def acl(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._acl)
         return self._NoneIfNotSet(self._acl)
 
     @property
     def bucket(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._bucket)
         return self._NoneIfNotSet(self._bucket)
 
     @property
     def content_type(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._content_type)
         return self._NoneIfNotSet(self._content_type)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def description(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._description)
         return self._NoneIfNotSet(self._description)
 
     @property
     def download_count(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._download_count)
         return self._NoneIfNotSet(self._download_count)
 
     @property
     def expirationdate(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._expirationdate)
         return self._NoneIfNotSet(self._expirationdate)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def mime_type(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._mime_type)
         return self._NoneIfNotSet(self._mime_type)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def path(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._path)
         return self._NoneIfNotSet(self._path)
 
     @property
     def policy(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._policy)
         return self._NoneIfNotSet(self._policy)
 
     @property
     def prefix(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._prefix)
         return self._NoneIfNotSet(self._prefix)
 
     @property
     def redirect(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._redirect)
         return self._NoneIfNotSet(self._redirect)
 
     @property
     def s3_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._s3_url)
         return self._NoneIfNotSet(self._s3_url)
 
     @property
     def signature(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._signature)
         return self._NoneIfNotSet(self._signature)
 
     @property
     def size(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._size)
         return self._NoneIfNotSet(self._size)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/downloads/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,

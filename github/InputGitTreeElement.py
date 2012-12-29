@@ -17,6 +17,10 @@ import github.GithubObject
 
 
 class InputGitTreeElement(object):
+    """
+    This class represents InputGitTreeElements as returned for example by http://developer.github.com/v3/todo
+    """
+
     def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         """
         :param path: string

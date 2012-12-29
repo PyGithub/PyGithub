@@ -19,18 +19,31 @@ import github.GitTreeElement
 
 
 class GitTree(github.GithubObject.GithubObject):
+    """
+    This class represents GitTrees as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def tree(self):
+        """
+        :type: list of :class:`github.GitTreeElement.GitTreeElement`
+        """
         self._completeIfNotSet(self._tree)
         return self._NoneIfNotSet(self._tree)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

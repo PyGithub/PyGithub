@@ -19,22 +19,39 @@ import github.GithubObject
 
 
 class Label(github.GithubObject.GithubObject):
+    """
+    This class represents Labels as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def color(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._color)
         return self._NoneIfNotSet(self._color)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/labels/:name <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
@@ -43,6 +60,12 @@ class Label(github.GithubObject.GithubObject):
         )
 
     def edit(self, name, color):
+        """
+        :calls: `PATCH /repos/:user/:repo/labels/:name <http://developer.github.com/v3/todo>`_
+        :param name: string
+        :param color: string
+        :rtype: None
+        """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(color, (str, unicode)), color
         post_parameters = {

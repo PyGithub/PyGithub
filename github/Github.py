@@ -33,6 +33,10 @@ DEFAULT_TIMEOUT = 10
 
 
 class Github(object):
+    """
+    This class represents Githubs as returned for example by http://developer.github.com/v3/todo
+    """
+
     def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None):
         """
         :param login_or_token: string
@@ -63,9 +67,17 @@ class Github(object):
 
     @property
     def rate_limiting(self):
+        """
+        :type: (int, int)
+        """
         return self.__requester.rate_limiting
 
     def get_user(self, login=github.GithubObject.NotSet):
+        """
+        :calls: `GET /users/:user <http://developer.github.com/v3/todo>`_
+        :param login: string
+        :rtype: :class:`github.NamedUser.NamedUser`
+        """
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
@@ -79,6 +91,11 @@ class Github(object):
             return github.NamedUser.NamedUser(self.__requester, data, completed=True)
 
     def get_organization(self, login):
+        """
+        :calls: `GET /orgs/:org <http://developer.github.com/v3/todo>`_
+        :param login: string
+        :rtype: :class:`github.Organization.Organization`
+        """
         assert isinstance(login, (str, unicode)), login
         headers, data = self.__requester.requestAndCheck(
             "GET",
@@ -89,6 +106,10 @@ class Github(object):
         return github.Organization.Organization(self.__requester, data, completed=True)
 
     def get_repo(self, full_name):
+        """
+        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.Repository.Repository`
+        """
         assert isinstance(full_name, (str, unicode)), full_name
         headers, data = self.__requester.requestAndCheck(
             "GET",
@@ -99,6 +120,11 @@ class Github(object):
         return Repository.Repository(self.__requester, data, completed=True)
 
     def get_gist(self, id):
+        """
+        :calls: `GET /gists/:id <http://developer.github.com/v3/todo>`_
+        :param id: string
+        :rtype: :class:`github.Gist.Gist`
+        """
         assert isinstance(id, (str, unicode)), id
         headers, data = self.__requester.requestAndCheck(
             "GET",
@@ -109,6 +135,10 @@ class Github(object):
         return github.Gist.Gist(self.__requester, data, completed=True)
 
     def get_gists(self):
+        """
+        :calls: `GET /gists/public <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
+        """
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self.__requester,
@@ -117,6 +147,12 @@ class Github(object):
         )
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
+        """
+        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/todo>`_
+        :param keyword: string
+        :param language: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         assert isinstance(keyword, (str, unicode)), keyword
         assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
         args = {} if language is github.GithubObject.NotSet else {"language": language}
@@ -130,6 +166,11 @@ class Github(object):
         )
 
     def legacy_search_users(self, keyword):
+        """
+        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/todo>`_
+        :param keyword: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
         assert isinstance(keyword, (str, unicode)), keyword
         return Legacy.PaginatedList(
             "/legacy/user/search/" + urllib.quote(keyword),
@@ -141,6 +182,11 @@ class Github(object):
         )
 
     def legacy_search_user_by_email(self, email):
+        """
+        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/todo>`_
+        :param email: string
+        :rtype: :class:`github.NamedUser.NamedUser`
+        """
         assert isinstance(email, (str, unicode)), email
         headers, data = self.__requester.requestAndCheck(
             "GET",
@@ -151,6 +197,12 @@ class Github(object):
         return github.NamedUser.NamedUser(self.__requester, Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
+        """
+        :calls: `POST /markdown <http://developer.github.com/v3/todo>`_
+        :param text: string
+        :param context: :class:`github.Repository.Repository`
+        :rtype: string
+        """
         assert isinstance(text, (str, unicode)), text
         assert context is github.GithubObject.NotSet or isinstance(context, github.Repository.Repository), context
         post_parameters = {
@@ -168,6 +220,10 @@ class Github(object):
         return data
 
     def get_hooks(self):
+        """
+        :calls: `GET /hooks <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDescription.HookDescription`
+        """
         headers, data = self.__requester.requestAndCheck(
             "GET",
             "/hooks",
@@ -177,6 +233,10 @@ class Github(object):
         return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
 
     def get_gitignore_templates(self):
+        """
+        :calls: `GET /gitignore/templates <http://developer.github.com/v3/todo>`_
+        :rtype: list of string
+        """
         headers, data = self.__requester.requestAndCheck(
             "GET",
             "/gitignore/templates",
@@ -186,6 +246,10 @@ class Github(object):
         return data
 
     def get_gitignore_template(self, name):
+        """
+        :calls: `GET /gitignore/templates/:name <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
+        """
         assert isinstance(name, (str, unicode)), name
         headers, attributes = self.__requester.requestAndCheck(
             "GET",

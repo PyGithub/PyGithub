@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class IssuePullRequest(github.GithubObject.BasicGithubObject):
+    """
+    This class represents IssuePullRequests as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def diff_url(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._diff_url)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def patch_url(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._patch_url)
 
     def _initAttributes(self):

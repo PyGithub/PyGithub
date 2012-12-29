@@ -17,20 +17,36 @@ import github.GithubObject
 
 
 class Plan(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Plans as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def collaborators(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._collaborators)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     @property
     def private_repos(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._private_repos)
 
     @property
     def space(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._space)
 
     def _initAttributes(self):

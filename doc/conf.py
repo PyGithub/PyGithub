@@ -245,3 +245,17 @@ texinfo_documents = [
 autodoc_default_flags = [ "members" ]
 autodoc_member_order = "bysource"
 autoclass_content = "both"
+
+with open("github_objects.rst", "w") as github_objects:
+	github_objects.write("Github objects\n")
+	github_objects.write("==============\n")
+	github_objects.write("\n")
+	github_objects.write(".. toctree::\n")
+
+	for obj in ["AuthenticatedUser", "Authorization", "AuthorizationApplication", "Branch", "Commit", "CommitComment", "CommitStats", "CommitStatus", "Comparison", "ContentFile", "Download", "Event", "File", "Gist", "GistComment", "GistFile", "GistHistoryState", "GitAuthor", "GitBlob", "GitCommit", "GitObject", "GitignoreTemplate", "GitRef", "GitTag", "GitTree", "GitTreeElement", "Hook", "HookDescription", "HookResponse", "Issue", "IssueComment", "IssueEvent", "IssuePullRequest", "Label", "Milestone", "NamedUser", "Organization", "Permissions", "Plan", "PullRequest", "PullRequestComment", "PullRequestMergeStatus", "PullRequestPart", "Repository", "RepositoryKey", "Tag", "Team", "UserKey"]:
+		github_objects.write("   github_objects/" + obj + "\n")
+		with open("github_objects/" + obj + ".rst", "w") as github_object:
+			github_object.write(obj + "\n")
+			github_object.write("=" * len(obj) + "\n")
+			github_object.write("\n")
+			github_object.write(".. autoclass:: github." + obj + "." + obj + "()\n")

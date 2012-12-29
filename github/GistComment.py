@@ -19,37 +19,63 @@ import github.NamedUser
 
 
 class GistComment(github.GithubObject.GithubObject):
+    """
+    This class represents GistComments as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def body(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._body)
         return self._NoneIfNotSet(self._body)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     def delete(self):
+        """
+        :calls: `DELETE /gists/comments/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
@@ -58,6 +84,11 @@ class GistComment(github.GithubObject.GithubObject):
         )
 
     def edit(self, body):
+        """
+        :calls: `PATCH /gists/comments/:id <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :rtype: None
+        """
         assert isinstance(body, (str, unicode)), body
         post_parameters = {
             "body": body,

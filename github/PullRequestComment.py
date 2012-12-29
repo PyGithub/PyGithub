@@ -19,62 +19,103 @@ import github.NamedUser
 
 
 class PullRequestComment(github.GithubObject.GithubObject):
+    """
+    This class represents PullRequestComments as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def body(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._body)
         return self._NoneIfNotSet(self._body)
 
     @property
     def commit_id(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._commit_id)
         return self._NoneIfNotSet(self._commit_id)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def original_commit_id(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._original_commit_id)
         return self._NoneIfNotSet(self._original_commit_id)
 
     @property
     def original_position(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._original_position)
         return self._NoneIfNotSet(self._original_position)
 
     @property
     def path(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._path)
         return self._NoneIfNotSet(self._path)
 
     @property
     def position(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._position)
         return self._NoneIfNotSet(self._position)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.url,
@@ -83,6 +124,11 @@ class PullRequestComment(github.GithubObject.GithubObject):
         )
 
     def edit(self, body):
+        """
+        :calls: `PATCH /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :rtype: None
+        """
         assert isinstance(body, (str, unicode)), body
         post_parameters = {
             "body": body,

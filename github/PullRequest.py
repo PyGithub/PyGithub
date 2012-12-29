@@ -26,145 +26,246 @@ import github.Commit
 
 
 class PullRequest(github.GithubObject.GithubObject):
+    """
+    This class represents PullRequests as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def additions(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._additions)
         return self._NoneIfNotSet(self._additions)
 
     @property
     def assignee(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._assignee)
         return self._NoneIfNotSet(self._assignee)
 
     @property
     def base(self):
+        """
+        :type: :class:`github.PullRequestPart.PullRequestPart`
+        """
         self._completeIfNotSet(self._base)
         return self._NoneIfNotSet(self._base)
 
     @property
     def body(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._body)
         return self._NoneIfNotSet(self._body)
 
     @property
     def changed_files(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._changed_files)
         return self._NoneIfNotSet(self._changed_files)
 
     @property
     def closed_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._closed_at)
         return self._NoneIfNotSet(self._closed_at)
 
     @property
     def comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._comments)
         return self._NoneIfNotSet(self._comments)
 
     @property
     def commits(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._commits)
         return self._NoneIfNotSet(self._commits)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def deletions(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._deletions)
         return self._NoneIfNotSet(self._deletions)
 
     @property
     def diff_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._diff_url)
         return self._NoneIfNotSet(self._diff_url)
 
     @property
     def head(self):
+        """
+        :type: :class:`github.PullRequestPart.PullRequestPart`
+        """
         self._completeIfNotSet(self._head)
         return self._NoneIfNotSet(self._head)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def issue_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._issue_url)
         return self._NoneIfNotSet(self._issue_url)
 
     @property
     def mergeable(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._mergeable)
         return self._NoneIfNotSet(self._mergeable)
 
     @property
     def merged(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._merged)
         return self._NoneIfNotSet(self._merged)
 
     @property
     def merged_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._merged_at)
         return self._NoneIfNotSet(self._merged_at)
 
     @property
     def merged_by(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._merged_by)
         return self._NoneIfNotSet(self._merged_by)
 
     @property
     def number(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._number)
         return self._NoneIfNotSet(self._number)
 
     @property
     def patch_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._patch_url)
         return self._NoneIfNotSet(self._patch_url)
 
     @property
     def review_comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._review_comments)
         return self._NoneIfNotSet(self._review_comments)
 
     @property
     def state(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._state)
         return self._NoneIfNotSet(self._state)
 
     @property
     def title(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._title)
         return self._NoneIfNotSet(self._title)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     def create_comment(self, body, commit_id, path, position):
+        """
+        :calls: `POST /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :param commit_id: :class:`github.Commit.Commit`
+        :param path: string
+        :param position: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
         return self.create_review_comment(body, commit_id, path, position)
 
     def create_review_comment(self, body, commit_id, path, position):
+        """
+        :calls: `POST /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :param commit_id: :class:`github.Commit.Commit`
+        :param path: string
+        :param position: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
         assert isinstance(body, (str, unicode)), body
         assert isinstance(commit_id, github.Commit.Commit), commit_id
         assert isinstance(path, (str, unicode)), path
@@ -184,6 +285,11 @@ class PullRequest(github.GithubObject.GithubObject):
         return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
 
     def create_issue_comment(self, body):
+        """
+        :calls: `POST /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :rtype: :class:`github.IssueComment.IssueComment`
+        """
         assert isinstance(body, (str, unicode)), body
         post_parameters = {
             "body": body,
@@ -197,6 +303,13 @@ class PullRequest(github.GithubObject.GithubObject):
         return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:user/:repo/pulls/:number <http://developer.github.com/v3/todo>`_
+        :param title: string
+        :param body: string
+        :param state: string
+        :rtype: None
+        """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
@@ -216,9 +329,19 @@ class PullRequest(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_comment(self, id):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
         return self.get_review_comment(id)
 
     def get_review_comment(self, id):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestComment.PullRequestComment`
+        """
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -229,9 +352,17 @@ class PullRequest(github.GithubObject.GithubObject):
         return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
 
     def get_comments(self):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
+        """
         return self.get_review_comments()
 
     def get_review_comments(self):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
+        """
         return github.PaginatedList.PaginatedList(
             github.PullRequestComment.PullRequestComment,
             self._requester,
@@ -240,6 +371,10 @@ class PullRequest(github.GithubObject.GithubObject):
         )
 
     def get_commits(self):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/:number/commits <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
+        """
         return github.PaginatedList.PaginatedList(
             github.Commit.Commit,
             self._requester,
@@ -248,6 +383,10 @@ class PullRequest(github.GithubObject.GithubObject):
         )
 
     def get_files(self):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/:number/files <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.File.File`
+        """
         return github.PaginatedList.PaginatedList(
             github.File.File,
             self._requester,
@@ -256,6 +395,11 @@ class PullRequest(github.GithubObject.GithubObject):
         )
 
     def get_issue_comment(self, id):
+        """
+        :calls: `GET /repos/:user/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :param id: integer
+        :rtype: :class:`github.IssueComment.IssueComment`
+        """
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -266,6 +410,10 @@ class PullRequest(github.GithubObject.GithubObject):
         return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def get_issue_comments(self):
+        """
+        :calls: `GET /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
+        """
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
@@ -274,6 +422,10 @@ class PullRequest(github.GithubObject.GithubObject):
         )
 
     def is_merged(self):
+        """
+        :calls: `GET /repos/:user/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :rtype: bool
+        """
         status, headers, data = self._requester.requestRaw(
             "GET",
             self.url + "/merge",
@@ -283,6 +435,11 @@ class PullRequest(github.GithubObject.GithubObject):
         return status == 204
 
     def merge(self, commit_message=github.GithubObject.NotSet):
+        """
+        :calls: `PUT /repos/:user/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :param commit_message: string
+        :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
+        """
         assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:

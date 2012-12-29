@@ -25,137 +25,226 @@ import github.Event
 
 
 class NamedUser(github.GithubObject.GithubObject):
+    """
+    This class represents NamedUsers as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def avatar_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._avatar_url)
         return self._NoneIfNotSet(self._avatar_url)
 
     @property
     def bio(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._bio)
         return self._NoneIfNotSet(self._bio)
 
     @property
     def blog(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._blog)
         return self._NoneIfNotSet(self._blog)
 
     @property
     def collaborators(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._collaborators)
         return self._NoneIfNotSet(self._collaborators)
 
     @property
     def company(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._company)
         return self._NoneIfNotSet(self._company)
 
     @property
     def contributions(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._contributions)
         return self._NoneIfNotSet(self._contributions)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def disk_usage(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._disk_usage)
         return self._NoneIfNotSet(self._disk_usage)
 
     @property
     def email(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._email)
         return self._NoneIfNotSet(self._email)
 
     @property
     def followers(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._followers)
         return self._NoneIfNotSet(self._followers)
 
     @property
     def following(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._following)
         return self._NoneIfNotSet(self._following)
 
     @property
     def gravatar_id(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._gravatar_id)
         return self._NoneIfNotSet(self._gravatar_id)
 
     @property
     def hireable(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._hireable)
         return self._NoneIfNotSet(self._hireable)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def location(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._location)
         return self._NoneIfNotSet(self._location)
 
     @property
     def login(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._login)
         return self._NoneIfNotSet(self._login)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def owned_private_repos(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._owned_private_repos)
         return self._NoneIfNotSet(self._owned_private_repos)
 
     @property
     def plan(self):
+        """
+        :type: :class:`github.Plan.Plan`
+        """
         self._completeIfNotSet(self._plan)
         return self._NoneIfNotSet(self._plan)
 
     @property
     def private_gists(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._private_gists)
         return self._NoneIfNotSet(self._private_gists)
 
     @property
     def public_gists(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._public_gists)
         return self._NoneIfNotSet(self._public_gists)
 
     @property
     def public_repos(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._public_repos)
         return self._NoneIfNotSet(self._public_repos)
 
     @property
     def total_private_repos(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._total_private_repos)
         return self._NoneIfNotSet(self._total_private_repos)
 
     @property
     def type(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._type)
         return self._NoneIfNotSet(self._type)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def create_gist(self, public, files, description=github.GithubObject.NotSet):
+        """
+        :calls: `POST /users/:user/gists <http://developer.github.com/v3/todo>`_
+        :param public: bool
+        :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
+        :param description: string
+        :rtype: :class:`github.Gist.Gist`
+        """
         assert isinstance(public, bool), public
         assert all(isinstance(element, github.InputFileContent) for element in files.itervalues()), files
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
@@ -174,6 +263,10 @@ class NamedUser(github.GithubObject.GithubObject):
         return github.Gist.Gist(self._requester, data, completed=True)
 
     def get_events(self):
+        """
+        :calls: `GET /users/:user/events <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
@@ -182,6 +275,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_followers(self):
+        """
+        :calls: `GET /users/:user/followers <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
         return github.PaginatedList.PaginatedList(
             NamedUser,
             self._requester,
@@ -190,6 +287,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_following(self):
+        """
+        :calls: `GET /users/:user/following <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
         return github.PaginatedList.PaginatedList(
             NamedUser,
             self._requester,
@@ -198,6 +299,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_gists(self):
+        """
+        :calls: `GET /users/:user/gists <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
+        """
         return github.PaginatedList.PaginatedList(
             github.Gist.Gist,
             self._requester,
@@ -206,6 +311,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_orgs(self):
+        """
+        :calls: `GET /users/:user/orgs <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Organization.Organization`
+        """
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization,
             self._requester,
@@ -214,6 +323,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_public_events(self):
+        """
+        :calls: `GET /users/:user/events/public <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
@@ -222,6 +335,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_public_received_events(self):
+        """
+        :calls: `GET /users/:user/received_events/public <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
@@ -230,6 +347,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_received_events(self):
+        """
+        :calls: `GET /users/:user/received_events <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
         return github.PaginatedList.PaginatedList(
             github.Event.Event,
             self._requester,
@@ -238,6 +359,11 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_repo(self, name):
+        """
+        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :param name: string
+        :rtype: :class:`github.Repository.Repository`
+        """
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestAndCheck(
             "GET",
@@ -248,6 +374,11 @@ class NamedUser(github.GithubObject.GithubObject):
         return github.Repository.Repository(self._requester, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet):
+        """
+        :calls: `GET /users/:user/repos <http://developer.github.com/v3/todo>`_
+        :param type: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
@@ -260,6 +391,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_starred(self):
+        """
+        :calls: `GET /users/:user/starred <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
@@ -268,6 +403,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_subscriptions(self):
+        """
+        :calls: `GET /users/:user/subscriptions <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
@@ -276,6 +415,10 @@ class NamedUser(github.GithubObject.GithubObject):
         )
 
     def get_watched(self):
+        """
+        :calls: `GET /users/:user/watched <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,

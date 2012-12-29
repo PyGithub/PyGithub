@@ -17,6 +17,10 @@ import github.GithubObject
 
 
 class RepositoryKey(github.GithubObject.GithubObject):
+    """
+    This class represents RepositoryKeys as returned for example by http://developer.github.com/v3/todo
+    """
+
     def __init__(self, requester, attributes, completed, repoUrl):
         github.GithubObject.GithubObject.__init__(self, requester, attributes, completed)
         self.__repoUrl = repoUrl
@@ -27,30 +31,49 @@ class RepositoryKey(github.GithubObject.GithubObject):
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def key(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._key)
         return self._NoneIfNotSet(self._key)
 
     @property
     def title(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._title)
         return self._NoneIfNotSet(self._title)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def verified(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._verified)
         return self._NoneIfNotSet(self._verified)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/keys/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestAndCheck(
             "DELETE",
             self.__customUrl,
@@ -59,6 +82,12 @@ class RepositoryKey(github.GithubObject.GithubObject):
         )
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:user/:repo/keys/:id <http://developer.github.com/v3/todo>`_
+        :param title: string
+        :param key: string
+        :rtype: None
+        """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert key is github.GithubObject.NotSet or isinstance(key, (str, unicode)), key
         post_parameters = dict()

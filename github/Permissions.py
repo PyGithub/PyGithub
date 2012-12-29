@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class Permissions(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Permissionss as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def admin(self):
+        """
+        :type: bool
+        """
         return self._NoneIfNotSet(self._admin)
 
     @property
     def pull(self):
+        """
+        :type: bool
+        """
         return self._NoneIfNotSet(self._pull)
 
     @property
     def push(self):
+        """
+        :type: bool
+        """
         return self._NoneIfNotSet(self._push)
 
     def _initAttributes(self):

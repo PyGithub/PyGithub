@@ -19,12 +19,22 @@ import github.Commit
 
 
 class Branch(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Branchs as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
         return self._NoneIfNotSet(self._commit)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     def _initAttributes(self):

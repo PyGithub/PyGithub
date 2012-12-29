@@ -17,12 +17,22 @@ import github.GithubObject
 
 
 class GitignoreTemplate(github.GithubObject.BasicGithubObject):
+    """
+    This class represents GitignoreTemplates as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def source(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._source)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     def _initAttributes(self):
