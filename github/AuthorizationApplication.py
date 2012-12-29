@@ -17,29 +17,13 @@ import github.GithubObject
 
 
 class AuthorizationApplication(github.GithubObject.GithubObject):
-    """
-    Please edit this generated docstring for class AuthorizationApplication.
-    """
-
     @property
     def name(self):
-        """
-        Please edit this generated docstring for property AuthorizationApplication.name.
-        
-        :type: string
-        """
-
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def url(self):
-        """
-        Please edit this generated docstring for property AuthorizationApplication.url.
-        
-        :type: string
-        """
-
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

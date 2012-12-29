@@ -69,6 +69,25 @@ class PaginatedListBase:
 
 
 class PaginatedList(PaginatedListBase):
+    """
+    This class abstracts the `pagination of the API <http://developer.github.com/v3/>`_.
+
+    You can simply enumerate through instances of this class:
+
+        for repo in user.get_repos():
+            print repo.name
+
+    You can also index them or take slices:
+
+        second_repo = user.get_repos()[1]
+        first_repos = user.get_repos()[:10]
+
+    And if you really need it, you can explicitely access a specific page:
+
+        some_repos = user.get_repos().get_page(0)
+        some_other_repos = user.get_repos().get_page(3)
+    """
+
     def __init__(self, contentClass, requester, firstUrl, firstParams):
         PaginatedListBase.__init__(self)
         self.__requester = requester

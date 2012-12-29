@@ -34,7 +34,9 @@ class Generator():
         if className in self.privateClasses:
             return None
         else:
-            return []
+            return [
+                "This class represents " + className + "s as returned for example by http://developer.github.com/v3/"
+            ]
 
     def getMemberDocstring(self, className, memberName):
         if className in self.privateClasses:
@@ -64,13 +66,13 @@ class Generator():
             return None
 
     def __formatType(self, type):
-        if type.startswith( "`PaginatedList` of "):
+        if type.startswith("`PaginatedList` of "):
             return ":class:`github.PaginatedList.PaginatedList` of " + self.__formatType(type[19:])
-        elif type.startswith( "list of "):
+        elif type.startswith("list of "):
             return "list of " + self.__formatType(type[8:])
-        elif type.startswith( "dict of string to "):
+        elif type.startswith("dict of string to "):
             return "dict of string to " + self.__formatType(type[18:])
-        elif type.startswith( "`" ) and type.endswith("`"):
+        elif type.startswith("`") and type.endswith("`"):
             type = type[1:-1]
             return ":class:`github." + type + "." + type + "`"
         elif type == "`Milestone` or \"none\" or \"*\"":
@@ -86,10 +88,10 @@ class Generator():
             "datetime.datetime", "date",
             "\"open\" or \"closed\"",
             "dict", "(int, int)"
-            ]:
+        ]:
             return type
         else:
-            raise Exception( "Unknown type " + type)
+            raise Exception("Unknown type " + type)
 
     def __init__(self):
         pass
@@ -152,7 +154,7 @@ class Generator():
             yield line
             if line.startswith("class"):
                 className = re.match("^class (.*?)(?:\(.*\))?:$", line).group(1)
-                for docStringLine in self.formatDocstring("    ", self.getClassDocstring(className)):
+                for docStringLine in self.formatDocstring("    ", self.getClassDocstring(className), True):
                     yield docStringLine
             if line.startswith("    def"):
                 if nextDefIsStaticMethod or nextDefIsClassMethod:
@@ -166,13 +168,14 @@ class Generator():
             nextDefIsStaticMethod = line == "    @staticmethod"
             nextDefIsClassMethod = line == "    @classmethod"
 
-    def formatDocstring(self, indent, lines):
+    def formatDocstring(self, indent, lines, addBlankLine=False):
         if lines is not None:
             yield indent + '"""'
             for docStringLine in lines:
                 yield indent + docStringLine
             yield indent + '"""'
-            yield ""
+            if addBlankLine:
+                yield ""
 
     def readLines(self, fileName):
         with open(fileName) as f:
