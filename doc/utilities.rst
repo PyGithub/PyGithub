@@ -16,7 +16,6 @@ Pagination
 
 .. autoclass:: github.PaginatedList.PaginatedList()
 
-
 Input classes
 -------------
 
