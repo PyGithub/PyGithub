@@ -35,7 +35,7 @@ class Generator():
             return None
         else:
             return [
-                "This class represents " + className + "s as returned for example by http://developer.github.com/v3/"
+                "This class represents " + className + "s as returned for example by http://developer.github.com/v3/todo"
             ]
 
     def getMemberDocstring(self, className, memberName):
@@ -49,7 +49,7 @@ class Generator():
                 ]
             elif memberName in classDescription.methods:
                 return [
-                    ":calls: `" + classDescription.methods[memberName].verb + " " + classDescription.methods[memberName].url + " <http://developer.github.com/v3/>`_",
+                    ":calls: `" + classDescription.methods[memberName].verb + " " + classDescription.methods[memberName].url + " <http://developer.github.com/v3/todo>`_",
                     # ":auth. level: ?",
                 ] + [
                     ":param " + parameterName + ": " + self.__formatType(parameterType) for parameterName, parameterType in classDescription.methods[memberName].parameters.items()
