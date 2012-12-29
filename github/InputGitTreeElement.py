@@ -19,8 +19,6 @@ import github.GithubObject
 class InputGitTreeElement(object):
     def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         """
-        Please edit this generated docstring for method :func:`github.InputGitTreeElement.InputGitTreeElement.__init__`.
-
         :param path: string
         :param mode: string
         :param type: string
@@ -31,8 +29,8 @@ class InputGitTreeElement(object):
         assert isinstance(path, (str, unicode)), path
         assert isinstance(mode, (str, unicode)), mode
         assert isinstance(type, (str, unicode)), type
-        assert isinstance(content, (str, unicode)), content
-        assert isinstance(sha, (str, unicode)), sha
+        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

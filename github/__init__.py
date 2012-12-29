@@ -30,7 +30,7 @@ from InputGitTreeElement import InputGitTreeElement
 
 def enable_console_debug_logging():  # pragma no cover
     """
-    This function set up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
+    This function sets up a very simple logging configuration (log everything on standard output) that is useful for troubleshooting.
     """
 
     logger = logging.getLogger("github")

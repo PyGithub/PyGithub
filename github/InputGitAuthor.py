@@ -17,8 +17,6 @@
 class InputGitAuthor(object):
     def __init__(self, name, email, date):
         """
-        Please edit this generated docstring for method :func:`github.InputGitAuthor.InputGitAuthor.__init__`.
-
         :param name: string
         :param email: string
         :param date: string

@@ -35,8 +35,6 @@ DEFAULT_TIMEOUT = 10
 class Github(object):
     def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None):
         """
-        Please edit this generated docstring for method :func:`Github.__init__`.
-
         :param login_or_token: string
         :param password: string
         :param base_url: string
@@ -48,8 +46,8 @@ class Github(object):
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
         assert password is None or isinstance(password, (str, unicode)), password
-        assert base_url is None or isinstance(base_url, (str, unicode)), base_url
-        assert timeout is None or isinstance(timeout, (int, long)), timeout
+        assert isinstance(base_url, (str, unicode)), base_url
+        assert isinstance(timeout, (int, long)), timeout
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
