@@ -9,10 +9,10 @@ python3 setup.py test --quiet
 coverage run --branch "--include=build/lib.linux-x86_64-2.7/github/*.py" "--omit=build/lib.linux-x86_64-2.7/github/tests/*.py" setup.py test --quiet
 coverage report --show-missing
 
-previousVersion=$( grep 'version=' setup.py | sed 's/.*version=\"\(.*\)\".*/\1/' )
+previousVersion=$( grep 'version =' setup.py | sed 's/.*version =\"\(.*\)\".*/\1/' )
 echo "Next version number? (previous: '$previousVersion')"
 read version
-sed -i -b "s/version=.*/version=\"$version\",/" setup.py
+sed -i -b "s/version = .*/version = \"$version\"/" setup.py
 git add setup.py
 
 git log v$previousVersion.. --oneline
