@@ -74,7 +74,7 @@ class PaginatedList(PaginatedListBase):
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
-        self.__firstParams = firstParams
+        self.__firstParams = firstParams or ()
         self.__nextUrl = firstUrl
         self.__nextParams = firstParams
 
