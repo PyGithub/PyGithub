@@ -71,11 +71,18 @@ class Github(object):
         )
         return github.Organization.Organization(self.__requester, data, completed=True)
 
-    def get_repo(self, full_name):
-        assert isinstance(full_name, (str, unicode)), full_name
+    def get_repo(self, repo_name, user_name=None):
+        assert isinstance(repo_name, (str, unicode)), repo_name
+
+
+        if user_name is not None:
+            url = "/repos/%s/%s" % (user_name, repo_name)
+        else:
+            url = "/repos/%s" % repo_name
+        
         headers, data = self.__requester.requestAndCheck(
             "GET",
-            "/repos/" + full_name,
+            url,
             None,
             None
         )
