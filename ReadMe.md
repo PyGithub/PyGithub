@@ -13,14 +13,10 @@ What's new?
 
 [![Build Status](https://travis-ci.org/jacquev6/PyGithub.png?branch=master)](https://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.10.0](https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed) (December 25th, 2012) (Christmas 2012 edition)
---------------------------------------------------------------------------------------------------------------------------------------
+[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (January 31st, 2013)
+------------------------------------------------------------------------------------------------------------
 
-* Major improvement: support Python 3! PyGithub is automaticaly tested on [Travis](http://travis-ci.org/jacquev6/PyGithub) with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
-* Add a shortcut function `Github.get_repo` to get a repo directly from its full name. thank you [lwc](https://github.com/lwc) for the contribution
-* `Github.get_gitignore_templates` and `Github.get_gitignore_template` for APIs `/gitignore/templates`
-* Add the optional `ref` parameter to `Repository.get_contents` and `get_readme`. Thank you [fixxxeruk](https://github.com/fixxxeruk) for the contribution
-* Get comments for all issues and all pull requests on a repository (`GET /repos/:user/:repo/pulls/comments`: `Repository.get_pulls_comments` or `Repository.get_pulls_review_comments`; `GET /repos/:user/:repo/issues/comments`: `Repository.get_issues_comments`)
+* Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)
 
 Previous versions
 -----------------
