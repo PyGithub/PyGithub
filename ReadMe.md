@@ -71,6 +71,7 @@ Projects using PyGithub
 ([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
 * [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
+* [Notifico](http://n.tkte.ch) receives messages (such as commits and issues) from services and scripts and delivers them to IRC channels. It can import/sync from Github.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
 * https://github.com/CMB/cligh
 * https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues
