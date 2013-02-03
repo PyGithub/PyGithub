@@ -896,6 +896,10 @@ Orgs
 ----
 * `get_orgs()`: `PaginatedList` of `Organization`
 
+Keys
+----
+* `get_keys()`: `PaginatedList` of `UserKey`
+
 Repos
 -----
 * `get_repo( name )`: `Repository`

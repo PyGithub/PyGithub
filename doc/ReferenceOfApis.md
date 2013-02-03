@@ -577,6 +577,10 @@ API `/users/:user/gists`
 * GET: `NamedUser.get_gists`
 * POST: `NamedUser.create_gist`
 
+API `/users/:user/keys`
+=======================
+* GET: `NamedUser.get_keys`
+
 API `/users/:user/orgs`
 =======================
 * GET: `NamedUser.get_orgs`

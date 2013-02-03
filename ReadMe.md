@@ -17,6 +17,7 @@ What's new?
 ------------------------------------------------------------------------------------------------------------
 
 * Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)
+* [Implement](https://github.com/jacquev6/PyGithub/issues/130) `NamedUser.get_keys`
 
 Previous versions
 -----------------
