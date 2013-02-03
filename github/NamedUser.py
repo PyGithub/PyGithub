@@ -205,6 +205,14 @@ class NamedUser(github.GithubObject.GithubObject):
             None
         )
 
+    def get_keys(self):
+        return github.PaginatedList.PaginatedList(
+            github.UserKey.UserKey,
+            self._requester,
+            self.url + "/keys",
+            None
+        )
+
     def get_orgs(self):
         return github.PaginatedList.PaginatedList(
             github.Organization.Organization,
