@@ -32,7 +32,7 @@ class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull
         for pull in self.repo.get_pulls('closed'):
             if pull.number == 204:
                 user = pull.head.user
-                self.assertIsNone(user)
+                self.assertEqual(user, None)
                 # Should be:
                 # self.assertEqual(user.login, 'imcf')
                 # self.assertEqual(user.type, 'Organization')
