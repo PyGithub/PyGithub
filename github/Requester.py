@@ -74,18 +74,16 @@ class Requester:
         self.__userAgent = user_agent
 
     def requestJsonAndCheck(self, verb, url, parameters, input):
-        status, headers, output = self.requestJson(verb, url, parameters, input)
-        output = self.__structuredFromJson(output)
-        if status >= 400:
-            raise GithubException.GithubException(status, output)
-        return headers, output
+        return self.__check(*self.requestJson(verb, url, parameters, input))
 
-    def requestMultipartAndCheck(self, verb, url, requestHeaders, input):
-        status, headers, output = self.requestMultipart(verb, url, requestHeaders, input)
+    def requestMultipartAndCheck(self, verb, url, parameters, input):
+        return self.__check(*self.requestMultipart(verb, url, parameters, input))
+
+    def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise GithubException.GithubException(status, output)
-        return headers, output
+        return responseHeaders, output
 
     def __structuredFromJson(self, data):
         if len(data) == 0:
@@ -94,63 +92,52 @@ class Requester:
             return json.loads(data)
 
     def requestJson(self, verb, url, parameters, input):
-        assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
-        if parameters is None:
-            parameters = dict()
+        def encode(input):
+            return "application/json", json.dumps(input)
 
-        requestHeaders = dict()
-        self.__authenticate(requestHeaders, parameters)
-        if self.__userAgent is not None:
-            requestHeaders["User-Agent"] = self.__userAgent
-
-        url = self.__makeAbsoluteUrl(url)
-        url = self.__addParametersToUrl(url, parameters)
-
-        if input is not None:
-            requestHeaders["Content-Type"] = "application/json"
-
-        status, responseHeaders, output = self.requestRaw(verb, url, requestHeaders, json.dumps(input))
-
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
-
-        return status, responseHeaders, output
+        return self.__requestEncode(verb, url, parameters, input, encode)
 
     def requestMultipart(self, verb, url, parameters, input):
-        assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
-        if parameters is None:
-            parameters = dict()
+        def encode(input):
+            boundary = "----------------------------3c3ba8b523b2"
+            eol = "\r\n"
 
-        requestHeaders = dict()
-        self.__authenticate(requestHeaders, parameters)
-        if self.__userAgent is not None:
-            requestHeaders["User-Agent"] = self.__userAgent
-
-        url = self.__makeAbsoluteUrl(url)
-        url = self.__addParametersToUrl(url, parameters)
-
-        boundary = "----------------------------3c3ba8b523b2"
-        eol = "\r\n"
-
-        encoded_input = ""
-        if input is not None:
-            requestHeaders["Content-Type"] = "multipart/form-data; boundary=" + boundary
-
+            encoded_input = ""
             for name, value in input.iteritems():
                 encoded_input += "--" + boundary + eol
                 encoded_input +=  "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol
                 encoded_input += value + eol
             encoded_input += "--" + boundary + "--" + eol
+            return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        status, responseHeaders, output = self.requestRaw(verb, url, requestHeaders, encoded_input)
+        return self.__requestEncode(verb, url, parameters, input, encode)
+
+    def __requestEncode(self, verb, url, parameters, input, encode):
+        assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
+        if parameters is None:
+            parameters = dict()
+
+        requestHeaders = dict()
+        self.__authenticate(requestHeaders, parameters)
+        if self.__userAgent is not None:
+            requestHeaders["User-Agent"] = self.__userAgent
+
+        url = self.__makeAbsoluteUrl(url)
+        url = self.__addParametersToUrl(url, parameters)
+
+        encoded_input = "null"
+        if input is not None:
+            requestHeaders["Content-Type"], encoded_input = encode(input)
+
+        status, responseHeaders, output = self.__requestRaw(verb, url, requestHeaders, encoded_input)
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
 
         return status, responseHeaders, output
 
-    def requestRaw(self, verb, url, requestHeaders, input):
+    def __requestRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
         cnx.request(
             verb,
