@@ -20,6 +20,7 @@ Another argument, that can be passed is `timeout` which has default value `10`.
 Attributes
 ----------
 * `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
+* `oauth_scopes`: None or list of string: when using oauth, after the first request, the list of scopes of the token (see http://developer.github.com/v3/oauth/#scopes)
 
 Methods
 -------

@@ -48,6 +48,10 @@ class Github(object):
     def rate_limiting(self):
         return self.__requester.rate_limiting
 
+    @property
+    def oauth_scopes(self):
+        return self.__requester.oauth_scopes
+
     def get_user(self, login=github.GithubObject.NotSet):
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:

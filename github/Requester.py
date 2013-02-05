@@ -69,6 +69,8 @@ class Requester:
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
 
+        self.oauth_scopes = None
+
         self.__clientId = client_id
         self.__clientSecret = client_secret
         self.__userAgent = user_agent
@@ -134,6 +136,9 @@ class Requester:
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+
+        if "x-oauth-scopes" in responseHeaders:
+            self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
 
         return status, responseHeaders, output
 
