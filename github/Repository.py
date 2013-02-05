@@ -200,7 +200,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def add_to_collaborators(self, collaborator):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator._identity,
             None,
@@ -210,7 +210,7 @@ class Repository(github.GithubObject.GithubObject):
     def compare(self, base, head):
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/compare/" + base + "..." + head,
             None,
@@ -231,7 +231,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if content_type is not github.GithubObject.NotSet:
             post_parameters["content_type"] = content_type
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/downloads",
             None,
@@ -246,7 +246,7 @@ class Repository(github.GithubObject.GithubObject):
             "content": content,
             "encoding": encoding,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/blobs",
             None,
@@ -269,7 +269,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["author"] = author._identity
         if committer is not github.GithubObject.NotSet:
             post_parameters["committer"] = committer._identity
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/commits",
             None,
@@ -284,7 +284,7 @@ class Repository(github.GithubObject.GithubObject):
             "ref": ref,
             "sha": sha,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/refs",
             None,
@@ -306,7 +306,7 @@ class Repository(github.GithubObject.GithubObject):
         }
         if tagger is not github.GithubObject.NotSet:
             post_parameters["tagger"] = tagger._identity
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/tags",
             None,
@@ -322,7 +322,7 @@ class Repository(github.GithubObject.GithubObject):
         }
         if base_tree is not github.GithubObject.NotSet:
             post_parameters["base_tree"] = base_tree._identity
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/trees",
             None,
@@ -343,7 +343,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["events"] = events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/hooks",
             None,
@@ -368,7 +368,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = [element.name for element in labels]
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/issues",
             None,
@@ -383,7 +383,7 @@ class Repository(github.GithubObject.GithubObject):
             "title": title,
             "key": key,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/keys",
             None,
@@ -398,7 +398,7 @@ class Repository(github.GithubObject.GithubObject):
             "name": name,
             "color": color,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
             None,
@@ -420,7 +420,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
             None,
@@ -449,7 +449,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def __create_pull(self, **kwds):
         post_parameters = kwds
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/pulls",
             None,
@@ -458,7 +458,7 @@ class Repository(github.GithubObject.GithubObject):
         return github.PullRequest.PullRequest(self._requester, data, completed=True)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -491,7 +491,7 @@ class Repository(github.GithubObject.GithubObject):
             post_parameters["has_downloads"] = has_downloads
         if default_branch is not github.GithubObject.NotSet:
             post_parameters["default_branch"] = default_branch
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -505,7 +505,7 @@ class Repository(github.GithubObject.GithubObject):
         url = self.url + "/" + archive_format
         if ref is not github.GithubObject.NotSet:
             url += "/" + ref
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             url,
             None,
@@ -523,7 +523,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_branch(self, branch):
         assert isinstance(branch, (str, unicode)), branch
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/branches/" + branch,
             None,
@@ -549,7 +549,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_comment(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
             None,
@@ -567,7 +567,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_commit(self, sha):
         assert isinstance(sha, (str, unicode)), sha
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/commits/" + sha,
             None,
@@ -596,7 +596,7 @@ class Repository(github.GithubObject.GithubObject):
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/contents" + path,
             url_parameters,
@@ -614,7 +614,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_download(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/downloads/" + str(id),
             None,
@@ -648,7 +648,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_git_blob(self, sha):
         assert isinstance(sha, (str, unicode)), sha
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/blobs/" + sha,
             None,
@@ -658,7 +658,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_git_commit(self, sha):
         assert isinstance(sha, (str, unicode)), sha
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/commits/" + sha,
             None,
@@ -671,7 +671,7 @@ class Repository(github.GithubObject.GithubObject):
         if not self._requester.FIX_REPO_GET_GIT_REF:
             prefix = "/git/"
         assert isinstance(ref, (str, unicode)), ref
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + prefix + ref,
             None,
@@ -689,7 +689,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_git_tag(self, sha):
         assert isinstance(sha, (str, unicode)), sha
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/tags/" + sha,
             None,
@@ -703,7 +703,7 @@ class Repository(github.GithubObject.GithubObject):
         url_parameters = dict()
         if recursive is not github.GithubObject.NotSet:
             url_parameters["recursive"] = recursive
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/trees/" + sha,
             url_parameters,
@@ -713,7 +713,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_hook(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/hooks/" + str(id),
             None,
@@ -731,7 +731,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_issue(self, number):
         assert isinstance(number, (int, long)), number
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/" + str(number),
             None,
@@ -798,7 +798,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_issues_event(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/events/" + str(id),
             None,
@@ -816,7 +816,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_key(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/keys/" + str(id),
             None,
@@ -834,7 +834,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_label(self, name):
         assert isinstance(name, (str, unicode)), name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/labels/" + urllib.quote(name),
             None,
@@ -851,7 +851,7 @@ class Repository(github.GithubObject.GithubObject):
         )
 
     def get_languages(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/languages",
             None,
@@ -861,7 +861,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_milestone(self, number):
         assert isinstance(number, (int, long)), number
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/milestones/" + str(number),
             None,
@@ -897,7 +897,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def get_pull(self, number):
         assert isinstance(number, (int, long)), number
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/pulls/" + str(number),
             None,
@@ -943,7 +943,7 @@ class Repository(github.GithubObject.GithubObject):
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/readme",
             url_parameters,
@@ -993,7 +993,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def has_in_assignees(self, assignee):
         assert isinstance(assignee, github.NamedUser.NamedUser), assignee
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/assignees/" + assignee._identity,
             None,
@@ -1003,7 +1003,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def has_in_collaborators(self, collaborator):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/collaborators/" + collaborator._identity,
             None,
@@ -1014,7 +1014,7 @@ class Repository(github.GithubObject.GithubObject):
     def legacy_search_issues(self, state, keyword):
         assert state in ["open", "closed"], state
         assert isinstance(keyword, (str, unicode)), keyword
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword),
             None,
@@ -1035,7 +1035,7 @@ class Repository(github.GithubObject.GithubObject):
         }
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/merges",
             None,
@@ -1048,7 +1048,7 @@ class Repository(github.GithubObject.GithubObject):
 
     def remove_from_collaborators(self, collaborator):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/collaborators/" + collaborator._identity,
             None,
@@ -1092,7 +1092,7 @@ class Repository(github.GithubObject.GithubObject):
             "Content-Length": len(input),
         }
 
-        responseHeaders, output = self._requester.requestAndCheckReallyRaw(
+        responseHeaders, output = self._requester.requestRawAndCheck(
             "POST",
             "/hub",
             requestHeaders,

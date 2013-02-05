@@ -119,7 +119,7 @@ class Issue(github.GithubObject.GithubObject):
     def add_to_labels(self, *labels):
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
             None,
@@ -131,7 +131,7 @@ class Issue(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -140,7 +140,7 @@ class Issue(github.GithubObject.GithubObject):
         return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def delete_labels(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels",
             None,
@@ -167,7 +167,7 @@ class Issue(github.GithubObject.GithubObject):
             post_parameters["milestone"] = milestone._identity if milestone else ''
         if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = labels
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -177,7 +177,7 @@ class Issue(github.GithubObject.GithubObject):
 
     def get_comment(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
             None,
@@ -211,7 +211,7 @@ class Issue(github.GithubObject.GithubObject):
 
     def remove_from_labels(self, label):
         assert isinstance(label, github.Label.Label), label
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels/" + label._identity,
             None,
@@ -221,7 +221,7 @@ class Issue(github.GithubObject.GithubObject):
     def set_labels(self, *labels):
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",
             None,

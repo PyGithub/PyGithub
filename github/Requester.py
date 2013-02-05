@@ -73,8 +73,8 @@ class Requester:
         self.__clientSecret = client_secret
         self.__userAgent = user_agent
 
-    def requestAndCheck(self, verb, url, parameters, input):
-        status, headers, output = self.requestRaw(verb, url, parameters, input)
+    def requestJsonAndCheck(self, verb, url, parameters, input):
+        status, headers, output = self.requestJson(verb, url, parameters, input)
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise GithubException.GithubException(status, output)
@@ -86,7 +86,7 @@ class Requester:
         else:
             return json.loads(data)
 
-    def requestRaw(self, verb, url, parameters, input):
+    def requestJson(self, verb, url, parameters, input):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -102,21 +102,21 @@ class Requester:
         if input is not None:
             requestHeaders["Content-Type"] = "application/json"
 
-        status, responseHeaders, output = self.requestReallyRaw(verb, url, requestHeaders, json.dumps(input))
+        status, responseHeaders, output = self.requestRaw(verb, url, requestHeaders, json.dumps(input))
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
 
         return status, responseHeaders, output
 
-    def requestAndCheckReallyRaw(self, verb, url, requestHeaders, input):
-        status, headers, output = self.requestReallyRaw(verb, url, requestHeaders, input)
+    def requestRawAndCheck(self, verb, url, requestHeaders, input):
+        status, headers, output = self.requestRaw(verb, url, requestHeaders, input)
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise GithubException.GithubException(status, output)
         return headers, output
 
-    def requestReallyRaw(self, verb, url, requestHeaders, input):
+    def requestRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
         cnx.request(
             verb,

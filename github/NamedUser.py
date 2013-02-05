@@ -165,7 +165,7 @@ class NamedUser(github.GithubObject.GithubObject):
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/gists",
             None,
@@ -247,7 +247,7 @@ class NamedUser(github.GithubObject.GithubObject):
 
     def get_repo(self, name):
         assert isinstance(name, (str, unicode)), name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name,
             None,
