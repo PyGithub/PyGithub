@@ -143,8 +143,6 @@ class Requester:
                 encoded_input += value + eol
             encoded_input += "--" + boundary + "--" + eol
 
-            requestHeaders["Content-Length"] = len(encoded_input)
-
         status, responseHeaders, output = self.requestRaw(verb, url, requestHeaders, encoded_input)
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
