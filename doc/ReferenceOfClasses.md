@@ -1420,6 +1420,16 @@ Modification
     * `has_downloads`: bool
     * `default_branch`: string
 
+PubSubHubbub
+------------
+* `subscribe_to_hub( event, callback, [secret] )`
+    * `event`: string
+    * `callback`: string
+    * `secret`: string
+* `unsubscribe_from_hub( event, callback )`
+    * `event`: string
+    * `callback`: string
+
 Pulls
 -----
 * `create_pull( < title, body, base, head > or < issue, base, head > )`: `PullRequest`

@@ -65,6 +65,10 @@ API `/hooks`
 ============
 * GET: `Github.get_hooks`
 
+API `/hub`
+============
+* POST: `Repository.subscribe_to_hub` or `Repository.unsubscribe_from_hub`
+
 API `/issues`
 =============
 * GET: `AuthenticatedUser.get_issues`

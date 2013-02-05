@@ -1055,6 +1055,50 @@ class Repository(github.GithubObject.GithubObject):
             None
         )
 
+    def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
+        return self._hub("subscribe", event, callback, secret)
+
+    def unsubscribe_from_hub(self, event, callback):
+        return self._hub("unsubscribe", event, callback, github.GithubObject.NotSet)
+
+    def _hub(self, mode, event, callback, secret):
+        assert isinstance(mode, (str, unicode)), mode
+        assert isinstance(event, (str, unicode)), event
+        assert isinstance(callback, (str, unicode)), callback
+        assert secret is github.GithubObject.NotSet or isinstance(secret, (str, unicode)), secret
+
+        boundary = "----------------------------3c3ba8b523b2"
+        eol = "\r\n"
+
+        post_parameters = {
+            "hub.mode": mode,
+            "hub.topic": "https://github.com/" + self._full_name + "/events/" + event,
+            "hub.callback": callback,
+        }
+        if secret is not github.GithubObject.NotSet:
+            post_parameters["hub.secret"] = secret
+
+        input = ""
+        for name, value in post_parameters.iteritems():
+            input += "--" + boundary + eol
+            input +=  "Content-Disposition: form-data; name=\"" + name + "\"" + eol
+            input += eol
+            input += value + eol
+        input += "--" + boundary + "--" + eol
+
+        requestHeaders = {
+            "Authorization": "Basic amFjcXVldjY6Y2xhdmllcg==",
+            "Content-Type": "multipart/form-data; boundary=" + boundary,
+            "Content-Length": len(input),
+        }
+
+        responseHeaders, output = self._requester.requestAndCheckReallyRaw(
+            "POST",
+            "/hub",
+            requestHeaders,
+            input,
+        )
+
     @property
     def _identity(self):
         return self.owner.login + "/" + self.name

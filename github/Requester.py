@@ -102,11 +102,26 @@ class Requester:
         if input is not None:
             requestHeaders["Content-Type"] = "application/json"
 
+        status, responseHeaders, output = self.requestReallyRaw(verb, url, requestHeaders, json.dumps(input))
+
+        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
+            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+
+        return status, responseHeaders, output
+
+    def requestAndCheckReallyRaw(self, verb, url, requestHeaders, input):
+        status, headers, output = self.requestReallyRaw(verb, url, requestHeaders, input)
+        output = self.__structuredFromJson(output)
+        if status >= 400:
+            raise GithubException.GithubException(status, output)
+        return headers, output
+
+    def requestReallyRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
         cnx.request(
             verb,
             url,
-            json.dumps(input),
+            input,
             requestHeaders
         )
         response = cnx.getresponse()
@@ -116,9 +131,6 @@ class Requester:
         output = response.read()
 
         cnx.close()
-
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 

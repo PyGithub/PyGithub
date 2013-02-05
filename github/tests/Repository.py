@@ -438,3 +438,19 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_pulls_comments(), lambda c: c.id, [1580134])
         self.assertListKeyEqual(self.repo.get_pulls_comments(sort="created", direction="asc"), lambda c: c.id, [1580134])
         self.assertListKeyEqual(self.repo.get_pulls_comments(since=datetime.datetime(2012, 5, 28, 23, 0, 0)), lambda c: c.id, [1580134])
+
+    def testSubscribePubSubHubbub(self):
+        self.repo.subscribe_to_hub("push", "http://requestb.in/1bc1sc61", "my_secret")
+
+    def testBadSubscribePubSubHubbub(self):
+        raised = False
+        try:
+            self.repo.subscribe_to_hub("non-existing-event", "http://requestb.in/1bc1sc61")
+        except github.GithubException, exception:
+            raised = True
+            self.assertEqual(exception.status, 422)
+            self.assertEqual(exception.data, {"message": "Invalid event: \"non-existing-event\""})
+        self.assertTrue(raised)
+
+    def testUnsubscribePubSubHubbub(self):
+        self.repo.unsubscribe_from_hub("push", "http://requestb.in/1bc1sc61")

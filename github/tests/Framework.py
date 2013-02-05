@@ -57,7 +57,7 @@ class RecordingConnection:  # pragma no cover
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
         fixAuthorizationHeader(headers)
-        self.__file.write(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input + "\n")
+        self.__file.write(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', '') + "\n")
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -103,7 +103,7 @@ class ReplayingConnection:
     def request(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
         expectation = self.__file.readline().strip()
-        self.__testCase.assertEqual(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input, expectation)
+        self.__testCase.assertEqual(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', ''), expectation)
 
     def getresponse(self):
         status = int(self.__file.readline().strip())
