@@ -1067,9 +1067,6 @@ class Repository(github.GithubObject.GithubObject):
         assert isinstance(callback, (str, unicode)), callback
         assert secret is github.GithubObject.NotSet or isinstance(secret, (str, unicode)), secret
 
-        boundary = "----------------------------3c3ba8b523b2"
-        eol = "\r\n"
-
         post_parameters = {
             "hub.mode": mode,
             "hub.topic": "https://github.com/" + self._full_name + "/events/" + event,
@@ -1078,25 +1075,11 @@ class Repository(github.GithubObject.GithubObject):
         if secret is not github.GithubObject.NotSet:
             post_parameters["hub.secret"] = secret
 
-        input = ""
-        for name, value in post_parameters.iteritems():
-            input += "--" + boundary + eol
-            input +=  "Content-Disposition: form-data; name=\"" + name + "\"" + eol
-            input += eol
-            input += value + eol
-        input += "--" + boundary + "--" + eol
-
-        requestHeaders = {
-            "Authorization": "Basic amFjcXVldjY6Y2xhdmllcg==",
-            "Content-Type": "multipart/form-data; boundary=" + boundary,
-            "Content-Length": len(input),
-        }
-
-        responseHeaders, output = self._requester.requestRawAndCheck(
+        responseHeaders, output = self._requester.requestMultipartAndCheck(
             "POST",
             "/hub",
-            requestHeaders,
-            input,
+            None,
+            post_parameters,
         )
 
     @property

@@ -80,6 +80,13 @@ class Requester:
             raise GithubException.GithubException(status, output)
         return headers, output
 
+    def requestMultipartAndCheck(self, verb, url, requestHeaders, input):
+        status, headers, output = self.requestMultipart(verb, url, requestHeaders, input)
+        output = self.__structuredFromJson(output)
+        if status >= 400:
+            raise GithubException.GithubException(status, output)
+        return headers, output
+
     def __structuredFromJson(self, data):
         if len(data) == 0:
             return None
@@ -109,12 +116,41 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def requestRawAndCheck(self, verb, url, requestHeaders, input):
-        status, headers, output = self.requestRaw(verb, url, requestHeaders, input)
-        output = self.__structuredFromJson(output)
-        if status >= 400:
-            raise GithubException.GithubException(status, output)
-        return headers, output
+    def requestMultipart(self, verb, url, parameters, input):
+        assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
+        if parameters is None:
+            parameters = dict()
+
+        requestHeaders = dict()
+        self.__authenticate(requestHeaders, parameters)
+        if self.__userAgent is not None:
+            requestHeaders["User-Agent"] = self.__userAgent
+
+        url = self.__makeAbsoluteUrl(url)
+        url = self.__addParametersToUrl(url, parameters)
+
+        boundary = "----------------------------3c3ba8b523b2"
+        eol = "\r\n"
+
+        encoded_input = ""
+        if input is not None:
+            requestHeaders["Content-Type"] = "multipart/form-data; boundary=" + boundary
+
+            for name, value in input.iteritems():
+                encoded_input += "--" + boundary + eol
+                encoded_input +=  "Content-Disposition: form-data; name=\"" + name + "\"" + eol
+                encoded_input += eol
+                encoded_input += value + eol
+            encoded_input += "--" + boundary + "--" + eol
+
+            requestHeaders["Content-Length"] = len(encoded_input)
+
+        status, responseHeaders, output = self.requestRaw(verb, url, requestHeaders, encoded_input)
+
+        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
+            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+
+        return status, responseHeaders, output
 
     def requestRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
