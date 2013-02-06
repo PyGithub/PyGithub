@@ -146,7 +146,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def add_to_public_members(self, public_member):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/public_members/" + public_member._identity,
             None,
@@ -158,7 +158,7 @@ class Organization(github.GithubObject.GithubObject):
         url_parameters = {
             "org": self.login,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             url_parameters,
@@ -198,7 +198,7 @@ class Organization(github.GithubObject.GithubObject):
             post_parameters["auto_init"] = auto_init
         if gitignore_template is not github.GithubObject.NotSet:
             post_parameters["gitignore_template"] = gitignore_template
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/repos",
             None,
@@ -217,7 +217,7 @@ class Organization(github.GithubObject.GithubObject):
             post_parameters["repo_names"] = [element._identity for element in repo_names]
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
             None,
@@ -245,7 +245,7 @@ class Organization(github.GithubObject.GithubObject):
             post_parameters["location"] = location
         if name is not github.GithubObject.NotSet:
             post_parameters["name"] = name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -279,7 +279,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def get_repo(self, name):
         assert isinstance(name, (str, unicode)), name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name,
             None,
@@ -301,7 +301,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def get_team(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/teams/" + str(id),
             None,
@@ -319,7 +319,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def has_in_members(self, member):
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/members/" + member._identity,
             None,
@@ -329,7 +329,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def has_in_public_members(self, public_member):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/public_members/" + public_member._identity,
             None,
@@ -339,7 +339,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def remove_from_members(self, member):
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
@@ -348,7 +348,7 @@ class Organization(github.GithubObject.GithubObject):
 
     def remove_from_public_members(self, public_member):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/public_members/" + public_member._identity,
             None,

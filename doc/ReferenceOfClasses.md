@@ -20,6 +20,7 @@ Another argument, that can be passed is `timeout` which has default value `10`.
 Attributes
 ----------
 * `rate_limiting`: tuple of two integers: remaining and limit, as explained in [Rate Limiting](http://developer.github.com/v3/#rate-limiting)
+* `oauth_scopes`: None or list of string: when using oauth, after the first request, the list of scopes of the token (see http://developer.github.com/v3/oauth/#scopes)
 
 Methods
 -------
@@ -896,6 +897,10 @@ Orgs
 ----
 * `get_orgs()`: `PaginatedList` of `Organization`
 
+Keys
+----
+* `get_keys()`: `PaginatedList` of `UserKey`
+
 Repos
 -----
 * `get_repo( name )`: `Repository`
@@ -1415,6 +1420,16 @@ Modification
     * `has_wiki`: bool
     * `has_downloads`: bool
     * `default_branch`: string
+
+PubSubHubbub
+------------
+* `subscribe_to_hub( event, callback, [secret] )`
+    * `event`: string
+    * `callback`: string
+    * `secret`: string
+* `unsubscribe_from_hub( event, callback )`
+    * `event`: string
+    * `callback`: string
 
 Pulls
 -----

@@ -35,7 +35,7 @@ class GitRef(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -50,7 +50,7 @@ class GitRef(github.GithubObject.GithubObject):
         }
         if force is not github.GithubObject.NotSet:
             post_parameters["force"] = force
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

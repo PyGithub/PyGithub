@@ -65,7 +65,7 @@ class Hook(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -91,7 +91,7 @@ class Hook(github.GithubObject.GithubObject):
             post_parameters["remove_events"] = remove_events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -100,7 +100,7 @@ class Hook(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def test(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/test",
             None,

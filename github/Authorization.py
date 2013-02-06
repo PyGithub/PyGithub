@@ -65,7 +65,7 @@ class Authorization(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -89,7 +89,7 @@ class Authorization(github.GithubObject.GithubObject):
             post_parameters["note"] = note
         if note_url is not github.GithubObject.NotSet:
             post_parameters["note_url"] = note_url
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

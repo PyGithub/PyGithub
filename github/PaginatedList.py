@@ -74,7 +74,7 @@ class PaginatedList(PaginatedListBase):
         self.__requester = requester
         self.__contentClass = contentClass
         self.__firstUrl = firstUrl
-        self.__firstParams = firstParams
+        self.__firstParams = firstParams or ()
         self.__nextUrl = firstUrl
         self.__nextParams = firstParams
 
@@ -82,7 +82,7 @@ class PaginatedList(PaginatedListBase):
         return self.__nextUrl is not None
 
     def _fetchNextPage(self):
-        headers, data = self.__requester.requestAndCheck("GET", self.__nextUrl, self.__nextParams, None)
+        headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
 
         links = self.__parseLinkHeader(headers)
         if len(data) > 0 and "next" in links:
@@ -111,7 +111,7 @@ class PaginatedList(PaginatedListBase):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
-        headers, data = self.__requester.requestAndCheck("GET", self.__firstUrl, params, None)
+        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
 
         return [
             self.__contentClass(self.__requester, element, completed=False)

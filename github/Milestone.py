@@ -79,7 +79,7 @@ class Milestone(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -100,7 +100,7 @@ class Milestone(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

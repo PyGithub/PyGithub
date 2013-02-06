@@ -48,12 +48,16 @@ class Github(object):
     def rate_limiting(self):
         return self.__requester.rate_limiting
 
+    @property
+    def oauth_scopes(self):
+        return self.__requester.oauth_scopes
+
     def get_user(self, login=github.GithubObject.NotSet):
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
         else:
-            headers, data = self.__requester.requestAndCheck(
+            headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 "/users/" + login,
                 None,
@@ -63,7 +67,7 @@ class Github(object):
 
     def get_organization(self, login):
         assert isinstance(login, (str, unicode)), login
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/orgs/" + login,
             None,
@@ -73,7 +77,7 @@ class Github(object):
 
     def get_repo(self, full_name):
         assert isinstance(full_name, (str, unicode)), full_name
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/repos/" + full_name,
             None,
@@ -83,7 +87,7 @@ class Github(object):
 
     def get_gist(self, id):
         assert isinstance(id, (str, unicode)), id
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gists/" + id,
             None,
@@ -125,7 +129,7 @@ class Github(object):
 
     def legacy_search_user_by_email(self, email):
         assert isinstance(email, (str, unicode)), email
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/legacy/user/email/" + email,
             None,
@@ -142,7 +146,7 @@ class Github(object):
         if context is not github.GithubObject.NotSet:
             post_parameters["mode"] = "gfm"
             post_parameters["context"] = context._identity
-        status, headers, data = self.__requester.requestRaw(
+        status, headers, data = self.__requester.requestJson(
             "POST",
             "/markdown",
             None,
@@ -151,7 +155,7 @@ class Github(object):
         return data
 
     def get_hooks(self):
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/hooks",
             None,
@@ -160,7 +164,7 @@ class Github(object):
         return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
 
     def get_gitignore_templates(self):
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates",
             None,
@@ -170,7 +174,7 @@ class Github(object):
 
     def get_gitignore_template(self, name):
         assert isinstance(name, (str, unicode)), name
-        headers, attributes = self.__requester.requestAndCheck(
+        headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates/" + name,
             None,

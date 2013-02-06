@@ -13,14 +13,13 @@ What's new?
 
 [![Build Status](https://travis-ci.org/jacquev6/PyGithub.png?branch=master)](https://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.10.0](https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed) (December 25th, 2012) (Christmas 2012 edition)
---------------------------------------------------------------------------------------------------------------------------------------
+[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (January 31st, 2013)
+------------------------------------------------------------------------------------------------------------
 
-* Major improvement: support Python 3! PyGithub is automaticaly tested on [Travis](http://travis-ci.org/jacquev6/PyGithub) with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
-* Add a shortcut function `Github.get_repo` to get a repo directly from its full name. thank you [lwc](https://github.com/lwc) for the contribution
-* `Github.get_gitignore_templates` and `Github.get_gitignore_template` for APIs `/gitignore/templates`
-* Add the optional `ref` parameter to `Repository.get_contents` and `get_readme`. Thank you [fixxxeruk](https://github.com/fixxxeruk) for the contribution
-* Get comments for all issues and all pull requests on a repository (`GET /repos/:user/:repo/pulls/comments`: `Repository.get_pulls_comments` or `Repository.get_pulls_review_comments`; `GET /repos/:user/:repo/issues/comments`: `Repository.get_issues_comments`)
+* Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)
+* [Implement](https://github.com/jacquev6/PyGithub/issues/130) `NamedUser.get_keys`
+* [Support PubSubHub](https://github.com/jacquev6/PyGithub/issues/129): `Repository.subscribe_to_hub` and `Repository.unsubscribe_from_hub`
+* [Publish the oauth scopes](https://github.com/jacquev6/PyGithub/issues/134) in Github.oauth_scopes, thank you [ bilderbuchi](https://github.com/ bilderbuchi) for asking
 
 Previous versions
 -----------------
@@ -75,6 +74,7 @@ Projects using PyGithub
 ([Open an issue](https://github.com/jacquev6/PyGithub/issues) if you want to be listed here, I'll be glad to add your project)
 
 * [Upverter](https://upverter.com) is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
+* [Notifico](http://n.tkte.ch) receives messages (such as commits and issues) from services and scripts and delivers them to IRC channels. It can import/sync from Github.
 * [Tratihubis](http://pypi.python.org/pypi/tratihubis/) converts Trac tickets to Github issues
 * https://github.com/CMB/cligh
 * https://github.com/natduca/quickopen uses PyGithub to automaticaly create issues

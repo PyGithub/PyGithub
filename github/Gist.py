@@ -103,7 +103,7 @@ class Gist(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -112,7 +112,7 @@ class Gist(github.GithubObject.GithubObject):
         return github.GistComment.GistComment(self._requester, data, completed=True)
 
     def create_fork(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/fork",
             None,
@@ -121,7 +121,7 @@ class Gist(github.GithubObject.GithubObject):
         return Gist(self._requester, data, completed=True)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -136,7 +136,7 @@ class Gist(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if files is not github.GithubObject.NotSet:
             post_parameters["files"] = dict((key, value._identity) for key, value in files.iteritems())
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -146,7 +146,7 @@ class Gist(github.GithubObject.GithubObject):
 
     def get_comment(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
             None,
@@ -163,7 +163,7 @@ class Gist(github.GithubObject.GithubObject):
         )
 
     def is_starred(self):
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/star",
             None,
@@ -172,7 +172,7 @@ class Gist(github.GithubObject.GithubObject):
         return status == 204
 
     def reset_starred(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/star",
             None,
@@ -180,7 +180,7 @@ class Gist(github.GithubObject.GithubObject):
         )
 
     def set_starred(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/star",
             None,

@@ -51,7 +51,7 @@ class RepositoryKey(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._verified)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.__customUrl,
             None,
@@ -66,7 +66,7 @@ class RepositoryKey(github.GithubObject.GithubObject):
             post_parameters["title"] = title
         if key is not github.GithubObject.NotSet:
             post_parameters["key"] = key
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.__customUrl,
             None,

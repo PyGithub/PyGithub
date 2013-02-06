@@ -175,7 +175,7 @@ class PullRequest(github.GithubObject.GithubObject):
             "path": path,
             "position": position,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -188,7 +188,7 @@ class PullRequest(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
             None,
@@ -207,7 +207,7 @@ class PullRequest(github.GithubObject.GithubObject):
             post_parameters["body"] = body
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -220,7 +220,7 @@ class PullRequest(github.GithubObject.GithubObject):
 
     def get_review_comment(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
             None,
@@ -257,7 +257,7 @@ class PullRequest(github.GithubObject.GithubObject):
 
     def get_issue_comment(self, id):
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id),
             None,
@@ -274,7 +274,7 @@ class PullRequest(github.GithubObject.GithubObject):
         )
 
     def is_merged(self):
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/merge",
             None,
@@ -287,7 +287,7 @@ class PullRequest(github.GithubObject.GithubObject):
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/merge",
             None,

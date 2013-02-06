@@ -53,7 +53,7 @@ class Team(github.GithubObject.GithubObject):
 
     def add_to_members(self, member):
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/members/" + member._identity,
             None,
@@ -62,7 +62,7 @@ class Team(github.GithubObject.GithubObject):
 
     def add_to_repos(self, repo):
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/repos/" + repo._identity,
             None,
@@ -70,7 +70,7 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -85,7 +85,7 @@ class Team(github.GithubObject.GithubObject):
         }
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -111,7 +111,7 @@ class Team(github.GithubObject.GithubObject):
 
     def has_in_members(self, member):
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/members/" + member._identity,
             None,
@@ -121,7 +121,7 @@ class Team(github.GithubObject.GithubObject):
 
     def has_in_repos(self, repo):
         assert isinstance(repo, github.Repository.Repository), repo
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/repos/" + repo._identity,
             None,
@@ -131,7 +131,7 @@ class Team(github.GithubObject.GithubObject):
 
     def remove_from_members(self, member):
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
@@ -140,7 +140,7 @@ class Team(github.GithubObject.GithubObject):
 
     def remove_from_repos(self, repo):
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo._identity,
             None,

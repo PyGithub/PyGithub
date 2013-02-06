@@ -43,7 +43,7 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
         args = dict(self.__args)
         if page != 0:
             args["start_page"] = page + 1
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__url,
             args,

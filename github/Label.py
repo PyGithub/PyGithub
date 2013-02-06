@@ -35,7 +35,7 @@ class Label(github.GithubObject.GithubObject):
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -49,7 +49,7 @@ class Label(github.GithubObject.GithubObject):
             "name": name,
             "color": color,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
