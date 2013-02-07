@@ -107,7 +107,7 @@ class Requester:
             encoded_input = ""
             for name, value in input.iteritems():
                 encoded_input += "--" + boundary + eol
-                encoded_input +=  "Content-Disposition: form-data; name=\"" + name + "\"" + eol
+                encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol
                 encoded_input += value + eol
             encoded_input += "--" + boundary + "--" + eol
