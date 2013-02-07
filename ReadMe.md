@@ -13,7 +13,7 @@ What's new?
 
 [![Build Status](https://travis-ci.org/jacquev6/PyGithub.png?branch=master)](https://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (January 31st, 2013)
+[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (February 7th, 2013)
 ------------------------------------------------------------------------------------------------------------
 
 * Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)

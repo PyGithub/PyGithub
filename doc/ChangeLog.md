@@ -1,3 +1,11 @@
+[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (February 7th, 2013)
+------------------------------------------------------------------------------------------------------------
+
+* Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)
+* [Implement](https://github.com/jacquev6/PyGithub/issues/130) `NamedUser.get_keys`
+* [Support PubSubHub](https://github.com/jacquev6/PyGithub/issues/129): `Repository.subscribe_to_hub` and `Repository.unsubscribe_from_hub`
+* [Publish the oauth scopes](https://github.com/jacquev6/PyGithub/issues/134) in Github.oauth_scopes, thank you [ bilderbuchi](https://github.com/ bilderbuchi) for asking
+
 [Version 1.10.0](https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed) (December 25th, 2012) (Christmas 2012 edition)
 --------------------------------------------------------------------------------------------------------------------------------------
 
