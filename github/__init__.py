@@ -15,7 +15,7 @@
 
 """
 The primary class you will instanciate is :class:`github.Github.Github`.
-From its `get_`, `create_` methods, you will obtain instances of all Github objects
+From its ``get_``, ``create_`` methods, you will obtain instances of all Github objects
 like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository`.
 """
 

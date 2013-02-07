@@ -4,7 +4,7 @@ With it, you can manage your `Github <http://github.com>`_ resources (repositori
 
 It covers the **full** API, and all methods are tested against the real Github site.
 
-Should you have any question, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
+Should you have any question, any remark, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
 
 PyGithub is stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
 
@@ -16,7 +16,7 @@ What's new?
 Next version
 ------------
 
-* Much better documentation
+* Much better documentation http://jacquev6.github.com/PyGithub.
 
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
 ----------------------------------------------------------------------------------------------------------------------------------------
@@ -32,41 +32,10 @@ Previous versions
 
 See `ChangeLog <https://github.com/jacquev6/PyGithub/blob/master/doc/ChangeLog.md>`_.
 
-Download and install
-====================
+Dcumentation
+============
 
-This package is in the `Python Package Index <http://pypi.python.org/pypi/PyGithub>`_, so `easy_install PyGithub` or `pip install PyGithub` should be enough.
-You can also clone it on `Github <http://github.com/jacquev6/PyGithub>`_.
-
-Tutorial
-========
-
-First create a Github instance::
-
-    from github import Github
-
-    g = Github( "user", "password" )
-
-Then play with your Github objects::
-
-    for repo in g.get_user().get_repos():
-        print repo.name
-        repo.edit( has_wiki = False )
-
-You can also create a Github instance with an OAuth token::
-
-    g = Github( token )
-
-Or without authentication::
-
-    g = Github()
-
-Reference documentation
-=======================
-
-You need to use a Github API and wonder which class implements it? `Reference of APIs <https://github.com/jacquev6/PyGithub/blob/master/doc/ReferenceOfApis.md>`_
-
-You want all the details about PyGithub classes? `Reference of classes <https://github.com/jacquev6/PyGithub/blob/master/doc/ReferenceOfClasses.md>`_
+All the documentation is here: http://jacquev6.github.com/PyGithub.
 
 Licensing
 =========
