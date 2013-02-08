@@ -25,5 +25,5 @@ class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
     def testCompletion(self):
         self.assertEqual(self.user._GithubObject__completed, False)
         self.assertEqual(self.user.name, "Ian Ozsvald")
-        self.assertEqual(self.user._GithubObject__completed, False)  # Should be True
-        self.assertEqual(self.user.plan, None)  # Should NOT fire a new request to Github
+        self.assertEqual(self.user._GithubObject__completed, True)
+        self.assertEqual(self.user.plan, None)

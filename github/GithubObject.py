@@ -69,4 +69,4 @@ class GithubObject(BasicGithubObject):
             None
         )
         self._useAttributes(data)
-        self._completed = True
+        self.__completed = True
