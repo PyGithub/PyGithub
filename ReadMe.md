@@ -24,7 +24,7 @@ What's new?
 Previous versions
 -----------------
 
-See [ChangeLog](https://github.com/jacquev6/PyGithub/blob/master/doc/ChangeLog.md).
+See [ChangeLog](doc/ChangeLog.md).
 
 Download and install
 ====================
@@ -58,15 +58,20 @@ Or without authentication:
 Reference documentation
 =======================
 
-You need to use a Github API and wonder which class implements it? [Reference of APIs](https://github.com/jacquev6/PyGithub/blob/master/doc/ReferenceOfApis.md)
+You need to use a Github API and wonder which class implements it? [Reference of APIs](doc/ReferenceOfApis.md)
 
-You want all the details about PyGithub classes? [Reference of classes](https://github.com/jacquev6/PyGithub/blob/master/doc/ReferenceOfClasses.md)
+You want all the details about PyGithub classes? [Reference of classes](doc/ReferenceOfClasses.md)
 
 Licensing
 =========
 
 PyGithub is distributed under the GNU Lesser General Public Licence.
 See files COPYING and COPYING.LESSER, as requested by [GNU](http://www.gnu.org/licenses/gpl-howto.html).
+
+Contributing
+============
+
+Please see [Contributing.md](Contributing.md).
 
 Projects using PyGithub
 =======================
