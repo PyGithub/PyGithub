@@ -13,6 +13,11 @@ What's new?
 
 [![Build Status](https://travis-ci.org/jacquev6/PyGithub.png?branch=master)](https://travis-ci.org/jacquev6/PyGithub)
 
+[Version 1.11.1](https://github.com/jacquev6/PyGithub/issues?milestone=21&state=closed) (February 9th, 2013) (London edition)
+-----------------------------------------------------------------------------------------------------------------------------
+
+* Fix [bug](https://github.com/jacquev6/PyGithub/issues/139#issuecomment-13280121) in lazy completion. Thank you [ianozsvald](https://github.com/ianozsvald) for pinpointing it
+
 [Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (February 7th, 2013)
 ------------------------------------------------------------------------------------------------------------
 
