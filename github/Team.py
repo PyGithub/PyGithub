@@ -80,7 +80,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/members/" + member._identity,
             None,
@@ -94,7 +94,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/repos/" + repo._identity,
             None,
@@ -106,7 +106,7 @@ class Team(github.GithubObject.GithubObject):
         :calls: `DELETE /teams/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -127,7 +127,7 @@ class Team(github.GithubObject.GithubObject):
         }
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -166,7 +166,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/members/" + member._identity,
             None,
@@ -181,7 +181,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/repos/" + repo._identity,
             None,
@@ -196,7 +196,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
@@ -210,7 +210,7 @@ class Team(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo._identity,
             None,

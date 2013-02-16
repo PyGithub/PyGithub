@@ -52,7 +52,7 @@ class GitRef(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -73,7 +73,7 @@ class GitRef(github.GithubObject.GithubObject):
         }
         if force is not github.GithubObject.NotSet:
             post_parameters["force"] = force
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

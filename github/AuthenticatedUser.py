@@ -240,7 +240,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         """
         assert all(isinstance(element, (str, unicode)) for element in emails), emails
         post_parameters = emails
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/emails",
             None,
@@ -254,7 +254,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/following/" + following._identity,
             None,
@@ -268,7 +268,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/starred/" + starred._identity,
             None,
@@ -282,7 +282,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/subscriptions/" + subscription._identity,
             None,
@@ -296,7 +296,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/watched/" + watched._identity,
             None,
@@ -329,7 +329,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             post_parameters["client_id"] = client_id
         if client_secret is not github.GithubObject.NotSet:
             post_parameters["client_secret"] = client_secret
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/authorizations",
             None,
@@ -344,7 +344,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(repo, github.Repository.Repository), repo
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             None,
@@ -369,7 +369,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/gists",
             None,
@@ -390,7 +390,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             "title": title,
             "key": key,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/keys",
             None,
@@ -440,7 +440,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             post_parameters["auto_init"] = auto_init
         if gitignore_template is not github.GithubObject.NotSet:
             post_parameters["gitignore_template"] = gitignore_template
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/repos",
             None,
@@ -482,7 +482,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             post_parameters["hireable"] = hireable
         if bio is not github.GithubObject.NotSet:
             post_parameters["bio"] = bio
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user",
             None,
@@ -497,7 +497,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: :class:`github.Authorization.Authorization`
         """
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/authorizations/" + str(id),
             None,
@@ -522,7 +522,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :calls: `GET /user/emails <http://developer.github.com/v3/todo>`_
         :rtype: list of string
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/user/emails",
             None,
@@ -597,7 +597,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: :class:`github.UserKey.UserKey`
         """
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/user/keys/" + str(id),
             None,
@@ -650,7 +650,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, (str, unicode)), name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name,
             None,
@@ -738,7 +738,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             "/user/following/" + following._identity,
             None,
@@ -753,7 +753,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             "/user/starred/" + starred._identity,
             None,
@@ -768,7 +768,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             "/user/subscriptions/" + subscription._identity,
             None,
@@ -783,7 +783,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: bool
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             "/user/watched/" + watched._identity,
             None,
@@ -799,7 +799,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         """
         assert all(isinstance(element, (str, unicode)) for element in emails), emails
         post_parameters = emails
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/emails",
             None,
@@ -813,7 +813,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(following, github.NamedUser.NamedUser), following
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/following/" + following._identity,
             None,
@@ -827,7 +827,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(starred, github.Repository.Repository), starred
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/starred/" + starred._identity,
             None,
@@ -841,7 +841,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(subscription, github.Repository.Repository), subscription
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/subscriptions/" + subscription._identity,
             None,
@@ -855,7 +855,7 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/watched/" + watched._identity,
             None,

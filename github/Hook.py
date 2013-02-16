@@ -100,7 +100,7 @@ class Hook(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/hooks/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -136,7 +136,7 @@ class Hook(github.GithubObject.GithubObject):
             post_parameters["remove_events"] = remove_events
         if active is not github.GithubObject.NotSet:
             post_parameters["active"] = active
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -149,7 +149,7 @@ class Hook(github.GithubObject.GithubObject):
         :calls: `POST /repos/:user/:repo/hooks/:id/test <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/test",
             None,

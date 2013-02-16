@@ -69,16 +69,23 @@ class Requester:
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
 
+        self.oauth_scopes = None
+
         self.__clientId = client_id
         self.__clientSecret = client_secret
         self.__userAgent = user_agent
 
-    def requestAndCheck(self, verb, url, parameters, input):
-        status, headers, output = self.requestRaw(verb, url, parameters, input)
+    def requestJsonAndCheck(self, verb, url, parameters, input):
+        return self.__check(*self.requestJson(verb, url, parameters, input))
+
+    def requestMultipartAndCheck(self, verb, url, parameters, input):
+        return self.__check(*self.requestMultipart(verb, url, parameters, input))
+
+    def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise GithubException.GithubException(status, output)
-        return headers, output
+        return responseHeaders, output
 
     def __structuredFromJson(self, data):
         if len(data) == 0:
@@ -86,7 +93,29 @@ class Requester:
         else:
             return json.loads(data)
 
-    def requestRaw(self, verb, url, parameters, input):
+    def requestJson(self, verb, url, parameters, input):
+        def encode(input):
+            return "application/json", json.dumps(input)
+
+        return self.__requestEncode(verb, url, parameters, input, encode)
+
+    def requestMultipart(self, verb, url, parameters, input):
+        def encode(input):
+            boundary = "----------------------------3c3ba8b523b2"
+            eol = "\r\n"
+
+            encoded_input = ""
+            for name, value in input.iteritems():
+                encoded_input += "--" + boundary + eol
+                encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
+                encoded_input += eol
+                encoded_input += value + eol
+            encoded_input += "--" + boundary + "--" + eol
+            return "multipart/form-data; boundary=" + boundary, encoded_input
+
+        return self.__requestEncode(verb, url, parameters, input, encode)
+
+    def __requestEncode(self, verb, url, parameters, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -99,14 +128,26 @@ class Requester:
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
+        encoded_input = "null"
         if input is not None:
-            requestHeaders["Content-Type"] = "application/json"
+            requestHeaders["Content-Type"], encoded_input = encode(input)
 
+        status, responseHeaders, output = self.__requestRaw(verb, url, requestHeaders, encoded_input)
+
+        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
+            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+
+        if "x-oauth-scopes" in responseHeaders:
+            self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
+
+        return status, responseHeaders, output
+
+    def __requestRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
         cnx.request(
             verb,
             url,
-            json.dumps(input),
+            input,
             requestHeaders
         )
         response = cnx.getresponse()
@@ -116,9 +157,6 @@ class Requester:
         output = response.read()
 
         cnx.close()
-
-        if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 

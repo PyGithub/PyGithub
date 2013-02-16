@@ -4,6 +4,19 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.11.1 <https://github.com/jacquev6/PyGithub/issues?milestone=21&state=closed>`_ (February 9th, 2013) (London edition)
+-------------------------------------------------------------------------------------------------------------------------------
+
+* Fix `bug <https://github.com/jacquev6/PyGithub/issues/139#issuecomment-13280121>`_ in lazy completion. Thank you `ianozsvald <https://github.com/ianozsvald>`_ for pinpointing it
+
+`Version 1.11.0 <https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed>`_ (February 7th, 2013)
+--------------------------------------------------------------------------------------------------------------
+
+* Fix bug in PaginatedList without url parameters. Thank you `llimllib <https://github.com/llimllib>`_ for the `contribution <https://github.com/jacquev6/PyGithub/pull/133>`_
+* `Implement <https://github.com/jacquev6/PyGithub/issues/130>`_ `NamedUser.get_keys`
+* `Support PubSubHub <https://github.com/jacquev6/PyGithub/issues/129>`_: `Repository.subscribe_to_hub` and `Repository.unsubscribe_from_hub`
+* `Publish the oauth scopes <https://github.com/jacquev6/PyGithub/issues/134>`_ in Github.oauth_scopes, thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for asking
+
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
 ----------------------------------------------------------------------------------------------------------------------------------------
 

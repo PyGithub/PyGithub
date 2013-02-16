@@ -131,3 +131,6 @@ class NamedUser(Framework.TestCase):
 
     def testGetReceivedEvents(self):
         self.assertListKeyBegin(self.user.get_received_events(), lambda e: e.type, ["IssueCommentEvent", "IssueCommentEvent", "IssueCommentEvent", "IssueCommentEvent"])
+
+    def testGetKeys(self):
+        self.assertListKeyEqual(self.user.get_keys(), lambda k: k.id, [3557894, 3791954, 3937333, 4051357, 4051492])

@@ -115,7 +115,7 @@ class Commit(github.GithubObject.GithubObject):
             post_parameters["path"] = path
         if position is not github.GithubObject.NotSet:
             post_parameters["position"] = position
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -141,7 +141,7 @@ class Commit(github.GithubObject.GithubObject):
             post_parameters["target_url"] = target_url
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
             None,

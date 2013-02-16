@@ -60,3 +60,8 @@ from Issue50 import *
 from Issue54 import *
 from Issue80 import *
 from Issue87 import *
+from Issue131 import *
+from Issue133 import *
+from Issue134 import *
+from Issue139 import *
+from Issue140 import *

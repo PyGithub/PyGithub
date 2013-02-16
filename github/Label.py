@@ -52,7 +52,7 @@ class Label(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/labels/:name <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -72,7 +72,7 @@ class Label(github.GithubObject.GithubObject):
             "name": name,
             "color": color,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

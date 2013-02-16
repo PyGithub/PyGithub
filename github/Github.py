@@ -72,6 +72,13 @@ class Github(object):
         """
         return self.__requester.rate_limiting
 
+    @property
+    def oauth_scopes(self):
+        """
+        :type: list of string
+        """
+        return self.__requester.oauth_scopes
+
     def get_user(self, login=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user <http://developer.github.com/v3/todo>`_
@@ -82,7 +89,7 @@ class Github(object):
         if login is github.GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
         else:
-            headers, data = self.__requester.requestAndCheck(
+            headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 "/users/" + login,
                 None,
@@ -97,7 +104,7 @@ class Github(object):
         :rtype: :class:`github.Organization.Organization`
         """
         assert isinstance(login, (str, unicode)), login
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/orgs/" + login,
             None,
@@ -111,7 +118,7 @@ class Github(object):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name, (str, unicode)), full_name
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/repos/" + full_name,
             None,
@@ -126,7 +133,7 @@ class Github(object):
         :rtype: :class:`github.Gist.Gist`
         """
         assert isinstance(id, (str, unicode)), id
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gists/" + id,
             None,
@@ -188,7 +195,7 @@ class Github(object):
         :rtype: :class:`github.NamedUser.NamedUser`
         """
         assert isinstance(email, (str, unicode)), email
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/legacy/user/email/" + email,
             None,
@@ -211,7 +218,7 @@ class Github(object):
         if context is not github.GithubObject.NotSet:
             post_parameters["mode"] = "gfm"
             post_parameters["context"] = context._identity
-        status, headers, data = self.__requester.requestRaw(
+        status, headers, data = self.__requester.requestJson(
             "POST",
             "/markdown",
             None,
@@ -224,7 +231,7 @@ class Github(object):
         :calls: `GET /hooks <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDescription.HookDescription`
         """
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/hooks",
             None,
@@ -237,7 +244,7 @@ class Github(object):
         :calls: `GET /gitignore/templates <http://developer.github.com/v3/todo>`_
         :rtype: list of string
         """
-        headers, data = self.__requester.requestAndCheck(
+        headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates",
             None,
@@ -251,7 +258,7 @@ class Github(object):
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
         assert isinstance(name, (str, unicode)), name
-        headers, attributes = self.__requester.requestAndCheck(
+        headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates/" + name,
             None,

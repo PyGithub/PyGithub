@@ -18,3 +18,14 @@ Please do your pull requests on the `develop` branch.
 
 PyGithub follows [pep8 Style Guide for Python Code](http://www.python.org/dev/peps/pep-0008/) except for line length.
 So if you do heavy modifications, please check your code with [pep8 Python style guide checker](http://pypi.python.org/pypi/pep8), by running `pep8 --ignore=E501 github`.
+
+Automated tests
+---------------
+
+You can run the tests through `python -m github.tests`. Run a specific test with `python -m github.tests TestCase` or `python -m github.tests TestCase.testMethod`.
+
+If you add a new test, for example `Issue139.testCompletion`, you must add an import in github/tests/AllTests.py. Then, you have to run `python -m github.tests Issue139.testCompletion --record` to create the github/tests/ReplayData/*.txt files needed for you new test. Check them and commit them as well. You will need a GithubCredentials.py file at the root of the project with the following contents:
+
+	login = "my_login"
+	password = "my_password"
+	oauth_token = "my_token"  # Can be left empty if not used

@@ -63,11 +63,11 @@ class GithubObject(BasicGithubObject):
             self.__complete()
 
     def __complete(self):
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._url,
             None,
             None
         )
         self._useAttributes(data)
-        self._completed = True
+        self.__completed = True

@@ -157,7 +157,7 @@ class Gist(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -170,7 +170,7 @@ class Gist(github.GithubObject.GithubObject):
         :calls: `POST /gists/:id/fork <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.Gist.Gist`
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/fork",
             None,
@@ -183,7 +183,7 @@ class Gist(github.GithubObject.GithubObject):
         :calls: `DELETE /gists/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -204,7 +204,7 @@ class Gist(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if files is not github.GithubObject.NotSet:
             post_parameters["files"] = dict((key, value._identity) for key, value in files.iteritems())
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -219,7 +219,7 @@ class Gist(github.GithubObject.GithubObject):
         :rtype: :class:`github.GistComment.GistComment`
         """
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
             None,
@@ -244,7 +244,7 @@ class Gist(github.GithubObject.GithubObject):
         :calls: `GET /gists/:id/star <http://developer.github.com/v3/todo>`_
         :rtype: bool
         """
-        status, headers, data = self._requester.requestRaw(
+        status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/star",
             None,
@@ -257,7 +257,7 @@ class Gist(github.GithubObject.GithubObject):
         :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/star",
             None,
@@ -269,7 +269,7 @@ class Gist(github.GithubObject.GithubObject):
         :calls: `PUT /gists/:id/star <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/star",
             None,

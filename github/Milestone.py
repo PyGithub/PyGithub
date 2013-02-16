@@ -120,7 +120,7 @@ class Milestone(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/milestones/:number <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -149,7 +149,7 @@ class Milestone(github.GithubObject.GithubObject):
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
             post_parameters["due_on"] = due_on.strftime("%Y-%m-%d")
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

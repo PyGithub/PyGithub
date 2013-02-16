@@ -68,6 +68,10 @@ APIs
 
   * GET: :meth:`github.Github.Github.get_hooks`
 
+* ``/hub``
+
+  * POST: :meth:`github.Repository.Repository.subscribe_to_hub` or :meth:`github.Repository.Repository.unsubscribe_to_hub`
+
 * ``/issues``
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_issues`
@@ -94,7 +98,7 @@ APIs
 
 * ``/markdown/raw``
 
- ` * POST: see * `/markdown``
+  * POST: see ``/markdown``
 
 * ``/networks/:user/:repo/events``
 
@@ -207,7 +211,7 @@ APIs
 
 * ``/repos/:user/:repo/contents/:path``
 
-  * GET: :meth:`github.Repository.Repository.get_contents`
+  * GET: :meth:`github.Repository.Repository.get_contents` or :meth:`github.Repository.Repository.get_file_contents` or :meth:`github.Repository.Repository.get_dir_contents`
 
 * ``/repos/:user/:repo/contributors``
 
@@ -579,6 +583,10 @@ APIs
 
   * GET: :meth:`github.NamedUser.NamedUser.get_gists`
   * POST: :meth:`github.NamedUser.NamedUser.create_gist`
+
+* ``/users/:user/keys``
+
+  * GET: :meth:`github.NamedUser.NamedUser.get_keys`
 
 * ``/users/:user/orgs``
 

@@ -76,7 +76,7 @@ class GistComment(github.GithubObject.GithubObject):
         :calls: `DELETE /gists/comments/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,
@@ -93,7 +93,7 @@ class GistComment(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,

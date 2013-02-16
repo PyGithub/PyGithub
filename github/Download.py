@@ -186,7 +186,7 @@ class Download(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/downloads/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
             None,

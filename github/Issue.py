@@ -182,7 +182,7 @@ class Issue(github.GithubObject.GithubObject):
         """
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
             None,
@@ -199,7 +199,7 @@ class Issue(github.GithubObject.GithubObject):
         post_parameters = {
             "body": body,
         }
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
             None,
@@ -212,7 +212,7 @@ class Issue(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels",
             None,
@@ -249,7 +249,7 @@ class Issue(github.GithubObject.GithubObject):
             post_parameters["milestone"] = milestone._identity if milestone else ''
         if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = labels
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
             None,
@@ -264,7 +264,7 @@ class Issue(github.GithubObject.GithubObject):
         :rtype: :class:`github.IssueComment.IssueComment`
         """
         assert isinstance(id, (int, long)), id
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
             None,
@@ -315,7 +315,7 @@ class Issue(github.GithubObject.GithubObject):
         :rtype: None
         """
         assert isinstance(label, github.Label.Label), label
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels/" + label._identity,
             None,
@@ -330,7 +330,7 @@ class Issue(github.GithubObject.GithubObject):
         """
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",
             None,

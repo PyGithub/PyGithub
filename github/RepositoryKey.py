@@ -74,7 +74,7 @@ class RepositoryKey(github.GithubObject.GithubObject):
         :calls: `DELETE /repos/:user/:repo/keys/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.__customUrl,
             None,
@@ -95,7 +95,7 @@ class RepositoryKey(github.GithubObject.GithubObject):
             post_parameters["title"] = title
         if key is not github.GithubObject.NotSet:
             post_parameters["key"] = key
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.__customUrl,
             None,

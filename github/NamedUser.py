@@ -254,7 +254,7 @@ class NamedUser(github.GithubObject.GithubObject):
         }
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/gists",
             None,
@@ -307,6 +307,18 @@ class NamedUser(github.GithubObject.GithubObject):
             github.Gist.Gist,
             self._requester,
             self.url + "/gists",
+            None
+        )
+
+    def get_keys(self):
+        """
+        :calls: `GET /users/:user/keys <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.UserKey.UserKey`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.UserKey.UserKey,
+            self._requester,
+            self.url + "/keys",
             None
         )
 
@@ -365,7 +377,7 @@ class NamedUser(github.GithubObject.GithubObject):
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, (str, unicode)), name
-        headers, data = self._requester.requestAndCheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name,
             None,

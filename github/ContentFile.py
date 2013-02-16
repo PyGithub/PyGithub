@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class ContentFile(github.GithubObject.BasicGithubObject):
+class ContentFile(github.GithubObject.GithubObject):
     """
     This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
     """
@@ -26,6 +26,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._content)
         return self._NoneIfNotSet(self._content)
 
     @property
@@ -33,6 +34,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._encoding)
         return self._NoneIfNotSet(self._encoding)
 
     @property
@@ -40,6 +42,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
@@ -47,6 +50,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._path)
         return self._NoneIfNotSet(self._path)
 
     @property
@@ -54,6 +58,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
@@ -61,6 +66,7 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: integer
         """
+        self._completeIfNotSet(self._size)
         return self._NoneIfNotSet(self._size)
 
     @property
@@ -68,7 +74,16 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         """
         :type: string
         """
+        self._completeIfNotSet(self._type)
         return self._NoneIfNotSet(self._type)
+
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._url)
+        return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -101,3 +116,6 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]
