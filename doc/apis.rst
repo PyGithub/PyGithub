@@ -3,7 +3,7 @@ APIs
 
 * ``/authorizations``
 
-  * GET: :func:`github.AuthenticatedUser.AuthenticatedUser.get_authorizations`
+  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_authorizations`
   * POST: :meth:`github.AuthenticatedUser.AuthenticatedUser.create_authorization`
 
 * ``/authorizations/:id``

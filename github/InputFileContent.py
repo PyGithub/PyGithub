@@ -16,7 +16,6 @@
 
 class InputFileContent(object):
     """
-    This class represents InputFileContents as returned for example by http://developer.github.com/v3/todo
     """
 
     def __init__(self, content):

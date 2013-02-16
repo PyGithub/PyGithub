@@ -13,23 +13,23 @@ Stable versions
 --------------------------------------------------------------------------------------------------------------
 
 * Fix bug in PaginatedList without url parameters. Thank you `llimllib <https://github.com/llimllib>`_ for the `contribution <https://github.com/jacquev6/PyGithub/pull/133>`_
-* `Implement <https://github.com/jacquev6/PyGithub/issues/130>`_ `NamedUser.get_keys`
-* `Support PubSubHub <https://github.com/jacquev6/PyGithub/issues/129>`_: `Repository.subscribe_to_hub` and `Repository.unsubscribe_from_hub`
-* `Publish the oauth scopes <https://github.com/jacquev6/PyGithub/issues/134>`_ in Github.oauth_scopes, thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for asking
+* `Implement <https://github.com/jacquev6/PyGithub/issues/130>`_ :meth:`github.NamedUser.NamedUser.get_keys`
+* `Support PubSubHub <https://github.com/jacquev6/PyGithub/issues/129>`_: :meth:`github.Repository.Repository.subscribe_to_hub` and :meth:`github.Repository.Repository.unsubscribe_from_hub`
+* `Publish the oauth scopes <https://github.com/jacquev6/PyGithub/issues/134>`_ in :attr:`github.Github.Github.oauth_scopes`, thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for asking
 
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 * Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`_ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
-* Add a shortcut function 'Github.get_repo' to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
-* 'Github.get_gitignore_templates' and 'Github.get_gitignore_template' for APIs '/gitignore/templates'
-* Add the optional 'ref' parameter to 'Repository.get_contents' and 'get_readme'. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
-* Get comments for all issues and all pull requests on a repository ('GET /repos/:user/:repo/pulls/comments': 'Repository.get_pulls_comments' or 'Repository.get_pulls_review_comments'; 'GET /repos/:user/:repo/issues/comments': 'Repository.get_issues_comments')
+* Add a shortcut function :meth:`github.Github.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
+* :meth:`github.Github.Github.get_gitignore_templates` and :meth:`github.Github.Github.get_gitignore_template` for APIs ``/gitignore/templates``
+* Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
+* Get comments for all issues and all pull requests on a repository (``GET /repos/:user/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:user/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
 
 `Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone-17&state-closed>`_ (November 20th, 2012)
 --------------------------------------------------------------------------------------------------------------
 
-* Fix an assertion failure when integers returned by Github do not fit in a Python `int`
+* Fix an assertion failure when integers returned by Github do not fit in a Python ``int``
 
 `Version 1.9.0 <https://github.com/jacquev6/PyGithub/issues?milestone-14&state-closed>`_ (November 19th, 2012)
 --------------------------------------------------------------------------------------------------------------

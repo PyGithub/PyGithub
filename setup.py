@@ -17,7 +17,7 @@
 import setuptools
 import textwrap
 
-version = "1.11.1",
+version = "1.11.1"
 
 if __name__ == "__main__":
     setuptools.setup(
@@ -26,26 +26,26 @@ if __name__ == "__main__":
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
-        url="http://vincent-jacques.net/PyGithub",
+        url="http://jacquev6.github.com/PyGithub",
         long_description=textwrap.dedent("""\
-            Tutorial
-            ========
+            (Very short) Tutorial
+            =====================
 
-            First create a Gihub instance::
+            First create a Github instance::
 
                 from github import Github
 
-                g = Github( "user", "password" )
+                g = Github("user", "password")
 
             Then play with your Github objects::
 
                 for repo in g.get_user().get_repos():
                     print repo.name
-                    repo.edit( has_wiki = False )
+                    repo.edit(has_wiki=False)
 
             You can also create a Github instance with an OAuth token::
 
-                g = Github( token )
+                g = Github(token)
 
             Or without authentication::
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
             Reference documentation
             =======================
 
-            See http://vincent-jacques.net/PyGithub"""),
+            See http://jacquev6.github.com/PyGithub"""),
         packages=[
             "github",
             "github.tests",

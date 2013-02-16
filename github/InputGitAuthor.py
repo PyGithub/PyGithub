@@ -16,7 +16,6 @@
 
 class InputGitAuthor(object):
     """
-    This class represents InputGitAuthors as returned for example by http://developer.github.com/v3/todo
     """
 
     def __init__(self, name, email, date):

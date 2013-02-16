@@ -34,7 +34,7 @@ DEFAULT_TIMEOUT = 10
 
 class Github(object):
     """
-    This class represents Githubs as returned for example by http://developer.github.com/v3/todo
+    This is the main class you instanciate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
     def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None):

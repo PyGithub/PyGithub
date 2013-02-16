@@ -7,3 +7,4 @@ PyGithub
    introduction
    reference
    changes
+   contributing
