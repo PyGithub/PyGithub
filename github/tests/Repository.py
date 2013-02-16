@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -35,7 +35,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.has_downloads, True)
         self.assertEqual(self.repo.has_issues, True)
         self.assertEqual(self.repo.has_wiki, False)
-        self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
+        self.assertEqual(self.repo.homepage, "http://jacquev6.github.com/PyGithub/")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
         self.assertEqual(self.repo.language, "Python")
@@ -62,7 +62,7 @@ class Repository(Framework.TestCase):
         self.repo.edit("PyGithub")
 
     def testEditWithAllArguments(self):
-        self.repo.edit("PyGithub", "Description edited by PyGithub", "http://vincent-jacques.net/PyGithub", public=True, has_issues=True, has_wiki=False, has_downloads=True)
+        self.repo.edit("PyGithub", "Description edited by PyGithub", "http://jacquev6.github.com/PyGithub/", public=True, has_issues=True, has_wiki=False, has_downloads=True)
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")

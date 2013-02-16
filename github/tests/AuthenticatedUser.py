@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -131,7 +131,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(authorization.id, 372259)
 
     def testCreateAuthorizationWithAllArguments(self):
-        authorization = self.user.create_authorization(["repo"], "Note created by PyGithub", "http://vincent-jacques.net/PyGithub")
+        authorization = self.user.create_authorization(["repo"], "Note created by PyGithub", "http://jacquev6.github.com/PyGithub/")
         self.assertEqual(authorization.id, 372294)
 
     def testCreateAuthorizationWithClientIdAndSecret(self):
