@@ -13,18 +13,10 @@ What's new?
 
 [![Build Status](https://travis-ci.org/jacquev6/PyGithub.png?branch=master)](https://travis-ci.org/jacquev6/PyGithub)
 
-[Version 1.11.1](https://github.com/jacquev6/PyGithub/issues?milestone=21&state=closed) (February 9th, 2013) (London edition)
------------------------------------------------------------------------------------------------------------------------------
+[Version 1.12.0](https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed) (February 17th, 2013)
+-------------------------------------------------------------------------------------------------------------
 
-* Fix [bug](https://github.com/jacquev6/PyGithub/issues/139#issuecomment-13280121) in lazy completion. Thank you [ianozsvald](https://github.com/ianozsvald) for pinpointing it
-
-[Version 1.11.0](https://github.com/jacquev6/PyGithub/issues?milestone=19&state=closed) (February 7th, 2013)
-------------------------------------------------------------------------------------------------------------
-
-* Fix bug in PaginatedList without url parameters. Thank you [llimllib](https://github.com/llimllib) for the [contribution](https://github.com/jacquev6/PyGithub/pull/133)
-* [Implement](https://github.com/jacquev6/PyGithub/issues/130) `NamedUser.get_keys`
-* [Support PubSubHub](https://github.com/jacquev6/PyGithub/issues/129): `Repository.subscribe_to_hub` and `Repository.unsubscribe_from_hub`
-* [Publish the oauth scopes](https://github.com/jacquev6/PyGithub/issues/134) in Github.oauth_scopes, thank you [ bilderbuchi](https://github.com/ bilderbuchi) for asking
+* [Implement](https://github.com/jacquev6/PyGithub/issues/140) `Repository.get_gir_contents`. Thank you [ksookocheff-va](https://github.com/ksookocheff-va) for asking
 
 Previous versions
 -----------------

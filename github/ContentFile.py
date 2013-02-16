@@ -16,34 +16,46 @@
 import github.GithubObject
 
 
-class ContentFile(github.GithubObject.BasicGithubObject):
+class ContentFile(github.GithubObject.GithubObject):
     @property
     def content(self):
+        self._completeIfNotSet(self._content)
         return self._NoneIfNotSet(self._content)
 
     @property
     def encoding(self):
+        self._completeIfNotSet(self._encoding)
         return self._NoneIfNotSet(self._encoding)
 
     @property
     def name(self):
+        self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def path(self):
+        self._completeIfNotSet(self._path)
         return self._NoneIfNotSet(self._path)
 
     @property
     def sha(self):
+        self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def size(self):
+        self._completeIfNotSet(self._size)
         return self._NoneIfNotSet(self._size)
 
     @property
     def type(self):
+        self._completeIfNotSet(self._type)
         return self._NoneIfNotSet(self._type)
+
+    @property
+    def url(self):
+        self._completeIfNotSet(self._url)
+        return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -76,3 +88,6 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]

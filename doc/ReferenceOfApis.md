@@ -208,7 +208,7 @@ API `/repos/:user/:repo/compare/:base...:head`
 
 API `/repos/:user/:repo/contents/:path`
 =======================================
-* GET: `Repository.get_contents`
+* GET: `Repository.get_contents` or `Repository.get_file_contents` or `Repository.get_dir_contents`
 
 API `/repos/:user/:repo/contributors`
 =====================================

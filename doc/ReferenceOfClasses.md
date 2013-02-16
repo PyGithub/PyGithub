@@ -1243,7 +1243,10 @@ Contents
 --------
 * `get_readme( [ref] )`: `ContentFile`
     * `ref`: string
-* `get_contents( path, [ref] )`: `ContentFile`
+* `get_file_contents( path, [ref] )` or `get_contents( path, [ref] )`: `ContentFile`
+    * `path`: string
+    * `ref`: string
+* `get_dir_contents( path, [ref] )`: list of `ContentFile`
     * `path`: string
     * `ref`: string
 * `get_archive_link( archive_format, [ref] )`: string

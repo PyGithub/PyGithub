@@ -591,6 +591,9 @@ class Repository(github.GithubObject.GithubObject):
         )
 
     def get_contents(self, path, ref=github.GithubObject.NotSet):
+        return self.get_file_contents(path, ref)
+
+    def get_file_contents(self, path, ref=github.GithubObject.NotSet):
         assert isinstance(path, (str, unicode)), path
         assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
         url_parameters = dict()
@@ -603,6 +606,23 @@ class Repository(github.GithubObject.GithubObject):
             None
         )
         return github.ContentFile.ContentFile(self._requester, data, completed=True)
+
+    def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
+        assert isinstance(path, (str, unicode)), path
+        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        url_parameters = dict()
+        if ref is not github.GithubObject.NotSet:
+            url_parameters["ref"] = ref
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/contents" + path,
+            url_parameters,
+            None
+        )
+        return [
+            github.ContentFile.ContentFile(self._requester, attributes, completed=attributes["type"]!="file")  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            for attributes in data
+        ]
 
     def get_contributors(self):
         return github.PaginatedList.PaginatedList(
