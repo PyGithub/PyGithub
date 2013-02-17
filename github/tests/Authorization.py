@@ -46,9 +46,9 @@ class Authorization(Framework.TestCase):
         self.assertEqual(self.authorization.scopes, ["user"])
         self.assertEqual(self.authorization.note, None)
         self.assertEqual(self.authorization.note_url, None)
-        self.authorization.edit(note="Note created by PyGithub", note_url="http://jacquev6.github.com/PyGithub/")
+        self.authorization.edit(note="Note created by PyGithub", note_url="http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.authorization.note, "Note created by PyGithub")
-        self.assertEqual(self.authorization.note_url, "http://jacquev6.github.com/PyGithub/")
+        self.assertEqual(self.authorization.note_url, "http://vincent-jacques.net/PyGithub")
 
     def testDelete(self):
         self.authorization.delete()

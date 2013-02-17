@@ -131,7 +131,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(authorization.id, 372259)
 
     def testCreateAuthorizationWithAllArguments(self):
-        authorization = self.user.create_authorization(["repo"], "Note created by PyGithub", "http://jacquev6.github.com/PyGithub/")
+        authorization = self.user.create_authorization(["repo"], "Note created by PyGithub", "http://vincent-jacques.net/PyGithub")
         self.assertEqual(authorization.id, 372294)
 
     def testCreateAuthorizationWithClientIdAndSecret(self):
