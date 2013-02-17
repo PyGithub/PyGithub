@@ -20,7 +20,7 @@ import GithubException
 
 class _NotSetType:
     def __repr__(self):
-        return "NotSet"
+        return "NotSet"  # pragma no cover
 NotSet = _NotSetType()
 
 

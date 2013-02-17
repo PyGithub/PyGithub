@@ -38,4 +38,8 @@ class Issue140(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
     def testGetFileContents(self):
         contents = self.repo.get_file_contents("/js/bootstrap-affix.js")
         self.assertEqual(contents.encoding, "base64")
+        self.assertEqual(contents.url, "https://api.github.com/repos/twitter/bootstrap/contents/js/bootstrap-affix.js")
         self.assertEqual(len(contents.content), 4722)
+
+    def testGetDirContentsWithRef(self):
+        contents = self.repo.get_dir_contents("/js", "")

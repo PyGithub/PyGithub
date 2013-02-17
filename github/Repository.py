@@ -889,7 +889,7 @@ class Repository(github.GithubObject.GithubObject):
             None
         )
         return [
-            github.ContentFile.ContentFile(self._requester, attributes, completed=attributes["type"]!="file")  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            github.ContentFile.ContentFile(self._requester, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
             for attributes in data
         ]
 
