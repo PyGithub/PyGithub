@@ -17,9 +17,9 @@ git add ReadMe.rst doc/changes.rst
 
 git commit -m "Publish version $version"
 
-cp -r doc COPYING* github
+cp COPYING* github
 python setup.py sdist upload
-rm -rf github/*.md github/doc github/COPYING*
+rm -rf github/COPYING*
 
 echo "Break (Ctrl+c) here if something is wrong. Else, press enter"
 read foobar

@@ -20,7 +20,7 @@ import subprocess
 import shutil
 import os.path
 
-version = "1.11.1"
+version = "1.12.0"
 
 
 def execute(*args):
