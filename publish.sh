@@ -3,6 +3,8 @@
 
 python setup.py publish || exit
 
+### @todo make_doc AFTER having incremented version
+
 previousVersion=$( grep '^version =' setup.py | sed 's/version = \"\(.*\)\"/\1/' )
 echo "Next version number? (previous: '$previousVersion')"
 read version
