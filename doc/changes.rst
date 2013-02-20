@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.12.0 <https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed>`_ (February 20th, 2013)
+---------------------------------------------------------------------------------------------------------------
+
+* Much better documentation: http://jacquev6.github.com/PyGithub
+* `Implement <https://github.com/jacquev6/PyGithub/issues/140>`_ :meth:`github.Repository.Repository.get_gir_contents`. Thank you `ksookocheff-va <https://github.com/ksookocheff-va>`_ for asking
+
 `Version 1.11.1 <https://github.com/jacquev6/PyGithub/issues?milestone=21&state=closed>`_ (February 9th, 2013) (London edition)
 -------------------------------------------------------------------------------------------------------------------------------
 

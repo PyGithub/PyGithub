@@ -10,7 +10,7 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-`Version 1.12.0 <https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed>`_ (February 17th, 2013)
+`Version 1.12.0 <https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed>`_ (February 20th, 2013)
 ---------------------------------------------------------------------------------------------------------------
 
 * Much better documentation: http://jacquev6.github.com/PyGithub
