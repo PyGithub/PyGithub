@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -26,97 +26,160 @@ import github.IssuePullRequest
 
 
 class Issue(github.GithubObject.GithubObject):
+    """
+    This class represents Issues as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def assignee(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._assignee)
         return self._NoneIfNotSet(self._assignee)
 
     @property
     def body(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._body)
         return self._NoneIfNotSet(self._body)
 
     @property
     def closed_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._closed_at)
         return self._NoneIfNotSet(self._closed_at)
 
     @property
     def closed_by(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._closed_by)
         return self._NoneIfNotSet(self._closed_by)
 
     @property
     def comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._comments)
         return self._NoneIfNotSet(self._comments)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def labels(self):
+        """
+        :type: list of :class:`github.Label.Label`
+        """
         self._completeIfNotSet(self._labels)
         return self._NoneIfNotSet(self._labels)
 
     @property
     def milestone(self):
+        """
+        :type: :class:`github.Milestone.Milestone`
+        """
         self._completeIfNotSet(self._milestone)
         return self._NoneIfNotSet(self._milestone)
 
     @property
     def number(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._number)
         return self._NoneIfNotSet(self._number)
 
     @property
     def pull_request(self):
+        """
+        :type: :class:`github.IssuePullRequest.IssuePullRequest`
+        """
         self._completeIfNotSet(self._pull_request)
         return self._NoneIfNotSet(self._pull_request)
 
     @property
     def repository(self):
+        """
+        :type: :class:`github.Repository.Repository`
+        """
         self._completeIfNotSet(self._repository)
         return self._NoneIfNotSet(self._repository)
 
     @property
     def state(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._state)
         return self._NoneIfNotSet(self._state)
 
     @property
     def title(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._title)
         return self._NoneIfNotSet(self._title)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     def add_to_labels(self, *labels):
+        """
+        :calls: `POST /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :param label: :class:`github.Label.Label`
+        :rtype: None
+        """
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
@@ -127,6 +190,11 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def create_comment(self, body):
+        """
+        :calls: `POST /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :rtype: :class:`github.IssueComment.IssueComment`
+        """
         assert isinstance(body, (str, unicode)), body
         post_parameters = {
             "body": body,
@@ -140,6 +208,10 @@ class Issue(github.GithubObject.GithubObject):
         return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def delete_labels(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels",
@@ -148,6 +220,16 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:user/:repo/issues/:number <http://developer.github.com/v3/todo>`_
+        :param title: string
+        :param body: string
+        :param assignee: :class:`github.NamedUser.NamedUser` or None
+        :param state: string
+        :param milestone: :class:`github.Milestone.Milestone` or None
+        :param labels: list of string
+        :rtype: None
+        """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser), assignee
@@ -176,6 +258,11 @@ class Issue(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_comment(self, id):
+        """
+        :calls: `GET /repos/:user/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :param id: integer
+        :rtype: :class:`github.IssueComment.IssueComment`
+        """
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -186,6 +273,10 @@ class Issue(github.GithubObject.GithubObject):
         return github.IssueComment.IssueComment(self._requester, data, completed=True)
 
     def get_comments(self):
+        """
+        :calls: `GET /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
+        """
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
@@ -194,6 +285,10 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def get_events(self):
+        """
+        :calls: `GET /repos/:user/:repo/issues/:number/events <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
+        """
         return github.PaginatedList.PaginatedList(
             github.IssueEvent.IssueEvent,
             self._requester,
@@ -202,6 +297,10 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def get_labels(self):
+        """
+        :calls: `GET /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
+        """
         return github.PaginatedList.PaginatedList(
             github.Label.Label,
             self._requester,
@@ -210,6 +309,11 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def remove_from_labels(self, label):
+        """
+        :calls: `DELETE /repos/:user/:repo/issues/:number/labels/:name <http://developer.github.com/v3/todo>`_
+        :param label: :class:`github.Label.Label`
+        :rtype: None
+        """
         assert isinstance(label, github.Label.Label), label
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -219,6 +323,11 @@ class Issue(github.GithubObject.GithubObject):
         )
 
     def set_labels(self, *labels):
+        """
+        :calls: `PUT /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :param label: :class:`github.Label.Label`
+        :rtype: None
+        """
         assert all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = [label.name for label in labels]
         headers, data = self._requester.requestJsonAndCheck(

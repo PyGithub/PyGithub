@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,28 +17,47 @@ import github.GithubObject
 
 
 class GitBlob(github.GithubObject.GithubObject):
+    """
+    This class represents GitBlobs as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def content(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._content)
         return self._NoneIfNotSet(self._content)
 
     @property
     def encoding(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._encoding)
         return self._NoneIfNotSet(self._encoding)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def size(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._size)
         return self._NoneIfNotSet(self._size)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -19,18 +19,31 @@ import github.GitTreeElement
 
 
 class GitTree(github.GithubObject.GithubObject):
+    """
+    This class represents GitTrees as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def tree(self):
+        """
+        :type: list of :class:`github.GitTreeElement.GitTreeElement`
+        """
         self._completeIfNotSet(self._tree)
         return self._NoneIfNotSet(self._tree)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

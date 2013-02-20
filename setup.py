@@ -16,60 +16,127 @@
 
 import setuptools
 import textwrap
+import subprocess
+import shutil
+import os.path
+
+version = "1.11.1"
 
 
-setuptools.setup(
-    name="PyGithub",
-    version="1.11.1",
-    description="Use the full Github API v3",
-    author="Vincent Jacques",
-    author_email="vincent@vincent-jacques.net",
-    url="http://vincent-jacques.net/PyGithub",
-    long_description=textwrap.dedent("""\
-        Tutorial
-        ========
+def execute(*args):
+    subprocess.check_call(args)
 
-        First create a Gihub instance::
 
-            from github import Github
+class SimpleCommand(setuptools.Command):
+    user_options = []
 
-            g = Github( "user", "password" )
+    def __init__(self, dist, *args, **kwds):
+        setuptools.Command.__init__(self, dist, *args, **kwds)
+        self.dist = dist
 
-        Then play with your Github objects::
+    def initialize_options(self):
+        pass
 
-            for repo in g.get_user().get_repos():
-                print repo.name
-                repo.edit( has_wiki = False )
+    def finalize_options(self):
+        pass
 
-        You can also create a Github instance with an OAuth token::
 
-            g = Github( token )
+class Check(SimpleCommand):
+    def run(self):
+        execute("pep8", "--ignore=E501", "github", "setup.py")  # pip install pep8
 
-        Or without authentication::
 
-            g = Github()
+class Coverage(SimpleCommand):
+    def run(self):
+        execute("coverage", "run", "--branch", "--include=github/*.py", "--omit=github/tests/*.py", "setup.py", "test", "--quiet")
+        execute("python3", "setup.py", "test", "--quiet")
+        execute("coverage", "report", "--show-missing")
 
-        Reference documentation
-        =======================
 
-        See http://vincent-jacques.net/PyGithub"""),
-    packages=[
-        "github",
-        "github.tests",
-    ],
-    package_data={
-        "github": ["ReadMe.md", "COPYING*", "doc/*.md", "tests/ReplayData/*.txt"]
-    },
-    classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Environment :: Web Environment",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Topic :: Software Development",
-    ],
-    test_suite="github.tests.AllTests",
-    use_2to3=True
-)
+class MakeDoc(SimpleCommand):
+    def run(self):
+        d = "doc/build"
+        if os.path.exists(d):
+            shutil.rmtree(d)
+        os.makedirs(d)
+        os.chdir(d)
+        execute("git", "init")
+        execute("sphinx-build", "-b", "html", "-d", "doctrees", "..", ".")
+        with open(".nojekyll", "w"):
+            pass
+        with open(".gitignore", "w") as f:
+            f.write("/doctrees/\n")
+        execute("git", "add", ".")
+        execute("git", "commit", "--message", "Automatic generation")
+        execute("git", "push", "--force", "../..", "HEAD:gh-pages")
+
+
+class Publish(SimpleCommand):
+    def run(self):
+        Check(self.dist).run()
+        Coverage(self.dist).run()
+        MakeDoc(self.dist).run()
+
+
+if __name__ == "__main__":
+    setuptools.setup(
+        name="PyGithub",
+        version=version,
+        description="Use the full Github API v3",
+        author="Vincent Jacques",
+        author_email="vincent@vincent-jacques.net",
+        url="http://jacquev6.github.com/PyGithub",
+        long_description=textwrap.dedent("""\
+            (Very short) Tutorial
+            =====================
+
+            First create a Github instance::
+
+                from github import Github
+
+                g = Github("user", "password")
+
+            Then play with your Github objects::
+
+                for repo in g.get_user().get_repos():
+                    print repo.name
+                    repo.edit(has_wiki=False)
+
+            You can also create a Github instance with an OAuth token::
+
+                g = Github(token)
+
+            Or without authentication::
+
+                g = Github()
+
+            Reference documentation
+            =======================
+
+            See http://jacquev6.github.com/PyGithub"""),
+        packages=[
+            "github",
+            "github.tests",
+        ],
+        package_data={
+            "github": ["ReadMe.rst", "COPYING*", "tests/ReplayData/*.txt"]
+        },
+        classifiers=[
+            "Development Status :: 5 - Production/Stable",
+            "Environment :: Web Environment",
+            "Intended Audience :: Developers",
+            "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+            "Operating System :: OS Independent",
+            "Programming Language :: Python",
+            "Programming Language :: Python :: 3",
+            "Topic :: Software Development",
+        ],
+        test_suite="github.tests.AllTests",
+        cmdclass={
+            "check": Check,
+            "coverage": Coverage,
+            "make_doc": MakeDoc,
+            "publish": Publish,
+        },
+        use_2to3=True
+    )

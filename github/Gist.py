@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -23,82 +23,136 @@ import github.GistHistoryState
 
 
 class Gist(github.GithubObject.GithubObject):
+    """
+    This class represents Gists as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def comments(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._comments)
         return self._NoneIfNotSet(self._comments)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def description(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._description)
         return self._NoneIfNotSet(self._description)
 
     @property
     def files(self):
+        """
+        :type: dict of string to :class:`github.GistFile.GistFile`
+        """
         self._completeIfNotSet(self._files)
         return self._NoneIfNotSet(self._files)
 
     @property
     def fork_of(self):
+        """
+        :type: :class:`github.Gist.Gist`
+        """
         self._completeIfNotSet(self._fork_of)
         return self._NoneIfNotSet(self._fork_of)
 
     @property
     def forks(self):
+        """
+        :type: list of :class:`github.Gist.Gist`
+        """
         self._completeIfNotSet(self._forks)
         return self._NoneIfNotSet(self._forks)
 
     @property
     def git_pull_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._git_pull_url)
         return self._NoneIfNotSet(self._git_pull_url)
 
     @property
     def git_push_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._git_push_url)
         return self._NoneIfNotSet(self._git_push_url)
 
     @property
     def history(self):
+        """
+        :type: list of :class:`github.GistHistoryState.GistHistoryState`
+        """
         self._completeIfNotSet(self._history)
         return self._NoneIfNotSet(self._history)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def id(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def public(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._public)
         return self._NoneIfNotSet(self._public)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     def create_comment(self, body):
+        """
+        :calls: `POST /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :rtype: :class:`github.GistComment.GistComment`
+        """
         assert isinstance(body, (str, unicode)), body
         post_parameters = {
             "body": body,
@@ -112,6 +166,10 @@ class Gist(github.GithubObject.GithubObject):
         return github.GistComment.GistComment(self._requester, data, completed=True)
 
     def create_fork(self):
+        """
+        :calls: `POST /gists/:id/fork <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.Gist.Gist`
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/fork",
@@ -121,6 +179,10 @@ class Gist(github.GithubObject.GithubObject):
         return Gist(self._requester, data, completed=True)
 
     def delete(self):
+        """
+        :calls: `DELETE /gists/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
@@ -129,6 +191,12 @@ class Gist(github.GithubObject.GithubObject):
         )
 
     def edit(self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /gists/:id <http://developer.github.com/v3/todo>`_
+        :param description: string
+        :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
+        :rtype: None
+        """
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert files is github.GithubObject.NotSet or all(isinstance(element, github.InputFileContent) for element in files.itervalues()), files
         post_parameters = dict()
@@ -145,6 +213,11 @@ class Gist(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_comment(self, id):
+        """
+        :calls: `GET /gists/comments/:id <http://developer.github.com/v3/todo>`_
+        :param id: integer
+        :rtype: :class:`github.GistComment.GistComment`
+        """
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -155,6 +228,10 @@ class Gist(github.GithubObject.GithubObject):
         return github.GistComment.GistComment(self._requester, data, completed=True)
 
     def get_comments(self):
+        """
+        :calls: `GET /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
+        """
         return github.PaginatedList.PaginatedList(
             github.GistComment.GistComment,
             self._requester,
@@ -163,6 +240,10 @@ class Gist(github.GithubObject.GithubObject):
         )
 
     def is_starred(self):
+        """
+        :calls: `GET /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :rtype: bool
+        """
         status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/star",
@@ -172,6 +253,10 @@ class Gist(github.GithubObject.GithubObject):
         return status == 204
 
     def reset_starred(self):
+        """
+        :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/star",
@@ -180,6 +265,10 @@ class Gist(github.GithubObject.GithubObject):
         )
 
     def set_starred(self):
+        """
+        :calls: `PUT /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/star",

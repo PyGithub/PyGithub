@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -69,6 +69,25 @@ class PaginatedListBase:
 
 
 class PaginatedList(PaginatedListBase):
+    """
+    This class abstracts the `pagination of the API <http://developer.github.com/v3/#pagination>`_.
+
+    You can simply enumerate through instances of this class::
+
+        for repo in user.get_repos():
+            print repo.name
+
+    You can also index them or take slices::
+
+        second_repo = user.get_repos()[1]
+        first_repos = user.get_repos()[:10]
+
+    And if you really need it, you can explicitely access a specific page::
+
+        some_repos = user.get_repos().get_page(0)
+        some_other_repos = user.get_repos().get_page(3)
+    """
+
     def __init__(self, contentClass, requester, firstUrl, firstParams):
         PaginatedListBase.__init__(self)
         self.__requester = requester

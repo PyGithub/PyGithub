@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -20,24 +20,43 @@ import github.NamedUser
 
 
 class PullRequestPart(github.GithubObject.BasicGithubObject):
+    """
+    This class represents PullRequestParts as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def label(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._label)
 
     @property
     def ref(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._ref)
 
     @property
     def repo(self):
+        """
+        :type: :class:`github.Repository.Repository`
+        """
         return self._NoneIfNotSet(self._repo)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._sha)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         return self._NoneIfNotSet(self._user)
 
     def _initAttributes(self):

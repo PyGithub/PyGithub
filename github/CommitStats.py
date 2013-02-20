@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,16 +17,29 @@ import github.GithubObject
 
 
 class CommitStats(github.GithubObject.BasicGithubObject):
+    """
+    This class represents CommitStatss as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def additions(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._additions)
 
     @property
     def deletions(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._deletions)
 
     @property
     def total(self):
+        """
+        :type: integer
+        """
         return self._NoneIfNotSet(self._total)
 
     def _initAttributes(self):

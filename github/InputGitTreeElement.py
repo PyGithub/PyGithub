@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,7 +17,23 @@ import github.GithubObject
 
 
 class InputGitTreeElement(object):
+    """
+    """
+
     def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
+        """
+        :param path: string
+        :param mode: string
+        :param type: string
+        :param content: string
+        :param sha: string
+        """
+
+        assert isinstance(path, (str, unicode)), path
+        assert isinstance(mode, (str, unicode)), mode
+        assert isinstance(type, (str, unicode)), type
+        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

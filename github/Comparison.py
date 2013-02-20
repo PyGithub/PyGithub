@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -20,63 +20,103 @@ import github.File
 
 
 class Comparison(github.GithubObject.GithubObject):
+    """
+    This class represents Comparisons as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def ahead_by(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._ahead_by)
         return self._NoneIfNotSet(self._ahead_by)
 
     @property
     def base_commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
         self._completeIfNotSet(self._base_commit)
         return self._NoneIfNotSet(self._base_commit)
 
     @property
     def behind_by(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._behind_by)
         return self._NoneIfNotSet(self._behind_by)
 
     @property
     def commits(self):
+        """
+        :type: list of :class:`github.Commit.Commit`
+        """
         self._completeIfNotSet(self._commits)
         return self._NoneIfNotSet(self._commits)
 
     @property
     def diff_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._diff_url)
         return self._NoneIfNotSet(self._diff_url)
 
     @property
     def files(self):
+        """
+        :type: list of :class:`github.File.File`
+        """
         self._completeIfNotSet(self._files)
         return self._NoneIfNotSet(self._files)
 
     @property
     def html_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._html_url)
         return self._NoneIfNotSet(self._html_url)
 
     @property
     def patch_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._patch_url)
         return self._NoneIfNotSet(self._patch_url)
 
     @property
     def permalink_url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._permalink_url)
         return self._NoneIfNotSet(self._permalink_url)
 
     @property
     def status(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._status)
         return self._NoneIfNotSet(self._status)
 
     @property
     def total_commits(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._total_commits)
         return self._NoneIfNotSet(self._total_commits)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 

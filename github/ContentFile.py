@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -16,34 +16,74 @@
 import github.GithubObject
 
 
-class ContentFile(github.GithubObject.BasicGithubObject):
+class ContentFile(github.GithubObject.GithubObject):
+    """
+    This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def content(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._content)
         return self._NoneIfNotSet(self._content)
 
     @property
     def encoding(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._encoding)
         return self._NoneIfNotSet(self._encoding)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def path(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._path)
         return self._NoneIfNotSet(self._path)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def size(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._size)
         return self._NoneIfNotSet(self._size)
 
     @property
     def type(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._type)
         return self._NoneIfNotSet(self._type)
+
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._url)
+        return self._NoneIfNotSet(self._url)
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -76,3 +116,6 @@ class ContentFile(github.GithubObject.BasicGithubObject):
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]

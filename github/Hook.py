@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -19,52 +19,87 @@ import github.HookResponse
 
 
 class Hook(github.GithubObject.GithubObject):
+    """
+    This class represents Hooks as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def active(self):
+        """
+        :type: bool
+        """
         self._completeIfNotSet(self._active)
         return self._NoneIfNotSet(self._active)
 
     @property
     def config(self):
+        """
+        :type: dict
+        """
         self._completeIfNotSet(self._config)
         return self._NoneIfNotSet(self._config)
 
     @property
     def created_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
 
     @property
     def events(self):
+        """
+        :type: list of string
+        """
         self._completeIfNotSet(self._events)
         return self._NoneIfNotSet(self._events)
 
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def last_response(self):
+        """
+        :type: :class:`github.HookResponse.HookResponse`
+        """
         self._completeIfNotSet(self._last_response)
         return self._NoneIfNotSet(self._last_response)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._updated_at)
         return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def delete(self):
+        """
+        :calls: `DELETE /repos/:user/:repo/hooks/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
@@ -73,6 +108,16 @@ class Hook(github.GithubObject.GithubObject):
         )
 
     def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:user/:repo/hooks/:id <http://developer.github.com/v3/todo>`_
+        :param name: string
+        :param config: dict
+        :param events: list of string
+        :param add_events: list of string
+        :param remove_events: list of string
+        :param active: bool
+        :rtype: None
+        """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(config, dict), config
         assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
@@ -100,6 +145,10 @@ class Hook(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def test(self):
+        """
+        :calls: `POST /repos/:user/:repo/hooks/:id/test <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/test",

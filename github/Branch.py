@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -19,12 +19,22 @@ import github.Commit
 
 
 class Branch(github.GithubObject.BasicGithubObject):
+    """
+    This class represents Branchs as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
         return self._NoneIfNotSet(self._commit)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         return self._NoneIfNotSet(self._name)
 
     def _initAttributes(self):

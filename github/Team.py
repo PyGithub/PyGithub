@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -21,37 +21,64 @@ import github.NamedUser
 
 
 class Team(github.GithubObject.GithubObject):
+    """
+    This class represents Teams as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def id(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._id)
         return self._NoneIfNotSet(self._id)
 
     @property
     def members_count(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._members_count)
         return self._NoneIfNotSet(self._members_count)
 
     @property
     def name(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._name)
         return self._NoneIfNotSet(self._name)
 
     @property
     def permission(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._permission)
         return self._NoneIfNotSet(self._permission)
 
     @property
     def repos_count(self):
+        """
+        :type: integer
+        """
         self._completeIfNotSet(self._repos_count)
         return self._NoneIfNotSet(self._repos_count)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def add_to_members(self, member):
+        """
+        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -61,6 +88,11 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def add_to_repos(self, repo):
+        """
+        :calls: `PUT /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: None
+        """
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
@@ -70,6 +102,10 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def delete(self):
+        """
+        :calls: `DELETE /teams/:id <http://developer.github.com/v3/todo>`_
+        :rtype: None
+        """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
@@ -78,6 +114,12 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def edit(self, name, permission=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /teams/:id <http://developer.github.com/v3/todo>`_
+        :param name: string
+        :param permission: string
+        :rtype: None
+        """
         assert isinstance(name, (str, unicode)), name
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
         post_parameters = {
@@ -94,6 +136,10 @@ class Team(github.GithubObject.GithubObject):
         self._useAttributes(data)
 
     def get_members(self):
+        """
+        :calls: `GET /teams/:id/members <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
@@ -102,6 +148,10 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def get_repos(self):
+        """
+        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
@@ -110,6 +160,11 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def has_in_members(self, member):
+        """
+        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: bool
+        """
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
             "GET",
@@ -120,6 +175,11 @@ class Team(github.GithubObject.GithubObject):
         return status == 204
 
     def has_in_repos(self, repo):
+        """
+        :calls: `GET /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: bool
+        """
         assert isinstance(repo, github.Repository.Repository), repo
         status, headers, data = self._requester.requestJson(
             "GET",
@@ -130,6 +190,11 @@ class Team(github.GithubObject.GithubObject):
         return status == 204
 
     def remove_from_members(self, member):
+        """
+        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -139,6 +204,11 @@ class Team(github.GithubObject.GithubObject):
         )
 
     def remove_from_repos(self, repo):
+        """
+        :calls: `DELETE /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: None
+        """
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",

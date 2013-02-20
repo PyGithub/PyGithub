@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -20,28 +20,47 @@ import github.CommitStats
 
 
 class GistHistoryState(github.GithubObject.GithubObject):
+    """
+    This class represents GistHistoryStates as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def change_status(self):
+        """
+        :type: :class:`github.CommitStats.CommitStats`
+        """
         self._completeIfNotSet(self._change_status)
         return self._NoneIfNotSet(self._change_status)
 
     @property
     def committed_at(self):
+        """
+        :type: datetime.datetime
+        """
         self._completeIfNotSet(self._committed_at)
         return self._NoneIfNotSet(self._committed_at)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     @property
     def user(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._user)
         return self._NoneIfNotSet(self._user)
 
     @property
     def version(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._version)
         return self._NoneIfNotSet(self._version)
 

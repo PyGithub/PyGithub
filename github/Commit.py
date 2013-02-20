@@ -3,7 +3,7 @@
 # Copyright 2012 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -25,47 +25,83 @@ import github.CommitComment
 
 
 class Commit(github.GithubObject.GithubObject):
+    """
+    This class represents Commits as returned for example by http://developer.github.com/v3/todo
+    """
+
     @property
     def author(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._author)
         return self._NoneIfNotSet(self._author)
 
     @property
     def commit(self):
+        """
+        :type: :class:`github.GitCommit.GitCommit`
+        """
         self._completeIfNotSet(self._commit)
         return self._NoneIfNotSet(self._commit)
 
     @property
     def committer(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
         self._completeIfNotSet(self._committer)
         return self._NoneIfNotSet(self._committer)
 
     @property
     def files(self):
+        """
+        :type: list of :class:`github.File.File`
+        """
         self._completeIfNotSet(self._files)
         return self._NoneIfNotSet(self._files)
 
     @property
     def parents(self):
+        """
+        :type: list of :class:`github.Commit.Commit`
+        """
         self._completeIfNotSet(self._parents)
         return self._NoneIfNotSet(self._parents)
 
     @property
     def sha(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._sha)
         return self._NoneIfNotSet(self._sha)
 
     @property
     def stats(self):
+        """
+        :type: :class:`github.CommitStats.CommitStats`
+        """
         self._completeIfNotSet(self._stats)
         return self._NoneIfNotSet(self._stats)
 
     @property
     def url(self):
+        """
+        :type: string
+        """
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
     def create_comment(self, body, line=github.GithubObject.NotSet, path=github.GithubObject.NotSet, position=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:user/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
+        :param body: string
+        :param line: integer
+        :param path: string
+        :param position: integer
+        :rtype: :class:`github.CommitComment.CommitComment`
+        """
         assert isinstance(body, (str, unicode)), body
         assert line is github.GithubObject.NotSet or isinstance(line, (int, long)), line
         assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
@@ -88,6 +124,13 @@ class Commit(github.GithubObject.GithubObject):
         return github.CommitComment.CommitComment(self._requester, data, completed=True)
 
     def create_status(self, state, target_url=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
+        """
+        :calls: `POST /repos/:user/:repo/statuses/:sha <http://developer.github.com/v3/todo>`_
+        :param state: string
+        :param target_url: string
+        :param description: string
+        :rtype: :class:`github.CommitStatus.CommitStatus`
+        """
         assert isinstance(state, (str, unicode)), state
         assert target_url is github.GithubObject.NotSet or isinstance(target_url, (str, unicode)), target_url
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
@@ -107,6 +150,10 @@ class Commit(github.GithubObject.GithubObject):
         return github.CommitStatus.CommitStatus(self._requester, data, completed=True)
 
     def get_comments(self):
+        """
+        :calls: `GET /repos/:user/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitComment.CommitComment`
+        """
         return github.PaginatedList.PaginatedList(
             github.CommitComment.CommitComment,
             self._requester,
@@ -115,6 +162,10 @@ class Commit(github.GithubObject.GithubObject):
         )
 
     def get_statuses(self):
+        """
+        :calls: `GET /repos/:user/:repo/statuses/:sha <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitStatus.CommitStatus`
+        """
         return github.PaginatedList.PaginatedList(
             github.CommitStatus.CommitStatus,
             self._requester,
