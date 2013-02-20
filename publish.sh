@@ -11,20 +11,21 @@ git add setup.py
 
 git log v$previousVersion.. --oneline
 
-echo "Edit ReadMe.rst and doc/changes.rst now, then press enter"
+echo "Edit README.rst and doc/changes.rst now, then press enter"
 read foobar
-git add ReadMe.rst doc/changes.rst
+git add README.rst doc/changes.rst
 
 git commit -m "Publish version $version"
+
+echo "Break (Ctrl+c) here if something is wrong. Else, press enter"
+read foobar
 
 cp COPYING* github
 python setup.py sdist upload
 rm -rf github/COPYING*
 
-echo "Break (Ctrl+c) here if something is wrong. Else, press enter"
-read foobar
-
 git tag -m "Version $version" v$version
 
-git push github master master:develop gh-pages
+git push github master master:develop
+git push --force github gh-pages
 git push --tags

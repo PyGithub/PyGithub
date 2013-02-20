@@ -20,7 +20,7 @@ import subprocess
 import shutil
 import os.path
 
-version = "1.12.0"
+version = "1.12.1"
 
 
 def execute(*args):
@@ -133,7 +133,7 @@ if __name__ == "__main__":
         ],
         test_suite="github.tests.AllTests",
         cmdclass={
-            "check": Check,
+            "check_": Check,
             "coverage": Coverage,
             "make_doc": MakeDoc,
             "publish": Publish,

@@ -4,6 +4,11 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.12.1 (February 20th, 2013)
+------------------------------------
+
+* Nothing, but packaging/upload of 1.12.0 failed
+
 `Version 1.12.0 <https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed>`_ (February 20th, 2013)
 ---------------------------------------------------------------------------------------------------------------
 
