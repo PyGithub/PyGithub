@@ -40,6 +40,11 @@ class Requester:
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
+    @classmethod
+    def resetConnectionClasses(cls):
+        cls.__httpConnectionClass = httplib.HTTPConnection
+        cls.__httpsConnectionClass = httplib.HTTPSConnection
+
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
         if password is not None:
             login = login_or_token
@@ -91,6 +96,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
+            if atLeastPython3 and isinstance(data, bytes):
+                data=data.decode("utf-8")
             return json.loads(data)
 
     def requestJson(self, verb, url, parameters, input):

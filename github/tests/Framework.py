@@ -157,6 +157,7 @@ class BasicTestCase(unittest.TestCase):
     def tearDown(self):
         unittest.TestCase.tearDown(self)
         self.__closeReplayFileIfNeeded()
+        github.Requester.Requester.resetConnectionClasses()
 
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
