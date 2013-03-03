@@ -199,10 +199,12 @@ class Requester:
             return url + "?" + urllib.urlencode(parameters)
 
     def __createConnection(self):
-        if atLeastPython26:
-            return self.__connectionClass(host=self.__hostname, port=self.__port, strict=True, timeout=self.__timeout)
-        else:  # pragma no cover
-            return self.__connectionClass(host=self.__hostname, port=self.__port, strict=True)  # pragma no cover
+        kwds = {}
+        if not atLeastPython3:  # pragma no branch
+            kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
+        if atLeastPython26:  # pragma no branch
+            kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
+        return self.__connectionClass(host=self.__hostname, port=self.__port, **kwds)
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
