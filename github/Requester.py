@@ -40,6 +40,11 @@ class Requester:
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
+    @classmethod
+    def resetConnectionClasses(cls):
+        cls.__httpConnectionClass = httplib.HTTPConnection
+        cls.__httpsConnectionClass = httplib.HTTPSConnection
+
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
         if password is not None:
             login = login_or_token
@@ -91,6 +96,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
+            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch
+                data = data.decode("utf-8")  # pragma no cover
             return json.loads(data)
 
     def requestJson(self, verb, url, parameters, input):
@@ -192,10 +199,12 @@ class Requester:
             return url + "?" + urllib.urlencode(parameters)
 
     def __createConnection(self):
-        if atLeastPython26:
-            return self.__connectionClass(host=self.__hostname, port=self.__port, strict=True, timeout=self.__timeout)
-        else:  # pragma no cover
-            return self.__connectionClass(host=self.__hostname, port=self.__port, strict=True)  # pragma no cover
+        kwds = {}
+        if not atLeastPython3:  # pragma no branch
+            kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
+        if atLeastPython26:  # pragma no branch
+            kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
+        return self.__connectionClass(host=self.__hostname, port=self.__port, **kwds)
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)

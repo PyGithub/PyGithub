@@ -10,6 +10,11 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+Version 1.12.2 (March 3rd, 2013)
+--------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/issues/142>`_ major issue with Python 3: Json decoding was broken. Thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for reporting
+
 Version 1.12.1 (February 20th, 2013)
 ------------------------------------
 
