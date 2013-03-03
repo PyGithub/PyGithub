@@ -96,8 +96,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
-            if atLeastPython3 and isinstance(data, bytes):
-                data=data.decode("utf-8")
+            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch
+                data = data.decode("utf-8")  # pragma no cover
             return json.loads(data)
 
     def requestJson(self, verb, url, parameters, input):
