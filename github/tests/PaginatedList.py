@@ -19,7 +19,8 @@ import Framework
 class PaginatedList(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.list = self.g.get_user("openframeworks").get_repo("openFrameworks").get_issues()
+        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
+        self.list = self.repo.get_issues()
 
     def testIteration(self):
         self.assertEqual(len(list(self.list)), 333)
@@ -80,3 +81,11 @@ class PaginatedList(Framework.TestCase):
             l += 1
             if l == 75:
                 break
+
+    def testCustomPerPage(self):
+        self.g.per_page = 100
+        self.assertEqual(len(list(self.repo.get_issues())), 456)
+
+    def testCustomPerPageWithGetPage(self):
+        self.g.per_page = 100
+        self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
