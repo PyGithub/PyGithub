@@ -1,4 +1,4 @@
 Main class: Github
 ==================
 
-.. autoclass:: github.Github.Github
+.. autoclass:: github.MainClass.Github

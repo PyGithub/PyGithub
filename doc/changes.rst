@@ -31,14 +31,14 @@ Version 1.12.1 (February 20th, 2013)
 * Fix bug in PaginatedList without url parameters. Thank you `llimllib <https://github.com/llimllib>`_ for the `contribution <https://github.com/jacquev6/PyGithub/pull/133>`_
 * `Implement <https://github.com/jacquev6/PyGithub/issues/130>`_ :meth:`github.NamedUser.NamedUser.get_keys`
 * `Support PubSubHub <https://github.com/jacquev6/PyGithub/issues/129>`_: :meth:`github.Repository.Repository.subscribe_to_hub` and :meth:`github.Repository.Repository.unsubscribe_from_hub`
-* `Publish the oauth scopes <https://github.com/jacquev6/PyGithub/issues/134>`_ in :attr:`github.Github.Github.oauth_scopes`, thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for asking
+* `Publish the oauth scopes <https://github.com/jacquev6/PyGithub/issues/134>`_ in :attr:`github.MainClass.Github.oauth_scopes`, thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for asking
 
 `Version 1.10.0 <https://github.com/jacquev6/PyGithub/issues?milestone=16&state=closed>`_ (December 25th, 2012) (Christmas 2012 edition)
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 * Major improvement: support Python 3! PyGithub is automaticaly tested on `Travis <http://travis-ci.org/jacquev6/PyGithub>`_ with versions 2.5, 2.6, 2.7, 3.1 and 3.2 of Python
-* Add a shortcut function :meth:`github.Github.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
-* :meth:`github.Github.Github.get_gitignore_templates` and :meth:`github.Github.Github.get_gitignore_template` for APIs ``/gitignore/templates``
+* Add a shortcut function :meth:`github.MainClass.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
+* :meth:`github.MainClass.Github.get_gitignore_templates` and :meth:`github.MainClass.Github.get_gitignore_template` for APIs ``/gitignore/templates``
 * Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
 * Get comments for all issues and all pull requests on a repository (``GET /repos/:user/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:user/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
 
