@@ -28,7 +28,22 @@ class BasicGithubObject(object):
     def __init__(self, requester, attributes, completed):
         self._requester = requester
         self._initAttributes()
+        self._storeAndUseAttributes(attributes)
+
+    def _storeAndUseAttributes(self, attributes):
         self._useAttributes(attributes)
+        self._rawData = attributes
+
+    @property
+    def raw_data(self):
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return self._rawData
+
+    def _completeIfNeeded(self):
+        pass
 
     @staticmethod
     def _parentUrl(url):
@@ -59,7 +74,11 @@ class GithubObject(BasicGithubObject):
         self.__completed = completed
 
     def _completeIfNotSet(self, value):
-        if not self.__completed and value is NotSet:
+        if value is NotSet:
+            self._completeIfNeeded()
+
+    def _completeIfNeeded(self):
+        if not self.__completed:
             self.__complete()
 
     def __complete(self):
@@ -69,5 +88,5 @@ class GithubObject(BasicGithubObject):
             None,
             None
         )
-        self._useAttributes(data)
+        self._storeAndUseAttributes(data)
         self.__completed = True

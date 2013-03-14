@@ -54,6 +54,7 @@ from PaginatedList import *
 from Exceptions import *
 from Enterprise import *
 from Logging_ import *
+from RawData import *
 
 from Issue33 import *
 from Issue50 import *
