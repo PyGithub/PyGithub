@@ -45,7 +45,7 @@ class Requester:
         cls.__httpConnectionClass = httplib.HTTPConnection
         cls.__httpsConnectionClass = httplib.HTTPSConnection
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
         if password is not None:
             login = login_or_token
             if atLeastPython3:
@@ -73,6 +73,7 @@ class Requester:
             assert False, "Unknown URL scheme"  # pragma no cover
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
+        self.per_page = per_page
 
         self.oauth_scopes = None
 
