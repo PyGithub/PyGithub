@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class GitAuthor(github.GithubObject.BasicGithubObject):
+class GitAuthor(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitAuthors as returned for example by http://developer.github.com/v3/todo
     """

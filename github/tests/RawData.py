@@ -68,14 +68,14 @@ class RawData(Framework.TestCase):
 
     def testCompletedObject(self):
         user = self.g.get_user("jacquev6")
-        self.assertTrue(user._GithubObject__completed)
+        self.assertTrue(user._CompletableGithubObject__completed)
         self.assertEqual(user.raw_data, RawData.jacquev6RawData)
 
     def testNotYetCompletedObject(self):
         user = self.g.get_user().get_repo("PyGithub").owner
-        self.assertFalse(user._GithubObject__completed)
+        self.assertFalse(user._CompletableGithubObject__completed)
         self.assertEqual(user.raw_data, RawData.jacquev6RawData)
-        self.assertTrue(user._GithubObject__completed)
+        self.assertTrue(user._CompletableGithubObject__completed)
 
     def testNonCompletableObject(self):
         plan = self.g.get_user().plan

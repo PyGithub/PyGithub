@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class GitignoreTemplate(github.GithubObject.BasicGithubObject):
+class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitignoreTemplates as returned for example by http://developer.github.com/v3/todo
     """

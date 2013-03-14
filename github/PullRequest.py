@@ -25,7 +25,7 @@ import github.IssueComment
 import github.Commit
 
 
-class PullRequest(github.GithubObject.GithubObject):
+class PullRequest(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequests as returned for example by http://developer.github.com/v3/todo
     """

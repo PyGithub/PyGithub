@@ -19,7 +19,7 @@ import github.GitAuthor
 import github.GitObject
 
 
-class GitTag(github.GithubObject.GithubObject):
+class GitTag(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTags as returned for example by http://developer.github.com/v3/todo
     """

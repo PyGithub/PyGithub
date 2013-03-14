@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class ContentFile(github.GithubObject.GithubObject):
+class ContentFile(github.GithubObject.CompletableGithubObject):
     """
     This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
     """

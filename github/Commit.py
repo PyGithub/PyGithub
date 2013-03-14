@@ -24,7 +24,7 @@ import github.CommitStats
 import github.CommitComment
 
 
-class Commit(github.GithubObject.GithubObject):
+class Commit(github.GithubObject.CompletableGithubObject):
     """
     This class represents Commits as returned for example by http://developer.github.com/v3/todo
     """

@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class GitObject(github.GithubObject.BasicGithubObject):
+class GitObject(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitObjects as returned for example by http://developer.github.com/v3/todo
     """

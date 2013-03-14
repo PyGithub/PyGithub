@@ -22,7 +22,7 @@ import github.GistFile
 import github.GistHistoryState
 
 
-class Gist(github.GithubObject.GithubObject):
+class Gist(github.GithubObject.CompletableGithubObject):
     """
     This class represents Gists as returned for example by http://developer.github.com/v3/todo
     """

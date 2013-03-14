@@ -18,7 +18,7 @@ import github.GithubObject
 import github.GitTreeElement
 
 
-class GitTree(github.GithubObject.GithubObject):
+class GitTree(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitTrees as returned for example by http://developer.github.com/v3/todo
     """

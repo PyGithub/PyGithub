@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class HookDescription(github.GithubObject.BasicGithubObject):
+class HookDescription(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents HookDescriptions as returned for example by http://developer.github.com/v3/todo
     """

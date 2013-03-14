@@ -20,7 +20,7 @@ import github.Repository
 import github.NamedUser
 
 
-class Event(github.GithubObject.BasicGithubObject):
+class Event(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Events as returned for example by http://developer.github.com/v3/todo
     """

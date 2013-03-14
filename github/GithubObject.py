@@ -24,7 +24,7 @@ class _NotSetType:
 NotSet = _NotSetType()
 
 
-class BasicGithubObject(object):
+class GithubObject(object):
     def __init__(self, requester, attributes, completed):
         self._requester = requester
         self._initAttributes()
@@ -41,9 +41,6 @@ class BasicGithubObject(object):
         """
         self._completeIfNeeded()
         return self._rawData
-
-    def _completeIfNeeded(self):
-        pass
 
     @staticmethod
     def _parentUrl(url):
@@ -68,9 +65,14 @@ class BasicGithubObject(object):
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
 
-class GithubObject(BasicGithubObject):
+class NonCompletableGithubObject(GithubObject):
+    def _completeIfNeeded(self):
+        pass
+
+
+class CompletableGithubObject(GithubObject):
     def __init__(self, requester, attributes, completed):
-        BasicGithubObject.__init__(self, requester, attributes, completed)
+        GithubObject.__init__(self, requester, attributes, completed)
         self.__completed = completed
 
     def _completeIfNotSet(self, value):

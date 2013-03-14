@@ -18,7 +18,7 @@ import github.GithubObject
 import github.Commit
 
 
-class Tag(github.GithubObject.BasicGithubObject):
+class Tag(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Tags as returned for example by http://developer.github.com/v3/todo
     """

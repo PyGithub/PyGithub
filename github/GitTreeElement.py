@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class GitTreeElement(github.GithubObject.BasicGithubObject):
+class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents GitTreeElements as returned for example by http://developer.github.com/v3/todo
     """

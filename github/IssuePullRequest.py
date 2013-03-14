@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class IssuePullRequest(github.GithubObject.BasicGithubObject):
+class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents IssuePullRequests as returned for example by http://developer.github.com/v3/todo
     """

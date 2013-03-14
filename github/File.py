@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class File(github.GithubObject.BasicGithubObject):
+class File(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Files as returned for example by http://developer.github.com/v3/todo
     """

@@ -24,7 +24,7 @@ import github.Organization
 import github.Event
 
 
-class NamedUser(github.GithubObject.GithubObject):
+class NamedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents NamedUsers as returned for example by http://developer.github.com/v3/todo
     """

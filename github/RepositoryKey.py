@@ -16,13 +16,13 @@
 import github.GithubObject
 
 
-class RepositoryKey(github.GithubObject.GithubObject):
+class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
     This class represents RepositoryKeys as returned for example by http://developer.github.com/v3/todo
     """
 
     def __init__(self, requester, attributes, completed, repoUrl):
-        github.GithubObject.GithubObject.__init__(self, requester, attributes, completed)
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, attributes, completed)
         self.__repoUrl = repoUrl
 
     @property
