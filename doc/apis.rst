@@ -23,7 +23,7 @@ APIs
 
 * ``/gists/:id``
 
-  * GET: :meth:`github.Github.Github.get_gist`
+  * GET: :meth:`github.MainClass.Github.get_gist`
   * PATCH: :meth:`github.Gist.Gist.edit`
   * DELETE: :meth:`github.Gist.Gist.delete`
 
@@ -50,7 +50,7 @@ APIs
 
 * ``/gists/public``
 
-  * GET: :meth:`github.Github.Github.get_gists`
+  * GET: :meth:`github.MainClass.Github.get_gists`
 
 * ``/gists/starred``
 
@@ -58,15 +58,15 @@ APIs
 
 * ``/gitignore/templates``
 
-  * GET: :meth:`github.Github.Github.get_gitignore_templates`
+  * GET: :meth:`github.MainClass.Github.get_gitignore_templates`
 
 * ``/gitignore/templates/:name``
 
-  * GET: :meth:`github.Github.Github.get_gitignore_template`
+  * GET: :meth:`github.MainClass.Github.get_gitignore_template`
 
 * ``/hooks``
 
-  * GET: :meth:`github.Github.Github.get_hooks`
+  * GET: :meth:`github.MainClass.Github.get_hooks`
 
 * ``/hub``
 
@@ -82,19 +82,19 @@ APIs
 
 * ``/legacy/repos/search/:keyword``
 
-  * GET: :meth:`github.Github.Github.legacy_search_repos`
+  * GET: :meth:`github.MainClass.Github.legacy_search_repos`
 
 * ``/legacy/user/email/:email``
 
-  * GET: :meth:`github.Github.Github.legacy_search_user_by_email`
+  * GET: :meth:`github.MainClass.Github.legacy_search_user_by_email`
 
 * ``/legacy/user/search/:keyword``
 
-  * GET: :meth:`github.Github.Github.legacy_search_users`
+  * GET: :meth:`github.MainClass.Github.legacy_search_users`
 
 * ``/markdown``
 
-  * POST: :meth:`github.Github.Github.render_markdown`
+  * POST: :meth:`github.MainClass.Github.render_markdown`
 
 * ``/markdown/raw``
 
@@ -106,7 +106,7 @@ APIs
 
 * ``/orgs/:org``
 
-  * GET: :meth:`github.Github.Github.get_organization`
+  * GET: :meth:`github.MainClass.Github.get_organization`
   * PATCH: :meth:`github.Organization.Organization.edit`
 
 * ``/orgs/:org/events``
@@ -148,7 +148,7 @@ APIs
 
 * ``/repos/:user/:repo``
 
-  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_repo` or :meth:`github.NamedUser.NamedUser.get_repo` or :meth:`github.Organization.Organization.get_repo` or :meth:`github.Github.Github.get_repo`
+  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_repo` or :meth:`github.NamedUser.NamedUser.get_repo` or :meth:`github.Organization.Organization.get_repo` or :meth:`github.MainClass.Github.get_repo`
   * PATCH: :meth:`github.Repository.Repository.edit`
   * DELETE: :meth:`github.Repository.Repository.delete`
 
@@ -482,7 +482,7 @@ APIs
 
 * ``/user``
 
-  * GET: :meth:`github.Github.Github.get_user`
+  * GET: :meth:`github.MainClass.Github.get_user`
   * PATCH: :meth:`github.AuthenticatedUser.AuthenticatedUser.edit`
 
 * ``/user/emails``
@@ -557,7 +557,7 @@ APIs
 
 * ``/users/:user``
 
-  * GET: :meth:`github.Github.Github.get_user`
+  * GET: :meth:`github.MainClass.Github.get_user`
 
 * ``/users/:user/events``
 

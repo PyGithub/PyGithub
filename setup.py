@@ -62,10 +62,10 @@ class MakeDoc(SimpleCommand):
         os.chdir(d)
         execute("git", "init")
         execute("sphinx-build", "-b", "html", "-d", "doctrees", "..", ".")
-        with open(".nojekyll", "w"):
-            pass
-        with open(".gitignore", "w") as f:
-            f.write("/doctrees/\n")
+        open(".nojekyll", "w").close()
+        f = open(".gitignore", "w")
+        f.write("/doctrees/\n")
+        f.close()
         execute("git", "add", ".")
         execute("git", "commit", "--message", "Automatic generation")
         execute("git", "push", "--force", "../..", "HEAD:gh-pages")
