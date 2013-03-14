@@ -47,7 +47,7 @@ class Gist(Framework.TestCase):
         self.assertEqual(self.gist.history[0].version, "a40de483e42ba33bda308371c0ef8383db73be9e")
         self.assertEqual(self.gist.html_url, "https://gist.github.com/2729810")
         self.assertEqual(self.gist.id, "2729810")
-        self.assertEqual(self.gist.public, True)
+        self.assertTrue(self.gist.public)
         self.assertEqual(self.gist.updated_at, datetime.datetime(2012, 2, 29, 16, 47, 12))
         self.assertEqual(self.gist.url, "https://api.github.com/gists/2729810")
         self.assertEqual(self.gist.user.login, "jacquev6")

@@ -28,13 +28,13 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
         self.assertEqual(self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47))
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
-        self.assertEqual(self.repo.fork, False)
+        self.assertFalse(self.repo.fork)
         self.assertEqual(self.repo.forks, 3)
         self.assertEqual(self.repo.full_name, "jacquev6/PyGithub")
         self.assertEqual(self.repo.git_url, "git://github.com/jacquev6/PyGithub.git")
-        self.assertEqual(self.repo.has_downloads, True)
-        self.assertEqual(self.repo.has_issues, True)
-        self.assertEqual(self.repo.has_wiki, False)
+        self.assertTrue(self.repo.has_downloads)
+        self.assertTrue(self.repo.has_issues)
+        self.assertFalse(self.repo.has_wiki)
         self.assertEqual(self.repo.homepage, "http://vincent-jacques.net/PyGithub")
         self.assertEqual(self.repo.html_url, "https://github.com/jacquev6/PyGithub")
         self.assertEqual(self.repo.id, 3544490)
@@ -45,10 +45,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.organization, None)
         self.assertEqual(self.repo.owner.login, "jacquev6")
         self.assertEqual(self.repo.parent, None)
-        self.assertEqual(self.repo.permissions.admin, True)
-        self.assertEqual(self.repo.permissions.pull, True)
-        self.assertEqual(self.repo.permissions.push, True)
-        self.assertEqual(self.repo.private, False)
+        self.assertTrue(self.repo.permissions.admin)
+        self.assertTrue(self.repo.permissions.pull)
+        self.assertTrue(self.repo.permissions.push)
+        self.assertFalse(self.repo.private)
         self.assertEqual(self.repo.pushed_at, datetime.datetime(2012, 5, 27, 6, 0, 28))
         self.assertEqual(self.repo.size, 308)
         self.assertEqual(self.repo.source, None)
@@ -116,7 +116,7 @@ class Repository(Framework.TestCase):
 
     def testCreateHookWithAllParameters(self):
         hook = self.repo.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
-        self.assertEqual(hook.active, True)  # WTF
+        self.assertTrue(hook.active)  # WTF
         self.assertEqual(hook.id, 257993)
 
     def testCreateDownloadWithMinimalArguments(self):
@@ -140,7 +140,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(download.path, "downloads/jacquev6/PyGithub/Foobar.txt")
         self.assertEqual(download.policy, "ewogICAgJ2V4cGlyYXRpb24nOiAnMjExMi0wNS0yMlQxOToxMTo0OS4wMDBaJywKICAgICdjb25kaXRpb25zJzogWwogICAgICAgIHsnYnVja2V0JzogJ2dpdGh1Yid9LAogICAgICAgIHsna2V5JzogJ2Rvd25sb2Fkcy9qYWNxdWV2Ni9QeUdpdGh1Yi9Gb29iYXIudHh0J30sCiAgICAgICAgeydhY2wnOiAncHVibGljLXJlYWQnfSwKICAgICAgICB7J3N1Y2Nlc3NfYWN0aW9uX3N0YXR1cyc6ICcyMDEnfSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRGaWxlbmFtZScsICcnXSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRDb250ZW50LVR5cGUnLCAnJ10KICAgIF0KfQ==")
         self.assertEqual(download.prefix, "downloads/jacquev6/PyGithub")
-        self.assertEqual(download.redirect, False)
+        self.assertFalse(download.redirect)
         self.assertEqual(download.s3_url, "https://github.s3.amazonaws.com/")
         self.assertEqual(download.signature, "8FCU/4rgT3ohXfE9N6HO7JgbuK4=")
         self.assertEqual(download.size, 1024)
