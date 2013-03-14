@@ -15,6 +15,8 @@
 
 import Framework
 
+import github.NamedUser
+
 class RawData(Framework.TestCase):
     jacquev6RawData = {
         u'disk_usage': 13812,
@@ -80,3 +82,8 @@ class RawData(Framework.TestCase):
     def testNonCompletableObject(self):
         plan = self.g.get_user().plan
         self.assertEqual(plan.raw_data, RawData.planRawData)
+
+    def testCreateObjectFromRawData(self):
+        user = self.g.create_from_raw_data(github.NamedUser.NamedUser, RawData.jacquev6RawData)
+        self.assertEqual(user._CompletableGithubObject__completed, True)
+        self.assertEqual(user.name, "Vincent Jacques")
