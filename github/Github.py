@@ -26,6 +26,7 @@ import Legacy
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
+import Notification
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -151,6 +152,45 @@ class Github(object):
             self.__requester,
             "/gists/public",
             None
+        )
+
+    def get_notification(self, id):
+        """
+        :calls: `GET /notifications/threads/:id <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.Notification.Notification`
+        """
+
+        assert isinstance(id, (str, unicode)), id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/notifications/threads/" + id,
+            None,
+            None
+        )
+        print data
+        return github.Notification.Notification(self.__requester, data, completed=True)
+
+    def get_notifications(self, all=False, participating=True):
+        """
+        :calls: `GET /notifications <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
+        """
+
+        assert isinstance(all, (bool, )), all
+        assert isinstance(participating, (bool,)), participating
+
+        params = dict()
+        if all:
+            params["all"] = "true"
+        if participating:
+            params["participating"] = "true"
+        # TODO: implement parameter "since"
+
+        return github.PaginatedList.PaginatedList(
+            github.Notification.Notification,
+            self.__requester,
+            "/notifications",
+            params
         )
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
