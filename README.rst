@@ -10,21 +10,12 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Version 1.12.2 (March 3rd, 2013)
---------------------------------
+`Version 1.13.0 <https://github.com/jacquev6/PyGithub/issues?milestone=23&state=closed>`_ (March 15th, 2013) (`ksookocheff-va <https://github.com/ptwobrussell>`_'s edition)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+All issues solved in this version were reported by `ksookocheff-va <https://github.com/ptwobrussell>`_. Thank you!
 
-* `Fix <https://github.com/jacquev6/PyGithub/issues/142>`_ major issue with Python 3: Json decoding was broken. Thank you `bilderbuchi <https://github.com/bilderbuchi>`_ for reporting
-
-Version 1.12.1 (February 20th, 2013)
-------------------------------------
-
-* Nothing, but packaging/upload of 1.12.0 failed
-
-`Version 1.12.0 <https://github.com/jacquev6/PyGithub/issues?milestone=22&state=closed>`_ (February 20th, 2013)
----------------------------------------------------------------------------------------------------------------
-
-* Much better documentation: http://jacquev6.github.com/PyGithub
-* `Implement <https://github.com/jacquev6/PyGithub/issues/140>`_ ``github.Repository.Repository.get_gir_contents``. Thank you `ksookocheff-va <https://github.com/ksookocheff-va>`_ for asking
+* `Fix <https://github.com/jacquev6/PyGithub/issues/143>`_ for Python 3 on case-insensitive file-systems
+* `Add <https://github.com/jacquev6/PyGithub/issues/145>`_ a property ``Github.per_page`` (and a parameter to the constructor) to change the number of items requested in paginated requests
 
 Documentation
 =============

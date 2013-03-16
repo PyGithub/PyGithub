@@ -96,6 +96,8 @@ class PaginatedList(PaginatedListBase):
         self.__firstParams = firstParams or ()
         self.__nextUrl = firstUrl
         self.__nextParams = firstParams
+        if self.__requester.per_page != 30:
+            self.__nextParams["per_page"] = self.__requester.per_page
 
     def _couldGrow(self):
         return self.__nextUrl is not None
@@ -130,6 +132,8 @@ class PaginatedList(PaginatedListBase):
         params = dict(self.__firstParams)
         if page != 0:
             params["page"] = page + 1
+        if self.__requester.per_page != 30:
+            params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
 
         return [
