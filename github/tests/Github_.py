@@ -31,15 +31,15 @@ class Github(Framework.TestCase):
         self.assertEqual(repos[1].created_at, datetime.datetime(2011, 6, 23, 22, 52, 33))
         self.assertEqual(repos[1].name, "github-v3-api")
         self.assertEqual(repos[1].watchers, 35)
-        self.assertEqual(repos[1].has_downloads, True)
+        self.assertTrue(repos[1].has_downloads)
         self.assertEqual(repos[3].homepage, "http://peter-murach.github.com/github")
         self.assertEqual(repos[1].url, "/repos/jwilger/github-v3-api")
-        self.assertEqual(repos[1].fork, False)
-        self.assertEqual(repos[1].has_issues, True)
-        self.assertEqual(repos[1].has_wiki, False)
+        self.assertFalse(repos[1].fork)
+        self.assertTrue(repos[1].has_issues)
+        self.assertFalse(repos[1].has_wiki)
         self.assertEqual(repos[1].forks, 13)
         self.assertEqual(repos[1].size, 212)
-        self.assertEqual(repos[1].private, False)
+        self.assertFalse(repos[1].private)
         self.assertEqual(repos[1].open_issues, 2)
         self.assertEqual(repos[3].pushed_at, datetime.datetime(2012, 6, 28, 21, 26, 31))
         self.assertEqual(repos[1].description, "Ruby Client for the GitHub v3 API")
@@ -92,6 +92,25 @@ class Github(Framework.TestCase):
         self.assertEqual(hook.supported_events, ["push"])
         self.assertEqual(hook.events, ["push"])
         self.assertEqual(hook.schema, [["string", "url"], ["string", "token"], ["string", "project_id"], ["string", "milestone_id"], ["string", "category_id"]])
+
+    def testGetNotification(self):
+        notification = self.g.get_notification("8406712")
+        self.assertEqual(notification.id, "8406712")
+        self.assertEqual(notification.unread, False)
+        self.assertEqual(notification.reason, "author")
+        self.assertEqual(notification.subject.title, "Feature/coveralls")
+        self.assertEqual(notification.subject.type, "PullRequest")
+        self.assertEqual(notification.repository.id, 8432784)
+
+    def testGetNotifications(self):
+        notifications = self.g.get_notifications()
+        notification = notifications[0]
+        self.assertEqual(notification.id, "8406712")
+        self.assertEqual(notification.unread, False)
+        self.assertEqual(notification.reason, "author")
+        self.assertEqual(notification.subject.title, "Feature/coveralls")
+        self.assertEqual(notification.subject.type, "PullRequest")
+        self.assertEqual(notification.repository.id, 8432784)
 
     def testGetRepoFromFullName(self):
         self.assertEqual(self.g.get_repo("jacquev6/PyGithub").description, "Python library implementing the full Github API v3")

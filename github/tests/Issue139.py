@@ -23,7 +23,7 @@ class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.user = self.g.get_user().get_repo("PyGithub").get_issue(139).user
 
     def testCompletion(self):
-        self.assertEqual(self.user._GithubObject__completed, False)
+        self.assertFalse(self.user._GithubObject__completed)
         self.assertEqual(self.user.name, "Ian Ozsvald")
-        self.assertEqual(self.user._GithubObject__completed, True)
+        self.assertTrue(self.user._GithubObject__completed)
         self.assertEqual(self.user.plan, None)

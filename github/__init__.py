@@ -14,14 +14,14 @@
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-The primary class you will instanciate is :class:`github.Github.Github`.
+The primary class you will instanciate is :class:`github.MainClass.Github`.
 From its ``get_``, ``create_`` methods, you will obtain instances of all Github objects
 like :class:`github.NamedUser.NamedUser` or :class:`github.Repository.Repository`.
 """
 
 import logging
 
-from Github import Github
+from MainClass import Github
 from GithubException import GithubException
 from InputFileContent import InputFileContent
 from InputGitAuthor import InputGitAuthor

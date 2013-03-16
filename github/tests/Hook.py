@@ -24,7 +24,7 @@ class Hook(Framework.TestCase):
         self.hook = self.g.get_user().get_repo("PyGithub").get_hook(257993)
 
     def testAttributes(self):
-        self.assertEqual(self.hook.active, True)  # WTF
+        self.assertTrue(self.hook.active)  # WTF
         self.assertEqual(self.hook.config, {"url": "http://foobar.com"})
         self.assertEqual(self.hook.created_at, datetime.datetime(2012, 5, 19, 6, 1, 45))
         self.assertEqual(self.hook.events, ["push"])
@@ -55,4 +55,4 @@ class Hook(Framework.TestCase):
         self.hook.edit("web", {"url": "http://foobar.com"}, remove_events=["fork"])
         self.assertEqual(self.hook.events, ["push"])
         self.hook.edit("web", {"url": "http://foobar.com"}, active=True)
-        self.assertEqual(self.hook.active, True)
+        self.assertTrue(self.hook.active)

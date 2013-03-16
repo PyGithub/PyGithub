@@ -26,10 +26,12 @@ import Legacy
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
+import Notification
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_TIMEOUT = 10
+DEFAULT_PER_PAGE = 30
 
 
 class Github(object):
@@ -37,7 +39,7 @@ class Github(object):
     This is the main class you instanciate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None):
+    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent=None, per_page=DEFAULT_PER_PAGE):
         """
         :param login_or_token: string
         :param password: string
@@ -46,6 +48,7 @@ class Github(object):
         :param client_id: string
         :param client_secret: string
         :param user_agent: string
+        :param per_page: int
         """
 
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
@@ -55,7 +58,7 @@ class Github(object):
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent)
+        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         return self.__requester.FIX_REPO_GET_GIT_REF
@@ -64,6 +67,17 @@ class Github(object):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
     FIX_REPO_GET_GIT_REF = property(__get_FIX_REPO_GET_GIT_REF, __set_FIX_REPO_GET_GIT_REF)
+
+    def get_per_page(self):
+        """
+        :type: int
+        """
+        return self.__requester.per_page
+
+    def set_per_page(self, value):
+        self.__requester.per_page = value
+
+    per_page = property(get_per_page, set_per_page)
 
     @property
     def rate_limiting(self):
@@ -151,6 +165,45 @@ class Github(object):
             self.__requester,
             "/gists/public",
             None
+        )
+
+    def get_notification(self, id):
+        """
+        :calls: `GET /notifications/threads/:id <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.Notification.Notification`
+        """
+
+        assert isinstance(id, (str, unicode)), id
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/notifications/threads/" + id,
+            None,
+            None
+        )
+        print data
+        return github.Notification.Notification(self.__requester, data, completed=True)
+
+    def get_notifications(self, all=False, participating=True):
+        """
+        :calls: `GET /notifications <http://developer.github.com/v3/todo>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
+        """
+
+        assert isinstance(all, (bool, )), all
+        assert isinstance(participating, (bool,)), participating
+
+        params = dict()
+        if all:
+            params["all"] = "true"
+        if participating:
+            params["participating"] = "true"
+        # TODO: implement parameter "since"
+
+        return github.PaginatedList.PaginatedList(
+            github.Notification.Notification,
+            self.__requester,
+            "/notifications",
+            params
         )
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):

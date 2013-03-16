@@ -36,7 +36,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.followers, 13)
         self.assertEqual(self.user.following, 24)
         self.assertEqual(self.user.gravatar_id, "b68de5ae38616c296fa345d2b9df2225")
-        self.assertEqual(self.user.hireable, False)
+        self.assertFalse(self.user.hireable)
         self.assertEqual(self.user.html_url, "https://github.com/jacquev6")
         self.assertEqual(self.user.id, 327146)
         self.assertEqual(self.user.location, "Paris, France")
@@ -64,7 +64,7 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(self.user.blog, "Blog edited by PyGithub")
         self.assertEqual(self.user.company, "Company edited by PyGithub")
         self.assertEqual(self.user.location, "Location edited by PyGithub")
-        self.assertEqual(self.user.hireable, True)
+        self.assertTrue(self.user.hireable)
         self.assertEqual(self.user.bio, "Bio edited by PyGithub")
 
     def testEmails(self):
@@ -77,39 +77,39 @@ class AuthenticatedUser(Framework.TestCase):
     def testFollowing(self):
         nvie = self.g.get_user("nvie")
         self.assertListKeyEqual(self.user.get_following(), lambda u: u.login, ["schacon", "jamis", "chad", "unclebob", "dabrahams", "jnorthrup", "brugidou", "regisb", "walidk", "tanzilli", "fjardon", "r3c", "sdanzan", "vineus", "cjuniet", "gturri", "ant9000", "asquini", "claudyus", "jardon-u", "s-bernard", "kamaradclimber", "Lyloa", "nvie"])
-        self.assertEqual(self.user.has_in_following(nvie), True)
+        self.assertTrue(self.user.has_in_following(nvie))
         self.user.remove_from_following(nvie)
-        self.assertEqual(self.user.has_in_following(nvie), False)
+        self.assertFalse(self.user.has_in_following(nvie))
         self.user.add_to_following(nvie)
-        self.assertEqual(self.user.has_in_following(nvie), True)
+        self.assertTrue(self.user.has_in_following(nvie))
         self.assertListKeyEqual(self.user.get_followers(), lambda u: u.login, ["jnorthrup", "brugidou", "regisb", "walidk", "afzalkhan", "sdanzan", "vineus", "gturri", "fjardon", "cjuniet", "jardon-u", "kamaradclimber", "L42y"])
 
     def testWatching(self):
         gitflow = self.g.get_user("nvie").get_repo("gitflow")
         self.assertListKeyEqual(self.user.get_watched(), lambda r: r.name, ["git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "PyGithub", "django", "django", "TestPyGithub"])
-        self.assertEqual(self.user.has_in_watched(gitflow), True)
+        self.assertTrue(self.user.has_in_watched(gitflow))
         self.user.remove_from_watched(gitflow)
-        self.assertEqual(self.user.has_in_watched(gitflow), False)
+        self.assertFalse(self.user.has_in_watched(gitflow))
         self.user.add_to_watched(gitflow)
-        self.assertEqual(self.user.has_in_watched(gitflow), True)
+        self.assertTrue(self.user.has_in_watched(gitflow))
 
     def testStarring(self):
         gitflow = self.g.get_user("nvie").get_repo("gitflow")
         self.assertListKeyEqual(self.user.get_starred(), lambda r: r.name, ["git", "boost.php", "capistrano", "boost.perl", "git-subtree", "git-hg", "homebrew", "celtic_knot", "twisted-intro", "markup", "hub", "gitflow", "murder", "boto", "agit", "d3", "pygit2", "git-pulls", "django_mathlatex", "scrumblr", "developer.github.com", "python-github3", "PlantUML", "bootstrap", "drawnby", "django-socketio", "django-realtime", "playground", "BozoCrack", "FatherBeaver", "amaunet", "django", "django", "moviePlanning", "folly"])
-        self.assertEqual(self.user.has_in_starred(gitflow), True)
+        self.assertTrue(self.user.has_in_starred(gitflow))
         self.user.remove_from_starred(gitflow)
-        self.assertEqual(self.user.has_in_starred(gitflow), False)
+        self.assertFalse(self.user.has_in_starred(gitflow))
         self.user.add_to_starred(gitflow)
-        self.assertEqual(self.user.has_in_starred(gitflow), True)
+        self.assertTrue(self.user.has_in_starred(gitflow))
 
     def testSubscriptions(self):
         gitflow = self.g.get_user("nvie").get_repo("gitflow")
         self.assertListKeyEqual(self.user.get_subscriptions(), lambda r: r.name, ["gitflow", "ViDE", "Boost.HierarchicalEnum", "QuadProgMm", "DrawSyntax", "DrawTurksHead", "PrivateStuff", "vincent-jacques.net", "Hacking", "C4Planner", "developer.github.com", "PyGithub", "PyGithub", "django", "CinePlanning", "PyGithub", "PyGithub", "PyGithub", "IpMap", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub", "PyGithub"])
-        self.assertEqual(self.user.has_in_subscriptions(gitflow), True)
+        self.assertTrue(self.user.has_in_subscriptions(gitflow))
         self.user.remove_from_subscriptions(gitflow)
-        self.assertEqual(self.user.has_in_subscriptions(gitflow), False)
+        self.assertFalse(self.user.has_in_subscriptions(gitflow))
         self.user.add_to_subscriptions(gitflow)
-        self.assertEqual(self.user.has_in_subscriptions(gitflow), True)
+        self.assertTrue(self.user.has_in_subscriptions(gitflow))
 
     def testGetAuthorizations(self):
         self.assertListKeyEqual(self.user.get_authorizations(), lambda a: a.id, [372294])
