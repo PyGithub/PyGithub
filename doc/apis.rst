@@ -104,6 +104,14 @@ APIs
 
   * GET: :meth:`github.Repository.Repository.get_network_events`
 
+* ``/notifications``
+
+  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_notifications`
+
+* ``/notifications/threads/:id``
+
+  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_notification`
+
 * ``/orgs/:org``
 
   * GET: :meth:`github.MainClass.Github.get_organization`
