@@ -180,7 +180,6 @@ class Github(object):
             None,
             None
         )
-        print data
         return github.Notification.Notification(self.__requester, data, completed=True)
 
     def get_notifications(self, all=False, participating=True):
