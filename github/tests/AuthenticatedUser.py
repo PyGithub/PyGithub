@@ -194,6 +194,13 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertEqual(notification.subject.title, "Feature/coveralls")
         self.assertEqual(notification.subject.type, "PullRequest")
         self.assertEqual(notification.repository.id, 8432784)
+        self.assertEqual(notification.updated_at, datetime.datetime(2013, 3, 15, 5, 43, 11))
+        self.assertEqual(notification.url, None)
+        self.assertEqual(notification.subject.url, None)
+        self.assertEqual(notification.subject.latest_comment_url, None)
 
     def testGetNotifications(self):
-        self.assertListKeyBegin(self.user.get_notifications(participating=True), lambda n: n.id, ["8406712"])
+        self.assertListKeyEqual(self.user.get_notifications(participating=True), lambda n: n.id, ["8406712"])
+
+    def testGetNotificationsWithOtherArguments(self):
+        self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])

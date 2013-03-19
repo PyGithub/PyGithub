@@ -90,24 +90,24 @@ class Notification(github.GithubObject.GithubObject):
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
-        if "id" in attributes:
+        if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (str, unicode)), attributes["id"]
             self._id = attributes["id"]
-        if "repository" in attributes:
+        if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
             self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
-        if "subject" in attributes:
+        if "subject" in attributes:  # pragma no branch
             assert attributes["subject"] is None or isinstance(attributes["subject"], dict), attributes["subject"]
             self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, attributes["subject"], completed=False)
-        if "reason" in attributes:
+        if "reason" in attributes:  # pragma no branch
             assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
             self._reason = attributes["reason"]
-        if "unread" in attributes:
+        if "unread" in attributes:  # pragma no branch
             assert attributes["unread"] is None or isinstance(attributes["unread"], bool), attributes["unread"]
             self._unread = attributes["unread"]
-        if "updated_at" in attributes:
+        if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"]);
-        if "url" in attributes:
+        if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
