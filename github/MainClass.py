@@ -26,6 +26,7 @@ import Legacy
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
+import Notification
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
