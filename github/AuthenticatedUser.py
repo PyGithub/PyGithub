@@ -617,6 +617,44 @@ class AuthenticatedUser(github.GithubObject.GithubObject):
             None
         )
 
+    def get_notification(self, id):
+        """
+        :calls: `GET /notifications/threads/:id <http://developer.github.com/v3/activity/notifications/#view-a-single-thread>`_
+        :rtype: :class:`github.Notification.Notification`
+        """
+
+        assert isinstance(id, (str, unicode)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            "/notifications/threads/" + id,
+            None,
+            None
+        )
+        return github.Notification.Notification(self._requester, data, completed=True)
+
+    def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
+        """
+        :calls: `GET /notifications <http://developer.github.com/v3/activity/notifications/#list-your-notifications>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Notification.Notification`
+        """
+
+        assert all is github.GithubObject.NotSet or isinstance(all, bool), all
+        assert participating is github.GithubObject.NotSet or isinstance(participating, bool), participating
+
+        params = dict()
+        if all is not github.GithubObject.NotSet:
+            params["all"] = all
+        if participating is not github.GithubObject.NotSet:
+            params["participating"] = participating
+        # TODO: implement parameter "since"
+
+        return github.PaginatedList.PaginatedList(
+            github.Notification.Notification,
+            self._requester,
+            "/notifications",
+            params
+        )
+
     def get_organization_events(self, org):
         """
         :calls: `GET /users/:user/events/orgs/:org <http://developer.github.com/v3/todo>`_

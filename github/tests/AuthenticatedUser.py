@@ -185,3 +185,15 @@ class AuthenticatedUser(Framework.TestCase):
     def testCreateFork(self):
         repo = self.user.create_fork(self.g.get_user("nvie").get_repo("gitflow"))
         self.assertEqual(repo.source.full_name, "nvie/gitflow")
+
+    def testGetNotification(self):
+        notification = self.user.get_notification("8406712")
+        self.assertEqual(notification.id, "8406712")
+        self.assertEqual(notification.unread, False)
+        self.assertEqual(notification.reason, "author")
+        self.assertEqual(notification.subject.title, "Feature/coveralls")
+        self.assertEqual(notification.subject.type, "PullRequest")
+        self.assertEqual(notification.repository.id, 8432784)
+
+    def testGetNotifications(self):
+        self.assertListKeyBegin(self.user.get_notifications(participating=True), lambda n: n.id, ["8406712"])
