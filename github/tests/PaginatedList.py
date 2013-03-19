@@ -83,7 +83,9 @@ class PaginatedList(Framework.TestCase):
                 break
 
     def testCustomPerPage(self):
+        self.assertEqual(self.g.per_page, 30)
         self.g.per_page = 100
+        self.assertEqual(self.g.per_page, 100)
         self.assertEqual(len(list(self.repo.get_issues())), 456)
 
     def testCustomPerPageWithGetPage(self):
