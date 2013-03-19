@@ -93,6 +93,25 @@ class Github(Framework.TestCase):
         self.assertEqual(hook.events, ["push"])
         self.assertEqual(hook.schema, [["string", "url"], ["string", "token"], ["string", "project_id"], ["string", "milestone_id"], ["string", "category_id"]])
 
+    def testGetNotification(self):
+        notification = self.g.get_notification("8406712")
+        self.assertEqual(notification.id, "8406712")
+        self.assertEqual(notification.unread, False)
+        self.assertEqual(notification.reason, "author")
+        self.assertEqual(notification.subject.title, "Feature/coveralls")
+        self.assertEqual(notification.subject.type, "PullRequest")
+        self.assertEqual(notification.repository.id, 8432784)
+
+    def testGetNotifications(self):
+        notifications = self.g.get_notifications()
+        notification = notifications[0]
+        self.assertEqual(notification.id, "8406712")
+        self.assertEqual(notification.unread, False)
+        self.assertEqual(notification.reason, "author")
+        self.assertEqual(notification.subject.title, "Feature/coveralls")
+        self.assertEqual(notification.subject.type, "PullRequest")
+        self.assertEqual(notification.repository.id, 8432784)
+
     def testGetRepoFromFullName(self):
         self.assertEqual(self.g.get_repo("jacquev6/PyGithub").description, "Python library implementing the full Github API v3")
 
