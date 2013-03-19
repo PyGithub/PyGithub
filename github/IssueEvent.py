@@ -19,7 +19,7 @@ import github.Issue
 import github.NamedUser
 
 
-class IssueEvent(github.GithubObject.GithubObject):
+class IssueEvent(github.GithubObject.CompletableGithubObject):
     """
     This class represents IssueEvents as returned for example by http://developer.github.com/v3/todo
     """

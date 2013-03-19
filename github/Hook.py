@@ -18,7 +18,7 @@ import github.GithubObject
 import github.HookResponse
 
 
-class Hook(github.GithubObject.GithubObject):
+class Hook(github.GithubObject.CompletableGithubObject):
     """
     This class represents Hooks as returned for example by http://developer.github.com/v3/todo
     """

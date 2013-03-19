@@ -47,7 +47,7 @@ import github.Event
 import github.Legacy
 
 
-class Repository(github.GithubObject.GithubObject):
+class Repository(github.GithubObject.CompletableGithubObject):
     """
     This class represents Repositorys as returned for example by http://developer.github.com/v3/todo
     """

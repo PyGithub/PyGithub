@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class PullRequestMergeStatus(github.GithubObject.BasicGithubObject):
+class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents PullRequestMergeStatuss as returned for example by http://developer.github.com/v3/todo
     """

@@ -18,7 +18,7 @@ import urllib
 import github.GithubObject
 
 
-class Label(github.GithubObject.GithubObject):
+class Label(github.GithubObject.CompletableGithubObject):
     """
     This class represents Labels as returned for example by http://developer.github.com/v3/todo
     """

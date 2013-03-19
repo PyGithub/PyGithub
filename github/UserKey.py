@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class UserKey(github.GithubObject.GithubObject):
+class UserKey(github.GithubObject.CompletableGithubObject):
     """
     This class represents UserKeys as returned for example by http://developer.github.com/v3/todo
     """

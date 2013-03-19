@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class CommitStats(github.GithubObject.BasicGithubObject):
+class CommitStats(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents CommitStatss as returned for example by http://developer.github.com/v3/todo
     """

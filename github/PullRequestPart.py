@@ -19,7 +19,7 @@ import github.Repository
 import github.NamedUser
 
 
-class PullRequestPart(github.GithubObject.BasicGithubObject):
+class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents PullRequestParts as returned for example by http://developer.github.com/v3/todo
     """

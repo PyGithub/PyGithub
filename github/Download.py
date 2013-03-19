@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class Download(github.GithubObject.GithubObject):
+class Download(github.GithubObject.CompletableGithubObject):
     """
     This class represents Downloads as returned for example by http://developer.github.com/v3/todo
     """

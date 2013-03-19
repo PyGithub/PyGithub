@@ -18,7 +18,7 @@ import github.GithubObject
 import github.GitObject
 
 
-class GitRef(github.GithubObject.GithubObject):
+class GitRef(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitRefs as returned for example by http://developer.github.com/v3/todo
     """

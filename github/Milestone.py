@@ -22,7 +22,7 @@ import github.NamedUser
 import github.Label
 
 
-class Milestone(github.GithubObject.GithubObject):
+class Milestone(github.GithubObject.CompletableGithubObject):
     """
     This class represents Milestones as returned for example by http://developer.github.com/v3/todo
     """

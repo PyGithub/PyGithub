@@ -23,7 +23,7 @@ import github.Repository
 import github.NamedUser
 
 
-class Organization(github.GithubObject.GithubObject):
+class Organization(github.GithubObject.CompletableGithubObject):
     """
     This class represents Organizations as returned for example by http://developer.github.com/v3/todo
     """

@@ -19,7 +19,7 @@ import github.NamedUser
 import github.CommitStats
 
 
-class GistHistoryState(github.GithubObject.GithubObject):
+class GistHistoryState(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistHistoryStates as returned for example by http://developer.github.com/v3/todo
     """

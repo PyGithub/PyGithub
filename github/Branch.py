@@ -18,7 +18,7 @@ import github.GithubObject
 import github.Commit
 
 
-class Branch(github.GithubObject.BasicGithubObject):
+class Branch(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Branchs as returned for example by http://developer.github.com/v3/todo
     """

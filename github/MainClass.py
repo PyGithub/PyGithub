@@ -278,3 +278,13 @@ class Github(object):
             None
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, attributes, completed=True)
+
+    def create_from_raw_data(self, klass, raw_data):
+        """
+        Creates an object from raw_data previously obtained by ``myObject.raw_data``
+
+        :param klass: the class of the object to create
+        :param raw_data: dict
+        :rtype: instance of class ``klass``
+        """
+        return klass(self.__requester, raw_data, completed=True)

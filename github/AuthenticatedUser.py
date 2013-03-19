@@ -27,7 +27,7 @@ import github.Event
 import github.Authorization
 
 
-class AuthenticatedUser(github.GithubObject.GithubObject):
+class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents AuthenticatedUsers as returned for example by http://developer.github.com/v3/todo
     """

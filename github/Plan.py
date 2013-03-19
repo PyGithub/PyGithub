@@ -16,7 +16,7 @@
 import github.GithubObject
 
 
-class Plan(github.GithubObject.BasicGithubObject):
+class Plan(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Plans as returned for example by http://developer.github.com/v3/todo
     """

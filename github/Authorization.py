@@ -18,7 +18,7 @@ import github.GithubObject
 import github.AuthorizationApplication
 
 
-class Authorization(github.GithubObject.GithubObject):
+class Authorization(github.GithubObject.CompletableGithubObject):
     """
     This class represents Authorizations as returned for example by http://developer.github.com/v3/todo
     """

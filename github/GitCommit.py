@@ -19,7 +19,7 @@ import github.GitAuthor
 import github.GitTree
 
 
-class GitCommit(github.GithubObject.GithubObject):
+class GitCommit(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitCommits as returned for example by http://developer.github.com/v3/todo
     """

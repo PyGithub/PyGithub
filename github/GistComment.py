@@ -18,7 +18,7 @@ import github.GithubObject
 import github.NamedUser
 
 
-class GistComment(github.GithubObject.GithubObject):
+class GistComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents GistComments as returned for example by http://developer.github.com/v3/todo
     """

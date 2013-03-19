@@ -11,10 +11,12 @@ What's new?
 ===========
 
 `Version 1.13.0 <https://github.com/jacquev6/PyGithub/issues?milestone=23&state=closed>`_ (March 15th, 2013) (`ksookocheff-va <https://github.com/ptwobrussell>`_'s edition)
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 All issues solved in this version were reported by `ksookocheff-va <https://github.com/ptwobrussell>`_. Thank you!
 
 * `Fix <https://github.com/jacquev6/PyGithub/issues/143>`_ for Python 3 on case-insensitive file-systems
+* `Expose <https://github.com/jacquev6/PyGithub/issues/144>`_ raw data returned by Github for all objects
 * `Add <https://github.com/jacquev6/PyGithub/issues/145>`_ a property ``Github.per_page`` (and a parameter to the constructor) to change the number of items requested in paginated requests
 
 Documentation
