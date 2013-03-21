@@ -69,7 +69,7 @@ class Gist(Framework.TestCase):
         self.gist.edit("Description edited by PyGithub", {"barbaz.txt": github.InputFileContent("File also created by PyGithub")})
         self.assertEqual(self.gist.description, "Description edited by PyGithub")
         self.assertEqual(self.gist.updated_at, datetime.datetime(2012, 5, 19, 7, 6, 10))
-        self.assertEqual(self.gist.files.keys(), ["foobar.txt", "barbaz.txt"])
+        self.assertEqual(set(self.gist.files.keys()), set(["foobar.txt", "barbaz.txt"]))
 
     def testCreateComment(self):
         comment = self.gist.create_comment("Comment created by PyGithub")

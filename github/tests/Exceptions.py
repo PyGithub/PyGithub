@@ -44,10 +44,6 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
                     "message": "Validation Failed"
                 }
             )
-            if atLeastPython26 and atMostPython2:
-                self.assertEqual(str(exception), "422 {u\'message\': u\'Validation Failed\', u\'errors\': [{u\'field\': u\'key\', u\'message\': u\"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", u\'code\': u\'custom\', u\'resource\': u\'PublicKey\'}]}")
-            else:
-                self.assertEqual(str(exception), "422 {\'message\': \'Validation Failed\', \'errors\': [{\'field\': \'key\', \'message\': \"key is invalid. It must begin with \'ssh-rsa\' or \'ssh-dss\'. Check that you\'re copying the public half of the key\", \'code\': \'custom\', \'resource\': \'PublicKey\'}]}")  # pragma no cover
         self.assertTrue(raised)
 
     def testUnknownObject(self):

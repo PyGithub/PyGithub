@@ -18,10 +18,13 @@ import sys
 import unittest
 import httplib
 import traceback
+import json
+import urlparse
 
 import github
 
 atLeastPython3 = sys.hexversion >= 0x03000000
+atMostPython32 = sys.hexversion < 0x03030000
 
 
 def readLine(file):
@@ -66,7 +69,13 @@ class RecordingConnection:  # pragma no cover
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
         fixAuthorizationHeader(headers)
-        self.__writeLine(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', ''))
+        self.__writeLine(self.__protocol)
+        self.__writeLine(verb)
+        self.__writeLine(self.__host)
+        self.__writeLine(self.__port)
+        self.__writeLine(url)
+        self.__writeLine(str(headers))
+        self.__writeLine(input.replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -114,8 +123,27 @@ class ReplayingConnection:
 
     def request(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        expectation = readLine(self.__file)
-        self.__testCase.assertEqual(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', ''), expectation)
+        self.__testCase.assertEqual(self.__protocol, readLine(self.__file))
+        self.__testCase.assertEqual(verb, readLine(self.__file))
+        self.__testCase.assertEqual(self.__host, readLine(self.__file))
+        self.__testCase.assertEqual(self.__port, readLine(self.__file))
+        self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
+        self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
+        expectedInput = readLine(self.__file)
+        if input.startswith("{"):
+            self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
+        elif atMostPython32:  # @todo Test in all cases, including Python 3.3
+            # In Python 3.3, dicts are not output in the same order as in Python 2.5 -> 3.2.
+            # So, form-data encoding is not deterministic and is difficult to test.
+            self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+
+    def __splitUrl(self, url):
+        splitedUrl = url.split("?")
+        if len(splitedUrl) == 1:
+            return splitedUrl
+        self.__testCase.assertEqual(len(splitedUrl), 2)
+        base, qs = splitedUrl
+        return (base, urlparse.parse_qs(qs))
 
     def getresponse(self):
         status = int(readLine(self.__file))
