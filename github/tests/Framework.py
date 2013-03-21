@@ -18,7 +18,6 @@ import sys
 import unittest
 import httplib
 import traceback
-import urlparse
 
 import github
 
@@ -148,7 +147,7 @@ class ReplayingConnection:
             return splitedUrl
         self.__testCase.assertEqual(len(splitedUrl), 2)
         base, qs = splitedUrl
-        return (base, urlparse.parse_qs(qs))
+        return (base, sorted(qs.split("&")))
 
     def getresponse(self):
         status = int(readLine(self.__file))
