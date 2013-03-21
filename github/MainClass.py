@@ -61,6 +61,9 @@ class Github(object):
         self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
+        """
+        :type: bool
+        """
         return self.__requester.FIX_REPO_GET_GIT_REF
 
     def __set_FIX_REPO_GET_GIT_REF(self, value):
@@ -68,16 +71,16 @@ class Github(object):
 
     FIX_REPO_GET_GIT_REF = property(__get_FIX_REPO_GET_GIT_REF, __set_FIX_REPO_GET_GIT_REF)
 
-    def get_per_page(self):
+    def __get_per_page(self):
         """
         :type: int
         """
         return self.__requester.per_page
 
-    def set_per_page(self, value):
+    def __set_per_page(self, value):
         self.__requester.per_page = value
 
-    per_page = property(get_per_page, set_per_page)
+    per_page = property(__get_per_page, __set_per_page)
 
     @property
     def rate_limiting(self):
