@@ -21,6 +21,15 @@ import traceback
 
 import github
 
+atLeastPython3 = sys.hexversion >= 0x03000000
+
+
+def readLine(file):
+    if atLeastPython3:
+        return file.readline().decode("utf-8").strip()
+    else:
+        return file.readline().strip()
+
 
 class FakeHttpResponse:
     def __init__(self, status, headers, output):
@@ -57,7 +66,7 @@ class RecordingConnection:  # pragma no cover
         print verb, url, input, headers,
         self.__cnx.request(verb, url, input, headers)
         fixAuthorizationHeader(headers)
-        self.__file.write(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', '') + "\n")
+        self.__writeLine(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -67,15 +76,18 @@ class RecordingConnection:  # pragma no cover
         headers = res.getheaders()
         output = res.read()
 
-        self.__file.write(str(status) + "\n")
-        self.__file.write(str(headers) + "\n")
-        self.__file.write(str(output) + "\n")
+        self.__writeLine(str(status))
+        self.__writeLine(str(headers))
+        self.__writeLine(str(output))
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__file.write("\n")
+        self.__writeLine("")
         return self.__cnx.close()
+
+    def __writeLine(self, line):
+        self.__file.write(line + "\n")
 
 
 class RecordingHttpConnection(RecordingConnection):  # pragma no cover
@@ -102,18 +114,18 @@ class ReplayingConnection:
 
     def request(self, verb, url, input, headers):
         fixAuthorizationHeader(headers)
-        expectation = self.__file.readline().strip()
+        expectation = readLine(self.__file)
         self.__testCase.assertEqual(self.__protocol + " " + verb + " " + self.__host + " " + self.__port + " " + url + " " + str(headers) + " " + input.replace('\n', '').replace('\r', ''), expectation)
 
     def getresponse(self):
-        status = int(self.__file.readline().strip())
-        headers = eval(self.__file.readline().strip())
-        output = self.__file.readline().strip()
+        status = int(readLine(self.__file))
+        headers = eval(readLine(self.__file))
+        output = readLine(self.__file)
 
         return FakeHttpResponse(status, headers, output)
 
     def close(self):
-        self.__file.readline()
+        readLine(self.__file)
 
 
 def ReplayingHttpConnection(testCase, file, *args, **kwds):
@@ -145,8 +157,8 @@ class BasicTestCase(unittest.TestCase):
             # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("r"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("r"), *args, **kwds)
+                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("rb"), *args, **kwds),
+                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("rb"), *args, **kwds)
             )
             self.login = "login"
             self.password = "password"
@@ -173,7 +185,7 @@ class BasicTestCase(unittest.TestCase):
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
             if not self.recordMode:  # pragma no branch
-                self.assertEqual(self.__file.readline(), "")
+                self.assertEqual(readLine(self.__file), "")
             self.__file.close()
 
     def assertListKeyEqual(self, elements, key, expectedKeys):
