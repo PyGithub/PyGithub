@@ -285,7 +285,7 @@ class Github(object):
 
     def create_from_raw_data(self, klass, raw_data):
         """
-        Creates an object from raw_data previously obtained by ``myObject.raw_data``
+        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
 
         :param klass: the class of the object to create
         :param raw_data: dict

@@ -25,6 +25,9 @@ NotSet = _NotSetType()
 
 
 class GithubObject(object):
+    """
+    Base class for all classes representing objects returned by the API.
+    """
     def __init__(self, requester, attributes, completed):
         self._requester = requester
         self._initAttributes()

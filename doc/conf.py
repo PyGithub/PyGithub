@@ -250,6 +250,8 @@ with open("github_objects.rst", "w") as github_objects:
 	github_objects.write("Github objects\n")
 	github_objects.write("==============\n")
 	github_objects.write("\n")
+	github_objects.write(".. autoclass:: github.GithubObject.GithubObject()\n")
+	github_objects.write("\n")
 	github_objects.write(".. toctree::\n")
 
 	for obj in ["AuthenticatedUser", "Authorization", "AuthorizationApplication", "Branch", "Commit", "CommitComment", "CommitStats", "CommitStatus", "Comparison", "ContentFile", "Download", "Event", "File", "Gist", "GistComment", "GistFile", "GistHistoryState", "GitAuthor", "GitBlob", "GitCommit", "GitObject", "GitignoreTemplate", "GitRef", "GitTag", "GitTree", "GitTreeElement", "Hook", "HookDescription", "HookResponse", "Issue", "IssueComment", "IssueEvent", "IssuePullRequest", "Label", "Milestone", "NamedUser", "Notification", "NotificationSubject", "Organization", "Permissions", "Plan", "PullRequest", "PullRequestComment", "PullRequestMergeStatus", "PullRequestPart", "Repository", "RepositoryKey", "Tag", "Team", "UserKey"]:
