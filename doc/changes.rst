@@ -4,6 +4,15 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.13.0 <https://github.com/jacquev6/PyGithub/issues?milestone=23&state=closed>`_ (March 22nd, 2013)
+------------------------------------------------------------------------------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/issues/143>`_ for Python 3 on case-insensitive file-systems. Thank you `ptwobrussell <https://github.com/ptwobrussell>`_ for reporting
+* `Expose <https://github.com/jacquev6/PyGithub/issues/144>`_ raw data returned by Github for all objects. Thank you `ptwobrussell <https://github.com/ptwobrussell>`_ for asking
+* `Add <https://github.com/jacquev6/PyGithub/issues/145>`_ a property ``Github.per_page`` (and a parameter to the constructor) to change the number of items requested in paginated requests. Thank you again `ptwobrussell <https://github.com/ptwobrussell>`_ for asking
+* `Implement <https://github.com/jacquev6/PyGithub/pull/148>`_ the first part of the `Notifications <http://developer.github.com/changes/2012-10-26-notifications-api/>`_ API. Thank you `pgolm <https://github.com/pgolm>`_
+* `Fix <https://github.com/jacquev6/PyGithub/issues/149>`_ automated tests on Python 3.3. Thank you `bkabrda <https://github.com/bkabrda>`_ for reporting
+
 Version 1.12.2 (March 3rd, 2013)
 --------------------------------
 

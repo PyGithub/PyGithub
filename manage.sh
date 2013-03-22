@@ -46,6 +46,7 @@ function doc {
     git add . || exit
     git commit --message "Automatic generation" || exit
     git push --force ../.. HEAD:gh-pages || exit
+    cd ../..
 }
 
 function push {
