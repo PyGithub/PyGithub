@@ -23,61 +23,6 @@ import os.path
 version = "1.12.2"
 
 
-def execute(*args):
-    subprocess.check_call(args)
-
-
-class SimpleCommand(setuptools.Command):
-    user_options = []
-
-    def __init__(self, dist, *args, **kwds):
-        setuptools.Command.__init__(self, dist, *args, **kwds)
-        self.dist = dist
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-
-class Check(SimpleCommand):
-    def run(self):
-        execute("pep8", "--ignore=E501", "github", "setup.py")  # pip install pep8
-
-
-class Coverage(SimpleCommand):
-    def run(self):
-        execute("coverage", "run", "--branch", "--include=github/*.py", "--omit=github/tests/*.py", "setup.py", "test", "--quiet")
-        execute("python3", "setup.py", "test", "--quiet")
-        execute("coverage", "report", "--show-missing")
-
-
-class MakeDoc(SimpleCommand):
-    def run(self):
-        d = "doc/build"
-        if os.path.exists(d):
-            shutil.rmtree(d)
-        os.makedirs(d)
-        os.chdir(d)
-        execute("git", "init")
-        execute("sphinx-build", "-b", "html", "-d", "doctrees", "..", ".")
-        open(".nojekyll", "w").close()
-        f = open(".gitignore", "w")
-        f.write("/doctrees/\n")
-        f.close()
-        execute("git", "add", ".")
-        execute("git", "commit", "--message", "Automatic generation")
-        execute("git", "push", "--force", "../..", "HEAD:gh-pages")
-
-
-class Publish(SimpleCommand):
-    def run(self):
-        Check(self.dist).run()
-        Coverage(self.dist).run()
-        MakeDoc(self.dist).run()
-
-
 if __name__ == "__main__":
     setuptools.setup(
         name="PyGithub",
@@ -132,11 +77,5 @@ if __name__ == "__main__":
             "Topic :: Software Development",
         ],
         test_suite="github.tests.AllTests",
-        cmdclass={
-            "check_": Check,
-            "coverage": Coverage,
-            "make_doc": MakeDoc,
-            "publish": Publish,
-        },
         use_2to3=True
     )
