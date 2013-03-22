@@ -17,6 +17,7 @@ import Framework
 
 import github.NamedUser
 
+
 class RawData(Framework.TestCase):
     jacquev6RawData = {
         'disk_usage': 13812,

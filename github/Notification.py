@@ -107,7 +107,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self._unread = attributes["unread"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"]);
+            self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
