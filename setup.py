@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques
+# Copyright 2012, 2013 Vincent Jacques
 # vincent@vincent-jacques.net
 
-# This file is part of PyGithub. http://vincent-jacques.net/PyGithub
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
 # PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
 # as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -73,7 +73,13 @@ if __name__ == "__main__":
             "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
             "Operating System :: OS Independent",
             "Programming Language :: Python",
+            "Programming Language :: Python :: 2",
+            "Programming Language :: Python :: 2.5",
+            "Programming Language :: Python :: 2.6",
+            "Programming Language :: Python :: 2.7",
             "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.2",
+            "Programming Language :: Python :: 3.3",
             "Topic :: Software Development",
         ],
         test_suite="github.tests.AllTests",
