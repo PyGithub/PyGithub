@@ -20,7 +20,7 @@ import subprocess
 import shutil
 import os.path
 
-version = "1.13.0"
+version = "1.13.1"
 
 
 if __name__ == "__main__":

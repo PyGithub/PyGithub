@@ -10,6 +10,11 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+Version 1.13.1 (March 28nd, 2013)
+---------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/issues/153>`_ login/password authentication for Python 3. Thank you `sebastianstigler <https://github.com/sebastianstigler>`_ for reporting
+
 `Version 1.13.0 <https://github.com/jacquev6/PyGithub/issues?milestone=23&state=closed>`_ (March 22nd, 2013)
 ------------------------------------------------------------------------------------------------------------
 
