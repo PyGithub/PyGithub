@@ -16,13 +16,27 @@
 
 class GithubException(Exception):
     """
-    This class represents GithubExceptions as returned for example by http://developer.github.com/v3/todo
+    Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub.
     """
 
     def __init__(self, status, data):
         Exception.__init__(self)
-        self.status = status
-        self.data = data
+        self.__status = status
+        self.__data = data
+
+    @property
+    def status(self):
+        """
+        The status returned by the Github API
+        """
+        return self.__status
+
+    @property
+    def data(self):
+        """
+        The (decoded) data returned by the Github API
+        """
+        return self.__data
 
     def __str__(self):
         return str(self.status) + " " + str(self.data)
