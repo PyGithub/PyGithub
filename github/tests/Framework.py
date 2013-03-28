@@ -63,8 +63,6 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "token private_token_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
-        else:  # pragma no cover
-            assert False
 
 
 class RecordingConnection:  # pragma no cover
