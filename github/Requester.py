@@ -49,7 +49,7 @@ class Requester:
         if password is not None:
             login = login_or_token
             if atLeastPython3:
-                self.__authorizationHeader = "Basic " + str(base64.b64encode(bytearray(login + ":" + password, "utf-8"))).replace('\n', '')  # pragma no cover
+                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover
             else:
                 self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
         elif login_or_token is not None:
