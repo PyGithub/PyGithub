@@ -70,7 +70,7 @@ class Requester:
         elif o.scheme == "http":
             self.__connectionClass = self.__httpConnectionClass
         else:
-            assert False, "Unknown URL scheme"  # pragma no cover
+            assert False, "Unknown URL scheme"
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page

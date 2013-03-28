@@ -28,6 +28,11 @@ class Enterprise(Framework.BasicTestCase):
         g = github.Github(self.login, self.password, base_url="http://my.enterprise.com")
         self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
 
+    def testUnknownUrlScheme(self):
+        with self.assertRaises(AssertionError) as cm:
+            github.Github(self.login, self.password, base_url="foobar://my.enterprise.com")
+        self.assertEqual(cm.exception.args[0], "Unknown URL scheme")
+
     def testLongUrl(self):
         g = github.Github(self.login, self.password, base_url="http://my.enterprise.com/path/to/github")
         repos = g.get_user().get_repos()
