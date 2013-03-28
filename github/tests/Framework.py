@@ -53,7 +53,13 @@ class FakeHttpResponse:
 
 def fixAuthorizationHeader(headers):
     if "Authorization" in headers:
-        if headers["Authorization"].startswith("token "):
+        if headers["Authorization"].endswith("ZmFrZV9sb2dpbjpmYWtlX3Bhc3N3b3Jk"):
+            # This special case is here to test the real Authorization header
+            # sent by PyGithub. It would have avoided issue https://github.com/jacquev6/PyGithub/issues/153
+            # because we would have seen that Python 3 was not generating the same
+            # header as Python 2
+            pass
+        elif headers["Authorization"].startswith("token "):
             headers["Authorization"] = "token private_token_removed"
         elif headers["Authorization"].startswith("Basic "):
             headers["Authorization"] = "Basic login_and_password_removed"
