@@ -27,8 +27,8 @@ atMostPython32 = sys.hexversion < 0x03030000
 
 if atLeastPython26:
     import json
-else:  # pragma no cover
-    import simplejson as json  # pragma no cover
+else:  # pragma no cover (Covered by all tests with Python 2.5)
+    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
 
 def readLine(file):
@@ -65,7 +65,7 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Basic login_and_password_removed"
 
 
-class RecordingConnection:  # pragma no cover
+class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
     def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
@@ -107,14 +107,14 @@ class RecordingConnection:  # pragma no cover
         self.__file.write(line + "\n")
 
 
-class RecordingHttpConnection(RecordingConnection):  # pragma no cover
+class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
     _realConnection = httplib.HTTPConnection
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
-class RecordingHttpsConnection(RecordingConnection):  # pragma no cover
+class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
     _realConnection = httplib.HTTPSConnection
 
     def __init__(self, file, *args, **kwds):
@@ -179,7 +179,7 @@ class BasicTestCase(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.__fileName = ""
         self.__file = None
-        if self.recordMode:  # pragma no cover
+        if self.recordMode:  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
             github.Requester.Requester.injectConnectionClasses(
                 lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
                 lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
@@ -220,7 +220,7 @@ class BasicTestCase(unittest.TestCase):
 
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
-            if not self.recordMode:  # pragma no branch
+            if not self.recordMode:  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
                 self.assertEqual(readLine(self.__file), "")
             self.__file.close()
 
@@ -239,5 +239,5 @@ class TestCase(BasicTestCase):
         self.g = github.Github(self.login, self.password)
 
 
-def activateRecordMode():  # pragma no cover
+def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True

@@ -36,7 +36,7 @@ class ContentFile(Framework.TestCase):
         self.assertEqual(self.file.name, "ReadMe.md")
         self.assertEqual(self.file.path, "ReadMe.md")
         if atLeastPython3:
-            self.assertEqual(len(base64.b64decode(bytearray(self.file.content, "utf-8"))), 7531)  # pragma no cover
+            self.assertEqual(len(base64.b64decode(bytearray(self.file.content, "utf-8"))), 7531)  # pragma no cover (Covered with Python 3)
         else:
             self.assertEqual(len(base64.b64decode(self.file.content)), 7531)
         self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
