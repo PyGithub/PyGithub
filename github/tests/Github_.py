@@ -17,6 +17,8 @@ import datetime
 
 import Framework
 
+import github
+
 
 class Github(Framework.TestCase):
     def testGetGists(self):
@@ -107,3 +109,6 @@ class Github(Framework.TestCase):
         t = self.g.get_gitignore_template("C++")
         self.assertEqual(t.name, "C++")
         self.assertEqual(t.source, "# Compiled Object files\n*.slo\n*.lo\n*.o\n\n# Compiled Dynamic libraries\n*.so\n*.dylib\n\n# Compiled Static libraries\n*.lai\n*.la\n*.a\n")
+
+    def testStringOfNotSet(self):
+        self.assertEqual(str(github.GithubObject.NotSet), "NotSet")

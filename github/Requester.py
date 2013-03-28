@@ -25,8 +25,8 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 if atLeastPython26:
     import json
-else:  # pragma no cover
-    import simplejson as json  # pragma no cover
+else:  # pragma no cover (Covered by all tests with Python 2.5)
+    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
 import GithubException
 
@@ -49,7 +49,7 @@ class Requester:
         if password is not None:
             login = login_or_token
             if atLeastPython3:
-                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover
+                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
             else:
                 self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
         elif login_or_token is not None:
@@ -70,7 +70,7 @@ class Requester:
         elif o.scheme == "http":
             self.__connectionClass = self.__httpConnectionClass
         else:
-            assert False, "Unknown URL scheme"  # pragma no cover
+            assert False, "Unknown URL scheme"
         self.rate_limiting = (5000, 5000)
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page
@@ -97,8 +97,8 @@ class Requester:
         if len(data) == 0:
             return None
         else:
-            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch
-                data = data.decode("utf-8")  # pragma no cover
+            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
+                data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
             return json.loads(data)
 
     def requestJson(self, verb, url, parameters, input):
@@ -201,9 +201,9 @@ class Requester:
 
     def __createConnection(self):
         kwds = {}
-        if not atLeastPython3:  # pragma no branch
+        if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
-        if atLeastPython26:  # pragma no branch
+        if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
         return self.__connectionClass(host=self.__hostname, port=self.__port, **kwds)
 
@@ -215,6 +215,4 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
-                else:  # pragma no cover
-                    requestHeaders["Authorization"] = "Unknown authorization removed"
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))

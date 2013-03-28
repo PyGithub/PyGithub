@@ -57,7 +57,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
+                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
 
     def testUnknownUser(self):
@@ -71,7 +71,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover
+                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
 
     def testBadAuthentication(self):
@@ -85,5 +85,5 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             if atLeastPython26 and atMostPython2:
                 self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
             else:
-                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover
+                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
