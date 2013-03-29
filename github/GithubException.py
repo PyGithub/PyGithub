@@ -17,6 +17,8 @@
 class GithubException(Exception):
     """
     Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub.
+
+    Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
     """
 
     def __init__(self, status, data):
