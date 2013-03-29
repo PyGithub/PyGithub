@@ -40,3 +40,9 @@ class GithubException(Exception):
 
     def __str__(self):
         return str(self.status) + " " + str(self.data)
+
+
+class BadCredentialsException(GithubException):
+    """
+    Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
+    """
