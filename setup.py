@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright 2012, 2013 Vincent Jacques
-# vincent@vincent-jacques.net
+# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2012 Zearin zearin@gonk.net
+# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 

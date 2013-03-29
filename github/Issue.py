@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques
-# vincent@vincent-jacques.net
+# Copyright 2012 Andrew Bettison andrewb@zip.com.au
+# Copyright 2012 Philip Kimmey philip@rover.com
+# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2012 Zearin zearin@gonk.net
+# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
