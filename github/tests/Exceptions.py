@@ -91,17 +91,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
 
 class SpecificExceptions(Framework.TestCase):
     def testBadCredentials(self):
-        raised = False
-        try:
-            github.Github("BadUser", "BadPassword").get_user().login
-        except github.BadCredentialsException, exception:
-            raised = True
-        self.assertTrue(raised)
+        self.assertRaises(github.BadCredentialsException, lambda: github.Github("BadUser", "BadPassword").get_user().login)
 
     def testUnknownObject(self):
-        raised = False
-        try:
-            self.g.get_user().get_repo("Xxx")
-        except github.UnknownObjectException:
-            raised = True
-        self.assertTrue(raised)
+        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
