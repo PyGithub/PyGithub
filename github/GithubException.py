@@ -46,3 +46,9 @@ class BadCredentialsException(GithubException):
     """
     Exception raised in case of bad credentials (when Github API replies with a 401 or 403 HTML status)
     """
+
+
+class UnknownObjectException(GithubException):
+    """
+    Exception raised a non-existing object is requested (when Github API replies with a 404 HTML status)
+    """

@@ -97,3 +97,11 @@ class SpecificExceptions(Framework.TestCase):
         except github.BadCredentialsException, exception:
             raised = True
         self.assertTrue(raised)
+
+    def testUnknownObject(self):
+        raised = False
+        try:
+            self.g.get_user().get_repo("Xxx")
+        except github.UnknownObjectException:
+            raised = True
+        self.assertTrue(raised)

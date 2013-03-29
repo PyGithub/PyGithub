@@ -96,6 +96,8 @@ class Requester:
     def __createException(self, status, output):
         if status == 401 and output["message"] == "Bad credentials":
             return GithubException.BadCredentialsException(status, output)
+        if status == 404 and output["message"] == "Not Found":
+            return GithubException.UnknownObjectException(status, output)
         return GithubException.GithubException(status, output)
 
     def __structuredFromJson(self, data):
