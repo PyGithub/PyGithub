@@ -78,6 +78,12 @@ class Gist(Framework.TestCase):
         gist.edit(files={"foo.txt": None})
         self.assertEqual(gist.files.keys(), ["bar.txt"])
 
+    def testRenameFile(self):
+        gist = self.g.get_gist("5339374")
+        self.assertEqual(gist.files.keys(), ["bar.txt"])
+        gist.edit(files={"bar.txt": github.InputFileContent(gist.files["bar.txt"].content, new_name="baz.txt")})
+        self.assertEqual(gist.files.keys(), ["baz.txt"])
+
     def testCreateComment(self):
         comment = self.gist.create_comment("Comment created by PyGithub")
         self.assertEqual(comment.id, 323629)

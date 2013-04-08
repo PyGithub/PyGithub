@@ -14,21 +14,29 @@
 
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
+import github.GithubObject
+
 
 class InputFileContent(object):
     """
     """
 
-    def __init__(self, content):
+    def __init__(self, content, new_name=github.GithubObject.NotSet):
         """
         :param content: string
+        :param new_name: string
         """
 
         assert isinstance(content, (str, unicode)), content
+        assert new_name is github.GithubObject.NotSet or isinstance(new_name, (str, unicode)), new_name
+        self.__newName = new_name
         self.__content = content
 
     @property
     def _identity(self):
-        return {
+        identity = {
             "content": self.__content,
         }
+        if self.__newName is not github.GithubObject.NotSet:
+            identity["filename"] = self.__newName
+        return identity
