@@ -25,7 +25,7 @@ All classes inherit from :class:`github.GithubObject.GithubObject`.
 import logging
 
 from MainClass import Github
-from GithubException import GithubException
+from GithubException import GithubException, BadCredentialsException, UnknownObjectException
 from InputFileContent import InputFileContent
 from InputGitAuthor import InputGitAuthor
 from InputGitTreeElement import InputGitTreeElement

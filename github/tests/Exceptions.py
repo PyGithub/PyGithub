@@ -88,3 +88,11 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             else:
                 self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
+
+
+class SpecificExceptions(Framework.TestCase):
+    def testBadCredentials(self):
+        self.assertRaises(github.BadCredentialsException, lambda: github.Github("BadUser", "BadPassword").get_user().login)
+
+    def testUnknownObject(self):
+        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))

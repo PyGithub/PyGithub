@@ -6,6 +6,11 @@ Logging
 
 .. autofunction:: github.enable_console_debug_logging
 
+Error Handling
+--------------
+
+.. autoclass:: github.GithubException.GithubException()
+
 Default argument
 ----------------
 
