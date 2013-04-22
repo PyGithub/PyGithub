@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.14.0 <https://github.com/jacquev6/PyGithub/issues?milestone=24&state=closed>`_ (April 22nd, 2013)
+------------------------------------------------------------------------------------------------------------
+
+* `Improve <https://github.com/jacquev6/PyGithub/issues/156>`_ gist edition. Thank you `jasonwiener <https://github.com/jasonwiener>`_ for asking:
+  * Delete a file with `gist.edit(files={"name.txt": None})`
+  * Rename a file with `gist.edit(files={"old_name.txt": github.InputFileContent(gist.files["old_name.txt"].content, new_name="new_name.txt")})`
+* `Raise <https://github.com/jacquev6/PyGithub/issues/152>`_ specific exceptions. Thank you `pconrad <https://github.com/pconrad>`_ for giving me the idea
+
 Version 1.13.1 (March 28nd, 2013)
 ---------------------------------
 

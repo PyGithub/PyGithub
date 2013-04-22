@@ -10,6 +10,8 @@ Error Handling
 --------------
 
 .. autoclass:: github.GithubException.GithubException()
+.. autoclass:: github.GithubException.BadCredentialsException()
+.. autoclass:: github.GithubException.UnknownObjectException()
 
 Default argument
 ----------------
