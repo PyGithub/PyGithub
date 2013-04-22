@@ -74,7 +74,7 @@ class Gist(Framework.TestCase):
 
     def testDeleteFile(self):
         gist = self.g.get_gist("5339374")
-        self.assertEqual(gist.files.keys(), ["foo.txt", "bar.txt"])
+        self.assertEqual(sorted(gist.files.keys()), ["bar.txt", "foo.txt"])
         gist.edit(files={"foo.txt": None})
         self.assertEqual(gist.files.keys(), ["bar.txt"])
 
