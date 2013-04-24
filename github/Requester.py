@@ -85,6 +85,9 @@ class Requester:
 
         self.__clientId = client_id
         self.__clientSecret = client_secret
+
+        assert user_agent is not None, 'github now requires a user-agent. ' \
+        				'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
     def requestJsonAndCheck(self, verb, url, parameters, input):
@@ -143,8 +146,7 @@ class Requester:
 
         requestHeaders = dict()
         self.__authenticate(requestHeaders, parameters)
-        if self.__userAgent is not None:
-            requestHeaders["User-Agent"] = self.__userAgent
+        requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
