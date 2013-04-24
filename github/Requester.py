@@ -87,7 +87,7 @@ class Requester:
         self.__clientSecret = client_secret
 
         assert user_agent is not None, 'github now requires a user-agent. ' \
-        				'See http://developer.github.com/v3/#user-agent-required'
+            'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
     def requestJsonAndCheck(self, verb, url, parameters, input):
