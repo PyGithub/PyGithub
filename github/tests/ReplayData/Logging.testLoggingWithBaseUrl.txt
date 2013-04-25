@@ -3,7 +3,7 @@ GET
 my.enterprise.com
 None
 /my/prefix/users/jacquev6
-{}
+{'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('content-length', '628'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('x-ratelimit-limit', '5000'), ('vary', 'Accept'), ('x-ratelimit-remaining', '4989'), ('server', 'nginx'), ('last-modified', 'Tue, 25 Sep 2012 07:42:42 GMT'), ('connection', 'keep-alive'), ('etag', '"9bd085221a16b6d2ea95e72634c3c1ac"'), ('cache-control', 'public, max-age=60, s-maxage=60'), ('date', 'Tue, 25 Sep 2012 20:38:56 GMT'), ('content-type', 'application/json; charset=utf-8')]
