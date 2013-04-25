@@ -10,6 +10,11 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+`Version 1.14.2 <https://github.com/jacquev6/PyGithub/issues?milestone=27&state=closed>`_ (April 25th, 2013)
+------------------------------------------------------------------------------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/issues/158>`_ paginated requests when using secret-key oauth. Thank you `jseabold <https://github.com/jseabold>`_ for analysing the bug
+
 `Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=26&state=closed>`_ (April 25th, 2013)
 ------------------------------------------------------------------------------------------------------------
 
