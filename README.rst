@@ -10,12 +10,24 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+Major issue (April 25th, 2013)
+------------------------------
+
+Github has `enforced the User Agent header <http://developer.github.com/changes/2013-04-24-user-agent-required/>`_ yesterday.
+But in PyGithub, the default value is still `None`, so all scripts are broken.
+We are going to fix that in `Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=26&state=open>`_ (`issue 160 <https://github.com/jacquev6/PyGithub/issues/160>`_).
+
+In the mean time, you can use the `user_agent` parameter of the `Github` constructor.
+
+
 `Version 1.14.0 <https://github.com/jacquev6/PyGithub/issues?milestone=24&state=closed>`_ (April 22nd, 2013)
 ------------------------------------------------------------------------------------------------------------
 
 * `Improve <https://github.com/jacquev6/PyGithub/issues/156>`_ gist edition. Thank you `jasonwiener <https://github.com/jasonwiener>`_ for asking:
+
   * Delete a file with `gist.edit(files={"name.txt": None})`
   * Rename a file with `gist.edit(files={"old_name.txt": github.InputFileContent(gist.files["old_name.txt"].content, new_name="new_name.txt")})`
+
 * `Raise <https://github.com/jacquev6/PyGithub/issues/152>`_ specific exceptions. Thank you `pconrad <https://github.com/pconrad>`_ for giving me the idea
 
 Documentation
