@@ -145,7 +145,7 @@ class Requester:
             parameters = dict()
 
         requestHeaders = dict()
-        self.__authenticate(requestHeaders, parameters)
+        self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -185,8 +185,8 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def __authenticate(self, requestHeaders, parameters):
-        if self.__clientId and self.__clientSecret:
+    def __authenticate(self, url, requestHeaders, parameters):
+        if self.__clientId and self.__clientSecret and "client_id=" not in url:
             parameters["client_id"] = self.__clientId
             parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
