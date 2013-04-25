@@ -8,6 +8,7 @@
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2012 Zearin zearin@gonk.net
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 Jonathan J Hunt hunt@braincorporation.com
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
