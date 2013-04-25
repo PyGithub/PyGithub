@@ -6,7 +6,7 @@ function publish {
     test
     bump
     readme
-    # doc
+    doc
     push
 }
 
