@@ -10,15 +10,12 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Major issue (April 25th, 2013)
-------------------------------
+`Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=24&state=closed>`_ (April 25th, 2013)
+------------------------------------------------------------------------------------------------------------
 
-Github has `enforced the User Agent header <http://developer.github.com/changes/2013-04-24-user-agent-required/>`_ yesterday.
-But in PyGithub, the default value is still `None`, so all scripts are broken.
-We are going to fix that in `Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=26&state=open>`_ (`issue 160 <https://github.com/jacquev6/PyGithub/issues/160>`_).
-
-In the mean time, you can use the `user_agent` parameter of the `Github` constructor.
-
+* Set the default User-Agent header to "PyGithub/Python". (Github has `enforced the User Agent header <http://developer.github.com/changes/2013-04-24-user-agent-required/>`_ yesterday.)
+Thank you `jjh42 <https://github.com/jjh42>`_ for `the fix <https://github.com/jacquev6/PyGithub/pull/161>`_,
+thank you `jasenmh <https://github.com/jasenmh>`_ and `pconrad <https://github.com/pconrad>`_ for reporting `the issue <https://github.com/jacquev6/PyGithub/issues/160>`_.
 
 `Version 1.14.0 <https://github.com/jacquev6/PyGithub/issues?milestone=24&state=closed>`_ (April 22nd, 2013)
 ------------------------------------------------------------------------------------------------------------
