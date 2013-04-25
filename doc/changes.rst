@@ -4,7 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-`Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=24&state=closed>`_ (April 25th, 2013)
+`Version 1.14.1 <https://github.com/jacquev6/PyGithub/issues?milestone=26&state=closed>`_ (April 25th, 2013)
 ------------------------------------------------------------------------------------------------------------
 
 * Set the default User-Agent header to "PyGithub/Python". (Github has `enforced the User Agent header <http://developer.github.com/changes/2013-04-24-user-agent-required/>`_ yesterday.)
