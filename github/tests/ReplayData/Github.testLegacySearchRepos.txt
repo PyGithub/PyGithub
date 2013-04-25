@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /legacy/repos/search/github%20api%20v3
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4972'), ('x-ratelimit-limit', '5000'), ('content-length', '41935'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"18b370100c262752c5ae87c817711ffe"'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Fri, 29 Jun 2012 18:43:30 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/pengwynn/octokit
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4971'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1132'), ('server', 'nginx/1.0.13'), ('last-modified', 'Fri, 29 Jun 2012 15:39:23 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e610e78b5a45972c1087ace8b7baf031"'), ('cache-control', 'private, max-age=60'), ('date', 'Fri, 29 Jun 2012 18:43:31 GMT'), ('content-type', 'application/json; charset=utf-8')]

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/jacquev6
-{}
+{'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4995'), ('content-length', '623'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"b81320548394cb55b7e97fb1636d2898"'), ('date', 'Sat, 26 May 2012 09:34:28 GMT'), ('content-type', 'application/json; charset=utf-8')]

@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('content-length', '554'), ('x-ratelimit-limit', '5000'), ('x-ratelimit-remaining', '4955'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"4e931612aa9051643f0a428d2ae60b2e"'), ('date', 'Sun, 27 May 2012 05:34:26 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4954'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:34:27 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -25,7 +25,7 @@ PUT
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4953'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:27 GMT')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4952'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:28 GMT')]
@@ -47,7 +47,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4951'), ('content-length', '590'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"dbf3059a3bb24b8af99793f5204a0a39"'), ('date', 'Sun, 27 May 2012 05:34:29 GMT'), ('content-type', 'application/json; charset=utf-8')]
@@ -58,7 +58,7 @@ DELETE
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4950'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sun, 27 May 2012 05:34:29 GMT')]
@@ -69,7 +69,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 404
 [('status', '404 Not Found'), ('x-ratelimit-remaining', '4949'), ('content-length', '23'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"e66a7a6c91e2c26803f3f49feb7a883f"'), ('date', 'Sun, 27 May 2012 05:34:30 GMT'), ('content-type', 'application/json; charset=utf-8')]

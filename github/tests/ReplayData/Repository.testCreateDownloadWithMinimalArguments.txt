@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /repos/jacquev6/PyGithub/downloads
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 {"name": "Foobar.txt", "size": 1024}
 201
 [('status', '201 Created'), ('x-ratelimit-remaining', '4954'), ('content-length', '1140'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"14a91323a46cfdfd53dfacffa96ab6a0"'), ('date', 'Tue, 22 May 2012 19:15:29 GMT'), ('content-type', 'application/json; charset=utf-8'), ('location', 'https://api.github.com/repos/jacquev6/PyGithub/downloads/242562')]

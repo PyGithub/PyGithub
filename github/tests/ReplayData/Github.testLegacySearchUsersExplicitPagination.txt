@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /legacy/user/search/Lucy?start_page=2
-{'Authorization': 'Basic login_and_password_removed'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4946'), ('x-ratelimit-limit', '5000'), ('content-length', '17711'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('etag', '"2276a70e7cb32c70ab3018105c9dcb22"'), ('cache-control', 'max-age=0, private, must-revalidate'), ('date', 'Fri, 29 Jun 2012 12:30:45 GMT'), ('content-type', 'application/json; charset=utf-8')]
