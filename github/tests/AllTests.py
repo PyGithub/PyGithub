@@ -67,5 +67,5 @@ from Issue133 import *
 from Issue134 import *
 from Issue139 import *
 from Issue140 import *
-from Issue142 import *
+# from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
 from Issue158 import *
