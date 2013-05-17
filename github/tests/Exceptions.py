@@ -96,3 +96,15 @@ class SpecificExceptions(Framework.TestCase):
 
     def testUnknownObject(self):
         self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
+
+    def testBadUserAgent(self):
+        self.assertRaises(github.BadUserAgentException, lambda: github.Github(self.login, self.password, user_agent="").get_user().name)
+
+    def testRateLimitExceeded(self):
+        g = github.Github()
+
+        def exceed():
+            for i in range(100):
+                g.get_user("jacquev6")
+
+        self.assertRaises(github.RateLimitExceededException, exceed)

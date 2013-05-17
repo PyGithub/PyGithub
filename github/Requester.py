@@ -105,10 +105,16 @@ class Requester:
 
     def __createException(self, status, output):
         if status == 401 and output["message"] == "Bad credentials":
-            return GithubException.BadCredentialsException(status, output)
-        if status == 404 and output["message"] == "Not Found":
-            return GithubException.UnknownObjectException(status, output)
-        return GithubException.GithubException(status, output)
+            cls = GithubException.BadCredentialsException
+        elif status == 403 and output["message"].startswith("Missing or invalid User Agent string"):
+            cls = GithubException.BadUserAgentException
+        elif status == 403 and output["message"].startswith("API Rate Limit Exceeded"):
+            cls = GithubException.RateLimitExceededException
+        elif status == 404 and output["message"] == "Not Found":
+            cls = GithubException.UnknownObjectException
+        else:
+            cls = GithubException.GithubException
+        return cls(status, output)
 
     def __structuredFromJson(self, data):
         if len(data) == 0:
