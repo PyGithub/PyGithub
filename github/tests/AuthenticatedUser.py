@@ -171,6 +171,19 @@ class AuthenticatedUser(Framework.TestCase):
     def testGetIssues(self):
         self.assertListKeyEqual(self.user.get_issues(), lambda i: (i.id, i.repository.name), [(4639931, "PyGithub"), (4452000, "PyGithub"), (4356743, "PyGithub"), (3716033, "PyGithub"), (3715946, "PyGithub"), (3643837, "PyGithub"), (3628022, "PyGithub"), (3624595, "PyGithub"), (3624570, "PyGithub"), (3624561, "PyGithub"), (3624556, "PyGithub"), (3619973, "PyGithub"), (3527266, "PyGithub"), (3527245, "PyGithub"), (3527231, "PyGithub")])
 
+    def testGetIssuesWithAllArguments(self):
+        requestedByUser = self.user.get_repo("PyGithub").get_label("Requested by user")
+        issues = self.user.get_issues("assigned", "closed", [requestedByUser], "comments", "asc", datetime.datetime(2012, 5, 28, 23, 0, 0))
+        self.assertListKeyEqual(issues, lambda i: i.id, [6816576, 8495415, 6889934, 8339699, 8075253, 8033963, 9089893, 9489725, 11746141, 5152384, 5177381, 5783131, 6454054, 6641076, 6653907, 7331214, 9489813, 9776615, 10360280, 4356743, 6583381, 6751469, 8189836, 10758585, 12097154, 12867103, 5191621, 5256315, 6363719, 9209408, 6912733, 9948505, 11503771, 10922412, 11844658, 12566144, 6353712, 9323084, 10379143, 5387373, 12179668, 6911794, 11731917, 6807542, 6780606])
+
+    def testGetUserIssues(self):
+        self.assertListKeyEqual(self.user.get_user_issues(), lambda i: i.id, [14447880, 13505356, 12541184, 10586808, 6741461, 6741457, 6727331, 5641572])
+
+    def testGetUserIssuesWithAllArguments(self):
+        requestedByUser = self.user.get_repo("PyGithub").get_label("Requested by user")
+        issues = self.user.get_user_issues("assigned", "closed", [requestedByUser], "comments", "asc", datetime.datetime(2012, 5, 28, 23, 0, 0))
+        self.assertListKeyEqual(issues, lambda i: i.id, [6816576, 8495415, 6889934, 8339699, 8075253, 8033963, 9089893, 9489725, 11746141, 5152384, 5177381, 5783131, 6454054, 6641076, 6653907, 7331214, 9489813, 9776615, 10360280, 4356743, 6583381, 6751469, 8189836, 10758585, 12097154, 12867103, 5191621, 5256315, 6363719, 9209408, 6912733, 9948505, 11503771, 10922412, 11844658, 12566144, 6353712, 9323084, 10379143, 5387373, 12179668, 6911794, 11731917, 6807542, 6780606])
+
     def testGetKeys(self):
         self.assertListKeyEqual(self.user.get_keys(), lambda k: k.title, ["vincent@home", "vincent@gandi", "vincent@aws", "vincent@macbook"])
 

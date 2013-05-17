@@ -121,6 +121,10 @@ APIs
 
   * GET: :meth:`github.Organization.Organization.get_events`
 
+* ``/orgs/:org/issues``
+
+  * GET: :meth:`github.Organization.Organization.get_issues`
+
 * ``/orgs/:org/members``
 
   * GET: :meth:`github.Organization.Organization.get_members`
@@ -512,6 +516,10 @@ APIs
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.has_in_following`
   * PUT: :meth:`github.AuthenticatedUser.AuthenticatedUser.add_to_following`
   * DELETE: :meth:`github.AuthenticatedUser.AuthenticatedUser.remove_from_following`
+
+* ``/user/issues``
+
+  * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_user_issues`
 
 * ``/user/keys``
 

@@ -53,5 +53,17 @@ class BadCredentialsException(GithubException):
 
 class UnknownObjectException(GithubException):
     """
-    Exception raised a non-existing object is requested (when Github API replies with a 404 HTML status)
+    Exception raised when a non-existing object is requested (when Github API replies with a 404 HTML status)
+    """
+
+
+class BadUserAgentException(GithubException):
+    """
+    Exception raised when request is sent with a bad user agent header (when Github API replies with a 403 bad user agent HTML status)
+    """
+
+
+class RateLimitExceededException(GithubException):
+    """
+    Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
