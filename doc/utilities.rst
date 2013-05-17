@@ -12,6 +12,8 @@ Error Handling
 .. autoclass:: github.GithubException.GithubException()
 .. autoclass:: github.GithubException.BadCredentialsException()
 .. autoclass:: github.GithubException.UnknownObjectException()
+.. autoclass:: github.GithubException.BadUserAgentException()
+.. autoclass:: github.GithubException.RateLimitExceededException()
 
 Default argument
 ----------------

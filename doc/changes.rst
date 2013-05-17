@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.15.0 <https://github.com/jacquev6/PyGithub/issues?milestone=25&state=closed>`_ (May 17th, 2013) (Switzerland edition)
+--------------------------------------------------------------------------------------------------------------------------------
+
+* `Implement <https://github.com/jacquev6/PyGithub/issues/166>`_ listing of user issues with all parameters. Thank you Daehyok Shin for reporting
+* `Raise <https://github.com/jacquev6/PyGithub/issues/152>`_ two new specific exceptions
+
 `Version 1.14.2 <https://github.com/jacquev6/PyGithub/issues?milestone=27&state=closed>`_ (April 25th, 2013)
 ------------------------------------------------------------------------------------------------------------
 
