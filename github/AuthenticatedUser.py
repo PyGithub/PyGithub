@@ -620,6 +620,44 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
+    def get_user_issues(self, filter=github.GithubObject.NotSet, state=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /user/issues <http://developer.github.com/v3/issues/#list-issues>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        :param filter: string
+        :param state: string
+        :param labels: list of :class:`github.Label.Label`
+        :param sort: string
+        :param direction: string
+        :param since: datetime.datetime
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
+        """
+        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, unicode)), filter
+        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if filter is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter
+        if state is not github.GithubObject.NotSet:
+            url_parameters["state"] = state
+        if labels is not github.GithubObject.NotSet:
+            url_parameters["labels"] = ",".join(label.name for label in labels)
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return github.PaginatedList.PaginatedList(
+            github.Issue.Issue,
+            self._requester,
+            "/issues",
+            url_parameters
+        )
+
     def get_key(self, id):
         """
         :calls: `GET /user/keys/:id <http://developer.github.com/v3/todo>`_

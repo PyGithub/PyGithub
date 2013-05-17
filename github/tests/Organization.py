@@ -84,6 +84,14 @@ class Organization(Framework.TestCase):
     def testGetPublicMembers(self):
         self.assertListKeyEqual(self.org.get_public_members(), lambda u: u.login, ["jacquev6"])
 
+    def testGetIssues(self):
+        self.assertListKeyEqual(self.org.get_issues(), lambda i: i.id, [])
+
+    def testGetIssuesWithAllArguments(self):
+        requestedByUser = self.g.get_user().get_repo("PyGithub").get_label("Requested by user")
+        issues = self.org.get_issues("assigned", "closed", [requestedByUser], "comments", "asc", datetime.datetime(2012, 5, 28, 23, 0, 0))
+        self.assertListKeyEqual(issues, lambda i: i.id, [])
+
     def testGetMembers(self):
         self.assertListKeyEqual(self.org.get_members(), lambda u: u.login, ["cjuniet", "jacquev6", "Lyloa"])
 
