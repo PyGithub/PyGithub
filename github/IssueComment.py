@@ -65,6 +65,14 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._url)
 
     @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._NoneIfNotSet(self._html_url)
+
+    @property
     def user(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
@@ -108,6 +116,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -126,6 +135,9 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
             self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)

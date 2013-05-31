@@ -19,7 +19,7 @@ import github.GithubObject
 
 class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
-    This class represents RepositoryKeys as returned for example by http://developer.github.com/v3/todo
+    This class represents RepositoryKeys as returned for example by http://developer.github.com/v3/keys
     """
 
     def __init__(self, requester, attributes, completed, repoUrl):
@@ -72,7 +72,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/keys/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:user/:repo/keys/:id <http://developer.github.com/v3/keys>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -84,7 +84,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/keys/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:user/:repo/keys/:id <http://developer.github.com/v3/keys>`_
         :param title: string
         :param key: string
         :rtype: None
