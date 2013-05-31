@@ -10,11 +10,10 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-`Version 1.15.0 <https://github.com/jacquev6/PyGithub/issues?milestone=25&state=closed>`_ (May 17th, 2013) (Switzerland edition)
---------------------------------------------------------------------------------------------------------------------------------
+Version 1.16.0 (May 31th, 2013) (Concarneau edition)
+----------------------------------------------------
 
-* `Implement <https://github.com/jacquev6/PyGithub/issues/166>`_ listing of user issues with all parameters. Thank you Daehyok Shin for reporting
-* `Raise <https://github.com/jacquev6/PyGithub/issues/152>`_ two new specific exceptions
+* `Add <https://github.com/jacquev6/PyGithub/pull/170>`_ the html_url attribute to IssueComment and PullRequestComment
 
 Documentation
 =============

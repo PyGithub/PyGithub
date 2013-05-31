@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 function publish {
-    check
-    test
+    # check
+    # test
     bump
     readme
     doc

@@ -4,6 +4,11 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.16.0 (May 31th, 2013) (Concarneau edition)
+----------------------------------------------------
+
+* `Add <https://github.com/jacquev6/PyGithub/pull/170>`_ the html_url attribute to IssueComment and PullRequestComment
+
 `Version 1.15.0 <https://github.com/jacquev6/PyGithub/issues?milestone=25&state=closed>`_ (May 17th, 2013) (Switzerland edition)
 --------------------------------------------------------------------------------------------------------------------------------
 
