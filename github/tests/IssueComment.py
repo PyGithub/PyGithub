@@ -31,6 +31,7 @@ class IssueComment(Framework.TestCase):
         self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 46, 42))
         self.assertEqual(self.comment.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311")
         self.assertEqual(self.comment.user.login, "jacquev6")
+        self.assertEqual(self.comment.html_url, "https://github.com/jacquev6/PyGithub/issues/28#issuecomment-5808311")
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
