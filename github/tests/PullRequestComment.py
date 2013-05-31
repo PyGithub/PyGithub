@@ -36,6 +36,7 @@ class PullRequestComment(Framework.TestCase):
         self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 27, 9, 40, 12))
         self.assertEqual(self.comment.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/comments/886298")
         self.assertEqual(self.comment.user.login, "jacquev6")
+        self.assertEqual(self.comment.html_url, "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907")
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
