@@ -23,7 +23,7 @@ import github.NamedUser
 
 class Team(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Branchs. The reference can be found here http://developer.github.com/v3/orgs/teams/
+    This class represents Teams. The reference can be found here http://developer.github.com/v3/orgs/teams/
     """
 
     @property
