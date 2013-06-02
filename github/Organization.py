@@ -29,7 +29,7 @@ import github.NamedUser
 
 class Organization(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Tags. The reference can be found here http://developer.github.com/v3/orgs/
+    This class represents Organizations. The reference can be found here http://developer.github.com/v3/orgs/
     """
 
     @property

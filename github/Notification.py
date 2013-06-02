@@ -21,7 +21,7 @@ import github.NotificationSubject
 
 class Notification(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Notifications as returned for example by http://developer.github.com/v3/activity/notifications/#list-your-notifications
+    This class represents Notifications. The reference can be found here http://developer.github.com/v3/activity/notifications/#list-your-notifications
     """
 
     @property
