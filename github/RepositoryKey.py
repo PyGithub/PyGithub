@@ -19,7 +19,7 @@ import github.GithubObject
 
 class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
-    This class represents RepositoryKeys as returned for example by http://developer.github.com/v3/keys
+    This class represents RepositoryKeys. The reference can be found here http://developer.github.com/v3/repos/keys/
     """
 
     def __init__(self, requester, attributes, completed, repoUrl):
