@@ -21,7 +21,7 @@ import github.GithubObject
 
 class Label(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Labels as returned for example by http://developer.github.com/v3/todo
+    This class represents Labels. The reference can be found here http://developer.github.com/v3/issues/labels/
     """
 
     @property
