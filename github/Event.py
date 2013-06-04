@@ -23,7 +23,7 @@ import github.NamedUser
 
 class Event(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Events. The reference can be found here http://developer.github.com/v3/issues/events/
+    This class represents Events. The reference can be found here http://developer.github.com/v3/activity/events/
     """
 
     @property
