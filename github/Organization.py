@@ -29,7 +29,7 @@ import github.NamedUser
 
 class Organization(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Organizations as returned for example by http://developer.github.com/v3/todo
+    This class represents Organizations. The reference can be found here http://developer.github.com/v3/orgs/
     """
 
     @property

@@ -21,7 +21,7 @@ import github.Commit
 
 class Branch(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Branchs as returned for example by http://developer.github.com/v3/todo
+    This class represents Branchs. The reference can be found here http://developer.github.com/v3/repos/#list-branches
     """
 
     @property

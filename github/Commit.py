@@ -27,7 +27,7 @@ import github.CommitComment
 
 class Commit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Commits as returned for example by http://developer.github.com/v3/todo
+    This class represents Commits. The reference can be found here http://developer.github.com/v3/git/commits/
     """
 
     @property
