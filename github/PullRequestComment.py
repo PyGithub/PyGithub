@@ -21,7 +21,7 @@ import github.NamedUser
 
 class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
-    This class represents PullRequestComments as returned for example by http://developer.github.com/v3/todo
+    This class represents PullRequestComments. The reference can be found here http://developer.github.com/v3/pulls/comments/
     """
 
     @property
