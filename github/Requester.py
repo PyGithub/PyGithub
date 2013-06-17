@@ -170,6 +170,9 @@ class Requester:
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
 
+        if 302 == status and "location" in responseHeaders:
+            return self.__requestEncode(verb, responseHeaders["location"], parameters, input, encode)
+
         return status, responseHeaders, output
 
     def __requestRaw(self, verb, url, requestHeaders, input):
