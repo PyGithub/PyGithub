@@ -891,6 +891,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
+
+        # Handle 302 redirect response
+        if headers.get('status') == '302 Found' and headers.get('location'):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                headers['location'],
+                url_parameters,
+                None
+            )
+            
         return [
             github.ContentFile.ContentFile(self._requester, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
             for attributes in data
