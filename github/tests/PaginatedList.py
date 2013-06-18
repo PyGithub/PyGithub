@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
 
 import Framework
-
+import CommitComment
+from github.PaginatedList import PaginatedList as PaginatedListImpl
 
 class PaginatedList(Framework.TestCase):
     def setUp(self):
@@ -88,6 +89,15 @@ class PaginatedList(Framework.TestCase):
         self.g.per_page = 100
         self.assertEqual(self.g.per_page, 100)
         self.assertEqual(len(list(self.repo.get_issues())), 456)
+    
+    def testCustomPerPageWithNoUrlParams(self):
+        self.g.per_page = 100
+        paginated_list = PaginatedListImpl(
+            CommitComment.CommitComment,
+            self.repo._requester,
+            self.repo.url + "/comments",
+            None
+        )
 
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100

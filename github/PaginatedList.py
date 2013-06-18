@@ -97,7 +97,7 @@ class PaginatedList(PaginatedListBase):
         self.__firstUrl = firstUrl
         self.__firstParams = firstParams or ()
         self.__nextUrl = firstUrl
-        self.__nextParams = firstParams
+        self.__nextParams = firstParams or {}
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
 
