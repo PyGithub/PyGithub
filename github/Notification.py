@@ -2,6 +2,7 @@
 
 # Copyright 2013 Peter Golm golm.peter@gmail.com
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 martinqt m.ki2@laposte.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
