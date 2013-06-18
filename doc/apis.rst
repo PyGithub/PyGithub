@@ -571,6 +571,10 @@ APIs
   * PUT: :meth:`github.AuthenticatedUser.AuthenticatedUser.add_to_watched`
   * DELETE: :meth:`github.AuthenticatedUser.AuthenticatedUser.remove_from_watched`
 
+* ``/users``
+
+  * GET: :meth:`github.MainClass.Github.get_users`
+
 * ``/users/:user``
 
   * GET: :meth:`github.MainClass.Github.get_user`
