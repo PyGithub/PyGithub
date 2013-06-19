@@ -99,6 +99,13 @@ class PaginatedList(Framework.TestCase):
             None
         )
 
+    def testCustomPerPageWithNoUrlParams2(self):
+        # This test is redountant and less unitary than testCustomPerPageWithNoUrlParams
+        # but I hope it will be more robust if we refactor PaginatedList,
+        # because testCustomPerPageWithNoUrlParams only tests the constructor
+        self.g.per_page = 100
+        self.assertEqual(len(list(self.repo.get_comments())), 325)
+
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
