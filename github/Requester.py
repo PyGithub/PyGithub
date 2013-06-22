@@ -189,6 +189,8 @@ class Requester:
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
+        elif status == 409 and output["message"] == "Git Repository is empty.":
+            cls = GithubException.EmptyRepositoryException
         else:
             cls = GithubException.GithubException
         return cls(status, output)
