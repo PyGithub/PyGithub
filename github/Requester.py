@@ -38,6 +38,8 @@ import base64
 import urllib
 import urlparse
 import sys
+import socket
+import ssl
 import Consts
 
 atLeastPython26 = sys.hexversion >= 0x02060000
@@ -49,6 +51,8 @@ else:  # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
 import GithubException
+
+IDEMPOTENT_VERBS = ["GET", "HEAD"]
 
 
 class Requester:
@@ -122,7 +126,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, max_retries):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -154,7 +158,7 @@ class Requester:
         self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page
-
+        self.max_retries = max_retries
         self.oauth_scopes = None
 
         self.__clientId = client_id
@@ -239,9 +243,18 @@ class Requester:
         if input is not None:
             requestHeaders["Content-Type"], encoded_input = encode(input)
 
+
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        retries_left = self.max_retries
+        while retries_left >= 0:
+            try:
+                status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+            except (socket.timeout, ssl.SSLError):
+                if verb in IDEMPOTENT_VERBS:
+                    retries_left -= 1
+                    continue
+            break
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
