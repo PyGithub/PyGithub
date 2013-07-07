@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 function publish {
-    # check
-    # test
+    check
+    test
     bump
     readme
     doc
@@ -32,7 +32,7 @@ function check_copyright {
 }
 
 function test {
-    python3 setup.py test --quiet || exit
+    # python3 setup.py test --quiet || exit
 
     coverage run --branch --include=github/*.py --omit=github/tests/*.py setup.py test --quiet || exit
     coverage report --show-missing || exit
@@ -81,6 +81,21 @@ function push {
     git push github master master:develop
     git push --force github gh-pages
     git push --tags
+}
+
+function unmerged {
+    BRANCHES_NOT_TO_BE_MERGED="-e gh-pages -e topic/DependencyGraph"
+    COMMITS_NOT_TO_BE_MERGED="-e 1bea00a -e 11aeaa7 -e dd1e255 -e 670c6fb -e ed87a91 -e 072fbcb -e 421a743 -e 0c45af7 -e 92e4df4 -e 79ebd4b -e 0965ffd -e e1990c5 -e 55f3250"
+
+    for b in `git branch -a --no-merged | grep -v $BRANCHES_NOT_TO_BE_MERGED`
+    do
+        if git --no-pager log ..$b --oneline | grep -v $COMMITS_NOT_TO_BE_MERGED > /dev/null
+        then
+            echo $b
+            git --no-pager log ..$b --oneline
+            echo
+        fi
+    done
 }
 
 $1
