@@ -72,15 +72,19 @@ function push {
 
     git commit -am "Publish version $version"
 
-    cp COPYING* github
-    python setup.py sdist upload
-    rm -rf github/COPYING*
+    sdist_upload
 
     git tag -m "Version $version" v$version
 
     git push github master master:develop
     git push --force github gh-pages
     git push --tags
+}
+
+function sdist_upload {
+    cp COPYING* github
+    python setup.py sdist upload
+    rm -rf github/COPYING*
 }
 
 function unmerged {
