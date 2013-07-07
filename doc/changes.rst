@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.17.0 <https://github.com/jacquev6/PyGithub/issues?milestone=29&state=closed>`_ (Jully 7th, 2013) (Hamburg edition)
+-----------------------------------------------------------------------------------------------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/176>`_ bug in ``Repository.get_comment`` when using custom ``per_page``. Thank you `davidbrai <https://github.com/davidbrai>`_
+* `Handle <https://github.com/jacquev6/PyGithub/pull/174>`_ Http redirects in ``Repository.get_dir_contents``. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_
+* `Implement <https://github.com/jacquev6/PyGithub/issues/173>`_ API ``/user`` in ``Github.get_users``. Thank you `rakeshcusat <https://github.com/rakeshcusat>`_ for asking
+* `Improve <https://github.com/jacquev6/PyGithub/pull/171>`_ the documentation. Thank you `martinqt <https://github.com/martinqt>`_
+
 Version 1.16.0 (May 31th, 2013) (Concarneau edition)
 ----------------------------------------------------
 
