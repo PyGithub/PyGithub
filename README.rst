@@ -10,10 +10,19 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Version 1.16.0 (May 31th, 2013) (Concarneau edition)
-----------------------------------------------------
+Summer 2013 - I'm traveling
+---------------------------
 
-* `Add <https://github.com/jacquev6/PyGithub/pull/170>`_ the html_url attribute to IssueComment and PullRequestComment
+You may have noticed I'm a bit slower than usual to manage your issues and pull requests.
+That's because I'm traveling a lot this summer. Please be patient.
+
+`Version 1.17.0 <https://github.com/jacquev6/PyGithub/issues?milestone=29&state=closed>`_ (Jully 7th, 2013) (Hamburg edition)
+-----------------------------------------------------------------------------------------------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/176>`_ bug in ``Repository.get_comment`` when using custom ``per_page``. Thank you `davidbrai <https://github.com/davidbrai>`_
+* `Handle <https://github.com/jacquev6/PyGithub/pull/174>`_ Http redirects in ``Repository.get_dir_contents``. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_
+* `Implement <https://github.com/jacquev6/PyGithub/issues/173>`_ API ``/user`` in ``Github.get_users``. Thank you `rakeshcusat <https://github.com/rakeshcusat>`_ for asking
+* `Improve <https://github.com/jacquev6/PyGithub/pull/171>`_ the documentation. Thank you `martinqt <https://github.com/martinqt>`_
 
 Documentation
 =============

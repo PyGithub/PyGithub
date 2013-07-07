@@ -3,6 +3,7 @@
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2012 Zearin zearin@gonk.net
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 martinqt m.ki2@laposte.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
@@ -27,7 +28,7 @@ import github.CommitComment
 
 class Commit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Commits as returned for example by http://developer.github.com/v3/todo
+    This class represents Commits. The reference can be found here http://developer.github.com/v3/git/commits/
     """
 
     @property

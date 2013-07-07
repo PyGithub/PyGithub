@@ -99,7 +99,7 @@ class Github(object):
 
     def get_user(self, login=github.GithubObject.NotSet):
         """
-        :calls: `GET /users/:user <http://developer.github.com/v3/todo>`_
+        :calls: `GET /users/:user <http://developer.github.com/v3/users/#get-a-single-user>`_ or `GET /user <http://developer.github.com/v3/users/#get-the-authenticated-user>`_
         :param login: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -114,6 +114,23 @@ class Github(object):
                 None
             )
             return github.NamedUser.NamedUser(self.__requester, data, completed=True)
+
+    def get_users(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /users <http://developer.github.com/v3/users/#get-all-users>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self.__requester,
+            "/users",
+            url_parameters
+        )
 
     def get_organization(self, login):
         """

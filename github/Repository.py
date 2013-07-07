@@ -5,6 +5,8 @@
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2012 Zearin zearin@gonk.net
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 Mark Roddy markroddy@gmail.com
+# Copyright 2013 martinqt m.ki2@laposte.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
@@ -52,7 +54,7 @@ import github.Legacy
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Repositorys as returned for example by http://developer.github.com/v3/todo
+    This class represents Repositorys. The reference can be found here http://developer.github.com/v3/repos/
     """
 
     @property
@@ -891,6 +893,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
+
+        # Handle 302 redirect response
+        if headers.get('status') == '302 Found' and headers.get('location'):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                headers['location'],
+                url_parameters,
+                None
+            )
+
         return [
             github.ContentFile.ContentFile(self._requester, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
             for attributes in data

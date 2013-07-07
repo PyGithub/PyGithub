@@ -3,6 +3,7 @@
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2012 Zearin zearin@gonk.net
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 martinqt m.ki2@laposte.net
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
@@ -25,7 +26,7 @@ import github.Label
 
 class Milestone(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Milestones as returned for example by http://developer.github.com/v3/todo
+    This class represents Milestones. The reference can be found here http://developer.github.com/v3/issues/milestones/
     """
 
     @property
