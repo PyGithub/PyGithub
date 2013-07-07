@@ -18,6 +18,7 @@ import Framework
 import CommitComment
 from github.PaginatedList import PaginatedList as PaginatedListImpl
 
+
 class PaginatedList(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
@@ -89,7 +90,7 @@ class PaginatedList(Framework.TestCase):
         self.g.per_page = 100
         self.assertEqual(self.g.per_page, 100)
         self.assertEqual(len(list(self.repo.get_issues())), 456)
-    
+
     def testCustomPerPageWithNoUrlParams(self):
         self.g.per_page = 100
         paginated_list = PaginatedListImpl(
