@@ -32,7 +32,7 @@ function check_copyright {
 }
 
 function test {
-    # python3 setup.py test --quiet || exit
+    python3 setup.py test --quiet || exit
 
     coverage run --branch --include=github/*.py --omit=github/tests/*.py setup.py test --quiet || exit
     coverage report --show-missing || exit
