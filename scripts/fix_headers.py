@@ -1,17 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright  
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import fnmatch
 import os
@@ -19,17 +28,62 @@ import subprocess
 import itertools
 
 
-license = [
-    "# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/",
-    "",
-    "# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License",
-    "# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.",
-    "",
-    "# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of",
-    "# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.",
-    "",
-    "# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.",
-]
+eightySharps = "################################################################################"
+
+
+def generateLicenseSection(filename):
+    yield "############################ Copyrights and license ############################"
+    yield "#                                                                              #"
+    for year, name in sorted(listContributors(filename)):
+        line = "# Copyright " + year + " " + name
+        line += (79 - len(line)) * " " + "#"
+        yield line
+    yield "#                                                                              #"
+    yield "# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #"
+    yield "#                                                                              #"
+    yield "# PyGithub is free software: you can redistribute it and/or modify it under    #"
+    yield "# the terms of the GNU Lesser General Public License as published by the Free  #"
+    yield "# Software Foundation, either version 3 of the License, or (at your option)    #"
+    yield "# any later version.                                                           #"
+    yield "#                                                                              #"
+    yield "# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #"
+    yield "# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #"
+    yield "# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #"
+    yield "# details.                                                                     #"
+    yield "#                                                                              #"
+    yield "# You should have received a copy of the GNU Lesser General Public License     #"
+    yield "# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #"
+    yield "#                                                                              #"
+    yield "################################################################################"
+
+
+def listContributors(filename):
+    contributors = set()
+    for line in subprocess.check_output(["git", "log", "--format=format:%ad %an <%ae>", "--date=short", "--", filename]).split("\n"):
+        year = line[0:4]
+        name = line[11:]
+        contributors.add((year, name))
+    return contributors
+
+
+def extractBodyLines(lines):
+    bodyLines = []
+
+    seenEndOfHeader = False
+
+    for line in lines:
+        if len(line) > 0 and line[0] != "#":
+            seenEndOfHeader = True
+        if seenEndOfHeader:
+            bodyLines.append(line)
+        # else:
+        #     print "HEAD:", line
+        if line == eightySharps:
+            seenEndOfHeader = True
+
+    # print "BODY:", "\nBODY: ".join(bodyLines)
+
+    return bodyLines
 
 
 class PythonHeader:
@@ -42,61 +96,34 @@ class PythonHeader:
         newLines.append("# -*- coding: utf-8 -*-")
         newLines.append("")
 
-        # @todo add <> around mails
-        # @todo add ############## Copyrights and license (add sections to the header)
-
-        for year, name in sorted(listContributors(filename)):
-            newLines.append("# Copyright " + year + " " + name)
-        newLines.append("")
-
-        for line in license:
+        for line in generateLicenseSection(filename):
             newLines.append(line)
 
-        bodyLines = list(itertools.dropwhile(self.lineCanBeHeader, lines))
+        bodyLines = extractBodyLines(lines)
 
-        if len(bodyLines) > 0:
+        if len(bodyLines) > 0 and bodyLines[0] != "":
             newLines.append("")
             if "import " not in bodyLines[0] and bodyLines[0] != '"""' and not bodyLines[0].startswith("##########"):
                 newLines.append("")
-
-            newLines += bodyLines
+        newLines += bodyLines
 
         return newLines
-
-    def lineCanBeHeader(self, line):
-        return (len(line) == 0 or line[0] == "#") and not line.startswith("##########")
 
 
 class StandardHeader:
     def fix(self, filename, lines):
         newLines = []
 
-        for year, name in sorted(listContributors(filename)):
-            newLines.append("# Copyright " + year + " " + name)
-        newLines.append("")
-
-        for line in license:
+        for line in generateLicenseSection(filename):
             newLines.append(line)
 
-        bodyLines = list(itertools.dropwhile(self.lineCanBeHeader, lines))
+        bodyLines = extractBodyLines(lines)
 
-        if len(bodyLines) > 0:
+        if len(bodyLines) and bodyLines[0] != "" > 0:
             newLines.append("")
-            newLines += bodyLines
+        newLines += bodyLines
 
         return newLines
-
-    def lineCanBeHeader(self, line):
-        return (len(line) == 0 or line[0] == "#") and not line.startswith("##########")
-
-
-def listContributors(filename):
-    contributors = set()
-    for line in subprocess.check_output(["git", "log", "--format=format:%ad %an %ae", "--date=short", "--", filename]).split("\n"):
-        year = line[0:4]
-        name = line[11:]
-        contributors.add((year, name))
-    return contributors
 
 
 def findHeadersAndFiles():
@@ -122,6 +149,7 @@ def findHeadersAndFiles():
 
 def main():
     for header, filename in findHeadersAndFiles():
+    # for header, filename in [(PythonHeader(), "github/MainClass.py"), (PythonHeader(), "doc/conf.py"), (StandardHeader(), ".gitignore")]:
         print "Analyzing", filename
         with open(filename) as f:
             lines = list(line.rstrip() for line in f)
