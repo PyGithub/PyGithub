@@ -2,9 +2,9 @@
 
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2012 Zearin zearin@gonk.net
+# Copyright 2013 Michael Stead michael.stead@gmail.com
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2013 martinqt m.ki2@laposte.net
-# Copyright 2013 Michael Stead michael.stead@gmail.com
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 

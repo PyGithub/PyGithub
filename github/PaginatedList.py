@@ -4,6 +4,7 @@
 # Copyright 2012 Zearin zearin@gonk.net
 # Copyright 2013 Bill Mill bill.mill@gmail.com
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
+# Copyright 2013 davidbrai davidbrai@gmail.com
 
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
 
