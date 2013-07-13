@@ -3,6 +3,8 @@
 # Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
 # Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
 
+################################################################################
+
 # PyGithub documentation build configuration file, created by
 # sphinx-quickstart on Thu Sep 13 22:51:42 2012.
 #
