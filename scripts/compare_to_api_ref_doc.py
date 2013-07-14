@@ -5,6 +5,10 @@ import os
 import fnmatch
 import glob
 
+# @todo Check links from our doc to Github API v3 ref
+# - in the description of each class
+# - in each ":calls:" section
+
 
 def parseReference():
     badlyNamedUrls = {
