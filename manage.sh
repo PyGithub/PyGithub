@@ -16,20 +16,6 @@ function check {
 
 function fix_headers {
     python scripts/fix_headers.py
-    # for file in $(git ls-files | grep "py$")
-    # do
-    #     git log "--format=format:# Copyright %ad %an %ae" --date=short -- $file |
-    #     sed "s/\([0-9][0-9][0-9][0-9]\)-[0-9][0-9]-[0-9][0-9]/\1/g" | sort -u |
-    #     while read copyright
-    #     do
-    #         if grep -n $file -e "^$copyright$" > /dev/null
-    #         then
-    #             echo > /dev/null
-    #         else
-    #             echo "$file should contain '$copyright'"
-    #         fi
-    #     done
-    # done
 }
 
 function test {
