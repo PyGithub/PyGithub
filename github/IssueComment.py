@@ -92,7 +92,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -104,7 +104,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
 
     def edit(self, body):
         """
-        :calls: `PATCH /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :param body: string
         :rtype: None
         """

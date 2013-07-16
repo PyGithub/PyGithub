@@ -128,7 +128,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -140,7 +140,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :param title: string
         :param state: string
         :param description: string
@@ -170,7 +170,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/:owner/:repo/milestones/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/milestones/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(

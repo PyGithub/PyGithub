@@ -86,7 +86,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_members(self, member):
         """
-        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -100,7 +100,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_repos(self, repo):
         """
-        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -114,7 +114,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /teams/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -126,7 +126,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def edit(self, name, permission=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /teams/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param permission: string
         :rtype: None
@@ -148,7 +148,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_members(self):
         """
-        :calls: `GET /teams/:id/members <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/members <http://developer.github.com/v3/orgs/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -160,7 +160,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_repos(self):
         """
-        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/orgs/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -172,7 +172,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_members(self, member):
         """
-        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -187,7 +187,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_repos(self, repo):
         """
-        :calls: `GET /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -202,7 +202,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_members(self, member):
         """
-        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -216,7 +216,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_repos(self, repo):
         """
-        :calls: `DELETE /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """

@@ -236,7 +236,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def add_to_public_members(self, public_member):
         """
-        :calls: `PUT /orgs/:org/public_members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -250,7 +250,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self, repo):
         """
-        :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: :class:`github.Repository.Repository`
         """
@@ -268,7 +268,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
-        :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/todo>`_
+        :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
         :param name: string
         :param description: string
         :param homepage: string
@@ -322,7 +322,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
         """
-        :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/todo>`_
+        :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
         :param permission: string
@@ -348,7 +348,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /orgs/:org <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /orgs/:org <http://developer.github.com/v3/orgs>`_
         :param billing_email: string
         :param blog: string
         :param company: string
@@ -386,7 +386,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_events(self):
         """
-        :calls: `GET /orgs/:org/events <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/events <http://developer.github.com/v3/activity/events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
         """
         return github.PaginatedList.PaginatedList(
@@ -398,7 +398,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_issues(self, filter=github.GithubObject.NotSet, state=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /orgs/:org/issues <http://developer.github.com/v3/issues/#list-issues>`_
+        :calls: `GET /orgs/:org/issues <http://developer.github.com/v3/issues>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         :param filter: string
         :param state: string
@@ -436,7 +436,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_members(self):
         """
-        :calls: `GET /orgs/:org/members <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/members <http://developer.github.com/v3/orgs/members>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -448,7 +448,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_public_members(self):
         """
-        :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/public_members <http://developer.github.com/v3/orgs/members>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -460,7 +460,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
@@ -475,7 +475,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_repos(self, type=github.GithubObject.NotSet):
         """
-        :calls: `GET /orgs/:org/repos <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/repos <http://developer.github.com/v3/repos>`_
         :param type: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
@@ -492,7 +492,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_team(self, id):
         """
-        :calls: `GET /teams/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param id: integer
         :rtype: :class:`github.Team.Team`
         """
@@ -507,7 +507,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_teams(self):
         """
-        :calls: `GET /orgs/:org/teams <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
         """
         return github.PaginatedList.PaginatedList(
@@ -519,7 +519,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def has_in_members(self, member):
         """
-        :calls: `GET /orgs/:org/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/members/:user <http://developer.github.com/v3/orgs/members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -534,7 +534,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def has_in_public_members(self, public_member):
         """
-        :calls: `GET /orgs/:org/public_members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -549,7 +549,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_members(self, member):
         """
-        :calls: `DELETE /orgs/:org/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /orgs/:org/members/:user <http://developer.github.com/v3/orgs/members>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -563,7 +563,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def remove_from_public_members(self, public_member):
         """
-        :calls: `DELETE /orgs/:org/public_members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
         :param public_member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """

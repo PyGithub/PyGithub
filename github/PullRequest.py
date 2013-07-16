@@ -260,7 +260,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body, commit_id, path, position):
         """
-        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :param body: string
         :param commit_id: :class:`github.Commit.Commit`
         :param path: string
@@ -271,7 +271,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_review_comment(self, body, commit_id, path, position):
         """
-        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :param body: string
         :param commit_id: :class:`github.Commit.Commit`
         :param path: string
@@ -298,7 +298,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_issue_comment(self, body):
         """
-        :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -316,7 +316,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
         :param title: string
         :param body: string
         :param state: string
@@ -342,7 +342,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -350,7 +350,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_review_comment(self, id):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -365,14 +365,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comments()
 
     def get_review_comments(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -384,7 +384,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_commits(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/commits <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/commits <http://developer.github.com/v3/pulls>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         return github.PaginatedList.PaginatedList(
@@ -396,7 +396,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_files(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/files <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/files <http://developer.github.com/v3/pulls>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.File.File`
         """
         return github.PaginatedList.PaginatedList(
@@ -408,7 +408,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_issue_comment(self, id):
         """
-        :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -423,7 +423,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_issue_comments(self):
         """
-        :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -435,7 +435,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def is_merged(self):
         """
-        :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson(
@@ -448,7 +448,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def merge(self, commit_message=github.GithubObject.NotSet):
         """
-        :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """

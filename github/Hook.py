@@ -107,7 +107,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -119,7 +119,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
         :param name: string
         :param config: dict
         :param events: list of string

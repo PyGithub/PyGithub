@@ -60,7 +60,7 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -72,7 +72,7 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     def edit(self, name, color):
         """
-        :calls: `PATCH /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :param name: string
         :param color: string
         :rtype: None

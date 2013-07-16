@@ -160,7 +160,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /gists/:gist_id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:gist_id/comments <http://developer.github.com/v3/gists/comments>`_
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -191,7 +191,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /gists/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /gists/:id <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -203,7 +203,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def edit(self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /gists/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /gists/:id <http://developer.github.com/v3/gists>`_
         :param description: string
         :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
         :rtype: None
@@ -225,7 +225,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /gists/:gist_id/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments/:id <http://developer.github.com/v3/gists/comments>`_
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -240,7 +240,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /gists/:gist_id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments <http://developer.github.com/v3/gists/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -252,7 +252,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def is_starred(self):
         """
-        :calls: `GET /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson(
@@ -265,7 +265,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def reset_starred(self):
         """
-        :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -277,7 +277,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def set_starred(self):
         """
-        :calls: `PUT /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
