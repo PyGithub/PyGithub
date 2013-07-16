@@ -59,7 +59,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -71,7 +71,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def edit(self, sha, force=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/todo>`_
         :param sha: string
         :param force: bool
         :rtype: None

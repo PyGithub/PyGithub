@@ -100,7 +100,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_repos(self, repo):
         """
-        :calls: `PUT /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/todo>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -187,7 +187,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_repos(self, repo):
         """
-        :calls: `GET /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -216,7 +216,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_repos(self, repo):
         """
-        :calls: `DELETE /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """

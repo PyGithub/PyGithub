@@ -85,8 +85,8 @@ def parseApiList():
                     assert newUrl > url, url
                 url = newUrl
             elif line.startswith("  * "):
-                verb, method = line[4:].split(": ")
-                if method.startswith(":meth:"):
+                verb = line[4:].split(":")[0]
+                if "Not implemented" not in line:
                     urls.add(url + " " + verb)
 
     return urls

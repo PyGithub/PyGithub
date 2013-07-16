@@ -276,7 +276,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_starred(self, starred):
         """
-        :calls: `PUT /user/starred/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /user/starred/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param starred: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -290,7 +290,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_subscriptions(self, subscription):
         """
-        :calls: `PUT /user/subscriptions/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /user/subscriptions/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param subscription: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -304,7 +304,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_watched(self, watched):
         """
-        :calls: `PUT /user/watched/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /user/watched/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -352,7 +352,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self, repo):
         """
-        :calls: `POST /repos/:user/:repo/forks <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/todo>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: :class:`github.Repository.Repository`
         """
@@ -760,7 +760,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
@@ -863,7 +863,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_starred(self, starred):
         """
-        :calls: `GET /user/starred/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /user/starred/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param starred: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -878,7 +878,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_subscriptions(self, subscription):
         """
-        :calls: `GET /user/subscriptions/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /user/subscriptions/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param subscription: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -893,7 +893,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_watched(self, watched):
         """
-        :calls: `GET /user/watched/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /user/watched/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -937,7 +937,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_starred(self, starred):
         """
-        :calls: `DELETE /user/starred/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /user/starred/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param starred: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -951,7 +951,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_subscriptions(self, subscription):
         """
-        :calls: `DELETE /user/subscriptions/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /user/subscriptions/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param subscription: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -965,7 +965,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_watched(self, watched):
         """
-        :calls: `DELETE /user/watched/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /user/watched/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """

@@ -383,7 +383,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """

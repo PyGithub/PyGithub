@@ -250,7 +250,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self, repo):
         """
-        :calls: `POST /repos/:user/:repo/forks <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/todo>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: :class:`github.Repository.Repository`
         """
@@ -460,7 +460,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
 
     def get_repo(self, name):
         """
-        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """

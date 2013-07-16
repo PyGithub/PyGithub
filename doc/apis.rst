@@ -21,16 +21,22 @@ APIs
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_gists`
   * POST: :meth:`github.AuthenticatedUser.AuthenticatedUser.create_gist`
 
+* ``/gists/:gist_id/comments``
+
+  * GET: :meth:`github.Gist.Gist.get_comments`
+  * POST: :meth:`github.Gist.Gist.create_comment`
+
+* ``/gists/:gist_id/comments/:id``
+
+  * GET: :meth:`github.Gist.Gist.get_comment`
+  * PATCH: :meth:`github.GistComment.GistComment.edit`
+  * DELETE: :meth:`github.GistComment.GistComment.delete`
+
 * ``/gists/:id``
 
   * GET: :meth:`github.MainClass.Github.get_gist`
   * PATCH: :meth:`github.Gist.Gist.edit`
   * DELETE: :meth:`github.Gist.Gist.delete`
-
-* ``/gists/:id/comments``
-
-  * GET: :meth:`github.Gist.Gist.get_comments`
-  * POST: :meth:`github.Gist.Gist.create_comment`
 
 * ``/gists/:id/fork``
 
@@ -41,12 +47,6 @@ APIs
   * GET: :meth:`github.Gist.Gist.is_starred`
   * PUT: :meth:`github.Gist.Gist.set_starred`
   * DELETE: :meth:`github.Gist.Gist.reset_starred`
-
-* ``/gists/comments/:id``
-
-  * GET: :meth:`github.Gist.Gist.get_comment`
-  * PATCH: :meth:`github.GistComment.GistComment.edit`
-  * DELETE: :meth:`github.GistComment.GistComment.delete`
 
 * ``/gists/public``
 
@@ -98,9 +98,9 @@ APIs
 
 * ``/markdown/raw``
 
-  * POST: see ``/markdown``
+  * POST: Not implemented, see ``/markdown``
 
-* ``/networks/:user/:repo/events``
+* ``/networks/:owner/:repo/events``
 
   * GET: :meth:`github.Repository.Repository.get_network_events`
 
@@ -156,313 +156,316 @@ APIs
 
 * ``/rate_limit``
 
-  * GET: :meth:Ngithub.ot ot implemented, see `Github.rate_limiting`
+  * GET: Not implemented, see `Github.rate_limiting`
 
-* ``/repos/:user/:repo``
+* ``/repos/:owner/:repo``
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_repo` or :meth:`github.NamedUser.NamedUser.get_repo` or :meth:`github.Organization.Organization.get_repo` or :meth:`github.MainClass.Github.get_repo`
   * PATCH: :meth:`github.Repository.Repository.edit`
   * DELETE: :meth:`github.Repository.Repository.delete`
 
-* ``/repos/:user/:repo/:archive_format/:ref``
+* ``/repos/:owner/:repo/:archive_format/:ref``
 
   * GET: :meth:`github.Repository.Repository.get_archive_link`
 
-* ``/repos/:user/:repo/assignees``
+* ``/repos/:owner/:repo/assignees``
 
   * GET: :meth:`github.Repository.Repository.get_assignees`
 
-* ``/repos/:user/:repo/assignees/:assignee``
+* ``/repos/:owner/:repo/assignees/:assignee``
 
   * GET: :meth:`github.Repository.Repository.has_in_assignees`
 
-* ``/repos/:user/:repo/branches``
+* ``/repos/:owner/:repo/branches``
 
   * GET: :meth:`github.Repository.Repository.get_branches`
 
-* ``/repos/:user/:repo/branches/:branch``
+* ``/repos/:owner/:repo/branches/:branch``
 
   * GET: :meth:`github.Repository.Repository.get_branch`
 
-* ``/repos/:user/:repo/collaborators``
+* ``/repos/:owner/:repo/collaborators``
 
   * GET: :meth:`github.Repository.Repository.get_collaborators`
 
-* ``/repos/:user/:repo/collaborators/:user``
+* ``/repos/:owner/:repo/collaborators/:user``
 
   * GET: :meth:`github.Repository.Repository.has_in_collaborators`
   * PUT: :meth:`github.Repository.Repository.add_to_collaborators`
   * DELETE: :meth:`github.Repository.Repository.remove_from_collaborators`
 
-* ``/repos/:user/:repo/comments``
+* ``/repos/:owner/:repo/comments``
 
   * GET: :meth:`github.Repository.Repository.get_comments`
 
-* ``/repos/:user/:repo/comments/:id``
+* ``/repos/:owner/:repo/comments/:id``
 
   * GET: :meth:`github.Repository.Repository.get_comment`
   * PATCH: :meth:`github.CommitComment.CommitComment.edit`
   * DELETE: :meth:`github.CommitComment.CommitComment.delete`
 
-* ``/repos/:user/:repo/commits``
+* ``/repos/:owner/:repo/commits``
 
   * GET: :meth:`github.Repository.Repository.get_commits`
 
-* ``/repos/:user/:repo/commits/:sha``
+* ``/repos/:owner/:repo/commits/:sha``
 
   * GET: :meth:`github.Repository.Repository.get_commit`
 
-* ``/repos/:user/:repo/commits/:sha/comments``
+* ``/repos/:owner/:repo/commits/:sha/comments``
 
   * GET: :meth:`github.Commit.Commit.get_comments`
   * POST: :meth:`github.Commit.Commit.create_comment`
 
-* ``/repos/:user/:repo/compare/:base...:head``
+* ``/repos/:owner/:repo/compare/:base...:head``
 
   * GET: :meth:`github.Repository.Repository.compare`
 
-* ``/repos/:user/:repo/contents/:path``
+* ``/repos/:owner/:repo/contents/:path``
 
   * GET: :meth:`github.Repository.Repository.get_contents` or :meth:`github.Repository.Repository.get_file_contents` or :meth:`github.Repository.Repository.get_dir_contents`
 
-* ``/repos/:user/:repo/contributors``
+* ``/repos/:owner/:repo/contributors``
 
   * GET: :meth:`github.Repository.Repository.get_contributors`
 
-* ``/repos/:user/:repo/downloads``
+* ``/repos/:owner/:repo/downloads``
 
   * GET: :meth:`github.Repository.Repository.get_downloads`
   * POST: :meth:`github.Repository.Repository.create_download`
 
-* ``/repos/:user/:repo/downloads/:id``
+* ``/repos/:owner/:repo/downloads/:id``
 
   * GET: :meth:`github.Repository.Repository.get_download`
   * DELETE: :meth:`github.Download.Download.delete`
 
-* ``/repos/:user/:repo/events``
+* ``/repos/:owner/:repo/events``
 
   * GET: :meth:`github.Repository.Repository.get_events`
 
-* ``/repos/:user/:repo/forks``
+* ``/repos/:owner/:repo/forks``
 
   * GET: :meth:`github.Repository.Repository.get_forks`
   * POST: :meth:`github.AuthenticatedUser.AuthenticatedUser.create_fork` or `Organization.create_fork`
 
-* ``/repos/:user/:repo/git/blobs``
+* ``/repos/:owner/:repo/git/blobs``
 
   * POST: :meth:`github.Repository.Repository.create_git_blob`
 
-* ``/repos/:user/:repo/git/blobs/:sha``
+* ``/repos/:owner/:repo/git/blobs/:sha``
 
   * GET: :meth:`github.Repository.Repository.get_git_blob`
 
-* ``/repos/:user/:repo/git/commits``
+* ``/repos/:owner/:repo/git/commits``
 
   * POST: :meth:`github.Repository.Repository.create_git_commit`
 
-* ``/repos/:user/:repo/git/commits/:sha``
+* ``/repos/:owner/:repo/git/commits/:sha``
 
   * GET: :meth:`github.Repository.Repository.get_git_commit`
 
-* ``/repos/:user/:repo/git/refs``
+* ``/repos/:owner/:repo/git/refs``
 
   * GET: :meth:`github.Repository.Repository.get_git_refs`
   * POST: :meth:`github.Repository.Repository.create_git_ref`
 
-* ``/repos/:user/:repo/git/refs/:ref``
+* ``/repos/:owner/:repo/git/refs/:ref``
 
   * GET: :meth:`github.Repository.Repository.get_git_ref`
   * PATCH: :meth:`github.GitRef.GitRef.edit`
   * DELETE: :meth:`github.GitRef.GitRef.delete`
 
-* ``/repos/:user/:repo/git/tags``
+* ``/repos/:owner/:repo/git/tags``
 
   * POST: :meth:`github.Repository.Repository.create_git_tag`
 
-* ``/repos/:user/:repo/git/tags/:sha``
+* ``/repos/:owner/:repo/git/tags/:sha``
 
   * GET: :meth:`github.Repository.Repository.get_git_tag`
 
-* ``/repos/:user/:repo/git/trees``
+* ``/repos/:owner/:repo/git/trees``
 
   * POST: :meth:`github.Repository.Repository.create_git_tree`
 
-* ``/repos/:user/:repo/git/trees/:sha``
+* ``/repos/:owner/:repo/git/trees/:sha``
 
   * GET: :meth:`github.Repository.Repository.get_git_tree`
 
-* ``/repos/:user/:repo/hooks``
+* ``/repos/:owner/:repo/hooks``
 
   * GET: :meth:`github.Repository.Repository.get_hooks`
   * POST: :meth:`github.Repository.Repository.create_hook`
 
-* ``/repos/:user/:repo/hooks/:id``
+* ``/repos/:owner/:repo/hooks/:id``
 
   * GET: :meth:`github.Repository.Repository.get_hook`
   * PATCH: :meth:`github.Hook.Hook.edit`
   * DELETE: :meth:`github.Hook.Hook.delete`
 
-* ``/repos/:user/:repo/hooks/:id/test``
+* ``/repos/:owner/:repo/hooks/:id/test``
 
   * POST: :meth:`github.Hook.Hook.test`
 
-* ``/repos/:user/:repo/issues``
+* ``/repos/:owner/:repo/issues``
 
   * GET: :meth:`github.Repository.Repository.get_issues`
   * POST: :meth:`github.Repository.Repository.create_issue`
 
-* ``/repos/:user/:repo/issues/:number``
+* ``/repos/:owner/:repo/issues/:issue_number/events``
+
+  * GET: :meth:`github.Issue.Issue.get_events`
+
+* ``/repos/:owner/:repo/issues/:number``
 
   * GET: :meth:`github.Repository.Repository.get_issue`
   * PATCH: :meth:`github.Issue.Issue.edit`
 
-* ``/repos/:user/:repo/issues/:number/comments``
+* ``/repos/:owner/:repo/issues/:number/comments``
 
   * GET: :meth:`github.Issue.Issue.get_comments` or :meth:`gituhub.PullRequest.PullRequest.get_issue_comments`
   * POST: :meth:`github.Issue.Issue.create_comment` or :meth:`gituhub.PullRequest.PullRequest.create_issue_comment`
 
-* ``/repos/:user/:repo/issues/:number/events``
-
-  * GET: :meth:`github.Issue.Issue.get_events`
-
-* ``/repos/:user/:repo/issues/:number/labels``
+* ``/repos/:owner/:repo/issues/:number/labels``
 
   * GET: :meth:`github.Issue.Issue.get_labels`
   * POST: :meth:`github.Issue.Issue.add_to_labels`
   * PUT: :meth:`github.Issue.Issue.set_labels`
   * DELETE: :meth:`github.Issue.Issue.delete_labels`
 
-* ``/repos/:user/:repo/issues/:number/labels/:name``
+* ``/repos/:owner/:repo/issues/:number/labels/:name``
 
   * DELETE: :meth:`github.Issue.Issue.remove_from_labels`
 
-* ``/repos/:user/:repo/issues/comments``
+* ``/repos/:owner/:repo/issues/comments``
 
   * GET: :meth:`github.Repository.Repository.get_issues_comments`
 
-* ``/repos/:user/:repo/issues/comments/:id``
+* ``/repos/:owner/:repo/issues/comments/:id``
 
   * GET: :meth:`github.Issue.Issue.get_comment` or :meth:`gituhub.PullRequest.PullRequest.get_issue_comment`
   * PATCH: :meth:`github.IssueComment.IssueComment.edit`
   * DELETE: :meth:`github.IssueComment.IssueComment.delete`
 
-* ``/repos/:user/:repo/issues/events``
+* ``/repos/:owner/:repo/issues/events``
 
   * GET: :meth:`github.Repository.Repository.get_issues_events`
 
-* ``/repos/:user/:repo/issues/events/:id``
+* ``/repos/:owner/:repo/issues/events/:id``
 
   * GET: :meth:`github.Repository.Repository.get_issues_event`
 
-* ``/repos/:user/:repo/keys``
+* ``/repos/:owner/:repo/keys``
 
   * GET: :meth:`github.Repository.Repository.get_keys`
   * POST: :meth:`github.Repository.Repository.create_key`
 
-* ``/repos/:user/:repo/keys/:id``
+* ``/repos/:owner/:repo/keys/:id``
 
   * GET: :meth:`github.Repository.Repository.get_key`
   * PATCH: :meth:`github.RepositoryKey.RepositoryKey.edit`
   * DELETE: :meth:`github.RepositoryKey.RepositoryKey.delete`
 
-* ``/repos/:user/:repo/labels``
+* ``/repos/:owner/:repo/labels``
 
   * GET: :meth:`github.Repository.Repository.get_labels`
   * POST: :meth:`github.Repository.Repository.create_label`
 
-* ``/repos/:user/:repo/labels/:name``
+* ``/repos/:owner/:repo/labels/:name``
 
   * GET: :meth:`github.Repository.Repository.get_label`
   * PATCH: :meth:`github.Label.Label.edit`
   * DELETE: :meth:`github.Label.Label.delete`
 
-* ``/repos/:user/:repo/languages``
+* ``/repos/:owner/:repo/languages``
 
   * GET: :meth:`github.Repository.Repository.get_languages`
 
-* ``/repos/:user/:repo/merges``
+* ``/repos/:owner/:repo/merges``
 
   * POST: :meth:`github.Repository.Repository.merge`
 
-* ``/repos/:user/:repo/milestones``
+* ``/repos/:owner/:repo/milestones``
 
   * GET: :meth:`github.Repository.Repository.get_milestones`
   * POST: :meth:`github.Repository.Repository.create_milestone`
 
-* ``/repos/:user/:repo/milestones/:number``
+* ``/repos/:owner/:repo/milestones/:number``
 
   * GET: :meth:`github.Repository.Repository.get_milestone`
   * PATCH: :meth:`github.Milestone.Milestone.edit`
   * DELETE: :meth:`github.Milestone.Milestone.delete`
 
-* ``/repos/:user/:repo/milestones/:number/labels``
+* ``/repos/:owner/:repo/milestones/:number/labels``
 
   * GET: :meth:`github.Milestone.Milestone.get_labels`
 
-* ``/repos/:user/:repo/pulls``
+* ``/repos/:owner/:repo/pulls``
 
   * GET: :meth:`github.Repository.Repository.get_pulls`
   * POST: :meth:`github.Repository.Repository.create_pull`
 
-* ``/repos/:user/:repo/pulls/:number``
+* ``/repos/:owner/:repo/pulls/:number``
 
   * GET: :meth:`github.Repository.Repository.get_pull`
   * PATCH: :meth:`github.PullRequest.PullRequest.edit`
 
-* ``/repos/:user/:repo/pulls/:number/comments``
+* ``/repos/:owner/:repo/pulls/:number/comments``
 
   * GET: :meth:`github.PullRequest.PullRequest.get_comments` or :meth:`github.PullRequest.PullRequest.get_review_comments`
   * POST: :meth:`github.PullRequest.PullRequest.create_comment` or :meth:`github.PullRequest.PullRequest.create_review_comment`
 
-* ``/repos/:user/:repo/pulls/:number/commits``
+* ``/repos/:owner/:repo/pulls/:number/commits``
 
   * GET: :meth:`github.PullRequest.PullRequest.get_commits`
 
-* ``/repos/:user/:repo/pulls/:number/files``
+* ``/repos/:owner/:repo/pulls/:number/files``
 
   * GET: :meth:`github.PullRequest.PullRequest.get_files`
 
-* ``/repos/:user/:repo/pulls/:number/merge``
+* ``/repos/:owner/:repo/pulls/:number/merge``
 
   * GET: :meth:`github.PullRequest.PullRequest.is_merged`
   * PUT: :meth:`github.PullRequest.PullRequest.merge`
 
-* ``/repos/:user/:repo/pulls/comments``
+* ``/repos/:owner/:repo/pulls/comments``
 
   * GET: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`
 
-* ``/repos/:user/:repo/pulls/comments/:number``
+* ``/repos/:owner/:repo/pulls/comments/:number``
 
   * GET: :meth:`github.PullRequest.PullRequest.get_comment` or :meth:`github.PullRequest.PullRequest.get_review_comment`
   * PATCH: :meth:`github.PullRequestComment.PullRequestComment.edit`
   * DELETE: :meth:`github.PullRequestComment.PullRequestComment.delete`
 
-* ``/repos/:user/:repo/readme``
+* ``/repos/:owner/:repo/readme``
 
   * GET: :meth:`github.Repository.Repository.get_readme`
 
-* ``/repos/:user/:repo/stargazers``
+* ``/repos/:owner/:repo/stargazers``
 
   * GET: :meth:`github.Repository.Repository.get_stargazers`
 
-* ``/repos/:user/:repo/statuses/:sha``
+* ``/repos/:owner/:repo/statuses/:ref``
 
   * GET: :meth:`github.Commit.Commit.get_statuses`
+
+* ``/repos/:owner/:repo/statuses/:sha``
+
   * POST: :meth:`github.Commit.Commit.create_status`
 
-* ``/repos/:user/:repo/subscribers``
+* ``/repos/:owner/:repo/subscribers``
 
   * GET: :meth:`github.Repository.Repository.get_subscribers`
 
-* ``/repos/:user/:repo/tags``
+* ``/repos/:owner/:repo/tags``
 
   * GET: :meth:`github.Repository.Repository.get_tags`
 
-* ``/repos/:user/:repo/teams``
+* ``/repos/:owner/:repo/teams``
 
   * GET: :meth:`github.Repository.Repository.get_teams`
 
-* ``/repos/:user/:repo/watchers``
+* ``/repos/:owner/:repo/watchers``
 
   * GET: :meth:`github.Repository.Repository.get_watchers`
 
@@ -486,10 +489,13 @@ APIs
 
   * GET: :meth:`github.Team.Team.get_repos`
 
-* ``/teams/:id/repos/:user/:repo``
+* ``/teams/:id/repos/:org/:repo``
+
+  * PUT: :meth:`github.Team.Team.add_to_repos`
+
+* ``/teams/:id/repos/:owner/:repo``
 
   * GET: :meth:`github.Team.Team.has_in_repos`
-  * PUT: :meth:`github.Team.Team.add_to_repos`
   * DELETE: :meth:`github.Team.Team.remove_from_repos`
 
 * ``/user``
@@ -545,7 +551,7 @@ APIs
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_starred`
 
-* ``/user/starred/:user/:repo``
+* ``/user/starred/:owner/:repo``
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.has_in_starred`
   * PUT: :meth:`github.AuthenticatedUser.AuthenticatedUser.add_to_starred`
@@ -555,7 +561,7 @@ APIs
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_subscriptions`
 
-* ``/user/subscriptions/:user/:repo``
+* ``/user/subscriptions/:owner/:repo``
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.has_in_subscriptions`
   * PUT: :meth:`github.AuthenticatedUser.AuthenticatedUser.add_to_subscriptions`
@@ -565,7 +571,7 @@ APIs
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.get_watched`
 
-* ``/user/watched/:user/:repo``
+* ``/user/watched/:owner/:repo``
 
   * GET: :meth:`github.AuthenticatedUser.AuthenticatedUser.has_in_watched`
   * PUT: :meth:`github.AuthenticatedUser.AuthenticatedUser.add_to_watched`

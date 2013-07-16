@@ -158,7 +158,7 @@ class Github(object):
 
     def get_repo(self, full_name):
         """
-        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name, (str, unicode)), full_name

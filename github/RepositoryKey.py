@@ -83,7 +83,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/keys/:id <http://developer.github.com/v3/keys>`_
+        :calls: `DELETE /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/keys>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -95,7 +95,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/keys/:id <http://developer.github.com/v3/keys>`_
+        :calls: `PATCH /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/keys>`_
         :param title: string
         :param key: string
         :rtype: None

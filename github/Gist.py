@@ -160,7 +160,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:gist_id/comments <http://developer.github.com/v3/todo>`_
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -225,7 +225,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /gists/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments/:id <http://developer.github.com/v3/todo>`_
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -240,7 +240,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
         """
         return github.PaginatedList.PaginatedList(

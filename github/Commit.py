@@ -106,7 +106,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body, line=github.GithubObject.NotSet, path=github.GithubObject.NotSet, position=github.GithubObject.NotSet):
         """
-        :calls: `POST /repos/:user/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
         :param body: string
         :param line: integer
         :param path: string
@@ -136,7 +136,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def create_status(self, state, target_url=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
         """
-        :calls: `POST /repos/:user/:repo/statuses/:sha <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/statuses/:sha <http://developer.github.com/v3/todo>`_
         :param state: string
         :param target_url: string
         :param description: string
@@ -162,7 +162,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitComment.CommitComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -174,7 +174,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def get_statuses(self):
         """
-        :calls: `GET /repos/:user/:repo/statuses/:sha <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/statuses/:ref <http://developer.github.com/v3/todo>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CommitStatus.CommitStatus`
         """
         return github.PaginatedList.PaginatedList(

@@ -193,7 +193,7 @@ class Download(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/downloads/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/downloads/:id <http://developer.github.com/v3/todo>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
