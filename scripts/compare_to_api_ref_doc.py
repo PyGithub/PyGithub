@@ -73,25 +73,6 @@ def parseLibrary():
     return urls
 
 
-def parseApiList():
-    urls = set()
-
-    with open("doc/apis.rst") as f:
-        url = None
-        for line in f:
-            if line.startswith("*"):
-                newUrl = line[4:-3]
-                if url is not None:
-                    assert newUrl > url, url
-                url = newUrl
-            elif line.startswith("  * "):
-                verb = line[4:].split(":")[0]
-                if "Not implemented" not in line:
-                    urls.add(url + " " + verb)
-
-    return urls
-
-
 def printUrls(title, urls):
     if len(urls) > 0:
         print len(urls), "URLs", title + ":"
@@ -102,10 +83,8 @@ def printUrls(title, urls):
 def main():
     ref = parseReference()
     lib = parseLibrary()
-    doc = parseApiList()
     printUrls("in Github API v3, but not implemented in PyGithub", ref - lib)
     printUrls("called by PyGithub but not existing in Github API v3", lib - ref)
-    printUrls("badly linked from doc/api.rst", doc ^ lib)
 
 
 if __name__ == "__main__":

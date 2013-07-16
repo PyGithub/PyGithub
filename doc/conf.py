@@ -33,7 +33,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, shutil
+import sys, os, shutil, glob
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -268,20 +268,84 @@ autodoc_default_flags = [ "members" ]
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
-with open("github_objects.rst", "w") as github_objects:
-	github_objects.write("Github objects\n")
-	github_objects.write("==============\n")
-	github_objects.write("\n")
-	github_objects.write(".. autoclass:: github.GithubObject.GithubObject()\n")
-	github_objects.write("\n")
-	github_objects.write(".. toctree::\n")
+githubClasses = [
+	fileName[10:-3]
+	for fileName in glob.glob("../github/*.py")
+	if fileName not in [
+		"../github/GithubException.py",
+		"../github/GithubObject.py",
+		"../github/InputFileContent.py",
+		"../github/InputGitAuthor.py",
+		"../github/InputGitTreeElement.py",
+		"../github/Legacy.py",
+		"../github/MainClass.py",
+		"../github/PaginatedList.py",
+		"../github/Requester.py",
+		"../github/__init__.py"]
+]
 
-	for obj in ["AuthenticatedUser", "Authorization", "AuthorizationApplication", "Branch", "Commit", "CommitComment", "CommitStats", "CommitStatus", "Comparison", "ContentFile", "Download", "Event", "File", "Gist", "GistComment", "GistFile", "GistHistoryState", "GitAuthor", "GitBlob", "GitCommit", "GitObject", "GitignoreTemplate", "GitRef", "GitTag", "GitTree", "GitTreeElement", "Hook", "HookDescription", "HookResponse", "Issue", "IssueComment", "IssueEvent", "IssuePullRequest", "Label", "Milestone", "NamedUser", "Notification", "NotificationSubject", "Organization", "Permissions", "Plan", "PullRequest", "PullRequestComment", "PullRequestMergeStatus", "PullRequestPart", "Repository", "RepositoryKey", "Tag", "Team", "UserKey"]:
-		github_objects.write("   github_objects/" + obj + "\n")
-		with open("github_objects/" + obj + ".rst", "w") as github_object:
-			github_object.write(obj + "\n")
-			github_object.write("=" * len(obj) + "\n")
-			github_object.write("\n")
-			github_object.write(".. autoclass:: github." + obj + "." + obj + "()\n")
+with open("github_objects.rst",	"w") as f:
+	f.write("Github objects\n")
+	f.write("==============\n")
+	f.write("\n")
+	f.write(".. autoclass:: github.GithubObject.GithubObject()\n")
+	f.write("\n")
+	f.write(".. toctree::\n")
+	for githubClass in githubClasses:
+		f.write("   github_objects/" + githubClass + "\n")
+
+for githubClass in githubClasses:
+	with open("github_objects/" + githubClass + ".rst", "w") as f:
+		f.write(githubClass + "\n")
+		f.write("=" * len(githubClass) + "\n")
+		f.write("\n")
+		f.write(".. autoclass:: github." + githubClass + "." + githubClass + "()\n")
+
+methods = dict()
+for githubClass in githubClasses + ["MainClass"]:
+	with open("../github/" + githubClass + ".py") as f:
+		if githubClass == "MainClass":
+			githubClass = "github.MainClass.Github"
+		else:
+			githubClass = "github." + githubClass + "." + githubClass
+		method = None
+		isProperty = False
+		for line in f:
+			line = line.rstrip()
+			if line == "    @property":
+				isProperty = True
+			if line.startswith("    def "):
+				if not isProperty:
+					assert method is None, method + " has no :calls: section"
+					method = line.split("(")[0][8:]
+					if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page"]:
+						method = None
+				isProperty = False
+			if line.startswith("        :calls: `"):
+				for callee in line[16:].split(" or "):
+					verb, url = callee[1:].split(" ")[0:2]
+					if url not in methods:
+						methods[url] = dict()
+					if verb not in methods[url]:
+						methods[url][verb] = set()
+					methods[url][verb].add(":meth:`" + githubClass + "." + method + "`")
+				method = None
+
+methods["/markdown/raw"] = dict()
+methods["/markdown/raw"]["POST"] = ["Not implemented, see ``/markdown``"]
+methods["/rate_limit"] = dict()
+methods["/rate_limit"]["GET"] = ["Not implemented, see `Github.rate_limiting`"]
+
+with open("apis.rst", "w") as apis:
+	apis.write("APIs\n")
+	apis.write("====\n")
+	apis.write("\n")
+	for url, verbs in sorted(methods.iteritems()):
+		apis.write("* ``" + url + "``\n")
+		apis.write("\n")
+		for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
+			if verb in verbs:
+				apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
+		apis.write("\n")
 
 shutil.copyfile("../Contributing.rst", "contributing.rst")

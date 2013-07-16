@@ -21,5 +21,6 @@
 ################################################################################
 
 /build/
-github_objects.rst
-contributing.rst
+/github_objects.rst
+/contributing.rst
+/apis.rst
