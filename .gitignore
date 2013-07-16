@@ -27,3 +27,4 @@ GithubCredentials.py
 /MANIFEST
 /PyGithub.egg-info/
 /.coverage
+/developer.github.com/
