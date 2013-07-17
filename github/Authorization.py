@@ -107,7 +107,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /authorizations/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /authorizations/:id <http://developer.github.com/v3/oauth>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -119,7 +119,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def edit(self, scopes=github.GithubObject.NotSet, add_scopes=github.GithubObject.NotSet, remove_scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /authorizations/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /authorizations/:id <http://developer.github.com/v3/oauth>`_
         :param scopes: list of string
         :param add_scopes: list of string
         :param remove_scopes: list of string

@@ -74,7 +74,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /user/keys/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /user/keys/:id <http://developer.github.com/v3/users/keys>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -86,7 +86,7 @@ class UserKey(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /user/keys/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /user/keys/:id <http://developer.github.com/v3/users/keys>`_
         :param title: string
         :param key: string
         :rtype: None

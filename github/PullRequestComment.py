@@ -133,7 +133,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -145,7 +145,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
 
     def edit(self, body):
         """
-        :calls: `PATCH /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :param body: string
         :rtype: None
         """

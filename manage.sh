@@ -89,4 +89,16 @@ function unmerged {
     done
 }
 
+function compare_to_api_ref_doc {
+    if [ -e developer.github.com ]
+    then
+        cd developer.github.com
+        git pull
+        cd ..
+    else
+        git clone https://github.com/github/developer.github.com.git
+    fi
+    python scripts/compare_to_api_ref_doc.py
+}
+
 $1

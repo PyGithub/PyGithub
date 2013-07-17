@@ -188,7 +188,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def add_to_labels(self, *labels):
         """
-        :calls: `POST /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
@@ -203,7 +203,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -221,7 +221,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def delete_labels(self):
         """
-        :calls: `DELETE /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -233,7 +233,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/issues/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
         :param assignee: :class:`github.NamedUser.NamedUser` or None
@@ -271,7 +271,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /repos/:user/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -286,7 +286,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -298,7 +298,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_events(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/events <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:issue_number/events <http://developer.github.com/v3/issues/events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
         """
         return github.PaginatedList.PaginatedList(
@@ -310,7 +310,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
@@ -322,7 +322,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def remove_from_labels(self, label):
         """
-        :calls: `DELETE /repos/:user/:repo/issues/:number/labels/:name <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
@@ -336,7 +336,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def set_labels(self, *labels):
         """
-        :calls: `PUT /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
