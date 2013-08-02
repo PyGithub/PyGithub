@@ -122,7 +122,6 @@ class PaginatedList(PaginatedListBase):
     def reversed(self):
         self._reversed = True
         self.__nextUrl = self._getLastPageUrl()
-        print "saved next url: %s" % self.__nextUrl
         return self
 
     def _couldGrow(self):
