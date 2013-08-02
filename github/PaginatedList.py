@@ -115,13 +115,15 @@ class PaginatedList(PaginatedListBase):
     def _getLastPageUrl(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, self.__nextParams, None)
         links = self.__parseLinkHeader(headers)
-        lastUrl = links["last"]
+        lastUrl = links.get("last")
         return lastUrl
 
     @property
     def reversed(self):
         self._reversed = True
-        self.__nextUrl = self._getLastPageUrl()
+        lastUrl = self._getLastPageUrl()
+        if lastUrl:
+            self.__nextUrl = lastUrl
         return self
 
     def _couldGrow(self):
@@ -130,15 +132,14 @@ class PaginatedList(PaginatedListBase):
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
 
-        links = self.__parseLinkHeader(headers)
+        self.__nextUrl = None
         if len(data) > 0:
+            links = self.__parseLinkHeader(headers)
             if self._reversed:
                 if "prev" in links:
                     self.__nextUrl = links["prev"]
             elif "next" in links:
                 self.__nextUrl = links["next"]
-        else:
-            self.__nextUrl = None
         self.__nextParams = None
 
         content = [
