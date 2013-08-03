@@ -147,7 +147,7 @@ class PaginatedList(PaginatedListBase):
             for element in data
         ]
         if self._reversed:
-            return reversed(content)
+            return content[::-1]
         return content
 
     def __parseLinkHeader(self, headers):
