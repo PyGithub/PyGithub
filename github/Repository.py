@@ -828,20 +828,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Commit.Commit(self._requester, data, completed=True)
 
-    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet):
+    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:user/:repo/commits <http://developer.github.com/v3/todo>`_
         :param sha: string
         :param path: string
+        :param since: datetime.datetime
+        :param until: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert until is github.GithubObject.NotSet or isinstance(until, datetime.datetime), until
         url_parameters = dict()
         if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
         if path is not github.GithubObject.NotSet:
             url_parameters["path"] = path
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if until is not github.GithubObject.NotSet:
+            url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Commit.Commit,
             self._requester,
