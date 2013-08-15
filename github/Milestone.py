@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2013 martinqt m.ki2@laposte.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import datetime
 
@@ -119,7 +128,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /repos/:user/:repo/milestones/:number <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -131,7 +140,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/milestones/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones>`_
         :param title: string
         :param state: string
         :param description: string
@@ -161,7 +170,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/:user/:repo/milestones/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/milestones/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(

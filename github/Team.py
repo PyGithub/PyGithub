@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2013 martinqt m.ki2@laposte.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -77,7 +86,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_members(self, member):
         """
-        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -91,7 +100,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def add_to_repos(self, repo):
         """
-        :calls: `PUT /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """
@@ -105,7 +114,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /teams/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -117,7 +126,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def edit(self, name, permission=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /teams/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param permission: string
         :rtype: None
@@ -139,7 +148,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_members(self):
         """
-        :calls: `GET /teams/:id/members <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/members <http://developer.github.com/v3/orgs/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         return github.PaginatedList.PaginatedList(
@@ -151,7 +160,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def get_repos(self):
         """
-        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/repos <http://developer.github.com/v3/orgs/teams>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
@@ -163,7 +172,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_members(self, member):
         """
-        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
@@ -178,7 +187,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def has_in_repos(self, repo):
         """
-        :calls: `GET /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: bool
         """
@@ -193,7 +202,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_members(self, member):
         """
-        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id/members/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
@@ -207,7 +216,7 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def remove_from_repos(self, repo):
         """
-        :calls: `DELETE /teams/:id/repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /teams/:id/repos/:owner/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
         :rtype: None
         """

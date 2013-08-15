@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 function publish {
-    # check
-    # test
+    check
+    test
     bump
     readme
     doc
@@ -14,21 +14,8 @@ function check {
     pep8 --ignore=E501 github setup.py || exit
 }
 
-function check_copyright {
-    for file in $(git ls-files | grep "py$")
-    do
-        git log "--format=format:# Copyright %ad %an %ae" --date=short -- $file |
-        sed "s/\([0-9][0-9][0-9][0-9]\)-[0-9][0-9]-[0-9][0-9]/\1/g" | sort -u |
-        while read copyright
-        do
-            if grep -n $file -e "^$copyright$" > /dev/null
-            then
-                echo > /dev/null
-            else
-                echo "$file should contain '$copyright'"
-            fi
-        done
-    done
+function fix_headers {
+    python scripts/fix_headers.py
 }
 
 function test {
@@ -72,15 +59,46 @@ function push {
 
     git commit -am "Publish version $version"
 
-    cp COPYING* github
-    python setup.py sdist upload
-    rm -rf github/COPYING*
+    sdist_upload
 
     git tag -m "Version $version" v$version
 
     git push github master master:develop
     git push --force github gh-pages
     git push --tags
+}
+
+function sdist_upload {
+    cp COPYING* github
+    python setup.py sdist upload
+    rm -rf github/COPYING*
+}
+
+function unmerged {
+    BRANCHES_NOT_TO_BE_MERGED="-e gh-pages -e topic/DependencyGraph"
+    COMMITS_NOT_TO_BE_MERGED="-e 1bea00a -e 11aeaa7 -e dd1e255 -e 670c6fb -e ed87a91 -e 072fbcb -e 421a743 -e 0c45af7 -e 92e4df4 -e 79ebd4b -e 0965ffd -e e1990c5 -e 55f3250"
+
+    for b in `git branch -a --no-merged | grep -v $BRANCHES_NOT_TO_BE_MERGED`
+    do
+        if git --no-pager log ..$b --oneline | grep -v $COMMITS_NOT_TO_BE_MERGED > /dev/null
+        then
+            echo $b
+            git --no-pager log ..$b --oneline
+            echo
+        fi
+    done
+}
+
+function compare_to_api_ref_doc {
+    if [ -e developer.github.com ]
+    then
+        cd developer.github.com
+        git pull
+        cd ..
+    else
+        git clone https://github.com/github/developer.github.com.git
+    fi
+    python scripts/compare_to_api_ref_doc.py
 }
 
 $1

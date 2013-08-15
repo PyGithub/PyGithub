@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+`Version 1.17.0 <https://github.com/jacquev6/PyGithub/issues?milestone=29&state=closed>`_ (Jully 7th, 2013) (Hamburg edition)
+-----------------------------------------------------------------------------------------------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/176>`_ bug in ``Repository.get_comment`` when using custom ``per_page``. Thank you `davidbrai <https://github.com/davidbrai>`_
+* `Handle <https://github.com/jacquev6/PyGithub/pull/174>`_ Http redirects in ``Repository.get_dir_contents``. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_
+* `Implement <https://github.com/jacquev6/PyGithub/issues/173>`_ API ``/user`` in ``Github.get_users``. Thank you `rakeshcusat <https://github.com/rakeshcusat>`_ for asking
+* `Improve <https://github.com/jacquev6/PyGithub/pull/171>`_ the documentation. Thank you `martinqt <https://github.com/martinqt>`_
+
 Version 1.16.0 (May 31th, 2013) (Concarneau edition)
 ----------------------------------------------------
 
@@ -85,7 +93,7 @@ Version 1.12.1 (February 20th, 2013)
 * Add a shortcut function :meth:`github.MainClass.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
 * :meth:`github.MainClass.Github.get_gitignore_templates` and :meth:`github.MainClass.Github.get_gitignore_template` for APIs ``/gitignore/templates``
 * Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
-* Get comments for all issues and all pull requests on a repository (``GET /repos/:user/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:user/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
+* Get comments for all issues and all pull requests on a repository (``GET /repos/:owner/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:owner/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
 
 `Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone-17&state-closed>`_ (November 20th, 2012)
 --------------------------------------------------------------------------------------------------------------
@@ -217,9 +225,9 @@ Pre-release versions
 
   * GET `/gists/public`
   * GET `/issues`
-  * GET `/repos/:user/:repo/compare/:base...:head`
-  * GET `/repos/:user/:repo/git/trees/:sha?recursive-1`
-  * POST `/repos/:user/:repo/git/trees?base_tree-`
+  * GET `/repos/:owner/:repo/compare/:base...:head`
+  * GET `/repos/:owner/:repo/git/trees/:sha?recursive-1`
+  * POST `/repos/:owner/:repo/git/trees?base_tree-`
 
 * Gists
 * Autorizations
