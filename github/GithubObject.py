@@ -5,6 +5,7 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -27,6 +28,8 @@ import datetime
 
 import GithubException
 
+import pickle
+
 
 class _NotSetType:
     def __repr__(self):
@@ -40,10 +43,22 @@ class GithubObject(object):
     """
     def __init__(self, requester, attributes, completed):
         self._requester = requester
+        self._initConditionalRequestAttributes()
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
 
+    def _initConditionalRequestAttributes(self):
+        self._etag = NotSet
+        self._last_modified = NotSet
+
+    def _useConditionalRequestAttributes(self, attributes):
+        if "etag" in attributes:
+            self._etag = attributes["etag"]
+        if "last-modified" in attributes:
+            self._last_modified = attributes["last-modified"]
+  
     def _storeAndUseAttributes(self, attributes):
+        self._useConditionalRequestAttributes(attributes)
         self._useAttributes(attributes)
         self._rawData = attributes
 
@@ -76,7 +91,27 @@ class GithubObject(object):
             return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+    
+    def save(self, file_name):
+        '''
+        Save instance to a file
+        
+        :param file_name: the full path of target file
+        '''
 
+        with open(file_name, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, file_name):
+        '''
+        Load saved instance from file
+        :param file_name: the full path to saved file
+        :rtype: saved instance. The type of loaded instance remains its orginal one and  will not be affected by from which derived class the method is called.   
+        '''
+        with open(file_name, 'rb') as f:
+            return pickle.load(f)
+        
 
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self):
@@ -105,3 +140,28 @@ class CompletableGithubObject(GithubObject):
         )
         self._storeAndUseAttributes(data)
         self.__completed = True
+    
+    def update(self):
+        '''
+        Check and update the object with conditional request
+        :rtype: Boolean value indicating whether the object is changed
+        '''
+        conditionalRequestHeader = dict()
+        if self._etag is not NotSet:
+            conditionalRequestHeader["If-None-Match"] = self._etag
+        if self._last_modified is not NotSet:
+            conditionalRequestHeader["If-Modified-Since"] = self._last_modified
+
+
+        try:
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self._url,
+                conditionalRequestHeader,
+                None
+            )
+            self._storeAndUseAttributes(data)
+            self.__completed = True
+            return True
+        except GithubException.NotModifiedException:
+            return False

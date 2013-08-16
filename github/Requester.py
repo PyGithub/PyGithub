@@ -11,6 +11,7 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -43,7 +44,6 @@ if atLeastPython26:
     import json
 else:  # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
-
 import GithubException
 
 
@@ -65,7 +65,7 @@ class Requester:
         if password is not None:
             login = login_or_token
             if atLeastPython3:
-                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
+                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx
             else:
                 self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
         elif login_or_token is not None:
@@ -106,11 +106,31 @@ class Requester:
     def requestMultipartAndCheck(self, verb, url, parameters, input):
         return self.__check(*self.requestMultipart(verb, url, parameters, input))
 
+    def _processHeaderForOutput(self, responseHeaders, output):
+        #Get fields for conditional request
+        if "etag" in responseHeaders: #and len(responseHeaders["etag"]) >= 2:
+            output["etag"] = responseHeaders["etag"]#[1:-1]
+        if "last-modified" in responseHeaders:
+            output["last-modified"] = responseHeaders["last-modified"]
+        return output
+
+    def __processHeaderForOutput(self, responseHeaders, output):
+        if isinstance(output, list):
+            return [self._processHeaderForOutput(responseHeaders, o) for o in output]
+        return self._processHeaderForOutput(responseHeaders, output)
+
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
             raise self.__createException(status, output)
+        elif status == 304:
+            raise self.__createException304(status, output)
+        if output is not None:
+            output = self.__processHeaderForOutput(responseHeaders, output)
         return responseHeaders, output
+
+    def __createException304(self, status, output):
+        return GithubException.NotModifiedException(status, output)
 
     def __createException(self, status, output):
         if status == 401 and output["message"] == "Bad credentials":
@@ -162,6 +182,7 @@ class Requester:
 
         requestHeaders = dict()
         self.__authenticate(url, requestHeaders, parameters)
+        self.__conditional(requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -179,16 +200,15 @@ class Requester:
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
 
+
         return status, responseHeaders, output
 
     def __requestRaw(self, verb, url, requestHeaders, input):
         cnx = self.__createConnection()
-        cnx.request(
-            verb,
+        cnx.request(verb,
             url,
             input,
-            requestHeaders
-        )
+            requestHeaders)
         response = cnx.getresponse()
 
         status = response.status
@@ -207,6 +227,14 @@ class Requester:
             parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
+    
+    def __conditional(self, requestHeaders, parameters):
+        if "If-None-Match" in parameters:
+            requestHeaders["If-None-Match"] = parameters["If-None-Match"]
+            del parameters["If-None-Match"]
+        if "If-Modified-Since" in parameters:
+            requestHeaders["If-Modified-Since"] = parameters["If-Modified-Since"]
+            del parameters["If-Modified-Since"]
 
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url
