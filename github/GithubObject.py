@@ -63,6 +63,20 @@ class GithubObject(object):
         self._rawData = attributes
 
     @property
+    def etag(self):
+        """
+        :type: str
+        """
+        return self._etag
+
+    @property
+    def last_modified(self):
+        """
+        :type: str
+        """
+        return self._last_modified
+
+    @property
     def raw_data(self):
         """
         :type: dict
