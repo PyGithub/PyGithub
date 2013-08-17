@@ -116,8 +116,11 @@ class Requester:
 
     def __processHeaderForOutput(self, responseHeaders, output):
         if isinstance(output, list):
-            return [self._processHeaderForOutput(responseHeaders, o) for o in output]
-        return self._processHeaderForOutput(responseHeaders, output)
+            return [self.__processHeaderForOutput(responseHeaders, o) for o in output]
+        elif isinstance(output, dict):
+            return self._processHeaderForOutput(responseHeaders, output)
+        else:
+            return output
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
