@@ -39,6 +39,7 @@ if atLeastPython26:
     import json
 else:  # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
+    import __future__
 
 
 def readLine(file):
