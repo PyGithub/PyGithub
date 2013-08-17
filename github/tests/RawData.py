@@ -27,6 +27,7 @@ import github.NamedUser
 
 
 class RawData(Framework.TestCase):
+    expectedEtag = '"1bb2632b6c4ebeb4ff568329490bfbe2"'
     jacquev6RawData = {
         'disk_usage': 13812,
         'private_gists': 5,
@@ -77,15 +78,24 @@ class RawData(Framework.TestCase):
         'space': 614400,
     }
 
+    def assertAndRemoveEtag(self, raw_data):
+        asserted = raw_data
+        self.assertTrue("etag" in raw_data)
+        self.assertEqual(self.expectedEtag, raw_data["etag"])
+        del asserted["etag"]
+        return asserted
+
     def testCompletedObject(self):
         user = self.g.get_user("jacquev6")
         self.assertTrue(user._CompletableGithubObject__completed)
-        self.assertEqual(user.raw_data, RawData.jacquev6RawData)
+        asserted = self.assertAndRemoveEtag(user.raw_data)
+        self.assertEqual(asserted, RawData.jacquev6RawData)
 
     def testNotYetCompletedObject(self):
         user = self.g.get_user().get_repo("PyGithub").owner
         self.assertFalse(user._CompletableGithubObject__completed)
-        self.assertEqual(user.raw_data, RawData.jacquev6RawData)
+        asserted = self.assertAndRemoveEtag(user.raw_data)
+        self.assertEqual(asserted, RawData.jacquev6RawData)
         self.assertTrue(user._CompletableGithubObject__completed)
 
     def testNonCompletableObject(self):
