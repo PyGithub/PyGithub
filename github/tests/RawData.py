@@ -94,31 +94,16 @@ class RawData(Framework.TestCase):
         asserted = self.assertAndRemoveKeyValue(asserted, key_modify, self.expectedLastModified)
         return asserted
 
-    def print_compare(self, from_test, real, expected):
-        print "========================================"
-        print from_test
-        print "----------------------------------------"
-        print "Real Value"
-        print "----------------------------------------"
-        print real
-        print "----------------------------------------"
-        print "Expected Value"
-        print "----------------------------------------"
-        print expected
-        print "----------------------------------------"
-
     def testCompletedObject(self):
         user = self.g.get_user("jacquev6")
         self.assertTrue(user._CompletableGithubObject__completed)
         asserted = self.assertAndRemoveConditionalRequestData(user.raw_data)
-        self.print_compare("testCompletedObject", asserted, RawData.jacquev6RawData)
         self.assertEqual(asserted, RawData.jacquev6RawData)
 
     def testNotYetCompletedObject(self):
         user = self.g.get_user().get_repo("PyGithub").owner
         self.assertFalse(user._CompletableGithubObject__completed)
         asserted = self.assertAndRemoveConditionalRequestData(user.raw_data)
-        self.print_compare("testNotYetCompletedObject", asserted, RawData.jacquev6RawData)
         self.assertEqual(asserted, RawData.jacquev6RawData)
         self.assertTrue(user._CompletableGithubObject__completed)
 
