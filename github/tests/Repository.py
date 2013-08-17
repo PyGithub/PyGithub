@@ -330,7 +330,7 @@ class Repository(Framework.TestCase):
         self.assertListKeyEqual(self.repo.get_labels(), lambda l: l.name, ["Refactoring", "Public interface", "Functionalities", "Project management", "Bug", "Question"])
 
     def testGetLanguages(self):
-        self.assertEqual(self.repo.get_languages(), {"Python": 127266, "Shell": 673})
+        self.assertEqual(self.repo.get_languages(), {"Python": 127266, "Shell": 673, 'etag': '"7d14a65f22f237036a50f0d982721206"'})
 
     def testGetMilestones(self):
         self.assertListKeyEqual(self.repo.get_milestones(), lambda m: m.id, [93547])
