@@ -109,9 +109,9 @@ class Requester:
     def _processHeaderForOutput(self, responseHeaders, output):
         #Get fields for conditional request
         if "etag" in responseHeaders: 
-            output["etag"] = responseHeaders["etag"].encode('utf-8')
+            output["etag"] = responseHeaders["etag"]
         if "last-modified" in responseHeaders:
-            output["last-modified"] = responseHeaders["last-modified"].encode('utf-8')
+            output["last-modified"] = responseHeaders["last-modified"]
         return output
 
     def __processHeaderForOutput(self, responseHeaders, output):
