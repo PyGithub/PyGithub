@@ -10,19 +10,11 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Summer 2013 - I'm traveling
----------------------------
 
-You may have noticed I'm a bit slower than usual to manage your issues and pull requests.
-That's because I'm traveling a lot this summer. Please be patient.
+`Version 1.18.0 <https://github.com/jacquev6/PyGithub/issues?milestone=30&state=closed>`_ (August 16th, 2013) (Bénodet edition)
+-------------------------------------------------------------------------------------------------------------------------------
 
-`Version 1.17.0 <https://github.com/jacquev6/PyGithub/issues?milestone=29&state=closed>`_ (Jully 7th, 2013) (Hamburg edition)
------------------------------------------------------------------------------------------------------------------------------
-
-* `Fix <https://github.com/jacquev6/PyGithub/pull/176>`_ bug in ``Repository.get_comment`` when using custom ``per_page``. Thank you `davidbrai <https://github.com/davidbrai>`_
-* `Handle <https://github.com/jacquev6/PyGithub/pull/174>`_ Http redirects in ``Repository.get_dir_contents``. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_
-* `Implement <https://github.com/jacquev6/PyGithub/issues/173>`_ API ``/user`` in ``Github.get_users``. Thank you `rakeshcusat <https://github.com/rakeshcusat>`_ for asking
-* `Improve <https://github.com/jacquev6/PyGithub/pull/171>`_ the documentation. Thank you `martinqt <https://github.com/martinqt>`_
+* `Issues <https://github.com/jacquev6/PyGithub/pull/181>`_' ``repository`` attribute will never be ``None``. Thank you `stuglaser <https://github.com/stuglaser>`_ for the pull request
 
 What's missing?
 ===============

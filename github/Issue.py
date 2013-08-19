@@ -144,7 +144,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        return self._NoneIfNotSet(self._repository)
+        if self._repository is github.GithubObject.NotSet:
+            # The repository was not set automatically, so it must be looked up by url.
+            repo_url = "/".join(self.url.split("/")[:-2])
+            self._repository = github.Repository.Repository(self._requester, {'url': repo_url}, False)
+        return self._repository
 
     @property
     def state(self):
