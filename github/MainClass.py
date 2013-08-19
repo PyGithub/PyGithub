@@ -95,9 +95,33 @@ class Github(object):
     @property
     def rate_limiting(self):
         """
+        First value is requests remaining, second value is request limit.
         :type: (int, int)
         """
+        remaining, limit = self.__requester.rate_limiting
+        if limit < 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
         return self.__requester.rate_limiting
+
+    @property
+    def rate_limiting_resettime(self):
+        """
+        Unix timestamp indicating when rate limiting will reset.
+        :type: int
+        """
+        if self.__requester.rate_limiting_resettime == 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
+        return self.__requester.rate_limiting_resettime
 
     @property
     def oauth_scopes(self):
