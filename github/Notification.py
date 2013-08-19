@@ -118,5 +118,5 @@ class Notification(github.GithubObject.CompletableGithubObject):
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]  # pragma no cover (but should be investigated)
+            self._url = attributes["url"]  # pragma no cover (but should be investigated)

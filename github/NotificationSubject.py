@@ -68,11 +68,11 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
             assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
             self._title = attributes["title"]
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]  # pragma no cover (but should be investigated)
+            self._url = attributes["url"]  # pragma no cover (but should be investigated)
         if "latest_comment_url" in attributes:  # pragma no branch
-            assert attributes["latest_comment_url"] is None or isinstance(attributes["latest_comment_url"], (str, unicode)), attributes["latest_comment_url"]
-            self._latest_comment_url = attributes["latest_comment_url"]
+            assert attributes["latest_comment_url"] is None or isinstance(attributes["latest_comment_url"], (str, unicode)), attributes["latest_comment_url"]  # pragma no cover (but should be investigated)
+            self._latest_comment_url = attributes["latest_comment_url"]  # pragma no cover (but should be investigated)
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
