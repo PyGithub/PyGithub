@@ -15,6 +15,7 @@ What's new?
 -------------------------------------------------------------------------------------------------------------------------------
 
 * `Issues <https://github.com/jacquev6/PyGithub/pull/181>`_' ``repository`` attribute will never be ``None``. Thank you `stuglaser <https://github.com/stuglaser>`_ for the pull request
+* No more false assumption on `rate_limiting <https://github.com/jacquev6/PyGithub/pull/186>`_, and creation of ``rate_limiting_resettime``. Thank you `edjackson <https://github.com/edjackson>`_ for the pull request
 
 What's missing?
 ===============
