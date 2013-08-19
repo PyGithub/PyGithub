@@ -32,3 +32,6 @@ class RateLimiting(Framework.TestCase):
         self.g.get_user("jacquev6")
         self.assertEqual(self.g.rate_limiting, (4999, 5000))
         self.assertEqual(self.g.rate_limiting_resettime, 1375802816)
+
+    def testResetTime(self):
+        self.assertEqual(self.g.rate_limiting_resettime, 1375802816)
