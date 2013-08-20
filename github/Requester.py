@@ -132,7 +132,10 @@ class Requester:
         else:
             if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
-            return json.loads(data)
+            try:
+                return json.loads(data)
+            except ValueError, e:
+                return {'data': data}
 
     def requestJson(self, verb, url, parameters, input):
         def encode(input):
