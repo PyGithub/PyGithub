@@ -388,7 +388,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def create_git_commit(self, message, tree, parents, author=github.GithubObject.NotSet, committer=github.GithubObject.NotSet):
         """
@@ -999,7 +999,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def get_git_commit(self, sha):
         """
