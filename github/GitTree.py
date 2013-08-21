@@ -73,9 +73,14 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         if "tree" in attributes:  # pragma no branch
             assert attributes["tree"] is None or all(isinstance(element, dict) for element in attributes["tree"]), attributes["tree"]
             self._tree = None if attributes["tree"] is None else [
-                github.GitTreeElement.GitTreeElement(self._requester, element, completed=False)
+                github.GitTreeElement.GitTreeElement(self._requester, self._headers, element, completed=False)
                 for element in attributes["tree"]
             ]
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+
+
+
+
+
