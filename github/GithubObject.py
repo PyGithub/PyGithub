@@ -24,10 +24,13 @@
 #                                                                              #
 ################################################################################
 
+from __future__ import with_statement
+
 import datetime
 
 import GithubException
 
+import pickle
 
 class _NotSetType:
     def __repr__(self):
@@ -95,6 +98,27 @@ class GithubObject(object):
             return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+
+    def save(self, file_name):
+        '''
+        Save instance to a file
+        
+        :param file_name: the full path of target file
+        '''
+
+        with open(file_name, 'wb') as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def load(cls, file_name):
+        '''
+        Load saved instance from file
+        :param file_name: the full path to saved file
+        :rtype: saved instance. The type of loaded instance remains its orginal one and  will not be affected by from which derived class the method is called.   
+        '''
+        with open(file_name, 'rb') as f:
+            return pickle.load(f)
+        
 
 
 class NonCompletableGithubObject(GithubObject):
