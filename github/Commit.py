@@ -225,7 +225,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._sha = attributes["sha"]
         if "stats" in attributes:  # pragma no branch
             assert attributes["stats"] is None or isinstance(attributes["stats"], dict), attributes["stats"]
-            self._stats = None if attributes["stats"] is None else github.CommitStats.CommitStats(self._requester, attributes["stats"], completed=False)
+            self._stats = None if attributes["stats"] is None else github.CommitStats.CommitStats(self._requester, self._headers, attributes["stats"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

@@ -84,7 +84,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "change_status" in attributes:  # pragma no branch
             assert attributes["change_status"] is None or isinstance(attributes["change_status"], dict), attributes["change_status"]
-            self._change_status = None if attributes["change_status"] is None else github.CommitStats.CommitStats(self._requester, attributes["change_status"], completed=False)
+            self._change_status = None if attributes["change_status"] is None else github.CommitStats.CommitStats(self._requester, self._headers, attributes["change_status"], completed=False)
         if "committed_at" in attributes:  # pragma no branch
             assert attributes["committed_at"] is None or isinstance(attributes["committed_at"], (str, unicode)), attributes["committed_at"]
             self._committed_at = self._parseDatetime(attributes["committed_at"])
