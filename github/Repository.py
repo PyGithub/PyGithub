@@ -1212,7 +1212,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueEvent.IssueEvent(self._requester, data, completed=True)
+        return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
     def get_issues_events(self):
         """
