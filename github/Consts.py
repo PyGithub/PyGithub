@@ -30,7 +30,7 @@
 ################################################################################
 def get(dic, key):
     if key in dic:
-        return key[dic]
+        return dic[key]
     return None
 
 

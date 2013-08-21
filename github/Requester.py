@@ -177,7 +177,7 @@ class Requester:
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
         if status == 304:
-            raise GithubException.NotModifiedException(sttatus, output)
+            raise GithubException.NotModifiedException(status, output)
         if status >= 400:
             raise self.__createException(status, output)
         return responseHeaders, output
@@ -282,8 +282,8 @@ class Requester:
             requestHeaders["Authorization"] = self.__authorizationHeader
 
     def __conditional(self, requestHeaders, parameters):
-        etag = Consts.get(requestHeaders, Consts.REQ_IF_NONE_MATCH)
-        last_modified = Consts.get(requestHeaders, Consts.REQ_IF_MODIFIED_SINCE)
+        etag = Consts.get(parameters, Consts.REQ_IF_NONE_MATCH)
+        last_modified = Consts.get(parameters, Consts.REQ_IF_MODIFIED_SINCE)
         if etag is not None:
             requestHeaders[Consts.REQ_IF_NONE_MATCH] = etag
             del parameters[Consts.REQ_IF_NONE_MATCH]
