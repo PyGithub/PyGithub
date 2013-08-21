@@ -1719,7 +1719,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._parent = None if attributes["parent"] is None else Repository(self._requester, attributes["parent"], completed=False)
         if "permissions" in attributes:  # pragma no branch
             assert attributes["permissions"] is None or isinstance(attributes["permissions"], dict), attributes["permissions"]
-            self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, attributes["permissions"], completed=False)
+            self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, self._headers, attributes["permissions"], completed=False)
         if "private" in attributes:  # pragma no branch
             assert attributes["private"] is None or isinstance(attributes["private"], bool), attributes["private"]
             self._private = attributes["private"]
