@@ -344,7 +344,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
@@ -503,7 +503,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """
