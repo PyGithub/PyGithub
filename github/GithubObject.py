@@ -157,7 +157,7 @@ class GithubObject(object):
             self._storeAndUseAttributes(data)
             self.__completed = True
             return True
-        except: #GithubException.NotModifiedException:
+        except GithubException.NotModifiedException:
             return False
 
 class NonCompletableGithubObject(GithubObject):
