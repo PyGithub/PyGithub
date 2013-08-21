@@ -195,7 +195,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self._id = attributes["id"]
         if "last_response" in attributes:  # pragma no branch
             assert attributes["last_response"] is None or isinstance(attributes["last_response"], dict), attributes["last_response"]
-            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, attributes["last_response"], completed=False)
+            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, self._headers, attributes["last_response"], completed=False)
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
@@ -205,3 +205,4 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+

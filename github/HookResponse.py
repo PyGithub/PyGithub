@@ -30,11 +30,6 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents HookResponses as returned for example by http://developer.github.com/v3/todo
     """
-    def __init__(self, requester, attributes, completed):
-        '''
-        Adapte for __init__ change, remove later
-        '''
-        github.GithubObject.NonCompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def code(self):
