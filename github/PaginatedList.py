@@ -26,7 +26,7 @@
 ################################################################################
 
 import github.GithubObject
-
+import inspect
 
 class PaginatedListBase:
     def __init__(self):
@@ -113,6 +113,28 @@ class PaginatedList(PaginatedListBase):
 
     def _couldGrow(self):
         return self.__nextUrl is not None
+        
+    def makePage(self, headers, data):
+        '''
+        Adapte for diffrent __init__ signature in refactoring, remove when done
+        '''
+        try:
+            if not inspect.isclass(self.__contentClass):
+                return [
+                    self.__contentClass(self.__requester, element, completed=False)
+                    for element in data]
+            elif issubclass(self.__contentClass, github.GithubObject.NonCompletableGithubObject):
+                return [
+                    self.__contentClass(self.__requester, element, completed=False)
+                    for element in data]
+            else:
+                return [
+                    self.__contentClass(self.__requester, element, completed=False)
+                    for element in data]
+        except TypeError: # fix for some testcases, passed lambda in
+            print "WTF????????????????"
+            print self.__contentClass
+            raise
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
@@ -124,10 +146,7 @@ class PaginatedList(PaginatedListBase):
             self.__nextUrl = None
         self.__nextParams = None
 
-        return [
-            self.__contentClass(self.__requester, element, completed=False)
-            for element in data
-        ]
+        return self.makePage(headers, data)
 
     def __parseLinkHeader(self, headers):
         links = {}
@@ -148,7 +167,4 @@ class PaginatedList(PaginatedListBase):
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
 
-        return [
-            self.__contentClass(self.__requester, element, completed=False)
-            for element in data
-        ]
+        return self.makePage(headers, data)

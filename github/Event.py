@@ -35,6 +35,11 @@ class Event(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Events. The reference can be found here http://developer.github.com/v3/activity/events/
     """
+    def __init__(self, requester, attributes, completed):
+        '''
+        Adapte for __init__ change, remove later
+        '''
+        github.GithubObject.NonCompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def actor(self):

@@ -33,6 +33,11 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents Tags. The reference can be found here http://developer.github.com/v3/git/tags/
     """
+    def __init__(self, requester, attributes, completed):
+        '''
+        Adapte for __init__ change, remove later
+        '''
+        github.GithubObject.NonCompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def commit(self):
