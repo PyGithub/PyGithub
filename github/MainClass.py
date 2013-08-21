@@ -114,7 +114,7 @@ class Github(object):
         """
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
