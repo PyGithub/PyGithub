@@ -10,15 +10,9 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
+`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
-`Version 1.18.0 <https://github.com/jacquev6/PyGithub/issues?milestone=30&state=closed>`_ (August 21st, 2013) (Bénodet edition)
--------------------------------------------------------------------------------------------------------------------------------
-
-* `Issues <https://github.com/jacquev6/PyGithub/pull/181>`_' ``repository`` attribute will never be ``None``. Thank you `stuglaser <https://github.com/stuglaser>`_ for the pull request
-* No more false assumption on `rate_limiting <https://github.com/jacquev6/PyGithub/pull/186>`_, and creation of ``rate_limiting_resettime``. Thank you `edjackson <https://github.com/edjackson>`_ for the pull request
-* `New <https://github.com/jacquev6/PyGithub/pull/187>`_ parameters ``since`` and ``until`` to ``Repository.get_commits``. Thank you `apetresc <https://github.com/apetresc>`_ for the pull request
-* `Catch <https://github.com/jacquev6/PyGithub/pull/182>`_ Json parsing exception for some internal server errors, and throw a better exception. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_ for the pull request
-* `Allow <https://github.com/jacquev6/PyGithub/pull/184>`_ reversed iteration of ``PaginatedList``s. Thank you `davidbrai <https://github.com/davidbrai>`_ for the pull request
+* Use the new URL to fork gists (minor change)
 
 What's missing?
 ===============
@@ -30,10 +24,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/feeds`` (GET)
-* ``/gists/:id/forks`` (POST)
-
-  * instead, ``Gist.create_fork`` calls the old URL ``/gists/:id/fork``
-
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
 * ``/notifications/emails`` (GET)

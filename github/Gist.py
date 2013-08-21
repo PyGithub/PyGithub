@@ -178,12 +178,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self):
         """
-        :calls: `POST /gists/:id/fork <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:id/forks <http://developer.github.com/v3/gists>`_
         :rtype: :class:`github.Gist.Gist`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/fork",
+            self.url + "/forks",
             None,
             None
         )
