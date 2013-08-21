@@ -541,7 +541,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._owned_private_repos = attributes["owned_private_repos"]
         if "plan" in attributes:  # pragma no branch
             assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
-            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, attributes["plan"], completed=False)
+            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, self._headers, attributes["plan"], completed=False)
         if "private_gists" in attributes:  # pragma no branch
             assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
             self._private_gists = attributes["private_gists"]
