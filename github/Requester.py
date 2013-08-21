@@ -36,6 +36,7 @@ import base64
 import urllib
 import urlparse
 import sys
+import Consts
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -231,6 +232,7 @@ class Requester:
 
         requestHeaders = dict()
         self.__authenticate(url, requestHeaders, parameters)
+        self.__conditional(requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -278,6 +280,16 @@ class Requester:
             parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
+
+    def __conditional(self, requestHeaders, parameters):
+        etag = Consts.get(requestHeaders, Consts.REQ_IF_NONE_MATCH)
+        last_modified = Consts.get(requestHeaders, Consts.REQ_IF_MODIFIED_SINCE)
+        if etag is not None:
+            requestHeaders[Consts.REQ_IF_NONE_MATCH] = etag
+            del parameters[Consts.REQ_IF_NONE_MATCH]
+        if last_modified is not None:
+            requestHeaders[Consts.REQ_IF_MODIFIED_SINCE] = last_modified
+            del parameters[Consts.REQ_IF_MODIFIED_SINCE]
 
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url
