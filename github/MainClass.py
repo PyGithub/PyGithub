@@ -122,7 +122,7 @@ class Github(object):
                 None,
                 None
             )
-            return github.NamedUser.NamedUser(self.__requester, data, completed=True)
+            return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
@@ -245,7 +245,7 @@ class Github(object):
             None,
             None
         )
-        return github.NamedUser.NamedUser(self.__requester, Legacy.convertUser(data["user"]), completed=False)
+        return github.NamedUser.NamedUser(self.__requester, headers,  Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
@@ -310,7 +310,7 @@ class Github(object):
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
-    def create_from_raw_data(self, klass, raw_data):
+    def create_from_raw_data(self, klass, raw_data, headers = {}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
 
@@ -318,4 +318,14 @@ class Github(object):
         :param raw_data: dict
         :rtype: instance of class ``klass``
         """
-        return klass(self.__requester, raw_data, completed=True)
+        return klass(self.__requester, headers, raw_data, completed=True)
+
+
+
+
+
+
+
+
+
+

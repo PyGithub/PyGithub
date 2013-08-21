@@ -97,7 +97,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             assert attributes["creator"] is None or isinstance(attributes["creator"], dict), attributes["creator"]
-            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, attributes["creator"], completed=False)
+            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False)
         if "description" in attributes:  # pragma no branch
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
             self._description = attributes["description"]

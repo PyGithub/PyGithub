@@ -91,4 +91,14 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
             self._sha = attributes["sha"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
+
+
+
+
+
+
+
+
+
+

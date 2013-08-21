@@ -376,7 +376,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
+            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["assignee"], completed=False)
         if "body" in attributes:  # pragma no branch
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
@@ -385,7 +385,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._closed_at = self._parseDatetime(attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
             assert attributes["closed_by"] is None or isinstance(attributes["closed_by"], dict), attributes["closed_by"]
-            self._closed_by = None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, attributes["closed_by"], completed=False)
+            self._closed_by = None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["closed_by"], completed=False)
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
@@ -430,4 +430,19 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -105,7 +105,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             assert attributes["actor"] is None or isinstance(attributes["actor"], dict), attributes["actor"]
-            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, attributes["actor"], completed=False)
+            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["actor"], completed=False)
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])

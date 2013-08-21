@@ -214,4 +214,19 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             self._html_url = attributes["html_url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

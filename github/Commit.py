@@ -201,13 +201,13 @@ class Commit(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, attributes["author"], completed=False)
+            self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["author"], completed=False)
         if "commit" in attributes:  # pragma no branch
             assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
             self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, self._headers, attributes["commit"], completed=False)
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = None if attributes["committer"] is None else github.NamedUser.NamedUser(self._requester, attributes["committer"], completed=False)
+            self._committer = None if attributes["committer"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["committer"], completed=False)
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [

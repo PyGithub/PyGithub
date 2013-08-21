@@ -61,10 +61,16 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
             None
         )
         self.__continue = len(data[self.__key]) > 0
-        return [
-            self.__contentClass(self.__requester, self.__convert(element), completed=False)
-            for element in data[self.__key]
-        ]
+        try:
+            return [
+                self.__contentClass(self.__requester, headers, self.__convert(element), completed=False)
+                for element in data[self.__key]
+            ]
+        except TypeError:
+            return [
+                self.__contentClass(self.__requester, self.__convert(element), completed=False)
+                for element in data[self.__key]
+            ]
 
 
 def convertUser(attributes):

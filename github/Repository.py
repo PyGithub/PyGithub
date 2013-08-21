@@ -1716,7 +1716,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, attributes["organization"], completed=False)
         if "owner" in attributes:  # pragma no branch
             assert attributes["owner"] is None or isinstance(attributes["owner"], dict), attributes["owner"]
-            self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, attributes["owner"], completed=False)
+            self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["owner"], completed=False)
         if "parent" in attributes:  # pragma no branch
             assert attributes["parent"] is None or isinstance(attributes["parent"], dict), attributes["parent"]
             self._parent = None if attributes["parent"] is None else Repository(self._requester, attributes["parent"], completed=False)

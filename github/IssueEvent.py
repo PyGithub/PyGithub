@@ -102,7 +102,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             assert attributes["actor"] is None or isinstance(attributes["actor"], dict), attributes["actor"]
-            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, attributes["actor"], completed=False)
+            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["actor"], completed=False)
         if "commit_id" in attributes:  # pragma no branch
             assert attributes["commit_id"] is None or isinstance(attributes["commit_id"], (str, unicode)), attributes["commit_id"]
             self._commit_id = attributes["commit_id"]
