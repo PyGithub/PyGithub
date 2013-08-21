@@ -105,7 +105,19 @@ class GitTag(github.GithubObject.CompletableGithubObject):
             self._tag = attributes["tag"]
         if "tagger" in attributes:  # pragma no branch
             assert attributes["tagger"] is None or isinstance(attributes["tagger"], dict), attributes["tagger"]
-            self._tagger = None if attributes["tagger"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["tagger"], completed=False)
+            self._tagger = None if attributes["tagger"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["tagger"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+
+
+
+
+
+
+
+
+
+
+
+

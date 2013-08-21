@@ -106,10 +106,10 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["author"], completed=False)
+            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["author"], completed=False)
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["committer"], completed=False)
+            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["committer"], completed=False)
         if "message" in attributes:  # pragma no branch
             assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
             self._message = attributes["message"]
