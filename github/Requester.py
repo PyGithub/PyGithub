@@ -11,7 +11,7 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 akfish <akfish@gmail.com>                                     #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -175,6 +175,8 @@ class Requester:
         # Log frame
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
+        if status == 304:
+            raise GithubException.NotModifiedException(sttatus, output)
         if status >= 400:
             raise self.__createException(status, output)
         return responseHeaders, output
