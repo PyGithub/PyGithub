@@ -30,9 +30,6 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     """
     This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def content(self):

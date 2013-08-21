@@ -888,7 +888,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
         """
@@ -919,7 +919,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             )
 
         return [
-            github.ContentFile.ContentFile(self._requester, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            github.ContentFile.ContentFile(self._requester, headers, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
             for attributes in data
         ]
 
@@ -1428,7 +1428,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_stargazers(self):
         """
