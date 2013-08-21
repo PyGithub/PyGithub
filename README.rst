@@ -12,6 +12,7 @@ What's new?
 
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
+* Implement ``NamedUser.has_in_following``
 * Use the new URL to fork gists (minor change)
 * Use the new URL to test hooks (minor change)
 
@@ -63,9 +64,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
-* ``/users/:user/following/:target_user`` (GET)
-
-  * should be called in method ``NamedUser.has_in_following``
 
 Documentation
 =============

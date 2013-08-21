@@ -449,6 +449,21 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def has_in_following(self, following):
+        """
+        :calls: `GET /user/:user/following/:target_user <http://developer.github.com/v3/users/followers/#check-if-one-user-follows-another>`_
+        :param following: :class:`github.NamedUser.NamedUser`
+        :rtype: bool
+        """
+        assert isinstance(following, github.NamedUser.NamedUser), following
+        status, headers, data = self._requester.requestJson(
+            "GET",
+            self.url + "/following/" + following._identity,
+            None,
+            None
+        )
+        return status == 204
+
     @property
     def _identity(self):
         return self.login
