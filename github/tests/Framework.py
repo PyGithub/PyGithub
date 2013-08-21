@@ -245,7 +245,11 @@ class BasicTestCase(unittest.TestCase):
 
 class TestCase(BasicTestCase):
     def doCheckFrame(self, obj, frame):
-        pass
+        if obj._headers == {} and frame is None:
+            return
+        if obj._headers is None and frame == {}:
+            return
+        self.assertEqual(obj._headers, frame[2]);
 
 
     def getFrameChecker(self):
