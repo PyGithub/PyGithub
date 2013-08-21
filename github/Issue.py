@@ -412,7 +412,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._number = attributes["number"]
         if "pull_request" in attributes:  # pragma no branch
             assert attributes["pull_request"] is None or isinstance(attributes["pull_request"], dict), attributes["pull_request"]
-            self._pull_request = None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, attributes["pull_request"], completed=False)
+            self._pull_request = None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, self._headers, attributes["pull_request"], completed=False)
         if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
             self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
