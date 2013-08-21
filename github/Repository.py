@@ -441,7 +441,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
     def create_git_tag(self, tag, message, object, type, tagger=github.GithubObject.NotSet):
         """
@@ -1032,7 +1032,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
     def get_git_refs(self):
         """
