@@ -281,7 +281,7 @@ class Github(object):
             None,
             None
         )
-        return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
+        return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
 
     def get_gitignore_templates(self):
         """
