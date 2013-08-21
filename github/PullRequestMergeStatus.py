@@ -31,11 +31,6 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
     """
     This class represents PullRequestMergeStatuss. The reference can be found here http://developer.github.com/v3/pulls/#get-if-a-pull-request-has-been-merged
     """
-    def __init__(self, requester, attributes, completed):
-        '''
-        Adapte for __init__ change, remove later
-        '''
-        github.GithubObject.NonCompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def merged(self):

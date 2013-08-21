@@ -462,7 +462,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, data, completed=True)
+        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
