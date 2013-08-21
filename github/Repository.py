@@ -523,7 +523,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def create_issue(self, title, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
         """
@@ -1094,7 +1094,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def get_hooks(self):
         """
