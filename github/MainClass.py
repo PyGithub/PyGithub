@@ -195,6 +195,23 @@ class Github(object):
         )
         return Repository.Repository(self.__requester, data, completed=True)
 
+    def get_repos(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repositories <http://developer.github.com/v3/repos/#list-all-public-repositories>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/repositories",
+            url_parameters
+        )
+
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_

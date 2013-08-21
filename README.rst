@@ -12,6 +12,7 @@ What's new?
 
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
+* Implement ``Github.get_repos`` to get all public repositories
 * Implement ``NamedUser.has_in_following``
 * Use the new URL to fork gists (minor change)
 * Use the new URL to test hooks (minor change)
@@ -56,10 +57,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/repos/:owner/:repo/subscription`` (DELETE)
 * ``/repos/:owner/:repo/subscription`` (GET)
 * ``/repos/:owner/:repo/subscription`` (PUT)
-* ``/repositories`` (GET)
-
-  * should be called in method ``Github.get_repos``
-
 * ``/search/code`` (GET)
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
