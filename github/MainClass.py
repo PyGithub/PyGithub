@@ -308,7 +308,7 @@ class Github(object):
             None,
             None
         )
-        return GitignoreTemplate.GitignoreTemplate(self.__requester, attributes, completed=True)
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
     def create_from_raw_data(self, klass, raw_data):
         """
