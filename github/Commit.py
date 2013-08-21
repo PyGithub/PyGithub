@@ -158,7 +158,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.CommitStatus.CommitStatus(self._requester, data, completed=True)
+        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
