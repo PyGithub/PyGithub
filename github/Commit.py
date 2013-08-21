@@ -211,7 +211,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [
-                github.File.File(self._requester, element, completed=False)
+                github.File.File(self._requester, self._headers, element, completed=False)
                 for element in attributes["files"]
             ]
         if "parents" in attributes:  # pragma no branch
