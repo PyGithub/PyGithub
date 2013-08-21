@@ -80,11 +80,6 @@ class GithubObject(object):
 
 
 class NonCompletableGithubObject(GithubObject):
-#    def __init__(self, requester, attributes, completed):
-#        '''
-#        Adapte for __init__ change, remove later
-#        '''
-#        GithubObject.__init__(self, requester, {}, attributes, completed)
     def _completeIfNeeded(self):
         pass
 
