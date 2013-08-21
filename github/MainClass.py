@@ -183,7 +183,7 @@ class Github(object):
             None,
             None
         )
-        return github.Gist.Gist(self.__requester, data, completed=True)
+        return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
     def get_gists(self):
         """

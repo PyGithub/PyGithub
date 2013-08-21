@@ -274,7 +274,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Gist.Gist(self._requester, data, completed=True)
+        return github.Gist.Gist(self._requester, headers, data, completed=True)
 
     def get_events(self):
         """

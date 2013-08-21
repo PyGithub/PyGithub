@@ -37,9 +37,6 @@ class Gist(github.GithubObject.CompletableGithubObject):
     """
     This class represents Gists as returned for example by http://developer.github.com/v3/todo
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def comments(self):
@@ -177,7 +174,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def create_fork(self):
         """
@@ -190,7 +187,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return Gist(self._requester, data, completed=True)
+        return Gist(self._requester, headers, data, completed=True)
 
     def delete(self):
         """
@@ -239,7 +236,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -325,7 +322,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             )
         if "fork_of" in attributes:  # pragma no branch
             assert attributes["fork_of"] is None or isinstance(attributes["fork_of"], dict), attributes["fork_of"]
-            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, attributes["fork_of"], completed=False)
+            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, self._headers, attributes["fork_of"], completed=False)
         if "forks" in attributes:  # pragma no branch
             assert attributes["forks"] is None or all(isinstance(element, dict) for element in attributes["forks"]), attributes["forks"]
             self._forks = None if attributes["forks"] is None else [
@@ -341,7 +338,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "history" in attributes:  # pragma no branch
             assert attributes["history"] is None or all(isinstance(element, dict) for element in attributes["history"]), attributes["history"]
             self._history = None if attributes["history"] is None else [
-                github.GistHistoryState.GistHistoryState(self._requester, element, completed=False)
+                github.GistHistoryState.GistHistoryState(self._requester, self._headers, element, completed=False)
                 for element in attributes["history"]
             ]
         if "html_url" in attributes:  # pragma no branch

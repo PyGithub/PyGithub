@@ -388,7 +388,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Gist.Gist(self._requester, data, completed=True)
+        return github.Gist.Gist(self._requester, headers, data, completed=True)
 
     def create_key(self, title, key):
         """
