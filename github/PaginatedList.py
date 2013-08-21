@@ -118,23 +118,15 @@ class PaginatedList(PaginatedListBase):
         '''
         Adapte for diffrent __init__ signature in refactoring, remove when done
         '''
-        try:
-            if not inspect.isclass(self.__contentClass):
-                return [
-                    self.__contentClass(self.__requester, element, completed=False)
-                    for element in data]
-            elif issubclass(self.__contentClass, github.GithubObject.NonCompletableGithubObject):
-                return [
-                    self.__contentClass(self.__requester, element, completed=False)
-                    for element in data]
-            else:
-                return [
-                    self.__contentClass(self.__requester, element, completed=False)
-                    for element in data]
-        except TypeError: # fix for some testcases, passed lambda in
-            print "WTF????????????????"
-            print self.__contentClass
-            raise
+        try: # Try use old __init__ signature
+            return [
+                self.__contentClass(self.__requester, element, completed=False)
+                for element in data]
+        except TypeError: # must be new
+            return [
+                self.__contentClass(self.__requester, headers, element, completed=False)
+                for element in data]
+
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
