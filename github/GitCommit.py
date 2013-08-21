@@ -124,7 +124,19 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
             self._sha = attributes["sha"]
         if "tree" in attributes:  # pragma no branch
             assert attributes["tree"] is None or isinstance(attributes["tree"], dict), attributes["tree"]
-            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, attributes["tree"], completed=False)
+            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, self._headers, attributes["tree"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+
+
+
+
+
+
+
+
+
+
+
+

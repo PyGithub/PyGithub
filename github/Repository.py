@@ -494,7 +494,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
     def create_hook(self, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
         """
@@ -1079,7 +1079,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
     def get_hook(self, id):
         """
