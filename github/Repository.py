@@ -667,7 +667,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
     def delete(self):
         """
@@ -1358,7 +1358,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
     def get_pulls(self, state=github.GithubObject.NotSet):
         """

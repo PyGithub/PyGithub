@@ -41,9 +41,6 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequests. The reference can be found here http://developer.github.com/v3/pulls/
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def additions(self):
@@ -297,7 +294,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
+        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
     def create_issue_comment(self, body):
         """
@@ -364,7 +361,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
+        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
