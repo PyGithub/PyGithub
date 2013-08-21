@@ -502,7 +502,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
         if "base" in attributes:  # pragma no branch
             assert attributes["base"] is None or isinstance(attributes["base"], dict), attributes["base"]
-            self._base = None if attributes["base"] is None else github.PullRequestPart.PullRequestPart(self._requester, attributes["base"], completed=False)
+            self._base = None if attributes["base"] is None else github.PullRequestPart.PullRequestPart(self._requester, self._headers, attributes["base"], completed=False)
         if "body" in attributes:  # pragma no branch
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
@@ -529,7 +529,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._diff_url = attributes["diff_url"]
         if "head" in attributes:  # pragma no branch
             assert attributes["head"] is None or isinstance(attributes["head"], dict), attributes["head"]
-            self._head = None if attributes["head"] is None else github.PullRequestPart.PullRequestPart(self._requester, attributes["head"], completed=False)
+            self._head = None if attributes["head"] is None else github.PullRequestPart.PullRequestPart(self._requester, self._headers, attributes["head"], completed=False)
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
