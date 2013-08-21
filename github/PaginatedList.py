@@ -110,6 +110,21 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = firstParams or {}
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
+        self._reversed = False
+
+    def _getLastPageUrl(self):
+        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, self.__nextParams, None)
+        links = self.__parseLinkHeader(headers)
+        lastUrl = links.get("last")
+        return lastUrl
+
+    @property
+    def reversed(self):
+        self._reversed = True
+        lastUrl = self._getLastPageUrl()
+        if lastUrl:
+            self.__nextUrl = lastUrl
+        return self
 
     def _couldGrow(self):
         return self.__nextUrl is not None
@@ -117,22 +132,28 @@ class PaginatedList(PaginatedListBase):
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
 
-        links = self.__parseLinkHeader(headers)
-        if len(data) > 0 and "next" in links:
-            self.__nextUrl = links["next"]
-        else:
-            self.__nextUrl = None
+        self.__nextUrl = None
+        if len(data) > 0:
+            links = self.__parseLinkHeader(headers)
+            if self._reversed:
+                if "prev" in links:
+                    self.__nextUrl = links["prev"]
+            elif "next" in links:
+                self.__nextUrl = links["next"]
         self.__nextParams = None
 
-        return [
+        content = [
             self.__contentClass(self.__requester, element, completed=False)
             for element in data
         ]
+        if self._reversed:
+            return content[::-1]
+        return content
 
     def __parseLinkHeader(self, headers):
         links = {}
         if "link" in headers:
-            linkHeaders = headers["link"].split(",")
+            linkHeaders = headers["link"].split(", ")
             for linkHeader in linkHeaders:
                 (url, rel) = linkHeader.split("; ")
                 url = url[1:-1]
