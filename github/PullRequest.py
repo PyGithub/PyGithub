@@ -41,6 +41,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequests. The reference can be found here http://developer.github.com/v3/pulls/
     """
+    def __init__(self, requester, attributes, completed):
+        # Adapte for __init__ change, remove later
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def additions(self):

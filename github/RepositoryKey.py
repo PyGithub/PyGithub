@@ -34,7 +34,8 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
     """
 
     def __init__(self, requester, attributes, completed, repoUrl):
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, attributes, completed)
+        ##############NOTE: this one should not be removed but modified
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
         self.__repoUrl = repoUrl
 
     @property

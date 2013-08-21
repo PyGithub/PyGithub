@@ -33,6 +33,9 @@ class Label(github.GithubObject.CompletableGithubObject):
     """
     This class represents Labels. The reference can be found here http://developer.github.com/v3/issues/labels/
     """
+    def __init__(self, requester, attributes, completed):
+        # Adapte for __init__ change, remove later
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def color(self):

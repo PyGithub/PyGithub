@@ -85,9 +85,9 @@ class NonCompletableGithubObject(GithubObject):
 
 
 class CompletableGithubObject(GithubObject):
-    def __init__(self, requester, attributes, completed):
+    def __init__(self, requester, headers, attributes, completed):
         # Adapte for __init__ change, remove later
-        GithubObject.__init__(self, requester, {}, attributes, completed)
+        GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
     def _completeIfNotSet(self, value):
@@ -105,5 +105,6 @@ class CompletableGithubObject(GithubObject):
             None,
             None
         )
+        self._headers = headers
         self._storeAndUseAttributes(data)
         self.__completed = True

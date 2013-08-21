@@ -65,6 +65,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
     """
     This class represents Repositorys. The reference can be found here http://developer.github.com/v3/repos/
     """
+    def __init__(self, requester, attributes, completed):
+        # Adapte for __init__ change, remove later
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def clone_url(self):

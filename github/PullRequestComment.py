@@ -34,6 +34,9 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
     """
     This class represents PullRequestComments. The reference can be found here http://developer.github.com/v3/pulls/comments/
     """
+    def __init__(self, requester, attributes, completed):
+        # Adapte for __init__ change, remove later
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def body(self):
