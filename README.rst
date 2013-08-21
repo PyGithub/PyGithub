@@ -13,6 +13,7 @@ What's new?
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
 * Use the new URL to fork gists (minor change)
+* Use the new URL to test hooks (minor change)
 
 What's missing?
 ===============
@@ -44,10 +45,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/repos/:owner/:repo/contents/:path`` (DELETE)
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
-* ``/repos/:owner/:repo/hooks/:id/tests`` (POST)
-
-  * instead, ``Hook.test`` calls the old URL ``/repos/:owner/:repo/hooks/:id/test``
-
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
 * ``/repos/:owner/:repo/stats/code_frequency`` (GET)

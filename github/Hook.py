@@ -30,7 +30,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks as returned for example by http://developer.github.com/v3/todo
+    This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
     """
 
     @property
@@ -156,12 +156,12 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def test(self):
         """
-        :calls: `POST /repos/:owner/:repo/hooks/:id/test <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/hooks/:id/tests <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/test",
+            self.url + "/tests",
             None,
             None
         )
