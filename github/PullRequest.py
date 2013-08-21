@@ -1,20 +1,29 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Michael Stead michael.stead@gmail.com
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2013 martinqt m.ki2@laposte.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -251,7 +260,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body, commit_id, path, position):
         """
-        :calls: `POST /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :param body: string
         :param commit_id: :class:`github.Commit.Commit`
         :param path: string
@@ -262,7 +271,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_review_comment(self, body, commit_id, path, position):
         """
-        :calls: `POST /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :param body: string
         :param commit_id: :class:`github.Commit.Commit`
         :param path: string
@@ -289,7 +298,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def create_issue_comment(self, body):
         """
-        :calls: `POST /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -307,7 +316,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/pulls/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
         :param title: string
         :param body: string
         :param state: string
@@ -333,7 +342,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -341,7 +350,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_review_comment(self, id):
         """
-        :calls: `GET /repos/:user/:repo/pulls/comments/:number <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number <http://developer.github.com/v3/pulls/comments>`_
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
@@ -356,14 +365,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return self.get_review_comments()
 
     def get_review_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/pulls/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/comments <http://developer.github.com/v3/pulls/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -375,7 +384,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_commits(self):
         """
-        :calls: `GET /repos/:user/:repo/pulls/:number/commits <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/commits <http://developer.github.com/v3/pulls>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         return github.PaginatedList.PaginatedList(
@@ -387,7 +396,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_files(self):
         """
-        :calls: `GET /repos/:user/:repo/pulls/:number/files <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/files <http://developer.github.com/v3/pulls>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.File.File`
         """
         return github.PaginatedList.PaginatedList(
@@ -399,7 +408,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_issue_comment(self, id):
         """
-        :calls: `GET /repos/:user/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -414,7 +423,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def get_issue_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -426,7 +435,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def is_merged(self):
         """
-        :calls: `GET /repos/:user/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson(
@@ -439,7 +448,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
 
     def merge(self, commit_message=github.GithubObject.NotSet):
         """
-        :calls: `PUT /repos/:user/:repo/pulls/:number/merge <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """

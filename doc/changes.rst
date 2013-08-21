@@ -93,7 +93,7 @@ Version 1.12.1 (February 20th, 2013)
 * Add a shortcut function :meth:`github.MainClass.Github.get_repo` to get a repo directly from its full name. thank you `lwc <https://github.com/lwc>`_ for the contribution
 * :meth:`github.MainClass.Github.get_gitignore_templates` and :meth:`github.MainClass.Github.get_gitignore_template` for APIs ``/gitignore/templates``
 * Add the optional ``ref`` parameter to :meth:`github.Repository.Repository.get_contents` and :meth:`github.Repository.Repository.get_readme`. Thank you `fixxxeruk <https://github.com/fixxxeruk>`_ for the contribution
-* Get comments for all issues and all pull requests on a repository (``GET /repos/:user/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:user/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
+* Get comments for all issues and all pull requests on a repository (``GET /repos/:owner/:repo/pulls/comments``: :meth:`github.Repository.Repository.get_pulls_comments` or :meth:`github.Repository.Repository.get_pulls_review_comments`; ``GET /repos/:owner/:repo/issues/comments``: :meth:`github.Repository.Repository.get_issues_comments`)
 
 `Version 1.9.1 <https://github.com/jacquev6/PyGithub/issues?milestone-17&state-closed>`_ (November 20th, 2012)
 --------------------------------------------------------------------------------------------------------------
@@ -225,9 +225,9 @@ Pre-release versions
 
   * GET `/gists/public`
   * GET `/issues`
-  * GET `/repos/:user/:repo/compare/:base...:head`
-  * GET `/repos/:user/:repo/git/trees/:sha?recursive-1`
-  * POST `/repos/:user/:repo/git/trees?base_tree-`
+  * GET `/repos/:owner/:repo/compare/:base...:head`
+  * GET `/repos/:owner/:repo/git/trees/:sha?recursive-1`
+  * POST `/repos/:owner/:repo/git/trees?base_tree-`
 
 * Gists
 * Autorizations

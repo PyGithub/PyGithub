@@ -1,19 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Steve English steve.english@navetas.com
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Steve English <steve.english@navetas.com>                     #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -151,7 +160,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:gist_id/comments <http://developer.github.com/v3/gists/comments>`_
         :param body: string
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -182,7 +191,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def delete(self):
         """
-        :calls: `DELETE /gists/:id <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /gists/:id <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -194,7 +203,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def edit(self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /gists/:id <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /gists/:id <http://developer.github.com/v3/gists>`_
         :param description: string
         :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
         :rtype: None
@@ -216,7 +225,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /gists/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments/:id <http://developer.github.com/v3/gists/comments>`_
         :param id: integer
         :rtype: :class:`github.GistComment.GistComment`
         """
@@ -231,7 +240,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /gists/:id/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:gist_id/comments <http://developer.github.com/v3/gists/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GistComment.GistComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -243,7 +252,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def is_starred(self):
         """
-        :calls: `GET /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: bool
         """
         status, headers, data = self._requester.requestJson(
@@ -256,7 +265,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def reset_starred(self):
         """
-        :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -268,7 +277,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def set_starred(self):
         """
-        :calls: `PUT /gists/:id/star <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /gists/:id/star <http://developer.github.com/v3/gists>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(

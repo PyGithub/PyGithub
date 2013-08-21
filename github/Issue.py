@@ -1,20 +1,30 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Andrew Bettison andrewb@zip.com.au
-# Copyright 2012 Philip Kimmey philip@rover.com
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
+# Copyright 2012 Philip Kimmey <philip@rover.com>                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import github.GithubObject
 import github.PaginatedList
@@ -135,7 +145,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        return self._NoneIfNotSet(self._repository)
+        if self._repository is github.GithubObject.NotSet:
+            # The repository was not set automatically, so it must be looked up by url.
+            repo_url = "/".join(self.url.split("/")[:-2])
+            self._repository = github.Repository.Repository(self._requester, {'url': repo_url}, False)
+        return self._repository
 
     @property
     def state(self):
@@ -179,7 +193,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def add_to_labels(self, *labels):
         """
-        :calls: `POST /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
@@ -194,7 +208,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def create_comment(self, body):
         """
-        :calls: `POST /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -212,7 +226,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def delete_labels(self):
         """
-        :calls: `DELETE /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
@@ -224,7 +238,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:user/:repo/issues/:number <http://developer.github.com/v3/todo>`_
+        :calls: `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
         :param assignee: :class:`github.NamedUser.NamedUser` or None
@@ -262,7 +276,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_comment(self, id):
         """
-        :calls: `GET /repos/:user/:repo/issues/comments/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/comments/:id <http://developer.github.com/v3/issues/comments>`_
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
@@ -277,7 +291,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_comments(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/comments <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
         return github.PaginatedList.PaginatedList(
@@ -289,7 +303,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_events(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/events <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:issue_number/events <http://developer.github.com/v3/issues/events>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueEvent.IssueEvent`
         """
         return github.PaginatedList.PaginatedList(
@@ -301,7 +315,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def get_labels(self):
         """
-        :calls: `GET /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Label.Label`
         """
         return github.PaginatedList.PaginatedList(
@@ -313,7 +327,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def remove_from_labels(self, label):
         """
-        :calls: `DELETE /repos/:user/:repo/issues/:number/labels/:name <http://developer.github.com/v3/todo>`_
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
@@ -327,7 +341,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def set_labels(self, *labels):
         """
-        :calls: `PUT /repos/:user/:repo/issues/:number/labels <http://developer.github.com/v3/todo>`_
+        :calls: `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
         :param label: :class:`github.Label.Label`
         :rtype: None
         """

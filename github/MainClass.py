@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2013 Peter Golm golm.peter@gmail.com
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2013 Jonathan J Hunt hunt@braincorporation.com
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
+# Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
+# Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import urllib
 
@@ -86,9 +96,33 @@ class Github(object):
     @property
     def rate_limiting(self):
         """
+        First value is requests remaining, second value is request limit.
         :type: (int, int)
         """
+        remaining, limit = self.__requester.rate_limiting
+        if limit < 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
         return self.__requester.rate_limiting
+
+    @property
+    def rate_limiting_resettime(self):
+        """
+        Unix timestamp indicating when rate limiting will reset.
+        :type: int
+        """
+        if self.__requester.rate_limiting_resettime == 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
+        return self.__requester.rate_limiting_resettime
 
     @property
     def oauth_scopes(self):
@@ -99,7 +133,7 @@ class Github(object):
 
     def get_user(self, login=github.GithubObject.NotSet):
         """
-        :calls: `GET /users/:user <http://developer.github.com/v3/users/#get-a-single-user>`_ or `GET /user <http://developer.github.com/v3/users/#get-the-authenticated-user>`_
+        :calls: `GET /users/:user <http://developer.github.com/v3/users>`_ or `GET /user <http://developer.github.com/v3/users>`_
         :param login: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -117,7 +151,7 @@ class Github(object):
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
-        :calls: `GET /users <http://developer.github.com/v3/users/#get-all-users>`_
+        :calls: `GET /users <http://developer.github.com/v3/users>`_
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -134,7 +168,7 @@ class Github(object):
 
     def get_organization(self, login):
         """
-        :calls: `GET /orgs/:org <http://developer.github.com/v3/todo>`_
+        :calls: `GET /orgs/:org <http://developer.github.com/v3/orgs>`_
         :param login: string
         :rtype: :class:`github.Organization.Organization`
         """
@@ -149,7 +183,7 @@ class Github(object):
 
     def get_repo(self, full_name):
         """
-        :calls: `GET /repos/:user/:repo <http://developer.github.com/v3/todo>`_
+        :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name, (str, unicode)), full_name
@@ -163,7 +197,7 @@ class Github(object):
 
     def get_gist(self, id):
         """
-        :calls: `GET /gists/:id <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_
         :param id: string
         :rtype: :class:`github.Gist.Gist`
         """
@@ -178,7 +212,7 @@ class Github(object):
 
     def get_gists(self):
         """
-        :calls: `GET /gists/public <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gists/public <http://developer.github.com/v3/gists>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Gist.Gist`
         """
         return github.PaginatedList.PaginatedList(
@@ -190,7 +224,7 @@ class Github(object):
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
         """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/todo>`_
+        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :param language: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -209,7 +243,7 @@ class Github(object):
 
     def legacy_search_users(self, keyword):
         """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/todo>`_
+        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -225,7 +259,7 @@ class Github(object):
 
     def legacy_search_user_by_email(self, email):
         """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/todo>`_
+        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
         :param email: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -240,7 +274,7 @@ class Github(object):
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
-        :calls: `POST /markdown <http://developer.github.com/v3/todo>`_
+        :calls: `POST /markdown <http://developer.github.com/v3/markdown>`_
         :param text: string
         :param context: :class:`github.Repository.Repository`
         :rtype: string
@@ -263,7 +297,7 @@ class Github(object):
 
     def get_hooks(self):
         """
-        :calls: `GET /hooks <http://developer.github.com/v3/todo>`_
+        :calls: `GET /hooks <http://developer.github.com/>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck(
@@ -276,7 +310,7 @@ class Github(object):
 
     def get_gitignore_templates(self):
         """
-        :calls: `GET /gitignore/templates <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gitignore/templates <http://developer.github.com/v3/gitignore>`_
         :rtype: list of string
         """
         headers, data = self.__requester.requestJsonAndCheck(
@@ -289,7 +323,7 @@ class Github(object):
 
     def get_gitignore_template(self, name):
         """
-        :calls: `GET /gitignore/templates/:name <http://developer.github.com/v3/todo>`_
+        :calls: `GET /gitignore/templates/:name <http://developer.github.com/v3/gitignore>`_
         :rtype: :class:`github.GitignoreTemplate.GitignoreTemplate`
         """
         assert isinstance(name, (str, unicode)), name

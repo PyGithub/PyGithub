@@ -1,24 +1,35 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Andrew Bettison andrewb@zip.com.au
-# Copyright 2012 Dima Kukushkin dima@kukushkin.me
-# Copyright 2012 Michael Woodworth mwoodworth@upverter.com
-# Copyright 2012 Petteri Muilu pmuilu@xena.(none)
-# Copyright 2012 Steve English steve.english@navetas.com
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2013 Jonathan J Hunt hunt@braincorporation.com
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
+# Copyright 2012 Dima Kukushkin <dima@kukushkin.me>                            #
+# Copyright 2012 Michael Woodworth <mwoodworth@upverter.com>                   #
+# Copyright 2012 Petteri Muilu <pmuilu@xena.(none)>                            #
+# Copyright 2012 Steve English <steve.english@navetas.com>                     #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
+# Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
+# Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import logging
 import httplib
@@ -78,7 +89,8 @@ class Requester:
             self.__connectionClass = self.__httpConnectionClass
         else:
             assert False, "Unknown URL scheme"
-        self.rate_limiting = (5000, 5000)
+        self.rate_limiting = (-1, -1)
+        self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page
 
@@ -122,7 +134,10 @@ class Requester:
         else:
             if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
-            return json.loads(data)
+            try:
+                return json.loads(data)
+            except ValueError, e:
+                return {'data': data}
 
     def requestJson(self, verb, url, parameters, input):
         def encode(input):
@@ -166,6 +181,8 @@ class Requester:
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+        if "x-ratelimit-reset" in responseHeaders:
+            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")

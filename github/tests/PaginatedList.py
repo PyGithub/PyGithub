@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import Framework
 from github.PaginatedList import PaginatedList as PaginatedListImpl
@@ -36,6 +46,35 @@ class PaginatedList(Framework.TestCase):
     def testIntIndexingInFirstPage(self):
         self.assertEqual(self.list[0].id, 4772349)
         self.assertEqual(self.list[24].id, 4286936)
+
+    def testReversedIterationWithSinglePage(self):
+        r = self.list.reversed
+        self.assertEqual(r[0].id, 4286936)
+        self.assertEqual(r[1].id, 4317009)
+
+    def testReversedIterationWithMultiplePages(self):
+        r = self.list.reversed
+        self.assertEqual(r[0].id, 94898)
+        self.assertEqual(r[1].id, 104702)
+        self.assertEqual(r[13].id, 166211)
+        self.assertEqual(r[14].id, 166212)
+        self.assertEqual(r[15].id, 166214)
+
+    def testReversedIterationSupportsIterator(self):
+        r = self.list.reversed
+        for i in r:
+            self.assertEqual(i.id, 4286936)
+            return
+        self.fail("empty iterator")
+
+    def testGettingTheReversedListDoesNotModifyTheOriginalList(self):
+        self.assertEqual(self.list[0].id, 18345408)
+        self.assertEqual(self.list[30].id, 17916118)
+        r = self.list.reversed
+        self.assertEqual(self.list[0].id, 18345408)
+        self.assertEqual(self.list[30].id, 17916118)
+        self.assertEqual(r[0].id, 132373)
+        self.assertEqual(r[30].id, 543694)
 
     def testIntIndexingInThirdPage(self):
         self.assertEqual(self.list[50].id, 3911629)

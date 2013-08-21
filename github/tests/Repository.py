@@ -1,18 +1,27 @@
 # -*- coding: utf-8 -*-
 
-# Copyright 2012 Vincent Jacques vincent@vincent-jacques.net
-# Copyright 2012 Zearin zearin@gonk.net
-# Copyright 2013 Vincent Jacques vincent@vincent-jacques.net
-
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/
-
-# PyGithub is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License
-# as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-# You should have received a copy of the GNU Lesser General Public License along with PyGithub.  If not, see <http://www.gnu.org/licenses/>.
+############################ Copyrights and license ############################
+#                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+#                                                                              #
+# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+#                                                                              #
+# PyGithub is free software: you can redistribute it and/or modify it under    #
+# the terms of the GNU Lesser General Public License as published by the Free  #
+# Software Foundation, either version 3 of the License, or (at your option)    #
+# any later version.                                                           #
+#                                                                              #
+# PyGithub is distributed in the hope that it will be useful, but WITHOUT ANY  #
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS    #
+# FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more #
+# details.                                                                     #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public License     #
+# along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
+#                                                                              #
+################################################################################
 
 import Framework
 
@@ -262,6 +271,10 @@ class Repository(Framework.TestCase):
 
     def testGetCommitsWithArguments(self):
         self.assertListKeyEqual(self.repo.get_commits("topic/RewriteWithGeneratedCode", "codegen/GenerateCode.py"), lambda c: c.sha, ["de386d5dc9cf103c90c4128eeca0e6abdd382065", "5b44982f6111bff2454243869df2e1c3086ccbba", "d6835ff949141957a733c8ddfa147026515ae493", "075d3d961d4614a2a0835d5583248adfc0687a7d", "8956796e7f462a49f499eac52fab901cdb59abdb", "283da5e7de6a4a3b6aaae7045909d70b643ad380", "d631e83b7901b0a0b6061b361130700a79505319"])
+
+    def testGetCommitsWithSinceUntil(self):
+        self.maxDiff=None
+        self.assertListKeyEqual(self.repo.get_commits(since=datetime.datetime(2013, 3, 1), until=datetime.datetime(2013, 3, 31)), lambda c: c.sha, ['db5560bd658b5d8057a864f7037ace4d5f618f1b', 'f266fed520fea4f683caabe0b38e1f758cfc5cff', 'dff094650011398fd8f0a57bf2668a066fb2cbcb', 'c1d747a9133a1c6cae1f0e11105a5f490f65fda6', '0bc368973acfb50a531329b6c196ba92e0a81890', '7b3e4c15ed6182963d66ffa9f0522acd0765275c', '4df3a7eb47888f38c4c6dae50573f030a0a3f1e1', 'e0db8cad4ec01c65e5e0eb50e11765e425e88ef9', '1c47be4e895b823baf907b25c647e43ab63c16dd', '8a9afbb1aa36c6ba04142c6e6c1cfbd7de982a6a', '1c67359a318f05e50bf457818e1983ce95aa5946', '1d18bd66f3a4a4225435bd38df04b8a227b5e821', 'b9d71fa787a2ffb99b6631e4bd6df932a4d4adbb', 'f5d8e221d116b74a200d87afca32247f01204ba1', 'dc96fef052f2b5c6adb34da65169e8df3f35f611', 'c85af79db11ed1d2f93261ea4069a23ff1709125', '0dd1adb4f06f45d554d12083b312fcdb6f6be8d1', 'b7e4000450e89b8c6e947e3a1e52fb06da7c9621', '1d9ad14fa918866c418067e774f65cede8e38682', '1bb05fef01d0a040cb2b931a4d44392784a2f0c1', 'd9b29851ddccc907f71f1ae662e57f2cd7c7dc71', 'f962bc71fee609cd54fe69c956c8b81703d2c19a', '7a9c0b916c632be8d6a65bc1b6f558508f04bb22', '82ce7b1ee30d308b48bdac6d8737dbca70500462', '1e99e7d5b21c71bf68cc5cc21faec30ee603b8b8', 'a397fac6db9f87a903ec3ede9643cb2b4224ed82', '109495175e926731703a55cafd8b542a07366513', 'da6bbdb69485fc3256030d8296589d4c2fb5df21', '34c18342dcce9697abc6f522c3506485202e6e7e', 'ee29deddd27480401db484733ecde9e7b1df5eda', '0901df1a2bed3f993cfe6e0d4cff5923bbf6ce32', 'edcf40bc7f25d1aff5c404406fbb37ad1bcf691e', 'f25c54e1d4eefb11c18f3de85270a4b19edea3ce', '23d668f11bdd806a871e0979bf5295d001f66ef2', '50a243671f1fa139cb1186c4a44c1e96b8cd5749', '6a3a384fd0decac1203db6c2bddc58039b0390bc', '82f5b4c61f86ae8c7cc85a31cb1a31180eeae32f', '6ac783974d3985dd0c162c1e8d1150615cc0082e', '0f9bb5d9fd2dcfbf03f094362e86323c9ef915e6', 'e25a6a49d1ab1a10c84db9b6722a6186ff6dfcbd', '4f1780f427eba400cbc06897e69eda0ecdecd887', '28648a51a15e430b85d6fe8f2514e1cb06bc76b8', 'a39f421ca24bd7aae984f8703159c7e30798a121', '86fe370b97b62548317cb35bc02ece3fabb7fa03', '03a256a4052cacea998d8205a83d5b5465f31e18', '9e6b086c2db5e4884484a04934f6f2e53e3f441b', '0ddb34d987b5a03813fdfa2fac13c933834a4804'])
 
     def testGetDownloads(self):
         self.assertListKeyEqual(self.repo.get_downloads(), lambda d: d.id, [245143])
