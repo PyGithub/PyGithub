@@ -11,7 +11,7 @@ What's new?
 ===========
 
 
-`Version 1.18.0 <https://github.com/jacquev6/PyGithub/issues?milestone=30&state=closed>`_ (August ??th, 2013) (Bénodet edition)
+`Version 1.18.0 <https://github.com/jacquev6/PyGithub/issues?milestone=30&state=closed>`_ (August 21st, 2013) (Bénodet edition)
 -------------------------------------------------------------------------------------------------------------------------------
 
 * `Issues <https://github.com/jacquev6/PyGithub/pull/181>`_' ``repository`` attribute will never be ``None``. Thank you `stuglaser <https://github.com/stuglaser>`_ for the pull request
