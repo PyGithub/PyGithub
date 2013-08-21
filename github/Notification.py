@@ -107,7 +107,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
         if "subject" in attributes:  # pragma no branch
             assert attributes["subject"] is None or isinstance(attributes["subject"], dict), attributes["subject"]
-            self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, attributes["subject"], completed=False)
+            self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, self._headers, attributes["subject"], completed=False)
         if "reason" in attributes:  # pragma no branch
             assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
             self._reason = attributes["reason"]
@@ -120,3 +120,6 @@ class Notification(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+
+
+
