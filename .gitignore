@@ -31,3 +31,4 @@ GithubCredentials.py
 
 *.cfg
 *.bat
+*.py~

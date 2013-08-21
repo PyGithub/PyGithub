@@ -32,6 +32,8 @@ import GithubException
 
 import pickle
 
+import Consts
+
 class _NotSetType:
     def __repr__(self):
         return "NotSet"
@@ -118,8 +120,45 @@ class GithubObject(object):
         '''
         with open(file_name, 'rb') as f:
             return pickle.load(f)
-        
 
+    @property
+    def etag(self):
+        '''
+        :type str
+        '''
+        return Consts.get(self._headers, Consts.RES_ETAG)
+
+    @property
+    def last_modified(self):
+        '''
+        :type str
+        '''
+        return Consts.get(self._headers, Consts.RES_LAST_MODIFED)
+    
+
+    def update(self):
+        '''
+        Check and update the object with conditional request
+        :rtype: Boolean value indicating whether the object is changed
+        '''
+        conditionalRequestHeader = dict()
+        if self.etag is not None:
+            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
+        if self.last_modified is not None:
+            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+
+        try:
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self._url,
+                conditionalRequestHeader,
+                None
+            )
+            self._storeAndUseAttributes(data)
+            self.__completed = True
+            return True
+        except: #GithubException.NotModifiedException:
+            return False
 
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self):
