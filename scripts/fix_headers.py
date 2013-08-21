@@ -130,6 +130,8 @@ def findHeadersAndFiles():
     for root, dirs, files in os.walk('.', topdown=True):
         if ".git" in dirs:
             dirs.remove(".git")
+        if "developer.github.com" in dirs:
+            dirs.remove("developer.github.com")
 
         for filename in files:
             fullname = os.path.join(root, filename)
@@ -142,6 +144,8 @@ def findHeadersAndFiles():
             elif filename == ".gitignore":
                 yield (StandardHeader(), fullname)
             elif "ReplayData" in fullname:
+                pass
+            elif fullname.endswith(".pyc"):
                 pass
             else:
                 print "Don't know what to do with", filename
