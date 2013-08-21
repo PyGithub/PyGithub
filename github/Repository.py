@@ -557,7 +557,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def create_key(self, title, key):
         """
@@ -1121,7 +1121,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def get_issues(self, milestone=github.GithubObject.NotSet, state=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, mentioned=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
         """
@@ -1536,7 +1536,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
         return [
-            github.Issue.Issue(self._requester, github.Legacy.convertIssue(element), completed=False)
+            github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
             for element in data["issues"]
         ]
 

@@ -120,7 +120,19 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
             self._id = attributes["id"]
         if "issue" in attributes:  # pragma no branch
             assert attributes["issue"] is None or isinstance(attributes["issue"], dict), attributes["issue"]
-            self._issue = None if attributes["issue"] is None else github.Issue.Issue(self._requester, attributes["issue"], completed=False)
+            self._issue = None if attributes["issue"] is None else github.Issue.Issue(self._requester, self._headers, attributes["issue"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
+
+
+
+
+
+
+
+
+
+
+
+
