@@ -409,7 +409,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.UserKey.UserKey(self._requester, data, completed=True)
+        return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
@@ -680,7 +680,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.UserKey.UserKey(self._requester, data, completed=True)
+        return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
     def get_keys(self):
         """
