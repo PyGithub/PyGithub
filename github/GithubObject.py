@@ -39,6 +39,12 @@ class GithubObject(object):
     """
     Base class for all classes representing objects returned by the API.
     """
+
+    '''
+    A global debug flag to enable header validation by requester for all objects
+    '''
+    CHECK_AFTER_INIT_FLAG = False
+
     def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
         # Make sure headers are signed before any operations on attributes
@@ -46,6 +52,11 @@ class GithubObject(object):
         self._headers = headers;
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
+
+        # Ask requester to do some checking, for debug and test purpose
+        # Since it's most handy to access and kinda all-knowing
+        if (GithubObject.CHECK_AFTER_INIT_FLAG):
+            requester.check_me(self);
 
     def _storeAndUseAttributes(self, attributes):
         self._useAttributes(attributes)

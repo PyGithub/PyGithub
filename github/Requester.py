@@ -11,6 +11,7 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 akfish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -60,8 +61,65 @@ class Requester:
     def resetConnectionClasses(cls):
         cls.__httpConnectionClass = httplib.HTTPConnection
         cls.__httpsConnectionClass = httplib.HTTPSConnection
+        
+    #############################################################
+    # For Debug
+
+    DEBUG_FLAG = False
+
+    DEBUG_FRAME_BUFFER_SIZE = 1024
+
+    DEBUG_HEADER_KEY = "DEBUG_FRAME"
+
+    def NEW_DEBUG_FRAME(self, requestHeader):
+        '''
+        Initialize a debug frame with requestHeader
+        Frame count is updated and will be attached to respond header
+        The structure of a frame: [requestHeader, statusCode, responseHeader, raw_data]
+        Some of them may be None
+        '''
+        if not self.DEBUG_FLAG:
+            return
+
+        new_frame = [requestHeader, None, None, None]
+        if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:
+            self._frameBuffer.append(new_frame)
+        else:
+            self._frameBuffer[0] = new_frame
+
+        self._frameCount = len(self._frameBuffer) - 1
+
+    def DEBUG_ON_RESPONSE(self, statusCode, responseHeader, data):
+        '''
+        Update current frame with response
+        Current frame index will be attached to responseHeader
+        '''
+        if not self.DEBUG_FLAG:
+            return
+        
+        self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
+        responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
+        
+
+    def check_me(self, obj):
+        if self.DEBUG_FLAG and self.onCheckMe is not None:
+            frame = None
+            if self.DEBUG_HEADER_KEY in obj._headers:
+                frame_index = obj._headers[self.DEBUG_HEADER_KEY]
+                frame = self._frameBuffer[frame_index]
+            onCheckMe(self, obj, frame)
+
+    def _initializeDebugFeature(self):
+        if not self.DEBUG_FLAG:
+            return
+        self.onCheckMe = None
+        self._frameCount = 0
+        self._frameBuffer = []
+    #############################################################
 
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
+        self._initializeDebugFeature()
+
         if password is not None:
             login = login_or_token
             if atLeastPython3:
@@ -108,6 +166,9 @@ class Requester:
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
+        # Log frame
+        self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
+
         if status >= 400:
             raise self.__createException(status, output)
         return responseHeaders, output
@@ -170,6 +231,8 @@ class Requester:
         encoded_input = "null"
         if input is not None:
             requestHeaders["Content-Type"], encoded_input = encode(input)
+
+        self.NEW_DEBUG_FRAME(requestHeaders)
 
         status, responseHeaders, output = self.__requestRaw(verb, url, requestHeaders, encoded_input)
 
