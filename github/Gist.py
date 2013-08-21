@@ -317,7 +317,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"].itervalues()), attributes["files"]
             self._files = None if attributes["files"] is None else dict(
-                (key, github.GistFile.GistFile(self._requester, element, completed=False))
+                (key, github.GistFile.GistFile(self._requester, self._headers, element, completed=False))
                 for key, element in attributes["files"].iteritems()
             )
         if "fork_of" in attributes:  # pragma no branch
