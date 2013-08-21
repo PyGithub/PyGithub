@@ -348,7 +348,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Authorization.Authorization(self._requester, data, completed=True)
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     def create_fork(self, repo):
         """
@@ -516,7 +516,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Authorization.Authorization(self._requester, data, completed=True)
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     def get_authorizations(self):
         """
