@@ -165,7 +165,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
             assert attributes["app"] is None or isinstance(attributes["app"], dict), attributes["app"]
-            self._app = None if attributes["app"] is None else github.AuthorizationApplication.AuthorizationApplication(self._requester, attributes["app"], completed=False)
+            self._app = None if attributes["app"] is None else github.AuthorizationApplication.AuthorizationApplication(self._requester, self._headers, attributes["app"], completed=False)
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
