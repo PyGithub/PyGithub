@@ -154,7 +154,7 @@ class Github(object):
             None,
             None
         )
-        return github.Organization.Organization(self.__requester, data, completed=True)
+        return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_repo(self, full_name):
         """

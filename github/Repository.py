@@ -1713,7 +1713,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._open_issues = attributes["open_issues"]
         if "organization" in attributes:  # pragma no branch
             assert attributes["organization"] is None or isinstance(attributes["organization"], dict), attributes["organization"]
-            self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, attributes["organization"], completed=False)
+            self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, self._headers, attributes["organization"], completed=False)
         if "owner" in attributes:  # pragma no branch
             assert attributes["owner"] is None or isinstance(attributes["owner"], dict), attributes["owner"]
             self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["owner"], completed=False)

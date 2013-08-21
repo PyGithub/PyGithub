@@ -114,7 +114,7 @@ class Event(github.GithubObject.NonCompletableGithubObject):
             self._id = attributes["id"]
         if "org" in attributes:  # pragma no branch
             assert attributes["org"] is None or isinstance(attributes["org"], dict), attributes["org"]
-            self._org = None if attributes["org"] is None else github.Organization.Organization(self._requester, attributes["org"], completed=False)
+            self._org = None if attributes["org"] is None else github.Organization.Organization(self._requester, self._headers, attributes["org"], completed=False)
         if "payload" in attributes:  # pragma no branch
             assert attributes["payload"] is None or isinstance(attributes["payload"], dict), attributes["payload"]
             self._payload = attributes["payload"]
@@ -127,3 +127,6 @@ class Event(github.GithubObject.NonCompletableGithubObject):
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+
+
+
