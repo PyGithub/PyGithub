@@ -338,7 +338,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Comparison.Comparison(self._requester, data, completed=True)
+        return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_download(self, name, size, description=github.GithubObject.NotSet, content_type=github.GithubObject.NotSet):
         """
