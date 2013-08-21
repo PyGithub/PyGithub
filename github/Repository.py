@@ -367,7 +367,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, headers, data, completed=True)
 
     def create_git_blob(self, content, encoding):
         """
@@ -948,7 +948,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, headers, data, completed=True)
 
     def get_downloads(self):
         """
