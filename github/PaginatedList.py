@@ -120,11 +120,15 @@ class PaginatedList(PaginatedListBase):
 
     @property
     def reversed(self):
+        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams)
+        r.__reverse()
+        return r
+
+    def __reverse(self):
         self._reversed = True
         lastUrl = self._getLastPageUrl()
         if lastUrl:
             self.__nextUrl = lastUrl
-        return self
 
     def _couldGrow(self):
         return self.__nextUrl is not None

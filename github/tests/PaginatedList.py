@@ -67,6 +67,15 @@ class PaginatedList(Framework.TestCase):
             return
         self.fail("empty iterator")
 
+    def testGettingTheReversedListDoesNotModifyTheOriginalList(self):
+        self.assertEqual(self.list[0].id, 18345408)
+        self.assertEqual(self.list[30].id, 17916118)
+        r = self.list.reversed
+        self.assertEqual(self.list[0].id, 18345408)
+        self.assertEqual(self.list[30].id, 17916118)
+        self.assertEqual(r[0].id, 132373)
+        self.assertEqual(r[30].id, 543694)
+
     def testIntIndexingInThirdPage(self):
         self.assertEqual(self.list[50].id, 3911629)
         self.assertEqual(self.list[74].id, 3605277)
