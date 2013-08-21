@@ -168,7 +168,7 @@ class Github(object):
             None,
             None
         )
-        return Repository.Repository(self.__requester, data, completed=True)
+        return Repository.Repository(self.__requester, headers, data, completed=True)
 
     def get_gist(self, id):
         """

@@ -85,7 +85,7 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
             self._ref = attributes["ref"]
         if "repo" in attributes:  # pragma no branch
             assert attributes["repo"] is None or isinstance(attributes["repo"], dict), attributes["repo"]
-            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, attributes["repo"], completed=False)
+            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repo"], completed=False)
         if "sha" in attributes:  # pragma no branch
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
             self._sha = attributes["sha"]

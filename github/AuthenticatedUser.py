@@ -363,7 +363,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_gist(self, public, files, description=github.GithubObject.NotSet):
         """
@@ -459,7 +459,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def edit(self, name=github.GithubObject.NotSet, email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, location=github.GithubObject.NotSet, hireable=github.GithubObject.NotSet, bio=github.GithubObject.NotSet):
         """
@@ -771,7 +771,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """

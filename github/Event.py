@@ -123,10 +123,14 @@ class Event(github.GithubObject.NonCompletableGithubObject):
             self._public = attributes["public"]
         if "repo" in attributes:  # pragma no branch
             assert attributes["repo"] is None or isinstance(attributes["repo"], dict), attributes["repo"]
-            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, attributes["repo"], completed=False)
+            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repo"], completed=False)
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+
+
+
+
 
 
 

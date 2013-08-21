@@ -394,7 +394,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet):
         """

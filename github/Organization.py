@@ -264,7 +264,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
@@ -318,7 +318,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
         """
@@ -471,7 +471,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet):
         """

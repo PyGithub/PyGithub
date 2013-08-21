@@ -65,9 +65,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
     """
     This class represents Repositorys. The reference can be found here http://developer.github.com/v3/repos/
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def clone_url(self):
@@ -1719,7 +1716,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["owner"], completed=False)
         if "parent" in attributes:  # pragma no branch
             assert attributes["parent"] is None or isinstance(attributes["parent"], dict), attributes["parent"]
-            self._parent = None if attributes["parent"] is None else Repository(self._requester, attributes["parent"], completed=False)
+            self._parent = None if attributes["parent"] is None else Repository(self._requester, self._headers, attributes["parent"], completed=False)
         if "permissions" in attributes:  # pragma no branch
             assert attributes["permissions"] is None or isinstance(attributes["permissions"], dict), attributes["permissions"]
             self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, self._headers, attributes["permissions"], completed=False)
@@ -1734,7 +1731,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._size = attributes["size"]
         if "source" in attributes:  # pragma no branch
             assert attributes["source"] is None or isinstance(attributes["source"], dict), attributes["source"]
-            self._source = None if attributes["source"] is None else Repository(self._requester, attributes["source"], completed=False)
+            self._source = None if attributes["source"] is None else Repository(self._requester, self._headers, attributes["source"], completed=False)
         if "ssh_url" in attributes:  # pragma no branch
             assert attributes["ssh_url"] is None or isinstance(attributes["ssh_url"], (str, unicode)), attributes["ssh_url"]
             self._ssh_url = attributes["ssh_url"]
