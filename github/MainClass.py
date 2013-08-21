@@ -224,7 +224,7 @@ class Github(object):
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
         """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :param language: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -243,7 +243,7 @@ class Github(object):
 
     def legacy_search_users(self, keyword):
         """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -259,7 +259,7 @@ class Github(object):
 
     def legacy_search_user_by_email(self, email):
         """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
         :param email: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """

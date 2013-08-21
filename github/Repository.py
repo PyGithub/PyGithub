@@ -1528,7 +1528,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def legacy_search_issues(self, state, keyword):
         """
-        :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param state: "open" or "closed"
         :param keyword: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`

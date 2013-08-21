@@ -72,6 +72,10 @@ Github API v3 URLs not (yet) covered by PyGithub
 
   * should be called in method ``Github.get_repos``
 
+* ``/search/code`` (GET)
+* ``/search/issues`` (GET)
+* ``/search/repositories`` (GET)
+* ``/search/users`` (GET)
 * ``/users/:user/following/:target_user`` (GET)
 
   * should be called in method ``NamedUser.has_in_following``
