@@ -244,10 +244,30 @@ class BasicTestCase(unittest.TestCase):
 
 
 class TestCase(BasicTestCase):
+    def doCheckFrame(self, obj, frame):
+        pass
+
+
+    def getFrameChecker(self):
+        return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
+
     def setUp(self):
         BasicTestCase.setUp(self)
+        
+        # Set up frame debugging
+        
+        github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
+
+        github.Requester.Requester.setDebugFlag(True)
+        
+        github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
+
         self.g = github.Github(self.login, self.password)
+
+        
+        
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
+

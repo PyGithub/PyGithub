@@ -45,6 +45,10 @@ class GithubObject(object):
     '''
     CHECK_AFTER_INIT_FLAG = False
 
+    @classmethod
+    def setCheckAfterInitFlag(cls, flag):
+        cls.CHECK_AFTER_INIT_FLAG = flag
+
     def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
         # Make sure headers are signed before any operations on attributes
@@ -55,7 +59,7 @@ class GithubObject(object):
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
-        if (GithubObject.CHECK_AFTER_INIT_FLAG):
+        if (self.CHECK_AFTER_INIT_FLAG):
             requester.check_me(self);
 
     def _storeAndUseAttributes(self, attributes):

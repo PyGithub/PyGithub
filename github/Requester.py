@@ -64,12 +64,21 @@ class Requester:
         
     #############################################################
     # For Debug
+    @classmethod
+    def setDebugFlag(cls, flag):
+        cls.DEBUG_FLAG = flag
+
+    @classmethod
+    def setOnCheckMe(cls, onCheckMe):
+        cls.ON_CHECK_ME = onCheckMe
 
     DEBUG_FLAG = False
 
     DEBUG_FRAME_BUFFER_SIZE = 1024
 
     DEBUG_HEADER_KEY = "DEBUG_FRAME"
+
+    ON_CHECK_ME = None
 
     def NEW_DEBUG_FRAME(self, requestHeader):
         '''
@@ -102,17 +111,14 @@ class Requester:
         
 
     def check_me(self, obj):
-        if self.DEBUG_FLAG and self.onCheckMe is not None:
+        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]
                 frame = self._frameBuffer[frame_index]
-            onCheckMe(self, obj, frame)
+            self.ON_CHECK_ME(obj, frame)
 
     def _initializeDebugFeature(self):
-        if not self.DEBUG_FLAG:
-            return
-        self.onCheckMe = None
         self._frameCount = 0
         self._frameBuffer = []
     #############################################################
