@@ -401,7 +401,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "labels" in attributes:  # pragma no branch
             assert attributes["labels"] is None or all(isinstance(element, dict) for element in attributes["labels"]), attributes["labels"]
             self._labels = None if attributes["labels"] is None else [
-                github.Label.Label(self._requester, element, completed=False)
+                github.Label.Label(self._requester, self._headers, element, completed=False)
                 for element in attributes["labels"]
             ]
         if "milestone" in attributes:  # pragma no branch

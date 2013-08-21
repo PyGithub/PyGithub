@@ -599,7 +599,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, headers, data, completed=True)
 
     def create_milestone(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
         """
@@ -1266,7 +1266,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, headers, data, completed=True)
 
     def get_labels(self):
         """
