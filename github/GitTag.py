@@ -96,7 +96,7 @@ class GitTag(github.GithubObject.CompletableGithubObject):
             self._message = attributes["message"]
         if "object" in attributes:  # pragma no branch
             assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, attributes["object"], completed=False)
+            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, self._headers, attributes["object"], completed=False)
         if "sha" in attributes:  # pragma no branch
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
             self._sha = attributes["sha"]

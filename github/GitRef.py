@@ -99,7 +99,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
             assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, attributes["object"], completed=False)
+            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, self._headers, attributes["object"], completed=False)
         if "ref" in attributes:  # pragma no branch
             assert attributes["ref"] is None or isinstance(attributes["ref"], (str, unicode)), attributes["ref"]
             self._ref = attributes["ref"]
