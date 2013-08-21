@@ -315,7 +315,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
         """
@@ -422,7 +422,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def get_issue_comments(self):
         """

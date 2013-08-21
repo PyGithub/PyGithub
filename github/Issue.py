@@ -217,7 +217,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def delete_labels(self):
         """
@@ -282,7 +282,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
