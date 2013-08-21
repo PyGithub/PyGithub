@@ -113,23 +113,6 @@ class PaginatedList(PaginatedListBase):
 
     def _couldGrow(self):
         return self.__nextUrl is not None
-        
-    def makePage(self, headers, data):
-        '''
-        Adapte for diffrent __init__ signature in refactoring, remove when done
-        '''
-
-        try: # Try use old __init__ signature
-            return [
-                self.__contentClass(self.__requester, element, completed=False)
-                for element in data]
-        except TypeError: # must be new
-            return [
-                self.__contentClass(self.__requester, headers, element, completed=False)
-                for element in data]
-
-
-
 
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
@@ -141,7 +124,10 @@ class PaginatedList(PaginatedListBase):
             self.__nextUrl = None
         self.__nextParams = None
 
-        return self.makePage(headers, data)
+        return [
+            self.__contentClass(self.__requester, headers, element, completed=False)
+            for element in data]
+
 
     def __parseLinkHeader(self, headers):
         links = {}
@@ -162,4 +148,7 @@ class PaginatedList(PaginatedListBase):
             params["per_page"] = self.__requester.per_page
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
 
-        return self.makePage(headers, data)
+        return [
+            self.__contentClass(self.__requester, headers, element, completed=False)
+            for element in data]
+
