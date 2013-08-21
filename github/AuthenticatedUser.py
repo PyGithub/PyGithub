@@ -707,7 +707,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Notification.Notification(self._requester, data, completed=True)
+        return github.Notification.Notification(self._requester, headers, data, completed=True)
 
     def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
         """
