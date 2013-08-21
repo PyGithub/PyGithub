@@ -40,6 +40,8 @@ class GithubObject(object):
     """
     def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
+        # Make sure headers are signed before any operations on attributes
+        # Object creatation requires headers as parameter
         self._headers = headers;
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
@@ -86,7 +88,6 @@ class NonCompletableGithubObject(GithubObject):
 
 class CompletableGithubObject(GithubObject):
     def __init__(self, requester, headers, attributes, completed):
-        # Adapte for __init__ change, remove later
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
