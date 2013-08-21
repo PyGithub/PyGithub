@@ -38,8 +38,9 @@ class GithubObject(object):
     """
     Base class for all classes representing objects returned by the API.
     """
-    def __init__(self, requester, attributes, completed):
+    def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
+        self._headers = headers;
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
 
@@ -79,13 +80,18 @@ class GithubObject(object):
 
 
 class NonCompletableGithubObject(GithubObject):
+    def __init__(self, requester, attributes, completed):
+        '''
+        Adapte for __init__ change, remove later
+        '''
+        GithubObject.__init__(self, requester, {}, attributes, completed)
     def _completeIfNeeded(self):
         pass
 
 
 class CompletableGithubObject(GithubObject):
     def __init__(self, requester, attributes, completed):
-        GithubObject.__init__(self, requester, attributes, completed)
+        GithubObject.__init__(self, requester, {}, attributes, completed)
         self.__completed = completed
 
     def _completeIfNotSet(self, value):
