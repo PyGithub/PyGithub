@@ -28,3 +28,6 @@ GithubCredentials.py
 /PyGithub.egg-info/
 /.coverage
 /developer.github.com/
+
+*.cfg
+*.bat
