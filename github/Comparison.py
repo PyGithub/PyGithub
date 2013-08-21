@@ -153,14 +153,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
             self._ahead_by = attributes["ahead_by"]
         if "base_commit" in attributes:  # pragma no branch
             assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
-            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, attributes["base_commit"], completed=False)
+            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["base_commit"], completed=False)
         if "behind_by" in attributes:  # pragma no branch
             assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
             self._behind_by = attributes["behind_by"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
             self._commits = None if attributes["commits"] is None else [
-                github.Commit.Commit(self._requester, element, completed=False)
+                github.Commit.Commit(self._requester, self._headers, element, completed=False)
                 for element in attributes["commits"]
             ]
         if "diff_url" in attributes:  # pragma no branch

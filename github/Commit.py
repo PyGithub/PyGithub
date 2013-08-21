@@ -39,9 +39,6 @@ class Commit(github.GithubObject.CompletableGithubObject):
     """
     This class represents Commits. The reference can be found here http://developer.github.com/v3/git/commits/
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def author(self):
@@ -207,7 +204,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, attributes["author"], completed=False)
         if "commit" in attributes:  # pragma no branch
             assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
-            self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, attributes["commit"], completed=False)
+            self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, self._headers, attributes["commit"], completed=False)
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
             self._committer = None if attributes["committer"] is None else github.NamedUser.NamedUser(self._requester, attributes["committer"], completed=False)
@@ -220,7 +217,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         if "parents" in attributes:  # pragma no branch
             assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
             self._parents = None if attributes["parents"] is None else [
-                Commit(self._requester, element, completed=False)
+                Commit(self._requester, self._headers, element, completed=False)
                 for element in attributes["parents"]
             ]
         if "sha" in attributes:  # pragma no branch

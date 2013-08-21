@@ -33,9 +33,6 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     """
     This class represents GitCommits as returned for example by http://developer.github.com/v3/todo
     """
-    def __init__(self, requester, attributes, completed):
-        # Adapte for __init__ change, remove later
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
 
     @property
     def author(self):
@@ -119,7 +116,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         if "parents" in attributes:  # pragma no branch
             assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
             self._parents = None if attributes["parents"] is None else [
-                GitCommit(self._requester, element, completed=False)
+                GitCommit(self._requester, self._headers, element, completed=False)
                 for element in attributes["parents"]
             ]
         if "sha" in attributes:  # pragma no branch

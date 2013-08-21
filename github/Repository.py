@@ -420,7 +420,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
     def create_git_ref(self, ref, sha):
         """
@@ -838,7 +838,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Commit.Commit(self._requester, data, completed=True)
+        return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet):
         """
@@ -1014,7 +1014,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
     def get_git_ref(self, ref):
         """
@@ -1566,7 +1566,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data is None:
             return None
         else:
-            return github.Commit.Commit(self._requester, data, completed=True)
+            return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def remove_from_collaborators(self, collaborator):
         """
