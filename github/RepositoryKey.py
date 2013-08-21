@@ -33,9 +33,8 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
     This class represents RepositoryKeys. The reference can be found here http://developer.github.com/v3/repos/keys/
     """
 
-    def __init__(self, requester, attributes, completed, repoUrl):
-        ##############NOTE: this one should not be removed but modified
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, {}, attributes, completed)
+    def __init__(self, requester, headers, attributes, completed, repoUrl):
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, headers, attributes, completed)
         self.__repoUrl = repoUrl
 
     @property

@@ -118,14 +118,22 @@ class PaginatedList(PaginatedListBase):
         '''
         Adapte for diffrent __init__ signature in refactoring, remove when done
         '''
-        try: # Try use old __init__ signature
+        try:
+            try: # Try use old __init__ signature
+                return [
+                    self.__contentClass(self.__requester, element, completed=False)
+                    for element in data]
+            except TypeError: # must be new
+                return [
+                    self.__contentClass(self.__requester, headers, element, completed=False)
+                    for element in data]
+        except:
+            print "WTF???????????"
+            print self.__contentClass
             return [
                 self.__contentClass(self.__requester, element, completed=False)
                 for element in data]
-        except TypeError: # must be new
-            return [
-                self.__contentClass(self.__requester, headers, element, completed=False)
-                for element in data]
+
 
 
     def _fetchNextPage(self):

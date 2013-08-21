@@ -578,7 +578,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
     def create_label(self, name, color):
         """
@@ -1239,7 +1239,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
     def get_keys(self):
         """
@@ -1247,7 +1247,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
-            lambda requester, data, completed: github.RepositoryKey.RepositoryKey(requester, data, completed, repoUrl=self._url),
+            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(requester, headers, data, completed, repoUrl=self._url),
             self._requester,
             self.url + "/keys",
             None
