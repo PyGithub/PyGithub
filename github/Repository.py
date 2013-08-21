@@ -769,7 +769,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Branch.Branch(self._requester, data, completed=True)
+        return github.Branch.Branch(self._requester, headers, data, completed=True)
 
     def get_branches(self):
         """
