@@ -629,7 +629,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
     def create_pull(self, *args, **kwds):
         """
@@ -1306,7 +1306,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
     def get_milestones(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """
