@@ -132,7 +132,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.CommitComment.CommitComment(self._requester, data, completed=True)
+        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
     def create_status(self, state, target_url=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
         """
