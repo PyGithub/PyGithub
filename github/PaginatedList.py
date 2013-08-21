@@ -94,6 +94,11 @@ class PaginatedList(PaginatedListBase):
         second_repo = user.get_repos()[1]
         first_repos = user.get_repos()[:10]
 
+    If you want to iterate in reversed order, just do::
+
+        for repo in user.get_repos().reversed:
+            print repo.name
+
     And if you really need it, you can explicitely access a specific page::
 
         some_repos = user.get_repos().get_page(0)

@@ -18,6 +18,7 @@ What's new?
 * No more false assumption on `rate_limiting <https://github.com/jacquev6/PyGithub/pull/186>`_, and creation of ``rate_limiting_resettime``. Thank you `edjackson <https://github.com/edjackson>`_ for the pull request
 * `New <https://github.com/jacquev6/PyGithub/pull/187>`_ parameters ``since`` and ``until`` to ``Repository.get_commits``. Thank you `apetresc <https://github.com/apetresc>`_ for the pull request
 * `Catch <https://github.com/jacquev6/PyGithub/pull/182>`_ Json parsing exception for some internal server errors, and throw a better exception. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_ for the pull request
+* `Allow <https://github.com/jacquev6/PyGithub/pull/184>`_ reversed iteration of ``PaginatedList``s. Thank you `davidbrai <https://github.com/davidbrai>`_ for the pull request
 
 What's missing?
 ===============
