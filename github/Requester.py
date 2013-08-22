@@ -9,9 +9,11 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
+# Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
+# Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -62,7 +64,7 @@ class Requester:
     def resetConnectionClasses(cls):
         cls.__httpConnectionClass = httplib.HTTPConnection
         cls.__httpsConnectionClass = httplib.HTTPSConnection
-        
+
     #############################################################
     # For Debug
     @classmethod
@@ -106,10 +108,9 @@ class Requester:
         '''
         if not self.DEBUG_FLAG:
             return
-        
+
         self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
         responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
-        
 
     def check_me(self, obj):
         if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:
@@ -122,6 +123,7 @@ class Requester:
     def _initializeDebugFeature(self):
         self._frameCount = 0
         self._frameBuffer = []
+
     #############################################################
 
     def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
@@ -152,7 +154,8 @@ class Requester:
             self.__connectionClass = self.__httpConnectionClass
         else:
             assert False, "Unknown URL scheme"
-        self.rate_limiting = (5000, 5000)
+        self.rate_limiting = (-1, -1)
+        self.rate_limiting_resettime = 0
         self.FIX_REPO_GET_GIT_REF = True
         self.per_page = per_page
 
@@ -201,7 +204,10 @@ class Requester:
         else:
             if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
-            return json.loads(data)
+            try:
+                return json.loads(data)
+            except ValueError, e:
+                return {'data': data}
 
     def requestJson(self, verb, url, parameters, input):
         def encode(input):
@@ -248,6 +254,8 @@ class Requester:
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+        if "x-ratelimit-reset" in responseHeaders:
+            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")

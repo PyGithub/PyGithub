@@ -10,19 +10,13 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Summer 2013 - I'm traveling
----------------------------
+`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
-You may have noticed I'm a bit slower than usual to manage your issues and pull requests.
-That's because I'm traveling a lot this summer. Please be patient.
-
-`Version 1.17.0 <https://github.com/jacquev6/PyGithub/issues?milestone=29&state=closed>`_ (Jully 7th, 2013) (Hamburg edition)
------------------------------------------------------------------------------------------------------------------------------
-
-* `Fix <https://github.com/jacquev6/PyGithub/pull/176>`_ bug in ``Repository.get_comment`` when using custom ``per_page``. Thank you `davidbrai <https://github.com/davidbrai>`_
-* `Handle <https://github.com/jacquev6/PyGithub/pull/174>`_ Http redirects in ``Repository.get_dir_contents``. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_
-* `Implement <https://github.com/jacquev6/PyGithub/issues/173>`_ API ``/user`` in ``Github.get_users``. Thank you `rakeshcusat <https://github.com/rakeshcusat>`_ for asking
-* `Improve <https://github.com/jacquev6/PyGithub/pull/171>`_ the documentation. Thank you `martinqt <https://github.com/martinqt>`_
+* Implement ``Github.get_repos`` to get all public repositories
+* Implement ``NamedUser.has_in_following``
+* Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
+* Use the new URL to fork gists (minor change)
+* Use the new URL to test hooks (minor change)
 
 What's missing?
 ===============
@@ -34,10 +28,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/feeds`` (GET)
-* ``/gists/:id/forks`` (POST)
-
-  * instead, ``Gist.create_fork`` calls the old URL ``/gists/:id/fork``
-
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
 * ``/notifications/emails`` (GET)
@@ -58,10 +48,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/repos/:owner/:repo/contents/:path`` (DELETE)
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
-* ``/repos/:owner/:repo/hooks/:id/tests`` (POST)
-
-  * instead, ``Hook.test`` calls the old URL ``/repos/:owner/:repo/hooks/:id/test``
-
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
 * ``/repos/:owner/:repo/stats/code_frequency`` (GET)
@@ -72,13 +58,10 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/repos/:owner/:repo/subscription`` (DELETE)
 * ``/repos/:owner/:repo/subscription`` (GET)
 * ``/repos/:owner/:repo/subscription`` (PUT)
-* ``/repositories`` (GET)
-
-  * should be called in method ``Github.get_repos``
-
-* ``/users/:user/following/:target_user`` (GET)
-
-  * should be called in method ``NamedUser.has_in_following``
+* ``/search/code`` (GET)
+* ``/search/issues`` (GET)
+* ``/search/repositories`` (GET)
+* ``/search/users`` (GET)
 
 Documentation
 =============

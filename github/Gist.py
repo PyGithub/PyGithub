@@ -5,8 +5,8 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -179,12 +179,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def create_fork(self):
         """
-        :calls: `POST /gists/:id/fork <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:id/forks <http://developer.github.com/v3/gists>`_
         :rtype: :class:`github.Gist.Gist`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/fork",
+            self.url + "/forks",
             None,
             None
         )
@@ -360,18 +360,3 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
             self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

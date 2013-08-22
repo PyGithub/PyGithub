@@ -2,10 +2,11 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -96,9 +97,33 @@ class Github(object):
     @property
     def rate_limiting(self):
         """
+        First value is requests remaining, second value is request limit.
         :type: (int, int)
         """
+        remaining, limit = self.__requester.rate_limiting
+        if limit < 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
         return self.__requester.rate_limiting
+
+    @property
+    def rate_limiting_resettime(self):
+        """
+        Unix timestamp indicating when rate limiting will reset.
+        :type: int
+        """
+        if self.__requester.rate_limiting_resettime == 0:
+            self.__requester.requestJsonAndCheck(
+                'GET',
+                '/rate_limit',
+                None,
+                None
+            )
+        return self.__requester.rate_limiting_resettime
 
     @property
     def oauth_scopes(self):
@@ -171,6 +196,23 @@ class Github(object):
         )
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
+    def get_repos(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repositories <http://developer.github.com/v3/repos/#list-all-public-repositories>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/repositories",
+            url_parameters
+        )
+
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_
@@ -200,7 +242,7 @@ class Github(object):
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
         """
-        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/repos/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :param language: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
@@ -219,7 +261,7 @@ class Github(object):
 
     def legacy_search_users(self, keyword):
         """
-        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/user/search/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param keyword: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
@@ -235,7 +277,7 @@ class Github(object):
 
     def legacy_search_user_by_email(self, email):
         """
-        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/user/email/:email <http://developer.github.com/v3/search/legacy>`_
         :param email: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
@@ -246,7 +288,7 @@ class Github(object):
             None,
             None
         )
-        return github.NamedUser.NamedUser(self.__requester, headers,  Legacy.convertUser(data["user"]), completed=False)
+        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
@@ -311,7 +353,7 @@ class Github(object):
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
-    def create_from_raw_data(self, klass, raw_data, headers = {}):
+    def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
 
@@ -320,13 +362,3 @@ class Github(object):
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
-
-
-
-
-
-
-
-
-
-

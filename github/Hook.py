@@ -4,8 +4,8 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -31,7 +31,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks as returned for example by http://developer.github.com/v3/todo
+    This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
     """
 
     @property
@@ -157,12 +157,12 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def test(self):
         """
-        :calls: `POST /repos/:owner/:repo/hooks/:id/test <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/hooks/:id/tests <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/test",
+            self.url + "/tests",
             None,
             None
         )
@@ -206,4 +206,3 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
-

@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -54,6 +55,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.updated_at, datetime.datetime(2012, 5, 26, 14, 59, 33))
         self.assertEqual(self.issue.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/28")
         self.assertEqual(self.issue.user.login, "jacquev6")
+        self.assertEqual(self.issue.repository.name, "PyGithub")
 
     def testEditWithoutParameters(self):
         self.issue.edit()

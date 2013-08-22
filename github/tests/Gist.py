@@ -108,12 +108,12 @@ class Gist(Framework.TestCase):
         self.assertFalse(self.gist.is_starred())
 
     def testFork(self):
-        gist = self.g.get_gist("2729818")  # Random gist
+        gist = self.g.get_gist("6296553")  # Random gist
         myGist = gist.create_fork()
-        self.assertEqual(myGist.id, "2729865")
+        self.assertEqual(myGist.id, "6296732")
         self.assertEqual(myGist.fork_of, None)  # WTF
-        sameGist = self.g.get_gist("2729865")
-        self.assertEqual(sameGist.fork_of.id, "2729818")
+        sameGist = self.g.get_gist("6296732")
+        self.assertEqual(sameGist.fork_of.id, "6296553")
 
     def testDelete(self):
         self.gist.delete()

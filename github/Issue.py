@@ -6,8 +6,9 @@
 # Copyright 2012 Philip Kimmey <philip@rover.com>                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -145,7 +146,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        return self._NoneIfNotSet(self._repository)
+        if self._repository is github.GithubObject.NotSet:
+            # The repository was not set automatically, so it must be looked up by url.
+            repo_url = "/".join(self.url.split("/")[:-2])
+            self._repository = github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False)
+        return self._repository
 
     @property
     def state(self):
@@ -432,18 +437,3 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
             self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

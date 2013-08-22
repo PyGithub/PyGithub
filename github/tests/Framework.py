@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -249,29 +250,21 @@ class TestCase(BasicTestCase):
             return
         if obj._headers is None and frame == {}:
             return
-        self.assertEqual(obj._headers, frame[2]);
-
+        self.assertEqual(obj._headers, frame[2])
 
     def getFrameChecker(self):
         return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
 
     def setUp(self):
         BasicTestCase.setUp(self)
-        
-        # Set up frame debugging
-        
-        github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
 
+        # Set up frame debugging
+        github.GithubObject.GithubObject.setCheckAfterInitFlag(True)
         github.Requester.Requester.setDebugFlag(True)
-        
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
         self.g = github.Github(self.login, self.password)
 
-        
-        
-
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
-

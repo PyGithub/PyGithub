@@ -109,6 +109,10 @@ class NamedUser(Framework.TestCase):
     def testGetFollowing(self):
         self.assertListKeyEqual(self.user.get_following(), lambda f: f.login, ["nvie", "schacon", "jamis", "chad", "unclebob", "dabrahams", "jnorthrup", "brugidou", "regisb", "walidk", "tanzilli", "fjardon", "r3c", "sdanzan", "vineus", "cjuniet", "gturri", "ant9000", "asquini", "claudyus", "jardon-u", "s-bernard", "kamaradclimber", "Lyloa"])
 
+    def testHasInFollowing(self):
+        nvie = self.g.get_user("nvie")
+        self.assertTrue(self.user.has_in_following(nvie))
+
     def testGetOrgs(self):
         self.assertListKeyEqual(self.user.get_orgs(), lambda o: o.login, ["BeaverSoftware"])
 

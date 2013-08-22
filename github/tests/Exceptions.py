@@ -56,6 +56,22 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             )
         self.assertTrue(raised)
 
+    def testNonJsonDataReturnedByGithub(self):
+        # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
+        raised = False
+        try:
+            self.g.get_user("jacquev6")
+        except github.GithubException, exception:
+            raised = True
+            self.assertEqual(exception.status, 503)
+            self.assertEqual(
+                exception.data,
+                {
+                    "data": "<html><body><h1>503 Service Unavailable</h1>No server is available to handle this request.</body></html>",
+                }
+            )
+        self.assertTrue(raised)
+
     def testUnknownObject(self):
         raised = False
         try:

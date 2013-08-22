@@ -4,10 +4,10 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -27,7 +27,7 @@
 ################################################################################
 
 import github.GithubObject
-import inspect
+
 
 class PaginatedListBase:
     def __init__(self):
@@ -95,6 +95,11 @@ class PaginatedList(PaginatedListBase):
         second_repo = user.get_repos()[1]
         first_repos = user.get_repos()[:10]
 
+    If you want to iterate in reversed order, just do::
+
+        for repo in user.get_repos().reversed:
+            print repo.name
+
     And if you really need it, you can explicitely access a specific page::
 
         some_repos = user.get_repos().get_page(0)
@@ -111,6 +116,25 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = firstParams or {}
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
+        self._reversed = False
+
+    def _getLastPageUrl(self):
+        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, self.__nextParams, None)
+        links = self.__parseLinkHeader(headers)
+        lastUrl = links.get("last")
+        return lastUrl
+
+    @property
+    def reversed(self):
+        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams)
+        r.__reverse()
+        return r
+
+    def __reverse(self):
+        self._reversed = True
+        lastUrl = self._getLastPageUrl()
+        if lastUrl:
+            self.__nextUrl = lastUrl
 
     def _couldGrow(self):
         return self.__nextUrl is not None
@@ -118,22 +142,28 @@ class PaginatedList(PaginatedListBase):
     def _fetchNextPage(self):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
 
-        links = self.__parseLinkHeader(headers)
-        if len(data) > 0 and "next" in links:
-            self.__nextUrl = links["next"]
-        else:
-            self.__nextUrl = None
+        self.__nextUrl = None
+        if len(data) > 0:
+            links = self.__parseLinkHeader(headers)
+            if self._reversed:
+                if "prev" in links:
+                    self.__nextUrl = links["prev"]
+            elif "next" in links:
+                self.__nextUrl = links["next"]
         self.__nextParams = None
 
-        return [
+        content = [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data]
-
+            for element in data
+        ]
+        if self._reversed:
+            return content[::-1]
+        return content
 
     def __parseLinkHeader(self, headers):
         links = {}
         if "link" in headers:
-            linkHeaders = headers["link"].split(",")
+            linkHeaders = headers["link"].split(", ")
             for linkHeader in linkHeaders:
                 (url, rel) = linkHeader.split("; ")
                 url = url[1:-1]
@@ -151,5 +181,5 @@ class PaginatedList(PaginatedListBase):
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data]
-
+            for element in data
+        ]

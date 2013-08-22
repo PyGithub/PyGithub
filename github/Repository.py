@@ -6,10 +6,11 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -838,20 +839,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet):
+    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/commits <http://developer.github.com/v3/repos/commits>`_
         :param sha: string
         :param path: string
+        :param since: datetime.datetime
+        :param until: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert until is github.GithubObject.NotSet or isinstance(until, datetime.datetime), until
         url_parameters = dict()
         if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
         if path is not github.GithubObject.NotSet:
             url_parameters["path"] = path
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if until is not github.GithubObject.NotSet:
+            url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.Commit.Commit,
             self._requester,
@@ -1520,7 +1529,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def legacy_search_issues(self, state, keyword):
         """
-        :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search>`_
+        :calls: `GET /legacy/issues/search/:owner/:repository/:state/:keyword <http://developer.github.com/v3/search/legacy>`_
         :param state: "open" or "closed"
         :param keyword: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
