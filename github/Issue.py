@@ -6,6 +6,7 @@
 # Copyright 2012 Philip Kimmey <philip@rover.com>                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Stuart Glaser <stuglaser@gmail.com>                           #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -222,7 +223,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def delete_labels(self):
         """
@@ -287,7 +288,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -381,7 +382,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
+            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["assignee"], completed=False)
         if "body" in attributes:  # pragma no branch
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
@@ -390,7 +391,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._closed_at = self._parseDatetime(attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
             assert attributes["closed_by"] is None or isinstance(attributes["closed_by"], dict), attributes["closed_by"]
-            self._closed_by = None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, attributes["closed_by"], completed=False)
+            self._closed_by = None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["closed_by"], completed=False)
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
@@ -406,21 +407,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "labels" in attributes:  # pragma no branch
             assert attributes["labels"] is None or all(isinstance(element, dict) for element in attributes["labels"]), attributes["labels"]
             self._labels = None if attributes["labels"] is None else [
-                github.Label.Label(self._requester, element, completed=False)
+                github.Label.Label(self._requester, self._headers, element, completed=False)
                 for element in attributes["labels"]
             ]
         if "milestone" in attributes:  # pragma no branch
             assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
-            self._milestone = None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, attributes["milestone"], completed=False)
+            self._milestone = None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, self._headers, attributes["milestone"], completed=False)
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "pull_request" in attributes:  # pragma no branch
             assert attributes["pull_request"] is None or isinstance(attributes["pull_request"], dict), attributes["pull_request"]
-            self._pull_request = None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, attributes["pull_request"], completed=False)
+            self._pull_request = None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, self._headers, attributes["pull_request"], completed=False)
         if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
+            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False)
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
             self._state = attributes["state"]
@@ -435,4 +436,4 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)

@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -132,7 +133,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.CommitComment.CommitComment(self._requester, data, completed=True)
+        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
     def create_status(self, state, target_url=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
         """
@@ -158,7 +159,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.CommitStatus.CommitStatus(self._requester, data, completed=True)
+        return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -201,23 +202,23 @@ class Commit(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, attributes["author"], completed=False)
+            self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["author"], completed=False)
         if "commit" in attributes:  # pragma no branch
             assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
-            self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, attributes["commit"], completed=False)
+            self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, self._headers, attributes["commit"], completed=False)
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = None if attributes["committer"] is None else github.NamedUser.NamedUser(self._requester, attributes["committer"], completed=False)
+            self._committer = None if attributes["committer"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["committer"], completed=False)
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [
-                github.File.File(self._requester, element, completed=False)
+                github.File.File(self._requester, self._headers, element, completed=False)
                 for element in attributes["files"]
             ]
         if "parents" in attributes:  # pragma no branch
             assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
             self._parents = None if attributes["parents"] is None else [
-                Commit(self._requester, element, completed=False)
+                Commit(self._requester, self._headers, element, completed=False)
                 for element in attributes["parents"]
             ]
         if "sha" in attributes:  # pragma no branch
@@ -225,7 +226,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._sha = attributes["sha"]
         if "stats" in attributes:  # pragma no branch
             assert attributes["stats"] is None or isinstance(attributes["stats"], dict), attributes["stats"]
-            self._stats = None if attributes["stats"] is None else github.CommitStats.CommitStats(self._requester, attributes["stats"], completed=False)
+            self._stats = None if attributes["stats"] is None else github.CommitStats.CommitStats(self._requester, self._headers, attributes["stats"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

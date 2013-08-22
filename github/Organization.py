@@ -5,6 +5,7 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -264,7 +265,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
@@ -318,7 +319,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
         """
@@ -344,7 +345,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
@@ -471,7 +472,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet):
         """
@@ -503,7 +504,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """
@@ -655,7 +656,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._owned_private_repos = attributes["owned_private_repos"]
         if "plan" in attributes:  # pragma no branch
             assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
-            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, attributes["plan"], completed=False)
+            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, self._headers, attributes["plan"], completed=False)
         if "private_gists" in attributes:  # pragma no branch
             assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
             self._private_gists = attributes["private_gists"]

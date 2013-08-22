@@ -5,6 +5,7 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -174,7 +175,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def create_fork(self):
         """
@@ -187,7 +188,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return Gist(self._requester, data, completed=True)
+        return Gist(self._requester, headers, data, completed=True)
 
     def delete(self):
         """
@@ -236,7 +237,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -317,12 +318,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"].itervalues()), attributes["files"]
             self._files = None if attributes["files"] is None else dict(
-                (key, github.GistFile.GistFile(self._requester, element, completed=False))
+                (key, github.GistFile.GistFile(self._requester, self._headers, element, completed=False))
                 for key, element in attributes["files"].iteritems()
             )
         if "fork_of" in attributes:  # pragma no branch
             assert attributes["fork_of"] is None or isinstance(attributes["fork_of"], dict), attributes["fork_of"]
-            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, attributes["fork_of"], completed=False)
+            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, self._headers, attributes["fork_of"], completed=False)
         if "forks" in attributes:  # pragma no branch
             assert attributes["forks"] is None or all(isinstance(element, dict) for element in attributes["forks"]), attributes["forks"]
             self._forks = None if attributes["forks"] is None else [
@@ -338,7 +339,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "history" in attributes:  # pragma no branch
             assert attributes["history"] is None or all(isinstance(element, dict) for element in attributes["history"]), attributes["history"]
             self._history = None if attributes["history"] is None else [
-                github.GistHistoryState.GistHistoryState(self._requester, element, completed=False)
+                github.GistHistoryState.GistHistoryState(self._requester, self._headers, element, completed=False)
                 for element in attributes["history"]
             ]
         if "html_url" in attributes:  # pragma no branch
@@ -358,4 +359,4 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)

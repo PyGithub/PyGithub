@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -102,7 +103,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
             assert attributes["actor"] is None or isinstance(attributes["actor"], dict), attributes["actor"]
-            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, attributes["actor"], completed=False)
+            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["actor"], completed=False)
         if "commit_id" in attributes:  # pragma no branch
             assert attributes["commit_id"] is None or isinstance(attributes["commit_id"], (str, unicode)), attributes["commit_id"]
             self._commit_id = attributes["commit_id"]
@@ -117,7 +118,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
             self._id = attributes["id"]
         if "issue" in attributes:  # pragma no branch
             assert attributes["issue"] is None or isinstance(attributes["issue"], dict), attributes["issue"]
-            self._issue = None if attributes["issue"] is None else github.Issue.Issue(self._requester, attributes["issue"], completed=False)
+            self._issue = None if attributes["issue"] is None else github.Issue.Issue(self._requester, self._headers, attributes["issue"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

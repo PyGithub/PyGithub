@@ -2,6 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
@@ -139,7 +140,7 @@ class Github(object):
         """
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
@@ -147,7 +148,7 @@ class Github(object):
                 None,
                 None
             )
-            return github.NamedUser.NamedUser(self.__requester, data, completed=True)
+            return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
@@ -179,7 +180,7 @@ class Github(object):
             None,
             None
         )
-        return github.Organization.Organization(self.__requester, data, completed=True)
+        return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_repo(self, full_name):
         """
@@ -193,7 +194,7 @@ class Github(object):
             None,
             None
         )
-        return Repository.Repository(self.__requester, data, completed=True)
+        return Repository.Repository(self.__requester, headers, data, completed=True)
 
     def get_repos(self, since=github.GithubObject.NotSet):
         """
@@ -225,7 +226,7 @@ class Github(object):
             None,
             None
         )
-        return github.Gist.Gist(self.__requester, data, completed=True)
+        return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
     def get_gists(self):
         """
@@ -287,7 +288,7 @@ class Github(object):
             None,
             None
         )
-        return github.NamedUser.NamedUser(self.__requester, Legacy.convertUser(data["user"]), completed=False)
+        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
@@ -323,7 +324,7 @@ class Github(object):
             None,
             None
         )
-        return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
+        return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
 
     def get_gitignore_templates(self):
         """
@@ -350,9 +351,9 @@ class Github(object):
             None,
             None
         )
-        return GitignoreTemplate.GitignoreTemplate(self.__requester, attributes, completed=True)
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
-    def create_from_raw_data(self, klass, raw_data):
+    def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
 
@@ -360,4 +361,4 @@ class Github(object):
         :param raw_data: dict
         :rtype: instance of class ``klass``
         """
-        return klass(self.__requester, raw_data, completed=True)
+        return klass(self.__requester, headers, raw_data, completed=True)

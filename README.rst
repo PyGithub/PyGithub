@@ -14,6 +14,7 @@ What's new?
 
 * Implement ``Github.get_repos`` to get all public repositories
 * Implement ``NamedUser.has_in_following``
+* Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
 * Use the new URL to fork gists (minor change)
 * Use the new URL to test hooks (minor change)
 

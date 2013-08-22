@@ -5,6 +5,7 @@
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -294,7 +295,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
+        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
     def create_issue_comment(self, body):
         """
@@ -312,7 +313,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
         """
@@ -361,7 +362,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.PullRequestComment.PullRequestComment(self._requester, data, completed=True)
+        return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -419,7 +420,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueComment.IssueComment(self._requester, data, completed=True)
+        return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
     def get_issue_comments(self):
         """
@@ -462,7 +463,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, data, completed=True)
+        return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
@@ -499,10 +500,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._additions = attributes["additions"]
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, attributes["assignee"], completed=False)
+            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["assignee"], completed=False)
         if "base" in attributes:  # pragma no branch
             assert attributes["base"] is None or isinstance(attributes["base"], dict), attributes["base"]
-            self._base = None if attributes["base"] is None else github.PullRequestPart.PullRequestPart(self._requester, attributes["base"], completed=False)
+            self._base = None if attributes["base"] is None else github.PullRequestPart.PullRequestPart(self._requester, self._headers, attributes["base"], completed=False)
         if "body" in attributes:  # pragma no branch
             assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
             self._body = attributes["body"]
@@ -529,7 +530,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._diff_url = attributes["diff_url"]
         if "head" in attributes:  # pragma no branch
             assert attributes["head"] is None or isinstance(attributes["head"], dict), attributes["head"]
-            self._head = None if attributes["head"] is None else github.PullRequestPart.PullRequestPart(self._requester, attributes["head"], completed=False)
+            self._head = None if attributes["head"] is None else github.PullRequestPart.PullRequestPart(self._requester, self._headers, attributes["head"], completed=False)
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
@@ -550,7 +551,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._merged_at = self._parseDatetime(attributes["merged_at"])
         if "merged_by" in attributes:  # pragma no branch
             assert attributes["merged_by"] is None or isinstance(attributes["merged_by"], dict), attributes["merged_by"]
-            self._merged_by = None if attributes["merged_by"] is None else github.NamedUser.NamedUser(self._requester, attributes["merged_by"], completed=False)
+            self._merged_by = None if attributes["merged_by"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["merged_by"], completed=False)
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
@@ -574,4 +575,4 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)

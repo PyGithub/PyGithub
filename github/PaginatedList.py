@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
@@ -152,7 +153,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         content = [
-            self.__contentClass(self.__requester, element, completed=False)
+            self.__contentClass(self.__requester, headers, element, completed=False)
             for element in data
         ]
         if self._reversed:
@@ -179,6 +180,6 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
 
         return [
-            self.__contentClass(self.__requester, element, completed=False)
+            self.__contentClass(self.__requester, headers, element, completed=False)
             for element in data
         ]

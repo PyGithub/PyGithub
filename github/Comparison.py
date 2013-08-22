@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -150,14 +151,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
             self._ahead_by = attributes["ahead_by"]
         if "base_commit" in attributes:  # pragma no branch
             assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
-            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, attributes["base_commit"], completed=False)
+            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["base_commit"], completed=False)
         if "behind_by" in attributes:  # pragma no branch
             assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
             self._behind_by = attributes["behind_by"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
             self._commits = None if attributes["commits"] is None else [
-                github.Commit.Commit(self._requester, element, completed=False)
+                github.Commit.Commit(self._requester, self._headers, element, completed=False)
                 for element in attributes["commits"]
             ]
         if "diff_url" in attributes:  # pragma no branch
@@ -166,7 +167,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [
-                github.File.File(self._requester, element, completed=False)
+                github.File.File(self._requester, self._headers, element, completed=False)
                 for element in attributes["files"]
             ]
         if "html_url" in attributes:  # pragma no branch

@@ -7,6 +7,7 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
@@ -336,7 +337,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Comparison.Comparison(self._requester, data, completed=True)
+        return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
     def create_download(self, name, size, description=github.GithubObject.NotSet, content_type=github.GithubObject.NotSet):
         """
@@ -365,7 +366,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, headers, data, completed=True)
 
     def create_git_blob(self, content, encoding):
         """
@@ -386,7 +387,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def create_git_commit(self, message, tree, parents, author=github.GithubObject.NotSet, committer=github.GithubObject.NotSet):
         """
@@ -418,7 +419,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
     def create_git_ref(self, ref, sha):
         """
@@ -439,7 +440,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
     def create_git_tag(self, tag, message, object, type, tagger=github.GithubObject.NotSet):
         """
@@ -470,7 +471,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitTag.GitTag(self._requester, data, completed=True)
+        return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
     def create_git_tree(self, tree, base_tree=github.GithubObject.NotSet):
         """
@@ -492,7 +493,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
     def create_hook(self, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
         """
@@ -521,7 +522,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def create_issue(self, title, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
         """
@@ -555,7 +556,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def create_key(self, title, key):
         """
@@ -576,7 +577,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
     def create_label(self, name, color):
         """
@@ -597,7 +598,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, headers, data, completed=True)
 
     def create_milestone(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
         """
@@ -627,7 +628,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
     def create_pull(self, *args, **kwds):
         """
@@ -665,7 +666,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
     def delete(self):
         """
@@ -770,7 +771,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Branch.Branch(self._requester, data, completed=True)
+        return github.Branch.Branch(self._requester, headers, data, completed=True)
 
     def get_branches(self):
         """
@@ -809,7 +810,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.CommitComment.CommitComment(self._requester, data, completed=True)
+        return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -836,7 +837,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Commit.Commit(self._requester, data, completed=True)
+        return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet):
         """
@@ -894,7 +895,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
         """
@@ -925,7 +926,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             )
 
         return [
-            github.ContentFile.ContentFile(self._requester, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            github.ContentFile.ContentFile(self._requester, headers, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
             for attributes in data
         ]
 
@@ -954,7 +955,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Download.Download(self._requester, data, completed=True)
+        return github.Download.Download(self._requester, headers, data, completed=True)
 
     def get_downloads(self):
         """
@@ -1005,7 +1006,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitBlob.GitBlob(self._requester, data, completed=True)
+        return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
     def get_git_commit(self, sha):
         """
@@ -1020,7 +1021,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitCommit.GitCommit(self._requester, data, completed=True)
+        return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
     def get_git_ref(self, ref):
         """
@@ -1038,7 +1039,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitRef.GitRef(self._requester, data, completed=True)
+        return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
     def get_git_refs(self):
         """
@@ -1065,7 +1066,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.GitTag.GitTag(self._requester, data, completed=True)
+        return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
     def get_git_tree(self, sha, recursive=github.GithubObject.NotSet):
         """
@@ -1085,7 +1086,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.GitTree.GitTree(self._requester, data, completed=True)
+        return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
     def get_hook(self, id):
         """
@@ -1100,7 +1101,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Hook.Hook(self._requester, data, completed=True)
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def get_hooks(self):
         """
@@ -1127,7 +1128,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Issue.Issue(self._requester, data, completed=True)
+        return github.Issue.Issue(self._requester, headers, data, completed=True)
 
     def get_issues(self, milestone=github.GithubObject.NotSet, state=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, mentioned=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
         """
@@ -1218,7 +1219,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.IssueEvent.IssueEvent(self._requester, data, completed=True)
+        return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
     def get_issues_events(self):
         """
@@ -1245,7 +1246,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.RepositoryKey.RepositoryKey(self._requester, data, completed=True, repoUrl=self._url)
+        return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
     def get_keys(self):
         """
@@ -1253,7 +1254,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
-            lambda requester, data, completed: github.RepositoryKey.RepositoryKey(requester, data, completed, repoUrl=self._url),
+            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(requester, headers, data, completed, repoUrl=self._url),
             self._requester,
             self.url + "/keys",
             None
@@ -1272,7 +1273,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Label.Label(self._requester, data, completed=True)
+        return github.Label.Label(self._requester, headers, data, completed=True)
 
     def get_labels(self):
         """
@@ -1312,7 +1313,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Milestone.Milestone(self._requester, data, completed=True)
+        return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
     def get_milestones(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """
@@ -1364,7 +1365,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.PullRequest.PullRequest(self._requester, data, completed=True)
+        return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
     def get_pulls(self, state=github.GithubObject.NotSet):
         """
@@ -1434,7 +1435,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters,
             None
         )
-        return github.ContentFile.ContentFile(self._requester, data, completed=True)
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def get_stargazers(self):
         """
@@ -1542,7 +1543,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
         return [
-            github.Issue.Issue(self._requester, github.Legacy.convertIssue(element), completed=False)
+            github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
             for element in data["issues"]
         ]
 
@@ -1572,7 +1573,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data is None:
             return None
         else:
-            return github.Commit.Commit(self._requester, data, completed=True)
+            return github.Commit.Commit(self._requester, headers, data, completed=True)
 
     def remove_from_collaborators(self, collaborator):
         """
@@ -1719,16 +1720,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._open_issues = attributes["open_issues"]
         if "organization" in attributes:  # pragma no branch
             assert attributes["organization"] is None or isinstance(attributes["organization"], dict), attributes["organization"]
-            self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, attributes["organization"], completed=False)
+            self._organization = None if attributes["organization"] is None else github.Organization.Organization(self._requester, self._headers, attributes["organization"], completed=False)
         if "owner" in attributes:  # pragma no branch
             assert attributes["owner"] is None or isinstance(attributes["owner"], dict), attributes["owner"]
-            self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, attributes["owner"], completed=False)
+            self._owner = None if attributes["owner"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["owner"], completed=False)
         if "parent" in attributes:  # pragma no branch
             assert attributes["parent"] is None or isinstance(attributes["parent"], dict), attributes["parent"]
-            self._parent = None if attributes["parent"] is None else Repository(self._requester, attributes["parent"], completed=False)
+            self._parent = None if attributes["parent"] is None else Repository(self._requester, self._headers, attributes["parent"], completed=False)
         if "permissions" in attributes:  # pragma no branch
             assert attributes["permissions"] is None or isinstance(attributes["permissions"], dict), attributes["permissions"]
-            self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, attributes["permissions"], completed=False)
+            self._permissions = None if attributes["permissions"] is None else github.Permissions.Permissions(self._requester, self._headers, attributes["permissions"], completed=False)
         if "private" in attributes:  # pragma no branch
             assert attributes["private"] is None or isinstance(attributes["private"], bool), attributes["private"]
             self._private = attributes["private"]
@@ -1740,7 +1741,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._size = attributes["size"]
         if "source" in attributes:  # pragma no branch
             assert attributes["source"] is None or isinstance(attributes["source"], dict), attributes["source"]
-            self._source = None if attributes["source"] is None else Repository(self._requester, attributes["source"], completed=False)
+            self._source = None if attributes["source"] is None else Repository(self._requester, self._headers, attributes["source"], completed=False)
         if "ssh_url" in attributes:  # pragma no branch
             assert attributes["ssh_url"] is None or isinstance(attributes["ssh_url"], (str, unicode)), attributes["ssh_url"]
             self._ssh_url = attributes["ssh_url"]

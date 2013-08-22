@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -38,10 +39,28 @@ class GithubObject(object):
     """
     Base class for all classes representing objects returned by the API.
     """
-    def __init__(self, requester, attributes, completed):
+
+    '''
+    A global debug flag to enable header validation by requester for all objects
+    '''
+    CHECK_AFTER_INIT_FLAG = False
+
+    @classmethod
+    def setCheckAfterInitFlag(cls, flag):
+        cls.CHECK_AFTER_INIT_FLAG = flag
+
+    def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
+        # Make sure headers are signed before any operations on attributes
+        # Object creatation requires headers as parameter
+        self._headers = headers;
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
+
+        # Ask requester to do some checking, for debug and test purpose
+        # Since it's most handy to access and kinda all-knowing
+        if (self.CHECK_AFTER_INIT_FLAG):
+            requester.check_me(self);
 
     def _storeAndUseAttributes(self, attributes):
         self._useAttributes(attributes)
@@ -84,8 +103,8 @@ class NonCompletableGithubObject(GithubObject):
 
 
 class CompletableGithubObject(GithubObject):
-    def __init__(self, requester, attributes, completed):
-        GithubObject.__init__(self, requester, attributes, completed)
+    def __init__(self, requester, headers, attributes, completed):
+        GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
     def _completeIfNotSet(self, value):
@@ -103,5 +122,6 @@ class CompletableGithubObject(GithubObject):
             None,
             None
         )
+        self._headers = headers
         self._storeAndUseAttributes(data)
         self.__completed = True

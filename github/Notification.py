@@ -2,6 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
@@ -104,10 +105,10 @@ class Notification(github.GithubObject.CompletableGithubObject):
             self._id = attributes["id"]
         if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, attributes["repository"], completed=False)
+            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False)
         if "subject" in attributes:  # pragma no branch
             assert attributes["subject"] is None or isinstance(attributes["subject"], dict), attributes["subject"]
-            self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, attributes["subject"], completed=False)
+            self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, self._headers, attributes["subject"], completed=False)
         if "reason" in attributes:  # pragma no branch
             assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
             self._reason = attributes["reason"]

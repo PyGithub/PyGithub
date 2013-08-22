@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -84,7 +85,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "change_status" in attributes:  # pragma no branch
             assert attributes["change_status"] is None or isinstance(attributes["change_status"], dict), attributes["change_status"]
-            self._change_status = None if attributes["change_status"] is None else github.CommitStats.CommitStats(self._requester, attributes["change_status"], completed=False)
+            self._change_status = None if attributes["change_status"] is None else github.CommitStats.CommitStats(self._requester, self._headers, attributes["change_status"], completed=False)
         if "committed_at" in attributes:  # pragma no branch
             assert attributes["committed_at"] is None or isinstance(attributes["committed_at"], (str, unicode)), attributes["committed_at"]
             self._committed_at = self._parseDatetime(attributes["committed_at"])
@@ -93,7 +94,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
         if "version" in attributes:  # pragma no branch
             assert attributes["version"] is None or isinstance(attributes["version"], (str, unicode)), attributes["version"]
             self._version = attributes["version"]

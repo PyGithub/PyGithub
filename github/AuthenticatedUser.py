@@ -5,6 +5,7 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -348,7 +349,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Authorization.Authorization(self._requester, data, completed=True)
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     def create_fork(self, repo):
         """
@@ -363,7 +364,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_gist(self, public, files, description=github.GithubObject.NotSet):
         """
@@ -388,7 +389,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Gist.Gist(self._requester, data, completed=True)
+        return github.Gist.Gist(self._requester, headers, data, completed=True)
 
     def create_key(self, title, key):
         """
@@ -409,7 +410,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.UserKey.UserKey(self._requester, data, completed=True)
+        return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
@@ -459,7 +460,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             post_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def edit(self, name=github.GithubObject.NotSet, email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, location=github.GithubObject.NotSet, hireable=github.GithubObject.NotSet, bio=github.GithubObject.NotSet):
         """
@@ -516,7 +517,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Authorization.Authorization(self._requester, data, completed=True)
+        return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
     def get_authorizations(self):
         """
@@ -680,7 +681,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.UserKey.UserKey(self._requester, data, completed=True)
+        return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
     def get_keys(self):
         """
@@ -707,7 +708,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Notification.Notification(self._requester, data, completed=True)
+        return github.Notification.Notification(self._requester, headers, data, completed=True)
 
     def get_notifications(self, all=github.GithubObject.NotSet, participating=github.GithubObject.NotSet):
         """
@@ -771,7 +772,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None,
             None
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet):
         """
@@ -1061,7 +1062,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             self._owned_private_repos = attributes["owned_private_repos"]
         if "plan" in attributes:  # pragma no branch
             assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
-            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, attributes["plan"], completed=False)
+            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, self._headers, attributes["plan"], completed=False)
         if "private_gists" in attributes:  # pragma no branch
             assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
             self._private_gists = attributes["private_gists"]

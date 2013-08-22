@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -73,7 +74,7 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         if "tree" in attributes:  # pragma no branch
             assert attributes["tree"] is None or all(isinstance(element, dict) for element in attributes["tree"]), attributes["tree"]
             self._tree = None if attributes["tree"] is None else [
-                github.GitTreeElement.GitTreeElement(self._requester, element, completed=False)
+                github.GitTreeElement.GitTreeElement(self._requester, self._headers, element, completed=False)
                 for element in attributes["tree"]
             ]
         if "url" in attributes:  # pragma no branch
