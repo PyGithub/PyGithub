@@ -33,7 +33,7 @@ def main(argv):
         print "Run sepecified test in record mode."
         print "Usage:"
         print "_record_.py [module_name] [other_arg] ..."
-        print "    e.g. _record_.py github.tests.AllTests"
+        print "    e.g. _record_.py AllTests"
         return
     
     github.tests.Framework.activateRecordMode()
