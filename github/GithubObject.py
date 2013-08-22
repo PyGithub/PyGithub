@@ -27,12 +27,11 @@
 from __future__ import with_statement
 
 import datetime
-
-import GithubException
-
 import pickle
 
+import GithubException
 import Consts
+
 
 class _NotSetType:
     def __repr__(self):
@@ -126,14 +125,14 @@ class GithubObject(object):
         '''
         :type str
         '''
-        return Consts.get(self._headers, Consts.RES_ETAG)
+        return self._headers.get(Consts.RES_ETAG)
 
     @property
     def last_modified(self):
         '''
         :type str
         '''
-        return Consts.get(self._headers, Consts.RES_LAST_MODIFED)
+        return self._headers.get(Consts.RES_LAST_MODIFED)
     
 
     def update(self):
