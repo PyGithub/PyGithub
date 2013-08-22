@@ -5,6 +5,7 @@
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -39,6 +40,7 @@ if atLeastPython26:
     import json
 else:  # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
+    import __future__
 
 
 def readLine(file):

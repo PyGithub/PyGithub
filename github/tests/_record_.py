@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
+
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -20,17 +21,30 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
-GithubCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/developer.github.com/
+import sys
+import unittest
 
-*.cfg
-*.bat
-*.py~
-eproject.cfg
-*.bat
+import github.tests.Framework
+import github.tests.AllTests
+
+
+def main(argv):
+    if len(argv) < 2:
+        print "Run sepecified test in record mode."
+        print "Usage:"
+        print "_record_.py [module_name] [other_arg] ..."
+        print "    e.g. _record_.py AllTests"
+        return
+    
+    github.tests.Framework.activateRecordMode()
+    module_to_run = argv.pop(1)
+    
+    print "module: " + module_to_run
+    print "argv:  ",
+    print argv
+
+    unittest.main(module=module_to_run, argv=argv)
+
+
+if __name__ == "__main__":
+    main(sys.argv)
