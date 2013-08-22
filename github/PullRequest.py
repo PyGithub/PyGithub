@@ -5,9 +5,9 @@
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -500,7 +500,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._additions = attributes["additions"]
         if "assignee" in attributes:  # pragma no branch
             assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers,  attributes["assignee"], completed=False)
+            self._assignee = None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["assignee"], completed=False)
         if "base" in attributes:  # pragma no branch
             assert attributes["base"] is None or isinstance(attributes["base"], dict), attributes["base"]
             self._base = None if attributes["base"] is None else github.PullRequestPart.PullRequestPart(self._requester, self._headers, attributes["base"], completed=False)
@@ -576,18 +576,3 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
             self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

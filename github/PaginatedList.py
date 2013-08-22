@@ -4,10 +4,10 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -27,7 +27,7 @@
 ################################################################################
 
 import github.GithubObject
-import inspect
+
 
 class PaginatedListBase:
     def __init__(self):
@@ -127,8 +127,8 @@ class PaginatedList(PaginatedListBase):
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data]
-
+            for element in data
+        ]
 
     def __parseLinkHeader(self, headers):
         links = {}
@@ -151,5 +151,5 @@ class PaginatedList(PaginatedListBase):
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data]
-
+            for element in data
+        ]

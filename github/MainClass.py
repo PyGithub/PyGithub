@@ -2,10 +2,10 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -246,7 +246,7 @@ class Github(object):
             None,
             None
         )
-        return github.NamedUser.NamedUser(self.__requester, headers,  Legacy.convertUser(data["user"]), completed=False)
+        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
@@ -311,7 +311,7 @@ class Github(object):
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
-    def create_from_raw_data(self, klass, raw_data, headers = {}):
+    def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
 
@@ -320,13 +320,3 @@ class Github(object):
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
-
-
-
-
-
-
-
-
-
-

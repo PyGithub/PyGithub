@@ -4,8 +4,8 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -98,15 +98,3 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         if "version" in attributes:  # pragma no branch
             assert attributes["version"] is None or isinstance(attributes["version"], (str, unicode)), attributes["version"]
             self._version = attributes["version"]
-
-
-
-
-
-
-
-
-
-
-
-

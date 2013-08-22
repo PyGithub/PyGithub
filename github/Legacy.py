@@ -5,8 +5,8 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -67,7 +67,6 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
             self.__contentClass(self.__requester, headers, self.__convert(element), completed=False)
             for element in data[self.__key]
         ]
-
 
 
 def convertUser(attributes):

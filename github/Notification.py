@@ -2,10 +2,10 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -121,6 +121,3 @@ class Notification(github.GithubObject.CompletableGithubObject):
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]
-
-
-
