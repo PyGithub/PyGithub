@@ -3,6 +3,7 @@
 ############################ Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -27,6 +28,8 @@ import github.NamedUser
 
 
 class RawData(Framework.TestCase):
+    expectedEtag = '"1bb2632b6c4ebeb4ff568329490bfbe2"'
+    expectedLastModified = "expectedLastModified = Tue, 12 Mar 2013 22:13:32 GMT"
     jacquev6RawData = {
         'disk_usage': 13812,
         'private_gists': 5,
@@ -77,15 +80,32 @@ class RawData(Framework.TestCase):
         'space': 614400,
     }
 
+    def assertAndRemoveKeyValue(self, dic, key, expectedValue):
+        asserted = dic
+        self.assertTrue(key in dic)
+        self.assertTrue(expectedValue, dic[key])
+        del asserted[key]
+        return asserted
+
+    def assertAndRemoveConditionalRequestData(self, raw_data):
+        asserted = raw_data
+        key_etag = "etag"
+        key_modify = "last-modified"
+        asserted = self.assertAndRemoveKeyValue(asserted, key_etag, self.expectedEtag)
+        asserted = self.assertAndRemoveKeyValue(asserted, key_modify, self.expectedLastModified)
+        return asserted
+
     def testCompletedObject(self):
         user = self.g.get_user("jacquev6")
         self.assertTrue(user._CompletableGithubObject__completed)
-        self.assertEqual(user.raw_data, RawData.jacquev6RawData)
+        asserted = self.assertAndRemoveConditionalRequestData(user.raw_data)
+        self.assertEqual(asserted, RawData.jacquev6RawData)
 
     def testNotYetCompletedObject(self):
         user = self.g.get_user().get_repo("PyGithub").owner
         self.assertFalse(user._CompletableGithubObject__completed)
-        self.assertEqual(user.raw_data, RawData.jacquev6RawData)
+        asserted = self.assertAndRemoveConditionalRequestData(user.raw_data)
+        self.assertEqual(asserted, RawData.jacquev6RawData)
         self.assertTrue(user._CompletableGithubObject__completed)
 
     def testNonCompletableObject(self):
