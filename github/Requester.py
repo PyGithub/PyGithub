@@ -290,6 +290,8 @@ class Requester:
             requestHeaders["Authorization"] = self.__authorizationHeader
 
     def __conditional(self, requestHeaders, parameters):
+        # #189: Why pass etag and last_modified by param "parameters"?
+        # #189: May be better to add a specific param "headers" to methods requestFoobar?
         etag = parameters.get(Consts.REQ_IF_NONE_MATCH)
         last_modified = parameters.get(Consts.REQ_IF_MODIFIED_SINCE)
         if etag is not None:

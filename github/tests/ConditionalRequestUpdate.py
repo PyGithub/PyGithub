@@ -21,13 +21,17 @@
 #                                                                              #
 ################################################################################
 
+# #189: Line endings should be linux style
+
 import Framework
 import github
+
 
 class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("akfish/PyGithub")        
+        self.repo = self.g.get_repo("akfish/PyGithub")
+        # #189: Let's separate this assert in its own test method, remove it from setUp.
         # Not updated
         self.assertFalse(self.repo.update(), msg="The repo is not changes. But update() != False")
 

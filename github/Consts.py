@@ -21,7 +21,9 @@
 #                                                                              #
 ################################################################################
 
-# TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013 
+# #189: Line endings should be linux style
+
+# TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013
 # lots of consts in this project are explict
 # should realy round them up and reference them by consts
 # EDIT: well, maybe :-)
@@ -30,12 +32,12 @@
 # Request Header                                                               #
 # (Case sensitive)                                                             #
 ################################################################################
-REQ_IF_NONE_MATCH         = "If-None-Match"
-REQ_IF_MODIFIED_SINCE     = "If-Modified-Since" 
+REQ_IF_NONE_MATCH = "If-None-Match"
+REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
 
 ################################################################################
 # Response Header                                                              #
 # (Lower Case)                                                                 #
 ################################################################################
-RES_ETAG                  = "etag"
-RES_LAST_MODIFED          = "last-modified" 
+RES_ETAG = "etag"
+RES_LAST_MODIFED = "last-modified"

@@ -28,6 +28,9 @@ import github.tests.Framework
 import github.tests.AllTests
 
 
+# #189: This seems equivalent to "python -m github.tests ClassName.methodName --record"
+
+
 def main(argv):
     if len(argv) < 2:
         print "Run sepecified test in record mode."
@@ -35,10 +38,10 @@ def main(argv):
         print "_record_.py [module_name] [other_arg] ..."
         print "    e.g. _record_.py AllTests"
         return
-    
+
     github.tests.Framework.activateRecordMode()
     module_to_run = argv.pop(1)
-    
+
     print "module: " + module_to_run
     print "argv:  ",
     print argv

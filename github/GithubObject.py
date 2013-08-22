@@ -57,14 +57,14 @@ class GithubObject(object):
         self._requester = requester
         # Make sure headers are signed before any operations on attributes
         # Object creatation requires headers as parameter
-        self._headers = headers;
+        self._headers = headers
         self._initAttributes()
         self._storeAndUseAttributes(attributes)
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
-        if (self.CHECK_AFTER_INIT_FLAG):
-            requester.check_me(self);
+        if self.CHECK_AFTER_INIT_FLAG:
+            requester.check_me(self)
 
     def _storeAndUseAttributes(self, attributes):
         self._useAttributes(attributes)
@@ -100,22 +100,21 @@ class GithubObject(object):
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-    def save(self, file_name):
+    def save(self, file_name):  # #189: Could we use file-like objects? It would be more "pythonic" than passing filenames.
         '''
         Save instance to a file
-        
         :param file_name: the full path of target file
         '''
-
         with open(file_name, 'wb') as f:
-            pickle.dump(self, f)
+            pickle.dump(self, f)  # #189: This will also save self._requester, and the login/password of the user. She might not appriciate.
+            # #189: May be better to pickle only self._rawData and self._headers and restore the object with Github.create_from_raw_data
 
-    @classmethod
-    def load(cls, file_name):
+    @classmethod  # #189: Could be a @staticmethod? The docstring would be simpler (no need to explain the type will be same as saved).
+    def load(cls, file_name):  # #189: Could we use file-like objects? It would be more "pythonic" than passing filenames.
         '''
         Load saved instance from file
         :param file_name: the full path to saved file
-        :rtype: saved instance. The type of loaded instance remains its orginal one and  will not be affected by from which derived class the method is called.   
+        :rtype: saved instance. The type of loaded instance remains its orginal one and will not be affected by from which derived class the method is called.
         '''
         with open(file_name, 'rb') as f:
             return pickle.load(f)
@@ -133,7 +132,6 @@ class GithubObject(object):
         :type str
         '''
         return self._headers.get(Consts.RES_LAST_MODIFED)
-    
 
     def update(self):
         '''
@@ -156,8 +154,9 @@ class GithubObject(object):
             self._storeAndUseAttributes(data)
             self.__completed = True
             return True
-        except GithubException.NotModifiedException:
+        except GithubException.NotModifiedException:  # #189: Why raise and catch? Can't we just check?
             return False
+
 
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self):
