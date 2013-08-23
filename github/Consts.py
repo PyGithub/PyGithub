@@ -21,7 +21,7 @@
 #                                                                              #
 ################################################################################
 
-# #189: Line endings should be linux style
+# #193: Line endings should be linux style
 
 # TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013
 # lots of consts in this project are explict

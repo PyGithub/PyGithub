@@ -28,7 +28,7 @@ import github.tests.Framework
 import github.tests.AllTests
 
 
-# #189: This seems equivalent to "python -m github.tests ClassName.methodName --record"
+# #193: This seems equivalent to "python -m github.tests ClassName.methodName --record"
 
 
 def main(argv):
