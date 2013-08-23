@@ -90,30 +90,26 @@ class Requester:
         The structure of a frame: [requestHeader, statusCode, responseHeader, raw_data]
         Some of them may be None
         '''
-        if not self.DEBUG_FLAG:
-            return
+        if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
+            new_frame = [requestHeader, None, None, None]
+            if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)
+                self._frameBuffer.append(new_frame)
+            else:
+                self._frameBuffer[0] = new_frame  # pragma no cover (Should be covered)
 
-        new_frame = [requestHeader, None, None, None]
-        if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:
-            self._frameBuffer.append(new_frame)
-        else:
-            self._frameBuffer[0] = new_frame
-
-        self._frameCount = len(self._frameBuffer) - 1
+            self._frameCount = len(self._frameBuffer) - 1
 
     def DEBUG_ON_RESPONSE(self, statusCode, responseHeader, data):
         '''
         Update current frame with response
         Current frame index will be attached to responseHeader
         '''
-        if not self.DEBUG_FLAG:
-            return
-
-        self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
-        responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
+        if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
+            self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
+            responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
     def check_me(self, obj):
-        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:
+        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]

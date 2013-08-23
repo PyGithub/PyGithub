@@ -60,7 +60,7 @@ class GithubObject(object):
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
-        if self.CHECK_AFTER_INIT_FLAG:
+        if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
             requester.check_me(self)
 
     def _storeAndUseAttributes(self, headers, attributes):
@@ -100,24 +100,46 @@ class GithubObject(object):
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-    def save(self, file_name):  # #193: Could we use file-like objects? It would be more "pythonic" than passing filenames.
-        '''
-        Save instance to a file
-        :param file_name: the full path of target file
-        '''
-        with open(file_name, 'wb') as f:
-            pickle.dump(self, f)  # #193: This will also save self._requester, and the login/password of the user. She might not appriciate.
-            # #193: May be better to pickle only self._rawData and self._headers and restore the object with Github.create_from_raw_data
+    # #193: I temporarily comment out those two methods
+    # We need to address the following:
+    #  - The interface should use file-like objects (not file names)
+    #    - it's more "pythonic"
+    #    - it allows user to save several objects in the same physical file
+    #    - it's easier to unit-test because we can inject in-memory file-like objects
+    #  - We should not save identification information
+    #  - We should not re-create several instances of Requester when loading objects
+    #    - This would lead to very surprising behaviors, when changing Github.per_page or anything impacting this central part of PyGithub
+    #  - It should be possible to restore a saved object without knowing its previous type
+    #  - The "load" method should not make the user think she must know this previous type
+    #    - In particular, it shouldn't be a classmethod of GithubObject
+    #  - They should be covered by unit tests
+    #
+    # My proposal, to be experimented and discussed:
+    #  - in "save", pickle a tuple containing the class of the object, its rawData and its headers
+    #  - make "load" a method of class Github
+    #  - it will unpickle everything and call Github.create_from_raw_data
+    #  - I would even make "save" a method of Github, to keep it symetric with "load"
+    #
+    # Using __get_state__ would not be enought because we wouldn't have access
+    # to the Requester instance in __set_state__.
 
-    @classmethod  # #193: Could be a @staticmethod? The docstring would be simpler (no need to explain the type will be same as saved).
-    def load(cls, file_name):  # #193: Could we use file-like objects? It would be more "pythonic" than passing filenames.
-        '''
-        Load saved instance from file
-        :param file_name: the full path to saved file
-        :rtype: saved instance. The type of loaded instance remains its orginal one and will not be affected by from which derived class the method is called.
-        '''
-        with open(file_name, 'rb') as f:
-            return pickle.load(f)
+    # def save(self, file_name):
+    #     '''
+    #     Save instance to a file
+    #     :param file_name: the full path of target file
+    #     '''
+    #     with open(file_name, 'wb') as f:
+    #         pickle.dump(self, f)
+
+    # @classmethod
+    # def load(cls, file_name):
+    #     '''
+    #     Load saved instance from file
+    #     :param file_name: the full path to saved file
+    #     :rtype: saved instance. The type of loaded instance remains its orginal one and will not be affected by from which derived class the method is called.
+    #     '''
+    #     with open(file_name, 'rb') as f:
+    #         return pickle.load(f)
 
     @property
     def etag(self):

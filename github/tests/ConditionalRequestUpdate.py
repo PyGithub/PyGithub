@@ -37,3 +37,7 @@ class ConditionalRequestUpdate(Framework.TestCase):
 
     def testDidUpdate(self):
         self.assertTrue(self.repo.update(), msg="The repo should be changed by now. But update() != True")
+
+    def testUpdateObjectWithoutEtag(self):
+        r = self.g.get_repo("jacquev6/PyGithub")
+        self.assertTrue(r.update())
