@@ -31,8 +31,8 @@ class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("akfish/PyGithub")
-        # #193: Let's separate this assert in its own test method, remove it from setUp.
-        # Not updated
+
+    def testDidNotUpdate(self):
         self.assertFalse(self.repo.update(), msg="The repo is not changes. But update() != False")
 
     def testDidUpdate(self):
