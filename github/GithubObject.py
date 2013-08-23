@@ -155,33 +155,6 @@ class GithubObject(object):
         '''
         return self._headers.get(Consts.RES_LAST_MODIFED)
 
-    # #193: Should be only in CompletableGithubObject, NonCompletableGithubObjects don't have urls
-    def update(self):
-        '''
-        Check and update the object with conditional request
-        :rtype: Boolean value indicating whether the object is changed
-        '''
-        conditionalRequestHeader = dict()
-        if self.etag is not None:
-            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
-        if self.last_modified is not None:
-            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
-
-        status, responseHeaders, output = self._requester.requestJson(
-            "GET",
-            self._url,
-            None,
-            conditionalRequestHeader,
-            None
-        )
-        if status == 304:
-            return False
-        else:
-            headers, data = self._requester._Requester__check(status, responseHeaders, output)
-            self._storeAndUseAttributes(headers, data)
-            self.__completed = True
-            return True
-
 
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self):
@@ -211,3 +184,29 @@ class CompletableGithubObject(GithubObject):
         )
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
+
+    def update(self):
+        '''
+        Check and update the object with conditional request
+        :rtype: Boolean value indicating whether the object is changed
+        '''
+        conditionalRequestHeader = dict()
+        if self.etag is not None:
+            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
+        if self.last_modified is not None:
+            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+
+        status, responseHeaders, output = self._requester.requestJson(
+            "GET",
+            self._url,
+            None,
+            conditionalRequestHeader,
+            None
+        )
+        if status == 304:
+            return False
+        else:
+            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            self._storeAndUseAttributes(headers, data)
+            self.__completed = True
+            return True
