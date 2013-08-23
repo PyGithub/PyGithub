@@ -168,11 +168,11 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
-    def requestJsonAndCheck(self, verb, url, parameters, input):
-        return self.__check(*self.requestJson(verb, url, parameters, input))
+    def requestJsonAndCheck(self, verb, url, parameters, headers, input):
+        return self.__check(*self.requestJson(verb, url, parameters, headers, input))
 
-    def requestMultipartAndCheck(self, verb, url, parameters, input):
-        return self.__check(*self.requestMultipart(verb, url, parameters, input))
+    def requestMultipartAndCheck(self, verb, url, parameters, headers, input):
+        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
@@ -208,13 +208,13 @@ class Requester:
             except ValueError, e:
                 return {'data': data}
 
-    def requestJson(self, verb, url, parameters, input):
+    def requestJson(self, verb, url, parameters, headers, input):
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(verb, url, parameters, input, encode)
+        return self.__requestEncode(verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters, input):
+    def requestMultipart(self, verb, url, parameters, headers, input):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -228,16 +228,16 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(verb, url, parameters, input, encode)
+        return self.__requestEncode(verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, verb, url, parameters, input, encode):
+    def __requestEncode(self, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
+        if requestHeaders is None:
+            requestHeaders = dict()
 
-        requestHeaders = dict()
         self.__authenticate(url, requestHeaders, parameters)
-        self.__conditional(requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
 
         url = self.__makeAbsoluteUrl(url)
@@ -287,18 +287,6 @@ class Requester:
             parameters["client_secret"] = self.__clientSecret
         if self.__authorizationHeader is not None:
             requestHeaders["Authorization"] = self.__authorizationHeader
-
-    def __conditional(self, requestHeaders, parameters):
-        # #193: Why pass etag and last_modified by param "parameters"?
-        # #193: May be better to add a specific param "headers" to methods requestFoobar?
-        etag = parameters.get(Consts.REQ_IF_NONE_MATCH)
-        last_modified = parameters.get(Consts.REQ_IF_MODIFIED_SINCE)
-        if etag is not None:
-            requestHeaders[Consts.REQ_IF_NONE_MATCH] = etag
-            del parameters[Consts.REQ_IF_NONE_MATCH]
-        if last_modified is not None:
-            requestHeaders[Consts.REQ_IF_MODIFIED_SINCE] = last_modified
-            del parameters[Consts.REQ_IF_MODIFIED_SINCE]
 
     def __makeAbsoluteUrl(self, url):
         # URLs generated locally will be relative to __base_url

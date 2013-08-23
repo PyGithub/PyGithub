@@ -246,6 +246,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/public_members/" + public_member._identity,
             None,
+            None,
             None
         )
 
@@ -263,6 +264,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
             url_parameters,
+            None,
             None
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
@@ -317,6 +319,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/repos",
             None,
+            None,
             post_parameters
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
@@ -342,6 +345,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
+            None,
             None,
             post_parameters
         )
@@ -380,6 +384,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
+            None,
             None,
             post_parameters
         )
@@ -470,6 +475,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "GET",
             "/repos/" + self.login + "/" + name,
             None,
+            None,
             None
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
@@ -502,6 +508,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "GET",
             "/teams/" + str(id),
             None,
+            None,
             None
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
@@ -529,6 +536,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/members/" + member._identity,
             None,
+            None,
             None
         )
         return status == 204
@@ -543,6 +551,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/public_members/" + public_member._identity,
+            None,
             None,
             None
         )
@@ -559,6 +568,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
+            None,
             None
         )
 
@@ -572,6 +582,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/public_members/" + public_member._identity,
+            None,
             None,
             None
         )

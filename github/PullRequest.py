@@ -293,6 +293,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/comments",
             None,
+            None,
             post_parameters
         )
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
@@ -310,6 +311,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            None,
             None,
             post_parameters
         )
@@ -337,6 +339,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -359,6 +362,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
+            None,
             None,
             None
         )
@@ -418,6 +422,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "GET",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id),
             None,
+            None,
             None
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
@@ -443,6 +448,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/merge",
             None,
+            None,
             None
         )
         return status == 204
@@ -460,6 +466,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/merge",
+            None,
             None,
             post_parameters
         )

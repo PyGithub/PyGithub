@@ -148,6 +148,7 @@ class GithubObject(object):
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
             self._url,
+            None,
             conditionalRequestHeader,
             None
         )
@@ -182,6 +183,7 @@ class CompletableGithubObject(GithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._url,
+            None,
             None,
             None
         )

@@ -59,6 +59,7 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
             "GET",
             self.__url,
             args,
+            None,
             None
         )
         self.__continue = len(data[self.__key]) > 0
