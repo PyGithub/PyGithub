@@ -176,6 +176,7 @@ class Requester:
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
+        # #193: Shouldn't next line be in __requestEncode? (__check is not called on all requests)
         # Log frame
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 

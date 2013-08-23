@@ -133,6 +133,7 @@ class GithubObject(object):
         '''
         return self._headers.get(Consts.RES_LAST_MODIFED)
 
+    # #193: Should be only in CompletableGithubObject, NonCompletableGithubObjects don't have urls
     def update(self):
         '''
         Check and update the object with conditional request
