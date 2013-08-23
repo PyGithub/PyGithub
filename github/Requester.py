@@ -179,8 +179,6 @@ class Requester:
         # Log frame
         self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
-        if status == 304:
-            raise GithubException.NotModifiedException(status, output)
         if status >= 400:
             raise self.__createException(status, output)
         return responseHeaders, output

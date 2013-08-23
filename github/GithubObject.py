@@ -55,20 +55,20 @@ class GithubObject(object):
 
     def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
-        # Make sure headers are signed before any operations on attributes
-        # Object creatation requires headers as parameter
-        self._headers = headers
         self._initAttributes()
-        self._storeAndUseAttributes(attributes)
+        self._storeAndUseAttributes(headers, attributes)
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
         if self.CHECK_AFTER_INIT_FLAG:
             requester.check_me(self)
 
-    def _storeAndUseAttributes(self, attributes):
-        self._useAttributes(attributes)
+    def _storeAndUseAttributes(self, headers, attributes):
+        # Make sure headers are assigned before calling _useAttributes
+        # (Some derived classes will use headers in _useAttributes)
+        self._headers = headers
         self._rawData = attributes
+        self._useAttributes(attributes)
 
     @property
     def raw_data(self):
@@ -144,18 +144,19 @@ class GithubObject(object):
         if self.last_modified is not None:
             conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
 
-        try:
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                self._url,
-                conditionalRequestHeader,
-                None
-            )
-            self._storeAndUseAttributes(data)
+        status, responseHeaders, output = self._requester.requestJson(
+            "GET",
+            self._url,
+            conditionalRequestHeader,
+            None
+        )
+        if status == 304:
+            return False
+        else:
+            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True
-        except GithubException.NotModifiedException:  # #193: Why raise and catch? Can't we just check?
-            return False
 
 
 class NonCompletableGithubObject(GithubObject):
@@ -183,6 +184,5 @@ class CompletableGithubObject(GithubObject):
             None,
             None
         )
-        self._headers = headers
-        self._storeAndUseAttributes(data)
+        self._storeAndUseAttributes(headers, data)
         self.__completed = True

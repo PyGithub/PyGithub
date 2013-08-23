@@ -77,9 +77,3 @@ class RateLimitExceededException(GithubException):
     """
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
-
-
-class NotModifiedException(GithubException):
-    """
-    Exception raised when conditional request is made to a resoure that has not changed
-    """
