@@ -81,3 +81,4 @@ from Issue158 import *
 from Issue174 import *
 
 from ConditionalRequestUpdate import ConditionalRequestUpdate
+from Persistence import Persistence
