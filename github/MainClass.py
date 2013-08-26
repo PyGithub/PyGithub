@@ -373,3 +373,31 @@ class Github(object):
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
+
+    def save(self, obj, f):
+        obj.save(f)
+
+    def revive(self, obj):
+        obj._requester = self.__requester
+
+    def load(self, f):
+        # Do some picking
+        dead = github.GithubObject.load(f)
+        # Set self.__requester
+        live = revive(dead)
+        # It's alive! Return it
+        return live
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -123,23 +123,38 @@ class GithubObject(object):
     # Using __get_state__ would not be enought because we wouldn't have access
     # to the Requester instance in __set_state__.
 
-    # def save(self, file_name):
-    #     '''
-    #     Save instance to a file
-    #     :param file_name: the full path of target file
-    #     '''
-    #     with open(file_name, 'wb') as f:
-    #         pickle.dump(self, f)
+    def __getstate__(self):
+        # For pickle,
+        # prevent developers from accidentally or 
+        # intentionally (well, in this case just making it harder) dumping sensitive information
+        return { 'headers': self._headers, 'raw_data': self._rawData }
 
-    # @classmethod
-    # def load(cls, file_name):
-    #     '''
-    #     Load saved instance from file
-    #     :param file_name: the full path to saved file
-    #     :rtype: saved instance. The type of loaded instance remains its orginal one and will not be affected by from which derived class the method is called.
-    #     '''
-    #     with open(file_name, 'rb') as f:
-    #         return pickle.load(f)
+    def __setstate__(self, d):
+        # Should developer choose to load a object on his own,
+        # he will and should get a 'dead' one without requester.
+        # Maybe that is what he wants, otherwise always use Github.load
+        # TBD: 'virtual' methods for derived class to filter sensitive data
+        self._headers = d.get('headers')
+        self._rawData = d.get('raw_data')
+
+    def save(self, f):
+        '''
+        Save instance to a file
+        :param f: a file-like object
+        '''
+        dumper = pickle.Pickler(f)
+        dumper.dump(self)
+
+    @classmethod
+    def load(cls, f):
+        '''
+        Load saved instance from file. The instance will be without requester.
+        Use Github.load for a live object or (TBD) use Github.revive to set one.
+        :param f: a file-like object
+        :rtype: saved instance. The type of loaded instance remains its orginal one and is not related to the class from which the method is called.
+        '''
+        loader = pickle.Unpickler(f)
+        return loader.load()
 
     @property
     def etag(self):
