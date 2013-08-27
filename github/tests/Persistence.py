@@ -38,7 +38,14 @@ class Persistence(Framework.TestCase):
 
     def tearDown(self):
         self._expected.close()
-    
+
+    def assertLoaded(self, loaded, klass, is_dead):
+        isRightType = isinstance(loaded, klass)
+        isDead = loaded._requester is None
+        deadMsg = "Expected dead == %r. But actually dead == %r" % (is_dead, isDead)
+        self.assertTrue(isRightType, msg = "Unexpected type")
+        self.assertEqual(is_dead, isDead, msg = deadMsg)
+        
     def testSave(self):
         actual = StringIO.StringIO()
         self.repo.save(actual)
@@ -51,30 +58,25 @@ class Persistence(Framework.TestCase):
         self._expected.seek(0)
 
         loaded = github.GithubObject.GithubObject.load(self._expected)
-        self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpected type")
-        self.assertIsNone(loaded._requester, msg = "No requester should be saved")
+        self.assertLoaded(loaded, self.repo.__class__, True)
     
     def testLoadDeadAndRevive(self):
         self._expected.seek(0)
 
         dead = github.GithubObject.GithubObject.load(self._expected)
-        self.assertIsInstance(dead, self.repo.__class__, msg = "Unexpected type")
-        self.assertIsNone(dead._requester, msg = "No requester should be saved")
+        self.assertLoaded(dead, self.repo.__class__, True)
         live = self.g.revive(dead)
-        self.assertIsNotNone(live._requester, msg = "Expect a live one")
+        self.assertLoaded(live, self.repo.__class__, False)
 
     def testGithubLoad(self):
         self._expected.seek(0)
-
         loaded = self.g.load(self._expected)
-        self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpected type")
-        self.assertIsNotNone(loaded._requester, msg = "Expect a live one")
+        self.assertLoaded(loaded, self.repo.__class__, False)
 
     def testLoadAndUpdate(self):
         self._expected.seek(0)
 
         loaded = self.g.load(self._expected)
-        self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpected type")
-        self.assertIsNotNone(loaded._requester, msg = "Expect a live one")
+        self.assertLoaded(loaded, self.repo.__class__, False)
 
         self.assertTrue(loaded.update(), msg="The repo should be changed by now. But update() != True")
