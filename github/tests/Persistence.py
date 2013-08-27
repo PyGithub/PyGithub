@@ -31,7 +31,9 @@ class Persistence(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("akfish/PyGithub")
-        with self._openStorage('r') as expectedF:
+        with self._openStorage('wb') as f:
+            self.repo.save(f)
+        with self._openStorage('rb') as expectedF:
             self._expected = StringIO.StringIO(expectedF.read())
 
     def tearDown(self):
