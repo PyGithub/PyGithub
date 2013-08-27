@@ -183,6 +183,15 @@ class CompletableGithubObject(GithubObject):
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
+    def __getstate__(self):
+        state = GithubObject.__getstate__(self)
+        state['url'] = self._url
+        return state
+
+    def __setstate__(self, d):
+        GithubObject.__setstate__(self, d)
+        self._url = d.get('url')
+
     def _completeIfNotSet(self, value):
         if value is NotSet:
             self._completeIfNeeded()
