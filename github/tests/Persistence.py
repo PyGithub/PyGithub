@@ -66,3 +66,12 @@ class Persistence(Framework.TestCase):
         loaded = self.g.load(self._expected)
         self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpecting type")
         self.assertIsNotNone(loaded._requester, msg = "Expect a live one")
+
+    def testLoadAndUpdate(self):
+        self._expected.seek(0)
+
+        loaded = self.g.load(self._expected)
+        self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpecting type")
+        self.assertIsNotNone(loaded._requester, msg = "Expect a live one")
+
+        self.assertTrue(loaded.update(), msg="The repo should be changed by now. But update() != True")
