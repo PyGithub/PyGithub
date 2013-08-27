@@ -136,6 +136,8 @@ class GithubObject(object):
         # TBD: 'virtual' methods for derived class to filter sensitive data
         self._headers = d.get('headers')
         self._rawData = d.get('raw_data')
+        # Initialize _requester anyway
+        self._requester = None
 
     def save(self, f):
         '''
