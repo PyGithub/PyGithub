@@ -220,12 +220,23 @@ class BasicTestCase(unittest.TestCase):
         unittest.TestCase.tearDown(self)
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
-
-    def __openFile(self, mode, usage = TestDataUsage.Network):
+    
+    def _openStorage(self, mode):
+        # let develop to handle releases of files for more flexibilities
+        # usually with 'with' statement
+        fileName = self._getTestDataFileName(TestDataUsage.Persistence)
+        return open(fileName, mode)
+    
+    def _getTestDataFileName(self, usage):
+        fileName = None
         for (_, _, functionName, _) in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
                 if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
                     fileName = os.path.join(os.path.dirname(__file__), usage, self.__class__.__name__ + "." + functionName + ".txt")
+        return fileName
+
+    def __openFile(self, mode):
+        fileName = self._getTestDataFileName(TestDataUsage.Network)
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName

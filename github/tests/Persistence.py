@@ -33,9 +33,9 @@ class Persistence(Framework.TestCase):
         
         
     def testSaveAndLoadDead(self):
-        with open("d:\\testWrite.txt", 'w') as f:
+        with self._openStorage('w') as f:
             self.repo.save(f)
-        with open("d:\\testWrite.txt", 'r') as f:
+        with self._openStorage('r') as f:
             loaded = github.GithubObject.GithubObject.load(f)
             self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpecting type")
             self.assertIsNone(loaded._requester, msg = "No requester should be saved")
