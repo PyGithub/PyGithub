@@ -24,17 +24,15 @@
 from __future__ import with_statement
 import Framework
 import github
-import StringIO
+import io
 
 
 class Persistence(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("akfish/PyGithub")
-        with self._openStorage('wb') as f:
-            self.repo.save(f)
         with self._openStorage('rb') as expectedF:
-            self._expected = StringIO.StringIO(expectedF.read())
+            self._expected = io.BytesIO(expectedF.read())
 
     def tearDown(self):
         self._expected.close()
@@ -47,7 +45,7 @@ class Persistence(Framework.TestCase):
         self.assertEqual(is_dead, isDead, msg = deadMsg)
         
     def testSave(self):
-        actual = StringIO.StringIO()
+        actual = io.BytesIO()
         self.repo.save(actual)
         self._expected.seek(0)
         actual.seek(0)
