@@ -29,7 +29,7 @@ import github
 if Framework.atLeastPython26:
     from io import BytesIO as IO
 else:
-    from io import StringIO as IO
+    from StringIO import StringIO as IO
 
 class Persistence(Framework.TestCase):
     def setUp(self):
