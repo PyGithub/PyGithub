@@ -182,6 +182,9 @@ def ReplayingHttpConnection(testCase, file, *args, **kwds):
 def ReplayingHttpsConnection(testCase, file, *args, **kwds):
     return ReplayingConnection(testCase, file, "https", *args, **kwds)
 
+class TestDataUsage:
+    Network = "ReplayData"
+    Persistence = "Storage"
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
@@ -218,7 +221,7 @@ class BasicTestCase(unittest.TestCase):
         self.__closeReplayFileIfNeeded()
         github.Requester.Requester.resetConnectionClasses()
 
-    def __openFile(self, mode, usage = "ReplayData"):
+    def __openFile(self, mode, usage = TestDataUsage.Network):
         for (_, _, functionName, _) in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
                 if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
