@@ -379,14 +379,17 @@ class Github(object):
 
     def revive(self, obj):
         obj._requester = self.__requester
+        return obj
 
     def load(self, f):
         # Do some picking
-        dead = github.GithubObject.load(f)
+        dead = github.GithubObject.GithubObject.load(f)
         # Set self.__requester
-        live = revive(dead)
+        live = self.revive(dead)
         # It's alive! Return it
         return live
+
+
 
 
 

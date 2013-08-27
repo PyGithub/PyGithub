@@ -50,4 +50,19 @@ class Persistence(Framework.TestCase):
         loaded = github.GithubObject.GithubObject.load(self._expected)
         self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpecting type")
         self.assertIsNone(loaded._requester, msg = "No requester should be saved")
-            
+    
+    def testLoadDeadAndRevive(self):
+        self._expected.seek(0)
+
+        dead = github.GithubObject.GithubObject.load(self._expected)
+        self.assertIsInstance(dead, self.repo.__class__, msg = "Unexpecting type")
+        self.assertIsNone(dead._requester, msg = "No requester should be saved")
+        live = self.g.revive(dead)
+        self.assertIsNotNone(live._requester, msg = "Expect a live one")
+
+    def testGithubLoad(self):
+        self._expected.seek(0)
+
+        loaded = self.g.load(self._expected)
+        self.assertIsInstance(loaded, self.repo.__class__, msg = "Unexpecting type")
+        self.assertIsNotNone(loaded._requester, msg = "Expect a live one")
