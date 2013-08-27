@@ -24,8 +24,12 @@
 from __future__ import with_statement
 import Framework
 import github
-import io
 
+# damn you, 2.5!
+if Framework.atLeastPython26:
+    from io import BytesIO as IO
+else:
+    from io import StringIO as IO
 
 class Persistence(Framework.TestCase):
     def setUp(self):
@@ -39,7 +43,7 @@ class Persistence(Framework.TestCase):
         with self._openStorage('wb') as f:
             self.repo.save(f)
         with self._openStorage('rb') as expectedF:
-            self._expected = io.BytesIO(expectedF.read())
+            self._expected = IO(expectedF.read())
 
     def tearDown(self):
         self._expected.close()
@@ -52,7 +56,7 @@ class Persistence(Framework.TestCase):
         self.assertEqual(is_dead, isDead, msg = deadMsg)
         
     def testSave(self):
-        actual = io.BytesIO()
+        actual = IO()
         self.repo.save(actual)
         # self._expected.seek(0)
         actual.seek(0)
