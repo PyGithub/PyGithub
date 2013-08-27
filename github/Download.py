@@ -201,6 +201,7 @@ class Download(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url,
             None,
+            None,
             None
         )
 

@@ -106,6 +106,7 @@ class Github(object):
                 'GET',
                 '/rate_limit',
                 None,
+                None,
                 None
             )
         return self.__requester.rate_limiting
@@ -120,6 +121,7 @@ class Github(object):
             self.__requester.requestJsonAndCheck(
                 'GET',
                 '/rate_limit',
+                None,
                 None,
                 None
             )
@@ -145,6 +147,7 @@ class Github(object):
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 "/users/" + login,
+                None,
                 None,
                 None
             )
@@ -178,6 +181,7 @@ class Github(object):
             "GET",
             "/orgs/" + login,
             None,
+            None,
             None
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
@@ -191,6 +195,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/repos/" + full_name,
+            None,
             None,
             None
         )
@@ -223,6 +228,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gists/" + id,
+            None,
             None,
             None
         )
@@ -286,6 +292,7 @@ class Github(object):
             "GET",
             "/legacy/user/email/" + email,
             None,
+            None,
             None
         )
         return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
@@ -309,6 +316,7 @@ class Github(object):
             "POST",
             "/markdown",
             None,
+            None,
             post_parameters
         )
         return data
@@ -322,6 +330,7 @@ class Github(object):
             "GET",
             "/hooks",
             None,
+            None,
             None
         )
         return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
@@ -334,6 +343,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates",
+            None,
             None,
             None
         )
@@ -349,6 +359,7 @@ class Github(object):
             "GET",
             "/gitignore/templates/" + name,
             None,
+            None,
             None
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
@@ -362,3 +373,34 @@ class Github(object):
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
+
+    def save(self, obj, f):
+        obj.save(f)
+
+    def revive(self, obj):
+        obj._requester = self.__requester
+        return obj
+
+    def load(self, f):
+        # Do some picking
+        dead = github.GithubObject.GithubObject.load(f)
+        # Set self.__requester
+        live = self.revive(dead)
+        # It's alive! Return it
+        return live
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

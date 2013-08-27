@@ -96,6 +96,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/members/" + member._identity,
             None,
+            None,
             None
         )
 
@@ -110,6 +111,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/repos/" + repo._identity,
             None,
+            None,
             None
         )
 
@@ -121,6 +123,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
+            None,
             None,
             None
         )
@@ -142,6 +145,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
+            None,
             None,
             post_parameters
         )
@@ -182,6 +186,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/members/" + member._identity,
             None,
+            None,
             None
         )
         return status == 204
@@ -196,6 +201,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/repos/" + repo._identity,
+            None,
             None,
             None
         )
@@ -212,6 +218,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url + "/members/" + member._identity,
             None,
+            None,
             None
         )
 
@@ -225,6 +232,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/repos/" + repo._identity,
+            None,
             None,
             None
         )

@@ -91,6 +91,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.__customUrl,
             None,
+            None,
             None
         )
 
@@ -111,6 +112,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.__customUrl,
+            None,
             None,
             post_parameters
         )

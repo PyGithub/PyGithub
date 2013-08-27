@@ -79,3 +79,6 @@ from Issue140 import *
 # from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
 from Issue158 import *
 from Issue174 import *
+
+from ConditionalRequestUpdate import ConditionalRequestUpdate
+from Persistence import Persistence

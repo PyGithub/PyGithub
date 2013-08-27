@@ -119,7 +119,13 @@ class PaginatedList(PaginatedListBase):
         self._reversed = False
 
     def _getLastPageUrl(self):
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, self.__nextParams, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__firstUrl,
+            self.__nextParams,
+            None,
+            None
+        )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
         return lastUrl
@@ -140,7 +146,13 @@ class PaginatedList(PaginatedListBase):
         return self.__nextUrl is not None
 
     def _fetchNextPage(self):
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__nextUrl,
+            self.__nextParams,
+            None,
+            None
+        )
 
         self.__nextUrl = None
         if len(data) > 0:
@@ -177,7 +189,13 @@ class PaginatedList(PaginatedListBase):
             params["page"] = page + 1
         if self.__requester.per_page != 30:
             params["per_page"] = self.__requester.per_page
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__firstUrl,
+            params,
+            None,
+            None
+        )
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)

@@ -173,6 +173,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/comments",
             None,
+            None,
             post_parameters
         )
         return github.GistComment.GistComment(self._requester, headers, data, completed=True)
@@ -186,6 +187,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/forks",
             None,
+            None,
             None
         )
         return Gist(self._requester, headers, data, completed=True)
@@ -198,6 +200,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
+            None,
             None,
             None
         )
@@ -220,6 +223,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -234,6 +238,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/comments/" + str(id),
+            None,
             None,
             None
         )
@@ -260,6 +265,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/star",
             None,
+            None,
             None
         )
         return status == 204
@@ -273,6 +279,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url + "/star",
             None,
+            None,
             None
         )
 
@@ -284,6 +291,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/star",
+            None,
             None,
             None
         )

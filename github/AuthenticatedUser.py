@@ -258,6 +258,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "POST",
             "/user/emails",
             None,
+            None,
             post_parameters
         )
 
@@ -271,6 +272,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/following/" + following._identity,
+            None,
             None,
             None
         )
@@ -286,6 +288,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "PUT",
             "/user/starred/" + starred._identity,
             None,
+            None,
             None
         )
 
@@ -300,6 +303,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "PUT",
             "/user/subscriptions/" + subscription._identity,
             None,
+            None,
             None
         )
 
@@ -313,6 +317,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/user/watched/" + watched._identity,
+            None,
             None,
             None
         )
@@ -347,6 +352,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "POST",
             "/authorizations",
             None,
+            None,
             post_parameters
         )
         return github.Authorization.Authorization(self._requester, headers, data, completed=True)
@@ -361,6 +367,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
+            None,
             None,
             None
         )
@@ -387,6 +394,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "POST",
             "/gists",
             None,
+            None,
             post_parameters
         )
         return github.Gist.Gist(self._requester, headers, data, completed=True)
@@ -407,6 +415,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/keys",
+            None,
             None,
             post_parameters
         )
@@ -458,6 +467,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "POST",
             "/user/repos",
             None,
+            None,
             post_parameters
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
@@ -500,6 +510,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "PATCH",
             "/user",
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -514,6 +525,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/authorizations/" + str(id),
+            None,
             None,
             None
         )
@@ -539,6 +551,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/user/emails",
+            None,
             None,
             None
         )
@@ -679,6 +692,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "GET",
             "/user/keys/" + str(id),
             None,
+            None,
             None
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
@@ -705,6 +719,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/notifications/threads/" + id,
+            None,
             None,
             None
         )
@@ -769,6 +784,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name,
+            None,
             None,
             None
         )
@@ -858,6 +874,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "GET",
             "/user/following/" + following._identity,
             None,
+            None,
             None
         )
         return status == 204
@@ -872,6 +889,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             "/user/starred/" + starred._identity,
+            None,
             None,
             None
         )
@@ -888,6 +906,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "GET",
             "/user/subscriptions/" + subscription._identity,
             None,
+            None,
             None
         )
         return status == 204
@@ -902,6 +921,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             "/user/watched/" + watched._identity,
+            None,
             None,
             None
         )
@@ -919,6 +939,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "DELETE",
             "/user/emails",
             None,
+            None,
             post_parameters
         )
 
@@ -932,6 +953,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/following/" + following._identity,
+            None,
             None,
             None
         )
@@ -947,6 +969,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "DELETE",
             "/user/starred/" + starred._identity,
             None,
+            None,
             None
         )
 
@@ -961,6 +984,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "DELETE",
             "/user/subscriptions/" + subscription._identity,
             None,
+            None,
             None
         )
 
@@ -974,6 +998,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/watched/" + watched._identity,
+            None,
             None,
             None
         )
