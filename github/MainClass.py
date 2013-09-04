@@ -26,6 +26,7 @@
 ################################################################################
 
 import urllib
+import pickle
 
 from Requester import Requester
 import AuthenticatedUser
@@ -366,10 +367,33 @@ class Github(object):
 
     def create_from_raw_data(self, klass, raw_data, headers={}):
         """
-        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
+        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
+        and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
+        :param headers: dict
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
+
+    def dump(self, obj, file, protocol=0):
+        """
+        Dumps (pickles) a PyGithub object to a file-like object.
+        Some effort is made to not pickle sensitive informations like the Github credentials used in the :class:`Github` instance.
+        But NO EFFORT is made to remove sensitive information from the object's attributes.
+
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <http://docs.python.org/2.7/library/pickle.html#data-stream-format>`_
+        """
+        pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
+
+    def load(self, f):
+        """
+        Loads (unpickles) a PyGithub object from a file-like object.
+
+        :param f: the file-like object to unpickle from
+        :return: the unpickled object
+        """
+        return self.create_from_raw_data(*pickle.load(f))
