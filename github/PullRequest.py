@@ -292,9 +292,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
@@ -311,9 +309,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -338,9 +334,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -361,10 +355,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self.url) + "/comments/" + str(id),
-            None,
-            None,
-            None
+            self._parentUrl(self.url) + "/comments/" + str(id)
         )
         return github.PullRequestComment.PullRequestComment(self._requester, headers, data, completed=True)
 
@@ -420,10 +411,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id),
-            None,
-            None,
-            None
+            self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id)
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -446,10 +434,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         """
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/merge",
-            None,
-            None,
-            None
+            self.url + "/merge"
         )
         return status == 204
 
@@ -466,9 +451,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/merge",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.PullRequestMergeStatus.PullRequestMergeStatus(self._requester, headers, data, completed=True)
 

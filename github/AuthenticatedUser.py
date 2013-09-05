@@ -257,9 +257,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/emails",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
 
     def add_to_following(self, following):
@@ -271,10 +269,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/following/" + following._identity,
-            None,
-            None,
-            None
+            "/user/following/" + following._identity
         )
 
     def add_to_starred(self, starred):
@@ -286,10 +281,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(starred, github.Repository.Repository), starred
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/starred/" + starred._identity,
-            None,
-            None,
-            None
+            "/user/starred/" + starred._identity
         )
 
     def add_to_subscriptions(self, subscription):
@@ -301,10 +293,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(subscription, github.Repository.Repository), subscription
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/subscriptions/" + subscription._identity,
-            None,
-            None,
-            None
+            "/user/subscriptions/" + subscription._identity
         )
 
     def add_to_watched(self, watched):
@@ -316,10 +305,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/watched/" + watched._identity,
-            None,
-            None,
-            None
+            "/user/watched/" + watched._identity
         )
 
     def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet):
@@ -351,9 +337,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/authorizations",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
@@ -366,10 +350,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
-            None,
-            None,
-            None
+            "/repos/" + repo.owner.login + "/" + repo.name + "/forks"
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -393,9 +374,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/gists",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Gist.Gist(self._requester, headers, data, completed=True)
 
@@ -415,9 +394,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/keys",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
@@ -466,9 +443,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/user/repos",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -509,9 +484,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             "/user",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -524,10 +497,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/authorizations/" + str(id),
-            None,
-            None,
-            None
+            "/authorizations/" + str(id)
         )
         return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
@@ -550,10 +520,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/user/emails",
-            None,
-            None,
-            None
+            "/user/emails"
         )
         return data
 
@@ -690,10 +657,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/user/keys/" + str(id),
-            None,
-            None,
-            None
+            "/user/keys/" + str(id)
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
@@ -718,10 +682,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (str, unicode)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/notifications/threads/" + id,
-            None,
-            None,
-            None
+            "/notifications/threads/" + id
         )
         return github.Notification.Notification(self._requester, headers, data, completed=True)
 
@@ -783,10 +744,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + self.login + "/" + name,
-            None,
-            None,
-            None
+            "/repos/" + self.login + "/" + name
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -872,10 +830,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/following/" + following._identity,
-            None,
-            None,
-            None
+            "/user/following/" + following._identity
         )
         return status == 204
 
@@ -888,10 +843,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(starred, github.Repository.Repository), starred
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/starred/" + starred._identity,
-            None,
-            None,
-            None
+            "/user/starred/" + starred._identity
         )
         return status == 204
 
@@ -904,10 +856,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(subscription, github.Repository.Repository), subscription
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/subscriptions/" + subscription._identity,
-            None,
-            None,
-            None
+            "/user/subscriptions/" + subscription._identity
         )
         return status == 204
 
@@ -920,10 +869,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(watched, github.Repository.Repository), watched
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/watched/" + watched._identity,
-            None,
-            None,
-            None
+            "/user/watched/" + watched._identity
         )
         return status == 204
 
@@ -938,9 +884,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             "/user/emails",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
 
     def remove_from_following(self, following):
@@ -952,10 +896,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(following, github.NamedUser.NamedUser), following
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/following/" + following._identity,
-            None,
-            None,
-            None
+            "/user/following/" + following._identity
         )
 
     def remove_from_starred(self, starred):
@@ -967,10 +908,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(starred, github.Repository.Repository), starred
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/starred/" + starred._identity,
-            None,
-            None,
-            None
+            "/user/starred/" + starred._identity
         )
 
     def remove_from_subscriptions(self, subscription):
@@ -982,10 +920,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(subscription, github.Repository.Repository), subscription
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/subscriptions/" + subscription._identity,
-            None,
-            None,
-            None
+            "/user/subscriptions/" + subscription._identity
         )
 
     def remove_from_watched(self, watched):
@@ -997,10 +932,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/watched/" + watched._identity,
-            None,
-            None,
-            None
+            "/user/watched/" + watched._identity
         )
 
     def _initAttributes(self):

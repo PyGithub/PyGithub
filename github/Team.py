@@ -94,10 +94,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/members/" + member._identity,
-            None,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
 
     def add_to_repos(self, repo):
@@ -109,10 +106,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/repos/" + repo._identity,
-            None,
-            None,
-            None
+            self.url + "/repos/" + repo._identity
         )
 
     def delete(self):
@@ -122,10 +116,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def edit(self, name, permission=github.GithubObject.NotSet):
@@ -145,9 +136,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -184,10 +173,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/members/" + member._identity,
-            None,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
         return status == 204
 
@@ -200,10 +186,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/repos/" + repo._identity,
-            None,
-            None,
-            None
+            self.url + "/repos/" + repo._identity
         )
         return status == 204
 
@@ -216,10 +199,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/members/" + member._identity,
-            None,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
 
     def remove_from_repos(self, repo):
@@ -231,10 +211,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         assert isinstance(repo, github.Repository.Repository), repo
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/repos/" + repo._identity,
-            None,
-            None,
-            None
+            self.url + "/repos/" + repo._identity
         )
 
     @property

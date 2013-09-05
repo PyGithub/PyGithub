@@ -172,9 +172,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
@@ -185,10 +183,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/forks",
-            None,
-            None,
-            None
+            self.url + "/forks"
         )
         return Gist(self._requester, headers, data, completed=True)
 
@@ -199,10 +194,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def edit(self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet):
@@ -222,9 +214,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -237,10 +227,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/comments/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/comments/" + str(id)
         )
         return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
@@ -263,10 +250,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/star",
-            None,
-            None,
-            None
+            self.url + "/star"
         )
         return status == 204
 
@@ -277,10 +261,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/star",
-            None,
-            None,
-            None
+            self.url + "/star"
         )
 
     def set_starred(self):
@@ -290,10 +271,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/star",
-            None,
-            None,
-            None
+            self.url + "/star"
         )
 
     def _initAttributes(self):

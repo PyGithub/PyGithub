@@ -164,10 +164,10 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
-    def requestJsonAndCheck(self, verb, url, parameters, headers, input):
+    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input))
 
-    def requestMultipartAndCheck(self, verb, url, parameters, headers, input):
+    def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def __check(self, status, responseHeaders, output):
@@ -200,13 +200,13 @@ class Requester:
             except ValueError, e:
                 return {'data': data}
 
-    def requestJson(self, verb, url, parameters, headers, input):
+    def requestJson(self, verb, url, parameters=None, headers=None, input=None):
         def encode(input):
             return "application/json", json.dumps(input)
 
         return self.__requestEncode(verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters, headers, input):
+    def requestMultipart(self, verb, url, parameters=None, headers=None, input=None):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"

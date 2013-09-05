@@ -89,10 +89,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.__customUrl,
-            None,
-            None,
-            None
+            self.__customUrl
         )
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
@@ -112,9 +109,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.__customUrl,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 

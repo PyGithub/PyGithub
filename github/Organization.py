@@ -244,10 +244,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
 
     def create_fork(self, repo):
@@ -263,9 +260,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
-            url_parameters,
-            None,
-            None
+            parameters=url_parameters
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -318,9 +313,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/repos",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -345,9 +338,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -384,9 +375,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -473,10 +462,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + self.login + "/" + name,
-            None,
-            None,
-            None
+            "/repos/" + self.login + "/" + name
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -506,10 +492,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/teams/" + str(id),
-            None,
-            None,
-            None
+            "/teams/" + str(id)
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
@@ -534,10 +517,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/members/" + member._identity,
-            None,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
         return status == 204
 
@@ -550,10 +530,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
         return status == 204
 
@@ -566,10 +543,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/members/" + member._identity,
-            None,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
 
     def remove_from_public_members(self, public_member):
@@ -581,10 +555,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
 
     def _initAttributes(self):

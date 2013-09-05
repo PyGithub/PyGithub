@@ -58,9 +58,7 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__url,
-            args,
-            None,
-            None
+            parameters=args
         )
         self.__continue = len(data[self.__key]) > 0
 

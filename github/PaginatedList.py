@@ -122,9 +122,7 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
-            self.__nextParams,
-            None,
-            None
+            parameters=self.__nextParams
         )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
@@ -149,9 +147,7 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__nextUrl,
-            self.__nextParams,
-            None,
-            None
+            parameters=self.__nextParams
         )
 
         self.__nextUrl = None
@@ -192,9 +188,7 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
-            params,
-            None,
-            None
+            parameters=params
         )
 
         return [

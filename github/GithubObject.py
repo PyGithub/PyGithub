@@ -141,10 +141,7 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._url,
-            None,
-            None,
-            None
+            self._url
         )
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
@@ -163,9 +160,7 @@ class CompletableGithubObject(GithubObject):
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
             self._url,
-            None,
-            conditionalRequestHeader,
-            None
+            headers=conditionalRequestHeader
         )
         if status == 304:
             return False

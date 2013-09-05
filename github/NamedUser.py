@@ -269,9 +269,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/gists",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Gist.Gist(self._requester, headers, data, completed=True)
 
@@ -392,10 +390,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + self.login + "/" + name,
-            None,
-            None,
-            None
+            "/repos/" + self.login + "/" + name
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
@@ -461,10 +456,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         assert isinstance(following, github.NamedUser.NamedUser), following
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/following/" + following._identity,
-            None,
-            None,
-            None
+            self.url + "/following/" + following._identity
         )
         return status == 204
 

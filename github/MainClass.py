@@ -109,10 +109,7 @@ class Github(object):
         if limit < 0:
             self.__requester.requestJsonAndCheck(
                 'GET',
-                '/rate_limit',
-                None,
-                None,
-                None
+                '/rate_limit'
             )
         return self.__requester.rate_limiting
 
@@ -125,10 +122,7 @@ class Github(object):
         if self.__requester.rate_limiting_resettime == 0:
             self.__requester.requestJsonAndCheck(
                 'GET',
-                '/rate_limit',
-                None,
-                None,
-                None
+                '/rate_limit'
             )
         return self.__requester.rate_limiting_resettime
 
@@ -151,10 +145,7 @@ class Github(object):
         else:
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
-                "/users/" + login,
-                None,
-                None,
-                None
+                "/users/" + login
             )
             return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
@@ -184,10 +175,7 @@ class Github(object):
         assert isinstance(login, (str, unicode)), login
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/orgs/" + login,
-            None,
-            None,
-            None
+            "/orgs/" + login
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
@@ -199,10 +187,7 @@ class Github(object):
         assert isinstance(full_name, (str, unicode)), full_name
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + full_name,
-            None,
-            None,
-            None
+            "/repos/" + full_name
         )
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
@@ -232,10 +217,7 @@ class Github(object):
         assert isinstance(id, (str, unicode)), id
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gists/" + id,
-            None,
-            None,
-            None
+            "/gists/" + id
         )
         return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
@@ -295,10 +277,7 @@ class Github(object):
         assert isinstance(email, (str, unicode)), email
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/legacy/user/email/" + email,
-            None,
-            None,
-            None
+            "/legacy/user/email/" + email
         )
         return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
@@ -320,9 +299,7 @@ class Github(object):
         status, headers, data = self.__requester.requestJson(
             "POST",
             "/markdown",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return data
 
@@ -333,10 +310,7 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/hooks",
-            None,
-            None,
-            None
+            "/hooks"
         )
         return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
 
@@ -347,10 +321,7 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates",
-            None,
-            None,
-            None
+            "/gitignore/templates"
         )
         return data
 
@@ -362,10 +333,7 @@ class Github(object):
         assert isinstance(name, (str, unicode)), name
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates/" + name,
-            None,
-            None,
-            None
+            "/gitignore/templates/" + name
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
