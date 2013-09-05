@@ -319,6 +319,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/collaborators/" + collaborator._identity,
             None,
+            None,
             None
         )
 
@@ -334,6 +335,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/compare/" + base + "..." + head,
+            None,
             None,
             None
         )
@@ -364,6 +366,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/downloads",
             None,
+            None,
             post_parameters
         )
         return github.Download.Download(self._requester, headers, data, completed=True)
@@ -384,6 +387,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/blobs",
+            None,
             None,
             post_parameters
         )
@@ -417,6 +421,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/git/commits",
             None,
+            None,
             post_parameters
         )
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
@@ -437,6 +442,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/refs",
+            None,
             None,
             post_parameters
         )
@@ -469,6 +475,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/git/tags",
             None,
+            None,
             post_parameters
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
@@ -490,6 +497,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/trees",
+            None,
             None,
             post_parameters
         )
@@ -519,6 +527,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/hooks",
+            None,
             None,
             post_parameters
         )
@@ -554,6 +563,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/issues",
             None,
+            None,
             post_parameters
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
@@ -575,6 +585,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/keys",
             None,
+            None,
             post_parameters
         )
         return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
@@ -595,6 +606,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
+            None,
             None,
             post_parameters
         )
@@ -625,6 +637,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
+            None,
             None,
             post_parameters
         )
@@ -664,6 +677,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/pulls",
             None,
+            None,
             post_parameters
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
@@ -676,6 +690,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url,
+            None,
             None,
             None
         )
@@ -722,6 +737,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -741,6 +757,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             url,
+            None,
             None,
             None
         )
@@ -768,6 +785,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/branches/" + branch,
+            None,
             None,
             None
         )
@@ -808,6 +826,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/comments/" + str(id),
             None,
+            None,
             None
         )
         return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
@@ -834,6 +853,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/commits/" + sha,
+            None,
             None,
             None
         )
@@ -893,6 +913,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/contents" + path,
             url_parameters,
+            None,
             None
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
@@ -913,6 +934,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/contents" + path,
             url_parameters,
+            None,
             None
         )
 
@@ -922,6 +944,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 "GET",
                 headers['location'],
                 url_parameters,
+                None,
                 None
             )
 
@@ -952,6 +975,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/downloads/" + str(id),
+            None,
             None,
             None
         )
@@ -1004,6 +1028,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/git/blobs/" + sha,
             None,
+            None,
             None
         )
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
@@ -1018,6 +1043,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/commits/" + sha,
+            None,
             None,
             None
         )
@@ -1036,6 +1062,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + prefix + ref,
+            None,
             None,
             None
         )
@@ -1064,6 +1091,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/git/tags/" + sha,
             None,
+            None,
             None
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
@@ -1084,6 +1112,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/git/trees/" + sha,
             url_parameters,
+            None,
             None
         )
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
@@ -1098,6 +1127,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/hooks/" + str(id),
+            None,
             None,
             None
         )
@@ -1125,6 +1155,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/issues/" + str(number),
+            None,
             None,
             None
         )
@@ -1217,6 +1248,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/issues/events/" + str(id),
             None,
+            None,
             None
         )
         return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
@@ -1243,6 +1275,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/keys/" + str(id),
+            None,
             None,
             None
         )
@@ -1271,6 +1304,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/labels/" + urllib.quote(name),
             None,
+            None,
             None
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
@@ -1296,6 +1330,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/languages",
             None,
+            None,
             None
         )
         return data
@@ -1310,6 +1345,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/milestones/" + str(number),
+            None,
             None,
             None
         )
@@ -1362,6 +1398,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/pulls/" + str(number),
+            None,
             None,
             None
         )
@@ -1433,6 +1470,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/readme",
             url_parameters,
+            None,
             None
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
@@ -1508,6 +1546,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/assignees/" + assignee._identity,
             None,
+            None,
             None
         )
         return status == 204
@@ -1522,6 +1561,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         status, headers, data = self._requester.requestJson(
             "GET",
             self.url + "/collaborators/" + collaborator._identity,
+            None,
             None,
             None
         )
@@ -1539,6 +1579,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword),
+            None,
             None,
             None
         )
@@ -1568,6 +1609,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/merges",
             None,
+            None,
             post_parameters
         )
         if data is None:
@@ -1585,6 +1627,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/collaborators/" + collaborator._identity,
+            None,
             None,
             None
         )
@@ -1626,6 +1669,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         responseHeaders, output = self._requester.requestMultipartAndCheck(
             "POST",
             "/hub",
+            None,
             None,
             post_parameters,
         )

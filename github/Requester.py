@@ -38,6 +38,7 @@ import base64
 import urllib
 import urlparse
 import sys
+import Consts
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -89,30 +90,26 @@ class Requester:
         The structure of a frame: [requestHeader, statusCode, responseHeader, raw_data]
         Some of them may be None
         '''
-        if not self.DEBUG_FLAG:
-            return
+        if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
+            new_frame = [requestHeader, None, None, None]
+            if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)
+                self._frameBuffer.append(new_frame)
+            else:
+                self._frameBuffer[0] = new_frame  # pragma no cover (Should be covered)
 
-        new_frame = [requestHeader, None, None, None]
-        if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:
-            self._frameBuffer.append(new_frame)
-        else:
-            self._frameBuffer[0] = new_frame
-
-        self._frameCount = len(self._frameBuffer) - 1
+            self._frameCount = len(self._frameBuffer) - 1
 
     def DEBUG_ON_RESPONSE(self, statusCode, responseHeader, data):
         '''
         Update current frame with response
         Current frame index will be attached to responseHeader
         '''
-        if not self.DEBUG_FLAG:
-            return
-
-        self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
-        responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
+        if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
+            self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
+            responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
     def check_me(self, obj):
-        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:
+        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]
@@ -167,17 +164,14 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
-    def requestJsonAndCheck(self, verb, url, parameters, input):
-        return self.__check(*self.requestJson(verb, url, parameters, input))
+    def requestJsonAndCheck(self, verb, url, parameters, headers, input):
+        return self.__check(*self.requestJson(verb, url, parameters, headers, input))
 
-    def requestMultipartAndCheck(self, verb, url, parameters, input):
-        return self.__check(*self.requestMultipart(verb, url, parameters, input))
+    def requestMultipartAndCheck(self, verb, url, parameters, headers, input):
+        return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
-        # Log frame
-        self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
-
         if status >= 400:
             raise self.__createException(status, output)
         return responseHeaders, output
@@ -206,13 +200,13 @@ class Requester:
             except ValueError, e:
                 return {'data': data}
 
-    def requestJson(self, verb, url, parameters, input):
+    def requestJson(self, verb, url, parameters, headers, input):
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(verb, url, parameters, input, encode)
+        return self.__requestEncode(verb, url, parameters, headers, input, encode)
 
-    def requestMultipart(self, verb, url, parameters, input):
+    def requestMultipart(self, verb, url, parameters, headers, input):
         def encode(input):
             boundary = "----------------------------3c3ba8b523b2"
             eol = "\r\n"
@@ -226,14 +220,15 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(verb, url, parameters, input, encode)
+        return self.__requestEncode(verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, verb, url, parameters, input, encode):
+    def __requestEncode(self, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
+        if requestHeaders is None:
+            requestHeaders = dict()
 
-        requestHeaders = dict()
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
 
@@ -255,6 +250,8 @@ class Requester:
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
+
+        self.DEBUG_ON_RESPONSE(status, responseHeaders, output)
 
         return status, responseHeaders, output
 

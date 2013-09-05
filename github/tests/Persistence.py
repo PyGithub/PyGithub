@@ -2,8 +2,6 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,62 +21,34 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
+import github
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
+if Framework.atLeastPython26:
+    from io import BytesIO as IO
+else:
+    from StringIO import StringIO as IO
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-# from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
-from Issue158 import *
-from Issue174 import *
+class Persistence(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.repo = self.g.get_repo("akfish/PyGithub")
 
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
+        self.dumpedRepo = IO()
+        self.g.dump(self.repo, self.dumpedRepo)
+        self.dumpedRepo.seek(0)
+
+    def tearDown(self):
+        self.dumpedRepo.close()
+
+    def testLoad(self):
+        loadedRepo = self.g.load(self.dumpedRepo)
+        self.assertTrue(isinstance(loadedRepo, github.Repository.Repository))
+        self.assertTrue(loadedRepo._requester is self.repo._requester)
+        self.assertTrue(loadedRepo.owner._requester is self.repo._requester)
+        self.assertEqual(loadedRepo.name, "PyGithub")
+        self.assertEqual(loadedRepo.url, "https://api.github.com/repos/akfish/PyGithub")
+
+    def testLoadAndUpdate(self):
+        loadedRepo = self.g.load(self.dumpedRepo)
+        self.assertTrue(loadedRepo.update())

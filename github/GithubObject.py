@@ -27,6 +27,7 @@
 import datetime
 
 import GithubException
+import Consts
 
 
 class _NotSetType:
@@ -51,20 +52,20 @@ class GithubObject(object):
 
     def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
-        # Make sure headers are signed before any operations on attributes
-        # Object creatation requires headers as parameter
-        self._headers = headers;
         self._initAttributes()
-        self._storeAndUseAttributes(attributes)
+        self._storeAndUseAttributes(headers, attributes)
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
-        if (self.CHECK_AFTER_INIT_FLAG):
-            requester.check_me(self);
+        if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
+            requester.check_me(self)
 
-    def _storeAndUseAttributes(self, attributes):
-        self._useAttributes(attributes)
+    def _storeAndUseAttributes(self, headers, attributes):
+        # Make sure headers are assigned before calling _useAttributes
+        # (Some derived classes will use headers in _useAttributes)
+        self._headers = headers
         self._rawData = attributes
+        self._useAttributes(attributes)
 
     @property
     def raw_data(self):
@@ -73,6 +74,14 @@ class GithubObject(object):
         """
         self._completeIfNeeded()
         return self._rawData
+
+    @property
+    def raw_headers(self):
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return self._headers
 
     @staticmethod
     def _parentUrl(url):
@@ -95,6 +104,20 @@ class GithubObject(object):
             return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+
+    @property
+    def etag(self):
+        '''
+        :type str
+        '''
+        return self._headers.get(Consts.RES_ETAG)
+
+    @property
+    def last_modified(self):
+        '''
+        :type str
+        '''
+        return self._headers.get(Consts.RES_LAST_MODIFED)
 
 
 class NonCompletableGithubObject(GithubObject):
@@ -120,8 +143,34 @@ class CompletableGithubObject(GithubObject):
             "GET",
             self._url,
             None,
+            None,
             None
         )
-        self._headers = headers
-        self._storeAndUseAttributes(data)
+        self._storeAndUseAttributes(headers, data)
         self.__completed = True
+
+    def update(self):
+        '''
+        Check and update the object with conditional request
+        :rtype: Boolean value indicating whether the object is changed
+        '''
+        conditionalRequestHeader = dict()
+        if self.etag is not None:
+            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
+        if self.last_modified is not None:
+            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+
+        status, responseHeaders, output = self._requester.requestJson(
+            "GET",
+            self._url,
+            None,
+            conditionalRequestHeader,
+            None
+        )
+        if status == 304:
+            return False
+        else:
+            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            self._storeAndUseAttributes(headers, data)
+            self.__completed = True
+            return True

@@ -204,6 +204,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/labels",
             None,
+            None,
             post_parameters
         )
 
@@ -221,6 +222,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "POST",
             self.url + "/comments",
             None,
+            None,
             post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
@@ -233,6 +235,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels",
+            None,
             None,
             None
         )
@@ -271,6 +274,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -285,6 +289,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id),
+            None,
             None,
             None
         )
@@ -337,6 +342,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url + "/labels/" + label._identity,
             None,
+            None,
             None
         )
 
@@ -351,6 +357,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",
+            None,
             None,
             post_parameters
         )

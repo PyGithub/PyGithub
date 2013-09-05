@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
+
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -21,15 +21,23 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
-GithubCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/developer.github.com/
+# #193: Line endings should be linux style
 
-*.cfg
-*.bat
-*.py~
+# TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013
+# lots of consts in this project are explict
+# should realy round them up and reference them by consts
+# EDIT: well, maybe :-)
+
+################################################################################
+# Request Header                                                               #
+# (Case sensitive)                                                             #
+################################################################################
+REQ_IF_NONE_MATCH = "If-None-Match"
+REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
+
+################################################################################
+# Response Header                                                              #
+# (Lower Case)                                                                 #
+################################################################################
+RES_ETAG = "etag"
+RES_LAST_MODIFED = "last-modified"

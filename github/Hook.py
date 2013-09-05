@@ -115,6 +115,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url,
             None,
+            None,
             None
         )
 
@@ -151,6 +152,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url,
             None,
+            None,
             post_parameters
         )
         self._useAttributes(data)
@@ -163,6 +165,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/tests",
+            None,
             None,
             None
         )

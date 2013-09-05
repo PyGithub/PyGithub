@@ -1,8 +1,8 @@
+# -*- coding: utf-8 -*-
+
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
-# Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -21,15 +21,23 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
-GithubCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/developer.github.com/
+# #193: Line endings should be linux style
 
-*.cfg
-*.bat
-*.py~
+import Framework
+import github
+
+
+class ConditionalRequestUpdate(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.repo = self.g.get_repo("akfish/PyGithub")
+
+    def testDidNotUpdate(self):
+        self.assertFalse(self.repo.update(), msg="The repo is not changes. But update() != False")
+
+    def testDidUpdate(self):
+        self.assertTrue(self.repo.update(), msg="The repo should be changed by now. But update() != True")
+
+    def testUpdateObjectWithoutEtag(self):
+        r = self.g.get_repo("jacquev6/PyGithub")
+        self.assertTrue(r.update())

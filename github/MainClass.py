@@ -26,6 +26,7 @@
 ################################################################################
 
 import urllib
+import pickle
 
 from Requester import Requester
 import AuthenticatedUser
@@ -106,6 +107,7 @@ class Github(object):
                 'GET',
                 '/rate_limit',
                 None,
+                None,
                 None
             )
         return self.__requester.rate_limiting
@@ -120,6 +122,7 @@ class Github(object):
             self.__requester.requestJsonAndCheck(
                 'GET',
                 '/rate_limit',
+                None,
                 None,
                 None
             )
@@ -145,6 +148,7 @@ class Github(object):
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
                 "/users/" + login,
+                None,
                 None,
                 None
             )
@@ -178,6 +182,7 @@ class Github(object):
             "GET",
             "/orgs/" + login,
             None,
+            None,
             None
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
@@ -191,6 +196,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/repos/" + full_name,
+            None,
             None,
             None
         )
@@ -223,6 +229,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gists/" + id,
+            None,
             None,
             None
         )
@@ -286,6 +293,7 @@ class Github(object):
             "GET",
             "/legacy/user/email/" + email,
             None,
+            None,
             None
         )
         return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
@@ -309,6 +317,7 @@ class Github(object):
             "POST",
             "/markdown",
             None,
+            None,
             post_parameters
         )
         return data
@@ -322,6 +331,7 @@ class Github(object):
             "GET",
             "/hooks",
             None,
+            None,
             None
         )
         return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
@@ -334,6 +344,7 @@ class Github(object):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "/gitignore/templates",
+            None,
             None,
             None
         )
@@ -349,16 +360,40 @@ class Github(object):
             "GET",
             "/gitignore/templates/" + name,
             None,
+            None,
             None
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
     def create_from_raw_data(self, klass, raw_data, headers={}):
         """
-        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
+        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
+        and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
+        :param headers: dict
         :rtype: instance of class ``klass``
         """
         return klass(self.__requester, headers, raw_data, completed=True)
+
+    def dump(self, obj, file, protocol=0):
+        """
+        Dumps (pickles) a PyGithub object to a file-like object.
+        Some effort is made to not pickle sensitive informations like the Github credentials used in the :class:`Github` instance.
+        But NO EFFORT is made to remove sensitive information from the object's attributes.
+
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <http://docs.python.org/2.7/library/pickle.html#data-stream-format>`_
+        """
+        pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
+
+    def load(self, f):
+        """
+        Loads (unpickles) a PyGithub object from a file-like object.
+
+        :param f: the file-like object to unpickle from
+        :return: the unpickled object
+        """
+        return self.create_from_raw_data(*pickle.load(f))

@@ -136,6 +136,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             "DELETE",
             self.url,
             None,
+            None,
             None
         )
 
@@ -164,6 +165,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
+            None,
             None,
             post_parameters
         )
