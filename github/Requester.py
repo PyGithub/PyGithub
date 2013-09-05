@@ -177,13 +177,13 @@ class Requester:
         return responseHeaders, output
 
     def __createException(self, status, output):
-        if status == 401 and output["message"] == "Bad credentials":
+        if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
-        elif status == 403 and output["message"].startswith("Missing or invalid User Agent string"):
+        elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
-        elif status == 403 and output["message"].startswith("API Rate Limit Exceeded"):
+        elif status == 403 and output.get("message").startswith("API Rate Limit Exceeded"):
             cls = GithubException.RateLimitExceededException
-        elif status == 404 and output["message"] == "Not Found":
+        elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
         else:
             cls = GithubException.GithubException
