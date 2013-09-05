@@ -43,7 +43,7 @@ class Persistence(Framework.TestCase):
 
     def testLoad(self):
         loadedRepo = self.g.load(self.dumpedRepo)
-        self.assertIsInstance(loadedRepo, github.Repository.Repository)
+        self.assertTrue(isinstance(loadedRepo, github.Repository.Repository))
         self.assertIs(loadedRepo._requester, self.repo._requester)
         self.assertIs(loadedRepo.owner._requester, self.repo._requester)
         self.assertEqual(loadedRepo.name, "PyGithub")
