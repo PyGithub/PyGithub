@@ -7,8 +7,14 @@ Should you have any question, any remark, or if you find a bug, or if there is s
 
 PyGithub is stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
 
+
 What's new?
 ===========
+
+Thank you, dear stargazers!
+---------------------------
+
+Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
 `Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (?? ??th, 2013)
 
