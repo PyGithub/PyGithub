@@ -40,6 +40,8 @@ import github.GithubObject
 import HookDescription
 import GitignoreTemplate
 import Notification
+import Status
+import StatusMessage
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -109,10 +111,7 @@ class Github(object):
         if limit < 0:
             self.__requester.requestJsonAndCheck(
                 'GET',
-                '/rate_limit',
-                None,
-                None,
-                None
+                '/rate_limit'
             )
         return self.__requester.rate_limiting
 
@@ -125,10 +124,7 @@ class Github(object):
         if self.__requester.rate_limiting_resettime == 0:
             self.__requester.requestJsonAndCheck(
                 'GET',
-                '/rate_limit',
-                None,
-                None,
-                None
+                '/rate_limit'
             )
         return self.__requester.rate_limiting_resettime
 
@@ -151,10 +147,7 @@ class Github(object):
         else:
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
-                "/users/" + login,
-                None,
-                None,
-                None
+                "/users/" + login
             )
             return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
@@ -184,10 +177,7 @@ class Github(object):
         assert isinstance(login, (str, unicode)), login
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/orgs/" + login,
-            None,
-            None,
-            None
+            "/orgs/" + login
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
@@ -199,10 +189,7 @@ class Github(object):
         assert isinstance(full_name, (str, unicode)), full_name
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + full_name,
-            None,
-            None,
-            None
+            "/repos/" + full_name
         )
         return Repository.Repository(self.__requester, headers, data, completed=True)
 
@@ -232,10 +219,7 @@ class Github(object):
         assert isinstance(id, (str, unicode)), id
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gists/" + id,
-            None,
-            None,
-            None
+            "/gists/" + id
         )
         return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
@@ -295,10 +279,7 @@ class Github(object):
         assert isinstance(email, (str, unicode)), email
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/legacy/user/email/" + email,
-            None,
-            None,
-            None
+            "/legacy/user/email/" + email
         )
         return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
@@ -320,9 +301,7 @@ class Github(object):
         status, headers, data = self.__requester.requestJson(
             "POST",
             "/markdown",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return data
 
@@ -333,10 +312,7 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/hooks",
-            None,
-            None,
-            None
+            "/hooks"
         )
         return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
 
@@ -347,10 +323,7 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates",
-            None,
-            None,
-            None
+            "/gitignore/templates"
         )
         return data
 
@@ -362,10 +335,7 @@ class Github(object):
         assert isinstance(name, (str, unicode)), name
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates/" + name,
-            None,
-            None,
-            None
+            "/gitignore/templates/" + name
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
@@ -401,3 +371,45 @@ class Github(object):
         :return: the unpickled object
         """
         return self.create_from_raw_data(*pickle.load(f))
+
+    def get_api_status(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/status.json <https://status.github.com/api>`_
+        :rtype: :class:`github.Status.Status`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/status.json",
+            cnx="status"
+        )
+        return Status.Status(self.__requester, headers, attributes, completed=True)
+
+    def get_last_api_status_message(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/last-message.json <https://status.github.com/api>`_
+        :rtype: :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/last-message.json",
+            cnx="status"
+        )
+        return StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True)
+
+    def get_api_status_messages(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/messages.json <https://status.github.com/api>`_
+        :rtype: list of :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/messages.json",
+            cnx="status"
+        )
+        return [StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True) for attributes in data]

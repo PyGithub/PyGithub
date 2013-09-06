@@ -113,10 +113,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
@@ -151,9 +148,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -164,10 +159,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/tests",
-            None,
-            None,
-            None
+            self.url + "/tests"
         )
 
     def _initAttributes(self):

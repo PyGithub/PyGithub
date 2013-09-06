@@ -2,8 +2,6 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,63 +21,23 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
+import github
+import datetime
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-# from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
-from Issue158 import *
-from Issue174 import *
 
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
+class Status(Framework.TestCase):
+    def testGetStatus(self):
+        status = self.g.get_api_status()
+        self.assertEqual(status.status, "good")
+        self.assertEqual(status.last_updated, datetime.datetime(2013, 9, 6, 8, 29, 27))
+
+    def testGetLastMessage(self):
+        message = self.g.get_last_api_status_message()
+        self.assertEqual(message.status, "good")
+        self.assertEqual(message.body, "Everything operating normally.")
+        self.assertEqual(message.created_on, datetime.datetime(2013, 9, 1, 15, 41, 46))
+
+    def testGetMessages(self):
+        self.assertListKeyEqual(self.g.get_api_status_messages(), lambda m: m.status, ["good", "minor", "good", "minor", "good", "minor", "good", "minor", "good", "major", "good", "minor"])

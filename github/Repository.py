@@ -317,10 +317,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/collaborators/" + collaborator._identity,
-            None,
-            None,
-            None
+            self.url + "/collaborators/" + collaborator._identity
         )
 
     def compare(self, base, head):
@@ -334,10 +331,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(head, (str, unicode)), head
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/compare/" + base + "..." + head,
-            None,
-            None,
-            None
+            self.url + "/compare/" + base + "..." + head
         )
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
@@ -365,9 +359,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/downloads",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Download.Download(self._requester, headers, data, completed=True)
 
@@ -387,9 +379,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/blobs",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -420,9 +410,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/commits",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
@@ -442,9 +430,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/refs",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -474,9 +460,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/tags",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -497,9 +481,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/git/trees",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
@@ -527,9 +509,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/hooks",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -562,9 +542,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/issues",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -584,9 +562,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/keys",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
@@ -606,9 +582,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -637,9 +611,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
@@ -676,9 +648,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/pulls",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
@@ -689,10 +659,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def edit(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, public=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
@@ -736,9 +703,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -756,10 +721,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url += "/" + ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            url,
-            None,
-            None,
-            None
+            url
         )
         return headers["location"]
 
@@ -784,10 +746,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(branch, (str, unicode)), branch
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/branches/" + branch,
-            None,
-            None,
-            None
+            self.url + "/branches/" + branch
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -824,10 +783,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/comments/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/comments/" + str(id)
         )
         return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
@@ -852,10 +808,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/commits/" + sha,
-            None,
-            None,
-            None
+            self.url + "/commits/" + sha
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
@@ -912,9 +865,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/contents" + path,
-            url_parameters,
-            None,
-            None
+            parameters=url_parameters
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
@@ -933,9 +884,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/contents" + path,
-            url_parameters,
-            None,
-            None
+            parameters=url_parameters
         )
 
         # Handle 302 redirect response
@@ -943,9 +892,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
                 headers['location'],
-                url_parameters,
-                None,
-                None
+                parameters=url_parameters
             )
 
         return [
@@ -974,10 +921,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/downloads/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/downloads/" + str(id)
         )
         return github.Download.Download(self._requester, headers, data, completed=True)
 
@@ -1026,10 +970,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/git/blobs/" + sha,
-            None,
-            None,
-            None
+            self.url + "/git/blobs/" + sha
         )
         return github.GitBlob.GitBlob(self._requester, headers, data, completed=True)
 
@@ -1042,10 +983,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/git/commits/" + sha,
-            None,
-            None,
-            None
+            self.url + "/git/commits/" + sha
         )
         return github.GitCommit.GitCommit(self._requester, headers, data, completed=True)
 
@@ -1061,10 +999,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(ref, (str, unicode)), ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + prefix + ref,
-            None,
-            None,
-            None
+            self.url + prefix + ref
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
@@ -1089,10 +1024,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/git/tags/" + sha,
-            None,
-            None,
-            None
+            self.url + "/git/tags/" + sha
         )
         return github.GitTag.GitTag(self._requester, headers, data, completed=True)
 
@@ -1111,9 +1043,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/git/trees/" + sha,
-            url_parameters,
-            None,
-            None
+            parameters=url_parameters
         )
         return github.GitTree.GitTree(self._requester, headers, data, completed=True)
 
@@ -1126,10 +1056,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/hooks/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/hooks/" + str(id)
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
@@ -1154,10 +1081,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/issues/" + str(number),
-            None,
-            None,
-            None
+            self.url + "/issues/" + str(number)
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
@@ -1246,10 +1170,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/issues/events/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/issues/events/" + str(id)
         )
         return github.IssueEvent.IssueEvent(self._requester, headers, data, completed=True)
 
@@ -1274,10 +1195,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/keys/" + str(id),
-            None,
-            None,
-            None
+            self.url + "/keys/" + str(id)
         )
         return github.RepositoryKey.RepositoryKey(self._requester, headers, data, completed=True, repoUrl=self._url)
 
@@ -1302,10 +1220,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/labels/" + urllib.quote(name),
-            None,
-            None,
-            None
+            self.url + "/labels/" + urllib.quote(name)
         )
         return github.Label.Label(self._requester, headers, data, completed=True)
 
@@ -1328,10 +1243,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/languages",
-            None,
-            None,
-            None
+            self.url + "/languages"
         )
         return data
 
@@ -1344,10 +1256,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/milestones/" + str(number),
-            None,
-            None,
-            None
+            self.url + "/milestones/" + str(number)
         )
         return github.Milestone.Milestone(self._requester, headers, data, completed=True)
 
@@ -1397,10 +1306,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(number, (int, long)), number
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/pulls/" + str(number),
-            None,
-            None,
-            None
+            self.url + "/pulls/" + str(number)
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
@@ -1469,9 +1375,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/readme",
-            url_parameters,
-            None,
-            None
+            parameters=url_parameters
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
@@ -1544,10 +1448,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(assignee, github.NamedUser.NamedUser), assignee
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/assignees/" + assignee._identity,
-            None,
-            None,
-            None
+            self.url + "/assignees/" + assignee._identity
         )
         return status == 204
 
@@ -1560,10 +1461,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/collaborators/" + collaborator._identity,
-            None,
-            None,
-            None
+            self.url + "/collaborators/" + collaborator._identity
         )
         return status == 204
 
@@ -1578,10 +1476,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(keyword, (str, unicode)), keyword
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword),
-            None,
-            None,
-            None
+            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword)
         )
         return [
             github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
@@ -1608,9 +1503,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/merges",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         if data is None:
             return None
@@ -1626,10 +1519,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/collaborators/" + collaborator._identity,
-            None,
-            None,
-            None
+            self.url + "/collaborators/" + collaborator._identity
         )
 
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
@@ -1669,9 +1559,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         responseHeaders, output = self._requester.requestMultipartAndCheck(
             "POST",
             "/hub",
-            None,
-            None,
-            post_parameters,
+            input=post_parameters
         )
 
     @property

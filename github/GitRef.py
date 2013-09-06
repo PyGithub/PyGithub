@@ -65,10 +65,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def edit(self, sha, force=github.GithubObject.NotSet):
@@ -88,9 +85,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 

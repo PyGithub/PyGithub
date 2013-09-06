@@ -130,9 +130,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.CommitComment.CommitComment(self._requester, headers, data, completed=True)
 
@@ -157,9 +155,7 @@ class Commit(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
 

@@ -2,8 +2,6 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,63 +21,36 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import github.GithubObject
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-# from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
-from Issue158 import *
-from Issue174 import *
+class Status(github.GithubObject.NonCompletableGithubObject):
+    """
+    This class represents status as defined in https://status.github.com/api
+    """
 
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
+    @property
+    def status(self):
+        """
+        :type: string
+        """
+        return self._NoneIfNotSet(self._status)
+
+    @property
+    def last_updated(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._NoneIfNotSet(self._last_updated)
+
+    def _initAttributes(self):
+        self._status = github.GithubObject.NotSet
+        self._last_updated = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "status" in attributes:  # pragma no branch
+            assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
+            self._status = attributes["status"]
+        if "last_updated" in attributes:  # pragma no branch
+            assert attributes["last_updated"] is None or isinstance(attributes["last_updated"], (str, unicode)), attributes["last_updated"]
+            self._last_updated = self._parseDatetime(attributes["last_updated"])

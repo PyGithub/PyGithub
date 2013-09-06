@@ -203,9 +203,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
 
     def create_comment(self, body):
@@ -221,9 +219,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -234,10 +230,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels",
-            None,
-            None,
-            None
+            self.url + "/labels"
         )
 
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
@@ -273,9 +266,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -288,10 +279,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self.url) + "/comments/" + str(id),
-            None,
-            None,
-            None
+            self._parentUrl(self.url) + "/comments/" + str(id)
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -340,10 +328,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert isinstance(label, github.Label.Label), label
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels/" + label._identity,
-            None,
-            None,
-            None
+            self.url + "/labels/" + label._identity
         )
 
     def set_labels(self, *labels):
@@ -357,9 +342,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",
-            None,
-            None,
-            post_parameters
+            input=post_parameters
         )
 
     @property

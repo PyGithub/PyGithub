@@ -199,10 +199,7 @@ class Download(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None,
-            None
+            self.url
         )
 
     def _initAttributes(self):
