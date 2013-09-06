@@ -29,6 +29,7 @@ if Framework.atLeastPython26:
 else:
     from StringIO import StringIO as IO
 
+
 class Persistence(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)

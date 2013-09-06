@@ -93,8 +93,12 @@ class Github(object):
     def __set_per_page(self, value):
         self.__requester.per_page = value
 
+    # v2: Remove this property? Why should it be necessary to read/modify it after construction
     per_page = property(__get_per_page, __set_per_page)
 
+    # v2: Provide a unified way to access values of headers of last response
+    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -325,7 +329,7 @@ class Github(object):
     def get_hooks(self):
         """
         :calls: `GET /hooks <http://developer.github.com/>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDescription.HookDescription`
+        :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
