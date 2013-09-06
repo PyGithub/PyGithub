@@ -40,6 +40,8 @@ import github.GithubObject
 import HookDescription
 import GitignoreTemplate
 import Notification
+import Status
+import StatusMessage
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -369,3 +371,45 @@ class Github(object):
         :return: the unpickled object
         """
         return self.create_from_raw_data(*pickle.load(f))
+
+    def get_api_status(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/status.json <https://status.github.com/api>`_
+        :rtype: :class:`github.Status.Status`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/status.json",
+            cnx="status"
+        )
+        return Status.Status(self.__requester, headers, attributes, completed=True)
+
+    def get_last_api_status_message(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/last-message.json <https://status.github.com/api>`_
+        :rtype: :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/last-message.json",
+            cnx="status"
+        )
+        return StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True)
+
+    def get_api_status_messages(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/messages.json <https://status.github.com/api>`_
+        :rtype: list of :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/messages.json",
+            cnx="status"
+        )
+        return [StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True) for attributes in data]

@@ -164,8 +164,8 @@ class Requester:
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
 
-    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input))
+    def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
+        return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
 
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
@@ -200,11 +200,11 @@ class Requester:
             except ValueError, e:
                 return {'data': data}
 
-    def requestJson(self, verb, url, parameters=None, headers=None, input=None):
+    def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         def encode(input):
             return "application/json", json.dumps(input)
 
-        return self.__requestEncode(verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(cnx, verb, url, parameters, headers, input, encode)
 
     def requestMultipart(self, verb, url, parameters=None, headers=None, input=None):
         def encode(input):
@@ -220,9 +220,9 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
-        return self.__requestEncode(verb, url, parameters, headers, input, encode)
+        return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
-    def __requestEncode(self, verb, url, parameters, requestHeaders, input, encode):
+    def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
             parameters = dict()
@@ -241,7 +241,7 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(verb, url, requestHeaders, encoded_input)
+        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
             self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
@@ -255,8 +255,12 @@ class Requester:
 
         return status, responseHeaders, output
 
-    def __requestRaw(self, verb, url, requestHeaders, input):
-        cnx = self.__createConnection()
+    def __requestRaw(self, cnx, verb, url, requestHeaders, input):
+        if cnx is None:
+            cnx = self.__createConnection()
+        else:
+            assert cnx == "status"
+            cnx = self.__httpsConnectionClass("status.github.com", 443)
         cnx.request(
             verb,
             url,
@@ -310,7 +314,7 @@ class Requester:
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
-        return self.__connectionClass(host=self.__hostname, port=self.__port, **kwds)
+        return self.__connectionClass(self.__hostname, self.__port, **kwds)
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
