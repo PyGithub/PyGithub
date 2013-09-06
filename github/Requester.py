@@ -324,4 +324,6 @@ class Requester:
                     requestHeaders["Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
                     requestHeaders["Authorization"] = "token (oauth token removed)"
+                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
+                    requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
             logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
