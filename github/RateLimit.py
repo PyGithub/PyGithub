@@ -2,8 +2,6 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,63 +21,26 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import github.GithubObject
+import github.Rate
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
+class RateLimit(github.GithubObject.NonCompletableGithubObject):
+    """
+    This class represents rate limits as defined in http://developer.github.com/v3/rate_limit
+    """
 
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
+    @property
+    def rate(self):
+        """
+        :type: class:`github.Rate.Rate`
+        """
+        return self._NoneIfNotSet(self._rate)
+
+    def _initAttributes(self):
+        self._rate = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "rate" in attributes:  # pragma no branch
+            assert attributes["rate"] is None or isinstance(attributes["rate"], dict), attributes["rate"]
+            self._rate = None if attributes["rate"] is None else github.Rate.Rate(self._requester, self._headers, attributes["rate"], completed=False)

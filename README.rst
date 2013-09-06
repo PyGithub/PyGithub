@@ -24,6 +24,7 @@ Starting today (September 05th, 2013), we now need more than 8 bits to store the
 * Implement ``Github.get_repos`` to get all public repositories
 * Implement ``NamedUser.has_in_following``
 * `Implement <https://github.com/jacquev6/PyGithub/issues/188>`_ ``Github.get_api_status``, ``Github.get_last_api_status_message`` and ``Github.get_api_status_messages``. Thank you `ruxandraburtica <https://github.com/ruxandraburtica>`_ for asking
+* Implement ``Github.get_rate_limit``
 * Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
 * Use the new URL to fork gists (minor change)
 * Use the new URL to test hooks (minor change)
@@ -52,10 +53,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/notifications/threads/:id/subscription`` (DELETE)
 * ``/notifications/threads/:id/subscription`` (GET)
 * ``/notifications/threads/:id/subscription`` (PUT)
-* ``/rate_limit`` (GET)
-
-  * should be called in method ``Github.get_rate_limit``. See also ``Github.rate_limiting``
-
 * ``/repos/:owner/:repo/contents/:path`` (DELETE)
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
 * ``/repos/:owner/:repo/notifications`` (GET)

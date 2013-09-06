@@ -42,6 +42,7 @@ import GitignoreTemplate
 import Notification
 import Status
 import StatusMessage
+import RateLimit
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -109,10 +110,7 @@ class Github(object):
         """
         remaining, limit = self.__requester.rate_limiting
         if limit < 0:
-            self.__requester.requestJsonAndCheck(
-                'GET',
-                '/rate_limit'
-            )
+            self.get_rate_limit()
         return self.__requester.rate_limiting
 
     @property
@@ -122,11 +120,21 @@ class Github(object):
         :type: int
         """
         if self.__requester.rate_limiting_resettime == 0:
-            self.__requester.requestJsonAndCheck(
-                'GET',
-                '/rate_limit'
-            )
+            self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
+
+    def get_rate_limit(self):
+        """
+        Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
+
+        :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit/>`_
+        :rtype: :class:`github.RateLimit.RateLimit`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            'GET',
+            '/rate_limit'
+        )
+        return RateLimit.RateLimit(self.__requester, headers, attributes, True)
 
     @property
     def oauth_scopes(self):

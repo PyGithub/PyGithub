@@ -2,8 +2,6 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,63 +21,48 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import github.GithubObject
+import datetime
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
+class Rate(github.GithubObject.NonCompletableGithubObject):
+    """
+    This class represents rate limits as defined in http://developer.github.com/v3/rate_limit
+    """
 
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
+    @property
+    def limit(self):
+        """
+        :type: integer
+        """
+        return self._NoneIfNotSet(self._limit)
+
+    @property
+    def remaining(self):
+        """
+        :type: integer
+        """
+        return self._NoneIfNotSet(self._remaining)
+
+    @property
+    def reset(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._NoneIfNotSet(self._reset)
+
+    def _initAttributes(self):
+        self._limit = github.GithubObject.NotSet
+        self._remaining = github.GithubObject.NotSet
+        self._reset = github.GithubObject.NotSet
+
+    def _useAttributes(self, attributes):
+        if "limit" in attributes:  # pragma no branch
+            assert attributes["limit"] is None or isinstance(attributes["limit"], (int, long)), attributes["limit"]
+            self._limit = attributes["limit"]
+        if "remaining" in attributes:  # pragma no branch
+            assert attributes["remaining"] is None or isinstance(attributes["remaining"], (int, long)), attributes["remaining"]
+            self._remaining = attributes["remaining"]
+        if "reset" in attributes:  # pragma no branch
+            assert attributes["reset"] is None or isinstance(attributes["reset"], (int, long)), attributes["reset"]
+            self._reset = datetime.datetime.fromtimestamp(attributes["reset"])
