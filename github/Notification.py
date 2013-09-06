@@ -44,6 +44,14 @@ class Notification(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._id)
 
     @property
+    def last_read_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._last_read_at)
+        return self._NoneIfNotSet(self._last_read_at)
+
+    @property
     def repository(self):
         """
         :type: :class:`github.Repository.Repository`
@@ -66,6 +74,14 @@ class Notification(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._reason)
         return self._NoneIfNotSet(self._reason)
+
+    @property
+    def subscription_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._subscription_url)
+        return self._NoneIfNotSet(self._subscription_url)
 
     @property
     def unread(self):
@@ -93,8 +109,10 @@ class Notification(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
+        self._last_read_at = github.GithubObject.NotSet
         self._repository = github.GithubObject.NotSet
         self._reason = github.GithubObject.NotSet
+        self._subscription_url = github.GithubObject.NotSet
         self._unread = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -103,6 +121,9 @@ class Notification(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (str, unicode)), attributes["id"]
             self._id = attributes["id"]
+        if "last_read_at" in attributes:  # pragma no branch
+            assert attributes["last_read_at"] is None or isinstance(attributes["last_read_at"], (str, unicode)), attributes["last_read_at"]
+            self._last_read_at = self._parseDatetime(attributes["last_read_at"])
         if "repository" in attributes:  # pragma no branch
             assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
             self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False)
@@ -112,6 +133,9 @@ class Notification(github.GithubObject.CompletableGithubObject):
         if "reason" in attributes:  # pragma no branch
             assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
             self._reason = attributes["reason"]
+        if "subscription_url" in attributes:  # pragma no branch
+            assert attributes["subscription_url"] is None or isinstance(attributes["subscription_url"], (str, unicode)), attributes["subscription_url"]
+            self._subscription_url = attributes["subscription_url"]
         if "unread" in attributes:  # pragma no branch
             assert attributes["unread"] is None or isinstance(attributes["unread"], bool), attributes["unread"]
             self._unread = attributes["unread"]

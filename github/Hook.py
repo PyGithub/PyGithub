@@ -91,6 +91,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._name)
 
     @property
+    def test_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._test_url)
+        return self._NoneIfNotSet(self._test_url)
+
+    @property
     def updated_at(self):
         """
         :type: datetime.datetime
@@ -170,6 +178,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._last_response = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._test_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
@@ -195,6 +204,9 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
+        if "test_url" in attributes:  # pragma no branch
+            assert attributes["test_url"] is None or isinstance(attributes["test_url"], (str, unicode)), attributes["test_url"]
+            self._test_url = attributes["test_url"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])

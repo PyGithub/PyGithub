@@ -85,12 +85,28 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._comments)
 
     @property
+    def comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._comments_url)
+        return self._NoneIfNotSet(self._comments_url)
+
+    @property
     def created_at(self):
         """
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
         return self._NoneIfNotSet(self._created_at)
+
+    @property
+    def events_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._events_url)
+        return self._NoneIfNotSet(self._events_url)
 
     @property
     def html_url(self):
@@ -115,6 +131,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._labels)
         return self._NoneIfNotSet(self._labels)
+
+    @property
+    def labels_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._labels_url)
+        return self._NoneIfNotSet(self._labels_url)
 
     @property
     def milestone(self):
@@ -355,10 +379,13 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._closed_at = github.GithubObject.NotSet
         self._closed_by = github.GithubObject.NotSet
         self._comments = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
+        self._events_url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._labels = github.GithubObject.NotSet
+        self._labels_url = github.GithubObject.NotSet
         self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._pull_request = github.GithubObject.NotSet
@@ -385,9 +412,15 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
+        if "comments_url" in attributes:  # pragma no branch
+            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
+            self._comments_url = attributes["comments_url"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
+        if "events_url" in attributes:  # pragma no branch
+            assert attributes["events_url"] is None or isinstance(attributes["events_url"], (str, unicode)), attributes["events_url"]
+            self._events_url = attributes["events_url"]
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
@@ -400,6 +433,9 @@ class Issue(github.GithubObject.CompletableGithubObject):
                 github.Label.Label(self._requester, self._headers, element, completed=False)
                 for element in attributes["labels"]
             ]
+        if "labels_url" in attributes:  # pragma no branch
+            assert attributes["labels_url"] is None or isinstance(attributes["labels_url"], (str, unicode)), attributes["labels_url"]
+            self._labels_url = attributes["labels_url"]
         if "milestone" in attributes:  # pragma no branch
             assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
             self._milestone = None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, self._headers, attributes["milestone"], completed=False)

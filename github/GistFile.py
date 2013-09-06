@@ -67,12 +67,20 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         """
         return self._NoneIfNotSet(self._size)
 
+    @property
+    def type(self):
+        """
+        :type: string
+        """
+        return self._NoneIfNotSet(self._type)
+
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._language = github.GithubObject.NotSet
         self._raw_url = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
+        self._type = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
@@ -90,3 +98,6 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         if "size" in attributes:  # pragma no branch
             assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
             self._size = attributes["size"]
+        if "type" in attributes:  # pragma no branch
+            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
+            self._type = attributes["type"]

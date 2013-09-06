@@ -52,6 +52,14 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._committer)
 
     @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._NoneIfNotSet(self._html_url)
+
+    @property
     def message(self):
         """
         :type: string
@@ -98,6 +106,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._author = github.GithubObject.NotSet
         self._committer = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._parents = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -111,6 +120,9 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
             self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["committer"], completed=False)
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
         if "message" in attributes:  # pragma no branch
             assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
             self._message = attributes["message"]

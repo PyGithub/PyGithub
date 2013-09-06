@@ -92,6 +92,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._html_url)
 
     @property
+    def merge_base_commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
+        self._completeIfNotSet(self._merge_base_commit)
+        return self._NoneIfNotSet(self._merge_base_commit)
+
+    @property
     def patch_url(self):
         """
         :type: string
@@ -139,6 +147,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         self._diff_url = github.GithubObject.NotSet
         self._files = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._merge_base_commit = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
         self._permalink_url = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
@@ -173,6 +182,9 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
+        if "merge_base_commit" in attributes:  # pragma no branch
+            assert attributes["merge_base_commit"] is None or isinstance(attributes["merge_base_commit"], dict), attributes["merge_base_commit"]
+            self._merge_base_commit = None if attributes["merge_base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["merge_base_commit"], completed=False)
         if "patch_url" in attributes:  # pragma no branch
             assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
             self._patch_url = attributes["patch_url"]

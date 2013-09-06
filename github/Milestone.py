@@ -88,6 +88,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._id)
 
     @property
+    def labels_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._labels_url)
+        return self._NoneIfNotSet(self._labels_url)
+
+    @property
     def number(self):
         """
         :type: integer
@@ -118,6 +126,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._title)
         return self._NoneIfNotSet(self._title)
+
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
@@ -189,10 +205,12 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         self._description = github.GithubObject.NotSet
         self._due_on = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._labels_url = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._open_issues = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -214,6 +232,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
+        if "labels_url" in attributes:  # pragma no branch
+            assert attributes["labels_url"] is None or isinstance(attributes["labels_url"], (str, unicode)), attributes["labels_url"]
+            self._labels_url = attributes["labels_url"]
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
@@ -226,6 +247,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if "title" in attributes:  # pragma no branch
             assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
             self._title = attributes["title"]
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

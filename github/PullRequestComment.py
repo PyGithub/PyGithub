@@ -61,6 +61,14 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._created_at)
 
     @property
+    def diff_hunk(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._diff_hunk)
+        return self._NoneIfNotSet(self._diff_hunk)
+
+    @property
     def id(self):
         """
         :type: integer
@@ -99,6 +107,14 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._position)
         return self._NoneIfNotSet(self._position)
+
+    @property
+    def pull_request_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._pull_request_url)
+        return self._NoneIfNotSet(self._pull_request_url)
 
     @property
     def updated_at(self):
@@ -163,11 +179,13 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
+        self._diff_hunk = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._original_commit_id = github.GithubObject.NotSet
         self._original_position = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._position = github.GithubObject.NotSet
+        self._pull_request_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -183,6 +201,9 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
+        if "diff_hunk" in attributes:  # pragma no branch
+            assert attributes["diff_hunk"] is None or isinstance(attributes["diff_hunk"], (str, unicode)), attributes["diff_hunk"]
+            self._diff_hunk = attributes["diff_hunk"]
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
@@ -198,6 +219,9 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         if "position" in attributes:  # pragma no branch
             assert attributes["position"] is None or isinstance(attributes["position"], (int, long)), attributes["position"]
             self._position = attributes["position"]
+        if "pull_request_url" in attributes:  # pragma no branch
+            assert attributes["pull_request_url"] is None or isinstance(attributes["pull_request_url"], (str, unicode)), attributes["pull_request_url"]
+            self._pull_request_url = attributes["pull_request_url"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])

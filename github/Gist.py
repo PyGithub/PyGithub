@@ -48,6 +48,22 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._comments)
 
     @property
+    def comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._comments_url)
+        return self._NoneIfNotSet(self._comments_url)
+
+    @property
+    def commits_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._commits_url)
+        return self._NoneIfNotSet(self._commits_url)
+
+    @property
     def created_at(self):
         """
         :type: datetime.datetime
@@ -86,6 +102,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._forks)
         return self._NoneIfNotSet(self._forks)
+
+    @property
+    def forks_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._forks_url)
+        return self._NoneIfNotSet(self._forks_url)
 
     @property
     def git_pull_url(self):
@@ -276,11 +300,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._comments = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
+        self._commits_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._files = github.GithubObject.NotSet
         self._fork_of = github.GithubObject.NotSet
         self._forks = github.GithubObject.NotSet
+        self._forks_url = github.GithubObject.NotSet
         self._git_pull_url = github.GithubObject.NotSet
         self._git_push_url = github.GithubObject.NotSet
         self._history = github.GithubObject.NotSet
@@ -295,6 +322,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
+        if "comments_url" in attributes:  # pragma no branch
+            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
+            self._comments_url = attributes["comments_url"]
+        if "commits_url" in attributes:  # pragma no branch
+            assert attributes["commits_url"] is None or isinstance(attributes["commits_url"], (str, unicode)), attributes["commits_url"]
+            self._commits_url = attributes["commits_url"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
@@ -313,9 +346,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "forks" in attributes:  # pragma no branch
             assert attributes["forks"] is None or all(isinstance(element, dict) for element in attributes["forks"]), attributes["forks"]
             self._forks = None if attributes["forks"] is None else [
-                Gist(self._requester, element, completed=False)
+                Gist(self._requester, self._headers, element, completed=False)
                 for element in attributes["forks"]
             ]
+        if "forks_url" in attributes:  # pragma no branch
+            assert attributes["forks_url"] is None or isinstance(attributes["forks_url"], (str, unicode)), attributes["forks_url"]
+            self._forks_url = attributes["forks_url"]
         if "git_pull_url" in attributes:  # pragma no branch
             assert attributes["git_pull_url"] is None or isinstance(attributes["git_pull_url"], (str, unicode)), attributes["git_pull_url"]
             self._git_pull_url = attributes["git_pull_url"]

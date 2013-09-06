@@ -60,6 +60,14 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._id)
 
     @property
+    def issue_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._issue_url)
+        return self._NoneIfNotSet(self._issue_url)
+
+    @property
     def updated_at(self):
         """
         :type: datetime.datetime
@@ -122,6 +130,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._issue_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -137,6 +146,9 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
+        if "issue_url" in attributes:  # pragma no branch
+            assert attributes["issue_url"] is None or isinstance(attributes["issue_url"], (str, unicode)), attributes["issue_url"]
+            self._issue_url = attributes["issue_url"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])

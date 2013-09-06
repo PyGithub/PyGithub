@@ -100,12 +100,28 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._comments)
 
     @property
+    def comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._comments_url)
+        return self._NoneIfNotSet(self._comments_url)
+
+    @property
     def commits(self):
         """
         :type: integer
         """
         self._completeIfNotSet(self._commits)
         return self._NoneIfNotSet(self._commits)
+
+    @property
+    def commits_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._commits_url)
+        return self._NoneIfNotSet(self._commits_url)
 
     @property
     def created_at(self):
@@ -164,12 +180,28 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._issue_url)
 
     @property
+    def merge_commit_sha(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._merge_commit_sha)
+        return self._NoneIfNotSet(self._merge_commit_sha)
+
+    @property
     def mergeable(self):
         """
         :type: bool
         """
         self._completeIfNotSet(self._mergeable)
         return self._NoneIfNotSet(self._mergeable)
+
+    @property
+    def mergeable_state(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._mergeable_state)
+        return self._NoneIfNotSet(self._mergeable_state)
 
     @property
     def merged(self):
@@ -196,6 +228,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._merged_by)
 
     @property
+    def milestone(self):
+        """
+        :type: :class:`github.Milestone.Milestone`
+        """
+        self._completeIfNotSet(self._milestone)
+        return self._NoneIfNotSet(self._milestone)
+
+    @property
     def number(self):
         """
         :type: integer
@@ -212,12 +252,28 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._patch_url)
 
     @property
+    def review_comment_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._review_comment_url)
+        return self._NoneIfNotSet(self._review_comment_url)
+
+    @property
     def review_comments(self):
         """
         :type: integer
         """
         self._completeIfNotSet(self._review_comments)
         return self._NoneIfNotSet(self._review_comments)
+
+    @property
+    def review_comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._review_comments_url)
+        return self._NoneIfNotSet(self._review_comments_url)
 
     @property
     def state(self):
@@ -463,7 +519,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._changed_files = github.GithubObject.NotSet
         self._closed_at = github.GithubObject.NotSet
         self._comments = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
         self._commits = github.GithubObject.NotSet
+        self._commits_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._diff_url = github.GithubObject.NotSet
@@ -471,13 +529,18 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._issue_url = github.GithubObject.NotSet
+        self._merge_commit_sha = github.GithubObject.NotSet
         self._mergeable = github.GithubObject.NotSet
+        self._mergeable_state = github.GithubObject.NotSet
         self._merged = github.GithubObject.NotSet
         self._merged_at = github.GithubObject.NotSet
         self._merged_by = github.GithubObject.NotSet
+        self._milestone = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
+        self._review_comment_url = github.GithubObject.NotSet
         self._review_comments = github.GithubObject.NotSet
+        self._review_comments_url = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
@@ -506,9 +569,15 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
+        if "comments_url" in attributes:  # pragma no branch
+            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
+            self._comments_url = attributes["comments_url"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or isinstance(attributes["commits"], (int, long)), attributes["commits"]
             self._commits = attributes["commits"]
+        if "commits_url" in attributes:  # pragma no branch
+            assert attributes["commits_url"] is None or isinstance(attributes["commits_url"], (str, unicode)), attributes["commits_url"]
+            self._commits_url = attributes["commits_url"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
@@ -530,9 +599,15 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "issue_url" in attributes:  # pragma no branch
             assert attributes["issue_url"] is None or isinstance(attributes["issue_url"], (str, unicode)), attributes["issue_url"]
             self._issue_url = attributes["issue_url"]
+        if "merge_commit_sha" in attributes:  # pragma no branch
+            assert attributes["merge_commit_sha"] is None or isinstance(attributes["merge_commit_sha"], (str, unicode)), attributes["merge_commit_sha"]
+            self._merge_commit_sha = attributes["merge_commit_sha"]
         if "mergeable" in attributes:  # pragma no branch
             assert attributes["mergeable"] is None or isinstance(attributes["mergeable"], bool), attributes["mergeable"]
             self._mergeable = attributes["mergeable"]
+        if "mergeable_state" in attributes:  # pragma no branch
+            assert attributes["mergeable_state"] is None or isinstance(attributes["mergeable_state"], (str, unicode)), attributes["mergeable_state"]
+            self._mergeable_state = attributes["mergeable_state"]
         if "merged" in attributes:  # pragma no branch
             assert attributes["merged"] is None or isinstance(attributes["merged"], bool), attributes["merged"]
             self._merged = attributes["merged"]
@@ -542,15 +617,24 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "merged_by" in attributes:  # pragma no branch
             assert attributes["merged_by"] is None or isinstance(attributes["merged_by"], dict), attributes["merged_by"]
             self._merged_by = None if attributes["merged_by"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["merged_by"], completed=False)
+        if "milestone" in attributes:  # pragma no branch
+            assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
+            self._milestone = None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, self._headers, attributes["milestone"], completed=False)
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
         if "patch_url" in attributes:  # pragma no branch
             assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
             self._patch_url = attributes["patch_url"]
+        if "review_comment_url" in attributes:  # pragma no branch
+            assert attributes["review_comment_url"] is None or isinstance(attributes["review_comment_url"], (str, unicode)), attributes["review_comment_url"]
+            self._review_comment_url = attributes["review_comment_url"]
         if "review_comments" in attributes:  # pragma no branch
             assert attributes["review_comments"] is None or isinstance(attributes["review_comments"], (int, long)), attributes["review_comments"]
             self._review_comments = attributes["review_comments"]
+        if "review_comments_url" in attributes:  # pragma no branch
+            assert attributes["review_comments_url"] is None or isinstance(attributes["review_comments_url"], (str, unicode)), attributes["review_comments_url"]
+            self._review_comments_url = attributes["review_comments_url"]
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
             self._state = attributes["state"]

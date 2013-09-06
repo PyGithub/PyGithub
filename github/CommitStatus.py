@@ -83,6 +83,13 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         """
         return self._NoneIfNotSet(self._updated_at)
 
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        return self._NoneIfNotSet(self._url)
+
     def _initAttributes(self):
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
@@ -91,6 +98,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         self._state = github.GithubObject.NotSet
         self._target_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "created_at" in attributes:  # pragma no branch
@@ -114,3 +122,6 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]

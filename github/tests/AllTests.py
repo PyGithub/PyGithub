@@ -69,6 +69,7 @@ from Logging_ import *
 from RawData import *
 from ConditionalRequestUpdate import *
 from Persistence import *
+from ExposeAllAttributes import *
 
 from Issue33 import *
 from Issue50 import *

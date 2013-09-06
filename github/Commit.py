@@ -50,6 +50,14 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._author)
 
     @property
+    def comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._comments_url)
+        return self._NoneIfNotSet(self._comments_url)
+
+    @property
     def commit(self):
         """
         :type: :class:`github.GitCommit.GitCommit`
@@ -72,6 +80,14 @@ class Commit(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._files)
         return self._NoneIfNotSet(self._files)
+
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._NoneIfNotSet(self._html_url)
 
     @property
     def parents(self):
@@ -189,9 +205,11 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._author = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
         self._commit = github.GithubObject.NotSet
         self._committer = github.GithubObject.NotSet
         self._files = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._parents = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._stats = github.GithubObject.NotSet
@@ -201,6 +219,9 @@ class Commit(github.GithubObject.CompletableGithubObject):
         if "author" in attributes:  # pragma no branch
             assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
             self._author = None if attributes["author"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["author"], completed=False)
+        if "comments_url" in attributes:  # pragma no branch
+            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
+            self._comments_url = attributes["comments_url"]
         if "commit" in attributes:  # pragma no branch
             assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
             self._commit = None if attributes["commit"] is None else github.GitCommit.GitCommit(self._requester, self._headers, attributes["commit"], completed=False)
@@ -213,6 +234,9 @@ class Commit(github.GithubObject.CompletableGithubObject):
                 github.File.File(self._requester, self._headers, element, completed=False)
                 for element in attributes["files"]
             ]
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
         if "parents" in attributes:  # pragma no branch
             assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
             self._parents = None if attributes["parents"] is None else [

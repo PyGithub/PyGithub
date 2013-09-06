@@ -114,6 +114,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._email)
 
     @property
+    def events_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._events_url)
+        return self._NoneIfNotSet(self._events_url)
+
+    @property
     def followers(self):
         """
         :type: integer
@@ -122,12 +130,36 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._followers)
 
     @property
+    def followers_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._followers_url)
+        return self._NoneIfNotSet(self._followers_url)
+
+    @property
     def following(self):
         """
         :type: integer
         """
         self._completeIfNotSet(self._following)
         return self._NoneIfNotSet(self._following)
+
+    @property
+    def following_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._following_url)
+        return self._NoneIfNotSet(self._following_url)
+
+    @property
+    def gists_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._gists_url)
+        return self._NoneIfNotSet(self._gists_url)
 
     @property
     def gravatar_id(self):
@@ -186,6 +218,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._name)
 
     @property
+    def organizations_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._organizations_url)
+        return self._NoneIfNotSet(self._organizations_url)
+
+    @property
     def owned_private_repos(self):
         """
         :type: integer
@@ -226,6 +266,38 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._public_repos)
 
     @property
+    def received_events_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._received_events_url)
+        return self._NoneIfNotSet(self._received_events_url)
+
+    @property
+    def repos_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._repos_url)
+        return self._NoneIfNotSet(self._repos_url)
+
+    @property
+    def starred_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._starred_url)
+        return self._NoneIfNotSet(self._starred_url)
+
+    @property
+    def subscriptions_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._subscriptions_url)
+        return self._NoneIfNotSet(self._subscriptions_url)
+
+    @property
     def total_private_repos(self):
         """
         :type: integer
@@ -240,6 +312,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._type)
         return self._NoneIfNotSet(self._type)
+
+    @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._NoneIfNotSet(self._updated_at)
 
     @property
     def url(self):
@@ -474,8 +554,12 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
+        self._events_url = github.GithubObject.NotSet
         self._followers = github.GithubObject.NotSet
+        self._followers_url = github.GithubObject.NotSet
         self._following = github.GithubObject.NotSet
+        self._following_url = github.GithubObject.NotSet
+        self._gists_url = github.GithubObject.NotSet
         self._gravatar_id = github.GithubObject.NotSet
         self._hireable = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -483,13 +567,19 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
         self._private_gists = github.GithubObject.NotSet
         self._public_gists = github.GithubObject.NotSet
         self._public_repos = github.GithubObject.NotSet
+        self._received_events_url = github.GithubObject.NotSet
+        self._repos_url = github.GithubObject.NotSet
+        self._starred_url = github.GithubObject.NotSet
+        self._subscriptions_url = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -520,12 +610,24 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "email" in attributes:  # pragma no branch
             assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
             self._email = attributes["email"]
+        if "events_url" in attributes:  # pragma no branch
+            assert attributes["events_url"] is None or isinstance(attributes["events_url"], (str, unicode)), attributes["events_url"]
+            self._events_url = attributes["events_url"]
         if "followers" in attributes:  # pragma no branch
             assert attributes["followers"] is None or isinstance(attributes["followers"], (int, long)), attributes["followers"]
             self._followers = attributes["followers"]
+        if "followers_url" in attributes:  # pragma no branch
+            assert attributes["followers_url"] is None or isinstance(attributes["followers_url"], (str, unicode)), attributes["followers_url"]
+            self._followers_url = attributes["followers_url"]
         if "following" in attributes:  # pragma no branch
             assert attributes["following"] is None or isinstance(attributes["following"], (int, long)), attributes["following"]
             self._following = attributes["following"]
+        if "following_url" in attributes:  # pragma no branch
+            assert attributes["following_url"] is None or isinstance(attributes["following_url"], (str, unicode)), attributes["following_url"]
+            self._following_url = attributes["following_url"]
+        if "gists_url" in attributes:  # pragma no branch
+            assert attributes["gists_url"] is None or isinstance(attributes["gists_url"], (str, unicode)), attributes["gists_url"]
+            self._gists_url = attributes["gists_url"]
         if "gravatar_id" in attributes:  # pragma no branch
             assert attributes["gravatar_id"] is None or isinstance(attributes["gravatar_id"], (str, unicode)), attributes["gravatar_id"]
             self._gravatar_id = attributes["gravatar_id"]
@@ -547,6 +649,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
+        if "organizations_url" in attributes:  # pragma no branch
+            assert attributes["organizations_url"] is None or isinstance(attributes["organizations_url"], (str, unicode)), attributes["organizations_url"]
+            self._organizations_url = attributes["organizations_url"]
         if "owned_private_repos" in attributes:  # pragma no branch
             assert attributes["owned_private_repos"] is None or isinstance(attributes["owned_private_repos"], (int, long)), attributes["owned_private_repos"]
             self._owned_private_repos = attributes["owned_private_repos"]
@@ -562,12 +667,27 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "public_repos" in attributes:  # pragma no branch
             assert attributes["public_repos"] is None or isinstance(attributes["public_repos"], (int, long)), attributes["public_repos"]
             self._public_repos = attributes["public_repos"]
+        if "received_events_url" in attributes:  # pragma no branch
+            assert attributes["received_events_url"] is None or isinstance(attributes["received_events_url"], (str, unicode)), attributes["received_events_url"]
+            self._received_events_url = attributes["received_events_url"]
+        if "repos_url" in attributes:  # pragma no branch
+            assert attributes["repos_url"] is None or isinstance(attributes["repos_url"], (str, unicode)), attributes["repos_url"]
+            self._repos_url = attributes["repos_url"]
+        if "starred_url" in attributes:  # pragma no branch
+            assert attributes["starred_url"] is None or isinstance(attributes["starred_url"], (str, unicode)), attributes["starred_url"]
+            self._starred_url = attributes["starred_url"]
+        if "subscriptions_url" in attributes:  # pragma no branch
+            assert attributes["subscriptions_url"] is None or isinstance(attributes["subscriptions_url"], (str, unicode)), attributes["subscriptions_url"]
+            self._subscriptions_url = attributes["subscriptions_url"]
         if "total_private_repos" in attributes:  # pragma no branch
             assert attributes["total_private_repos"] is None or isinstance(attributes["total_private_repos"], (int, long)), attributes["total_private_repos"]
             self._total_private_repos = attributes["total_private_repos"]
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

@@ -39,7 +39,6 @@ import Legacy
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
-import Notification
 import Status
 import StatusMessage
 import RateLimit
