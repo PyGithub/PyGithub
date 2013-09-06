@@ -67,6 +67,8 @@ from Exceptions import *
 from Enterprise import *
 from Logging_ import *
 from RawData import *
+from ConditionalRequestUpdate import *
+from Persistence import *
 
 from Issue33 import *
 from Issue50 import *
@@ -81,6 +83,3 @@ from Issue140 import *
 from Issue142 import *
 from Issue158 import *
 from Issue174 import *
-
-from ConditionalRequestUpdate import ConditionalRequestUpdate
-from Persistence import Persistence
