@@ -126,7 +126,7 @@ class Github(object):
         """
         Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
 
-        :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit/>`_
+        :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit>`_
         :rtype: :class:`github.RateLimit.RateLimit`
         """
         headers, attributes = self.__requester.requestJsonAndCheck(

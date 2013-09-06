@@ -329,6 +329,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._NoneIfNotSet(self._url)
 
+    # v2: Remove this method
     def create_gist(self, public, files, description=github.GithubObject.NotSet):
         """
         :calls: `POST /users/:user/gists <http://developer.github.com/v3/todo>`_
@@ -529,7 +530,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_following(self, following):
         """
-        :calls: `GET /user/:user/following/:target_user <http://developer.github.com/v3/users/followers/#check-if-one-user-follows-another>`_
+        :calls: `GET /users/:user/following/:target_user <http://developer.github.com/v3/users/followers/#check-if-one-user-follows-another>`_
         :param following: :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
