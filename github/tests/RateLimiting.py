@@ -43,4 +43,4 @@ class RateLimiting(Framework.TestCase):
         rateLimit = self.g.get_rate_limit()
         self.assertEqual(rateLimit.rate.limit, 5000)
         self.assertEqual(rateLimit.rate.remaining, 5000)
-        self.assertEqual(rateLimit.rate.reset, datetime.datetime(2013, 9, 6, 12, 29, 57))
+        self.assertEqual(rateLimit.rate.reset, datetime.datetime(2013, 9, 6, 10, 29, 57))

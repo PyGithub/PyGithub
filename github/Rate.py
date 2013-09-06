@@ -65,4 +65,4 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
             self._remaining = attributes["remaining"]
         if "reset" in attributes:  # pragma no branch
             assert attributes["reset"] is None or isinstance(attributes["reset"], (int, long)), attributes["reset"]
-            self._reset = datetime.datetime.fromtimestamp(attributes["reset"])
+            self._reset = datetime.datetime.utcfromtimestamp(attributes["reset"])
