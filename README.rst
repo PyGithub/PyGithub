@@ -23,6 +23,7 @@ Starting today (September 05th, 2013), we now need more than 8 bits to store the
 * Implement persistence of PyGithub objects: ``Github.save`` and ``Github.load``. Don't forget to ``update`` your objects after loading them, it won't decrease your rate limiting quota if nothing has changed. Again, thank you `akfish <https://github.com/akfish>`_
 * Implement ``Github.get_repos`` to get all public repositories
 * Implement ``NamedUser.has_in_following``
+* `Implement <https://github.com/jacquev6/PyGithub/issues/188>`_ ``Github.get_api_status``, ``Github.get_last_api_status_message`` and ``Github.get_api_status_messages``. Thank you `ruxandraburtica <https://github.com/ruxandraburtica>`_ for asking
 * Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
 * Use the new URL to fork gists (minor change)
 * Use the new URL to test hooks (minor change)
