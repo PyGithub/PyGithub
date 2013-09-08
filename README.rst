@@ -16,8 +16,8 @@ Thank you, dear stargazers!
 
 Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
-`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (September ??th, 2013) (AKFish's edition)
------------------------------------------------------------------------------------------------------------------------------------
+`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (September 8th, 2013) (AKFish's edition)
+----------------------------------------------------------------------------------------------------------------------------------
 
 * Implement `conditional requests <http://developer.github.com/guides/getting-started/#conditional-requests>`_ by the method ``GithubObject.update``. Thank you very much `akfish <https://github.com/akfish>`_ for the pull request and your collaboration!
 * Implement persistence of PyGithub objects: ``Github.save`` and ``Github.load``. Don't forget to ``update`` your objects after loading them, it won't decrease your rate limiting quota if nothing has changed. Again, thank you `akfish <https://github.com/akfish>`_
