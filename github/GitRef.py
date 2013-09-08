@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -64,9 +65,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, sha, force=github.GithubObject.NotSet):
@@ -86,8 +85,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -99,7 +97,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
             assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, attributes["object"], completed=False)
+            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, self._headers, attributes["object"], completed=False)
         if "ref" in attributes:  # pragma no branch
             assert attributes["ref"] is None or isinstance(attributes["ref"], (str, unicode)), attributes["ref"]
             self._ref = attributes["ref"]

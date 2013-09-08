@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Bill Mill <bill.mill@gmail.com>                               #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 davidbrai <davidbrai@gmail.com>                               #
@@ -118,7 +119,11 @@ class PaginatedList(PaginatedListBase):
         self._reversed = False
 
     def _getLastPageUrl(self):
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, self.__nextParams, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__firstUrl,
+            parameters=self.__nextParams
+        )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
         return lastUrl
@@ -139,7 +144,11 @@ class PaginatedList(PaginatedListBase):
         return self.__nextUrl is not None
 
     def _fetchNextPage(self):
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__nextUrl, self.__nextParams, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__nextUrl,
+            parameters=self.__nextParams
+        )
 
         self.__nextUrl = None
         if len(data) > 0:
@@ -152,7 +161,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         content = [
-            self.__contentClass(self.__requester, element, completed=False)
+            self.__contentClass(self.__requester, headers, element, completed=False)
             for element in data
         ]
         if self._reversed:
@@ -176,9 +185,13 @@ class PaginatedList(PaginatedListBase):
             params["page"] = page + 1
         if self.__requester.per_page != 30:
             params["per_page"] = self.__requester.per_page
-        headers, data = self.__requester.requestJsonAndCheck("GET", self.__firstUrl, params, None)
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            self.__firstUrl,
+            parameters=params
+        )
 
         return [
-            self.__contentClass(self.__requester, element, completed=False)
+            self.__contentClass(self.__requester, headers, element, completed=False)
             for element in data
         ]

@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -53,6 +54,13 @@ class File(github.GithubObject.NonCompletableGithubObject):
         return self._NoneIfNotSet(self._changes)
 
     @property
+    def contents_url(self):
+        """
+        :type: string
+        """
+        return self._NoneIfNotSet(self._contents_url)
+
+    @property
     def deletions(self):
         """
         :type: integer
@@ -98,6 +106,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         self._additions = github.GithubObject.NotSet
         self._blob_url = github.GithubObject.NotSet
         self._changes = github.GithubObject.NotSet
+        self._contents_url = github.GithubObject.NotSet
         self._deletions = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._patch = github.GithubObject.NotSet
@@ -115,6 +124,9 @@ class File(github.GithubObject.NonCompletableGithubObject):
         if "changes" in attributes:  # pragma no branch
             assert attributes["changes"] is None or isinstance(attributes["changes"], (int, long)), attributes["changes"]
             self._changes = attributes["changes"]
+        if "contents_url" in attributes:  # pragma no branch
+            assert attributes["contents_url"] is None or isinstance(attributes["contents_url"], (str, unicode)), attributes["contents_url"]
+            self._contents_url = attributes["contents_url"]
         if "deletions" in attributes:  # pragma no branch
             assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
             self._deletions = attributes["deletions"]

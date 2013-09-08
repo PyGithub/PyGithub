@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -82,6 +83,13 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         """
         return self._NoneIfNotSet(self._updated_at)
 
+    @property
+    def url(self):
+        """
+        :type: string
+        """
+        return self._NoneIfNotSet(self._url)
+
     def _initAttributes(self):
         self._created_at = github.GithubObject.NotSet
         self._creator = github.GithubObject.NotSet
@@ -90,6 +98,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         self._state = github.GithubObject.NotSet
         self._target_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "created_at" in attributes:  # pragma no branch
@@ -97,7 +106,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             assert attributes["creator"] is None or isinstance(attributes["creator"], dict), attributes["creator"]
-            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, attributes["creator"], completed=False)
+            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False)
         if "description" in attributes:  # pragma no branch
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
             self._description = attributes["description"]
@@ -113,3 +122,6 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])
+        if "url" in attributes:  # pragma no branch
+            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
+            self._url = attributes["url"]

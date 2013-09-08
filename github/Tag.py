@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -71,7 +72,7 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
             assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
-            self._commit = None if attributes["commit"] is None else github.Commit.Commit(self._requester, attributes["commit"], completed=False)
+            self._commit = None if attributes["commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["commit"], completed=False)
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]

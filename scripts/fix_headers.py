@@ -132,6 +132,8 @@ def findHeadersAndFiles():
             dirs.remove(".git")
         if "developer.github.com" in dirs:
             dirs.remove("developer.github.com")
+        if "build" in dirs:
+            dirs.remove("build")
 
         for filename in files:
             fullname = os.path.join(root, filename)

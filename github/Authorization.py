@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -112,9 +113,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, scopes=github.GithubObject.NotSet, add_scopes=github.GithubObject.NotSet, remove_scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet):
@@ -146,8 +145,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -165,7 +163,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
             assert attributes["app"] is None or isinstance(attributes["app"], dict), attributes["app"]
-            self._app = None if attributes["app"] is None else github.AuthorizationApplication.AuthorizationApplication(self._requester, attributes["app"], completed=False)
+            self._app = None if attributes["app"] is None else github.AuthorizationApplication.AuthorizationApplication(self._requester, self._headers, attributes["app"], completed=False)
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])

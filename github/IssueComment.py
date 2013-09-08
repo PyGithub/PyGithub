@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -59,6 +60,14 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._id)
 
     @property
+    def issue_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._issue_url)
+        return self._NoneIfNotSet(self._issue_url)
+
+    @property
     def updated_at(self):
         """
         :type: datetime.datetime
@@ -97,9 +106,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, body):
@@ -115,8 +122,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -124,6 +130,7 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._issue_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -139,6 +146,9 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
+        if "issue_url" in attributes:  # pragma no branch
+            assert attributes["issue_url"] is None or isinstance(attributes["issue_url"], (str, unicode)), attributes["issue_url"]
+            self._issue_url = attributes["issue_url"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])
@@ -150,4 +160,4 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             self._html_url = attributes["html_url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)

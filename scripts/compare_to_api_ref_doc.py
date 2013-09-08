@@ -41,6 +41,9 @@ def parseReference():
     undocumentedUrls = [
         ("/hooks", "GET"),  # Mentioned somewhere
         ("/hub", "POST"),  # Described in content/v3/repos/hooks.md
+        ("/api/status.json", "GET"),  # https://status.github.com/api
+        ("/api/last-message.json", "GET"),  # https://status.github.com/api
+        ("/api/messages.json", "GET"),  # https://status.github.com/api
     ]
     uninterestingUrls = [
         ("/markdown/raw", "POST"),  # Job is done by /markdown => useless in PyGithub
@@ -74,7 +77,7 @@ def parseReference():
                             urls[url] = docUrl
 
     for url in undocumentedUrls:
-        urls[url] = "http://developer.github.com/"
+        urls[url] = None
 
     for url in uninterestingUrls:
         del urls[url]
@@ -112,7 +115,7 @@ def main():
     printUrls("called by PyGithub but not existing in Github API v3", set(lib) - set(ref))
     for key in set(lib) & set(ref):
         (url, verb) = key
-        if lib[key] != ref[key]:
+        if ref[key] is not None and lib[key] != ref[key] and not lib[key].startswith(ref[key] + "/#"):
             print "sed -i \"s@:calls: ." + verb + " " + url + " ." + lib[key] + ".._" + "@:calls: \\`" + verb + " " + url + " \\<" + ref[key] + "\\>\\`_@\" github/*.py"
 
 

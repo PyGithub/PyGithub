@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -87,6 +88,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._id)
 
     @property
+    def labels_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._labels_url)
+        return self._NoneIfNotSet(self._labels_url)
+
+    @property
     def number(self):
         """
         :type: integer
@@ -119,6 +128,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._title)
 
     @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._NoneIfNotSet(self._updated_at)
+
+    @property
     def url(self):
         """
         :type: string
@@ -133,9 +150,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, title, state=github.GithubObject.NotSet, description=github.GithubObject.NotSet, due_on=github.GithubObject.NotSet):
@@ -163,8 +178,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -191,10 +205,12 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         self._description = github.GithubObject.NotSet
         self._due_on = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._labels_url = github.GithubObject.NotSet
         self._number = github.GithubObject.NotSet
         self._open_issues = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -206,7 +222,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
             self._created_at = self._parseDatetime(attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
             assert attributes["creator"] is None or isinstance(attributes["creator"], dict), attributes["creator"]
-            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, attributes["creator"], completed=False)
+            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False)
         if "description" in attributes:  # pragma no branch
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
             self._description = attributes["description"]
@@ -216,6 +232,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
             self._id = attributes["id"]
+        if "labels_url" in attributes:  # pragma no branch
+            assert attributes["labels_url"] is None or isinstance(attributes["labels_url"], (str, unicode)), attributes["labels_url"]
+            self._labels_url = attributes["labels_url"]
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
             self._number = attributes["number"]
@@ -228,6 +247,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         if "title" in attributes:  # pragma no branch
             assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
             self._title = attributes["title"]
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

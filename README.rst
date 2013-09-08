@@ -7,18 +7,28 @@ Should you have any question, any remark, or if you find a bug, or if there is s
 
 PyGithub is stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
 
+
 What's new?
 ===========
 
+Thank you, dear stargazers!
+---------------------------
 
-`Version 1.18.0 <https://github.com/jacquev6/PyGithub/issues?milestone=30&state=closed>`_ (August 21st, 2013) (Bénodet edition)
--------------------------------------------------------------------------------------------------------------------------------
+Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
-* `Issues <https://github.com/jacquev6/PyGithub/pull/181>`_' ``repository`` attribute will never be ``None``. Thank you `stuglaser <https://github.com/stuglaser>`_ for the pull request
-* No more false assumption on `rate_limiting <https://github.com/jacquev6/PyGithub/pull/186>`_, and creation of ``rate_limiting_resettime``. Thank you `edjackson <https://github.com/edjackson>`_ for the pull request
-* `New <https://github.com/jacquev6/PyGithub/pull/187>`_ parameters ``since`` and ``until`` to ``Repository.get_commits``. Thank you `apetresc <https://github.com/apetresc>`_ for the pull request
-* `Catch <https://github.com/jacquev6/PyGithub/pull/182>`_ Json parsing exception for some internal server errors, and throw a better exception. Thank you `MarkRoddy <https://github.com/MarkRoddy>`_ for the pull request
-* `Allow <https://github.com/jacquev6/PyGithub/pull/184>`_ reversed iteration of ``PaginatedList``s. Thank you `davidbrai <https://github.com/davidbrai>`_ for the pull request
+`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (September ??th, 2013) (AKFish's edition)
+-----------------------------------------------------------------------------------------------------------------------------------
+
+* Implement `conditional requests <http://developer.github.com/guides/getting-started/#conditional-requests>`_ by the method ``GithubObject.update``. Thank you very much `akfish <https://github.com/akfish>`_ for the pull request and your collaboration!
+* Implement persistence of PyGithub objects: ``Github.save`` and ``Github.load``. Don't forget to ``update`` your objects after loading them, it won't decrease your rate limiting quota if nothing has changed. Again, thank you `akfish <https://github.com/akfish>`_
+* Implement ``Github.get_repos`` to get all public repositories
+* Implement ``NamedUser.has_in_following``
+* `Implement <https://github.com/jacquev6/PyGithub/issues/188>`_ ``Github.get_api_status``, ``Github.get_last_api_status_message`` and ``Github.get_api_status_messages``. Thank you `ruxandraburtica <https://github.com/ruxandraburtica>`_ for asking
+* Implement ``Github.get_rate_limit``
+* Add many missing attributes
+* Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
+* Use the new URL to fork gists (minor change)
+* Use the new URL to test hooks (minor change)
 
 What's missing?
 ===============
@@ -30,10 +40,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/feeds`` (GET)
-* ``/gists/:id/forks`` (POST)
-
-  * instead, ``Gist.create_fork`` calls the old URL ``/gists/:id/fork``
-
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
 * ``/notifications/emails`` (GET)
@@ -48,16 +54,8 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/notifications/threads/:id/subscription`` (DELETE)
 * ``/notifications/threads/:id/subscription`` (GET)
 * ``/notifications/threads/:id/subscription`` (PUT)
-* ``/rate_limit`` (GET)
-
-  * should be called in method ``Github.get_rate_limit``. See also ``Github.rate_limiting``
-
 * ``/repos/:owner/:repo/contents/:path`` (DELETE)
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
-* ``/repos/:owner/:repo/hooks/:id/tests`` (POST)
-
-  * instead, ``Hook.test`` calls the old URL ``/repos/:owner/:repo/hooks/:id/test``
-
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
 * ``/repos/:owner/:repo/stats/code_frequency`` (GET)
@@ -68,17 +66,10 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/repos/:owner/:repo/subscription`` (DELETE)
 * ``/repos/:owner/:repo/subscription`` (GET)
 * ``/repos/:owner/:repo/subscription`` (PUT)
-* ``/repositories`` (GET)
-
-  * should be called in method ``Github.get_repos``
-
 * ``/search/code`` (GET)
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
-* ``/users/:user/following/:target_user`` (GET)
-
-  * should be called in method ``NamedUser.has_in_following``
 
 Documentation
 =============

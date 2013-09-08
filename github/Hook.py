@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -30,7 +31,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks as returned for example by http://developer.github.com/v3/todo
+    This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
     """
 
     @property
@@ -90,6 +91,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._name)
 
     @property
+    def test_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._test_url)
+        return self._NoneIfNotSet(self._test_url)
+
+    @property
     def updated_at(self):
         """
         :type: datetime.datetime
@@ -112,9 +121,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, name, config, events=github.GithubObject.NotSet, add_events=github.GithubObject.NotSet, remove_events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
@@ -149,21 +156,18 @@ class Hook(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
     def test(self):
         """
-        :calls: `POST /repos/:owner/:repo/hooks/:id/test <http://developer.github.com/v3/todo>`_
+        :calls: `POST /repos/:owner/:repo/hooks/:id/tests <http://developer.github.com/v3/repos/hooks>`_
         :rtype: None
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/test",
-            None,
-            None
+            self.url + "/tests"
         )
 
     def _initAttributes(self):
@@ -174,6 +178,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._last_response = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
+        self._test_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
@@ -195,10 +200,13 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self._id = attributes["id"]
         if "last_response" in attributes:  # pragma no branch
             assert attributes["last_response"] is None or isinstance(attributes["last_response"], dict), attributes["last_response"]
-            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, attributes["last_response"], completed=False)
+            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, self._headers, attributes["last_response"], completed=False)
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
+        if "test_url" in attributes:  # pragma no branch
+            assert attributes["test_url"] is None or isinstance(attributes["test_url"], (str, unicode)), attributes["test_url"]
+            self._test_url = attributes["test_url"]
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
             self._updated_at = self._parseDatetime(attributes["updated_at"])

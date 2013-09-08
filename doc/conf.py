@@ -281,6 +281,7 @@ githubClasses = [
 		"../github/MainClass.py",
 		"../github/PaginatedList.py",
 		"../github/Requester.py",
+		"../github/Consts.py",
 		"../github/__init__.py"]
 ]
 
@@ -318,7 +319,7 @@ for githubClass in githubClasses + ["MainClass"]:
 				if not isProperty:
 					assert method is None, method + " has no :calls: section"
 					method = line.split("(")[0][8:]
-					if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page"]:
+					if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
 						method = None
 				isProperty = False
 			if line.startswith("        :calls: `"):

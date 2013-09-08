@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -91,6 +92,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._html_url)
 
     @property
+    def merge_base_commit(self):
+        """
+        :type: :class:`github.Commit.Commit`
+        """
+        self._completeIfNotSet(self._merge_base_commit)
+        return self._NoneIfNotSet(self._merge_base_commit)
+
+    @property
     def patch_url(self):
         """
         :type: string
@@ -138,6 +147,7 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         self._diff_url = github.GithubObject.NotSet
         self._files = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
+        self._merge_base_commit = github.GithubObject.NotSet
         self._patch_url = github.GithubObject.NotSet
         self._permalink_url = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
@@ -150,14 +160,14 @@ class Comparison(github.GithubObject.CompletableGithubObject):
             self._ahead_by = attributes["ahead_by"]
         if "base_commit" in attributes:  # pragma no branch
             assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
-            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, attributes["base_commit"], completed=False)
+            self._base_commit = None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["base_commit"], completed=False)
         if "behind_by" in attributes:  # pragma no branch
             assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
             self._behind_by = attributes["behind_by"]
         if "commits" in attributes:  # pragma no branch
             assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
             self._commits = None if attributes["commits"] is None else [
-                github.Commit.Commit(self._requester, element, completed=False)
+                github.Commit.Commit(self._requester, self._headers, element, completed=False)
                 for element in attributes["commits"]
             ]
         if "diff_url" in attributes:  # pragma no branch
@@ -166,12 +176,15 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
             self._files = None if attributes["files"] is None else [
-                github.File.File(self._requester, element, completed=False)
+                github.File.File(self._requester, self._headers, element, completed=False)
                 for element in attributes["files"]
             ]
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
             self._html_url = attributes["html_url"]
+        if "merge_base_commit" in attributes:  # pragma no branch
+            assert attributes["merge_base_commit"] is None or isinstance(attributes["merge_base_commit"], dict), attributes["merge_base_commit"]
+            self._merge_base_commit = None if attributes["merge_base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["merge_base_commit"], completed=False)
         if "patch_url" in attributes:  # pragma no branch
             assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
             self._patch_url = attributes["patch_url"]

@@ -128,3 +128,9 @@ class Github(Framework.TestCase):
 
     def testGetUsersSince(self):
         self.assertListKeyBegin(self.g.get_users(since=1000), lambda u: u.login, ["sbecker"])
+
+    def testGetRepos(self):
+        self.assertListKeyBegin(self.g.get_repos(), lambda r: r.name, ["grit", "merb-core", "rubinius", "god", "jsawesome", "jspec", "exception_logger", "ambition"])
+
+    def testGetReposSince(self):
+        self.assertListKeyBegin(self.g.get_repos(since=1000), lambda r: r.name, ["jquery-humanize-messages-plugin", "4slicer", "fixture-scenarios", "mongrel_proctitle", "rails-plugins"])

@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -56,6 +57,7 @@ from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *
+from Status import *
 from Tag import *
 from Team import *
 from UserKey import *
@@ -65,6 +67,9 @@ from Exceptions import *
 from Enterprise import *
 from Logging_ import *
 from RawData import *
+from ConditionalRequestUpdate import *
+from Persistence import *
+from ExposeAllAttributes import *
 
 from Issue33 import *
 from Issue50 import *
@@ -76,6 +81,6 @@ from Issue133 import *
 from Issue134 import *
 from Issue139 import *
 from Issue140 import *
-# from Issue142 import *  # Deactivated for Travis-CI because Github has lowered the rate limitations
+from Issue142 import *
 from Issue158 import *
 from Issue174 import *

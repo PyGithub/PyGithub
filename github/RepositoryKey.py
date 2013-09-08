@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Srijan Choudhary <srijan4@gmail.com>                          #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
@@ -33,8 +34,8 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
     This class represents RepositoryKeys. The reference can be found here http://developer.github.com/v3/repos/keys/
     """
 
-    def __init__(self, requester, attributes, completed, repoUrl):
-        github.GithubObject.CompletableGithubObject.__init__(self, requester, attributes, completed)
+    def __init__(self, requester, headers, attributes, completed, repoUrl):
+        github.GithubObject.CompletableGithubObject.__init__(self, requester, headers, attributes, completed)
         self.__repoUrl = repoUrl
 
     @property
@@ -88,9 +89,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.__customUrl,
-            None,
-            None
+            self.__customUrl
         )
 
     def edit(self, title=github.GithubObject.NotSet, key=github.GithubObject.NotSet):
@@ -110,8 +109,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.__customUrl,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 

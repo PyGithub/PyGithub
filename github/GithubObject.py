@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -26,6 +27,7 @@
 import datetime
 
 import GithubException
+import Consts
 
 
 class _NotSetType:
@@ -38,14 +40,32 @@ class GithubObject(object):
     """
     Base class for all classes representing objects returned by the API.
     """
-    def __init__(self, requester, attributes, completed):
+
+    '''
+    A global debug flag to enable header validation by requester for all objects
+    '''
+    CHECK_AFTER_INIT_FLAG = False
+
+    @classmethod
+    def setCheckAfterInitFlag(cls, flag):
+        cls.CHECK_AFTER_INIT_FLAG = flag
+
+    def __init__(self, requester, headers, attributes, completed):
         self._requester = requester
         self._initAttributes()
-        self._storeAndUseAttributes(attributes)
+        self._storeAndUseAttributes(headers, attributes)
 
-    def _storeAndUseAttributes(self, attributes):
-        self._useAttributes(attributes)
+        # Ask requester to do some checking, for debug and test purpose
+        # Since it's most handy to access and kinda all-knowing
+        if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
+            requester.check_me(self)
+
+    def _storeAndUseAttributes(self, headers, attributes):
+        # Make sure headers are assigned before calling _useAttributes
+        # (Some derived classes will use headers in _useAttributes)
+        self._headers = headers
         self._rawData = attributes
+        self._useAttributes(attributes)
 
     @property
     def raw_data(self):
@@ -54,6 +74,14 @@ class GithubObject(object):
         """
         self._completeIfNeeded()
         return self._rawData
+
+    @property
+    def raw_headers(self):
+        """
+        :type: dict
+        """
+        self._completeIfNeeded()
+        return self._headers
 
     @staticmethod
     def _parentUrl(url):
@@ -77,6 +105,20 @@ class GithubObject(object):
         else:
             return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
+    @property
+    def etag(self):
+        '''
+        :type str
+        '''
+        return self._headers.get(Consts.RES_ETAG)
+
+    @property
+    def last_modified(self):
+        '''
+        :type str
+        '''
+        return self._headers.get(Consts.RES_LAST_MODIFED)
+
 
 class NonCompletableGithubObject(GithubObject):
     def _completeIfNeeded(self):
@@ -84,8 +126,8 @@ class NonCompletableGithubObject(GithubObject):
 
 
 class CompletableGithubObject(GithubObject):
-    def __init__(self, requester, attributes, completed):
-        GithubObject.__init__(self, requester, attributes, completed)
+    def __init__(self, requester, headers, attributes, completed):
+        GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
     def _completeIfNotSet(self, value):
@@ -99,9 +141,31 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._url,
-            None,
-            None
+            self._url
         )
-        self._storeAndUseAttributes(data)
+        self._storeAndUseAttributes(headers, data)
         self.__completed = True
+
+    def update(self):
+        '''
+        Check and update the object with conditional request
+        :rtype: Boolean value indicating whether the object is changed
+        '''
+        conditionalRequestHeader = dict()
+        if self.etag is not None:
+            conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
+        if self.last_modified is not None:
+            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+
+        status, responseHeaders, output = self._requester.requestJson(
+            "GET",
+            self._url,
+            headers=conditionalRequestHeader
+        )
+        if status == 304:
+            return False
+        else:
+            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            self._storeAndUseAttributes(headers, data)
+            self.__completed = True
+            return True

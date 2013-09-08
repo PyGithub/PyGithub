@@ -5,6 +5,7 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 #                                                                              #
@@ -107,6 +108,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._email)
 
     @property
+    def events_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._events_url)
+        return self._NoneIfNotSet(self._events_url)
+
+    @property
     def followers(self):
         """
         :type: integer
@@ -163,6 +172,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._login)
 
     @property
+    def members_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._members_url)
+        return self._NoneIfNotSet(self._members_url)
+
+    @property
     def name(self):
         """
         :type: string
@@ -203,12 +220,28 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._public_gists)
 
     @property
+    def public_members_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._public_members_url)
+        return self._NoneIfNotSet(self._public_members_url)
+
+    @property
     def public_repos(self):
         """
         :type: integer
         """
         self._completeIfNotSet(self._public_repos)
         return self._NoneIfNotSet(self._public_repos)
+
+    @property
+    def repos_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._repos_url)
+        return self._NoneIfNotSet(self._repos_url)
 
     @property
     def total_private_repos(self):
@@ -227,6 +260,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._type)
 
     @property
+    def updated_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._updated_at)
+        return self._NoneIfNotSet(self._updated_at)
+
+    @property
     def url(self):
         """
         :type: string
@@ -243,9 +284,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
 
     def create_fork(self, repo):
@@ -261,10 +300,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/repos/" + repo.owner.login + "/" + repo.name + "/forks",
-            url_parameters,
-            None
+            parameters=url_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
         """
@@ -315,10 +353,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/repos",
-            None,
-            post_parameters
+            input=post_parameters
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
         """
@@ -341,10 +378,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
-            None,
-            post_parameters
+            input=post_parameters
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
@@ -379,8 +415,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -467,11 +502,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + self.login + "/" + name,
-            None,
-            None
+            "/repos/" + self.login + "/" + name
         )
-        return github.Repository.Repository(self._requester, data, completed=True)
+        return github.Repository.Repository(self._requester, headers, data, completed=True)
 
     def get_repos(self, type=github.GithubObject.NotSet):
         """
@@ -499,11 +532,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/teams/" + str(id),
-            None,
-            None
+            "/teams/" + str(id)
         )
-        return github.Team.Team(self._requester, data, completed=True)
+        return github.Team.Team(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """
@@ -526,9 +557,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/members/" + member._identity,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
         return status == 204
 
@@ -541,9 +570,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
         return status == 204
 
@@ -556,9 +583,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(member, github.NamedUser.NamedUser), member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/members/" + member._identity,
-            None,
-            None
+            self.url + "/members/" + member._identity
         )
 
     def remove_from_public_members(self, public_member):
@@ -570,9 +595,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/public_members/" + public_member._identity,
-            None,
-            None
+            self.url + "/public_members/" + public_member._identity
         )
 
     def _initAttributes(self):
@@ -584,6 +607,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._disk_usage = github.GithubObject.NotSet
         self._email = github.GithubObject.NotSet
+        self._events_url = github.GithubObject.NotSet
         self._followers = github.GithubObject.NotSet
         self._following = github.GithubObject.NotSet
         self._gravatar_id = github.GithubObject.NotSet
@@ -591,14 +615,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._id = github.GithubObject.NotSet
         self._location = github.GithubObject.NotSet
         self._login = github.GithubObject.NotSet
+        self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
         self._private_gists = github.GithubObject.NotSet
         self._public_gists = github.GithubObject.NotSet
+        self._public_members_url = github.GithubObject.NotSet
         self._public_repos = github.GithubObject.NotSet
+        self._repos_url = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
+        self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -626,6 +654,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "email" in attributes:  # pragma no branch
             assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
             self._email = attributes["email"]
+        if "events_url" in attributes:  # pragma no branch
+            assert attributes["events_url"] is None or isinstance(attributes["events_url"], (str, unicode)), attributes["events_url"]
+            self._events_url = attributes["events_url"]
         if "followers" in attributes:  # pragma no branch
             assert attributes["followers"] is None or isinstance(attributes["followers"], (int, long)), attributes["followers"]
             self._followers = attributes["followers"]
@@ -647,6 +678,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if "login" in attributes:  # pragma no branch
             assert attributes["login"] is None or isinstance(attributes["login"], (str, unicode)), attributes["login"]
             self._login = attributes["login"]
+        if "members_url" in attributes:  # pragma no branch
+            assert attributes["members_url"] is None or isinstance(attributes["members_url"], (str, unicode)), attributes["members_url"]
+            self._members_url = attributes["members_url"]
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]
@@ -655,22 +689,31 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._owned_private_repos = attributes["owned_private_repos"]
         if "plan" in attributes:  # pragma no branch
             assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
-            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, attributes["plan"], completed=False)
+            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, self._headers, attributes["plan"], completed=False)
         if "private_gists" in attributes:  # pragma no branch
             assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
             self._private_gists = attributes["private_gists"]
         if "public_gists" in attributes:  # pragma no branch
             assert attributes["public_gists"] is None or isinstance(attributes["public_gists"], (int, long)), attributes["public_gists"]
             self._public_gists = attributes["public_gists"]
+        if "public_members_url" in attributes:  # pragma no branch
+            assert attributes["public_members_url"] is None or isinstance(attributes["public_members_url"], (str, unicode)), attributes["public_members_url"]
+            self._public_members_url = attributes["public_members_url"]
         if "public_repos" in attributes:  # pragma no branch
             assert attributes["public_repos"] is None or isinstance(attributes["public_repos"], (int, long)), attributes["public_repos"]
             self._public_repos = attributes["public_repos"]
+        if "repos_url" in attributes:  # pragma no branch
+            assert attributes["repos_url"] is None or isinstance(attributes["repos_url"], (str, unicode)), attributes["repos_url"]
+            self._repos_url = attributes["repos_url"]
         if "total_private_repos" in attributes:  # pragma no branch
             assert attributes["total_private_repos"] is None or isinstance(attributes["total_private_repos"], (int, long)), attributes["total_private_repos"]
             self._total_private_repos = attributes["total_private_repos"]
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
             self._type = attributes["type"]
+        if "updated_at" in attributes:  # pragma no branch
+            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
+            self._updated_at = self._parseDatetime(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

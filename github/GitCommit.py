@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -49,6 +50,14 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._committer)
         return self._NoneIfNotSet(self._committer)
+
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._NoneIfNotSet(self._html_url)
 
     @property
     def message(self):
@@ -97,6 +106,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._author = github.GithubObject.NotSet
         self._committer = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._parents = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -106,17 +116,20 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
             assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["author"], completed=False)
+            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["author"], completed=False)
         if "committer" in attributes:  # pragma no branch
             assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, attributes["committer"], completed=False)
+            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["committer"], completed=False)
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
         if "message" in attributes:  # pragma no branch
             assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
             self._message = attributes["message"]
         if "parents" in attributes:  # pragma no branch
             assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
             self._parents = None if attributes["parents"] is None else [
-                GitCommit(self._requester, element, completed=False)
+                GitCommit(self._requester, self._headers, element, completed=False)
                 for element in attributes["parents"]
             ]
         if "sha" in attributes:  # pragma no branch
@@ -124,7 +137,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
             self._sha = attributes["sha"]
         if "tree" in attributes:  # pragma no branch
             assert attributes["tree"] is None or isinstance(attributes["tree"], dict), attributes["tree"]
-            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, attributes["tree"], completed=False)
+            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, self._headers, attributes["tree"], completed=False)
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
             self._url = attributes["url"]

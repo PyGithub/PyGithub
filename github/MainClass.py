@@ -2,6 +2,7 @@
 
 ############################ Copyrights and license ############################
 #                                                                              #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
@@ -25,6 +26,7 @@
 ################################################################################
 
 import urllib
+import pickle
 
 from Requester import Requester
 import AuthenticatedUser
@@ -37,7 +39,9 @@ import Legacy
 import github.GithubObject
 import HookDescription
 import GitignoreTemplate
-import Notification
+import Status
+import StatusMessage
+import RateLimit
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -91,8 +95,12 @@ class Github(object):
     def __set_per_page(self, value):
         self.__requester.per_page = value
 
+    # v2: Remove this property? Why should it be necessary to read/modify it after construction
     per_page = property(__get_per_page, __set_per_page)
 
+    # v2: Provide a unified way to access values of headers of last response
+    # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
+    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -101,12 +109,7 @@ class Github(object):
         """
         remaining, limit = self.__requester.rate_limiting
         if limit < 0:
-            self.__requester.requestJsonAndCheck(
-                'GET',
-                '/rate_limit',
-                None,
-                None
-            )
+            self.get_rate_limit()
         return self.__requester.rate_limiting
 
     @property
@@ -116,13 +119,21 @@ class Github(object):
         :type: int
         """
         if self.__requester.rate_limiting_resettime == 0:
-            self.__requester.requestJsonAndCheck(
-                'GET',
-                '/rate_limit',
-                None,
-                None
-            )
+            self.get_rate_limit()
         return self.__requester.rate_limiting_resettime
+
+    def get_rate_limit(self):
+        """
+        Don't forget you can access the rate limit returned in headers of last Github API v3 response, by :attr:`github.MainClass.Github.rate_limiting` and :attr:`github.MainClass.Github.rate_limiting_resettime`.
+
+        :calls: `GET /rate_limit <http://developer.github.com/v3/rate_limit>`_
+        :rtype: :class:`github.RateLimit.RateLimit`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            'GET',
+            '/rate_limit'
+        )
+        return RateLimit.RateLimit(self.__requester, headers, attributes, True)
 
     @property
     def oauth_scopes(self):
@@ -139,15 +150,13 @@ class Github(object):
         """
         assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
-            return AuthenticatedUser.AuthenticatedUser(self.__requester, {"url": "/user"}, completed=False)
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
             headers, data = self.__requester.requestJsonAndCheck(
                 "GET",
-                "/users/" + login,
-                None,
-                None
+                "/users/" + login
             )
-            return github.NamedUser.NamedUser(self.__requester, data, completed=True)
+            return github.NamedUser.NamedUser(self.__requester, headers, data, completed=True)
 
     def get_users(self, since=github.GithubObject.NotSet):
         """
@@ -175,11 +184,9 @@ class Github(object):
         assert isinstance(login, (str, unicode)), login
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/orgs/" + login,
-            None,
-            None
+            "/orgs/" + login
         )
-        return github.Organization.Organization(self.__requester, data, completed=True)
+        return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
     def get_repo(self, full_name):
         """
@@ -189,11 +196,26 @@ class Github(object):
         assert isinstance(full_name, (str, unicode)), full_name
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/repos/" + full_name,
-            None,
-            None
+            "/repos/" + full_name
         )
-        return Repository.Repository(self.__requester, data, completed=True)
+        return Repository.Repository(self.__requester, headers, data, completed=True)
+
+    def get_repos(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /repositories <http://developer.github.com/v3/repos/#list-all-public-repositories>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/repositories",
+            url_parameters
+        )
 
     def get_gist(self, id):
         """
@@ -204,11 +226,9 @@ class Github(object):
         assert isinstance(id, (str, unicode)), id
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gists/" + id,
-            None,
-            None
+            "/gists/" + id
         )
-        return github.Gist.Gist(self.__requester, data, completed=True)
+        return github.Gist.Gist(self.__requester, headers, data, completed=True)
 
     def get_gists(self):
         """
@@ -266,11 +286,9 @@ class Github(object):
         assert isinstance(email, (str, unicode)), email
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/legacy/user/email/" + email,
-            None,
-            None
+            "/legacy/user/email/" + email
         )
-        return github.NamedUser.NamedUser(self.__requester, Legacy.convertUser(data["user"]), completed=False)
+        return github.NamedUser.NamedUser(self.__requester, headers, Legacy.convertUser(data["user"]), completed=False)
 
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
@@ -290,23 +308,20 @@ class Github(object):
         status, headers, data = self.__requester.requestJson(
             "POST",
             "/markdown",
-            None,
-            post_parameters
+            input=post_parameters
         )
         return data
 
     def get_hooks(self):
         """
         :calls: `GET /hooks <http://developer.github.com/>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.HookDescription.HookDescription`
+        :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/hooks",
-            None,
-            None
+            "/hooks"
         )
-        return [HookDescription.HookDescription(self.__requester, attributes, completed=True) for attributes in data]
+        return [HookDescription.HookDescription(self.__requester, headers, attributes, completed=True) for attributes in data]
 
     def get_gitignore_templates(self):
         """
@@ -315,9 +330,7 @@ class Github(object):
         """
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates",
-            None,
-            None
+            "/gitignore/templates"
         )
         return data
 
@@ -329,18 +342,81 @@ class Github(object):
         assert isinstance(name, (str, unicode)), name
         headers, attributes = self.__requester.requestJsonAndCheck(
             "GET",
-            "/gitignore/templates/" + name,
-            None,
-            None
+            "/gitignore/templates/" + name
         )
-        return GitignoreTemplate.GitignoreTemplate(self.__requester, attributes, completed=True)
+        return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
-    def create_from_raw_data(self, klass, raw_data):
+    def create_from_raw_data(self, klass, raw_data, headers={}):
         """
-        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`
+        Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,
+        and optionaly headers previously obtained by :attr:`github.GithubObject.GithubObject.raw_headers`.
 
         :param klass: the class of the object to create
         :param raw_data: dict
+        :param headers: dict
         :rtype: instance of class ``klass``
         """
-        return klass(self.__requester, raw_data, completed=True)
+        return klass(self.__requester, headers, raw_data, completed=True)
+
+    def dump(self, obj, file, protocol=0):
+        """
+        Dumps (pickles) a PyGithub object to a file-like object.
+        Some effort is made to not pickle sensitive informations like the Github credentials used in the :class:`Github` instance.
+        But NO EFFORT is made to remove sensitive information from the object's attributes.
+
+        :param obj: the object to pickle
+        :param file: the file-like object to pickle to
+        :param protocol: the `pickling protocol <http://docs.python.org/2.7/library/pickle.html#data-stream-format>`_
+        """
+        pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
+
+    def load(self, f):
+        """
+        Loads (unpickles) a PyGithub object from a file-like object.
+
+        :param f: the file-like object to unpickle from
+        :return: the unpickled object
+        """
+        return self.create_from_raw_data(*pickle.load(f))
+
+    def get_api_status(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/status.json <https://status.github.com/api>`_
+        :rtype: :class:`github.Status.Status`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/status.json",
+            cnx="status"
+        )
+        return Status.Status(self.__requester, headers, attributes, completed=True)
+
+    def get_last_api_status_message(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/last-message.json <https://status.github.com/api>`_
+        :rtype: :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/last-message.json",
+            cnx="status"
+        )
+        return StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True)
+
+    def get_api_status_messages(self):
+        """
+        This doesn't work with a Github Enterprise installation, because it always targets https://status.github.com.
+
+        :calls: `GET /api/messages.json <https://status.github.com/api>`_
+        :rtype: list of :class:`github.StatusMessage.StatusMessage`
+        """
+        headers, data = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/api/messages.json",
+            cnx="status"
+        )
+        return [StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True) for attributes in data]

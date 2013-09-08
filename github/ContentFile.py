@@ -4,6 +4,7 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -46,6 +47,22 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._encoding)
         return self._NoneIfNotSet(self._encoding)
+
+    @property
+    def git_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._git_url)
+        return self._NoneIfNotSet(self._git_url)
+
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._NoneIfNotSet(self._html_url)
 
     @property
     def name(self):
@@ -98,6 +115,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._encoding = github.GithubObject.NotSet
+        self._git_url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
@@ -111,6 +130,12 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "encoding" in attributes:  # pragma no branch
             assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
             self._encoding = attributes["encoding"]
+        if "git_url" in attributes:  # pragma no branch
+            assert attributes["git_url"] is None or isinstance(attributes["git_url"], (str, unicode)), attributes["git_url"]
+            self._git_url = attributes["git_url"]
+        if "html_url" in attributes:  # pragma no branch
+            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
+            self._html_url = attributes["html_url"]
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
             self._name = attributes["name"]

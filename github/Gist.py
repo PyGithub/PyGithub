@@ -5,6 +5,7 @@
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -47,6 +48,22 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._NoneIfNotSet(self._comments)
 
     @property
+    def comments_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._comments_url)
+        return self._NoneIfNotSet(self._comments_url)
+
+    @property
+    def commits_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._commits_url)
+        return self._NoneIfNotSet(self._commits_url)
+
+    @property
     def created_at(self):
         """
         :type: datetime.datetime
@@ -85,6 +102,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._forks)
         return self._NoneIfNotSet(self._forks)
+
+    @property
+    def forks_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._forks_url)
+        return self._NoneIfNotSet(self._forks_url)
 
     @property
     def git_pull_url(self):
@@ -171,23 +196,20 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/comments",
-            None,
-            post_parameters
+            input=post_parameters
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def create_fork(self):
         """
-        :calls: `POST /gists/:id/fork <http://developer.github.com/v3/todo>`_
+        :calls: `POST /gists/:id/forks <http://developer.github.com/v3/gists>`_
         :rtype: :class:`github.Gist.Gist`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self.url + "/fork",
-            None,
-            None
+            self.url + "/forks"
         )
-        return Gist(self._requester, data, completed=True)
+        return Gist(self._requester, headers, data, completed=True)
 
     def delete(self):
         """
@@ -196,9 +218,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url,
-            None,
-            None
+            self.url
         )
 
     def edit(self, description=github.GithubObject.NotSet, files=github.GithubObject.NotSet):
@@ -218,8 +238,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
-            None,
-            post_parameters
+            input=post_parameters
         )
         self._useAttributes(data)
 
@@ -232,11 +251,9 @@ class Gist(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/comments/" + str(id),
-            None,
-            None
+            self.url + "/comments/" + str(id)
         )
-        return github.GistComment.GistComment(self._requester, data, completed=True)
+        return github.GistComment.GistComment(self._requester, headers, data, completed=True)
 
     def get_comments(self):
         """
@@ -257,9 +274,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/star",
-            None,
-            None
+            self.url + "/star"
         )
         return status == 204
 
@@ -270,9 +285,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/star",
-            None,
-            None
+            self.url + "/star"
         )
 
     def set_starred(self):
@@ -282,18 +295,19 @@ class Gist(github.GithubObject.CompletableGithubObject):
         """
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/star",
-            None,
-            None
+            self.url + "/star"
         )
 
     def _initAttributes(self):
         self._comments = github.GithubObject.NotSet
+        self._comments_url = github.GithubObject.NotSet
+        self._commits_url = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._description = github.GithubObject.NotSet
         self._files = github.GithubObject.NotSet
         self._fork_of = github.GithubObject.NotSet
         self._forks = github.GithubObject.NotSet
+        self._forks_url = github.GithubObject.NotSet
         self._git_pull_url = github.GithubObject.NotSet
         self._git_push_url = github.GithubObject.NotSet
         self._history = github.GithubObject.NotSet
@@ -308,6 +322,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "comments" in attributes:  # pragma no branch
             assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
             self._comments = attributes["comments"]
+        if "comments_url" in attributes:  # pragma no branch
+            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
+            self._comments_url = attributes["comments_url"]
+        if "commits_url" in attributes:  # pragma no branch
+            assert attributes["commits_url"] is None or isinstance(attributes["commits_url"], (str, unicode)), attributes["commits_url"]
+            self._commits_url = attributes["commits_url"]
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
             self._created_at = self._parseDatetime(attributes["created_at"])
@@ -317,18 +337,21 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "files" in attributes:  # pragma no branch
             assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"].itervalues()), attributes["files"]
             self._files = None if attributes["files"] is None else dict(
-                (key, github.GistFile.GistFile(self._requester, element, completed=False))
+                (key, github.GistFile.GistFile(self._requester, self._headers, element, completed=False))
                 for key, element in attributes["files"].iteritems()
             )
         if "fork_of" in attributes:  # pragma no branch
             assert attributes["fork_of"] is None or isinstance(attributes["fork_of"], dict), attributes["fork_of"]
-            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, attributes["fork_of"], completed=False)
+            self._fork_of = None if attributes["fork_of"] is None else Gist(self._requester, self._headers, attributes["fork_of"], completed=False)
         if "forks" in attributes:  # pragma no branch
             assert attributes["forks"] is None or all(isinstance(element, dict) for element in attributes["forks"]), attributes["forks"]
             self._forks = None if attributes["forks"] is None else [
-                Gist(self._requester, element, completed=False)
+                Gist(self._requester, self._headers, element, completed=False)
                 for element in attributes["forks"]
             ]
+        if "forks_url" in attributes:  # pragma no branch
+            assert attributes["forks_url"] is None or isinstance(attributes["forks_url"], (str, unicode)), attributes["forks_url"]
+            self._forks_url = attributes["forks_url"]
         if "git_pull_url" in attributes:  # pragma no branch
             assert attributes["git_pull_url"] is None or isinstance(attributes["git_pull_url"], (str, unicode)), attributes["git_pull_url"]
             self._git_pull_url = attributes["git_pull_url"]
@@ -338,7 +361,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "history" in attributes:  # pragma no branch
             assert attributes["history"] is None or all(isinstance(element, dict) for element in attributes["history"]), attributes["history"]
             self._history = None if attributes["history"] is None else [
-                github.GistHistoryState.GistHistoryState(self._requester, element, completed=False)
+                github.GistHistoryState.GistHistoryState(self._requester, self._headers, element, completed=False)
                 for element in attributes["history"]
             ]
         if "html_url" in attributes:  # pragma no branch
@@ -358,4 +381,4 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._url = attributes["url"]
         if "user" in attributes:  # pragma no branch
             assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, attributes["user"], completed=False)
+            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)

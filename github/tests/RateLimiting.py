@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+import datetime
+
 import Framework
 
 
@@ -36,3 +38,9 @@ class RateLimiting(Framework.TestCase):
 
     def testResetTime(self):
         self.assertEqual(self.g.rate_limiting_resettime, 1375802816)
+
+    def testGetRateLimit(self):
+        rateLimit = self.g.get_rate_limit()
+        self.assertEqual(rateLimit.rate.limit, 5000)
+        self.assertEqual(rateLimit.rate.remaining, 5000)
+        self.assertEqual(rateLimit.rate.reset, datetime.datetime(2013, 9, 6, 10, 29, 57))
