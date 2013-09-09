@@ -77,3 +77,8 @@ class RateLimitExceededException(GithubException):
     """
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
+
+class EmptyRepositoryException(GithubException):
+    """
+    Exception raised when an empty repository is queried for commits (when Github API replies with a 409 HTML status)
+    """

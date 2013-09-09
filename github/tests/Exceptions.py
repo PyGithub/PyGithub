@@ -133,3 +133,12 @@ class SpecificExceptions(Framework.TestCase):
                 g.get_user("jacquev6")
 
         self.assertRaises(github.RateLimitExceededException, exceed)
+
+    def testEmptyRepository(self):
+        commits = self.g.get_user("wcdolphin").get_repo("empty").get_commits()
+
+        def getEmpty():
+            for commit in commits:
+                continue
+
+        self.assertRaises(github.EmptyRepositoryException, getEmpty)
