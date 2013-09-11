@@ -16,19 +16,10 @@ Thank you, dear stargazers!
 
 Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
-`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (September 8th, 2013) (AKFish's edition)
-----------------------------------------------------------------------------------------------------------------------------------
+`Version 1.20.0 <https://github.com/jacquev6/PyGithub/issues?milestone=32&state=closed>`_ (???? ??th, 2013)
+-----------------------------------------------------------------------------------------------------------
 
-* Implement `conditional requests <http://developer.github.com/guides/getting-started/#conditional-requests>`_ by the method ``GithubObject.update``. Thank you very much `akfish <https://github.com/akfish>`_ for the pull request and your collaboration!
-* Implement persistence of PyGithub objects: ``Github.save`` and ``Github.load``. Don't forget to ``update`` your objects after loading them, it won't decrease your rate limiting quota if nothing has changed. Again, thank you `akfish <https://github.com/akfish>`_
-* Implement ``Github.get_repos`` to get all public repositories
-* Implement ``NamedUser.has_in_following``
-* `Implement <https://github.com/jacquev6/PyGithub/issues/188>`_ ``Github.get_api_status``, ``Github.get_last_api_status_message`` and ``Github.get_api_status_messages``. Thank you `ruxandraburtica <https://github.com/ruxandraburtica>`_ for asking
-* Implement ``Github.get_rate_limit``
-* Add many missing attributes
-* Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
-* Use the new URL to fork gists (minor change)
-* Use the new URL to test hooks (minor change)
+* `Implement <https://github.com/jacquev6/PyGithub/issues/196>`_ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`_ for asking
 
 What's missing?
 ===============
