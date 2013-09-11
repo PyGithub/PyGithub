@@ -35,21 +35,21 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._limit)
+        return self._limit.value
 
     @property
     def remaining(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._remaining)
+        return self._remaining.value
 
     @property
     def reset(self):
         """
         :type: datetime.datetime
         """
-        return self._NoneIfNotSet(self._reset)
+        return self._reset.value
 
     def _initAttributes(self):
         self._limit = github.GithubObject.NotSet
@@ -59,10 +59,10 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "limit" in attributes:  # pragma no branch
             assert attributes["limit"] is None or isinstance(attributes["limit"], (int, long)), attributes["limit"]
-            self._limit = attributes["limit"]
+            self._limit = github.GithubObject.ValuedAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch
             assert attributes["remaining"] is None or isinstance(attributes["remaining"], (int, long)), attributes["remaining"]
-            self._remaining = attributes["remaining"]
+            self._remaining = github.GithubObject.ValuedAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
             assert attributes["reset"] is None or isinstance(attributes["reset"], (int, long)), attributes["reset"]
-            self._reset = datetime.datetime.utcfromtimestamp(attributes["reset"])
+            self._reset = github.GithubObject.ValuedAttribute(datetime.datetime.utcfromtimestamp(attributes["reset"]))

@@ -39,56 +39,56 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         """
         :type: datetime.datetime
         """
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def creator(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
-        return self._NoneIfNotSet(self._creator)
+        return self._creator.value
 
     @property
     def description(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._description)
+        return self._description.value
 
     @property
     def id(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def state(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._state)
+        return self._state.value
 
     @property
     def target_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._target_url)
+        return self._target_url.value
 
     @property
     def updated_at(self):
         """
         :type: datetime.datetime
         """
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._created_at = github.GithubObject.NotSet
@@ -103,25 +103,25 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
         if "creator" in attributes:  # pragma no branch
             assert attributes["creator"] is None or isinstance(attributes["creator"], dict), attributes["creator"]
-            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False)
+            self._creator = github.GithubObject.ValuedAttribute(None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False))
         if "description" in attributes:  # pragma no branch
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
-            self._description = attributes["description"]
+            self._description = github.GithubObject.ValuedAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
-            self._state = attributes["state"]
+            self._state = github.GithubObject.ValuedAttribute(attributes["state"])
         if "target_url" in attributes:  # pragma no branch
             assert attributes["target_url"] is None or isinstance(attributes["target_url"], (str, unicode)), attributes["target_url"]
-            self._target_url = attributes["target_url"]
+            self._target_url = github.GithubObject.ValuedAttribute(attributes["target_url"])
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

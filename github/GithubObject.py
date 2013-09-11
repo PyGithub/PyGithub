@@ -33,7 +33,14 @@ import Consts
 class _NotSetType:
     def __repr__(self):
         return "NotSet"
+
+    value = None
 NotSet = _NotSetType()
+
+
+class ValuedAttribute:
+    def __init__(self, value):
+        self.value = value
 
 
 class GithubObject(object):
@@ -88,13 +95,6 @@ class GithubObject(object):
         return "/".join(url.split("/")[: -1])
 
     @staticmethod
-    def _NoneIfNotSet(value):
-        if value is NotSet:
-            return None
-        else:
-            return value
-
-    @staticmethod
     def _parseDatetime(s):
         if s is None:
             return None
@@ -141,7 +141,7 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._url
+            self._url.value
         )
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
@@ -159,7 +159,7 @@ class CompletableGithubObject(GithubObject):
 
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
-            self._url,
+            self._url.value,
             headers=conditionalRequestHeader
         )
         if status == 304:

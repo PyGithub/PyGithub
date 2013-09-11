@@ -40,7 +40,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._active)
-        return self._NoneIfNotSet(self._active)
+        return self._active.value
 
     @property
     def config(self):
@@ -48,7 +48,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: dict
         """
         self._completeIfNotSet(self._config)
-        return self._NoneIfNotSet(self._config)
+        return self._config.value
 
     @property
     def created_at(self):
@@ -56,7 +56,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def events(self):
@@ -64,7 +64,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: list of string
         """
         self._completeIfNotSet(self._events)
-        return self._NoneIfNotSet(self._events)
+        return self._events.value
 
     @property
     def id(self):
@@ -72,7 +72,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def last_response(self):
@@ -80,7 +80,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.HookResponse.HookResponse`
         """
         self._completeIfNotSet(self._last_response)
-        return self._NoneIfNotSet(self._last_response)
+        return self._last_response.value
 
     @property
     def name(self):
@@ -88,7 +88,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def test_url(self):
@@ -96,7 +96,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._test_url)
-        return self._NoneIfNotSet(self._test_url)
+        return self._test_url.value
 
     @property
     def updated_at(self):
@@ -104,7 +104,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -112,7 +112,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def delete(self):
         """
@@ -185,31 +185,31 @@ class Hook(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "active" in attributes:  # pragma no branch
             assert attributes["active"] is None or isinstance(attributes["active"], bool), attributes["active"]
-            self._active = attributes["active"]
+            self._active = github.GithubObject.ValuedAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch
             assert attributes["config"] is None or isinstance(attributes["config"], dict), attributes["config"]
-            self._config = attributes["config"]
+            self._config = github.GithubObject.ValuedAttribute(attributes["config"])
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
         if "events" in attributes:  # pragma no branch
             assert attributes["events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["events"]), attributes["events"]
-            self._events = attributes["events"]
+            self._events = github.GithubObject.ValuedAttribute(attributes["events"])
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
         if "last_response" in attributes:  # pragma no branch
             assert attributes["last_response"] is None or isinstance(attributes["last_response"], dict), attributes["last_response"]
-            self._last_response = None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, self._headers, attributes["last_response"], completed=False)
+            self._last_response = github.GithubObject.ValuedAttribute(None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, self._headers, attributes["last_response"], completed=False))
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "test_url" in attributes:  # pragma no branch
             assert attributes["test_url"] is None or isinstance(attributes["test_url"], (str, unicode)), attributes["test_url"]
-            self._test_url = attributes["test_url"]
+            self._test_url = github.GithubObject.ValuedAttribute(attributes["test_url"])
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

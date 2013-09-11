@@ -37,70 +37,70 @@ class File(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._additions)
+        return self._additions.value
 
     @property
     def blob_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._blob_url)
+        return self._blob_url.value
 
     @property
     def changes(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._changes)
+        return self._changes.value
 
     @property
     def contents_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._contents_url)
+        return self._contents_url.value
 
     @property
     def deletions(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._deletions)
+        return self._deletions.value
 
     @property
     def filename(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._filename)
+        return self._filename.value
 
     @property
     def patch(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._patch)
+        return self._patch.value
 
     @property
     def raw_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._raw_url)
+        return self._raw_url.value
 
     @property
     def sha(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def status(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._status)
+        return self._status.value
 
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
@@ -117,31 +117,31 @@ class File(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
             assert attributes["additions"] is None or isinstance(attributes["additions"], (int, long)), attributes["additions"]
-            self._additions = attributes["additions"]
+            self._additions = github.GithubObject.ValuedAttribute(attributes["additions"])
         if "blob_url" in attributes:  # pragma no branch
             assert attributes["blob_url"] is None or isinstance(attributes["blob_url"], (str, unicode)), attributes["blob_url"]
-            self._blob_url = attributes["blob_url"]
+            self._blob_url = github.GithubObject.ValuedAttribute(attributes["blob_url"])
         if "changes" in attributes:  # pragma no branch
             assert attributes["changes"] is None or isinstance(attributes["changes"], (int, long)), attributes["changes"]
-            self._changes = attributes["changes"]
+            self._changes = github.GithubObject.ValuedAttribute(attributes["changes"])
         if "contents_url" in attributes:  # pragma no branch
             assert attributes["contents_url"] is None or isinstance(attributes["contents_url"], (str, unicode)), attributes["contents_url"]
-            self._contents_url = attributes["contents_url"]
+            self._contents_url = github.GithubObject.ValuedAttribute(attributes["contents_url"])
         if "deletions" in attributes:  # pragma no branch
             assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
-            self._deletions = attributes["deletions"]
+            self._deletions = github.GithubObject.ValuedAttribute(attributes["deletions"])
         if "filename" in attributes:  # pragma no branch
             assert attributes["filename"] is None or isinstance(attributes["filename"], (str, unicode)), attributes["filename"]
-            self._filename = attributes["filename"]
+            self._filename = github.GithubObject.ValuedAttribute(attributes["filename"])
         if "patch" in attributes:  # pragma no branch
             assert attributes["patch"] is None or isinstance(attributes["patch"], (str, unicode)), attributes["patch"]
-            self._patch = attributes["patch"]
+            self._patch = github.GithubObject.ValuedAttribute(attributes["patch"])
         if "raw_url" in attributes:  # pragma no branch
             assert attributes["raw_url"] is None or isinstance(attributes["raw_url"], (str, unicode)), attributes["raw_url"]
-            self._raw_url = attributes["raw_url"]
+            self._raw_url = github.GithubObject.ValuedAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
         if "status" in attributes:  # pragma no branch
             assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = attributes["status"]
+            self._status = github.GithubObject.ValuedAttribute(attributes["status"])

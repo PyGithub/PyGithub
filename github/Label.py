@@ -41,7 +41,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._color)
-        return self._NoneIfNotSet(self._color)
+        return self._color.value
 
     @property
     def name(self):
@@ -49,7 +49,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def url(self):
@@ -57,7 +57,7 @@ class Label(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def delete(self):
         """
@@ -101,10 +101,10 @@ class Label(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "color" in attributes:  # pragma no branch
             assert attributes["color"] is None or isinstance(attributes["color"], (str, unicode)), attributes["color"]
-            self._color = attributes["color"]
+            self._color = github.GithubObject.ValuedAttribute(attributes["color"])
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

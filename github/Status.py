@@ -34,14 +34,14 @@ class Status(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._status)
+        return self._status.value
 
     @property
     def last_updated(self):
         """
         :type: datetime.datetime
         """
-        return self._NoneIfNotSet(self._last_updated)
+        return self._last_updated.value
 
     def _initAttributes(self):
         self._status = github.GithubObject.NotSet
@@ -50,7 +50,7 @@ class Status(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "status" in attributes:  # pragma no branch
             assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = attributes["status"]
+            self._status = github.GithubObject.ValuedAttribute(attributes["status"])
         if "last_updated" in attributes:  # pragma no branch
             assert attributes["last_updated"] is None or isinstance(attributes["last_updated"], (str, unicode)), attributes["last_updated"]
-            self._last_updated = self._parseDatetime(attributes["last_updated"])
+            self._last_updated = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["last_updated"]))

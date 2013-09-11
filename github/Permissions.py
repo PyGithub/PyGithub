@@ -37,21 +37,21 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
         """
         :type: bool
         """
-        return self._NoneIfNotSet(self._admin)
+        return self._admin.value
 
     @property
     def pull(self):
         """
         :type: bool
         """
-        return self._NoneIfNotSet(self._pull)
+        return self._pull.value
 
     @property
     def push(self):
         """
         :type: bool
         """
-        return self._NoneIfNotSet(self._push)
+        return self._push.value
 
     def _initAttributes(self):
         self._admin = github.GithubObject.NotSet
@@ -61,10 +61,10 @@ class Permissions(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "admin" in attributes:  # pragma no branch
             assert attributes["admin"] is None or isinstance(attributes["admin"], bool), attributes["admin"]
-            self._admin = attributes["admin"]
+            self._admin = github.GithubObject.ValuedAttribute(attributes["admin"])
         if "pull" in attributes:  # pragma no branch
             assert attributes["pull"] is None or isinstance(attributes["pull"], bool), attributes["pull"]
-            self._pull = attributes["pull"]
+            self._pull = github.GithubObject.ValuedAttribute(attributes["pull"])
         if "push" in attributes:  # pragma no branch
             assert attributes["push"] is None or isinstance(attributes["push"], bool), attributes["push"]
-            self._push = attributes["push"]
+            self._push = github.GithubObject.ValuedAttribute(attributes["push"])

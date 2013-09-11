@@ -37,28 +37,28 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
         """
         :type: list of string
         """
-        return self._NoneIfNotSet(self._events)
+        return self._events.value
 
     @property
     def name(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def schema(self):
         """
         :type: list of list of string
         """
-        return self._NoneIfNotSet(self._schema)
+        return self._schema.value
 
     @property
     def supported_events(self):
         """
         :type: list of string
         """
-        return self._NoneIfNotSet(self._supported_events)
+        return self._supported_events.value
 
     def _initAttributes(self):
         self._events = github.GithubObject.NotSet
@@ -69,13 +69,13 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "events" in attributes:  # pragma no branch
             assert attributes["events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["events"]), attributes["events"]
-            self._events = attributes["events"]
+            self._events = github.GithubObject.ValuedAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "schema" in attributes:  # pragma no branch
             assert attributes["schema"] is None or all(isinstance(element, list) for element in attributes["schema"]), attributes["schema"]
-            self._schema = attributes["schema"]
+            self._schema = github.GithubObject.ValuedAttribute(attributes["schema"])
         if "supported_events" in attributes:  # pragma no branch
             assert attributes["supported_events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["supported_events"]), attributes["supported_events"]
-            self._supported_events = attributes["supported_events"]
+            self._supported_events = github.GithubObject.ValuedAttribute(attributes["supported_events"])

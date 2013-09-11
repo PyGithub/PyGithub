@@ -35,7 +35,7 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
         """
         :type: class:`github.Rate.Rate`
         """
-        return self._NoneIfNotSet(self._rate)
+        return self._rate.value
 
     def _initAttributes(self):
         self._rate = github.GithubObject.NotSet
@@ -43,4 +43,4 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "rate" in attributes:  # pragma no branch
             assert attributes["rate"] is None or isinstance(attributes["rate"], dict), attributes["rate"]
-            self._rate = None if attributes["rate"] is None else github.Rate.Rate(self._requester, self._headers, attributes["rate"], completed=False)
+            self._rate = github.GithubObject.ValuedAttribute(None if attributes["rate"] is None else github.Rate.Rate(self._requester, self._headers, attributes["rate"], completed=False))

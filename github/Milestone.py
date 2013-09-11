@@ -45,7 +45,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._closed_issues)
-        return self._NoneIfNotSet(self._closed_issues)
+        return self._closed_issues.value
 
     @property
     def created_at(self):
@@ -53,7 +53,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def creator(self):
@@ -61,7 +61,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._creator)
-        return self._NoneIfNotSet(self._creator)
+        return self._creator.value
 
     @property
     def description(self):
@@ -69,7 +69,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._description)
-        return self._NoneIfNotSet(self._description)
+        return self._description.value
 
     @property
     def due_on(self):
@@ -77,7 +77,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._due_on)
-        return self._NoneIfNotSet(self._due_on)
+        return self._due_on.value
 
     @property
     def id(self):
@@ -85,7 +85,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def labels_url(self):
@@ -93,7 +93,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._labels_url)
-        return self._NoneIfNotSet(self._labels_url)
+        return self._labels_url.value
 
     @property
     def number(self):
@@ -101,7 +101,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._number)
-        return self._NoneIfNotSet(self._number)
+        return self._number.value
 
     @property
     def open_issues(self):
@@ -109,7 +109,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._open_issues)
-        return self._NoneIfNotSet(self._open_issues)
+        return self._open_issues.value
 
     @property
     def state(self):
@@ -117,7 +117,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._state)
-        return self._NoneIfNotSet(self._state)
+        return self._state.value
 
     @property
     def title(self):
@@ -125,7 +125,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._title)
-        return self._NoneIfNotSet(self._title)
+        return self._title.value
 
     @property
     def updated_at(self):
@@ -133,7 +133,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -141,7 +141,7 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def delete(self):
         """
@@ -216,40 +216,40 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "closed_issues" in attributes:  # pragma no branch
             assert attributes["closed_issues"] is None or isinstance(attributes["closed_issues"], (int, long)), attributes["closed_issues"]
-            self._closed_issues = attributes["closed_issues"]
+            self._closed_issues = github.GithubObject.ValuedAttribute(attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch
             assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
         if "creator" in attributes:  # pragma no branch
             assert attributes["creator"] is None or isinstance(attributes["creator"], dict), attributes["creator"]
-            self._creator = None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False)
+            self._creator = github.GithubObject.ValuedAttribute(None if attributes["creator"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["creator"], completed=False))
         if "description" in attributes:  # pragma no branch
             assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
-            self._description = attributes["description"]
+            self._description = github.GithubObject.ValuedAttribute(attributes["description"])
         if "due_on" in attributes:  # pragma no branch
             assert attributes["due_on"] is None or isinstance(attributes["due_on"], (str, unicode)), attributes["due_on"]
-            self._due_on = self._parseDatetime(attributes["due_on"])
+            self._due_on = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["due_on"]))
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
         if "labels_url" in attributes:  # pragma no branch
             assert attributes["labels_url"] is None or isinstance(attributes["labels_url"], (str, unicode)), attributes["labels_url"]
-            self._labels_url = attributes["labels_url"]
+            self._labels_url = github.GithubObject.ValuedAttribute(attributes["labels_url"])
         if "number" in attributes:  # pragma no branch
             assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
-            self._number = attributes["number"]
+            self._number = github.GithubObject.ValuedAttribute(attributes["number"])
         if "open_issues" in attributes:  # pragma no branch
             assert attributes["open_issues"] is None or isinstance(attributes["open_issues"], (int, long)), attributes["open_issues"]
-            self._open_issues = attributes["open_issues"]
+            self._open_issues = github.GithubObject.ValuedAttribute(attributes["open_issues"])
         if "state" in attributes:  # pragma no branch
             assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
-            self._state = attributes["state"]
+            self._state = github.GithubObject.ValuedAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
             assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = attributes["title"]
+            self._title = github.GithubObject.ValuedAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
             assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

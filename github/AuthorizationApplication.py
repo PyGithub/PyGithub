@@ -38,7 +38,7 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def url(self):
@@ -46,7 +46,7 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._name = github.GithubObject.NotSet
@@ -55,7 +55,7 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

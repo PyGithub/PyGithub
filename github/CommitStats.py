@@ -37,21 +37,21 @@ class CommitStats(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._additions)
+        return self._additions.value
 
     @property
     def deletions(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._deletions)
+        return self._deletions.value
 
     @property
     def total(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._total)
+        return self._total.value
 
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
@@ -61,10 +61,10 @@ class CommitStats(github.GithubObject.NonCompletableGithubObject):
     def _useAttributes(self, attributes):
         if "additions" in attributes:  # pragma no branch
             assert attributes["additions"] is None or isinstance(attributes["additions"], (int, long)), attributes["additions"]
-            self._additions = attributes["additions"]
+            self._additions = github.GithubObject.ValuedAttribute(attributes["additions"])
         if "deletions" in attributes:  # pragma no branch
             assert attributes["deletions"] is None or isinstance(attributes["deletions"], (int, long)), attributes["deletions"]
-            self._deletions = attributes["deletions"]
+            self._deletions = github.GithubObject.ValuedAttribute(attributes["deletions"])
         if "total" in attributes:  # pragma no branch
             assert attributes["total"] is None or isinstance(attributes["total"], (int, long)), attributes["total"]
-            self._total = attributes["total"]
+            self._total = github.GithubObject.ValuedAttribute(attributes["total"])

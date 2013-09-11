@@ -43,7 +43,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def members_count(self):
@@ -51,7 +51,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._members_count)
-        return self._NoneIfNotSet(self._members_count)
+        return self._members_count.value
 
     @property
     def members_url(self):
@@ -59,7 +59,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._members_url)
-        return self._NoneIfNotSet(self._members_url)
+        return self._members_url.value
 
     @property
     def name(self):
@@ -67,7 +67,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def permission(self):
@@ -75,7 +75,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._permission)
-        return self._NoneIfNotSet(self._permission)
+        return self._permission.value
 
     @property
     def repos_count(self):
@@ -83,7 +83,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._repos_count)
-        return self._NoneIfNotSet(self._repos_count)
+        return self._repos_count.value
 
     @property
     def repositories_url(self):
@@ -91,7 +91,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._repositories_url)
-        return self._NoneIfNotSet(self._repositories_url)
+        return self._repositories_url.value
 
     @property
     def slug(self):
@@ -99,7 +99,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._slug)
-        return self._NoneIfNotSet(self._slug)
+        return self._slug.value
 
     @property
     def url(self):
@@ -107,7 +107,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def add_to_members(self, member):
         """
@@ -256,28 +256,28 @@ class Team(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
             assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
         if "members_count" in attributes:  # pragma no branch
             assert attributes["members_count"] is None or isinstance(attributes["members_count"], (int, long)), attributes["members_count"]
-            self._members_count = attributes["members_count"]
+            self._members_count = github.GithubObject.ValuedAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch
             assert attributes["members_url"] is None or isinstance(attributes["members_url"], (str, unicode)), attributes["members_url"]
-            self._members_url = attributes["members_url"]
+            self._members_url = github.GithubObject.ValuedAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "permission" in attributes:  # pragma no branch
             assert attributes["permission"] is None or isinstance(attributes["permission"], (str, unicode)), attributes["permission"]
-            self._permission = attributes["permission"]
+            self._permission = github.GithubObject.ValuedAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch
             assert attributes["repos_count"] is None or isinstance(attributes["repos_count"], (int, long)), attributes["repos_count"]
-            self._repos_count = attributes["repos_count"]
+            self._repos_count = github.GithubObject.ValuedAttribute(attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
             assert attributes["repositories_url"] is None or isinstance(attributes["repositories_url"], (str, unicode)), attributes["repositories_url"]
-            self._repositories_url = attributes["repositories_url"]
+            self._repositories_url = github.GithubObject.ValuedAttribute(attributes["repositories_url"])
         if "slug" in attributes:  # pragma no branch
             assert attributes["slug"] is None or isinstance(attributes["slug"], (str, unicode)), attributes["slug"]
-            self._slug = attributes["slug"]
+            self._slug = github.GithubObject.ValuedAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])

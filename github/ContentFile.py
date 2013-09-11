@@ -38,7 +38,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._content)
-        return self._NoneIfNotSet(self._content)
+        return self._content.value
 
     @property
     def encoding(self):
@@ -46,7 +46,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._encoding)
-        return self._NoneIfNotSet(self._encoding)
+        return self._encoding.value
 
     @property
     def git_url(self):
@@ -54,7 +54,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._git_url)
-        return self._NoneIfNotSet(self._git_url)
+        return self._git_url.value
 
     @property
     def html_url(self):
@@ -62,7 +62,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._html_url)
-        return self._NoneIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def name(self):
@@ -70,7 +70,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def path(self):
@@ -78,7 +78,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._path)
-        return self._NoneIfNotSet(self._path)
+        return self._path.value
 
     @property
     def sha(self):
@@ -86,7 +86,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._sha)
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def size(self):
@@ -94,7 +94,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._size)
-        return self._NoneIfNotSet(self._size)
+        return self._size.value
 
     @property
     def type(self):
@@ -102,7 +102,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._type)
-        return self._NoneIfNotSet(self._type)
+        return self._type.value
 
     @property
     def url(self):
@@ -110,7 +110,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -126,31 +126,31 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
             assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = attributes["content"]
+            self._content = github.GithubObject.ValuedAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
             assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
-            self._encoding = attributes["encoding"]
+            self._encoding = github.GithubObject.ValuedAttribute(attributes["encoding"])
         if "git_url" in attributes:  # pragma no branch
             assert attributes["git_url"] is None or isinstance(attributes["git_url"], (str, unicode)), attributes["git_url"]
-            self._git_url = attributes["git_url"]
+            self._git_url = github.GithubObject.ValuedAttribute(attributes["git_url"])
         if "html_url" in attributes:  # pragma no branch
             assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = attributes["html_url"]
+            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
         if "name" in attributes:  # pragma no branch
             assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
-            self._path = attributes["path"]
+            self._path = github.GithubObject.ValuedAttribute(attributes["path"])
         if "sha" in attributes:  # pragma no branch
             assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
             assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = attributes["size"]
+            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
             assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = attributes["type"]
+            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
             assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
