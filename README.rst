@@ -14,7 +14,7 @@ What's new?
 Thank you, dear stargazers!
 ---------------------------
 
-Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
+Starting today (September 5th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
 `Version 1.20.0 <https://github.com/jacquev6/PyGithub/issues?milestone=32&state=closed>`_ (???? ??th, 2013)
 -----------------------------------------------------------------------------------------------------------
