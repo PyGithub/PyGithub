@@ -60,11 +60,8 @@ class GitObject(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
+            self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

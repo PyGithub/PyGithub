@@ -84,20 +84,14 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "mode" in attributes:  # pragma no branch
-            assert attributes["mode"] is None or isinstance(attributes["mode"], (str, unicode)), attributes["mode"]
-            self._mode = github.GithubObject.ValuedAttribute(attributes["mode"])
+            self._mode = self._makeStringAttribute(attributes["mode"])
         if "path" in attributes:  # pragma no branch
-            assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
-            self._path = github.GithubObject.ValuedAttribute(attributes["path"])
+            self._path = self._makeStringAttribute(attributes["path"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
+            self._size = self._makeIntAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
+            self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

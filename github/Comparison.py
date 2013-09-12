@@ -156,47 +156,28 @@ class Comparison(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "ahead_by" in attributes:  # pragma no branch
-            assert attributes["ahead_by"] is None or isinstance(attributes["ahead_by"], (int, long)), attributes["ahead_by"]
-            self._ahead_by = github.GithubObject.ValuedAttribute(attributes["ahead_by"])
+            self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch
-            assert attributes["base_commit"] is None or isinstance(attributes["base_commit"], dict), attributes["base_commit"]
-            self._base_commit = github.GithubObject.ValuedAttribute(None if attributes["base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["base_commit"], completed=False))
+            self._base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["base_commit"])
         if "behind_by" in attributes:  # pragma no branch
-            assert attributes["behind_by"] is None or isinstance(attributes["behind_by"], (int, long)), attributes["behind_by"]
-            self._behind_by = github.GithubObject.ValuedAttribute(attributes["behind_by"])
+            self._behind_by = self._makeIntAttribute(attributes["behind_by"])
         if "commits" in attributes:  # pragma no branch
-            assert attributes["commits"] is None or all(isinstance(element, dict) for element in attributes["commits"]), attributes["commits"]
-            self._commits = github.GithubObject.ValuedAttribute(None if attributes["commits"] is None else [
-                github.Commit.Commit(self._requester, self._headers, element, completed=False)
-                for element in attributes["commits"]
-            ])
+            self._commits = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["commits"])
         if "diff_url" in attributes:  # pragma no branch
-            assert attributes["diff_url"] is None or isinstance(attributes["diff_url"], (str, unicode)), attributes["diff_url"]
-            self._diff_url = github.GithubObject.ValuedAttribute(attributes["diff_url"])
+            self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "files" in attributes:  # pragma no branch
-            assert attributes["files"] is None or all(isinstance(element, dict) for element in attributes["files"]), attributes["files"]
-            self._files = github.GithubObject.ValuedAttribute(None if attributes["files"] is None else [
-                github.File.File(self._requester, self._headers, element, completed=False)
-                for element in attributes["files"]
-            ])
+            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "merge_base_commit" in attributes:  # pragma no branch
-            assert attributes["merge_base_commit"] is None or isinstance(attributes["merge_base_commit"], dict), attributes["merge_base_commit"]
-            self._merge_base_commit = github.GithubObject.ValuedAttribute(None if attributes["merge_base_commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["merge_base_commit"], completed=False))
+            self._merge_base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["merge_base_commit"])
         if "patch_url" in attributes:  # pragma no branch
-            assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
-            self._patch_url = github.GithubObject.ValuedAttribute(attributes["patch_url"])
+            self._patch_url = self._makeStringAttribute(attributes["patch_url"])
         if "permalink_url" in attributes:  # pragma no branch
-            assert attributes["permalink_url"] is None or isinstance(attributes["permalink_url"], (str, unicode)), attributes["permalink_url"]
-            self._permalink_url = github.GithubObject.ValuedAttribute(attributes["permalink_url"])
+            self._permalink_url = self._makeStringAttribute(attributes["permalink_url"])
         if "status" in attributes:  # pragma no branch
-            assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = github.GithubObject.ValuedAttribute(attributes["status"])
+            self._status = self._makeStringAttribute(attributes["status"])
         if "total_commits" in attributes:  # pragma no branch
-            assert attributes["total_commits"] is None or isinstance(attributes["total_commits"], (int, long)), attributes["total_commits"]
-            self._total_commits = github.GithubObject.ValuedAttribute(attributes["total_commits"])
+            self._total_commits = self._makeIntAttribute(attributes["total_commits"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

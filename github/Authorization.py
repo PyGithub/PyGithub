@@ -162,29 +162,20 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
-            assert attributes["app"] is None or isinstance(attributes["app"], dict), attributes["app"]
-            self._app = github.GithubObject.ValuedAttribute(None if attributes["app"] is None else github.AuthorizationApplication.AuthorizationApplication(self._requester, self._headers, attributes["app"], completed=False))
+            self._app = self._makeClassAttribute(github.AuthorizationApplication.AuthorizationApplication, attributes["app"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "note" in attributes:  # pragma no branch
-            assert attributes["note"] is None or isinstance(attributes["note"], (str, unicode)), attributes["note"]
-            self._note = github.GithubObject.ValuedAttribute(attributes["note"])
+            self._note = self._makeStringAttribute(attributes["note"])
         if "note_url" in attributes:  # pragma no branch
-            assert attributes["note_url"] is None or isinstance(attributes["note_url"], (str, unicode)), attributes["note_url"]
-            self._note_url = github.GithubObject.ValuedAttribute(attributes["note_url"])
+            self._note_url = self._makeStringAttribute(attributes["note_url"])
         if "scopes" in attributes:  # pragma no branch
-            assert attributes["scopes"] is None or all(isinstance(element, (str, unicode)) for element in attributes["scopes"]), attributes["scopes"]
-            self._scopes = github.GithubObject.ValuedAttribute(attributes["scopes"])
+            self._scopes = self._makeListOfStringsAttribute(attributes["scopes"])
         if "token" in attributes:  # pragma no branch
-            assert attributes["token"] is None or isinstance(attributes["token"], (str, unicode)), attributes["token"]
-            self._token = github.GithubObject.ValuedAttribute(attributes["token"])
+            self._token = self._makeStringAttribute(attributes["token"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

@@ -100,11 +100,8 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "color" in attributes:  # pragma no branch
-            assert attributes["color"] is None or isinstance(attributes["color"], (str, unicode)), attributes["color"]
-            self._color = github.GithubObject.ValuedAttribute(attributes["color"])
+            self._color = self._makeStringAttribute(attributes["color"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

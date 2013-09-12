@@ -69,14 +69,8 @@ class GitTree(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
-            assert attributes["tree"] is None or all(isinstance(element, dict) for element in attributes["tree"]), attributes["tree"]
-            self._tree = github.GithubObject.ValuedAttribute(None if attributes["tree"] is None else [
-                github.GitTreeElement.GitTreeElement(self._requester, self._headers, element, completed=False)
-                for element in attributes["tree"]
-            ])
+            self._tree = self._makeListOfClassesAttribute(github.GitTreeElement.GitTreeElement, attributes["tree"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

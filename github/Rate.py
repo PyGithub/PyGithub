@@ -58,11 +58,8 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "limit" in attributes:  # pragma no branch
-            assert attributes["limit"] is None or isinstance(attributes["limit"], (int, long)), attributes["limit"]
-            self._limit = github.GithubObject.ValuedAttribute(attributes["limit"])
+            self._limit = self._makeIntAttribute(attributes["limit"])
         if "remaining" in attributes:  # pragma no branch
-            assert attributes["remaining"] is None or isinstance(attributes["remaining"], (int, long)), attributes["remaining"]
-            self._remaining = github.GithubObject.ValuedAttribute(attributes["remaining"])
+            self._remaining = self._makeIntAttribute(attributes["remaining"])
         if "reset" in attributes:  # pragma no branch
-            assert attributes["reset"] is None or isinstance(attributes["reset"], (int, long)), attributes["reset"]
-            self._reset = github.GithubObject.ValuedAttribute(datetime.datetime.utcfromtimestamp(attributes["reset"]))
+            self._reset = self._makeTimestampAttribute(attributes["reset"])

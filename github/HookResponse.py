@@ -60,11 +60,8 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "code" in attributes:  # pragma no branch
-            assert attributes["code"] is None or isinstance(attributes["code"], (int, long)), attributes["code"]
-            self._code = github.GithubObject.ValuedAttribute(attributes["code"])
+            self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = github.GithubObject.ValuedAttribute(attributes["message"])
+            self._message = self._makeStringAttribute(attributes["message"])
         if "status" in attributes:  # pragma no branch
-            assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = github.GithubObject.ValuedAttribute(attributes["status"])
+            self._status = self._makeStringAttribute(attributes["status"])

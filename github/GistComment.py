@@ -119,20 +119,14 @@ class GistComment(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "body" in attributes:  # pragma no branch
-            assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
-            self._body = github.GithubObject.ValuedAttribute(attributes["body"])
+            self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = github.GithubObject.ValuedAttribute(None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False))
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

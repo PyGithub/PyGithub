@@ -113,17 +113,12 @@ class UserKey(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
-            assert attributes["key"] is None or isinstance(attributes["key"], (str, unicode)), attributes["key"]
-            self._key = github.GithubObject.ValuedAttribute(attributes["key"])
+            self._key = self._makeStringAttribute(attributes["key"])
         if "title" in attributes:  # pragma no branch
-            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = github.GithubObject.ValuedAttribute(attributes["title"])
+            self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
-            assert attributes["verified"] is None or isinstance(attributes["verified"], bool), attributes["verified"]
-            self._verified = github.GithubObject.ValuedAttribute(attributes["verified"])
+            self._verified = self._makeBoolAttribute(attributes["verified"])

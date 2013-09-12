@@ -95,7 +95,80 @@ class GithubObject(object):
         return "/".join(url.split("/")[: -1])
 
     @staticmethod
-    def _parseDatetime(s):
+    def _makeStringAttribute(value):
+        assert value is None or isinstance(value, (str, unicode)), (value, "should be a string")
+        return ValuedAttribute(value)
+
+    @staticmethod
+    def _makeIntAttribute(value):
+        assert value is None or isinstance(value, (int, long)), (value, "should be an int")
+        return ValuedAttribute(value)
+
+    @staticmethod
+    def _makeBoolAttribute(value):
+        assert value is None or isinstance(value, bool), (value, "should be an bool")
+        return ValuedAttribute(value)
+
+    @staticmethod
+    def _makeDictAttribute(value):
+        assert value is None or isinstance(value, dict), (value, "should be an dict")
+        return ValuedAttribute(value)
+
+    @staticmethod
+    def _makeTimestampAttribute(value):
+        assert value is None or isinstance(value, (int, long)), (value, "should be a timestamp")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(datetime.datetime.utcfromtimestamp(value))
+
+    @staticmethod
+    def _makeDatetimeAttribute(value):
+        assert value is None or isinstance(value, (str, unicode)), (value, "should be a string parsable as a date")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(GithubObject.__parseDatetime(value))
+
+    def _makeClassAttribute(self, klass, value):
+        assert value is None or isinstance(value, dict), (value, "should be an dict")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(klass(self._requester, self._headers, value, completed=False))
+
+    @staticmethod
+    def _makeListOfStringsAttribute(value):
+        assert value is None or isinstance(value, list) and all(isinstance(element, (str, unicode)) for element in value), (value, "should be a list of strings")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(value)
+
+    @staticmethod
+    def _makeListOfListOfStringsAttribute(value):
+        assert value is None or isinstance(value, list) and all(all(isinstance(sub, (str, unicode)) for sub in element) for element in value), (value, "should be a list of list of strings")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(value)
+
+    def _makeListOfClassesAttribute(self, klass, value):
+        assert value is None or isinstance(value, list) and all(isinstance(element, dict) for element in value), (value, "should be a list of dicts")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute([klass(self._requester, self._headers, element, completed=False) for element in value])
+
+    def _makeDictOfStringsToClassesAttribute(self, klass, value):
+        assert value is None or isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()), (value, "should be a dict of strings to dicts")
+        if value is None:
+            return ValuedAttribute(None)
+        else:
+            return ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
+
+    @staticmethod
+    def __parseDatetime(s):
         if s is None:
             return None
         elif len(s) == 24:

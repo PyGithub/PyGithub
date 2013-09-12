@@ -55,8 +55,6 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
-            assert attributes["commit"] is None or isinstance(attributes["commit"], dict), attributes["commit"]
-            self._commit = github.GithubObject.ValuedAttribute(None if attributes["commit"] is None else github.Commit.Commit(self._requester, self._headers, attributes["commit"], completed=False))
+            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])

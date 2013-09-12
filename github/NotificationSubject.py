@@ -66,14 +66,10 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "title" in attributes:  # pragma no branch
-            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = github.GithubObject.ValuedAttribute(attributes["title"])
+            self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])
         if "latest_comment_url" in attributes:  # pragma no branch
-            assert attributes["latest_comment_url"] is None or isinstance(attributes["latest_comment_url"], (str, unicode)), attributes["latest_comment_url"]
-            self._latest_comment_url = github.GithubObject.ValuedAttribute(attributes["latest_comment_url"])
+            self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
+            self._type = self._makeStringAttribute(attributes["type"])

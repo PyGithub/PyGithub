@@ -255,29 +255,20 @@ class Team(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "members_count" in attributes:  # pragma no branch
-            assert attributes["members_count"] is None or isinstance(attributes["members_count"], (int, long)), attributes["members_count"]
-            self._members_count = github.GithubObject.ValuedAttribute(attributes["members_count"])
+            self._members_count = self._makeIntAttribute(attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch
-            assert attributes["members_url"] is None or isinstance(attributes["members_url"], (str, unicode)), attributes["members_url"]
-            self._members_url = github.GithubObject.ValuedAttribute(attributes["members_url"])
+            self._members_url = self._makeStringAttribute(attributes["members_url"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "permission" in attributes:  # pragma no branch
-            assert attributes["permission"] is None or isinstance(attributes["permission"], (str, unicode)), attributes["permission"]
-            self._permission = github.GithubObject.ValuedAttribute(attributes["permission"])
+            self._permission = self._makeStringAttribute(attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch
-            assert attributes["repos_count"] is None or isinstance(attributes["repos_count"], (int, long)), attributes["repos_count"]
-            self._repos_count = github.GithubObject.ValuedAttribute(attributes["repos_count"])
+            self._repos_count = self._makeIntAttribute(attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
-            assert attributes["repositories_url"] is None or isinstance(attributes["repositories_url"], (str, unicode)), attributes["repositories_url"]
-            self._repositories_url = github.GithubObject.ValuedAttribute(attributes["repositories_url"])
+            self._repositories_url = self._makeStringAttribute(attributes["repositories_url"])
         if "slug" in attributes:  # pragma no branch
-            assert attributes["slug"] is None or isinstance(attributes["slug"], (str, unicode)), attributes["slug"]
-            self._slug = github.GithubObject.ValuedAttribute(attributes["slug"])
+            self._slug = self._makeStringAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

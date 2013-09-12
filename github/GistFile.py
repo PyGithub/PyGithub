@@ -84,20 +84,14 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
-            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = github.GithubObject.ValuedAttribute(attributes["content"])
+            self._content = self._makeStringAttribute(attributes["content"])
         if "filename" in attributes:  # pragma no branch
-            assert attributes["filename"] is None or isinstance(attributes["filename"], (str, unicode)), attributes["filename"]
-            self._filename = github.GithubObject.ValuedAttribute(attributes["filename"])
+            self._filename = self._makeStringAttribute(attributes["filename"])
         if "language" in attributes:  # pragma no branch
-            assert attributes["language"] is None or isinstance(attributes["language"], (str, unicode)), attributes["language"]
-            self._language = github.GithubObject.ValuedAttribute(attributes["language"])
+            self._language = self._makeStringAttribute(attributes["language"])
         if "raw_url" in attributes:  # pragma no branch
-            assert attributes["raw_url"] is None or isinstance(attributes["raw_url"], (str, unicode)), attributes["raw_url"]
-            self._raw_url = github.GithubObject.ValuedAttribute(attributes["raw_url"])
+            self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
+            self._size = self._makeIntAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
+            self._type = self._makeStringAttribute(attributes["type"])

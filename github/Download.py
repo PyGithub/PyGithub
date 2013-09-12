@@ -226,62 +226,42 @@ class Download(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "accesskeyid" in attributes:  # pragma no branch
-            assert attributes["accesskeyid"] is None or isinstance(attributes["accesskeyid"], (str, unicode)), attributes["accesskeyid"]
-            self._accesskeyid = github.GithubObject.ValuedAttribute(attributes["accesskeyid"])
+            self._accesskeyid = self._makeStringAttribute(attributes["accesskeyid"])
         if "acl" in attributes:  # pragma no branch
-            assert attributes["acl"] is None or isinstance(attributes["acl"], (str, unicode)), attributes["acl"]
-            self._acl = github.GithubObject.ValuedAttribute(attributes["acl"])
+            self._acl = self._makeStringAttribute(attributes["acl"])
         if "bucket" in attributes:  # pragma no branch
-            assert attributes["bucket"] is None or isinstance(attributes["bucket"], (str, unicode)), attributes["bucket"]
-            self._bucket = github.GithubObject.ValuedAttribute(attributes["bucket"])
+            self._bucket = self._makeStringAttribute(attributes["bucket"])
         if "content_type" in attributes:  # pragma no branch
-            assert attributes["content_type"] is None or isinstance(attributes["content_type"], (str, unicode)), attributes["content_type"]
-            self._content_type = github.GithubObject.ValuedAttribute(attributes["content_type"])
+            self._content_type = self._makeStringAttribute(attributes["content_type"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "description" in attributes:  # pragma no branch
-            assert attributes["description"] is None or isinstance(attributes["description"], (str, unicode)), attributes["description"]
-            self._description = github.GithubObject.ValuedAttribute(attributes["description"])
+            self._description = self._makeStringAttribute(attributes["description"])
         if "download_count" in attributes:  # pragma no branch
-            assert attributes["download_count"] is None or isinstance(attributes["download_count"], (int, long)), attributes["download_count"]
-            self._download_count = github.GithubObject.ValuedAttribute(attributes["download_count"])
+            self._download_count = self._makeIntAttribute(attributes["download_count"])
         if "expirationdate" in attributes:  # pragma no branch
-            assert attributes["expirationdate"] is None or isinstance(attributes["expirationdate"], (str, unicode)), attributes["expirationdate"]
-            self._expirationdate = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["expirationdate"]))
+            self._expirationdate = self._makeDatetimeAttribute(attributes["expirationdate"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "mime_type" in attributes:  # pragma no branch
-            assert attributes["mime_type"] is None or isinstance(attributes["mime_type"], (str, unicode)), attributes["mime_type"]
-            self._mime_type = github.GithubObject.ValuedAttribute(attributes["mime_type"])
+            self._mime_type = self._makeStringAttribute(attributes["mime_type"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
-            assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
-            self._path = github.GithubObject.ValuedAttribute(attributes["path"])
+            self._path = self._makeStringAttribute(attributes["path"])
         if "policy" in attributes:  # pragma no branch
-            assert attributes["policy"] is None or isinstance(attributes["policy"], (str, unicode)), attributes["policy"]
-            self._policy = github.GithubObject.ValuedAttribute(attributes["policy"])
+            self._policy = self._makeStringAttribute(attributes["policy"])
         if "prefix" in attributes:  # pragma no branch
-            assert attributes["prefix"] is None or isinstance(attributes["prefix"], (str, unicode)), attributes["prefix"]
-            self._prefix = github.GithubObject.ValuedAttribute(attributes["prefix"])
+            self._prefix = self._makeStringAttribute(attributes["prefix"])
         if "redirect" in attributes:  # pragma no branch
-            assert attributes["redirect"] is None or isinstance(attributes["redirect"], bool), attributes["redirect"]
-            self._redirect = github.GithubObject.ValuedAttribute(attributes["redirect"])
+            self._redirect = self._makeBoolAttribute(attributes["redirect"])
         if "s3_url" in attributes:  # pragma no branch
-            assert attributes["s3_url"] is None or isinstance(attributes["s3_url"], (str, unicode)), attributes["s3_url"]
-            self._s3_url = github.GithubObject.ValuedAttribute(attributes["s3_url"])
+            self._s3_url = self._makeStringAttribute(attributes["s3_url"])
         if "signature" in attributes:  # pragma no branch
-            assert attributes["signature"] is None or isinstance(attributes["signature"], (str, unicode)), attributes["signature"]
-            self._signature = github.GithubObject.ValuedAttribute(attributes["signature"])
+            self._signature = self._makeStringAttribute(attributes["signature"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
+            self._size = self._makeIntAttribute(attributes["size"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

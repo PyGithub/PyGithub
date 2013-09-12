@@ -42,5 +42,4 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "rate" in attributes:  # pragma no branch
-            assert attributes["rate"] is None or isinstance(attributes["rate"], dict), attributes["rate"]
-            self._rate = github.GithubObject.ValuedAttribute(None if attributes["rate"] is None else github.Rate.Rate(self._requester, self._headers, attributes["rate"], completed=False))
+            self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])

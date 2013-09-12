@@ -115,29 +115,18 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = github.GithubObject.ValuedAttribute(None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["author"], completed=False))
+            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
         if "committer" in attributes:  # pragma no branch
-            assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = github.GithubObject.ValuedAttribute(None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["committer"], completed=False))
+            self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = github.GithubObject.ValuedAttribute(attributes["message"])
+            self._message = self._makeStringAttribute(attributes["message"])
         if "parents" in attributes:  # pragma no branch
-            assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
-            self._parents = github.GithubObject.ValuedAttribute(None if attributes["parents"] is None else [
-                GitCommit(self._requester, self._headers, element, completed=False)
-                for element in attributes["parents"]
-            ])
+            self._parents = self._makeListOfClassesAttribute(GitCommit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
-            assert attributes["tree"] is None or isinstance(attributes["tree"], dict), attributes["tree"]
-            self._tree = github.GithubObject.ValuedAttribute(None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, self._headers, attributes["tree"], completed=False))
+            self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

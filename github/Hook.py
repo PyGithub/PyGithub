@@ -184,32 +184,22 @@ class Hook(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "active" in attributes:  # pragma no branch
-            assert attributes["active"] is None or isinstance(attributes["active"], bool), attributes["active"]
-            self._active = github.GithubObject.ValuedAttribute(attributes["active"])
+            self._active = self._makeBoolAttribute(attributes["active"])
         if "config" in attributes:  # pragma no branch
-            assert attributes["config"] is None or isinstance(attributes["config"], dict), attributes["config"]
-            self._config = github.GithubObject.ValuedAttribute(attributes["config"])
+            self._config = self._makeDictAttribute(attributes["config"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "events" in attributes:  # pragma no branch
-            assert attributes["events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["events"]), attributes["events"]
-            self._events = github.GithubObject.ValuedAttribute(attributes["events"])
+            self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "last_response" in attributes:  # pragma no branch
-            assert attributes["last_response"] is None or isinstance(attributes["last_response"], dict), attributes["last_response"]
-            self._last_response = github.GithubObject.ValuedAttribute(None if attributes["last_response"] is None else github.HookResponse.HookResponse(self._requester, self._headers, attributes["last_response"], completed=False))
+            self._last_response = self._makeClassAttribute(github.HookResponse.HookResponse, attributes["last_response"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "test_url" in attributes:  # pragma no branch
-            assert attributes["test_url"] is None or isinstance(attributes["test_url"], (str, unicode)), attributes["test_url"]
-            self._test_url = github.GithubObject.ValuedAttribute(attributes["test_url"])
+            self._test_url = self._makeStringAttribute(attributes["test_url"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

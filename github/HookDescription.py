@@ -68,14 +68,10 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "events" in attributes:  # pragma no branch
-            assert attributes["events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["events"]), attributes["events"]
-            self._events = github.GithubObject.ValuedAttribute(attributes["events"])
+            self._events = self._makeListOfStringsAttribute(attributes["events"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "schema" in attributes:  # pragma no branch
-            assert attributes["schema"] is None or all(isinstance(element, list) for element in attributes["schema"]), attributes["schema"]
-            self._schema = github.GithubObject.ValuedAttribute(attributes["schema"])
+            self._schema = self._makeListOfListOfStringsAttribute(attributes["schema"])
         if "supported_events" in attributes:  # pragma no branch
-            assert attributes["supported_events"] is None or all(isinstance(element, (str, unicode)) for element in attributes["supported_events"]), attributes["supported_events"]
-            self._supported_events = github.GithubObject.ValuedAttribute(attributes["supported_events"])
+            self._supported_events = self._makeListOfStringsAttribute(attributes["supported_events"])

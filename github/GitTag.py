@@ -93,20 +93,14 @@ class GitTag(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = github.GithubObject.ValuedAttribute(attributes["message"])
+            self._message = self._makeStringAttribute(attributes["message"])
         if "object" in attributes:  # pragma no branch
-            assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = github.GithubObject.ValuedAttribute(None if attributes["object"] is None else github.GitObject.GitObject(self._requester, self._headers, attributes["object"], completed=False))
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "tag" in attributes:  # pragma no branch
-            assert attributes["tag"] is None or isinstance(attributes["tag"], (str, unicode)), attributes["tag"]
-            self._tag = github.GithubObject.ValuedAttribute(attributes["tag"])
+            self._tag = self._makeStringAttribute(attributes["tag"])
         if "tagger" in attributes:  # pragma no branch
-            assert attributes["tagger"] is None or isinstance(attributes["tagger"], dict), attributes["tagger"]
-            self._tagger = github.GithubObject.ValuedAttribute(None if attributes["tagger"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["tagger"], completed=False))
+            self._tagger = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["tagger"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

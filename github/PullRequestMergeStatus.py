@@ -61,11 +61,8 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "merged" in attributes:  # pragma no branch
-            assert attributes["merged"] is None or isinstance(attributes["merged"], bool), attributes["merged"]
-            self._merged = github.GithubObject.ValuedAttribute(attributes["merged"])
+            self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = github.GithubObject.ValuedAttribute(attributes["message"])
+            self._message = self._makeStringAttribute(attributes["message"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])

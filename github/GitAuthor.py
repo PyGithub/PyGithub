@@ -60,11 +60,8 @@ class GitAuthor(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "date" in attributes:  # pragma no branch
-            assert attributes["date"] is None or isinstance(attributes["date"], (str, unicode)), attributes["date"]
-            self._date = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["date"]))
+            self._date = self._makeDatetimeAttribute(attributes["date"])
         if "email" in attributes:  # pragma no branch
-            assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
-            self._email = github.GithubObject.ValuedAttribute(attributes["email"])
+            self._email = self._makeStringAttribute(attributes["email"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])

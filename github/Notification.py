@@ -119,29 +119,20 @@ class Notification(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (str, unicode)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch
-            assert attributes["last_read_at"] is None or isinstance(attributes["last_read_at"], (str, unicode)), attributes["last_read_at"]
-            self._last_read_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["last_read_at"]))
+            self._last_read_at = self._makeDatetimeAttribute(attributes["last_read_at"])
         if "repository" in attributes:  # pragma no branch
-            assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = github.GithubObject.ValuedAttribute(None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False))
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "subject" in attributes:  # pragma no branch
-            assert attributes["subject"] is None or isinstance(attributes["subject"], dict), attributes["subject"]
-            self._subject = github.GithubObject.ValuedAttribute(None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, self._headers, attributes["subject"], completed=False))
+            self._subject = self._makeClassAttribute(github.NotificationSubject.NotificationSubject, attributes["subject"])
         if "reason" in attributes:  # pragma no branch
-            assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
-            self._reason = github.GithubObject.ValuedAttribute(attributes["reason"])
+            self._reason = self._makeStringAttribute(attributes["reason"])
         if "subscription_url" in attributes:  # pragma no branch
-            assert attributes["subscription_url"] is None or isinstance(attributes["subscription_url"], (str, unicode)), attributes["subscription_url"]
-            self._subscription_url = github.GithubObject.ValuedAttribute(attributes["subscription_url"])
+            self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
         if "unread" in attributes:  # pragma no branch
-            assert attributes["unread"] is None or isinstance(attributes["unread"], bool), attributes["unread"]
-            self._unread = github.GithubObject.ValuedAttribute(attributes["unread"])
+            self._unread = self._makeBoolAttribute(attributes["unread"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

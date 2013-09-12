@@ -398,68 +398,44 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
-            assert attributes["assignee"] is None or isinstance(attributes["assignee"], dict), attributes["assignee"]
-            self._assignee = github.GithubObject.ValuedAttribute(None if attributes["assignee"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["assignee"], completed=False))
+            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
         if "body" in attributes:  # pragma no branch
-            assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
-            self._body = github.GithubObject.ValuedAttribute(attributes["body"])
+            self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
-            assert attributes["closed_at"] is None or isinstance(attributes["closed_at"], (str, unicode)), attributes["closed_at"]
-            self._closed_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["closed_at"]))
+            self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
-            assert attributes["closed_by"] is None or isinstance(attributes["closed_by"], dict), attributes["closed_by"]
-            self._closed_by = github.GithubObject.ValuedAttribute(None if attributes["closed_by"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["closed_by"], completed=False))
+            self._closed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["closed_by"])
         if "comments" in attributes:  # pragma no branch
-            assert attributes["comments"] is None or isinstance(attributes["comments"], (int, long)), attributes["comments"]
-            self._comments = github.GithubObject.ValuedAttribute(attributes["comments"])
+            self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch
-            assert attributes["comments_url"] is None or isinstance(attributes["comments_url"], (str, unicode)), attributes["comments_url"]
-            self._comments_url = github.GithubObject.ValuedAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["created_at"]))
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "events_url" in attributes:  # pragma no branch
-            assert attributes["events_url"] is None or isinstance(attributes["events_url"], (str, unicode)), attributes["events_url"]
-            self._events_url = github.GithubObject.ValuedAttribute(attributes["events_url"])
+            self._events_url = self._makeStringAttribute(attributes["events_url"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = github.GithubObject.ValuedAttribute(attributes["id"])
+            self._id = self._makeIntAttribute(attributes["id"])
         if "labels" in attributes:  # pragma no branch
-            assert attributes["labels"] is None or all(isinstance(element, dict) for element in attributes["labels"]), attributes["labels"]
-            self._labels = github.GithubObject.ValuedAttribute(None if attributes["labels"] is None else [
-                github.Label.Label(self._requester, self._headers, element, completed=False)
-                for element in attributes["labels"]
-            ])
+            self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
         if "labels_url" in attributes:  # pragma no branch
-            assert attributes["labels_url"] is None or isinstance(attributes["labels_url"], (str, unicode)), attributes["labels_url"]
-            self._labels_url = github.GithubObject.ValuedAttribute(attributes["labels_url"])
+            self._labels_url = self._makeStringAttribute(attributes["labels_url"])
         if "milestone" in attributes:  # pragma no branch
-            assert attributes["milestone"] is None or isinstance(attributes["milestone"], dict), attributes["milestone"]
-            self._milestone = github.GithubObject.ValuedAttribute(None if attributes["milestone"] is None else github.Milestone.Milestone(self._requester, self._headers, attributes["milestone"], completed=False))
+            self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
         if "number" in attributes:  # pragma no branch
-            assert attributes["number"] is None or isinstance(attributes["number"], (int, long)), attributes["number"]
-            self._number = github.GithubObject.ValuedAttribute(attributes["number"])
+            self._number = self._makeIntAttribute(attributes["number"])
         if "pull_request" in attributes:  # pragma no branch
-            assert attributes["pull_request"] is None or isinstance(attributes["pull_request"], dict), attributes["pull_request"]
-            self._pull_request = github.GithubObject.ValuedAttribute(None if attributes["pull_request"] is None else github.IssuePullRequest.IssuePullRequest(self._requester, self._headers, attributes["pull_request"], completed=False))
+            self._pull_request = self._makeClassAttribute(github.IssuePullRequest.IssuePullRequest, attributes["pull_request"])
         if "repository" in attributes:  # pragma no branch
-            assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = github.GithubObject.ValuedAttribute(None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False))
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "state" in attributes:  # pragma no branch
-            assert attributes["state"] is None or isinstance(attributes["state"], (str, unicode)), attributes["state"]
-            self._state = github.GithubObject.ValuedAttribute(attributes["state"])
+            self._state = self._makeStringAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
-            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = github.GithubObject.ValuedAttribute(attributes["title"])
+            self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = github.GithubObject.ValuedAttribute(self._parseDatetime(attributes["updated_at"]))
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = github.GithubObject.ValuedAttribute(None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False))
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

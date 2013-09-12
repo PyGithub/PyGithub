@@ -81,17 +81,12 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
-            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = github.GithubObject.ValuedAttribute(attributes["content"])
+            self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
-            assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
-            self._encoding = github.GithubObject.ValuedAttribute(attributes["encoding"])
+            self._encoding = self._makeStringAttribute(attributes["encoding"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
+            self._size = self._makeIntAttribute(attributes["size"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])

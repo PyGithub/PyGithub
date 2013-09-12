@@ -68,14 +68,10 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
-            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], (int, long)), attributes["collaborators"]
-            self._collaborators = github.GithubObject.ValuedAttribute(attributes["collaborators"])
+            self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "private_repos" in attributes:  # pragma no branch
-            assert attributes["private_repos"] is None or isinstance(attributes["private_repos"], (int, long)), attributes["private_repos"]
-            self._private_repos = github.GithubObject.ValuedAttribute(attributes["private_repos"])
+            self._private_repos = self._makeIntAttribute(attributes["private_repos"])
         if "space" in attributes:  # pragma no branch
-            assert attributes["space"] is None or isinstance(attributes["space"], (int, long)), attributes["space"]
-            self._space = github.GithubObject.ValuedAttribute(attributes["space"])
+            self._space = self._makeIntAttribute(attributes["space"])

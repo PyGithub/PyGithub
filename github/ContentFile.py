@@ -125,32 +125,22 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
-            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = github.GithubObject.ValuedAttribute(attributes["content"])
+            self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
-            assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
-            self._encoding = github.GithubObject.ValuedAttribute(attributes["encoding"])
+            self._encoding = self._makeStringAttribute(attributes["encoding"])
         if "git_url" in attributes:  # pragma no branch
-            assert attributes["git_url"] is None or isinstance(attributes["git_url"], (str, unicode)), attributes["git_url"]
-            self._git_url = github.GithubObject.ValuedAttribute(attributes["git_url"])
+            self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = github.GithubObject.ValuedAttribute(attributes["html_url"])
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = github.GithubObject.ValuedAttribute(attributes["name"])
+            self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
-            assert attributes["path"] is None or isinstance(attributes["path"], (str, unicode)), attributes["path"]
-            self._path = github.GithubObject.ValuedAttribute(attributes["path"])
+            self._path = self._makeStringAttribute(attributes["path"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = github.GithubObject.ValuedAttribute(attributes["sha"])
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = github.GithubObject.ValuedAttribute(attributes["size"])
+            self._size = self._makeIntAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = github.GithubObject.ValuedAttribute(attributes["type"])
+            self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = github.GithubObject.ValuedAttribute(attributes["url"])
+            self._url = self._makeStringAttribute(attributes["url"])
