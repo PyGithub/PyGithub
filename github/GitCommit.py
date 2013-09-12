@@ -41,7 +41,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.GitAuthor.GitAuthor`
         """
         self._completeIfNotSet(self._author)
-        return self._NoneIfNotSet(self._author)
+        return self._author.value
 
     @property
     def committer(self):
@@ -49,7 +49,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.GitAuthor.GitAuthor`
         """
         self._completeIfNotSet(self._committer)
-        return self._NoneIfNotSet(self._committer)
+        return self._committer.value
 
     @property
     def html_url(self):
@@ -57,7 +57,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._html_url)
-        return self._NoneIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def message(self):
@@ -65,7 +65,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._message)
-        return self._NoneIfNotSet(self._message)
+        return self._message.value
 
     @property
     def parents(self):
@@ -73,7 +73,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: list of :class:`github.GitCommit.GitCommit`
         """
         self._completeIfNotSet(self._parents)
-        return self._NoneIfNotSet(self._parents)
+        return self._parents.value
 
     @property
     def sha(self):
@@ -81,7 +81,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._sha)
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def tree(self):
@@ -89,7 +89,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.GitTree.GitTree`
         """
         self._completeIfNotSet(self._tree)
-        return self._NoneIfNotSet(self._tree)
+        return self._tree.value
 
     @property
     def url(self):
@@ -97,7 +97,7 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     @property
     def _identity(self):
@@ -115,29 +115,18 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            assert attributes["author"] is None or isinstance(attributes["author"], dict), attributes["author"]
-            self._author = None if attributes["author"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["author"], completed=False)
+            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
         if "committer" in attributes:  # pragma no branch
-            assert attributes["committer"] is None or isinstance(attributes["committer"], dict), attributes["committer"]
-            self._committer = None if attributes["committer"] is None else github.GitAuthor.GitAuthor(self._requester, self._headers, attributes["committer"], completed=False)
+            self._committer = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["committer"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = attributes["html_url"]
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = attributes["message"]
+            self._message = self._makeStringAttribute(attributes["message"])
         if "parents" in attributes:  # pragma no branch
-            assert attributes["parents"] is None or all(isinstance(element, dict) for element in attributes["parents"]), attributes["parents"]
-            self._parents = None if attributes["parents"] is None else [
-                GitCommit(self._requester, self._headers, element, completed=False)
-                for element in attributes["parents"]
-            ]
+            self._parents = self._makeListOfClassesAttribute(GitCommit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
-            assert attributes["tree"] is None or isinstance(attributes["tree"], dict), attributes["tree"]
-            self._tree = None if attributes["tree"] is None else github.GitTree.GitTree(self._requester, self._headers, attributes["tree"], completed=False)
+            self._tree = self._makeClassAttribute(github.GitTree.GitTree, attributes["tree"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

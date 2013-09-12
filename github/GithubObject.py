@@ -33,7 +33,25 @@ import Consts
 class _NotSetType:
     def __repr__(self):
         return "NotSet"
+
+    value = None
 NotSet = _NotSetType()
+
+
+class _ValuedAttribute:
+    def __init__(self, value):
+        self.value = value
+
+
+class _BadAttribute:
+    def __init__(self, value, expectedType, exception=None):
+        self.__value = value
+        self.__expectedType = expectedType
+        self.__exception = exception
+
+    @property
+    def value(self):
+        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject(object):
@@ -88,22 +106,85 @@ class GithubObject(object):
         return "/".join(url.split("/")[: -1])
 
     @staticmethod
-    def _NoneIfNotSet(value):
-        if value is NotSet:
-            return None
+    def __makeSimpleAttribute(value, type):
+        if value is None or isinstance(value, type):
+            return _ValuedAttribute(value)
         else:
-            return value
+            return _BadAttribute(value, type)
 
     @staticmethod
-    def _parseDatetime(s):
-        if s is None:
-            return None
-        elif len(s) == 24:
-            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
-        elif len(s) == 25:
-            return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+    def __makeSimpleListAttribute(value, type):
+        if isinstance(value, list) and all(isinstance(element, type) for element in value):
+            return _ValuedAttribute(value)
         else:
-            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+            return _BadAttribute(value, [type])
+
+    @staticmethod
+    def __makeTransformedAttribute(value, type, transform):
+        if value is None:
+            return _ValuedAttribute(None)
+        elif isinstance(value, type):
+            try:
+                return _ValuedAttribute(transform(value))
+            except Exception, e:
+                return _BadAttribute(value, type, e)
+        else:
+            return _BadAttribute(value, type)
+
+    @staticmethod
+    def _makeStringAttribute(value):
+        return GithubObject.__makeSimpleAttribute(value, (str, unicode))
+
+    @staticmethod
+    def _makeIntAttribute(value):
+        return GithubObject.__makeSimpleAttribute(value, (int, long))
+
+    @staticmethod
+    def _makeBoolAttribute(value):
+        return GithubObject.__makeSimpleAttribute(value, bool)
+
+    @staticmethod
+    def _makeDictAttribute(value):
+        return GithubObject.__makeSimpleAttribute(value, dict)
+
+    @staticmethod
+    def _makeTimestampAttribute(value):
+        return GithubObject.__makeTransformedAttribute(value, (int, long), datetime.datetime.utcfromtimestamp)
+
+    @staticmethod
+    def _makeDatetimeAttribute(value):
+        def parseDatetime(s):
+            if len(s) == 24:
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
+            elif len(s) == 25:
+                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+            else:
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+
+        return GithubObject.__makeTransformedAttribute(value, (str, unicode), parseDatetime)
+
+    def _makeClassAttribute(self, klass, value):
+        return GithubObject.__makeTransformedAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
+
+    @staticmethod
+    def _makeListOfStringsAttribute(value):
+        return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
+
+    @staticmethod
+    def _makeListOfListOfStringsAttribute(value):
+        return GithubObject.__makeSimpleListAttribute(value, list)
+
+    def _makeListOfClassesAttribute(self, klass, value):
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
+            return _ValuedAttribute([klass(self._requester, self._headers, element, completed=False) for element in value])
+        else:
+            return _BadAttribute(value, [dict])
+
+    def _makeDictOfStringsToClassesAttribute(self, klass, value):
+        if isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()):
+            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
+        else:
+            return _BadAttribute(value, {(str, unicode): dict})
 
     @property
     def etag(self):
@@ -141,7 +222,7 @@ class CompletableGithubObject(GithubObject):
     def __complete(self):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._url
+            self._url.value
         )
         self._storeAndUseAttributes(headers, data)
         self.__completed = True
@@ -159,7 +240,7 @@ class CompletableGithubObject(GithubObject):
 
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
-            self._url,
+            self._url.value,
             headers=conditionalRequestHeader
         )
         if status == 304:

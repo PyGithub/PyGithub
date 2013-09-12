@@ -38,21 +38,21 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
         """
         :type: bool
         """
-        return self._NoneIfNotSet(self._merged)
+        return self._merged.value
 
     @property
     def message(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._message)
+        return self._message.value
 
     @property
     def sha(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     def _initAttributes(self):
         self._merged = github.GithubObject.NotSet
@@ -61,11 +61,8 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "merged" in attributes:  # pragma no branch
-            assert attributes["merged"] is None or isinstance(attributes["merged"], bool), attributes["merged"]
-            self._merged = attributes["merged"]
+            self._merged = self._makeBoolAttribute(attributes["merged"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = attributes["message"]
+            self._message = self._makeStringAttribute(attributes["message"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = self._makeStringAttribute(attributes["sha"])

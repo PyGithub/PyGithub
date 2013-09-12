@@ -37,28 +37,28 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._collaborators)
+        return self._collaborators.value
 
     @property
     def name(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def private_repos(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._private_repos)
+        return self._private_repos.value
 
     @property
     def space(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._space)
+        return self._space.value
 
     def _initAttributes(self):
         self._collaborators = github.GithubObject.NotSet
@@ -68,14 +68,10 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
-            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], (int, long)), attributes["collaborators"]
-            self._collaborators = attributes["collaborators"]
+            self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = self._makeStringAttribute(attributes["name"])
         if "private_repos" in attributes:  # pragma no branch
-            assert attributes["private_repos"] is None or isinstance(attributes["private_repos"], (int, long)), attributes["private_repos"]
-            self._private_repos = attributes["private_repos"]
+            self._private_repos = self._makeIntAttribute(attributes["private_repos"])
         if "space" in attributes:  # pragma no branch
-            assert attributes["space"] is None or isinstance(attributes["space"], (int, long)), attributes["space"]
-            self._space = attributes["space"]
+            self._space = self._makeIntAttribute(attributes["space"])

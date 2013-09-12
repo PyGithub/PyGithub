@@ -40,7 +40,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._body)
-        return self._NoneIfNotSet(self._body)
+        return self._body.value
 
     @property
     def created_at(self):
@@ -48,7 +48,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def id(self):
@@ -56,7 +56,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def updated_at(self):
@@ -64,7 +64,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -72,7 +72,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     @property
     def user(self):
@@ -80,7 +80,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._user)
-        return self._NoneIfNotSet(self._user)
+        return self._user.value
 
     def delete(self):
         """
@@ -119,20 +119,14 @@ class GistComment(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "body" in attributes:  # pragma no branch
-            assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
-            self._body = attributes["body"]
+            self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = self._makeIntAttribute(attributes["id"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

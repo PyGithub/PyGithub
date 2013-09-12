@@ -37,42 +37,42 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._content)
+        return self._content.value
 
     @property
     def filename(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._filename)
+        return self._filename.value
 
     @property
     def language(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._language)
+        return self._language.value
 
     @property
     def raw_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._raw_url)
+        return self._raw_url.value
 
     @property
     def size(self):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._size)
+        return self._size.value
 
     @property
     def type(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._type)
+        return self._type.value
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -84,20 +84,14 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
-            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = attributes["content"]
+            self._content = self._makeStringAttribute(attributes["content"])
         if "filename" in attributes:  # pragma no branch
-            assert attributes["filename"] is None or isinstance(attributes["filename"], (str, unicode)), attributes["filename"]
-            self._filename = attributes["filename"]
+            self._filename = self._makeStringAttribute(attributes["filename"])
         if "language" in attributes:  # pragma no branch
-            assert attributes["language"] is None or isinstance(attributes["language"], (str, unicode)), attributes["language"]
-            self._language = attributes["language"]
+            self._language = self._makeStringAttribute(attributes["language"])
         if "raw_url" in attributes:  # pragma no branch
-            assert attributes["raw_url"] is None or isinstance(attributes["raw_url"], (str, unicode)), attributes["raw_url"]
-            self._raw_url = attributes["raw_url"]
+            self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = attributes["size"]
+            self._size = self._makeIntAttribute(attributes["size"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = attributes["type"]
+            self._type = self._makeStringAttribute(attributes["type"])

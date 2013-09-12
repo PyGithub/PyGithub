@@ -36,14 +36,14 @@ class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._source)
+        return self._source.value
 
     @property
     def name(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     def _initAttributes(self):
         self._source = github.GithubObject.NotSet
@@ -51,8 +51,6 @@ class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "source" in attributes:  # pragma no branch
-            assert attributes["source"] is None or isinstance(attributes["source"], (str, unicode)), attributes["source"]
-            self._source = attributes["source"]
+            self._source = self._makeStringAttribute(attributes["source"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = self._makeStringAttribute(attributes["name"])

@@ -35,28 +35,28 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._title)
+        return self._title.value
 
     @property
     def url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     @property
     def latest_comment_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._latest_comment_url)
+        return self._latest_comment_url.value
 
     @property
     def type(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._type)
+        return self._type.value
 
     def _initAttributes(self):
         self._title = github.GithubObject.NotSet
@@ -66,14 +66,10 @@ class NotificationSubject(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "title" in attributes:  # pragma no branch
-            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = attributes["title"]
+            self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]  # pragma no cover (but should be investigated)
-            self._url = attributes["url"]  # pragma no cover (but should be investigated)
+            self._url = self._makeStringAttribute(attributes["url"])
         if "latest_comment_url" in attributes:  # pragma no branch
-            assert attributes["latest_comment_url"] is None or isinstance(attributes["latest_comment_url"], (str, unicode)), attributes["latest_comment_url"]  # pragma no cover (but should be investigated)
-            self._latest_comment_url = attributes["latest_comment_url"]  # pragma no cover (but should be investigated)
+            self._latest_comment_url = self._makeStringAttribute(attributes["latest_comment_url"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = attributes["type"]
+            self._type = self._makeStringAttribute(attributes["type"])

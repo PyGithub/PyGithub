@@ -47,7 +47,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._avatar_url)
-        return self._NoneIfNotSet(self._avatar_url)
+        return self._avatar_url.value
 
     @property
     def bio(self):
@@ -55,7 +55,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._bio)
-        return self._NoneIfNotSet(self._bio)
+        return self._bio.value
 
     @property
     def blog(self):
@@ -63,7 +63,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._blog)
-        return self._NoneIfNotSet(self._blog)
+        return self._blog.value
 
     @property
     def collaborators(self):
@@ -71,7 +71,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._collaborators)
-        return self._NoneIfNotSet(self._collaborators)
+        return self._collaborators.value
 
     @property
     def company(self):
@@ -79,7 +79,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._company)
-        return self._NoneIfNotSet(self._company)
+        return self._company.value
 
     @property
     def contributions(self):
@@ -87,7 +87,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._contributions)
-        return self._NoneIfNotSet(self._contributions)
+        return self._contributions.value
 
     @property
     def created_at(self):
@@ -95,7 +95,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def disk_usage(self):
@@ -103,7 +103,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._disk_usage)
-        return self._NoneIfNotSet(self._disk_usage)
+        return self._disk_usage.value
 
     @property
     def email(self):
@@ -111,7 +111,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._email)
-        return self._NoneIfNotSet(self._email)
+        return self._email.value
 
     @property
     def events_url(self):
@@ -119,7 +119,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._events_url)
-        return self._NoneIfNotSet(self._events_url)
+        return self._events_url.value
 
     @property
     def followers(self):
@@ -127,7 +127,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._followers)
-        return self._NoneIfNotSet(self._followers)
+        return self._followers.value
 
     @property
     def followers_url(self):
@@ -135,7 +135,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._followers_url)
-        return self._NoneIfNotSet(self._followers_url)
+        return self._followers_url.value
 
     @property
     def following(self):
@@ -143,7 +143,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._following)
-        return self._NoneIfNotSet(self._following)
+        return self._following.value
 
     @property
     def following_url(self):
@@ -151,7 +151,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._following_url)
-        return self._NoneIfNotSet(self._following_url)
+        return self._following_url.value
 
     @property
     def gists_url(self):
@@ -159,7 +159,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._gists_url)
-        return self._NoneIfNotSet(self._gists_url)
+        return self._gists_url.value
 
     @property
     def gravatar_id(self):
@@ -167,7 +167,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._gravatar_id)
-        return self._NoneIfNotSet(self._gravatar_id)
+        return self._gravatar_id.value
 
     @property
     def hireable(self):
@@ -175,7 +175,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._hireable)
-        return self._NoneIfNotSet(self._hireable)
+        return self._hireable.value
 
     @property
     def html_url(self):
@@ -183,7 +183,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._html_url)
-        return self._NoneIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def id(self):
@@ -191,7 +191,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def location(self):
@@ -199,7 +199,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._location)
-        return self._NoneIfNotSet(self._location)
+        return self._location.value
 
     @property
     def login(self):
@@ -207,7 +207,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._login)
-        return self._NoneIfNotSet(self._login)
+        return self._login.value
 
     @property
     def name(self):
@@ -215,7 +215,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._name)
-        return self._NoneIfNotSet(self._name)
+        return self._name.value
 
     @property
     def organizations_url(self):
@@ -223,7 +223,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._organizations_url)
-        return self._NoneIfNotSet(self._organizations_url)
+        return self._organizations_url.value
 
     @property
     def owned_private_repos(self):
@@ -231,7 +231,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._owned_private_repos)
-        return self._NoneIfNotSet(self._owned_private_repos)
+        return self._owned_private_repos.value
 
     @property
     def plan(self):
@@ -239,7 +239,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Plan.Plan`
         """
         self._completeIfNotSet(self._plan)
-        return self._NoneIfNotSet(self._plan)
+        return self._plan.value
 
     @property
     def private_gists(self):
@@ -247,7 +247,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._private_gists)
-        return self._NoneIfNotSet(self._private_gists)
+        return self._private_gists.value
 
     @property
     def public_gists(self):
@@ -255,7 +255,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._public_gists)
-        return self._NoneIfNotSet(self._public_gists)
+        return self._public_gists.value
 
     @property
     def public_repos(self):
@@ -263,7 +263,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._public_repos)
-        return self._NoneIfNotSet(self._public_repos)
+        return self._public_repos.value
 
     @property
     def received_events_url(self):
@@ -271,7 +271,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._received_events_url)
-        return self._NoneIfNotSet(self._received_events_url)
+        return self._received_events_url.value
 
     @property
     def repos_url(self):
@@ -279,7 +279,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._repos_url)
-        return self._NoneIfNotSet(self._repos_url)
+        return self._repos_url.value
 
     @property
     def starred_url(self):
@@ -287,7 +287,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._starred_url)
-        return self._NoneIfNotSet(self._starred_url)
+        return self._starred_url.value
 
     @property
     def subscriptions_url(self):
@@ -295,7 +295,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._subscriptions_url)
-        return self._NoneIfNotSet(self._subscriptions_url)
+        return self._subscriptions_url.value
 
     @property
     def total_private_repos(self):
@@ -303,7 +303,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._total_private_repos)
-        return self._NoneIfNotSet(self._total_private_repos)
+        return self._total_private_repos.value
 
     @property
     def type(self):
@@ -311,7 +311,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._type)
-        return self._NoneIfNotSet(self._type)
+        return self._type.value
 
     @property
     def updated_at(self):
@@ -319,7 +319,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -327,7 +327,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     # v2: Remove this method
     def create_gist(self, public, files, description=github.GithubObject.NotSet):
@@ -585,110 +585,74 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "avatar_url" in attributes:  # pragma no branch
-            assert attributes["avatar_url"] is None or isinstance(attributes["avatar_url"], (str, unicode)), attributes["avatar_url"]
-            self._avatar_url = attributes["avatar_url"]
+            self._avatar_url = self._makeStringAttribute(attributes["avatar_url"])
         if "bio" in attributes:  # pragma no branch
-            assert attributes["bio"] is None or isinstance(attributes["bio"], (str, unicode)), attributes["bio"]
-            self._bio = attributes["bio"]
+            self._bio = self._makeStringAttribute(attributes["bio"])
         if "blog" in attributes:  # pragma no branch
-            assert attributes["blog"] is None or isinstance(attributes["blog"], (str, unicode)), attributes["blog"]
-            self._blog = attributes["blog"]
+            self._blog = self._makeStringAttribute(attributes["blog"])
         if "collaborators" in attributes:  # pragma no branch
-            assert attributes["collaborators"] is None or isinstance(attributes["collaborators"], (int, long)), attributes["collaborators"]
-            self._collaborators = attributes["collaborators"]
+            self._collaborators = self._makeIntAttribute(attributes["collaborators"])
         if "company" in attributes:  # pragma no branch
-            assert attributes["company"] is None or isinstance(attributes["company"], (str, unicode)), attributes["company"]
-            self._company = attributes["company"]
+            self._company = self._makeStringAttribute(attributes["company"])
         if "contributions" in attributes:  # pragma no branch
-            assert attributes["contributions"] is None or isinstance(attributes["contributions"], (int, long)), attributes["contributions"]
-            self._contributions = attributes["contributions"]
+            self._contributions = self._makeIntAttribute(attributes["contributions"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "disk_usage" in attributes:  # pragma no branch
-            assert attributes["disk_usage"] is None or isinstance(attributes["disk_usage"], (int, long)), attributes["disk_usage"]
-            self._disk_usage = attributes["disk_usage"]
+            self._disk_usage = self._makeIntAttribute(attributes["disk_usage"])
         if "email" in attributes:  # pragma no branch
-            assert attributes["email"] is None or isinstance(attributes["email"], (str, unicode)), attributes["email"]
-            self._email = attributes["email"]
+            self._email = self._makeStringAttribute(attributes["email"])
         if "events_url" in attributes:  # pragma no branch
-            assert attributes["events_url"] is None or isinstance(attributes["events_url"], (str, unicode)), attributes["events_url"]
-            self._events_url = attributes["events_url"]
+            self._events_url = self._makeStringAttribute(attributes["events_url"])
         if "followers" in attributes:  # pragma no branch
-            assert attributes["followers"] is None or isinstance(attributes["followers"], (int, long)), attributes["followers"]
-            self._followers = attributes["followers"]
+            self._followers = self._makeIntAttribute(attributes["followers"])
         if "followers_url" in attributes:  # pragma no branch
-            assert attributes["followers_url"] is None or isinstance(attributes["followers_url"], (str, unicode)), attributes["followers_url"]
-            self._followers_url = attributes["followers_url"]
+            self._followers_url = self._makeStringAttribute(attributes["followers_url"])
         if "following" in attributes:  # pragma no branch
-            assert attributes["following"] is None or isinstance(attributes["following"], (int, long)), attributes["following"]
-            self._following = attributes["following"]
+            self._following = self._makeIntAttribute(attributes["following"])
         if "following_url" in attributes:  # pragma no branch
-            assert attributes["following_url"] is None or isinstance(attributes["following_url"], (str, unicode)), attributes["following_url"]
-            self._following_url = attributes["following_url"]
+            self._following_url = self._makeStringAttribute(attributes["following_url"])
         if "gists_url" in attributes:  # pragma no branch
-            assert attributes["gists_url"] is None or isinstance(attributes["gists_url"], (str, unicode)), attributes["gists_url"]
-            self._gists_url = attributes["gists_url"]
+            self._gists_url = self._makeStringAttribute(attributes["gists_url"])
         if "gravatar_id" in attributes:  # pragma no branch
-            assert attributes["gravatar_id"] is None or isinstance(attributes["gravatar_id"], (str, unicode)), attributes["gravatar_id"]
-            self._gravatar_id = attributes["gravatar_id"]
+            self._gravatar_id = self._makeStringAttribute(attributes["gravatar_id"])
         if "hireable" in attributes:  # pragma no branch
-            assert attributes["hireable"] is None or isinstance(attributes["hireable"], bool), attributes["hireable"]
-            self._hireable = attributes["hireable"]
+            self._hireable = self._makeBoolAttribute(attributes["hireable"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = attributes["html_url"]
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = self._makeIntAttribute(attributes["id"])
         if "location" in attributes:  # pragma no branch
-            assert attributes["location"] is None or isinstance(attributes["location"], (str, unicode)), attributes["location"]
-            self._location = attributes["location"]
+            self._location = self._makeStringAttribute(attributes["location"])
         if "login" in attributes:  # pragma no branch
-            assert attributes["login"] is None or isinstance(attributes["login"], (str, unicode)), attributes["login"]
-            self._login = attributes["login"]
+            self._login = self._makeStringAttribute(attributes["login"])
         if "name" in attributes:  # pragma no branch
-            assert attributes["name"] is None or isinstance(attributes["name"], (str, unicode)), attributes["name"]
-            self._name = attributes["name"]
+            self._name = self._makeStringAttribute(attributes["name"])
         if "organizations_url" in attributes:  # pragma no branch
-            assert attributes["organizations_url"] is None or isinstance(attributes["organizations_url"], (str, unicode)), attributes["organizations_url"]
-            self._organizations_url = attributes["organizations_url"]
+            self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
-            assert attributes["owned_private_repos"] is None or isinstance(attributes["owned_private_repos"], (int, long)), attributes["owned_private_repos"]
-            self._owned_private_repos = attributes["owned_private_repos"]
+            self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
         if "plan" in attributes:  # pragma no branch
-            assert attributes["plan"] is None or isinstance(attributes["plan"], dict), attributes["plan"]
-            self._plan = None if attributes["plan"] is None else github.Plan.Plan(self._requester, self._headers, attributes["plan"], completed=False)
+            self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch
-            assert attributes["private_gists"] is None or isinstance(attributes["private_gists"], (int, long)), attributes["private_gists"]
-            self._private_gists = attributes["private_gists"]
+            self._private_gists = self._makeIntAttribute(attributes["private_gists"])
         if "public_gists" in attributes:  # pragma no branch
-            assert attributes["public_gists"] is None or isinstance(attributes["public_gists"], (int, long)), attributes["public_gists"]
-            self._public_gists = attributes["public_gists"]
+            self._public_gists = self._makeIntAttribute(attributes["public_gists"])
         if "public_repos" in attributes:  # pragma no branch
-            assert attributes["public_repos"] is None or isinstance(attributes["public_repos"], (int, long)), attributes["public_repos"]
-            self._public_repos = attributes["public_repos"]
+            self._public_repos = self._makeIntAttribute(attributes["public_repos"])
         if "received_events_url" in attributes:  # pragma no branch
-            assert attributes["received_events_url"] is None or isinstance(attributes["received_events_url"], (str, unicode)), attributes["received_events_url"]
-            self._received_events_url = attributes["received_events_url"]
+            self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
-            assert attributes["repos_url"] is None or isinstance(attributes["repos_url"], (str, unicode)), attributes["repos_url"]
-            self._repos_url = attributes["repos_url"]
+            self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "starred_url" in attributes:  # pragma no branch
-            assert attributes["starred_url"] is None or isinstance(attributes["starred_url"], (str, unicode)), attributes["starred_url"]
-            self._starred_url = attributes["starred_url"]
+            self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
-            assert attributes["subscriptions_url"] is None or isinstance(attributes["subscriptions_url"], (str, unicode)), attributes["subscriptions_url"]
-            self._subscriptions_url = attributes["subscriptions_url"]
+            self._subscriptions_url = self._makeStringAttribute(attributes["subscriptions_url"])
         if "total_private_repos" in attributes:  # pragma no branch
-            assert attributes["total_private_repos"] is None or isinstance(attributes["total_private_repos"], (int, long)), attributes["total_private_repos"]
-            self._total_private_repos = attributes["total_private_repos"]
+            self._total_private_repos = self._makeIntAttribute(attributes["total_private_repos"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = attributes["type"]
+            self._type = self._makeStringAttribute(attributes["type"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

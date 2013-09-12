@@ -20,6 +20,7 @@ Starting today (September 5th, 2013), we now need more than 8 bits to store the 
 -----------------------------------------------------------------------------------------------------------
 
 * `Implement <https://github.com/jacquev6/PyGithub/issues/196>`_ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`_ for asking
+* In case bad data is returned by Github API v3, `raise <https://github.com/jacquev6/PyGithub/issues/195>`_ an exception only when the user accesses the faulty attribute, not when constructing the object containing this attribute. Thank you `klmitch <https://github.com/klmitch>`_ for asking
 
 What's missing?
 ===============

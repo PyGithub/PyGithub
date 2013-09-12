@@ -48,7 +48,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def key(self):
@@ -56,7 +56,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._key)
-        return self._NoneIfNotSet(self._key)
+        return self._key.value
 
     @property
     def title(self):
@@ -64,7 +64,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._title)
-        return self._NoneIfNotSet(self._title)
+        return self._title.value
 
     @property
     def url(self):
@@ -72,7 +72,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     @property
     def verified(self):
@@ -80,7 +80,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._verified)
-        return self._NoneIfNotSet(self._verified)
+        return self._verified.value
 
     def delete(self):
         """
@@ -122,17 +122,12 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = self._makeIntAttribute(attributes["id"])
         if "key" in attributes:  # pragma no branch
-            assert attributes["key"] is None or isinstance(attributes["key"], (str, unicode)), attributes["key"]
-            self._key = attributes["key"]
+            self._key = self._makeStringAttribute(attributes["key"])
         if "title" in attributes:  # pragma no branch
-            assert attributes["title"] is None or isinstance(attributes["title"], (str, unicode)), attributes["title"]
-            self._title = attributes["title"]
+            self._title = self._makeStringAttribute(attributes["title"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
-            assert attributes["verified"] is None or isinstance(attributes["verified"], bool), attributes["verified"]
-            self._verified = attributes["verified"]
+            self._verified = self._makeBoolAttribute(attributes["verified"])
