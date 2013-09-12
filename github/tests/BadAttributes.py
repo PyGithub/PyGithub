@@ -40,7 +40,7 @@ class BadAttributes(Framework.TestCase):
             raised = True
             self.assertEqual(e.actual_value, 42)
             self.assertEqual(e.expected_type, (str, unicode))
-            self.assertIsNone(e.transformation_exception)
+            self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
     def testBadAttributeTransformation(self):
@@ -55,7 +55,10 @@ class BadAttributes(Framework.TestCase):
             self.assertEqual(e.actual_value, "foobar")
             self.assertEqual(e.expected_type, (str, unicode))
             self.assertEqual(e.transformation_exception.__class__, ValueError)
-            self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
+            if Framework.atLeastPython26:
+                self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
+            else:
+                self.assertEqual(e.transformation_exception.args, ('time data did not match format:  data=foobar  fmt=%Y-%m-%dT%H:%M:%SZ',))
         self.assertTrue(raised)
 
     def testBadTransformedAttribute(self):
@@ -69,7 +72,7 @@ class BadAttributes(Framework.TestCase):
             raised = True
             self.assertEqual(e.actual_value, 42)
             self.assertEqual(e.expected_type, (str, unicode))
-            self.assertIsNone(e.transformation_exception)
+            self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
     def testBadSimpleAttributeInList(self):
@@ -83,7 +86,7 @@ class BadAttributes(Framework.TestCase):
             raised = True
             self.assertEqual(e.actual_value, ["push", 42])
             self.assertEqual(e.expected_type, [(str, unicode)])
-            self.assertIsNone(e.transformation_exception)
+            self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
     def testBadAttributeInClassAttribute(self):
@@ -109,7 +112,7 @@ class BadAttributes(Framework.TestCase):
             raised = True
             self.assertEqual(e.actual_value, [42])
             self.assertEqual(e.expected_type, [dict])
-            self.assertIsNone(e.transformation_exception)
+            self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
     def testBadTransformedAttributeInDict(self):
@@ -122,7 +125,7 @@ class BadAttributes(Framework.TestCase):
             raised = True
             self.assertEqual(e.actual_value, {"test.py": 42})
             self.assertEqual(e.expected_type, {(str, unicode): dict})
-            self.assertIsNone(e.transformation_exception)
+            self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
     def testIssue195(self):
@@ -142,5 +145,5 @@ class BadAttributes(Framework.TestCase):
                     raised = True
                     self.assertEqual(e.actual_value, [["commit_comment", "create", "delete", "download", "follow", "fork", "fork_apply", "gist", "gollum", "issue_comment", "issues", "member", "public", "pull_request", "pull_request_review_comment", "push", "status", "team_add", "watch"]])
                     self.assertEqual(e.expected_type, [(str, unicode)])
-                    self.assertIsNone(e.transformation_exception)
+                    self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
