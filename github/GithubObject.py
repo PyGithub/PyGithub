@@ -95,88 +95,99 @@ class GithubObject(object):
         return "/".join(url.split("/")[: -1])
 
     @staticmethod
+    def __makeSimpleAttribute(value, type):
+        if value is None or isinstance(value, type):
+            return ValuedAttribute(value)
+        else:
+            return BadAttribute(value, type)
+
+    @staticmethod
+    def __makeSimpleListAttribute(value, type):
+        if isinstance(value, list) and all(isinstance(element, type) for element in value):
+            return ValuedAttribute(value)
+        else:
+            return BadAttribute(value, type)
+
+    @staticmethod
+    def __makeTransformedAttribute(value, type, transform):
+        if value is None:
+            return ValuedAttribute(None)
+        elif isinstance(value, type):
+            try:
+                return ValuedAttribute(transform(value))
+            except exception, e:
+                return BadAttribute(value, type, e)
+        else:
+            return BadAttribute(value, type)
+
+    @staticmethod
+    def __makeTransformedListAttribute(value, type, transform):
+        if isinstance(value, list) and all(isinstance(element, type) for element in value):
+            try:
+                return ValuedAttribute([transform(element) for element in value])
+            except exception, e:
+                return BadAttribute(value, type, e)
+        else:
+            return BadAttribute(value, type)
+
+    @staticmethod
+    def __makeTransformedDictAttribute(value, keyType, type, transform):
+        if isinstance(value, dict) and all(isinstance(key, keyType) and isinstance(element, type) for key, element in value.iteritems()):
+            try:
+                return ValuedAttribute(dict((key, transform(element)) for key, element in value.iteritems()))
+            except exception, e:
+                return BadAttribute(value, type, e)
+        else:
+            return BadAttribute(value, type)
+
+    @staticmethod
     def _makeStringAttribute(value):
-        assert value is None or isinstance(value, (str, unicode)), (value, "should be a string")
-        return ValuedAttribute(value)
+        return GithubObject.__makeSimpleAttribute(value, (str, unicode))
 
     @staticmethod
     def _makeIntAttribute(value):
-        assert value is None or isinstance(value, (int, long)), (value, "should be an int")
-        return ValuedAttribute(value)
+        return GithubObject.__makeSimpleAttribute(value, (int, long))
 
     @staticmethod
     def _makeBoolAttribute(value):
-        assert value is None or isinstance(value, bool), (value, "should be an bool")
-        return ValuedAttribute(value)
+        return GithubObject.__makeSimpleAttribute(value, bool)
 
     @staticmethod
     def _makeDictAttribute(value):
-        assert value is None or isinstance(value, dict), (value, "should be an dict")
-        return ValuedAttribute(value)
+        return GithubObject.__makeSimpleAttribute(value, dict)
 
     @staticmethod
     def _makeTimestampAttribute(value):
-        assert value is None or isinstance(value, (int, long)), (value, "should be a timestamp")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(datetime.datetime.utcfromtimestamp(value))
+        return GithubObject.__makeTransformedAttribute(value, (int, long), datetime.datetime.utcfromtimestamp)
 
     @staticmethod
     def _makeDatetimeAttribute(value):
-        assert value is None or isinstance(value, (str, unicode)), (value, "should be a string parsable as a date")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(GithubObject.__parseDatetime(value))
+        def parseDatetime(s):
+            if len(s) == 24:
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
+            elif len(s) == 25:
+                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+            else:
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+
+        return GithubObject.__makeTransformedAttribute(value, (str, unicode), parseDatetime)
 
     def _makeClassAttribute(self, klass, value):
-        assert value is None or isinstance(value, dict), (value, "should be an dict")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(klass(self._requester, self._headers, value, completed=False))
+        return GithubObject.__makeTransformedAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
 
     @staticmethod
     def _makeListOfStringsAttribute(value):
-        assert value is None or isinstance(value, list) and all(isinstance(element, (str, unicode)) for element in value), (value, "should be a list of strings")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(value)
+        return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(value):
-        assert value is None or isinstance(value, list) and all(all(isinstance(sub, (str, unicode)) for sub in element) for element in value), (value, "should be a list of list of strings")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(value)
+        return GithubObject.__makeSimpleListAttribute(value, list)
 
     def _makeListOfClassesAttribute(self, klass, value):
-        assert value is None or isinstance(value, list) and all(isinstance(element, dict) for element in value), (value, "should be a list of dicts")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute([klass(self._requester, self._headers, element, completed=False) for element in value])
+        return GithubObject.__makeTransformedListAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        assert value is None or isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()), (value, "should be a dict of strings to dicts")
-        if value is None:
-            return ValuedAttribute(None)
-        else:
-            return ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
-
-    @staticmethod
-    def __parseDatetime(s):
-        if s is None:
-            return None
-        elif len(s) == 24:
-            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
-        elif len(s) == 25:
-            return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
-        else:
-            return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+        return GithubObject.__makeTransformedDictAttribute(value, (str, unicode), dict, lambda value: klass(self._requester, self._headers, value, completed=False))
 
     @property
     def etag(self):
