@@ -173,7 +173,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
             repo_url = "/".join(self.url.split("/")[:-2])
-            self._repository = github.GithubObject.ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
+            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
         return self._repository.value
 
     @property

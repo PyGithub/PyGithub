@@ -38,9 +38,20 @@ class _NotSetType:
 NotSet = _NotSetType()
 
 
-class ValuedAttribute:
+class _ValuedAttribute:
     def __init__(self, value):
         self.value = value
+
+
+class _BadAttribute:
+    def __init__(self, value, expectedType, exception=None):
+        self.__value = value
+        self.__expectedType = expectedType
+        self.__exception = exception
+
+    @property
+    def value(self):
+        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject(object):
@@ -97,48 +108,28 @@ class GithubObject(object):
     @staticmethod
     def __makeSimpleAttribute(value, type):
         if value is None or isinstance(value, type):
-            return ValuedAttribute(value)
+            return _ValuedAttribute(value)
         else:
-            return BadAttribute(value, type)
+            return _BadAttribute(value, type)
 
     @staticmethod
     def __makeSimpleListAttribute(value, type):
         if isinstance(value, list) and all(isinstance(element, type) for element in value):
-            return ValuedAttribute(value)
+            return _ValuedAttribute(value)
         else:
-            return BadAttribute(value, type)
+            return _BadAttribute(value, [type])
 
     @staticmethod
     def __makeTransformedAttribute(value, type, transform):
         if value is None:
-            return ValuedAttribute(None)
+            return _ValuedAttribute(None)
         elif isinstance(value, type):
             try:
-                return ValuedAttribute(transform(value))
-            except exception, e:
-                return BadAttribute(value, type, e)
+                return _ValuedAttribute(transform(value))
+            except Exception, e:
+                return _BadAttribute(value, type, e)
         else:
-            return BadAttribute(value, type)
-
-    @staticmethod
-    def __makeTransformedListAttribute(value, type, transform):
-        if isinstance(value, list) and all(isinstance(element, type) for element in value):
-            try:
-                return ValuedAttribute([transform(element) for element in value])
-            except exception, e:
-                return BadAttribute(value, type, e)
-        else:
-            return BadAttribute(value, type)
-
-    @staticmethod
-    def __makeTransformedDictAttribute(value, keyType, type, transform):
-        if isinstance(value, dict) and all(isinstance(key, keyType) and isinstance(element, type) for key, element in value.iteritems()):
-            try:
-                return ValuedAttribute(dict((key, transform(element)) for key, element in value.iteritems()))
-            except exception, e:
-                return BadAttribute(value, type, e)
-        else:
-            return BadAttribute(value, type)
+            return _BadAttribute(value, type)
 
     @staticmethod
     def _makeStringAttribute(value):
@@ -184,10 +175,16 @@ class GithubObject(object):
         return GithubObject.__makeSimpleListAttribute(value, list)
 
     def _makeListOfClassesAttribute(self, klass, value):
-        return GithubObject.__makeTransformedListAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
+        if isinstance(value, list) and all(isinstance(element, dict) for element in value):
+            return _ValuedAttribute([klass(self._requester, self._headers, element, completed=False) for element in value])
+        else:
+            return _BadAttribute(value, [dict])
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        return GithubObject.__makeTransformedDictAttribute(value, (str, unicode), dict, lambda value: klass(self._requester, self._headers, value, completed=False))
+        if isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()):
+            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
+        else:
+            return _BadAttribute(value, {(str, unicode): dict})
 
     @property
     def etag(self):
