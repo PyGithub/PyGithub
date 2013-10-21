@@ -129,33 +129,6 @@ class Repository(Framework.TestCase):
         self.assertTrue(hook.active)  # WTF
         self.assertEqual(hook.id, 257993)
 
-    def testCreateDownloadWithMinimalArguments(self):
-        download = self.repo.create_download("Foobar.txt", 1024)
-        self.assertEqual(download.id, 242562)
-
-    def testCreateDownloadWithAllArguments(self):
-        download = self.repo.create_download("Foobar.txt", 1024, "Download created by PyGithub", "text/richtext")
-        self.assertEqual(download.accesskeyid, "1DWESVTPGHQVTX38V182")
-        self.assertEqual(download.acl, "public-read")
-        self.assertEqual(download.bucket, "github")
-        self.assertEqual(download.content_type, "text/richtext")
-        self.assertEqual(download.created_at, datetime.datetime(2012, 5, 22, 19, 11, 49))
-        self.assertEqual(download.description, "Download created by PyGithub")
-        self.assertEqual(download.download_count, 0)
-        self.assertEqual(download.expirationdate, datetime.datetime(2112, 5, 22, 19, 11, 49))
-        self.assertEqual(download.html_url, "https://github.com/downloads/jacquev6/PyGithub/Foobar.txt")
-        self.assertEqual(download.id, 242556)
-        self.assertEqual(download.mime_type, "text/richtext")
-        self.assertEqual(download.name, "Foobar.txt")
-        self.assertEqual(download.path, "downloads/jacquev6/PyGithub/Foobar.txt")
-        self.assertEqual(download.policy, "ewogICAgJ2V4cGlyYXRpb24nOiAnMjExMi0wNS0yMlQxOToxMTo0OS4wMDBaJywKICAgICdjb25kaXRpb25zJzogWwogICAgICAgIHsnYnVja2V0JzogJ2dpdGh1Yid9LAogICAgICAgIHsna2V5JzogJ2Rvd25sb2Fkcy9qYWNxdWV2Ni9QeUdpdGh1Yi9Gb29iYXIudHh0J30sCiAgICAgICAgeydhY2wnOiAncHVibGljLXJlYWQnfSwKICAgICAgICB7J3N1Y2Nlc3NfYWN0aW9uX3N0YXR1cyc6ICcyMDEnfSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRGaWxlbmFtZScsICcnXSwKICAgICAgICBbJ3N0YXJ0cy13aXRoJywgJyRDb250ZW50LVR5cGUnLCAnJ10KICAgIF0KfQ==")
-        self.assertEqual(download.prefix, "downloads/jacquev6/PyGithub")
-        self.assertFalse(download.redirect)
-        self.assertEqual(download.s3_url, "https://github.s3.amazonaws.com/")
-        self.assertEqual(download.signature, "8FCU/4rgT3ohXfE9N6HO7JgbuK4=")
-        self.assertEqual(download.size, 1024)
-        self.assertEqual(download.url, "https://api.github.com/repos/jacquev6/PyGithub/downloads/242556")
-
     def testCreateGitRef(self):
         ref = self.repo.create_git_ref("refs/heads/BranchCreatedByPyGithub", "4303c5b90e2216d927155e9609436ccb8984c495")
         self.assertEqual(ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub")

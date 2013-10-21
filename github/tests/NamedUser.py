@@ -92,14 +92,6 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
 
-    def testCreateGist(self):
-        gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")}, "Gist created by PyGithub on a NamedUser")
-        self.assertEqual(gist.description, "Gist created by PyGithub on a NamedUser")
-
-    def testCreateGistWithoutDescription(self):
-        gist = self.user.create_gist(True, {"foobar.txt": github.InputFileContent("File created by PyGithub")})
-        self.assertEqual(gist.description, None)
-
     def testGetGists(self):
         self.assertListKeyEqual(self.user.get_gists(), lambda g: g.description, ["Gist created by PyGithub", "FairThreadPoolPool.cpp", "How to error 500 Github API v3, as requested by Rick (GitHub Staff)", "Cadfael: order of episodes in French DVD edition"])
 
