@@ -1,7 +1,8 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 ############################ Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -21,13 +22,11 @@
 #                                                                              #
 ################################################################################
 
-*.pyc
+import sys
+import twitter
 
-/GithubCredentials.py
-/scripts/TwitterCredentials.py
-/dist/
-/build/
-/MANIFEST
-/PyGithub.egg-info/
-/.coverage
-/developer.github.com/
+import TwitterCredentials as cred
+
+api = twitter.Api(consumer_key=cred.consumer_key, consumer_secret=cred.consumer_secret, access_token_key=cred.access_token_key, access_token_secret=cred.access_token_secret)
+message = "I've just published version " + sys.argv[1] + " of PyGithub http://github.com/jacquev6/PyGithub"
+api.PostUpdate(message)

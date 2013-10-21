@@ -33,7 +33,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, shutil, glob
+import sys
+import os
+import shutil
+import glob
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -192,7 +195,7 @@ htmlhelp_basename = 'PyGithubdoc'
 
 # -- Options for LaTeX output --------------------------------------------------
 
-latex_elements = {
+# latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
 
@@ -201,13 +204,13 @@ latex_elements = {
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
-}
+# }
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'PyGithub.tex', u'PyGithub Documentation',
-   u'Vincent Jacques', 'manual'),
+    ('index', 'PyGithub.tex', u'PyGithub Documentation',
+     u'Vincent Jacques', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -250,9 +253,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'PyGithub', u'PyGithub Documentation',
-   u'Vincent Jacques', 'PyGithub', 'One line description of project.',
-   'Miscellaneous'),
+    ('index', 'PyGithub', u'PyGithub Documentation',
+     u'Vincent Jacques', 'PyGithub', 'One line description of project.',
+     'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
@@ -264,73 +267,73 @@ texinfo_documents = [
 # How to display URL addresses: 'footnote', 'no', or 'inline'.
 #texinfo_show_urls = 'footnote'
 
-autodoc_default_flags = [ "members" ]
+autodoc_default_flags = ["members"]
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
 githubClasses = [
-	fileName[10:-3]
-	for fileName in glob.glob("../github/*.py")
-	if fileName not in [
-		"../github/GithubException.py",
-		"../github/GithubObject.py",
-		"../github/InputFileContent.py",
-		"../github/InputGitAuthor.py",
-		"../github/InputGitTreeElement.py",
-		"../github/Legacy.py",
-		"../github/MainClass.py",
-		"../github/PaginatedList.py",
-		"../github/Requester.py",
-		"../github/Consts.py",
-		"../github/__init__.py"]
+    fileName[10:-3]
+    for fileName in glob.glob("../github/*.py")
+    if fileName not in [
+        "../github/GithubException.py",
+        "../github/GithubObject.py",
+        "../github/InputFileContent.py",
+        "../github/InputGitAuthor.py",
+        "../github/InputGitTreeElement.py",
+        "../github/Legacy.py",
+        "../github/MainClass.py",
+        "../github/PaginatedList.py",
+        "../github/Requester.py",
+        "../github/Consts.py",
+        "../github/__init__.py"]
 ]
 
-with open("github_objects.rst",	"w") as f:
-	f.write("Github objects\n")
-	f.write("==============\n")
-	f.write("\n")
-	f.write(".. autoclass:: github.GithubObject.GithubObject()\n")
-	f.write("\n")
-	f.write(".. toctree::\n")
-	for githubClass in githubClasses:
-		f.write("   github_objects/" + githubClass + "\n")
+with open("github_objects.rst", "w") as f:
+    f.write("Github objects\n")
+    f.write("==============\n")
+    f.write("\n")
+    f.write(".. autoclass:: github.GithubObject.GithubObject()\n")
+    f.write("\n")
+    f.write(".. toctree::\n")
+    for githubClass in githubClasses:
+        f.write("   github_objects/" + githubClass + "\n")
 
 for githubClass in githubClasses:
-	with open("github_objects/" + githubClass + ".rst", "w") as f:
-		f.write(githubClass + "\n")
-		f.write("=" * len(githubClass) + "\n")
-		f.write("\n")
-		f.write(".. autoclass:: github." + githubClass + "." + githubClass + "()\n")
+    with open("github_objects/" + githubClass + ".rst", "w") as f:
+        f.write(githubClass + "\n")
+        f.write("=" * len(githubClass) + "\n")
+        f.write("\n")
+        f.write(".. autoclass:: github." + githubClass + "." + githubClass + "()\n")
 
 methods = dict()
 for githubClass in githubClasses + ["MainClass"]:
-	with open("../github/" + githubClass + ".py") as f:
-		if githubClass == "MainClass":
-			githubClass = "github.MainClass.Github"
-		else:
-			githubClass = "github." + githubClass + "." + githubClass
-		method = None
-		isProperty = False
-		for line in f:
-			line = line.rstrip()
-			if line == "    @property":
-				isProperty = True
-			if line.startswith("    def "):
-				if not isProperty:
-					assert method is None, method + " has no :calls: section"
-					method = line.split("(")[0][8:]
-					if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
-						method = None
-				isProperty = False
-			if line.startswith("        :calls: `"):
-				for callee in line[16:].split(" or "):
-					verb, url = callee[1:].split(" ")[0:2]
-					if url not in methods:
-						methods[url] = dict()
-					if verb not in methods[url]:
-						methods[url][verb] = set()
-					methods[url][verb].add(":meth:`" + githubClass + "." + method + "`")
-				method = None
+    with open("../github/" + githubClass + ".py") as f:
+        if githubClass == "MainClass":
+            githubClass = "github.MainClass.Github"
+        else:
+            githubClass = "github." + githubClass + "." + githubClass
+        method = None
+        isProperty = False
+        for line in f:
+            line = line.rstrip()
+            if line == "    @property":
+                isProperty = True
+            if line.startswith("    def "):
+                if not isProperty:
+                    assert method is None, method + " has no :calls: section"
+                    method = line.split("(")[0][8:]
+                    if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
+                        method = None
+                isProperty = False
+            if line.startswith("        :calls: `"):
+                for callee in line[16:].split(" or "):
+                    verb, url = callee[1:].split(" ")[0:2]
+                    if url not in methods:
+                        methods[url] = dict()
+                    if verb not in methods[url]:
+                        methods[url][verb] = set()
+                    methods[url][verb].add(":meth:`" + githubClass + "." + method + "`")
+                method = None
 
 methods["/markdown/raw"] = dict()
 methods["/markdown/raw"]["POST"] = ["Not implemented, see ``/markdown``"]
@@ -338,15 +341,15 @@ methods["/rate_limit"] = dict()
 methods["/rate_limit"]["GET"] = ["Not implemented, see `Github.rate_limiting`"]
 
 with open("apis.rst", "w") as apis:
-	apis.write("APIs\n")
-	apis.write("====\n")
-	apis.write("\n")
-	for url, verbs in sorted(methods.iteritems()):
-		apis.write("* ``" + url + "``\n")
-		apis.write("\n")
-		for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
-			if verb in verbs:
-				apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
-		apis.write("\n")
+    apis.write("APIs\n")
+    apis.write("====\n")
+    apis.write("\n")
+    for url, verbs in sorted(methods.iteritems()):
+        apis.write("* ``" + url + "``\n")
+        apis.write("\n")
+        for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
+            if verb in verbs:
+                apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
+        apis.write("\n")
 
 shutil.copyfile("../Contributing.rst", "contributing.rst")

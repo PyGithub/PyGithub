@@ -8,10 +8,11 @@ function publish {
     readme
     doc
     push
+    twitt_release
 }
 
 function check {
-    pep8 --ignore=E501 github setup.py || exit
+    pep8 --ignore=E501 github scripts doc *.py || exit
 }
 
 function fix_headers {
@@ -106,6 +107,10 @@ function compare_to_api_ref_doc {
         git clone https://github.com/github/developer.github.com.git
     fi
     python scripts/compare_to_api_ref_doc.py
+}
+
+function twitt_release {
+    python scripts/twitt_release.py $version
 }
 
 $1

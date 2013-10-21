@@ -24,6 +24,11 @@ Starting today (September 5th, 2013), we now need more than 8 bits to store the 
 * `Fix <https://github.com/jacquev6/PyGithub/issues/199>`_ parameter public/private of ``Repository.edit``. Thank you `daireobroin449 <https://github.com/daireobroin449>`_ for reporting the issue
 * Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corrensponding APIs are not documented anymore
 
+Twitter
+-------
+
+Starting with version 1.21.0, I'm going to twitt each new release. I rarelly twitt, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
+
 What's missing?
 ===============
 

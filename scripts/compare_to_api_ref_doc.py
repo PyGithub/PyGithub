@@ -63,7 +63,7 @@ def parseReference():
             with open(filename) as f:
                 for line in f:
                     if line.startswith("#"):
-                        section = ("-".join(line.rstrip().split(" ")[1:]))  ### @todo anchor-ify (lowercase, only a-z, etc.)
+                        section = ("-".join(line.rstrip().split(" ")[1:]))  # ## @todo anchor-ify (lowercase, only a-z, etc.)
                     if line.startswith("    "):
                         line = line[4:]
                     if line.startswith("\t"):
@@ -74,7 +74,7 @@ def parseReference():
                             url = (url, verb)
                             if url in badlyNamedUrls:
                                 url = badlyNamedUrls[url]
-                            docUrl = "http://developer.github.com/" + filename[29:-3] ### @todo + "#" + section
+                            docUrl = "http://developer.github.com/" + filename[29:-3]  # ## @todo + "#" + section
                             urls[url] = docUrl
 
     for url in undocumentedUrls:
