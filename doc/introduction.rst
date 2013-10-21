@@ -63,5 +63,4 @@ They talk about PyGithub
 * http://stackoverflow.com/questions/10625190/most-suitable-python-library-for-github-api-v3
 * http://stackoverflow.com/questions/12379637/django-social-auth-github-authentication
 * http://www.freebsd.org/cgi/cvsweb.cgi/ports/devel/py-pygithub/
-* http://oddshocks.com/blog/2012/08/02/developing-charsheet/
 * https://bugzilla.redhat.com/show_bug.cgi?id=910565
