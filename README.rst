@@ -33,6 +33,8 @@ Github API v3 URLs not (yet) covered by PyGithub
 ------------------------------------------------
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
+* ``/authorizations/clients/:client_id`` (PUT)
+* ``/emojis`` (GET)
 * ``/feeds`` (GET)
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
@@ -52,6 +54,15 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
+* ``/repos/:owner/:repo/releases`` (GET)
+* ``/repos/:owner/:repo/releases`` (POST)
+* ``/repos/:owner/:repo/releases/:id`` (DELETE)
+* ``/repos/:owner/:repo/releases/:id`` (GET)
+* ``/repos/:owner/:repo/releases/:id`` (PATCH)
+* ``/repos/:owner/:repo/releases/:id/assets`` (GET)
+* ``/repos/:owner/:repo/releases/assets/:id`` (DELETE)
+* ``/repos/:owner/:repo/releases/assets/:id`` (GET)
+* ``/repos/:owner/:repo/releases/assets/:id`` (PATCH)
 * ``/repos/:owner/:repo/stats/code_frequency`` (GET)
 * ``/repos/:owner/:repo/stats/commit_activity`` (GET)
 * ``/repos/:owner/:repo/stats/contributors`` (GET)
@@ -64,6 +75,7 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
+* ``/user/teams`` (GET)
 
 Documentation
 =============
