@@ -72,7 +72,7 @@ class Repository(Framework.TestCase):
         self.repo.edit("PyGithub")
 
     def testEditWithAllArguments(self):
-        self.repo.edit("PyGithub", "Description edited by PyGithub", "http://vincent-jacques.net/PyGithub", public=True, has_issues=True, has_wiki=False, has_downloads=True)
+        self.repo.edit("PyGithub", "Description edited by PyGithub", "http://vincent-jacques.net/PyGithub", private=True, has_issues=True, has_wiki=False, has_downloads=True)
         self.assertEqual(self.repo.description, "Description edited by PyGithub")
         self.repo.edit("PyGithub", "Python library implementing the full Github API v3")
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")

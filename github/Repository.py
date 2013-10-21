@@ -982,13 +982,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, public=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
+    def edit(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
         :param description: string
         :param homepage: string
-        :param public: bool
+        :param private: bool
         :param has_issues: bool
         :param has_wiki: bool
         :param has_downloads: bool
@@ -998,7 +998,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
-        assert public is github.GithubObject.NotSet or isinstance(public, bool), public
+        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
@@ -1010,8 +1010,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["description"] = description
         if homepage is not github.GithubObject.NotSet:
             post_parameters["homepage"] = homepage
-        if public is not github.GithubObject.NotSet:
-            post_parameters["public"] = public
+        if private is not github.GithubObject.NotSet:
+            post_parameters["private"] = private
         if has_issues is not github.GithubObject.NotSet:
             post_parameters["has_issues"] = has_issues
         if has_wiki is not github.GithubObject.NotSet:
