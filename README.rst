@@ -22,6 +22,7 @@ Starting today (September 5th, 2013), we now need more than 8 bits to store the 
 * `Implement <https://github.com/jacquev6/PyGithub/issues/196>`_ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`_ for asking
 * In case bad data is returned by Github API v3, `raise <https://github.com/jacquev6/PyGithub/issues/195>`_ an exception only when the user accesses the faulty attribute, not when constructing the object containing this attribute. Thank you `klmitch <https://github.com/klmitch>`_ for asking
 * `Fix <https://github.com/jacquev6/PyGithub/issues/199>`_ parameter public/private of ``Repository.edit``. Thank you `daireobroin449 <https://github.com/daireobroin449>`_ for reporting the issue
+* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corrensponding APIs are not documented anymore
 
 What's missing?
 ===============

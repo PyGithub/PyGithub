@@ -655,34 +655,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Comparison.Comparison(self._requester, headers, data, completed=True)
 
-    def create_download(self, name, size, description=github.GithubObject.NotSet, content_type=github.GithubObject.NotSet):
-        """
-        :calls: `POST /repos/:owner/:repo/downloads <http://developer.github.com/v3/repos/downloads>`_
-        :param name: string
-        :param size: integer
-        :param description: string
-        :param content_type: string
-        :rtype: :class:`github.Download.Download`
-        """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(size, (int, long)), size
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert content_type is github.GithubObject.NotSet or isinstance(content_type, (str, unicode)), content_type
-        post_parameters = {
-            "name": name,
-            "size": size,
-        }
-        if description is not github.GithubObject.NotSet:
-            post_parameters["description"] = description
-        if content_type is not github.GithubObject.NotSet:
-            post_parameters["content_type"] = content_type
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/downloads",
-            input=post_parameters
-        )
-        return github.Download.Download(self._requester, headers, data, completed=True)
-
     def create_git_blob(self, content, encoding):
         """
         :calls: `POST /repos/:owner/:repo/git/blobs <http://developer.github.com/v3/git/blobs>`_

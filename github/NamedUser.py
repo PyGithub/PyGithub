@@ -329,31 +329,6 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    # v2: Remove this method
-    def create_gist(self, public, files, description=github.GithubObject.NotSet):
-        """
-        :calls: `POST /users/:user/gists <http://developer.github.com/v3/todo>`_
-        :param public: bool
-        :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
-        :param description: string
-        :rtype: :class:`github.Gist.Gist`
-        """
-        assert isinstance(public, bool), public
-        assert all(isinstance(element, github.InputFileContent) for element in files.itervalues()), files
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        post_parameters = {
-            "public": public,
-            "files": dict((key, value._identity) for key, value in files.iteritems()),
-        }
-        if description is not github.GithubObject.NotSet:
-            post_parameters["description"] = description
-        headers, data = self._requester.requestJsonAndCheck(
-            "POST",
-            self.url + "/gists",
-            input=post_parameters
-        )
-        return github.Gist.Gist(self._requester, headers, data, completed=True)
-
     def get_events(self):
         """
         :calls: `GET /users/:user/events <http://developer.github.com/v3/activity/events>`_
