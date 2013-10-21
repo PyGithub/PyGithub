@@ -312,9 +312,22 @@ class Github(object):
         )
         return data
 
+    def get_hook(self, name):
+        """
+        :calls: `GET /hooks/:name <http://developer.github.com/v3/repos/hooks/>`_
+        :param name: string
+        :rtype: :class:`github.HookDescription.HookDescription`
+        """
+        assert isinstance(name, (str, unicode)), name
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/hooks/" + name
+        )
+        return HookDescription.HookDescription(self.__requester, headers, attributes, completed=True)
+
     def get_hooks(self):
         """
-        :calls: `GET /hooks <http://developer.github.com/>`_
+        :calls: `GET /hooks <http://developer.github.com/v3/repos/hooks/>`_
         :rtype: list of :class:`github.HookDescription.HookDescription`
         """
         headers, data = self.__requester.requestJsonAndCheck(

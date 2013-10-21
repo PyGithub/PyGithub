@@ -40,35 +40,35 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._label)
+        return self._label.value
 
     @property
     def ref(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._ref)
+        return self._ref.value
 
     @property
     def repo(self):
         """
         :type: :class:`github.Repository.Repository`
         """
-        return self._NoneIfNotSet(self._repo)
+        return self._repo.value
 
     @property
     def sha(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def user(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
-        return self._NoneIfNotSet(self._user)
+        return self._user.value
 
     def _initAttributes(self):
         self._label = github.GithubObject.NotSet
@@ -79,17 +79,12 @@ class PullRequestPart(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "label" in attributes:  # pragma no branch
-            assert attributes["label"] is None or isinstance(attributes["label"], (str, unicode)), attributes["label"]
-            self._label = attributes["label"]
+            self._label = self._makeStringAttribute(attributes["label"])
         if "ref" in attributes:  # pragma no branch
-            assert attributes["ref"] is None or isinstance(attributes["ref"], (str, unicode)), attributes["ref"]
-            self._ref = attributes["ref"]
+            self._ref = self._makeStringAttribute(attributes["ref"])
         if "repo" in attributes:  # pragma no branch
-            assert attributes["repo"] is None or isinstance(attributes["repo"], dict), attributes["repo"]
-            self._repo = None if attributes["repo"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repo"], completed=False)
+            self._repo = self._makeClassAttribute(github.Repository.Repository, attributes["repo"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "user" in attributes:  # pragma no branch
-            assert attributes["user"] is None or isinstance(attributes["user"], dict), attributes["user"]
-            self._user = None if attributes["user"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["user"], completed=False)
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])

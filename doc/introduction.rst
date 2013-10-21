@@ -48,6 +48,7 @@ Projects using PyGithub
 
 (`Open an issue <https://github.com/jacquev6/PyGithub/issues>`_ if you want to be listed here, I'll be glad to add your project)
 
+* `DevAssistant <http://devassistant.org>`_
 * `Upverter <https://upverter.com>`_ is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * `Notifico <http://n.tkte.ch>`_ receives messages (such as commits and issues) from services and scripts and delivers them to IRC channels. It can import/sync from Github.
 * `Tratihubis <http://pypi.python.org/pypi/tratihubis/>`_ converts Trac tickets to Github issues
@@ -63,5 +64,4 @@ They talk about PyGithub
 * http://stackoverflow.com/questions/10625190/most-suitable-python-library-for-github-api-v3
 * http://stackoverflow.com/questions/12379637/django-social-auth-github-authentication
 * http://www.freebsd.org/cgi/cvsweb.cgi/ports/devel/py-pygithub/
-* http://oddshocks.com/blog/2012/08/02/developing-charsheet/
 * https://bugzilla.redhat.com/show_bug.cgi?id=910565

@@ -37,21 +37,21 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._diff_url)
+        return self._diff_url.value
 
     @property
     def html_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._html_url)
+        return self._html_url.value
 
     @property
     def patch_url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._patch_url)
+        return self._patch_url.value
 
     def _initAttributes(self):
         self._diff_url = github.GithubObject.NotSet
@@ -60,11 +60,8 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "diff_url" in attributes:  # pragma no branch
-            assert attributes["diff_url"] is None or isinstance(attributes["diff_url"], (str, unicode)), attributes["diff_url"]
-            self._diff_url = attributes["diff_url"]
+            self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "html_url" in attributes:  # pragma no branch
-            assert attributes["html_url"] is None or isinstance(attributes["html_url"], (str, unicode)), attributes["html_url"]
-            self._html_url = attributes["html_url"]
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "patch_url" in attributes:  # pragma no branch
-            assert attributes["patch_url"] is None or isinstance(attributes["patch_url"], (str, unicode)), attributes["patch_url"]
-            self._patch_url = attributes["patch_url"]
+            self._patch_url = self._makeStringAttribute(attributes["patch_url"])

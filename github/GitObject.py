@@ -37,21 +37,21 @@ class GitObject(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def type(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._type)
+        return self._type.value
 
     @property
     def url(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._sha = github.GithubObject.NotSet
@@ -60,11 +60,8 @@ class GitObject(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "type" in attributes:  # pragma no branch
-            assert attributes["type"] is None or isinstance(attributes["type"], (str, unicode)), attributes["type"]
-            self._type = attributes["type"]
+            self._type = self._makeStringAttribute(attributes["type"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

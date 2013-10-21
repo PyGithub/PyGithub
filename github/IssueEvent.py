@@ -41,7 +41,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.NamedUser.NamedUser`
         """
         self._completeIfNotSet(self._actor)
-        return self._NoneIfNotSet(self._actor)
+        return self._actor.value
 
     @property
     def commit_id(self):
@@ -49,7 +49,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._commit_id)
-        return self._NoneIfNotSet(self._commit_id)
+        return self._commit_id.value
 
     @property
     def created_at(self):
@@ -57,7 +57,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._created_at)
-        return self._NoneIfNotSet(self._created_at)
+        return self._created_at.value
 
     @property
     def event(self):
@@ -65,7 +65,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._event)
-        return self._NoneIfNotSet(self._event)
+        return self._event.value
 
     @property
     def id(self):
@@ -73,7 +73,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def issue(self):
@@ -81,7 +81,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Issue.Issue`
         """
         self._completeIfNotSet(self._issue)
-        return self._NoneIfNotSet(self._issue)
+        return self._issue.value
 
     @property
     def url(self):
@@ -89,7 +89,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._actor = github.GithubObject.NotSet
@@ -102,23 +102,16 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
-            assert attributes["actor"] is None or isinstance(attributes["actor"], dict), attributes["actor"]
-            self._actor = None if attributes["actor"] is None else github.NamedUser.NamedUser(self._requester, self._headers, attributes["actor"], completed=False)
+            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
         if "commit_id" in attributes:  # pragma no branch
-            assert attributes["commit_id"] is None or isinstance(attributes["commit_id"], (str, unicode)), attributes["commit_id"]
-            self._commit_id = attributes["commit_id"]
+            self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "created_at" in attributes:  # pragma no branch
-            assert attributes["created_at"] is None or isinstance(attributes["created_at"], (str, unicode)), attributes["created_at"]
-            self._created_at = self._parseDatetime(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "event" in attributes:  # pragma no branch
-            assert attributes["event"] is None or isinstance(attributes["event"], (str, unicode)), attributes["event"]
-            self._event = attributes["event"]
+            self._event = self._makeStringAttribute(attributes["event"])
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (int, long)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = self._makeIntAttribute(attributes["id"])
         if "issue" in attributes:  # pragma no branch
-            assert attributes["issue"] is None or isinstance(attributes["issue"], dict), attributes["issue"]
-            self._issue = None if attributes["issue"] is None else github.Issue.Issue(self._requester, self._headers, attributes["issue"], completed=False)
+            self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

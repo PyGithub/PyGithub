@@ -37,21 +37,21 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
         """
         :type: integer
         """
-        return self._NoneIfNotSet(self._code)
+        return self._code.value
 
     @property
     def message(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._message)
+        return self._message.value
 
     @property
     def status(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._status)
+        return self._status.value
 
     def _initAttributes(self):
         self._code = github.GithubObject.NotSet
@@ -60,11 +60,8 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "code" in attributes:  # pragma no branch
-            assert attributes["code"] is None or isinstance(attributes["code"], (int, long)), attributes["code"]
-            self._code = attributes["code"]
+            self._code = self._makeIntAttribute(attributes["code"])
         if "message" in attributes:  # pragma no branch
-            assert attributes["message"] is None or isinstance(attributes["message"], (str, unicode)), attributes["message"]
-            self._message = attributes["message"]
+            self._message = self._makeStringAttribute(attributes["message"])
         if "status" in attributes:  # pragma no branch
-            assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = attributes["status"]
+            self._status = self._makeStringAttribute(attributes["status"])

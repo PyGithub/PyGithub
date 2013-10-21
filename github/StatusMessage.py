@@ -34,21 +34,21 @@ class StatusMessage(github.GithubObject.NonCompletableGithubObject):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._body)
+        return self._body.value
 
     @property
     def status(self):
         """
         :type: string
         """
-        return self._NoneIfNotSet(self._status)
+        return self._status.value
 
     @property
     def created_on(self):
         """
         :type: datetime.datetime
         """
-        return self._NoneIfNotSet(self._created_on)
+        return self._created_on.value
 
     def _initAttributes(self):
         self._status = github.GithubObject.NotSet
@@ -56,11 +56,8 @@ class StatusMessage(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "body" in attributes:  # pragma no branch
-            assert attributes["body"] is None or isinstance(attributes["body"], (str, unicode)), attributes["body"]
-            self._body = attributes["body"]
+            self._body = self._makeStringAttribute(attributes["body"])
         if "status" in attributes:  # pragma no branch
-            assert attributes["status"] is None or isinstance(attributes["status"], (str, unicode)), attributes["status"]
-            self._status = attributes["status"]
+            self._status = self._makeStringAttribute(attributes["status"])
         if "created_on" in attributes:  # pragma no branch
-            assert attributes["created_on"] is None or isinstance(attributes["created_on"], (str, unicode)), attributes["created_on"]
-            self._created_on = self._parseDatetime(attributes["created_on"])
+            self._created_on = self._makeDatetimeAttribute(attributes["created_on"])

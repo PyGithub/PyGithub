@@ -38,7 +38,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._content)
-        return self._NoneIfNotSet(self._content)
+        return self._content.value
 
     @property
     def encoding(self):
@@ -46,7 +46,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._encoding)
-        return self._NoneIfNotSet(self._encoding)
+        return self._encoding.value
 
     @property
     def sha(self):
@@ -54,7 +54,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._sha)
-        return self._NoneIfNotSet(self._sha)
+        return self._sha.value
 
     @property
     def size(self):
@@ -62,7 +62,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         :type: integer
         """
         self._completeIfNotSet(self._size)
-        return self._NoneIfNotSet(self._size)
+        return self._size.value
 
     @property
     def url(self):
@@ -70,7 +70,7 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
@@ -81,17 +81,12 @@ class GitBlob(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "content" in attributes:  # pragma no branch
-            assert attributes["content"] is None or isinstance(attributes["content"], (str, unicode)), attributes["content"]
-            self._content = attributes["content"]
+            self._content = self._makeStringAttribute(attributes["content"])
         if "encoding" in attributes:  # pragma no branch
-            assert attributes["encoding"] is None or isinstance(attributes["encoding"], (str, unicode)), attributes["encoding"]
-            self._encoding = attributes["encoding"]
+            self._encoding = self._makeStringAttribute(attributes["encoding"])
         if "sha" in attributes:  # pragma no branch
-            assert attributes["sha"] is None or isinstance(attributes["sha"], (str, unicode)), attributes["sha"]
-            self._sha = attributes["sha"]
+            self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch
-            assert attributes["size"] is None or isinstance(attributes["size"], (int, long)), attributes["size"]
-            self._size = attributes["size"]
+            self._size = self._makeIntAttribute(attributes["size"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

@@ -14,21 +14,15 @@ What's new?
 Thank you, dear stargazers!
 ---------------------------
 
-Starting today (September 05th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
+Starting today (September 5th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
 
-`Version 1.19.0 <https://github.com/jacquev6/PyGithub/issues?milestone=31&state=closed>`_ (September 8th, 2013) (AKFish's edition)
-----------------------------------------------------------------------------------------------------------------------------------
+`Version 1.20.0 <https://github.com/jacquev6/PyGithub/issues?milestone=32&state=closed>`_ (???? ??th, 2013)
+-----------------------------------------------------------------------------------------------------------
 
-* Implement `conditional requests <http://developer.github.com/guides/getting-started/#conditional-requests>`_ by the method ``GithubObject.update``. Thank you very much `akfish <https://github.com/akfish>`_ for the pull request and your collaboration!
-* Implement persistence of PyGithub objects: ``Github.save`` and ``Github.load``. Don't forget to ``update`` your objects after loading them, it won't decrease your rate limiting quota if nothing has changed. Again, thank you `akfish <https://github.com/akfish>`_
-* Implement ``Github.get_repos`` to get all public repositories
-* Implement ``NamedUser.has_in_following``
-* `Implement <https://github.com/jacquev6/PyGithub/issues/188>`_ ``Github.get_api_status``, ``Github.get_last_api_status_message`` and ``Github.get_api_status_messages``. Thank you `ruxandraburtica <https://github.com/ruxandraburtica>`_ for asking
-* Implement ``Github.get_rate_limit``
-* Add many missing attributes
-* Technical change: HTTP headers are now stored in retrieved objects. This is a base for new functionalities. Thank you `akfish <https://github.com/akfish>`_ for the pull request
-* Use the new URL to fork gists (minor change)
-* Use the new URL to test hooks (minor change)
+* `Implement <https://github.com/jacquev6/PyGithub/issues/196>`_ ``Github.get_hook(name)``. Thank you `klmitch <https://github.com/klmitch>`_ for asking
+* In case bad data is returned by Github API v3, `raise <https://github.com/jacquev6/PyGithub/issues/195>`_ an exception only when the user accesses the faulty attribute, not when constructing the object containing this attribute. Thank you `klmitch <https://github.com/klmitch>`_ for asking
+* `Fix <https://github.com/jacquev6/PyGithub/issues/199>`_ parameter public/private of ``Repository.edit``. Thank you `daireobroin449 <https://github.com/daireobroin449>`_ for reporting the issue
+* Remove ``Repository.create_download`` and ``NamedUser.create_gist`` as the corrensponding APIs are not documented anymore
 
 What's missing?
 ===============
@@ -39,6 +33,8 @@ Github API v3 URLs not (yet) covered by PyGithub
 ------------------------------------------------
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
+* ``/authorizations/clients/:client_id`` (PUT)
+* ``/emojis`` (GET)
 * ``/feeds`` (GET)
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
@@ -58,6 +54,15 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/repos/:owner/:repo/contents/:path`` (PUT)
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
+* ``/repos/:owner/:repo/releases`` (GET)
+* ``/repos/:owner/:repo/releases`` (POST)
+* ``/repos/:owner/:repo/releases/:id`` (DELETE)
+* ``/repos/:owner/:repo/releases/:id`` (GET)
+* ``/repos/:owner/:repo/releases/:id`` (PATCH)
+* ``/repos/:owner/:repo/releases/:id/assets`` (GET)
+* ``/repos/:owner/:repo/releases/assets/:id`` (DELETE)
+* ``/repos/:owner/:repo/releases/assets/:id`` (GET)
+* ``/repos/:owner/:repo/releases/assets/:id`` (PATCH)
 * ``/repos/:owner/:repo/stats/code_frequency`` (GET)
 * ``/repos/:owner/:repo/stats/commit_activity`` (GET)
 * ``/repos/:owner/:repo/stats/contributors`` (GET)
@@ -70,6 +75,7 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
+* ``/user/teams`` (GET)
 
 Documentation
 =============

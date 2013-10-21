@@ -39,7 +39,8 @@ def parseReference():
         ("/notifications/threads/1/subscription", "PUT"): ("/notifications/threads/:id/subscription", "PUT"),
     }
     undocumentedUrls = [
-        ("/hooks", "GET"),  # Mentioned somewhere
+        ("/hooks/:name", "GET"),  # Discovered in https://github.com/jacquev6/PyGithub/issues/196
+        ("/hooks", "GET"),  # Mentioned somewhere in http://developer.github.com/v3/repos/hooks/
         ("/hub", "POST"),  # Described in content/v3/repos/hooks.md
         ("/api/status.json", "GET"),  # https://status.github.com/api
         ("/api/last-message.json", "GET"),  # https://status.github.com/api

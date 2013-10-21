@@ -41,7 +41,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._id)
-        return self._NoneIfNotSet(self._id)
+        return self._id.value
 
     @property
     def last_read_at(self):
@@ -49,7 +49,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._last_read_at)
-        return self._NoneIfNotSet(self._last_read_at)
+        return self._last_read_at.value
 
     @property
     def repository(self):
@@ -57,7 +57,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         self._completeIfNotSet(self._repository)
-        return self._NoneIfNotSet(self._repository)
+        return self._repository.value
 
     @property
     def subject(self):
@@ -65,7 +65,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.NotificationSubject.NotificationSubject`
         """
         self._completeIfNotSet(self._subject)
-        return self._NoneIfNotSet(self._subject)
+        return self._subject.value
 
     @property
     def reason(self):
@@ -73,7 +73,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._reason)
-        return self._NoneIfNotSet(self._reason)
+        return self._reason.value
 
     @property
     def subscription_url(self):
@@ -81,7 +81,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._subscription_url)
-        return self._NoneIfNotSet(self._subscription_url)
+        return self._subscription_url.value
 
     @property
     def unread(self):
@@ -89,7 +89,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: bool
         """
         self._completeIfNotSet(self._unread)
-        return self._NoneIfNotSet(self._unread)
+        return self._unread.value
 
     @property
     def updated_at(self):
@@ -97,7 +97,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: datetime.datetime
         """
         self._completeIfNotSet(self._updated_at)
-        return self._NoneIfNotSet(self._updated_at)
+        return self._updated_at.value
 
     @property
     def url(self):
@@ -105,7 +105,7 @@ class Notification(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def _initAttributes(self):
         self._id = github.GithubObject.NotSet
@@ -119,29 +119,20 @@ class Notification(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
-            assert attributes["id"] is None or isinstance(attributes["id"], (str, unicode)), attributes["id"]
-            self._id = attributes["id"]
+            self._id = self._makeStringAttribute(attributes["id"])
         if "last_read_at" in attributes:  # pragma no branch
-            assert attributes["last_read_at"] is None or isinstance(attributes["last_read_at"], (str, unicode)), attributes["last_read_at"]
-            self._last_read_at = self._parseDatetime(attributes["last_read_at"])
+            self._last_read_at = self._makeDatetimeAttribute(attributes["last_read_at"])
         if "repository" in attributes:  # pragma no branch
-            assert attributes["repository"] is None or isinstance(attributes["repository"], dict), attributes["repository"]
-            self._repository = None if attributes["repository"] is None else github.Repository.Repository(self._requester, self._headers, attributes["repository"], completed=False)
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "subject" in attributes:  # pragma no branch
-            assert attributes["subject"] is None or isinstance(attributes["subject"], dict), attributes["subject"]
-            self._subject = None if attributes["subject"] is None else github.NotificationSubject.NotificationSubject(self._requester, self._headers, attributes["subject"], completed=False)
+            self._subject = self._makeClassAttribute(github.NotificationSubject.NotificationSubject, attributes["subject"])
         if "reason" in attributes:  # pragma no branch
-            assert attributes["reason"] is None or isinstance(attributes["reason"], (str, unicode)), attributes["reason"]
-            self._reason = attributes["reason"]
+            self._reason = self._makeStringAttribute(attributes["reason"])
         if "subscription_url" in attributes:  # pragma no branch
-            assert attributes["subscription_url"] is None or isinstance(attributes["subscription_url"], (str, unicode)), attributes["subscription_url"]
-            self._subscription_url = attributes["subscription_url"]
+            self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
         if "unread" in attributes:  # pragma no branch
-            assert attributes["unread"] is None or isinstance(attributes["unread"], bool), attributes["unread"]
-            self._unread = attributes["unread"]
+            self._unread = self._makeBoolAttribute(attributes["unread"])
         if "updated_at" in attributes:  # pragma no branch
-            assert attributes["updated_at"] is None or isinstance(attributes["updated_at"], (str, unicode)), attributes["updated_at"]
-            self._updated_at = self._parseDatetime(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]  # pragma no cover (but should be investigated)
-            self._url = attributes["url"]  # pragma no cover (but should be investigated)
+            self._url = self._makeStringAttribute(attributes["url"])

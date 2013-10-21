@@ -40,7 +40,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.GitObject.GitObject`
         """
         self._completeIfNotSet(self._object)
-        return self._NoneIfNotSet(self._object)
+        return self._object.value
 
     @property
     def ref(self):
@@ -48,7 +48,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._ref)
-        return self._NoneIfNotSet(self._ref)
+        return self._ref.value
 
     @property
     def url(self):
@@ -56,7 +56,7 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :type: string
         """
         self._completeIfNotSet(self._url)
-        return self._NoneIfNotSet(self._url)
+        return self._url.value
 
     def delete(self):
         """
@@ -96,11 +96,8 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
-            assert attributes["object"] is None or isinstance(attributes["object"], dict), attributes["object"]
-            self._object = None if attributes["object"] is None else github.GitObject.GitObject(self._requester, self._headers, attributes["object"], completed=False)
+            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch
-            assert attributes["ref"] is None or isinstance(attributes["ref"], (str, unicode)), attributes["ref"]
-            self._ref = attributes["ref"]
+            self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch
-            assert attributes["url"] is None or isinstance(attributes["url"], (str, unicode)), attributes["url"]
-            self._url = attributes["url"]
+            self._url = self._makeStringAttribute(attributes["url"])

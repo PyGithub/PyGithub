@@ -27,7 +27,7 @@
 
 class GithubException(Exception):
     """
-    Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub.
+    Error handling in PyGithub is done with exceptions. This class is the base of all exceptions raised by PyGithub (but :class:`github.GithubException.BadAttributeException`).
 
     Some other types of exceptions might be raised by underlying libraries, for example for network-related issues.
     """
@@ -77,3 +77,34 @@ class RateLimitExceededException(GithubException):
     """
     Exception raised when the rate limit is exceeded (when Github API replies with a 403 rate limit exceeded HTML status)
     """
+
+
+class BadAttributeException(Exception):
+    """
+    Exception raised when Github returns an attribute with the wrong type.
+    """
+    def __init__(self, actualValue, expectedType, transformationException):
+        self.__actualValue = actualValue
+        self.__expectedType = expectedType
+        self.__transformationException = transformationException
+
+    @property
+    def actual_value(self):
+        """
+        The value returned by Github
+        """
+        return self.__actualValue
+
+    @property
+    def expected_type(self):
+        """
+        The type PyGithub expected
+        """
+        return self.__expectedType
+
+    @property
+    def transformation_exception(self):
+        """
+        The exception raised when PyGithub tried to parse the value
+        """
+        return self.__transformationException
