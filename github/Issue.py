@@ -219,11 +219,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def add_to_labels(self, *labels):
         """
         :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
-        :param label: :class:`github.Label.Label`
+        :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert all(isinstance(element, github.Label.Label) for element in labels), labels
-        post_parameters = [label.name for label in labels]
+        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
@@ -346,13 +346,15 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def remove_from_labels(self, label):
         """
         :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
-        :param label: :class:`github.Label.Label`
+        :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert isinstance(label, github.Label.Label), label
+        assert isinstance(label, (github.Label.Label, str, unicode)), label
+        if isinstance(label, github.Label.Label):
+            label = label._identity
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels/" + label._identity
+            self.url + "/labels/" + label
         )
 
     def set_labels(self, *labels):
@@ -361,8 +363,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
-        assert all(isinstance(element, github.Label.Label) for element in labels), labels
-        post_parameters = [label.name for label in labels]
+        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
+        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",

@@ -104,9 +104,29 @@ class Issue(Framework.TestCase):
         self.issue.add_to_labels(bug, question)
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
 
+    def testAddAndRemoveLabelsWithStringArguments(self):
+        bug = "Bug"
+        question = "Question"
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
+        self.issue.remove_from_labels(bug)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management", "Question"])
+        self.issue.remove_from_labels(question)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management"])
+        self.issue.add_to_labels(bug, question)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
+
     def testDeleteAndSetLabels(self):
         bug = self.repo.get_label("Bug")
         question = self.repo.get_label("Question")
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
+        self.issue.delete_labels()
+        self.assertListKeyEqual(self.issue.get_labels(), None, [])
+        self.issue.set_labels(bug, question)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
+
+    def testDeleteAndSetLabelsWithStringArguments(self):
+        bug = "Bug"
+        question = "Question"
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
         self.issue.delete_labels()
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
