@@ -213,6 +213,12 @@ class CompletableGithubObject(GithubObject):
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
+    def __eq__(self, other):
+        return other.__class__ is self.__class__ and other._url.value == self._url.value
+
+    def __ne__(self, other):
+        return not self == other
+
     def _completeIfNotSet(self, value):
         if value is NotSet:
             self._completeIfNeeded()

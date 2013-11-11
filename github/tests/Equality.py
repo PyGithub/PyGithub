@@ -24,65 +24,29 @@
 #                                                                              #
 ################################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
-from ConditionalRequestUpdate import *
-from Persistence import *
-from ExposeAllAttributes import *
-from BadAttributes import *
-from Equality import *
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
+class Equality(Framework.TestCase):
+    def testUserEquality(self):
+        u1 = self.g.get_user("jacquev6")
+        u2 = self.g.get_user("jacquev6")
+        self.assertTrue(u1 == u2)
+        self.assertFalse(u1 != u2)
+        self.assertEqual(u1, u2)
+
+    def testUserDifference(self):
+        u1 = self.g.get_user("jacquev6")
+        u2 = self.g.get_user("OddBloke")
+        self.assertFalse(u1 == u2)
+        self.assertTrue(u1 != u2)
+        self.assertNotEqual(u1, u2)
+
+    def testBranchEquality(self):
+        # Erf, equality of NonCompletableGithubObjects will be difficult to implement
+        # because even their _rawData can differ. (Here, the avatar_url is not equal)
+        # (CompletableGithubObjects are compared by their API url, which is a good key)
+        r = self.g.get_user().get_repo("PyGithub")
+        b1 = r.get_branch("develop")
+        b2 = r.get_branch("develop")
+        self.assertNotEqual(b1._rawData, b2._rawData)
