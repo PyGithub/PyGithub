@@ -61,6 +61,7 @@ import github.Download
 import github.Permissions
 import github.Event
 import github.Legacy
+import github.StatsContributor
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -1689,6 +1690,75 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/stargazers",
             None
         )
+
+    def get_stats_contributors(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/contributors <http://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts>`_
+        :rtype: None or list of :class:`github.StatsContributor.StatsContributor`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/contributors"
+        )
+        if data == {}:
+            return None
+        else:
+            return [
+                github.StatsContributor.StatsContributor(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
+
+    def get_stats_commit_activity(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/commit_activity <developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/commit_activity"
+        )
+        if data == {}:
+            return None
+        else:
+            return data  # @todo Return something structured
+
+    def get_stats_code_frequency(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/code_frequency <http://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/code_frequency"
+        )
+        if data == {}:
+            return None
+        else:
+            return data  # @todo Return something structured
+
+    def get_stats_participation(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/participation <http://developer.github.com/v3/repos/statistics/#get-the-weekly-commit-count-for-the-repo-owner-and-everyone-else>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/participation"
+        )
+        if data == {}:
+            return None
+        else:
+            return data  # @todo Return something structured
+
+    def get_stats_punch_card(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/punch_card <http://developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/punch_card"
+        )
+        if data == {}:
+            return None
+        else:
+            return data  # @todo Return something structured
 
     def get_subscribers(self):
         """
