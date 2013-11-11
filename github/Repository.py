@@ -1111,7 +1111,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param path: string
         :param since: datetime.datetime
         :param until: datetime.datetime
-        :param author: string or :clas:`github.NamedUser.NamedUser` or :clas:`github.AuthenticatedUser.AuthenticatedUser`
+        :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
