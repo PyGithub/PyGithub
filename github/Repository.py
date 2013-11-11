@@ -1104,19 +1104,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet):
+    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet, author=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/commits <http://developer.github.com/v3/repos/commits>`_
         :param sha: string
         :param path: string
         :param since: datetime.datetime
         :param until: datetime.datetime
+        :param author: string or :clas:`github.NamedUser.NamedUser` or :clas:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         assert until is github.GithubObject.NotSet or isinstance(until, datetime.datetime), until
+        assert author is github.GithubObject.NotSet or isinstance(author, (str, unicode, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)), author
         url_parameters = dict()
         if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
@@ -1126,6 +1128,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if until is not github.GithubObject.NotSet:
             url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if author is not github.GithubObject.NotSet:
+            if isinstance(author, (github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)):
+                url_parameters["author"] = author.login
+            else:
+                url_parameters["author"] = author
         return github.PaginatedList.PaginatedList(
             github.Commit.Commit,
             self._requester,
