@@ -475,7 +475,20 @@ class Repository(Framework.TestCase):
                 self.assertEqual(s.weeks[0].w, datetime.datetime(2012, 2, 12))
         self.assertTrue(seenJacquev6)
 
-        self.repo.get_stats_commit_activity()
-        self.repo.get_stats_code_frequency()
-        self.repo.get_stats_participation()
-        self.repo.get_stats_punch_card()
+        stats = self.repo.get_stats_commit_activity()
+        self.assertEqual(stats[0].week, datetime.datetime(2012, 11, 18, 0, 0))
+        self.assertEqual(stats[0].total, 29)
+        self.assertEqual(stats[0].days, [0, 7, 3, 9, 7, 3, 0])
+
+        stats = self.repo.get_stats_code_frequency()
+        self.assertEqual(stats[0].week, datetime.datetime(2012, 2, 12, 0, 0))
+        self.assertEqual(stats[0].additions, 3853)
+        self.assertEqual(stats[0].deletions, -2098)
+
+        stats = self.repo.get_stats_participation()
+        self.assertEqual(stats.owner, [1, 36, 8, 0, 0, 8, 18, 0, 0, 0, 0, 7, 20, 6, 9, 0, 4, 11, 20, 16, 0, 3, 0, 16, 0, 0, 6, 1, 4, 0, 1, 6, 0, 0, 12, 10, 0, 0, 0, 1, 44, 0, 20, 10, 0, 0, 0, 0, 0, 10, 0, 0])
+        self.assertEqual(stats.all, [4, 36, 8, 0, 0, 10, 20, 0, 0, 0, 0, 11, 20, 6, 9, 0, 4, 14, 21, 16, 0, 3, 0, 20, 0, 0, 8, 1, 9, 16, 1, 15, 1, 0, 12, 12, 0, 4, 6, 15, 116, 20, 20, 11, 0, 0, 0, 0, 0, 10, 0, 0])
+
+        stats = self.repo.get_stats_punch_card()
+        self.assertEqual(stats.get(4, 12), 7)
+        self.assertEqual(stats.get(6, 18), 2)

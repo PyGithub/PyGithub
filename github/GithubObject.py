@@ -173,6 +173,10 @@ class GithubObject(object):
         return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
 
     @staticmethod
+    def _makeListOfIntsAttribute(value):
+        return GithubObject.__makeSimpleListAttribute(value, int)
+
+    @staticmethod
     def _makeListOfListOfStringsAttribute(value):
         return GithubObject.__makeSimpleListAttribute(value, list)
 

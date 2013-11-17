@@ -39,7 +39,7 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
         @property
         def w(self):
             """
-            :type: int
+            :type: datetime.datetime
             """
             return self._w.value
 
@@ -90,7 +90,7 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     @property
     def total(self):
         """
-        :type: string
+        :type: int
         """
         return self._total.value
 

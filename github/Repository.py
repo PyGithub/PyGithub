@@ -62,6 +62,10 @@ import github.Permissions
 import github.Event
 import github.Legacy
 import github.StatsContributor
+import github.StatsCommitActivity
+import github.StatsCodeFrequency
+import github.StatsParticipation
+import github.StatsPunchCard
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -1711,6 +1715,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_stats_commit_activity(self):
         """
         :calls: `GET /repos/:owner/:repo/stats/commit_activity <developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        :rtype: None or list of :class:`github.StatsCommitActivity.StatsCommitActivity`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -1719,11 +1724,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data == {}:
             return None
         else:
-            return data  # @todo Return something structured
+            return [
+                github.StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
 
     def get_stats_code_frequency(self):
         """
         :calls: `GET /repos/:owner/:repo/stats/code_frequency <http://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week>`_
+        :rtype: None or list of :class:`github.StatsCodeFrequency.StatsCodeFrequency`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -1732,11 +1741,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data == {}:
             return None
         else:
-            return data  # @todo Return something structured
+            return [
+                github.StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
 
     def get_stats_participation(self):
         """
         :calls: `GET /repos/:owner/:repo/stats/participation <http://developer.github.com/v3/repos/statistics/#get-the-weekly-commit-count-for-the-repo-owner-and-everyone-else>`_
+        :rtype: None or :class:`github.StatsParticipation.StatsParticipation`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -1745,11 +1758,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data == {}:
             return None
         else:
-            return data  # @todo Return something structured
+            return github.StatsParticipation.StatsParticipation(self._requester, headers, data, completed=True)
 
     def get_stats_punch_card(self):
         """
         :calls: `GET /repos/:owner/:repo/stats/punch_card <http://developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        :rtype: None or :class:`github.StatsPunchCard.StatsPunchCard`
         """
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
@@ -1758,7 +1772,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if data == {}:
             return None
         else:
-            return data  # @todo Return something structured
+            return github.StatsPunchCard.StatsPunchCard(self._requester, headers, data, completed=True)
 
     def get_subscribers(self):
         """
