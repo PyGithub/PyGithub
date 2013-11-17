@@ -71,6 +71,7 @@ from ConditionalRequestUpdate import *
 from Persistence import *
 from ExposeAllAttributes import *
 from BadAttributes import *
+from Equality import *
 
 from Issue33 import *
 from Issue50 import *

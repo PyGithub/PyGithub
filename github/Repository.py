@@ -61,6 +61,11 @@ import github.Download
 import github.Permissions
 import github.Event
 import github.Legacy
+import github.StatsContributor
+import github.StatsCommitActivity
+import github.StatsCodeFrequency
+import github.StatsParticipation
+import github.StatsPunchCard
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -1104,19 +1109,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Commit.Commit(self._requester, headers, data, completed=True)
 
-    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet):
+    def get_commits(self, sha=github.GithubObject.NotSet, path=github.GithubObject.NotSet, since=github.GithubObject.NotSet, until=github.GithubObject.NotSet, author=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/commits <http://developer.github.com/v3/repos/commits>`_
         :param sha: string
         :param path: string
         :param since: datetime.datetime
         :param until: datetime.datetime
+        :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
         assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         assert until is github.GithubObject.NotSet or isinstance(until, datetime.datetime), until
+        assert author is github.GithubObject.NotSet or isinstance(author, (str, unicode, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)), author
         url_parameters = dict()
         if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
@@ -1126,6 +1133,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if until is not github.GithubObject.NotSet:
             url_parameters["until"] = until.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if author is not github.GithubObject.NotSet:
+            if isinstance(author, (github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)):
+                url_parameters["author"] = author.login
+            else:
+                url_parameters["author"] = author
         return github.PaginatedList.PaginatedList(
             github.Commit.Commit,
             self._requester,
@@ -1682,6 +1694,85 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/stargazers",
             None
         )
+
+    def get_stats_contributors(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/contributors <http://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts>`_
+        :rtype: None or list of :class:`github.StatsContributor.StatsContributor`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/contributors"
+        )
+        if data == {}:
+            return None
+        else:
+            return [
+                github.StatsContributor.StatsContributor(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
+
+    def get_stats_commit_activity(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/commit_activity <developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        :rtype: None or list of :class:`github.StatsCommitActivity.StatsCommitActivity`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/commit_activity"
+        )
+        if data == {}:
+            return None
+        else:
+            return [
+                github.StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
+
+    def get_stats_code_frequency(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/code_frequency <http://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week>`_
+        :rtype: None or list of :class:`github.StatsCodeFrequency.StatsCodeFrequency`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/code_frequency"
+        )
+        if data == {}:
+            return None
+        else:
+            return [
+                github.StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes, completed=True)
+                for attributes in data
+            ]
+
+    def get_stats_participation(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/participation <http://developer.github.com/v3/repos/statistics/#get-the-weekly-commit-count-for-the-repo-owner-and-everyone-else>`_
+        :rtype: None or :class:`github.StatsParticipation.StatsParticipation`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/participation"
+        )
+        if data == {}:
+            return None
+        else:
+            return github.StatsParticipation.StatsParticipation(self._requester, headers, data, completed=True)
+
+    def get_stats_punch_card(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stats/punch_card <http://developer.github.com/v3/repos/statistics/#get-the-number-of-commits-per-hour-in-each-day>`_
+        :rtype: None or :class:`github.StatsPunchCard.StatsPunchCard`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/stats/punch_card"
+        )
+        if data == {}:
+            return None
+        else:
+            return github.StatsPunchCard.StatsPunchCard(self._requester, headers, data, completed=True)
 
     def get_subscribers(self):
         """

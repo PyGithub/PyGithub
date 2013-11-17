@@ -154,8 +154,10 @@ class GithubObject(object):
     @staticmethod
     def _makeDatetimeAttribute(value):
         def parseDatetime(s):
-            if len(s) == 24:
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
+            if len(s) == 24:  # pragma no branch (This branch was used only when creating a download)
+                # The Downloads API has been removed. I'm keeping this branch because I have no mean
+                # to check if it's really useless now.
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
             elif len(s) == 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
             else:
@@ -169,6 +171,10 @@ class GithubObject(object):
     @staticmethod
     def _makeListOfStringsAttribute(value):
         return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
+
+    @staticmethod
+    def _makeListOfIntsAttribute(value):
+        return GithubObject.__makeSimpleListAttribute(value, int)
 
     @staticmethod
     def _makeListOfListOfStringsAttribute(value):
@@ -210,6 +216,12 @@ class CompletableGithubObject(GithubObject):
     def __init__(self, requester, headers, attributes, completed):
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
+
+    def __eq__(self, other):
+        return other.__class__ is self.__class__ and other._url.value == self._url.value
+
+    def __ne__(self, other):
+        return not self == other
 
     def _completeIfNotSet(self, value):
         if value is NotSet:
