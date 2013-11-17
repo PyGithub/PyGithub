@@ -252,9 +252,9 @@ class Repository(Framework.TestCase):
     def testGetCommitsWithAuthor(self):
         self.g.per_page = 5
         akfish = self.g.get_user("AKFish")
-        self.assertListKeyBegin(self.repo.get_commits(author=self.user), lambda c:c.sha, ["54f718a15770579a37ffbe7ae94ad30003407786"])
-        self.assertListKeyBegin(self.repo.get_commits(author=akfish), lambda c:c.sha, ["38b137fb37c0fdc74f8802a4184518e105db9121"])
-        self.assertListKeyBegin(self.repo.get_commits(author="m.ki2@laposte.net"), lambda c:c.sha, ["ab674dfcbc86c70bc32d9ecbe171b48a5694c337"])
+        self.assertListKeyBegin(self.repo.get_commits(author=self.user), lambda c: c.sha, ["54f718a15770579a37ffbe7ae94ad30003407786"])
+        self.assertListKeyBegin(self.repo.get_commits(author=akfish), lambda c: c.sha, ["38b137fb37c0fdc74f8802a4184518e105db9121"])
+        self.assertListKeyBegin(self.repo.get_commits(author="m.ki2@laposte.net"), lambda c: c.sha, ["ab674dfcbc86c70bc32d9ecbe171b48a5694c337"])
 
     def testGetDownloads(self):
         self.assertListKeyEqual(self.repo.get_downloads(), lambda d: d.id, [245143])
