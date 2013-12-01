@@ -359,6 +359,17 @@ class Github(object):
         )
         return GitignoreTemplate.GitignoreTemplate(self.__requester, headers, attributes, completed=True)
 
+    def get_emojis(self):
+        """
+        :calls: `GET /emojis <http://developer.github.com/v3/emojis/>`_
+        :rtype: dictionary of type => url for emoji`
+        """
+        headers, attributes = self.__requester.requestJsonAndCheck(
+            "GET",
+            "/emojis"
+        )
+        return attributes
+
     def create_from_raw_data(self, klass, raw_data, headers={}):
         """
         Creates an object from raw_data previously obtained by :attr:`github.GithubObject.GithubObject.raw_data`,

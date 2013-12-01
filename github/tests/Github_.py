@@ -105,6 +105,11 @@ class Github(Framework.TestCase):
         self.assertEqual(hook.events, ["push"])
         self.assertEqual(hook.schema, [["string", "url"], ["string", "token"], ["string", "project_id"], ["string", "milestone_id"], ["string", "category_id"]])
 
+    def testGetEmojis(self):
+        emojis = self.g.get_emojis()
+        first = emojis.get("+1")
+        self.assertEqual(first, "https://github.global.ssl.fastly.net/images/icons/emoji/+1.png?v5")
+
     def testGetHook(self):
         hook = self.g.get_hook("activecollab")
         self.assertEqual(hook.name, "activecollab")
