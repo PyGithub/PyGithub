@@ -537,6 +537,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._ssh_url)
         return self._ssh_url.value
 
+    @property 
+    def stargazers_count(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._stargazers_count)
+        return self._stargazers_count.value
+
     @property
     def stargazers_url(self):
         """
@@ -2008,6 +2016,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._size = github.GithubObject.NotSet
         self._source = github.GithubObject.NotSet
         self._ssh_url = github.GithubObject.NotSet
+        self._stargazers_count = github.GithubObject.NotSet
         self._stargazers_url = github.GithubObject.NotSet
         self._statuses_url = github.GithubObject.NotSet
         self._subscribers_url = github.GithubObject.NotSet
@@ -2138,6 +2147,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._source = self._makeClassAttribute(Repository, attributes["source"])
         if "ssh_url" in attributes:  # pragma no branch
             self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
+        if "stargazers_count" in attributes:  # pragma no branch
+            self._stargazers_count = self._makeIntAttribute(attributes["stargazers_count"])
         if "stargazers_url" in attributes:  # pragma no branch
             self._stargazers_url = self._makeStringAttribute(attributes["stargazers_url"])
         if "statuses_url" in attributes:  # pragma no branch
