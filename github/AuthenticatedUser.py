@@ -900,6 +900,18 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_teams(self):
+        """
+        :calls: `GET /user/teams <http://developer.github.com/v3/orgs/teams>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Team.Team`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Team.Team,
+            self._requester,
+            "/user/teams",
+            None
+        )
+
     def get_watched(self):
         """
         :calls: `GET /user/watched <http://developer.github.com/v3/activity/starring>`_
