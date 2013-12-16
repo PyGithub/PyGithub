@@ -2,10 +2,7 @@ language: python
 python:
   - "2.7"
   - "2.6"
-  - "2.5"
   - "3.2"
   - "3.3"
-install:
-  - if [ $TRAVIS_PYTHON_VERSION == '2.5' ]; then pip install -r python25-requirements.txt --use-mirrors; fi
 script:
   - python setup.py test
