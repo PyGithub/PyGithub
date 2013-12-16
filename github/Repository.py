@@ -537,7 +537,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._ssh_url)
         return self._ssh_url.value
 
-    @property 
+    @property
     def stargazers_count(self):
         """
         :type: integer

@@ -11,18 +11,19 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Thank you, dear stargazers!
----------------------------
+Version 2 is comming
+--------------------
 
-Starting today (September 5th, 2013), we now need more than 8 bits to store the number of `stargazers <https://github.com/jacquev6/PyGithub/stargazers>`_! Thank you so much!
+As of December 15th, 2013, I plan to spend more time on version 2. I'll continue to maintain version 1, investigating and fixing bugs, but I'm not going to actively implement missing features. I'll still be glad to accept pull requests.
 
-`Version 1.21.0 <https://github.com/jacquev6/PyGithub/issues?milestone=33&state=closed>`_ (November ??th, 2013)
+More info on version 2 in the comming weeks, and here is an issue to discuss the topic: https://github.com/jacquev6/PyGithub/issues/217
+
+`Version 1.22.0 <https://github.com/jacquev6/PyGithub/issues?milestone=34&state=closed>`_ (December 15th, 2013)
 ---------------------------------------------------------------------------------------------------------------
 
-* `Accept <https://github.com/jacquev6/PyGithub/issues/202>`__ strings as well as ``Label`` objects in ``Issue.add_to_labels``, ``Issue.remove_from_labels`` and ``Issue.set_labels``. Thank you `acdha <https://github.com/acdha>`__ for asking
-* `Implement <https://github.com/jacquev6/PyGithub/issues/201>`__ equality comparison for *completable* github objects (ie. those who have a ``url`` attribute). Warning, comparison is still not implemented for non-completable objects. This will be done in version 2.0 of PyGithub. Thank you `OddBloke <https://github.com/OddBloke>`__ for asking
-* `Add <https://github.com/jacquev6/PyGithub/issues/204>`__ parameter ``author`` to ``Repository.get_commits``. Thank you `naorrosenberg <https://github.com/naorrosenberg>`__ for asking
-* `Implement <https://github.com/jacquev6/PyGithub/issues/203>`__ the statistics end points. Thank you `naorrosenberg <https://github.com/naorrosenberg>`__ for asking
+* `Emojis <https://github.com/jacquev6/PyGithub/pull/209>`__, thanks to `evolvelight <https://github.com/evolvelight>`__
+* `Repository.stargazers_count <https://github.com/jacquev6/PyGithub/pull/212>`__, thanks to `cameronbwhite <https://github.com/cameronbwhite>`__
+* `User.get_teams <https://github.com/jacquev6/PyGithub/pull/213>`__, thanks to `poulp <https://github.com/poulp>`__
 
 Twitter
 -------
@@ -39,7 +40,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/authorizations/clients/:client_id`` (PUT)
-* ``/emojis`` (GET)
 * ``/feeds`` (GET)
 * ``/meta`` (GET)
 * ``/notifications`` (PUT)
@@ -75,7 +75,6 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
-* ``/user/teams`` (GET)
 
 Documentation
 =============
