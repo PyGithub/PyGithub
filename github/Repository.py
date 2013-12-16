@@ -636,13 +636,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def add_to_collaborators(self, collaborator):
         """
         :calls: `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
-        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/collaborators/" + collaborator._identity
+            self.url + "/collaborators/" + collaborator
         )
 
     def compare(self, base, head):
@@ -815,14 +819,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/issues <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
-        :param assignee: :class:`github.NamedUser.NamedUser`
+        :param assignee: string or :class:`github.NamedUser.NamedUser`
         :param milestone: :class:`github.Milestone.Milestone`
         :param labels: list of :class:`github.Label.Label`
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
         post_parameters = {
@@ -831,7 +835,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
         if assignee is not github.GithubObject.NotSet:
-            post_parameters["assignee"] = assignee._identity
+            if isinstance(assignee, (str, unicode)):
+                post_parameters["assignee"] = assignee
+            else:
+                post_parameters["assignee"] = assignee._identity
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
@@ -1394,7 +1401,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `GET /repos/:owner/:repo/issues <http://developer.github.com/v3/issues>`_
         :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
         :param state: string
-        :param assignee: :class:`github.NamedUser.NamedUser` or "none" or "*"
+        :param assignee: string or :class:`github.NamedUser.NamedUser` or "none" or "*"
         :param mentioned: :class:`github.NamedUser.NamedUser`
         :param labels: list of :class:`github.Label.Label`
         :param sort: string
@@ -1404,7 +1411,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert milestone is github.GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(milestone, github.Milestone.Milestone), milestone
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert assignee is github.GithubObject.NotSet or assignee == "*" or assignee == "none" or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert mentioned is github.GithubObject.NotSet or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
         assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
@@ -1825,26 +1832,34 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def has_in_assignees(self, assignee):
         """
         :calls: `GET /repos/:owner/:repo/assignees/:assignee <http://developer.github.com/v3/issues/assignees>`_
-        :param assignee: :class:`github.NamedUser.NamedUser`
+        :param assignee: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
-        assert isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+
+        if isinstance(assignee, github.NamedUser.NamedUser):
+            assignee = assignee._identity
+
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/assignees/" + assignee._identity
+            self.url + "/assignees/" + assignee
         )
         return status == 204
 
     def has_in_collaborators(self, collaborator):
         """
         :calls: `GET /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
-        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/collaborators/" + collaborator._identity
+            self.url + "/collaborators/" + collaborator
         )
         return status == 204
 
@@ -1896,13 +1911,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def remove_from_collaborators(self, collaborator):
         """
         :calls: `DELETE /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
-        :param collaborator: :class:`github.NamedUser.NamedUser`
+        :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+
+        if isinstance(collaborator, github.NamedUser.NamedUser):
+            collaborator = collaborator._identity
+
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/collaborators/" + collaborator._identity
+            self.url + "/collaborators/" + collaborator
         )
 
     def subscribe_to_hub(self, event, callback, secret=github.GithubObject.NotSet):
