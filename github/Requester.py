@@ -39,6 +39,7 @@ import urllib
 import urlparse
 import sys
 import Consts
+import re
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -173,12 +174,14 @@ class Requester:
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
-            raise self.__createException(status, output)
+            raise self.__createException(status, responseHeaders, output)
         return responseHeaders, output
 
-    def __createException(self, status, output):
+    def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
+        elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
+            cls = GithubException.TwoFactorException
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and output.get("message").startswith("API Rate Limit Exceeded"):
