@@ -397,7 +397,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "/user/watched/" + watched._identity
         )
 
-    def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet):
+    def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet, onetime_password=None):
         """
         :calls: `POST /authorizations <http://developer.github.com/v3/oauth>`_
         :param scopes: list of string
@@ -405,6 +405,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :param client_id: string
         :param client_secret: string
+        :param onetime_password: string
         :rtype: :class:`github.Authorization.Authorization`
         """
         assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
@@ -412,6 +413,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
         assert client_id is github.GithubObject.NotSet or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is github.GithubObject.NotSet or isinstance(client_secret, (str, unicode)), client_secret
+        assert onetime_password is None or isinstance(onetime_password, (str, unicode)), onetime_password
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes
@@ -423,10 +425,15 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             post_parameters["client_id"] = client_id
         if client_secret is not github.GithubObject.NotSet:
             post_parameters["client_secret"] = client_secret
+        if onetime_password is not None:
+            request_header = {'x-github-otp': onetime_password}
+        else:
+            request_header = None
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             "/authorizations",
-            input=post_parameters
+            input=post_parameters,
+            headers=request_header,
         )
         return github.Authorization.Authorization(self._requester, headers, data, completed=True)
 
