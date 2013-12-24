@@ -23,9 +23,15 @@
 ################################################################################
 
 import sys
-import twitter
+import twitter  # pip install python-twitter
 
 import TwitterCredentials as cred
+# Must contain:
+# consumer_key = ""
+# consumer_secret = ""
+# access_token_key = ""
+# access_token_secret = ""
+# from https://dev.twitter.com/apps/5252388/show
 
 api = twitter.Api(consumer_key=cred.consumer_key, consumer_secret=cred.consumer_secret, access_token_key=cred.access_token_key, access_token_secret=cred.access_token_secret)
 message = "I've just published version " + sys.argv[1] + " of PyGithub http://github.com/jacquev6/PyGithub"
