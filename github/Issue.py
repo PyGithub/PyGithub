@@ -262,7 +262,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :calls: `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
-        :param assignee: :class:`github.NamedUser.NamedUser` or None
+        :param assignee: string or :class:`github.NamedUser.NamedUser` or None
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string
@@ -270,7 +270,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser), assignee
+        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
         assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
@@ -280,7 +280,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
         if body is not github.GithubObject.NotSet:
             post_parameters["body"] = body
         if assignee is not github.GithubObject.NotSet:
-            post_parameters["assignee"] = assignee._identity if assignee else ''
+            if isinstance(assignee, (str, unicode)):
+                post_parameters["assignee"] = assignee
+            else:
+                post_parameters["assignee"] = assignee._identity if assignee else ''
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
         if milestone is not github.GithubObject.NotSet:
