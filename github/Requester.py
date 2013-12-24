@@ -270,7 +270,7 @@ class Requester:
         response = cnx.getresponse()
 
         status = response.status
-        responseHeaders = dict(response.getheaders())
+        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
         output = response.read()
 
         cnx.close()

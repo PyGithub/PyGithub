@@ -18,12 +18,10 @@ As of December 15th, 2013, I plan to spend more time on version 2. I'll continue
 
 More info on version 2 in the comming weeks, and here is an issue to discuss the topic: https://github.com/jacquev6/PyGithub/issues/217
 
-`Version 1.22.0 <https://github.com/jacquev6/PyGithub/issues?milestone=34&state=closed>`_ (December 15th, 2013)
+`Version 1.23.0 <https://github.com/jacquev6/PyGithub/issues?milestone=35&state=closed>`_ (December 23th, 2013)
 ---------------------------------------------------------------------------------------------------------------
 
-* `Emojis <https://github.com/jacquev6/PyGithub/pull/209>`__, thanks to `evolvelight <https://github.com/evolvelight>`__
-* `Repository.stargazers_count <https://github.com/jacquev6/PyGithub/pull/212>`__, thanks to `cameronbwhite <https://github.com/cameronbwhite>`__
-* `User.get_teams <https://github.com/jacquev6/PyGithub/pull/213>`__, thanks to `poulp <https://github.com/poulp>`__
+* `Fix <https://github.com/jacquev6/PyGithub/pull/216>`__ all that is based on headers in Python 3 (pagination, conditional request, rate_limit...), huge thanks to `cwarren-mw <https://github.com/cwarren-mw>`__ for finding the bug
 
 Twitter
 -------

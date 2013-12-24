@@ -1947,7 +1947,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if secret is not github.GithubObject.NotSet:
             post_parameters["hub.secret"] = secret
 
-        responseHeaders, output = self._requester.requestMultipartAndCheck(
+        headers, output = self._requester.requestMultipartAndCheck(
             "POST",
             "/hub",
             input=post_parameters
