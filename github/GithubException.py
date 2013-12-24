@@ -108,3 +108,9 @@ class BadAttributeException(Exception):
         The exception raised when PyGithub tried to parse the value
         """
         return self.__transformationException
+
+
+class TwoFactorException(GithubException):
+    """
+    Exception raised when Github requires a onetime password for two-factor authentication
+    """
