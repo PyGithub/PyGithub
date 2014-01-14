@@ -28,7 +28,7 @@ More info on version 2 in the coming weeks, and here is an issue to discuss the 
 Twitter
 -------
 
-Starting with version 1.21.0, I'm going to tweet each new release. I rarelly tweet, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
+Starting with version 1.21.0, I'm going to tweet each new release. I rarely tweet, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
 
 What's missing?
 ===============
