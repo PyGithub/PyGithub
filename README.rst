@@ -11,12 +11,12 @@ PyGithub is stable. I will maintain it up to date with the API, and fix bugs if 
 What's new?
 ===========
 
-Version 2 is comming
+Version 2 is coming
 --------------------
 
 As of December 15th, 2013, I plan to spend more time on version 2. I'll continue to maintain version 1, investigating and fixing bugs, but I'm not going to actively implement missing features. I'll still be glad to accept pull requests.
 
-More info on version 2 in the comming weeks, and here is an issue to discuss the topic: https://github.com/jacquev6/PyGithub/issues/217
+More info on version 2 in the coming weeks, and here is an issue to discuss the topic: https://github.com/jacquev6/PyGithub/issues/217
 
 `Version 1.23.0 <https://github.com/jacquev6/PyGithub/issues?milestone=35&state=closed>`_ (December 23th, 2013)
 ---------------------------------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ More info on version 2 in the comming weeks, and here is an issue to discuss the
 Twitter
 -------
 
-Starting with version 1.21.0, I'm going to twitt each new release. I rarelly twitt, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
+Starting with version 1.21.0, I'm going to tweet each new release. I rarely tweet, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
 
 What's missing?
 ===============
