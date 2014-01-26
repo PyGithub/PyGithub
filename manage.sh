@@ -48,17 +48,15 @@ function readme {
 }
 
 function doc {
-    rm -rf doc/build
-    mkdir doc/build
-    cd doc/build
-    git init
-    sphinx-build -b html -d doctrees .. . || exit
-    touch .nojekyll
-    echo /doctrees/ > .gitignore
-    git add . || exit
-    git commit --message "Automatic generation" || exit
-    git push --force ../.. HEAD:gh-pages || exit
-    cd ../..
+    rm -rf gh-pages
+    git clone . gh-pages -b gh-pages || exit
+    sphinx-build -b html -d doc/doctrees doc gh-pages/v1 || exit
+
+    cd gh-pages
+    git add . --all || exit
+    git commit --message "Generation doc of v1" || exit
+    git push origin gh-pages || exit
+    cd ..
 }
 
 function push {
@@ -71,8 +69,7 @@ function push {
 
     git tag -m "Version $version" v$version
 
-    git push github master master:develop
-    git push --force github gh-pages
+    git push github master master:develop gh-pages
     git push --tags
 }
 
