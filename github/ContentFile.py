@@ -24,7 +24,10 @@
 #                                                                              #
 ################################################################################
 
+import base64
+
 import github.GithubObject
+import github.Repository
 
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
@@ -39,6 +42,11 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._content)
         return self._content.value
+
+    @property
+    def decoded_content(self):
+        assert self.encoding == "base64", "unsupported encoding: %s" % self.encoding
+        return base64.b64decode(self.content)
 
     @property
     def encoding(self):
@@ -81,6 +89,17 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         return self._path.value
 
     @property
+    def repository(self):
+        """
+        :type: :class:`github.Repository.Repository`
+        """
+        if self._repository is github.GithubObject.NotSet:
+            # The repository was not set automatically, so it must be looked up by url.
+            repo_url = "/".join(self.url.split("/")[:6])
+            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
+        return self._repository.value
+
+    @property
     def sha(self):
         """
         :type: string
@@ -119,6 +138,7 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
+        self._repository = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._type = github.GithubObject.NotSet
@@ -136,6 +156,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
+        if "repository" in attributes:  # pragma no branch
+            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch

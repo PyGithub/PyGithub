@@ -35,6 +35,7 @@ types = {
     "string": ("string", "(str, unicode)", "attributes[\"" + attributeName + "\"]"),
     "int": ("integer", "(int, long)", "attributes[\"" + attributeName + "\"]"),
     "bool": ("bool", "bool", "attributes[\"" + attributeName + "\"]"),
+    "float": ("float", "float", "attributes[\"" + attributeName + "\"]"),
     "datetime": ("datetime.datetime", "(str, unicode)", "self._parseDatetime(attributes[\"" + attributeName + "\"])"),
 }
 
@@ -61,7 +62,7 @@ while not added:
     if line.startswith("    def "):
         if isProperty:
             attrName = line[8:-7]
-            if attrName != "_identity" and attrName > attributeName:
+            if attrName == "_identity" or attrName > attributeName:
                 newLines.append("    def " + attributeName + "(self):")
                 newLines.append("        \"\"\"")
                 newLines.append("        :type: " + attributeDocType)
@@ -83,9 +84,10 @@ while not added:
     if line == "    def _initAttributes(self):":
         inInit = True
     if inInit:
-        if line.endswith(" = github.GithubObject.NotSet"):
-            attrName = line[14:-29]
-            if attrName > attributeName:
+        if not line or line.endswith(" = github.GithubObject.NotSet"):
+            if line:
+                attrName = line[14:-29]
+            if not line or attrName > attributeName:
                 newLines.append("        self._" + attributeName + " = github.GithubObject.NotSet")
                 added = True
     newLines.append(line)
@@ -99,9 +101,10 @@ while not added:
     if line == "    def _useAttributes(self, attributes):":
         inUse = True
     if inUse:
-        if line.endswith(" in attributes:  # pragma no branch"):
-            attrName = line[12:-36]
-            if attrName > attributeName:
+        if not line or line.endswith(" in attributes:  # pragma no branch"):
+            if line:
+                attrName = line[12:-36]
+            if not line or attrName > attributeName:
                 newLines.append("        if \"" + attributeName + "\" in attributes:  # pragma no branch")
                 newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
                 newLines.append("            self._" + attributeName + " = " + attributeValue)

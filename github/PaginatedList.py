@@ -45,7 +45,7 @@ class PaginatedListBase:
         for element in self.__elements:
             yield element
         while self._couldGrow():
-            newElements = self.__grow()
+            newElements = self._grow()
             for element in newElements:
                 yield element
 
@@ -54,9 +54,9 @@ class PaginatedListBase:
 
     def __fetchToIndex(self, index):
         while len(self.__elements) <= index and self._couldGrow():
-            self.__grow()
+            self._grow()
 
-    def __grow(self):
+    def _grow(self):
         newElements = self._fetchNextPage()
         self.__elements += newElements
         return newElements
@@ -117,6 +117,14 @@ class PaginatedList(PaginatedListBase):
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
+        self.__totalCount = None
+
+    @property
+    def totalCount(self):
+        if not self.__totalCount:
+            self._grow()
+
+        return self.__totalCount
 
     def _getLastPageUrl(self):
         headers, data = self.__requester.requestJsonAndCheck(
@@ -160,6 +168,10 @@ class PaginatedList(PaginatedListBase):
                 self.__nextUrl = links["next"]
         self.__nextParams = None
 
+        if 'items' in data:
+            self.__totalCount = data['total_count']
+            data = data["items"]
+
         content = [
             self.__contentClass(self.__requester, headers, element, completed=False)
             for element in data
@@ -190,6 +202,10 @@ class PaginatedList(PaginatedListBase):
             self.__firstUrl,
             parameters=params
         )
+
+        if 'items' in data:
+            self.__totalCount = data['total_count']
+            data = data["items"]
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)
