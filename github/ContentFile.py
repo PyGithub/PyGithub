@@ -24,6 +24,8 @@
 #                                                                              #
 ################################################################################
 
+import base64
+
 import github.GithubObject
 import github.Repository
 
@@ -40,6 +42,11 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._content)
         return self._content.value
+
+    @property
+    def decoded_content(self):
+        assert self.encoding == "base64", "unsupported encoding: %s" % self.encoding
+        return base64.b64decode(self.content)
 
     @property
     def encoding(self):
