@@ -216,7 +216,24 @@ class Github(object):
             "/repositories",
             url_parameters
         )
-
+        
+    def get_starred(self, login=github.GithubObject.NotSet):
+        """
+        :calls: `GET /users/:user/starred <http://developer.github.com/v3/activity/starring/#list-repositories-being-starred>`_
+        :param: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
+        if login is github.GithubObject.NotSet:
+            return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
+        else:
+            headers, data = self.__requester.request.requestJsonAndCheck(
+                "GET",
+                "/users/" + login,
+                "/starred"
+            )
+            return github.NamedUser.NamedUser(self.__requester,headers,data,completed=True)
+            
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_
