@@ -325,6 +325,41 @@ class Github(object):
             url_parameters
         )
 
+    def search_users(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
+        """
+        :calls: `GET /search/users <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param sort: string ('followers', 'repositories', 'joined')
+        :param order: string ('asc', 'desc')
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            assert sort in ('followers', 'repositories', 'joined'), sort
+            url_parameters["sort"] = sort
+        if order is not github.GithubObject.NotSet:
+            assert order in ('asc', 'desc'), order
+            url_parameters["order"] = order
+
+        query_chunks = []
+        if query:
+            query_chunks.append(urllib.quote(query))
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self.__requester,
+            "/search/users",
+            url_parameters
+        )
+
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
         :calls: `POST /markdown <http://developer.github.com/v3/markdown>`_
