@@ -395,6 +395,41 @@ class Github(object):
             url_parameters
         )
 
+    def search_code(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
+        """
+        :calls: `GET /search/issues <http://developer.github.com/v3/search>`_
+        :param query: string
+        :param sort: string ('indexed')
+        :param order: string ('asc', 'desc')
+        :param qualifiers: keyword dict query qualifiers
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeSearchResult.CodeSearchResult`
+        """
+        assert isinstance(query, (str, unicode)), query
+        url_parameters = dict()
+        if sort is not github.GithubObject.NotSet:
+            assert sort in ('indexed',), sort
+            url_parameters["sort"] = sort
+        if order is not github.GithubObject.NotSet:
+            assert order in ('asc', 'desc'), order
+            url_parameters["order"] = order
+
+        query_chunks = []
+        if query:
+            query_chunks.append(urllib.quote(query))
+
+        for qualifier, value in qualifiers.items():
+            query_chunks.append("%s:%s" % (qualifier, value))
+
+        url_parameters["q"] = ' '.join(query_chunks)
+        assert url_parameters["q"], "need at least one qualifier"
+
+        return github.PaginatedList.PaginatedList(
+            github.ContentFile.ContentFile,
+            self.__requester,
+            "/search/code",
+            url_parameters
+        )
+
     def render_markdown(self, text, context=github.GithubObject.NotSet):
         """
         :calls: `POST /markdown <http://developer.github.com/v3/markdown>`_
