@@ -397,7 +397,7 @@ class Github(object):
 
     def search_code(self, query, sort=github.GithubObject.NotSet, order=github.GithubObject.NotSet, **qualifiers):
         """
-        :calls: `GET /search/issues <http://developer.github.com/v3/search>`_
+        :calls: `GET /search/code <http://developer.github.com/v3/search>`_
         :param query: string
         :param sort: string ('indexed')
         :param order: string ('asc', 'desc')

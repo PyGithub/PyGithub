@@ -54,7 +54,7 @@ function doc {
 
     cd gh-pages
     git add . --all || exit
-    git commit --message "Generation doc of v1" || exit
+    git commit --message "Generate doc of v1" || exit
     git push origin gh-pages || exit
     cd ..
 }

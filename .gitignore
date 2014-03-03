@@ -31,3 +31,5 @@
 /PyGithub.egg-info/
 /.coverage
 /developer.github.com/
+/gh-pages/
+/doc/doctrees/
