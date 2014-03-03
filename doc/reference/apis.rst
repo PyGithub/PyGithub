@@ -1004,28 +1004,32 @@ GET /repos/:owner/:repo/keys
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/keys#list>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_keys`
 
 POST /repos/:owner/:repo/keys
 -----------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/keys#create>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_key`
 
 DELETE /repos/:owner/:repo/keys/:id
 -----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/keys#delete>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PublicKey.delete`
 
 GET /repos/:owner/:repo/keys/:id
 --------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/keys#get>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_key`
 
 GET /repos/:owner/:repo/labels
 ------------------------------
@@ -1639,28 +1643,32 @@ GET /user/keys
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#list-your-public-keys>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_keys`
 
 POST /user/keys
 ---------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#create-a-public-key>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.create_key`
 
 DELETE /user/keys/:id
 ---------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#delete-a-public-key>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PublicKey.delete`
 
 GET /user/keys/:id
 ------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#get-a-single-public-key>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_key`
 
 GET /user/orgs
 --------------
@@ -1831,7 +1839,8 @@ GET /users/:user/keys
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.User.get_keys`
 
 GET /users/:user/orgs
 ---------------------

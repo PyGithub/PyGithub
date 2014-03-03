@@ -142,7 +142,7 @@ def createTestCase(builder):
                             'body': requestBody,
                             'headers': dict(request.headers),
                             'verb': request.method,
-                            'url': _parseUrl(url),
+                            'url': _parseUrl(request.url),
                         },
                         "response": {
                             'body': responseBody,

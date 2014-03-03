@@ -98,6 +98,10 @@ class SessionedGithubObject(object):
         r = self.__session._request(verb, url, **kwds)
         return r.json()
 
+    def _createList(self, klass, verb, url, **kwds):
+        r = self.__session._request(verb, url, **kwds)
+        return [klass(self.__session, a, r.headers.get("ETag")) for a in r.json()]
+
 
 class UpdatableGithubObject(SessionedGithubObject):
     """

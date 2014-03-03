@@ -12,6 +12,7 @@ import fnmatch
 from PyGithub.Blocking.tests.Classes.AuthenticatedUserTestCase import *
 from PyGithub.Blocking.tests.Classes.GithubTestCase import *
 from PyGithub.Blocking.tests.Classes.OrganizationTestCase import *
+from PyGithub.Blocking.tests.Classes.PublicKeyTestCase import *
 from PyGithub.Blocking.tests.Classes.RepositoryTestCase import *
 from PyGithub.Blocking.tests.Classes.SubscriptionTestCase import *
 from PyGithub.Blocking.tests.Classes.TeamTestCase import *

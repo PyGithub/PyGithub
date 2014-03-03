@@ -31,6 +31,13 @@ methods:
     end_point: GET /users/:user/following
     url_template: attribute following_url
     return_strategy: paginatedList(User)
+  - name: get_keys
+    end_point: GET /users/:user/keys
+    url_template: end_point
+    url_template_arguments:
+      - name: user
+        value: attribute login
+    return_strategy: listOf(PublicKey)
   - name: get_orgs
     end_point: GET /users/:user/orgs
     url_template: attribute organizations_url

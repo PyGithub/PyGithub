@@ -171,6 +171,20 @@ methods:
       - name: collaborator
         value: parameter user
     return_strategy: none
+  - name: create_key
+    end_point: POST /repos/:owner/:repo/keys
+    parameters:
+      - name: title
+        type: string
+      - name: key
+        type: string
+    url_template: attribute keys_url
+    post_arguments:
+      - name: title
+        value: parameter title
+      - name: key
+        value: parameter key
+    return_strategy: instanceFromAttributes(PublicKey)
   - name: delete
     end_point: DELETE /repos/:owner/:repo
     url_template: attribute url
@@ -239,6 +253,20 @@ methods:
       - name: sort
         value: parameter sort
     return_strategy: paginatedList(Repository)
+  - name: get_key
+    parameters:
+      - name: id
+        type: int
+    end_point: GET /repos/:owner/:repo/keys/:id
+    url_template: attribute keys_url
+    url_template_arguments:
+      - name: key_id
+        value: parameter id
+    return_strategy: instanceFromAttributes(PublicKey)
+  - name: get_keys
+    end_point: GET /repos/:owner/:repo/keys
+    url_template: attribute keys_url
+    return_strategy: listOf(PublicKey)
   - name: get_stargazers
     end_point: GET /repos/:owner/:repo/stargazers
     url_template: attribute stargazers_url

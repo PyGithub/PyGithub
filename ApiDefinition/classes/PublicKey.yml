@@ -1,0 +1,18 @@
+attributes:
+  - name: id
+    type: int
+  - name: key
+    type: string
+  - name: title
+    type: string
+  - name: url
+    type: string
+  - name: verified
+    type: bool
+methods:
+  - name: delete
+    end_points:
+      - DELETE /user/keys/:id
+      - DELETE /repos/:owner/:repo/keys/:id
+    url_template: attribute url
+    return_strategy: none

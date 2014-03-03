@@ -264,7 +264,7 @@ class Structure(AttributedType, Member):
 
 
 class Method(Member):
-    def __init__(self, containerClass, name, endPoint, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy):
+    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy):
         Member.__init__(self, containerClass)
         self.__name = name
         self.__parameters = [Parameter(*p) for p in parameters]
@@ -273,15 +273,16 @@ class Method(Member):
         self.__urlArguments = [Argument(*a) for a in urlArguments]
         self.__postArguments = [Argument(*a) for a in postArguments]
 
-        self.__tmp_endPoint = endPoint
+        self.__tmp_endPoints = endPoints
         self.__tmp_returnStrategy = returnStrategy
 
     def _crossReference(self, types, endPoints):
-        if self.__tmp_endPoint is None:
-            self.__endPoint = None
-        else:
-            self.__endPoint = endPoints[self.__tmp_endPoint]
-            self.__endPoint._addMethod(self)
+        eps = []
+        for ep in self.__tmp_endPoints:
+            ep = endPoints[ep]
+            ep._addMethod(self)
+            eps.append(ep)
+        self.__endPoints = sorted(eps, key=lambda ep: (ep.url, ep.verb))
 
         for p in self.__parameters:
             p._crossReference(types, endPoints)
@@ -293,10 +294,11 @@ class Method(Member):
 
     def _finalize(self):
         self.__displayWarnings()
+        del self.__tmp_endPoints
 
     def __displayWarnings(self):  # pragma no cover
-        if self.__endPoint is not None:
-            unimplementedParameters = set(self.__endPoint.parameters) - set(p.name for p in self.__parameters)
+        for ep in self.__endPoints:
+            unimplementedParameters = set(ep.parameters) - set(p.name for p in self.__parameters)
             # @todoGeni Put those special cases in .yml definition files
             if self.containerClass.name == "AuthenticatedUser" and self.__name == "create_repo":
                 unimplementedParameters.remove("team_id")
@@ -318,8 +320,8 @@ class Method(Member):
         return self.__name
 
     @property
-    def endPoint(self):
-        return self.__endPoint
+    def endPoints(self):
+        return self.__endPoints
 
     @property
     def parameters(self):
@@ -413,7 +415,7 @@ class Definition(object):
         endPoints = {ep.verb + " " + ep.url: EndPoint(*ep) for ep in definition.endPoints}
         classes = {c.name: Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes}
 
-        build = Structured.Method("build", None, [], "end_point", [], [], [], "instanceFromAttributes(Github)")
+        build = Structured.Method("build", [], [], "end_point", [], [], [], "instanceFromAttributes(Github)")
         builder = Class("Builder", "Builder", None, [], [], [build], [])
 
         types = {t: Typing.BuiltinType(t) for t in ["int", "bool", "string", "datetime"]}

@@ -156,3 +156,9 @@ class UserTestCase(Framework.SimpleLoginTestCase):
         jacquev6 = self.g.get_user("jacquev6")
         self.assertTrue(jacquev6.has_in_following("nvie"))
         self.assertFalse(nvie.has_in_following("jacquev6"))
+
+    def testGetKeys(self):
+        keys = self.g.get_user("nvie").get_keys()
+        self.assertEqual(len(keys), 5)
+        self.assertEqual(keys[0].id, 112610)
+        self.assertEqual(keys[1].id, 116764)

@@ -17,6 +17,7 @@ import PyGithub.Blocking.Attributes
 
 import PyGithub.Blocking.Contributor
 import PyGithub.Blocking.Organization
+import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Team
 import PyGithub.Blocking.User
 
@@ -843,6 +844,24 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         self._triggerSideEffect("PUT", url)
 
+    def create_key(self, title, key):
+        """
+        Calls the `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys#create>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: mandatory :class:`string`
+        :param key: mandatory :class:`string`
+        :rtype: :class:`.PublicKey`
+        """
+
+        title = PyGithub.Blocking.Parameters.normalizeString(title)
+        key = PyGithub.Blocking.Parameters.normalizeString(key)
+
+        url = uritemplate.expand(self.keys_url)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
+        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "POST", url, postArguments=postArguments)
+
     def delete(self):
         """
         Calls the `DELETE /repos/:owner/:repo <http://developer.github.com/v3/repos#delete-a-repository>`__ end point.
@@ -966,6 +985,33 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.forks_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, per_page=per_page)
         return self._createPaginatedList(Repository, "GET", url, urlArguments=urlArguments)
+
+    def get_key(self, id):
+        """
+        Calls the `GET /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys#get>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param id: mandatory :class:`int`
+        :rtype: :class:`.PublicKey`
+        """
+
+        id = PyGithub.Blocking.Parameters.normalizeInt(id)
+
+        url = uritemplate.expand(self.keys_url, key_id=str(id))
+        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+
+    def get_keys(self):
+        """
+        Calls the `GET /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys#list>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.PublicKey`
+        """
+
+        url = uritemplate.expand(self.keys_url)
+        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
 
     def get_stargazers(self, per_page=None):
         """

@@ -46,6 +46,20 @@ methods:
       - name: repo
         value: nameFromRepo repo
     return_strategy: instanceFromAttributes(Repository)
+  - name: create_key
+    end_point: POST /user/keys
+    parameters:
+      - name: title
+        type: string
+      - name: key
+        type: string
+    url_template: end_point
+    post_arguments:
+      - name: title
+        value: parameter title
+      - name: key
+        value: parameter key
+    return_strategy: instanceFromAttributes(PublicKey)
   - name: create_repo
     end_point: POST /user/repos
     parameters:
@@ -148,6 +162,20 @@ methods:
     end_point: GET /user/following
     url_template: end_point
     return_strategy: paginatedList(User)
+  - name: get_key
+    parameters:
+      - name: id
+        type: int
+    end_point: GET /user/keys/:id
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter id
+    return_strategy: instanceFromAttributes(PublicKey)
+  - name: get_keys
+    end_point: GET /user/keys
+    url_template: end_point
+    return_strategy: listOf(PublicKey)
   - name: get_orgs
     end_point: GET /user/orgs
     url_template: end_point

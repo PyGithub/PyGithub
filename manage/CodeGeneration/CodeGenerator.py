@@ -177,16 +177,18 @@ class CodeGenerator:
         )
 
     def generateDocStringForMethod(self, method):
-        yield "Calls the `{} {} <{}>`__ end point.".format(method.endPoint.verb, method.endPoint.url, method.endPoint.doc)
-        yield ""
-        if len(method.endPoint.methods) > 1:
-            yield "The following methods also call this end point:"
-            for otherMethod in method.endPoint.methods:
-                if otherMethod is not method:
-                    yield "  * :meth:`.{}.{}`".format(otherMethod.containerClass.name, otherMethod.name)
-        else:
-            yield "This is the only method calling this end point."
-        yield ""
+        # @todoSomeday Document the "or" aspect of a method calling several end-points
+        for endPoint in method.endPoints:
+            yield "Calls the `{} {} <{}>`__ end point.".format(endPoint.verb, endPoint.url, endPoint.doc)
+            yield ""
+            if len(endPoint.methods) > 1:
+                yield "The following methods also call this end point:"
+                for otherMethod in endPoint.methods:
+                    if otherMethod is not method:
+                        yield "  * :meth:`.{}.{}`".format(otherMethod.containerClass.name, otherMethod.name)
+            else:
+                yield "This is the only method calling this end point."
+            yield ""
         for parameter in method.parameters:
             yield ":param {}: {} {}".format(
                 parameter.name,
@@ -283,10 +285,16 @@ class CodeGenerator:
         return "self._updateWith({})".format(self.generateCallArguments(method))
 
     def generateCodeForListOfReturnStrategy(self, method):
+        return self.getMethod("generateCodeForListOf{}ReturnStrategy", method.returnStrategy.returnType.content.category)(method)
+
+    def generateCodeForListOfBuiltinReturnStrategy(self, method):
         return "return self._returnRawData({})".format(self.generateCallArguments(method))
 
+    def generateCodeForListOfClassReturnStrategy(self, method):
+        return 'return self._createList({}, {})'.format(("" if method.returnStrategy.returnType.content is method.containerClass else method.returnStrategy.returnType.content.module + ".") + method.returnStrategy.returnType.content.name, self.generateCallArguments(method))
+
     def generateCallArguments(self, m):
-        args = '"{}", url'.format(m.endPoint.verb)
+        args = '"{}", url'.format(m.endPoints[0].verb)
         if len(m.urlArguments) != 0:
             args += ", urlArguments=urlArguments"
         if len(m.postArguments) != 0:
@@ -324,7 +332,7 @@ class CodeGenerator:
         return self.getMethod("generateCodeForValueFrom{}", value.origin)(method, value)
 
     def generateCodeForValueFromEndPoint(self, method, value):
-        return '"https://api.github.com{}"'.format(method.endPoint.urlTemplate)
+        return '"https://api.github.com{}"'.format(method.endPoints[0].urlTemplate)
 
     def generateCodeForValueFromAttribute(self, method, value):
         return "self.{}".format(value.value)

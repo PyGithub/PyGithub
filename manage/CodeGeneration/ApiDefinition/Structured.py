@@ -14,7 +14,7 @@ Enum = collections.namedtuple("Enum", "name, values")
 List = collections.namedtuple("List", "type")
 Structure = collections.namedtuple("Structure", "name, attributes, deprecatedAttributes")
 Class = collections.namedtuple("Class", "name, base, structures, attributes, methods, deprecatedAttributes")
-Method = collections.namedtuple("Method", "name, endPoint, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy")
+Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy")
 Parameter = collections.namedtuple("Parameter", "name, types, optional")
 Argument = collections.namedtuple("Argument", "name, value")
 Attribute = collections.namedtuple("Attribute", "name, types")
@@ -128,9 +128,11 @@ class Definition(object):
     def __buildList(self, type):
         return List(type)
 
-    def __buildMethod(self, name, end_point, url_template, return_strategy, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
+    def __buildMethod(self, name, url_template, return_strategy, end_point=None, end_points=[], url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
         assert isinstance(name, str), name
-        assert isinstance(end_point, str), end_point
+        end_points = list(end_points)
+        if end_point is not None:
+            end_points.append(end_point)
 
         if return_strategy.startswith("paginatedList("):
             optional_parameters = list(optional_parameters)
@@ -140,7 +142,7 @@ class Definition(object):
 
         return Method(
             name=name,
-            endPoint=end_point,
+            endPoints=end_points,
             parameters=[self.__buildParameter(optional=False, **p) for p in parameters]
             + [self.__buildParameter(optional=True, **p) for p in optional_parameters],
             urlTemplate=self.__buildValue(url_template),
@@ -178,7 +180,10 @@ class Definition(object):
         unimplemented = set(verb + " " + url for url, verbs in data.items() for verb in verbs)
 
         allEndPoints = set(ep.verb + " " + ep.url for ep in self.endPoints)
-        implemented = set(m.endPoint for c in self.classes for m in c.methods)
+        implemented = set()
+        for c in self.classes:
+            for m in c.methods:
+                implemented.update(m.endPoints)
 
         inter = implemented & unimplemented
         union = implemented | unimplemented

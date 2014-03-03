@@ -17,6 +17,7 @@ import PyGithub.Blocking.Attributes
 
 import PyGithub.Blocking.Entity
 import PyGithub.Blocking.Organization
+import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Repository
 
 
@@ -184,6 +185,18 @@ class User(PyGithub.Blocking.Entity.Entity):
         url = uritemplate.expand(self.following_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
         return self._createPaginatedList(User, "GET", url, urlArguments=urlArguments)
+
+    def get_keys(self):
+        """
+        Calls the `GET /users/:user/keys <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.PublicKey`
+        """
+
+        url = uritemplate.expand("https://api.github.com/users/{user}/keys", user=self.login)
+        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
 
     def get_orgs(self, per_page=None):
         """

@@ -358,3 +358,16 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
     def testGetTeams_allParameters(self):
         teams = self.g.get_repo("BeaverSoftware/FatherBeaver").get_teams(per_page=1)
         self.assertEqual(teams[0].name, "Members")
+
+    def testGetKeys(self):
+        keys = self.g.get_repo("jacquev6/CodingDojos").get_keys()
+        self.assertEqual(len(keys), 1)
+        self.assertEqual(keys[0].id, 6941367)
+
+    def testGetKey(self):
+        key = self.g.get_repo("jacquev6/CodingDojos").get_key(6941367)
+        self.assertEqual(key.title, "dojo@dojo")
+
+    def testCreateKey(self):
+        key = self.g.get_repo("jacquev6/CodingDojos").create_key("vincent@test", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkQih2DtSwBzLUtSNYEKULlI5M1qa6vnq42xt9qZpkLav3G9eD/GqJRST+zZMsyfpP62PtiYKXJdLJX2MQIzUgI2PzNy+iMy+ldiTEABYEOCa+BH9+x2R5xXGlmmCPblpamx3kstGtCTa3LSkyIvxbt5vjbXCyThhJaSKyh+42Uedcz7l0y/TODhnkpid/5eiBz6k0VEbFfhM6h71eBdCFpeMJIhGaPTjbKsEjXIK0SRe0v0UQnpXJQkhAINbm+q/2yjt7zwBF74u6tQjRqJK7vQO2k47ZmFMAGeIxS6GheI+JPmwtHkxvfaJjy2lIGX+rt3lkW8xEUxiMTlxeh+0R")
+        self.assertEqual(key.id, 7229238)

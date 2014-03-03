@@ -16,6 +16,7 @@ import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
 import PyGithub.Blocking.Organization
+import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Repository
 import PyGithub.Blocking.Subscription
 import PyGithub.Blocking.Team
@@ -92,6 +93,24 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         return self._createInstance(PyGithub.Blocking.Repository.Repository, "POST", url)
+
+    def create_key(self, title, key):
+        """
+        Calls the `POST /user/keys <http://developer.github.com/v3/users/keys#create-a-public-key>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: mandatory :class:`string`
+        :param key: mandatory :class:`string`
+        :rtype: :class:`.PublicKey`
+        """
+
+        title = PyGithub.Blocking.Parameters.normalizeString(title)
+        key = PyGithub.Blocking.Parameters.normalizeString(key)
+
+        url = uritemplate.expand("https://api.github.com/user/keys")
+        postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
+        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "POST", url, postArguments=postArguments)
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, auto_init=None, gitignore_template=None):
         """
@@ -219,6 +238,33 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/user/following")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
         return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+
+    def get_key(self, id):
+        """
+        Calls the `GET /user/keys/:id <http://developer.github.com/v3/users/keys#get-a-single-public-key>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param id: mandatory :class:`int`
+        :rtype: :class:`.PublicKey`
+        """
+
+        id = PyGithub.Blocking.Parameters.normalizeInt(id)
+
+        url = uritemplate.expand("https://api.github.com/user/keys/{id}", id=str(id))
+        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+
+    def get_keys(self):
+        """
+        Calls the `GET /user/keys <http://developer.github.com/v3/users/keys#list-your-public-keys>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.PublicKey`
+        """
+
+        url = uritemplate.expand("https://api.github.com/user/keys")
+        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
 
     def get_orgs(self, per_page=None):
         """
