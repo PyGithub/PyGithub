@@ -22,6 +22,9 @@
 ################################################################################
 
 import Framework
+import sys
+
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class Search(Framework.TestCase):
@@ -52,7 +55,10 @@ class Search(Framework.TestCase):
         self.assertListKeyBegin(issues, lambda i: i.id, [12068673, 23250111, 14371957, 9423897, 24277400, 2408877, 11338741, 13980502, 27697165, 23102422])
 
     def testSearchCode(self):
-        files = self.g.search_code("toto", sort="indexed", order="asc", language="Python", user="jacquev6")
-        self.assertListKeyEqual(files, lambda f: f.name, [u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
+        files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
+        self.assertListKeyEqual(files, lambda f: f.name, [u'Commit.setUp.txt', u'PullRequest.testGetFiles.txt', u'NamedUser.testGetEvents.txt', u'PullRequest.testCreateComment.txt', u'PullRequestFile.setUp.txt', u'Repository.testGetIssuesWithWildcards.txt', u'Repository.testGetIssuesWithArguments.txt', u'test_ebnf.cpp', u'test_abnf.cpp', u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
         self.assertEqual(files[0].repository.full_name, "jacquev6/PyGithub")
-        self.assertEqual(files[0].decoded_content[:30], "# -*- coding: utf-8 -*-\n\n#####")
+        if atLeastPython3:
+            self.assertEqual(files[0].decoded_content[:30], b'https\nGET\napi.github.com\nNone\n')
+        else:
+            self.assertEqual(files[0].decoded_content[:30], "https\nGET\napi.github.com\nNone\n")
