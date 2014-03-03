@@ -1,0 +1,323 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/orgs/BeaverSoftware",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                "billing_email": "BeaverSoftware@vincent-jacques.net",
+                "blog": null,
+                "collaborators": 0,
+                "company": null,
+                "created_at": "2012-02-09T19:20:12Z",
+                "disk_usage": 84,
+                "email": null,
+                "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
+                "followers": 0,
+                "following": 0,
+                "html_url": "https://github.com/BeaverSoftware",
+                "id": 1424031,
+                "location": "Paris, France",
+                "login": "BeaverSoftware",
+                "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
+                "name": null,
+                "owned_private_repos": 0,
+                "plan": {
+                    "name": "free",
+                    "private_repos": 0,
+                    "space": 307200
+                },
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_members_url": "https://api.github.com/orgs/BeaverSoftware/public_members{/member}",
+                "public_repos": 1,
+                "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
+                "total_private_repos": 0,
+                "type": "Organization",
+                "updated_at": "2013-12-21T04:06:00Z",
+                "url": "https://api.github.com/orgs/BeaverSoftware"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
+                "etag": "\"c8ee35376edbc79d2fef53174c7db24a\"",
+                "last-modified": "Sat, 21 Dec 2013 04:06:00 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:32C9:9AE11D:52B513EA",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4976",
+                "x-ratelimit-reset": "1387601164"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/potential-octo-lana",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "documentation_url": "http://developer.github.com/v3",
+                "message": "Not Found"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
+                "server": "GitHub.com",
+                "status": "404 Not Found",
+                "transfer-encoding": "chunked",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:32C9:9AE144:52B513EA",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4975",
+                "x-ratelimit-reset": "1387601164"
+            },
+            "status": 404
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "auto_init": true,
+                "description": "Created with PyGithub v2",
+                "gitignore_template": "C",
+                "has_downloads": false,
+                "has_issues": false,
+                "has_wiki": false,
+                "homepage": "http://foo.bar",
+                "name": "potential-octo-lana",
+                "private": false,
+                "team_id": 141496
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "251",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/orgs/BeaverSoftware/repos",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/branches{/branch}",
+                "clone_url": "https://github.com/BeaverSoftware/potential-octo-lana.git",
+                "collaborators_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/comments{/number}",
+                "commits_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/contributors",
+                "created_at": "2013-12-21T04:07:06Z",
+                "default_branch": "master",
+                "description": "Created with PyGithub v2",
+                "downloads_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/downloads",
+                "events_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/forks",
+                "full_name": "BeaverSoftware/potential-octo-lana",
+                "git_commits_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/tags{/sha}",
+                "git_url": "git://github.com/BeaverSoftware/potential-octo-lana.git",
+                "has_downloads": false,
+                "has_issues": false,
+                "has_wiki": false,
+                "homepage": "http://foo.bar",
+                "hooks_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/hooks",
+                "html_url": "https://github.com/BeaverSoftware/potential-octo-lana",
+                "id": 15353586,
+                "issue_comment_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues{/number}",
+                "keys_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/languages",
+                "merges_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/merges",
+                "milestones_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/milestones{/number}",
+                "mirror_url": null,
+                "name": "potential-octo-lana",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/pulls{/number}",
+                "pushed_at": "2013-12-21T04:07:06Z",
+                "releases_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/releases{/id}",
+                "size": 0,
+                "ssh_url": "git@github.com:BeaverSoftware/potential-octo-lana.git",
+                "stargazers_count": 0,
+                "stargazers_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/stargazers",
+                "statuses_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/statuses/{sha}",
+                "subscribers_count": 0,
+                "subscribers_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/subscribers",
+                "subscription_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/subscription",
+                "svn_url": "https://github.com/BeaverSoftware/potential-octo-lana",
+                "tags_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/tags",
+                "teams_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/teams",
+                "trees_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/trees{/sha}",
+                "updated_at": "2013-12-21T04:07:06Z",
+                "url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana",
+                "watchers": 0,
+                "watchers_count": 0
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "6599",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
+                "etag": "\"5e0839f254c8d99d0fff36022dfcb04a\"",
+                "location": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:32C9:9AE162:52B513EA",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4974",
+                "x-ratelimit-reset": "1387601164"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/potential-octo-lana",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "date": "Sat, 21 Dec 2013 04:07:07 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:32C9:9AE1B7:52B513EA",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4973",
+                "x-ratelimit-reset": "1387601164"
+            },
+            "status": 204
+        }
+    }
+]

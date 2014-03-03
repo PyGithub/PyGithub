@@ -1,0 +1,44 @@
+Attributes:
+
+                      Organization  User  AuthedUser
+avatar_url                 Yes      Yes      Yes
+billing_email             Admin
+bio                                 Yes      Yes
+blog                       Yes      Yes      Yes
+collaborators             Admin              Yes
+company                    Yes      Yes      Yes
+created_at                 Yes      Yes      Yes
+disk_usage                Admin              Yes
+email                      Yes      Yes      Yes
+events_url                 Yes      Yes      Yes
+followers                  Yes      Yes      Yes
+followers_url                       Yes      Yes
+following                  Yes      Yes      Yes
+following_url                       Yes      Yes
+gists_url                           Yes      Yes
+gravatar_id                         Yes      Yes
+hireable                            Yes      Yes
+html_url                   Yes      Yes      Yes
+id                         Yes      Yes      Yes
+location                   Yes      Yes      Yes
+login                      Yes      Yes      Yes
+members_url                Yes
+name                       Yes      Yes      Yes
+organizations_url                   Yes      Yes
+owned_private_repos       Admin              Yes
+plan                      Admin              Yes
+private_gists             Admin              Yes
+public_gists               Yes      Yes      Yes
+public_members_url         Yes
+public_repos               Yes      Yes      Yes
+received_events_url                 Yes      Yes
+repos_url                  Yes      Yes      Yes
+site_admin                          Yes      Yes
+starred_url                         Yes      Yes
+subscriptions_url                   Yes      Yes
+total_private_repos       Admin              Yes
+type                       Yes      Yes      Yes
+updated_at                 Yes      Yes      Yes
+url                        Yes      Yes      Yes
+
+Methods:

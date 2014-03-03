@@ -1,0 +1,141 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/defunkt",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/b8dbb1987e8e5318584865f880036796?d=https%3A%2F%2Fidenticons.github.com%2Fc81e728d9d4c2f636f067f89cc14862c.png&r=x",
+                "bio": "",
+                "blog": "http://chriswanstrath.com/",
+                "company": "GitHub",
+                "created_at": "2007-10-20T05:24:19Z",
+                "email": "chris@github.com",
+                "events_url": "https://api.github.com/users/defunkt/events{/privacy}",
+                "followers": 12925,
+                "followers_url": "https://api.github.com/users/defunkt/followers",
+                "following": 208,
+                "following_url": "https://api.github.com/users/defunkt/following{/other_user}",
+                "gists_url": "https://api.github.com/users/defunkt/gists{/gist_id}",
+                "gravatar_id": "b8dbb1987e8e5318584865f880036796",
+                "hireable": true,
+                "html_url": "https://github.com/defunkt",
+                "id": 2,
+                "location": "San Francisco",
+                "login": "defunkt",
+                "name": "Chris Wanstrath",
+                "organizations_url": "https://api.github.com/users/defunkt/orgs",
+                "public_gists": 284,
+                "public_repos": 101,
+                "received_events_url": "https://api.github.com/users/defunkt/received_events",
+                "repos_url": "https://api.github.com/users/defunkt/repos",
+                "site_admin": true,
+                "starred_url": "https://api.github.com/users/defunkt/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/defunkt/subscriptions",
+                "type": "User",
+                "updated_at": "2013-12-25T19:52:17Z",
+                "url": "https://api.github.com/users/defunkt"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 20:27:42 GMT",
+                "etag": "\"eade06abf86b2da873e2243d0f3a8be1\"",
+                "last-modified": "Wed, 25 Dec 2013 19:52:17 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:643C:8294798:52BB3FBD",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4971",
+                "x-ratelimit-reset": "1388004358"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/defunkt/orgs",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "avatar_url": "https://gravatar.com/avatar/61024896f291303615bcd4f7a0dcfb74?d=https%3A%2F%2Fidenticons.github.com%2Fae816a80e4c1c56caa2eb4e1819cbb2f.png&r=x",
+                    "events_url": "https://api.github.com/orgs/github/events",
+                    "id": 9919,
+                    "login": "github",
+                    "members_url": "https://api.github.com/orgs/github/members{/member}",
+                    "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                    "repos_url": "https://api.github.com/orgs/github/repos",
+                    "url": "https://api.github.com/orgs/github"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/66b4068c9b17a2da3bbf2a9613a4662f?d=https%3A%2F%2Fidenticons.github.com%2F638fe896e51227dad639b61237a527e9.png&r=x",
+                    "events_url": "https://api.github.com/orgs/mustache/events",
+                    "id": 197655,
+                    "login": "mustache",
+                    "members_url": "https://api.github.com/orgs/mustache/members{/member}",
+                    "public_members_url": "https://api.github.com/orgs/mustache/public_members{/member}",
+                    "repos_url": "https://api.github.com/orgs/mustache/repos",
+                    "url": "https://api.github.com/orgs/mustache"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 20:27:42 GMT",
+                "etag": "\"f4cc0661b1908a934b1e39a13c6b4139\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:643C:82947C5:52BB3FBE",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4970",
+                "x-ratelimit-reset": "1388004358"
+            },
+            "status": 200
+        }
+    }
+]

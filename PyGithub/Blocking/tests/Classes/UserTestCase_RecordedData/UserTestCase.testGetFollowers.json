@@ -1,0 +1,198 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/466ef7561a0b100dc5a1021959962d28?d=https%3A%2F%2Fidenticons.github.com%2Fe6d0513ce49cc06cb956251623cb8fd9.png&r=x",
+                "bio": null,
+                "blog": "http://nvie.com",
+                "company": "3rd Cloud",
+                "created_at": "2009-05-12T21:19:38Z",
+                "email": "vincent@3rdcloud.com",
+                "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                "followers": 607,
+                "followers_url": "https://api.github.com/users/nvie/followers",
+                "following": 45,
+                "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                "hireable": true,
+                "html_url": "https://github.com/nvie",
+                "id": 83844,
+                "location": "Netherlands",
+                "login": "nvie",
+                "name": "Vincent Driessen",
+                "organizations_url": "https://api.github.com/users/nvie/orgs",
+                "public_gists": 39,
+                "public_repos": 92,
+                "received_events_url": "https://api.github.com/users/nvie/received_events",
+                "repos_url": "https://api.github.com/users/nvie/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                "type": "User",
+                "updated_at": "2013-12-25T16:30:59Z",
+                "url": "https://api.github.com/users/nvie"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 20:27:40 GMT",
+                "etag": "\"dfef326e1de5327fc85c3b3376c346ce\"",
+                "last-modified": "Wed, 25 Dec 2013 16:30:59 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B9A:9255CBA:52BB3FBC",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4975",
+                "x-ratelimit-reset": "1388004358"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie/followers",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "avatar_url": "https://gravatar.com/avatar/427fa758aec23bba705f8eb379e1cda9?d=https%3A%2F%2Fidenticons.github.com%2F8141bd1723bca1941656938fa02204c9.png&r=x",
+                    "events_url": "https://api.github.com/users/vidbina/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/vidbina/followers",
+                    "following_url": "https://api.github.com/users/vidbina/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/vidbina/gists{/gist_id}",
+                    "gravatar_id": "427fa758aec23bba705f8eb379e1cda9",
+                    "html_url": "https://github.com/vidbina",
+                    "id": 335406,
+                    "login": "vidbina",
+                    "organizations_url": "https://api.github.com/users/vidbina/orgs",
+                    "received_events_url": "https://api.github.com/users/vidbina/received_events",
+                    "repos_url": "https://api.github.com/users/vidbina/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/vidbina/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/vidbina/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/vidbina"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/86fa5074a90bd5b5cc7d948bfb2a00e5?d=https%3A%2F%2Fidenticons.github.com%2F120fc3d3ac35d80f17459297a1b87ea0.png&r=x",
+                    "events_url": "https://api.github.com/users/nirmalkumarv/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/nirmalkumarv/followers",
+                    "following_url": "https://api.github.com/users/nirmalkumarv/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/nirmalkumarv/gists{/gist_id}",
+                    "gravatar_id": "86fa5074a90bd5b5cc7d948bfb2a00e5",
+                    "html_url": "https://github.com/nirmalkumarv",
+                    "id": 897323,
+                    "login": "nirmalkumarv",
+                    "organizations_url": "https://api.github.com/users/nirmalkumarv/orgs",
+                    "received_events_url": "https://api.github.com/users/nirmalkumarv/received_events",
+                    "repos_url": "https://api.github.com/users/nirmalkumarv/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/nirmalkumarv/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/nirmalkumarv/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/nirmalkumarv"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/df3e09f2cd8e94bb2f0598a84b8bf276?d=https%3A%2F%2Fidenticons.github.com%2F811d15e88761cc17fa0559bf61c4fb8b.png&r=x",
+                    "events_url": "https://api.github.com/users/zhuyinan/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/zhuyinan/followers",
+                    "following_url": "https://api.github.com/users/zhuyinan/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/zhuyinan/gists{/gist_id}",
+                    "gravatar_id": "df3e09f2cd8e94bb2f0598a84b8bf276",
+                    "html_url": "https://github.com/zhuyinan",
+                    "id": 1510656,
+                    "login": "zhuyinan",
+                    "organizations_url": "https://api.github.com/users/zhuyinan/orgs",
+                    "received_events_url": "https://api.github.com/users/zhuyinan/received_events",
+                    "repos_url": "https://api.github.com/users/zhuyinan/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/zhuyinan/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/zhuyinan/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/zhuyinan"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/16bbb5898bf208ffef736295fceb7e27?d=https%3A%2F%2Fidenticons.github.com%2F291597a100aadd814d197af4f4bab3a7.png&r=x",
+                    "events_url": "https://api.github.com/users/fspeirs/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/fspeirs/followers",
+                    "following_url": "https://api.github.com/users/fspeirs/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/fspeirs/gists{/gist_id}",
+                    "gravatar_id": "16bbb5898bf208ffef736295fceb7e27",
+                    "html_url": "https://github.com/fspeirs",
+                    "id": 642,
+                    "login": "fspeirs",
+                    "organizations_url": "https://api.github.com/users/fspeirs/orgs",
+                    "received_events_url": "https://api.github.com/users/fspeirs/received_events",
+                    "repos_url": "https://api.github.com/users/fspeirs/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/fspeirs/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/fspeirs/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/fspeirs"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 20:27:40 GMT",
+                "etag": "\"0269ce09785fc20e997752f1867458e0\"",
+                "link": "<https://api.github.com/user/83844/followers?per_page=4&page=2>; rel=\"next\", <https://api.github.com/user/83844/followers?per_page=4&page=152>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B9A:9255CDA:52BB3FBC",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4974",
+                "x-ratelimit-reset": "1388004358"
+            },
+            "status": 200
+        }
+    }
+]

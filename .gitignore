@@ -1,0 +1,12 @@
+*.pyc
+
+/GithubCredentials.py
+/scripts/TwitterCredentials.py
+/dist/
+/build/
+/MANIFEST
+/PyGithub.egg-info/
+/.coverage
+/test_coverage/
+/generation_coverage/
+/gh-pages/

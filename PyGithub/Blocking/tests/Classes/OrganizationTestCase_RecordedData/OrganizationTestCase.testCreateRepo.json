@@ -1,0 +1,314 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/orgs/BeaverSoftware",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                "billing_email": "BeaverSoftware@vincent-jacques.net",
+                "blog": null,
+                "collaborators": 0,
+                "company": null,
+                "created_at": "2012-02-09T19:20:12Z",
+                "disk_usage": 84,
+                "email": null,
+                "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
+                "followers": 0,
+                "following": 0,
+                "html_url": "https://github.com/BeaverSoftware",
+                "id": 1424031,
+                "location": "Paris, France",
+                "login": "BeaverSoftware",
+                "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
+                "name": null,
+                "owned_private_repos": 0,
+                "plan": {
+                    "name": "free",
+                    "private_repos": 0,
+                    "space": 307200
+                },
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_members_url": "https://api.github.com/orgs/BeaverSoftware/public_members{/member}",
+                "public_repos": 1,
+                "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
+                "total_private_repos": 0,
+                "type": "Organization",
+                "updated_at": "2013-12-20T06:27:28Z",
+                "url": "https://api.github.com/orgs/BeaverSoftware"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:27:29 GMT",
+                "etag": "\"507785d07db21849730b965da0eee78c\"",
+                "last-modified": "Fri, 20 Dec 2013 06:27:28 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:1FE8:20C434D:52B3E350",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4955",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/turbo-octo-ironman",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "documentation_url": "http://developer.github.com/v3",
+                "message": "Not Found"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:27:29 GMT",
+                "server": "GitHub.com",
+                "status": "404 Not Found",
+                "transfer-encoding": "chunked",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:1FE8:20C436C:52B3E351",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4954",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 404
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "name": "turbo-octo-ironman"
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "30",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/orgs/BeaverSoftware/repos",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/branches{/branch}",
+                "clone_url": "https://github.com/BeaverSoftware/turbo-octo-ironman.git",
+                "collaborators_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/comments{/number}",
+                "commits_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/contributors",
+                "created_at": "2013-12-20T06:27:29Z",
+                "default_branch": "master",
+                "description": null,
+                "downloads_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/downloads",
+                "events_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/forks",
+                "full_name": "BeaverSoftware/turbo-octo-ironman",
+                "git_commits_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/git/tags{/sha}",
+                "git_url": "git://github.com/BeaverSoftware/turbo-octo-ironman.git",
+                "has_downloads": true,
+                "has_issues": true,
+                "has_wiki": true,
+                "homepage": null,
+                "hooks_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/hooks",
+                "html_url": "https://github.com/BeaverSoftware/turbo-octo-ironman",
+                "id": 15331566,
+                "issue_comment_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/issues{/number}",
+                "keys_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/languages",
+                "merges_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/merges",
+                "milestones_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/milestones{/number}",
+                "mirror_url": null,
+                "name": "turbo-octo-ironman",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/pulls{/number}",
+                "pushed_at": "2013-12-20T06:27:29Z",
+                "releases_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/releases{/id}",
+                "size": 0,
+                "ssh_url": "git@github.com:BeaverSoftware/turbo-octo-ironman.git",
+                "stargazers_count": 0,
+                "stargazers_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/stargazers",
+                "statuses_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/statuses/{sha}",
+                "subscribers_count": 0,
+                "subscribers_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/subscribers",
+                "subscription_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/subscription",
+                "svn_url": "https://github.com/BeaverSoftware/turbo-octo-ironman",
+                "tags_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/tags",
+                "teams_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/teams",
+                "trees_url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman/git/trees{/sha}",
+                "updated_at": "2013-12-20T06:27:29Z",
+                "url": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman",
+                "watchers": 0,
+                "watchers_count": 0
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "6519",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:27:29 GMT",
+                "etag": "\"b25a89bcbdff1946d124c76e45b39a02\"",
+                "location": "https://api.github.com/repos/BeaverSoftware/turbo-octo-ironman",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:1FE8:20C437F:52B3E351",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4953",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/turbo-octo-ironman",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "date": "Fri, 20 Dec 2013 06:27:29 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:1FE8:20C43C3:52B3E351",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4952",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 204
+        }
+    }
+]

@@ -1,0 +1,32 @@
+attributes:
+  - name: created_at
+    type: datetime
+  - name: ignored
+    type: bool
+  - name: reason
+    type: string
+  - name: repository_url
+    type: string
+  - name: subscribed
+    type: bool
+  - name: url
+    type: string
+methods:
+  - name: delete
+    end_point: DELETE /repos/:owner/:repo/subscription
+    url_template: attribute url
+    return_strategy: none
+  - name: edit
+    end_point: PUT /repos/:owner/:repo/subscription
+    parameters:
+      - name: subscribed
+        type: bool
+      - name: ignored
+        type: bool
+    url_template: attribute url
+    post_arguments:
+      - name: subscribed
+        value: parameter subscribed
+      - name: ignored
+        value: parameter ignored
+    return_strategy: updateSelfThen(none)

@@ -1,0 +1,296 @@
+base: User
+methods:
+  - name: add_to_following
+    end_point: PUT /user/following/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: end_point
+    url_template_arguments:
+      - name: user
+        value: parameter user
+    return_strategy: none
+  - name: add_to_starred
+    end_point: PUT /user/starred/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none
+  - name: add_to_subscriptions
+    end_point: PUT /user/subscriptions/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none
+  - name: create_fork
+    end_point: POST /repos/:owner/:repo/forks
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: instanceFromAttributes(Repository)
+  - name: create_repo
+    end_point: POST /user/repos
+    parameters:
+      - name: name
+        type: string
+    optional_parameters:
+      - name: description
+        type: string
+      - name: homepage
+        type: string
+      - name: private
+        type: bool
+      - name: has_issues
+        type: bool
+      - name: has_wiki
+        type: bool
+      - name: has_downloads
+        type: bool
+      - name: auto_init
+        type: bool
+      - name: gitignore_template
+        type: Github.GitIgnoreTemplate
+    url_template: end_point
+    post_arguments:
+      - name: name
+        value: parameter name
+      - name: description
+        value: parameter description
+      - name: homepage
+        value: parameter homepage
+      - name: private
+        value: parameter private
+      - name: has_downloads
+        value: parameter has_downloads
+      - name: has_issues
+        value: parameter has_issues
+      - name: has_wiki
+        value: parameter has_wiki
+      - name: auto_init
+        value: parameter auto_init
+      - name: gitignore_template
+        value: parameter gitignore_template
+    return_strategy: instanceFromAttributes(Repository)
+  - name: create_subscription
+    end_point: PUT /repos/:owner/:repo/subscription
+    parameters:
+      - name: repo
+        type: Repository
+      - name: subscribed
+        type: bool
+      - name: ignored
+        type: bool
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    post_arguments:
+      - name: subscribed
+        value: parameter subscribed
+      - name: ignored
+        value: parameter ignored
+    return_strategy: instanceFromAttributes(Subscription)
+  - name: edit
+    end_point: PATCH /user
+    optional_parameters:
+      - name: name
+        types: [string, Reset]
+      - name: email
+        types: [string, Reset]
+      - name: blog
+        types: [string, Reset]
+      - name: company
+        types: [string, Reset]
+      - name: location
+        types: [string, Reset]
+      - name: hireable
+        types: [bool, Reset]
+    url_template: end_point
+    post_arguments:
+      - name: blog
+        value: parameter blog
+      - name: company
+        value: parameter company
+      - name: email
+        value: parameter email
+      - name: hireable
+        value: parameter hireable
+      - name: location
+        value: parameter location
+      - name: name
+        value: parameter name
+    return_strategy: updateSelfThen(none)
+  - name: get_followers
+    end_point: GET /user/followers
+    url_template: end_point
+    return_strategy: paginatedList(User)
+  - name: get_following
+    end_point: GET /user/following
+    url_template: end_point
+    return_strategy: paginatedList(User)
+  - name: get_orgs
+    end_point: GET /user/orgs
+    url_template: end_point
+    return_strategy: paginatedList(Organization)
+  - name: get_repo
+    end_point: GET /repos/:owner/:repo
+    parameters:
+      - name: repo
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute login
+      - name: repo
+        value: parameter repo
+    return_strategy: instanceFromAttributes(Repository)
+  - name: get_repos
+    end_point: GET /user/repos
+    optional_parameters:
+      - name: sort
+        type:
+          meta: enum
+          values: [created, updated, pushed, full_name]
+      - name: direction
+        type:
+          meta: enum
+          values: [asc, desc]
+      - name: type
+        type:
+          meta: enum
+          values: [all, owner, public, private, member]
+    url_template: end_point
+    url_arguments:
+      - name: sort
+        value: parameter sort
+      - name: direction
+        value: parameter direction
+      - name: type
+        value: parameter type
+    return_strategy: paginatedList(Repository)
+  - name: get_starred
+    end_point: GET /user/starred
+    optional_parameters:
+      - name: sort
+        type:
+          meta: enum
+          values: [created, updated]
+      - name: direction
+        type:
+          meta: enum
+          values: [asc, desc]
+    url_template: end_point
+    url_arguments:
+      - name: sort
+        value: parameter sort
+      - name: direction
+        value: parameter direction
+    return_strategy: paginatedList(Repository)
+  - name: get_subscription
+    end_point: GET /repos/:owner/:repo/subscription
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: instanceFromAttributes(Subscription)
+  - name: get_subscriptions
+    end_point: GET /user/subscriptions
+    url_template: end_point
+    return_strategy: paginatedList(Repository)
+  - name: get_teams
+    end_point: GET /user/teams
+    url_template: end_point
+    return_strategy: paginatedList(Team)
+  - name: has_in_following
+    end_point: GET /user/following/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: end_point
+    url_template_arguments:
+      - name: user
+        value: parameter user
+    return_strategy: boolFromStatus
+  - name: has_in_starred
+    end_point: GET /user/starred/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: boolFromStatus
+  - name: has_in_subscriptions
+    end_point: GET /user/subscriptions/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: boolFromStatus
+  - name: remove_from_following
+    end_point: DELETE /user/following/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: end_point
+    url_template_arguments:
+      - name: user
+        value: parameter user
+    return_strategy: none
+  - name: remove_from_starred
+    end_point: DELETE /user/starred/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none
+  - name: remove_from_subscriptions
+    end_point: DELETE /user/subscriptions/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none

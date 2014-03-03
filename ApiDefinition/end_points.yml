@@ -1,0 +1,765 @@
+/api/last-message.json:
+  - verb: GET
+    doc: https://status.github.com/api
+/api/messages.json:
+  - verb: GET
+    doc: https://status.github.com/api
+/api/status.json:
+  - verb: GET
+    doc: https://status.github.com/api
+/applications/:client_id/tokens:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/oauth_authorizations#revoke-all-authorizations-for-an-application
+/applications/:client_id/tokens/:access_token:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/oauth_authorizations#revoke-an-authorization-for-an-application
+  - verb: GET
+    doc: http://developer.github.com/v3/oauth_authorizations#check-an-authorization
+/authorizations:
+  - verb: GET
+    doc: http://developer.github.com/v3/oauth_authorizations#list-your-authorizations
+  - verb: POST
+    parameters: [client_id, client_secret, note, note_url, scopes]
+    doc: http://developer.github.com/v3/oauth_authorizations#create-a-new-authorization
+/authorizations/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/oauth_authorizations#delete-an-authorization
+  - verb: GET
+    doc: http://developer.github.com/v3/oauth_authorizations#get-a-single-authorization
+  - verb: PATCH
+    parameters: [add_scopes, note, note_url, remove_scopes, scopes]
+    doc: http://developer.github.com/v3/oauth_authorizations#update-an-existing-authorization
+/authorizations/clients/:client_id:
+  - verb: PUT
+    parameters: [client_secret, note, note_url, scopes]
+    doc: http://developer.github.com/v3/oauth_authorizations#get-or-create-an-authorization-for-a-specific-app
+/emojis:
+  - verb: GET
+    doc: http://developer.github.com/v3/emojis#emojis
+/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-public-events
+/feeds:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/feeds#list-feeds
+/gists:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/gists#list-gists
+  - verb: POST
+    parameters: [description, files, public]
+    doc: http://developer.github.com/v3/gists#create-a-gist
+/gists/:gist_id/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/gists/comments#list-comments-on-a-gist
+  - verb: POST
+    parameters: [body]
+    doc: http://developer.github.com/v3/gists/comments#create-a-comment
+/gists/:gist_id/comments/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/gists/comments#delete-a-comment
+  - verb: GET
+    doc: http://developer.github.com/v3/gists/comments#get-a-single-comment
+  - verb: PATCH
+    parameters: [body]
+    doc: http://developer.github.com/v3/gists/comments#edit-a-comment
+/gists/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/gists#delete-a-gist
+  - verb: GET
+    doc: http://developer.github.com/v3/gists#get-a-single-gist
+  - verb: PATCH
+    parameters: [content, description, filename, files]
+    doc: http://developer.github.com/v3/gists#edit-a-gist
+/gists/:id/forks:
+  - verb: POST
+    doc: http://developer.github.com/v3/gists#fork-a-gist
+/gists/:id/star:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/gists#unstar-a-gist
+  - verb: GET
+    doc: http://developer.github.com/v3/gists#check-if-a-gist-is-starred
+  - verb: PUT
+    doc: http://developer.github.com/v3/gists#star-a-gist
+/gists/public:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/gists#list-gists
+/gists/starred:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/gists#list-gists
+/gitignore/templates:
+  - verb: GET
+    doc: http://developer.github.com/v3/gitignore#listing-available-templates
+/gitignore/templates/:name:
+  - verb: GET
+    doc: http://developer.github.com/v3/gitignore#get-a-single-template
+/hooks:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/hooks
+/hooks/:name:
+  - verb: GET
+    doc: https://github.com/jacquev6/PyGithub/issues/196
+/hub:
+  - verb: POST
+    doc: http://developer.github.com/v3/repos/hooks#pubsubhubbub
+/issues:
+  - verb: GET
+    parameters: [direction, filter, labels, since, sort, state]
+    doc: http://developer.github.com/v3/issues#list-issues
+/markdown:
+  - verb: POST
+    parameters: [context, mode, text]
+    doc: http://developer.github.com/v3/markdown#render-an-arbitrary-markdown-document
+/meta:
+  - verb: GET
+    doc: http://developer.github.com/v3/meta#meta
+/networks/:owner/:repo/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-public-events-for-a-network-of-repositories
+/notifications:
+  - verb: GET
+    parameters: [all, participating, since]
+    doc: http://developer.github.com/v3/activity/notifications#list-your-notifications
+  - verb: PUT
+    parameters: [last_read_at]
+    doc: http://developer.github.com/v3/activity/notifications#mark-as-read
+/notifications/threads/:id:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/notifications#view-a-single-thread
+  - verb: PATCH
+    doc: http://developer.github.com/v3/activity/notifications#mark-a-thread-as-read
+/notifications/threads/:id/subscription:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/activity/notifications#delete-a-thread-subscription
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/notifications#get-a-thread-subscription
+  - verb: PUT
+    parameters: [ignored, subscribed]
+    doc: http://developer.github.com/v3/activity/notifications#set-a-thread-subscription
+/orgs/:org:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs#get-an-organization
+  - verb: PATCH
+    parameters: [billing_email, company, email, location, name]
+    doc: http://developer.github.com/v3/orgs#edit-an-organization
+/orgs/:org/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-public-events-for-an-organization
+/orgs/:org/issues:
+  - verb: GET
+    parameters: [direction, filter, labels, since, sort, state]
+    doc: http://developer.github.com/v3/issues#list-issues
+/orgs/:org/members:
+  - verb: GET
+    parameters: [filter]
+    doc: http://developer.github.com/v3/orgs/members#members-list
+/orgs/:org/members/:user:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/orgs/members#remove-a-member
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/members#check-membership
+/orgs/:org/public_members:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/members#public-members-list
+/orgs/:org/public_members/:user:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/orgs/members#conceal-a-users-membership
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/members#check-public-membership
+  - verb: PUT
+    doc: http://developer.github.com/v3/orgs/members#publicize-a-users-membership
+/orgs/:org/repos:
+  - verb: GET
+    parameters: [type]
+    doc: http://developer.github.com/v3/repos#list-organization-repositories
+  - verb: POST
+    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, name, private, team_id]
+    doc: http://developer.github.com/v3/repos#create
+/orgs/:org/teams:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#list-teams
+  - verb: POST
+    parameters: [name, permission, repo_names]
+    doc: http://developer.github.com/v3/orgs/teams#create-team
+/rate_limit:
+  - verb: GET
+    doc: http://developer.github.com/v3/rate_limit#get-your-current-rate-limit-status
+/repos/:owner/:repo:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos#delete-a-repository
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#get
+  - verb: PATCH
+    parameters: [default_branch, description, has_downloads, has_issues, has_wiki, homepage, name, private]
+    doc: http://developer.github.com/v3/repos#edit
+/repos/:owner/:repo/:archive_format/:ref:
+  - verb: GET
+    parameters: [archive_format, ref]
+    doc: http://developer.github.com/v3/repos/contents#get-archive-link
+/repos/:owner/:repo/assignees:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/assignees#list-assignees
+/repos/:owner/:repo/assignees/:assignee:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/assignees#check-assignee
+/repos/:owner/:repo/branches:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#list-branches
+/repos/:owner/:repo/branches/:branch:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#get-branch
+/repos/:owner/:repo/collaborators:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/collaborators#list
+/repos/:owner/:repo/collaborators/:user:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/collaborators#remove-collaborator
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/collaborators#get
+  - verb: PUT
+    doc: http://developer.github.com/v3/repos/collaborators#add-collaborator
+/repos/:owner/:repo/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/comments#list-commit-comments-for-a-repository
+/repos/:owner/:repo/comments/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/comments#delete-a-commit-comment
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/comments#get-a-single-commit-comment
+  - verb: PATCH
+    parameters: [body]
+    doc: http://developer.github.com/v3/repos/comments#update-a-commit-comment
+/repos/:owner/:repo/commits:
+  - verb: GET
+    parameters: [author, path, sha, since, until]
+    doc: http://developer.github.com/v3/repos/commits#list-commits-on-a-repository
+/repos/:owner/:repo/commits/:sha:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/commits#get-a-single-commit
+/repos/:owner/:repo/commits/:sha/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/comments#list-comments-for-a-single-commit
+  - verb: POST
+    parameters: [body, line, path, position, sha]
+    doc: http://developer.github.com/v3/repos/comments#create-a-commit-comment
+/repos/:owner/:repo/compare/:base...:head:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/commits#compare-two-commits
+/repos/:owner/:repo/compare/user1:branchname...user2:branchname:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/commits#compare-two-commits
+/repos/:owner/:repo/contents/:path:
+  - verb: DELETE
+    parameters: [branch, email, message, name, path, sha]
+    doc: http://developer.github.com/v3/repos/contents#delete-a-file
+  - verb: GET
+    parameters: [path, ref]
+    doc: http://developer.github.com/v3/repos/contents#get-contents
+  - verb: PUT
+    parameters: [branch, content, email, message, name, path, sha]
+    doc: http://developer.github.com/v3/repos/contents#update-a-file
+/repos/:owner/:repo/contributors:
+  - verb: GET
+    parameters: [anon]
+    doc: http://developer.github.com/v3/repos#list-contributors
+/repos/:owner/:repo/deployments:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/deployments#list-deployments
+  - verb: POST
+    parameters: [auto_merge, description, force, payload, ref]
+    doc: http://developer.github.com/v3/repos/deployments#create-a-deployment
+/repos/:owner/:repo/deployments/:id/statuses:
+  - verb: GET
+    parameters: [id]
+    doc: http://developer.github.com/v3/repos/deployments#list-deployment-statuses
+  - verb: POST
+    parameters: [description, state, target_url]
+    doc: http://developer.github.com/v3/repos/deployments#create-a-deployment-status
+/repos/:owner/:repo/downloads:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/downloads#list-downloads-for-a-repository
+/repos/:owner/:repo/downloads/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/downloads#delete-a-download
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/downloads#get-a-single-download
+/repos/:owner/:repo/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-repository-events
+/repos/:owner/:repo/forks:
+  - verb: GET
+    parameters: [sort]
+    doc: http://developer.github.com/v3/repos/forks#list-forks
+  - verb: POST
+    parameters: [organization]
+    doc: http://developer.github.com/v3/repos/forks#create-a-fork
+/repos/:owner/:repo/git/blobs:
+  - verb: POST
+    doc: http://developer.github.com/v3/git/blobs#create-a-blob
+/repos/:owner/:repo/git/blobs/:sha:
+  - verb: GET
+    doc: http://developer.github.com/v3/git/blobs#get-a-blob
+/repos/:owner/:repo/git/commits:
+  - verb: POST
+    parameters: [date, email, message, name, parents, tree]
+    doc: http://developer.github.com/v3/git/commits#create-a-commit
+/repos/:owner/:repo/git/commits/:sha:
+  - verb: GET
+    doc: http://developer.github.com/v3/git/commits#get-a-commit
+/repos/:owner/:repo/git/refs:
+  - verb: GET
+    doc: http://developer.github.com/v3/git/refs#get-all-references
+  - verb: POST
+    parameters: [ref, sha]
+    doc: http://developer.github.com/v3/git/refs#create-a-reference
+/repos/:owner/:repo/git/refs/:ref:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/git/refs#delete-a-reference
+  - verb: GET
+    doc: http://developer.github.com/v3/git/refs#get-a-reference
+  - verb: PATCH
+    parameters: [force, sha]
+    doc: http://developer.github.com/v3/git/refs#update-a-reference
+/repos/:owner/:repo/git/tags:
+  - verb: POST
+    parameters: [date, email, message, name, object, tag, tagger, type]
+    doc: http://developer.github.com/v3/git/tags#create-a-tag-object
+/repos/:owner/:repo/git/tags/:sha:
+  - verb: GET
+    doc: http://developer.github.com/v3/git/tags#get-a-tag
+/repos/:owner/:repo/git/trees:
+  - verb: POST
+    parameters: [base_tree, content, mode, path, sha, tree, type]
+    doc: http://developer.github.com/v3/git/trees#create-a-tree
+/repos/:owner/:repo/git/trees/:sha:
+  - verb: GET
+    doc: http://developer.github.com/v3/git/trees#get-a-tree
+/repos/:owner/:repo/hooks:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/hooks#list-hooks
+  - verb: POST
+    parameters: [active, config, events, name]
+    doc: http://developer.github.com/v3/repos/hooks#create-a-hook
+/repos/:owner/:repo/hooks/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/hooks#delete-a-hook
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/hooks#get-single-hook
+  - verb: PATCH
+    parameters: [active, add_events, config, events, remove_events]
+    doc: http://developer.github.com/v3/repos/hooks#edit-a-hook
+/repos/:owner/:repo/hooks/:id/pings:
+  - verb: POST
+    doc: http://developer.github.com/v3/repos/hooks#ping-a-hook
+/repos/:owner/:repo/hooks/:id/tests:
+  - verb: POST
+    doc: http://developer.github.com/v3/repos/hooks#test-a-push-hook
+/repos/:owner/:repo/issues:
+  - verb: GET
+    parameters: [assignee, creator, direction, labels, mentioned, milestone, since, sort, state]
+    doc: http://developer.github.com/v3/issues#list-issues-for-a-repository
+  - verb: POST
+    parameters: [assignee, body, labels, milestone, title]
+    doc: http://developer.github.com/v3/issues#create-an-issue
+/repos/:owner/:repo/issues/:issue_number/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/events#list-events-for-an-issue
+/repos/:owner/:repo/issues/:number:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues#get-a-single-issue
+  - verb: PATCH
+    parameters: [assignee, body, labels, milestone, state, title]
+    doc: http://developer.github.com/v3/issues#edit-an-issue
+/repos/:owner/:repo/issues/:number/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/comments#list-comments-on-an-issue
+  - verb: POST
+    parameters: [body]
+    doc: http://developer.github.com/v3/issues/comments#create-a-comment
+/repos/:owner/:repo/issues/:number/labels:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/issues/labels#remove-all-labels-from-an-issue
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/labels#list-labels-on-an-issue
+  - verb: POST
+    doc: http://developer.github.com/v3/issues/labels#add-labels-to-an-issue
+  - verb: PUT
+    doc: http://developer.github.com/v3/issues/labels#replace-all-labels-for-an-issue
+/repos/:owner/:repo/issues/:number/labels/:name:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/issues/labels#remove-a-label-from-an-issue
+/repos/:owner/:repo/issues/comments:
+  - verb: GET
+    parameters: [direction, since, sort]
+    doc: http://developer.github.com/v3/issues/comments#list-comments-in-a-repository
+/repos/:owner/:repo/issues/comments/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/issues/comments#delete-a-comment
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/comments#get-a-single-comment
+  - verb: PATCH
+    parameters: [body]
+    doc: http://developer.github.com/v3/issues/comments#edit-a-comment
+/repos/:owner/:repo/issues/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-issue-events-for-a-repository
+/repos/:owner/:repo/issues/events/:id:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/events#get-a-single-event
+/repos/:owner/:repo/keys:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/keys#list
+  - verb: POST
+    doc: http://developer.github.com/v3/repos/keys#create
+/repos/:owner/:repo/keys/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/keys#delete
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/keys#get
+/repos/:owner/:repo/labels:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/labels#list-all-labels-for-this-repository
+  - verb: POST
+    parameters: [color, name]
+    doc: http://developer.github.com/v3/issues/labels#create-a-label
+/repos/:owner/:repo/labels/:name:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/issues/labels#delete-a-label
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/labels#get-a-single-label
+  - verb: PATCH
+    parameters: [color, name]
+    doc: http://developer.github.com/v3/issues/labels#update-a-label
+/repos/:owner/:repo/languages:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#list-languages
+/repos/:owner/:repo/merges:
+  - verb: POST
+    parameters: [base, commit_message, head]
+    doc: http://developer.github.com/v3/repos/merging#perform-a-merge
+/repos/:owner/:repo/milestones:
+  - verb: GET
+    parameters: [direction, sort, state]
+    doc: http://developer.github.com/v3/issues/milestones#list-milestones-for-a-repository
+  - verb: POST
+    parameters: [description, due_on, state, title]
+    doc: http://developer.github.com/v3/issues/milestones#create-a-milestone
+/repos/:owner/:repo/milestones/:number:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/issues/milestones#delete-a-milestone
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/milestones#get-a-single-milestone
+  - verb: PATCH
+    parameters: [description, due_on, state, title]
+    doc: http://developer.github.com/v3/issues/milestones#update-a-milestone
+/repos/:owner/:repo/milestones/:number/labels:
+  - verb: GET
+    doc: http://developer.github.com/v3/issues/labels#get-labels-for-every-issue-in-a-milestone
+/repos/:owner/:repo/notifications:
+  - verb: GET
+    parameters: [all, participating, since]
+    doc: http://developer.github.com/v3/activity/notifications#list-your-notifications-in-a-repository
+  - verb: PUT
+    parameters: [last_read_at]
+    doc: http://developer.github.com/v3/activity/notifications#mark-notifications-as-read-in-a-repository
+/repos/:owner/:repo/pages:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/pages#get-information-about-a-pages-site
+/repos/:owner/:repo/pages/builds:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/pages#list-pages-builds
+/repos/:owner/:repo/pages/builds/latest:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/pages#list-latest-pages-build
+/repos/:owner/:repo/pulls:
+  - verb: GET
+    parameters: [base, head, state]
+    doc: http://developer.github.com/v3/pulls#list-pull-requests
+  - verb: POST
+    parameters: [base, body, head, issue, title]
+    doc: http://developer.github.com/v3/pulls#create-a-pull-request
+/repos/:owner/:repo/pulls/:number:
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls#get-a-single-pull-request
+  - verb: PATCH
+    parameters: [body, state, title]
+    doc: http://developer.github.com/v3/pulls#update-a-pull-request
+/repos/:owner/:repo/pulls/:number/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls/comments#list-comments-on-a-pull-request
+  - verb: POST
+    parameters: [body, body, commit_id, in_reply_to, path, position]
+    doc: http://developer.github.com/v3/pulls/comments#create-a-comment
+/repos/:owner/:repo/pulls/:number/commits:
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls#list-commits-on-a-pull-request
+/repos/:owner/:repo/pulls/:number/files:
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls#list-pull-requests-files
+/repos/:owner/:repo/pulls/:number/merge:
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls#get-if-a-pull-request-has-been-merged
+  - verb: PUT
+    parameters: [commit_message]
+    doc: http://developer.github.com/v3/pulls#merge-a-pull-request-merge-buttontrade
+/repos/:owner/:repo/pulls/comments:
+  - verb: GET
+    parameters: [direction, since, sort]
+    doc: http://developer.github.com/v3/pulls/comments#list-comments-in-a-repository
+/repos/:owner/:repo/pulls/comments/:number:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/pulls/comments#delete-a-comment
+  - verb: GET
+    doc: http://developer.github.com/v3/pulls/comments#get-a-single-comment
+  - verb: PATCH
+    parameters: [body]
+    doc: http://developer.github.com/v3/pulls/comments#edit-a-comment
+/repos/:owner/:repo/readme:
+  - verb: GET
+    parameters: [ref]
+    doc: http://developer.github.com/v3/repos/contents#get-the-readme
+/repos/:owner/:repo/releases:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/releases#list-releases-for-a-repository
+  - verb: POST
+    parameters: [body, draft, name, prerelease, tag_name, target_commitish]
+    doc: http://developer.github.com/v3/repos/releases#create-a-release
+/repos/:owner/:repo/releases/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/releases#delete-a-release
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/releases#get-a-single-release
+  - verb: PATCH
+    parameters: [body, draft, name, prerelease, tag_name, target_commitish]
+    doc: http://developer.github.com/v3/repos/releases#edit-a-release
+/repos/:owner/:repo/releases/:id/assets:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/releases#list-assets-for-a-release
+/repos/:owner/:repo/releases/assets/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/repos/releases#delete-a-release-asset
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/releases#get-a-single-release-asset
+  - verb: PATCH
+    parameters: [label, name]
+    doc: http://developer.github.com/v3/repos/releases#edit-a-release-asset
+/repos/:owner/:repo/stargazers:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/starring#list-stargazers
+/repos/:owner/:repo/stats/code_frequency:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/statistics#code-frequency
+/repos/:owner/:repo/stats/commit_activity:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/statistics#commit-activity
+/repos/:owner/:repo/stats/contributors:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/statistics#contributors
+/repos/:owner/:repo/stats/participation:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/statistics#participation
+/repos/:owner/:repo/stats/punch_card:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/statistics#punch-card
+/repos/:owner/:repo/statuses/:ref:
+  - verb: GET
+    parameters: [ref]
+    doc: http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref
+/repos/:owner/:repo/statuses/:sha:
+  - verb: POST
+    parameters: [description, state, target_url]
+    doc: http://developer.github.com/v3/repos/statuses#create-a-status
+/repos/:owner/:repo/subscribers:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/watching#list-watchers
+/repos/:owner/:repo/subscription:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/activity/watching#delete-a-repository-subscription
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/watching#get-a-repository-subscription
+  - verb: PUT
+    parameters: [ignored, subscribed]
+    doc: http://developer.github.com/v3/activity/watching#set-a-repository-subscription
+/repos/:owner/:repo/tags:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#list-tags
+/repos/:owner/:repo/teams:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos#list-teams
+/repositories:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/repos#list-all-public-repositories
+/search/code:
+  - verb: GET
+    parameters: [order, q, sort]
+    doc: http://developer.github.com/v3/search#search-code
+/search/issues:
+  - verb: GET
+    parameters: [order, q, sort]
+    doc: http://developer.github.com/v3/search#search-issues
+/search/repositories:
+  - verb: GET
+    parameters: [order, q, sort]
+    doc: http://developer.github.com/v3/search#search-repositories
+/search/users:
+  - verb: GET
+    parameters: [order, q, sort]
+    doc: http://developer.github.com/v3/search#search-users
+/teams/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/orgs/teams#delete-team
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#get-team
+  - verb: PATCH
+    parameters: [name, permission]
+    doc: http://developer.github.com/v3/orgs/teams#edit-team
+/teams/:id/members:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#list-team-members
+/teams/:id/members/:user:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/orgs/teams#remove-team-member
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#get-team-member
+  - verb: PUT
+    doc: http://developer.github.com/v3/orgs/teams#add-team-member
+/teams/:id/repos:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#list-team-repos
+/teams/:id/repos/:org/:repo:
+  - verb: PUT
+    doc: http://developer.github.com/v3/orgs/teams#add-team-repo
+/teams/:id/repos/:owner/:repo:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/orgs/teams#remove-team-repo
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#get-team-repo
+/user:
+  - verb: GET
+    doc: http://developer.github.com/v3/users#get-the-authenticated-user
+  - verb: PATCH
+    parameters: [bio, blog, company, email, hireable, location, name]
+    doc: http://developer.github.com/v3/users#update-the-authenticated-user
+/user/emails:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/users/emails#delete-email-addresses
+  - verb: GET
+    doc: http://developer.github.com/v3/users/emails#list-email-addresses-for-a-user
+  - verb: POST
+    doc: http://developer.github.com/v3/users/emails#add-email-addresses
+/user/followers:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#list-followers-of-a-user
+/user/following:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#list-users-followed-by-another-user
+/user/following/:user:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/users/followers#unfollow-a-user
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#check-if-you-are-following-a-user
+  - verb: PUT
+    doc: http://developer.github.com/v3/users/followers#follow-a-user
+/user/issues:
+  - verb: GET
+    parameters: [direction, filter, labels, since, sort, state]
+    doc: http://developer.github.com/v3/issues#list-issues
+/user/keys:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/keys#list-your-public-keys
+  - verb: POST
+    doc: http://developer.github.com/v3/users/keys#create-a-public-key
+/user/keys/:id:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/users/keys#delete-a-public-key
+  - verb: GET
+    doc: http://developer.github.com/v3/users/keys#get-a-single-public-key
+/user/orgs:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs#list-user-organizations
+/user/repos:
+  - verb: GET
+    parameters: [direction, sort, type]
+    doc: http://developer.github.com/v3/repos#list-your-repositories
+  - verb: POST
+    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, name, private, team_id]
+    doc: http://developer.github.com/v3/repos#create
+/user/starred:
+  - verb: GET
+    parameters: [direction, sort]
+    doc: http://developer.github.com/v3/activity/starring#list-repositories-being-starred
+/user/starred/:owner/:repo:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/activity/starring#unstar-a-repository
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/starring#check-if-you-are-starring-a-repository
+  - verb: PUT
+    doc: http://developer.github.com/v3/activity/starring#star-a-repository
+/user/subscriptions:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/watching#list-repositories-being-watched
+/user/subscriptions/:owner/:repo:
+  - verb: DELETE
+    doc: http://developer.github.com/v3/activity/watching#stop-watching-a-repository-legacy
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/watching#check-if-you-are-watching-a-repository-legacy
+  - verb: PUT
+    doc: http://developer.github.com/v3/activity/watching#watch-a-repository-legacy
+/user/teams:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs/teams#list-user-teams
+/users:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/users#get-all-users
+/users/:user:
+  - verb: GET
+    doc: http://developer.github.com/v3/users#get-a-single-user
+/users/:user/events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-events-performed-by-a-user
+/users/:user/events/orgs/:org:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-events-for-an-organization
+/users/:user/events/public:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-public-events-performed-by-a-user
+/users/:user/followers:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#list-followers-of-a-user
+/users/:user/following:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#list-users-followed-by-another-user
+/users/:user/following/:target_user:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/followers#check-if-one-user-follows-another
+/users/:user/gists:
+  - verb: GET
+    parameters: [since]
+    doc: http://developer.github.com/v3/gists#list-gists
+/users/:user/keys:
+  - verb: GET
+    doc: http://developer.github.com/v3/users/keys#list-public-keys-for-a-user
+/users/:user/orgs:
+  - verb: GET
+    doc: http://developer.github.com/v3/orgs#list-user-organizations
+/users/:user/received_events:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-events-that-a-user-has-received
+/users/:user/received_events/public:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/events#list-public-events-that-a-user-has-received
+/users/:user/repos:
+  - verb: GET
+    parameters: [direction, sort, type]
+    doc: http://developer.github.com/v3/repos#list-user-repositories
+/users/:user/starred:
+  - verb: GET
+    parameters: [direction, sort]
+    doc: http://developer.github.com/v3/activity/starring#list-repositories-being-starred
+/users/:user/subscriptions:
+  - verb: GET
+    doc: http://developer.github.com/v3/activity/watching#list-repositories-being-watched

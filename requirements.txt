@@ -1,0 +1,4 @@
+requests
+uritemplate.py
+simplejson
+MockMockMock

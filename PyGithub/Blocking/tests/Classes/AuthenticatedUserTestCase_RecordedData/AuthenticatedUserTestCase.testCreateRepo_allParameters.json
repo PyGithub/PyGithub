@@ -1,0 +1,312 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                "bio": null,
+                "blog": "http://vincent-jacques.net",
+                "collaborators": 0,
+                "company": "Amazon",
+                "created_at": "2010-07-09T06:10:06Z",
+                "disk_usage": 91985,
+                "email": "vincent@vincent-jacques.net",
+                "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                "followers": 30,
+                "followers_url": "https://api.github.com/users/jacquev6/followers",
+                "following": 43,
+                "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                "hireable": false,
+                "html_url": "https://github.com/jacquev6",
+                "id": 327146,
+                "location": "Seattle, WA, United States",
+                "login": "jacquev6",
+                "name": "Vincent Jacques",
+                "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                "owned_private_repos": 3,
+                "plan": {
+                    "collaborators": 1,
+                    "name": "micro",
+                    "private_repos": 5,
+                    "space": 614400
+                },
+                "private_gists": 6,
+                "public_gists": 5,
+                "public_repos": 19,
+                "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                "repos_url": "https://api.github.com/users/jacquev6/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                "total_private_repos": 3,
+                "type": "User",
+                "updated_at": "2013-12-21T19:43:54Z",
+                "url": "https://api.github.com/users/jacquev6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 22:59:40 GMT",
+                "etag": "\"6245df17059bfd39f5f92979e24345c4\"",
+                "last-modified": "Sat, 21 Dec 2013 19:43:54 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:1DE475C:52B61D5C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4995",
+                "x-ratelimit-reset": "1387670152"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/potential-octo-lana",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "documentation_url": "http://developer.github.com/v3",
+                "message": "Not Found"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 22:59:40 GMT",
+                "server": "GitHub.com",
+                "status": "404 Not Found",
+                "transfer-encoding": "chunked",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:1DE478D:52B61D5C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4994",
+                "x-ratelimit-reset": "1387670152"
+            },
+            "status": 404
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "auto_init": true,
+                "description": "Created with PyGithub v2",
+                "gitignore_template": "C",
+                "has_downloads": false,
+                "has_issues": false,
+                "has_wiki": false,
+                "homepage": "http://foo.bar",
+                "name": "potential-octo-lana",
+                "private": true
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "231",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/repos",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/branches{/branch}",
+                "clone_url": "https://github.com/jacquev6/potential-octo-lana.git",
+                "collaborators_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/comments{/number}",
+                "commits_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/contributors",
+                "created_at": "2013-12-21T22:59:40Z",
+                "default_branch": "master",
+                "description": "Created with PyGithub v2",
+                "downloads_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/downloads",
+                "events_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/forks",
+                "full_name": "jacquev6/potential-octo-lana",
+                "git_commits_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/git/tags{/sha}",
+                "git_url": "git://github.com/jacquev6/potential-octo-lana.git",
+                "has_downloads": false,
+                "has_issues": false,
+                "has_wiki": false,
+                "homepage": "http://foo.bar",
+                "hooks_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/hooks",
+                "html_url": "https://github.com/jacquev6/potential-octo-lana",
+                "id": 15367011,
+                "issue_comment_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/issues{/number}",
+                "keys_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/languages",
+                "merges_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/merges",
+                "milestones_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/milestones{/number}",
+                "mirror_url": null,
+                "name": "potential-octo-lana",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": true,
+                "pulls_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/pulls{/number}",
+                "pushed_at": "2013-12-21T22:59:40Z",
+                "releases_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/releases{/id}",
+                "size": 0,
+                "ssh_url": "git@github.com:jacquev6/potential-octo-lana.git",
+                "stargazers_count": 0,
+                "stargazers_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/stargazers",
+                "statuses_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/statuses/{sha}",
+                "subscribers_count": 0,
+                "subscribers_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/subscribers",
+                "subscription_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/subscription",
+                "svn_url": "https://github.com/jacquev6/potential-octo-lana",
+                "tags_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/tags",
+                "teams_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/teams",
+                "trees_url": "https://api.github.com/repos/jacquev6/potential-octo-lana/git/trees{/sha}",
+                "updated_at": "2013-12-21T22:59:40Z",
+                "url": "https://api.github.com/repos/jacquev6/potential-octo-lana",
+                "watchers": 0,
+                "watchers_count": 0
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "5175",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 21 Dec 2013 22:59:40 GMT",
+                "etag": "\"caac05a04edfafce48a4ef178f7e00eb\"",
+                "location": "https://api.github.com/repos/jacquev6/potential-octo-lana",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:1DE47BF:52B61D5C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4993",
+                "x-ratelimit-reset": "1387670152"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/potential-octo-lana",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "date": "Sat, 21 Dec 2013 22:59:40 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:1DE4809:52B61D5C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4992",
+                "x-ratelimit-reset": "1387670152"
+            },
+            "status": 204
+        }
+    }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "documentation_url": "http://developer.github.com/v3",
+                "message": "Requires authentication"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-length": "90",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 21:06:22 GMT",
+                "server": "GitHub.com",
+                "status": "401 Unauthorized",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:732C:565354:5309114E",
+                "x-ratelimit-limit": "60",
+                "x-ratelimit-remaining": "56",
+                "x-ratelimit-reset": "1393104182"
+            },
+            "status": 401
+        }
+    }
+]

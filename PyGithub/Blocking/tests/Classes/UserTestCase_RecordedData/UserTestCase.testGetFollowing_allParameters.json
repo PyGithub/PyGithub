@@ -1,0 +1,179 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/466ef7561a0b100dc5a1021959962d28?d=https%3A%2F%2Fidenticons.github.com%2Fe6d0513ce49cc06cb956251623cb8fd9.png&r=x",
+                "bio": null,
+                "blog": "http://nvie.com",
+                "company": "3rd Cloud",
+                "created_at": "2009-05-12T21:19:38Z",
+                "email": "vincent@3rdcloud.com",
+                "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                "followers": 605,
+                "followers_url": "https://api.github.com/users/nvie/followers",
+                "following": 45,
+                "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                "hireable": true,
+                "html_url": "https://github.com/nvie",
+                "id": 83844,
+                "location": "Netherlands",
+                "login": "nvie",
+                "name": "Vincent Driessen",
+                "organizations_url": "https://api.github.com/users/nvie/orgs",
+                "public_gists": 39,
+                "public_repos": 92,
+                "received_events_url": "https://api.github.com/users/nvie/received_events",
+                "repos_url": "https://api.github.com/users/nvie/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                "type": "User",
+                "updated_at": "2013-12-20T06:27:56Z",
+                "url": "https://api.github.com/users/nvie"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:13 GMT",
+                "etag": "\"0078419293a48e81b5410300ad94d94c\"",
+                "last-modified": "Fri, 20 Dec 2013 06:27:56 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:41AC:E0288C:52B3E37D",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4790",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie/following",
+                "query": {
+                    "per_page": "3"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "avatar_url": "https://gravatar.com/avatar/b8dbb1987e8e5318584865f880036796?d=https%3A%2F%2Fidenticons.github.com%2Fc81e728d9d4c2f636f067f89cc14862c.png&r=x",
+                    "events_url": "https://api.github.com/users/defunkt/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/defunkt/followers",
+                    "following_url": "https://api.github.com/users/defunkt/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/defunkt/gists{/gist_id}",
+                    "gravatar_id": "b8dbb1987e8e5318584865f880036796",
+                    "html_url": "https://github.com/defunkt",
+                    "id": 2,
+                    "login": "defunkt",
+                    "organizations_url": "https://api.github.com/users/defunkt/orgs",
+                    "received_events_url": "https://api.github.com/users/defunkt/received_events",
+                    "repos_url": "https://api.github.com/users/defunkt/repos",
+                    "site_admin": true,
+                    "starred_url": "https://api.github.com/users/defunkt/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/defunkt/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/defunkt"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/b7472bc7aa45c70641c299e9408b78ab?d=https%3A%2F%2Fidenticons.github.com%2Fc8ffe9a587b126f152ed3d89a146b445.png&r=x",
+                    "events_url": "https://api.github.com/users/brosner/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/brosner/followers",
+                    "following_url": "https://api.github.com/users/brosner/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/brosner/gists{/gist_id}",
+                    "gravatar_id": "b7472bc7aa45c70641c299e9408b78ab",
+                    "html_url": "https://github.com/brosner",
+                    "id": 124,
+                    "login": "brosner",
+                    "organizations_url": "https://api.github.com/users/brosner/orgs",
+                    "received_events_url": "https://api.github.com/users/brosner/received_events",
+                    "repos_url": "https://api.github.com/users/brosner/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/brosner/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/brosner/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/brosner"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/bb46488d2c90d51f366cafc776e2b3ad?d=https%3A%2F%2Fidenticons.github.com%2F303ed4c69846ab36c2904d3ba8573050.png&r=x",
+                    "events_url": "https://api.github.com/users/progrium/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/progrium/followers",
+                    "following_url": "https://api.github.com/users/progrium/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/progrium/gists{/gist_id}",
+                    "gravatar_id": "bb46488d2c90d51f366cafc776e2b3ad",
+                    "html_url": "https://github.com/progrium",
+                    "id": 647,
+                    "login": "progrium",
+                    "organizations_url": "https://api.github.com/users/progrium/orgs",
+                    "received_events_url": "https://api.github.com/users/progrium/received_events",
+                    "repos_url": "https://api.github.com/users/progrium/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/progrium/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/progrium/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/progrium"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:13 GMT",
+                "etag": "\"bbc9a0162f81877f2493b3053c409494\"",
+                "link": "<https://api.github.com/user/83844/following?per_page=3&page=2>; rel=\"next\", <https://api.github.com/user/83844/following?per_page=3&page=15>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:41AC:E028A1:52B3E37D",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4789",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    }
+]

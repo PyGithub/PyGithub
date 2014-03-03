@@ -1,0 +1,122 @@
+attributes:
+  - name: id
+    type: int
+  - name: members_count
+    type: int
+  - name: members_url
+    type: string
+  - name: name
+    type: string
+  - name: organization
+    type: Organization
+  - name: permission
+    type: string
+  - name: repos_count
+    type: int
+  - name: repositories_url
+    type: string
+  - name: slug
+    type: string
+  - name: url
+    type: string
+methods:
+  - name: add_to_members
+    end_point: PUT /teams/:id/members/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute members_url
+    url_template_arguments:
+      - name: member
+        value: parameter user
+    return_strategy: none
+  - name: add_to_repos
+    end_point: PUT /teams/:id/repos/:org/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: attribute id
+      - name: org
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none
+  - name: delete
+    end_point: DELETE /teams/:id
+    url_template: attribute url
+    return_strategy: none
+  - name: edit
+    end_point: PATCH /teams/:id
+    optional_parameters:
+      - name: name
+        type: string
+      - name: permission
+        type:
+          meta: enum
+          values: [push, pull, admin]
+    url_template: attribute url
+    post_arguments:
+      - name: name
+        value: parameter name
+      - name: permission
+        value: parameter permission
+    return_strategy: updateSelfThen(none)
+  - name: get_members
+    end_point: GET /teams/:id/members
+    url_template: attribute members_url
+    return_strategy: paginatedList(User)
+  - name: get_repos
+    end_point: GET /teams/:id/repos
+    url_template: attribute repositories_url
+    return_strategy: paginatedList(Repository)
+  - name: has_in_members
+    end_point: GET /teams/:id/members/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute members_url
+    url_template_arguments:
+      - name: member
+        value: parameter user
+    return_strategy: boolFromStatus
+  - name: has_in_repos
+    end_point: GET /teams/:id/repos/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: attribute id
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: boolFromStatus
+  - name: remove_from_members
+    end_point: DELETE /teams/:id/members/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute members_url
+    url_template_arguments:
+      - name: member
+        value: parameter user
+    return_strategy: none
+  - name: remove_from_repos
+    end_point: DELETE /teams/:id/repos/:owner/:repo
+    parameters:
+      - name: repo
+        type: Repository
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: attribute id
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: none

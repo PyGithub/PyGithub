@@ -1,0 +1,209 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                "bio": null,
+                "blog": "http://vincent-jacques.net",
+                "collaborators": 0,
+                "company": "Amazon",
+                "created_at": "2010-07-09T06:10:06Z",
+                "disk_usage": 89487,
+                "email": "vincent@vincent-jacques.net",
+                "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                "followers": 30,
+                "followers_url": "https://api.github.com/users/jacquev6/followers",
+                "following": 43,
+                "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                "hireable": false,
+                "html_url": "https://github.com/jacquev6",
+                "id": 327146,
+                "location": "Seattle, WA, United States",
+                "login": "jacquev6",
+                "name": "Vincent Jacques",
+                "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                "owned_private_repos": 3,
+                "plan": {
+                    "collaborators": 1,
+                    "name": "micro",
+                    "private_repos": 5,
+                    "space": 614400
+                },
+                "private_gists": 6,
+                "public_gists": 5,
+                "public_repos": 19,
+                "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                "repos_url": "https://api.github.com/users/jacquev6/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                "total_private_repos": 3,
+                "type": "User",
+                "updated_at": "2013-12-25T18:26:03Z",
+                "url": "https://api.github.com/users/jacquev6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 19:40:40 GMT",
+                "etag": "\"6c93cff8e0071946504115eab494ced3\"",
+                "last-modified": "Wed, 25 Dec 2013 18:26:03 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:6BA3E53:52BB34B8",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4958",
+                "x-ratelimit-reset": "1388000716"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/following",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "avatar_url": "https://gravatar.com/avatar/9375a9529679f1b42b567a640d775e7d?d=https%3A%2F%2Fidenticons.github.com%2F7cbbc409ec990f19c78c75bd1e06f215.png&r=x",
+                    "events_url": "https://api.github.com/users/schacon/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/schacon/followers",
+                    "following_url": "https://api.github.com/users/schacon/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/schacon/gists{/gist_id}",
+                    "gravatar_id": "9375a9529679f1b42b567a640d775e7d",
+                    "html_url": "https://github.com/schacon",
+                    "id": 70,
+                    "login": "schacon",
+                    "organizations_url": "https://api.github.com/users/schacon/orgs",
+                    "received_events_url": "https://api.github.com/users/schacon/received_events",
+                    "repos_url": "https://api.github.com/users/schacon/repos",
+                    "site_admin": true,
+                    "starred_url": "https://api.github.com/users/schacon/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/schacon/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/schacon"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/77f306388bb6ae00ac0b0401e27cdc99?d=https%3A%2F%2Fidenticons.github.com%2F539fd53b59e3bb12d203f45a912eeaf2.png&r=x",
+                    "events_url": "https://api.github.com/users/chad/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/chad/followers",
+                    "following_url": "https://api.github.com/users/chad/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/chad/gists{/gist_id}",
+                    "gravatar_id": "77f306388bb6ae00ac0b0401e27cdc99",
+                    "html_url": "https://github.com/chad",
+                    "id": 237,
+                    "login": "chad",
+                    "organizations_url": "https://api.github.com/users/chad/orgs",
+                    "received_events_url": "https://api.github.com/users/chad/received_events",
+                    "repos_url": "https://api.github.com/users/chad/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/chad/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/chad/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/chad"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/992fe8c19bbbc27f2b562a9f96efc03d?d=https%3A%2F%2Fidenticons.github.com%2F97d0145823aeb8ed80617be62e08bdcc.png&r=x",
+                    "events_url": "https://api.github.com/users/jamis/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jamis/followers",
+                    "following_url": "https://api.github.com/users/jamis/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jamis/gists{/gist_id}",
+                    "gravatar_id": "992fe8c19bbbc27f2b562a9f96efc03d",
+                    "html_url": "https://github.com/jamis",
+                    "id": 1627,
+                    "login": "jamis",
+                    "organizations_url": "https://api.github.com/users/jamis/orgs",
+                    "received_events_url": "https://api.github.com/users/jamis/received_events",
+                    "repos_url": "https://api.github.com/users/jamis/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jamis/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jamis/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jamis"
+                },
+                {
+                    "avatar_url": "https://gravatar.com/avatar/e47a3e81d72676bd497b1cb67f66da97?d=https%3A%2F%2Fidenticons.github.com%2F69a51eb82d1e05b00d1fcc0c56fdd7de.png&r=x",
+                    "events_url": "https://api.github.com/users/unclebob/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/unclebob/followers",
+                    "following_url": "https://api.github.com/users/unclebob/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/unclebob/gists{/gist_id}",
+                    "gravatar_id": "e47a3e81d72676bd497b1cb67f66da97",
+                    "html_url": "https://github.com/unclebob",
+                    "id": 36901,
+                    "login": "unclebob",
+                    "organizations_url": "https://api.github.com/users/unclebob/orgs",
+                    "received_events_url": "https://api.github.com/users/unclebob/received_events",
+                    "repos_url": "https://api.github.com/users/unclebob/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/unclebob/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/unclebob/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/unclebob"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 25 Dec 2013 19:40:41 GMT",
+                "etag": "\"ce1f1069d96f6c3018805380e14cdcda\"",
+                "link": "<https://api.github.com/user/following?per_page=4&page=2>; rel=\"next\", <https://api.github.com/user/following?per_page=4&page=11>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:2B98:6BA3E6E:52BB34B8",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4957",
+                "x-ratelimit-reset": "1388000716"
+            },
+            "status": 200
+        }
+    }
+]

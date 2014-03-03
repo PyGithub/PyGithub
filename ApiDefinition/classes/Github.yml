@@ -1,0 +1,114 @@
+structures:
+  - name: RateLimit
+    attributes:
+      - name: resources
+        type: Resources
+    deprecated_attributes:
+      - rate
+  - name: RateLimits
+    attributes:
+      - name: limit
+        type: int
+      - name: remaining
+        type: int
+      - name: reset
+        type: datetime
+  - name: Resources
+    attributes:
+      - name: core
+        type: RateLimits
+      - name: search
+        type: RateLimits
+  - name: GitIgnoreTemplate
+    attributes:
+      - name: name
+        type: string
+      - name: source
+        type: string
+methods:
+  - name: get_authenticated_user
+    end_point: GET /user
+    url_template: end_point
+    return_strategy: instanceFromAttributes(AuthenticatedUser)
+  - name: get_gitignore_templates
+    end_point: GET /gitignore/templates
+    url_template: end_point
+    return_strategy: listOf(string)
+  - name: get_gitignore_template
+    end_point: GET /gitignore/templates/:name
+    parameters:
+      - name: name
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: name
+        value: parameter name
+    return_strategy: structFromAttributes(GitIgnoreTemplate)
+  - name: get_org
+    end_point: GET /orgs/:org
+    parameters:
+      - name: org
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: org
+        value: parameter org
+    return_strategy: instanceFromAttributes(Organization)
+  - name: get_rate_limit
+    end_point: GET /rate_limit
+    url_template: end_point
+    return_strategy: structFromAttributes(RateLimit)
+  - name: get_repo
+    end_point: GET /repos/:owner/:repo
+    parameters:
+      - name: repo
+        types:
+          - TwoStrings
+          - string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: ownerFromRepo repo
+      - name: repo
+        value: nameFromRepo repo
+    return_strategy: instanceFromAttributes(Repository)
+  - name: get_repos
+    end_point: GET /repositories
+    optional_parameters:
+      - name: since
+        types: [Repository, int]
+    url_template: end_point
+    url_arguments:
+      - name: since
+        value: parameter since
+    return_strategy: paginatedListWithoutPerPage(Repository)
+  - name: get_team
+    end_point: GET /teams/:id
+    parameters:
+      - name: id
+        type: int
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter id
+    return_strategy: instanceFromAttributes(Team)
+  - name: get_user
+    end_point: GET /users/:user
+    parameters:
+      - name: user
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: user
+        value: parameter user
+    return_strategy: instanceFromAttributes(User)
+  - name: get_users
+    end_point: GET /users
+    optional_parameters:
+      - name: since
+        types: [User, int]
+    url_template: end_point
+    url_arguments:
+      - name: since
+        value: parameter since
+    return_strategy: paginatedListWithoutPerPage(User)

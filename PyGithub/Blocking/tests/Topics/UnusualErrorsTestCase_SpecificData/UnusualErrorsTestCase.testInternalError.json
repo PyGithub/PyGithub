@@ -1,0 +1,32 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "message": "Server Error"
+            },
+            "headers": {
+                "content-length": "32",
+                "content-type": "application/json",
+                "date": "Sun, 22 Dec 2013 22:50:19 GMT",
+                "server": "GitHub.com"
+            },
+            "status": 502
+        }
+    }
+]

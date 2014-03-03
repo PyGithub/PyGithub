@@ -1,0 +1,67 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/orgs/github",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/61024896f291303615bcd4f7a0dcfb74?d=https%3A%2F%2Fidenticons.github.com%2Fae816a80e4c1c56caa2eb4e1819cbb2f.png&r=x",
+                "blog": "https://github.com/about",
+                "company": null,
+                "created_at": "2008-05-11T04:37:31Z",
+                "email": "support@github.com",
+                "events_url": "https://api.github.com/orgs/github/events",
+                "followers": 12,
+                "following": 0,
+                "html_url": "https://github.com/github",
+                "id": 9919,
+                "location": "San Francisco, CA",
+                "login": "github",
+                "members_url": "https://api.github.com/orgs/github/members{/member}",
+                "name": "GitHub",
+                "public_gists": 0,
+                "public_members_url": "https://api.github.com/orgs/github/public_members{/member}",
+                "public_repos": 117,
+                "repos_url": "https://api.github.com/orgs/github/repos",
+                "type": "Organization",
+                "updated_at": "2013-12-20T06:26:10Z",
+                "url": "https://api.github.com/orgs/github"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:27:25 GMT",
+                "etag": "\"69a1e9a4f1e845d27f40a658432d8b1f\"",
+                "last-modified": "Fri, 20 Dec 2013 06:26:10 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:41B0:286648C:52B3E34D",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4965",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    }
+]

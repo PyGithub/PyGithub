@@ -1,0 +1,4 @@
+base: User
+attributes:
+  - name: contributions
+    type: int

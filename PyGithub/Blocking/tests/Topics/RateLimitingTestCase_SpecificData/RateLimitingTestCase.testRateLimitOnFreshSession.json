@@ -1,0 +1,60 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/rate_limit",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "rate": {
+                    "limit": 60,
+                    "remaining": 60,
+                    "reset": 1387753225
+                },
+                "resources": {
+                    "core": {
+                        "limit": 60,
+                        "remaining": 60,
+                        "reset": 1387753225
+                    },
+                    "search": {
+                        "limit": 5,
+                        "remaining": 5,
+                        "reset": 1387749685
+                    }
+                }
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "no-cache",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sun, 22 Dec 2013 22:00:25 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:32C9:376A61E:52B760F9",
+                "x-ratelimit-limit": "60",
+                "x-ratelimit-remaining": "60",
+                "x-ratelimit-reset": "1387753225"
+            },
+            "status": 200
+        }
+    }
+]

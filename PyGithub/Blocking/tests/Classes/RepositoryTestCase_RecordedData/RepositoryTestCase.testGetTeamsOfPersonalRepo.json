@@ -1,0 +1,180 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/PyGithub",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/jacquev6/PyGithub/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/jacquev6/PyGithub/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/jacquev6/PyGithub/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/jacquev6/PyGithub/branches{/branch}",
+                "clone_url": "https://github.com/jacquev6/PyGithub.git",
+                "collaborators_url": "https://api.github.com/repos/jacquev6/PyGithub/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/jacquev6/PyGithub/comments{/number}",
+                "commits_url": "https://api.github.com/repos/jacquev6/PyGithub/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/jacquev6/PyGithub/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/jacquev6/PyGithub/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/jacquev6/PyGithub/contributors",
+                "created_at": "2012-02-25T12:53:47Z",
+                "default_branch": "master",
+                "description": "Python library implementing the full Github API v3",
+                "downloads_url": "https://api.github.com/repos/jacquev6/PyGithub/downloads",
+                "events_url": "https://api.github.com/repos/jacquev6/PyGithub/events",
+                "fork": false,
+                "forks": 100,
+                "forks_count": 100,
+                "forks_url": "https://api.github.com/repos/jacquev6/PyGithub/forks",
+                "full_name": "jacquev6/PyGithub",
+                "git_commits_url": "https://api.github.com/repos/jacquev6/PyGithub/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/jacquev6/PyGithub/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/jacquev6/PyGithub/git/tags{/sha}",
+                "git_url": "git://github.com/jacquev6/PyGithub.git",
+                "has_downloads": true,
+                "has_issues": true,
+                "has_wiki": true,
+                "homepage": "http://jacquev6.github.com/PyGithub",
+                "hooks_url": "https://api.github.com/repos/jacquev6/PyGithub/hooks",
+                "html_url": "https://github.com/jacquev6/PyGithub",
+                "id": 3544490,
+                "issue_comment_url": "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/jacquev6/PyGithub/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/jacquev6/PyGithub/issues{/number}",
+                "keys_url": "https://api.github.com/repos/jacquev6/PyGithub/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/jacquev6/PyGithub/labels{/name}",
+                "language": "Python",
+                "languages_url": "https://api.github.com/repos/jacquev6/PyGithub/languages",
+                "merges_url": "https://api.github.com/repos/jacquev6/PyGithub/merges",
+                "milestones_url": "https://api.github.com/repos/jacquev6/PyGithub/milestones{/number}",
+                "mirror_url": null,
+                "name": "PyGithub",
+                "network_count": 100,
+                "notifications_url": "https://api.github.com/repos/jacquev6/PyGithub/notifications{?since,all,participating}",
+                "open_issues": 18,
+                "open_issues_count": 18,
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/jacquev6/PyGithub/pulls{/number}",
+                "pushed_at": "2014-01-26T20:13:19Z",
+                "releases_url": "https://api.github.com/repos/jacquev6/PyGithub/releases{/id}",
+                "size": 10235,
+                "ssh_url": "git@github.com:jacquev6/PyGithub.git",
+                "stargazers_count": 349,
+                "stargazers_url": "https://api.github.com/repos/jacquev6/PyGithub/stargazers",
+                "statuses_url": "https://api.github.com/repos/jacquev6/PyGithub/statuses/{sha}",
+                "subscribers_count": 36,
+                "subscribers_url": "https://api.github.com/repos/jacquev6/PyGithub/subscribers",
+                "subscription_url": "https://api.github.com/repos/jacquev6/PyGithub/subscription",
+                "svn_url": "https://github.com/jacquev6/PyGithub",
+                "tags_url": "https://api.github.com/repos/jacquev6/PyGithub/tags",
+                "teams_url": "https://api.github.com/repos/jacquev6/PyGithub/teams",
+                "trees_url": "https://api.github.com/repos/jacquev6/PyGithub/git/trees{/sha}",
+                "updated_at": "2014-01-26T20:13:22Z",
+                "url": "https://api.github.com/repos/jacquev6/PyGithub",
+                "watchers": 349,
+                "watchers_count": 349
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 18:08:01 GMT",
+                "etag": "\"074b93747e0c76cc14bbe03b12832f38\"",
+                "last-modified": "Sun, 26 Jan 2014 20:13:22 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:328F:12EB4F:5308E781",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4984",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/PyGithub/teams",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "2",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 18:08:01 GMT",
+                "etag": "\"d0aeb1cda2a3f829ee9385f53f9457a6\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:328F:12EB90:5308E781",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4983",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    }
+]

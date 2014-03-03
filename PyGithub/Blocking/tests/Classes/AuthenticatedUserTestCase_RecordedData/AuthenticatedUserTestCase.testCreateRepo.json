@@ -1,0 +1,304 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                "bio": "",
+                "blog": "http://vincent-jacques.net",
+                "collaborators": 0,
+                "company": "Amazon",
+                "created_at": "2010-07-09T06:10:06Z",
+                "disk_usage": 91985,
+                "email": "vincent@vincent-jacques.net",
+                "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                "followers": 30,
+                "followers_url": "https://api.github.com/users/jacquev6/followers",
+                "following": 43,
+                "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                "hireable": false,
+                "html_url": "https://github.com/jacquev6",
+                "id": 327146,
+                "location": "Seattle, WA, United States",
+                "login": "jacquev6",
+                "name": "Vincent Jacques",
+                "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                "owned_private_repos": 3,
+                "plan": {
+                    "collaborators": 1,
+                    "name": "micro",
+                    "private_repos": 5,
+                    "space": 614400
+                },
+                "private_gists": 6,
+                "public_gists": 5,
+                "public_repos": 19,
+                "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                "repos_url": "https://api.github.com/users/jacquev6/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                "total_private_repos": 3,
+                "type": "User",
+                "updated_at": "2013-12-20T06:28:00Z",
+                "url": "https://api.github.com/users/jacquev6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:01 GMT",
+                "etag": "\"cf2fb470019f576da59387f4348d067a\"",
+                "last-modified": "Fri, 20 Dec 2013 06:28:00 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:4201:2BA25ED:52B3E370",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4832",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/turbo-octo-ironman",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "documentation_url": "http://developer.github.com/v3",
+                "message": "Not Found"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:01 GMT",
+                "server": "GitHub.com",
+                "status": "404 Not Found",
+                "transfer-encoding": "chunked",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:4201:2BA261E:52B3E371",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4831",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 404
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "name": "turbo-octo-ironman"
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "30",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/repos",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/branches{/branch}",
+                "clone_url": "https://github.com/jacquev6/turbo-octo-ironman.git",
+                "collaborators_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/comments{/number}",
+                "commits_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/contributors",
+                "created_at": "2013-12-20T06:28:01Z",
+                "default_branch": "master",
+                "description": null,
+                "downloads_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/downloads",
+                "events_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/forks",
+                "full_name": "jacquev6/turbo-octo-ironman",
+                "git_commits_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/git/tags{/sha}",
+                "git_url": "git://github.com/jacquev6/turbo-octo-ironman.git",
+                "has_downloads": true,
+                "has_issues": true,
+                "has_wiki": true,
+                "homepage": null,
+                "hooks_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/hooks",
+                "html_url": "https://github.com/jacquev6/turbo-octo-ironman",
+                "id": 15331580,
+                "issue_comment_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/issues{/number}",
+                "keys_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/languages",
+                "merges_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/merges",
+                "milestones_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/milestones{/number}",
+                "mirror_url": null,
+                "name": "turbo-octo-ironman",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/pulls{/number}",
+                "pushed_at": "2013-12-20T06:28:01Z",
+                "releases_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/releases{/id}",
+                "size": 0,
+                "ssh_url": "git@github.com:jacquev6/turbo-octo-ironman.git",
+                "stargazers_count": 0,
+                "stargazers_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/stargazers",
+                "statuses_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/statuses/{sha}",
+                "subscribers_count": 0,
+                "subscribers_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/subscribers",
+                "subscription_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/subscription",
+                "svn_url": "https://github.com/jacquev6/turbo-octo-ironman",
+                "tags_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/tags",
+                "teams_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/teams",
+                "trees_url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman/git/trees{/sha}",
+                "updated_at": "2013-12-20T06:28:01Z",
+                "url": "https://api.github.com/repos/jacquev6/turbo-octo-ironman",
+                "watchers": 0,
+                "watchers_count": 0
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "5096",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:01 GMT",
+                "etag": "\"c5e8f03598075ca67a48b6e62968bd2b\"",
+                "location": "https://api.github.com/repos/jacquev6/turbo-octo-ironman",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:4201:2BA2659:52B3E371",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4830",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/turbo-octo-ironman",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "date": "Fri, 20 Dec 2013 06:28:01 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:4201:2BA26AE:52B3E371",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4829",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 204
+        }
+    }
+]

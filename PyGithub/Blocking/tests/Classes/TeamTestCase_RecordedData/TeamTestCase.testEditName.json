@@ -1,0 +1,234 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/teams/141496",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "id": 141496,
+                "members_count": 0,
+                "members_url": "https://api.github.com/teams/141496/members{/member}",
+                "name": "Members",
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "blog": null,
+                    "company": null,
+                    "created_at": "2012-02-09T19:20:12Z",
+                    "email": null,
+                    "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
+                    "followers": 0,
+                    "following": 0,
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "location": "Paris, France",
+                    "login": "BeaverSoftware",
+                    "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
+                    "name": "Beaver Software",
+                    "public_gists": 0,
+                    "public_members_url": "https://api.github.com/orgs/BeaverSoftware/public_members{/member}",
+                    "public_repos": 1,
+                    "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
+                    "type": "Organization",
+                    "updated_at": "2013-12-22T01:30:14Z",
+                    "url": "https://api.github.com/orgs/BeaverSoftware"
+                },
+                "permission": "push",
+                "repos_count": 1,
+                "repositories_url": "https://api.github.com/teams/141496/repos",
+                "slug": "members",
+                "url": "https://api.github.com/teams/141496"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 17:56:15 GMT",
+                "etag": "\"a4d7b361489a97410294b78ec656d313\"",
+                "last-modified": "Sat, 22 Feb 2014 17:52:19 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:60AE:467A1:5308E4BF",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4991",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "name": "Members FTW"
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "23",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/teams/141496",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "PATCH"
+        },
+        "response": {
+            "body": {
+                "id": 141496,
+                "members_count": 0,
+                "members_url": "https://api.github.com/teams/141496/members{/member}",
+                "name": "Members FTW",
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "blog": null,
+                    "company": null,
+                    "created_at": "2012-02-09T19:20:12Z",
+                    "email": null,
+                    "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
+                    "followers": 0,
+                    "following": 0,
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "location": "Paris, France",
+                    "login": "BeaverSoftware",
+                    "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
+                    "name": "Beaver Software",
+                    "public_gists": 0,
+                    "public_members_url": "https://api.github.com/orgs/BeaverSoftware/public_members{/member}",
+                    "public_repos": 1,
+                    "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
+                    "type": "Organization",
+                    "updated_at": "2013-12-22T01:30:14Z",
+                    "url": "https://api.github.com/orgs/BeaverSoftware"
+                },
+                "permission": "push",
+                "repos_count": 1,
+                "repositories_url": "https://api.github.com/teams/141496/repos",
+                "slug": "members-ftw",
+                "url": "https://api.github.com/teams/141496"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 17:56:15 GMT",
+                "etag": "\"e853b63e58f0fd3b592852bc3bab2c78\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:60AE:467EC:5308E4BF",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4990",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "name": "Members"
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "19",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/teams/141496",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "PATCH"
+        },
+        "response": {
+            "body": {
+                "id": 141496,
+                "members_count": 0,
+                "members_url": "https://api.github.com/teams/141496/members{/member}",
+                "name": "Members",
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "blog": null,
+                    "company": null,
+                    "created_at": "2012-02-09T19:20:12Z",
+                    "email": null,
+                    "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
+                    "followers": 0,
+                    "following": 0,
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "location": "Paris, France",
+                    "login": "BeaverSoftware",
+                    "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
+                    "name": "Beaver Software",
+                    "public_gists": 0,
+                    "public_members_url": "https://api.github.com/orgs/BeaverSoftware/public_members{/member}",
+                    "public_repos": 1,
+                    "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
+                    "type": "Organization",
+                    "updated_at": "2013-12-22T01:30:14Z",
+                    "url": "https://api.github.com/orgs/BeaverSoftware"
+                },
+                "permission": "push",
+                "repos_count": 1,
+                "repositories_url": "https://api.github.com/teams/141496/repos",
+                "slug": "members",
+                "url": "https://api.github.com/teams/141496"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 17:56:15 GMT",
+                "etag": "\"5b186576f0b1a585c47a0b2868708da9\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:60AE:46843:5308E4BF",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4989",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/Lyloa",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://gravatar.com/avatar/bc866ac54680ae164e60621a247c5717?d=https%3A%2F%2Fidenticons.github.com%2Ff2683e2fae42ad4421fa4506f0751e29.png&r=x",
+                "bio": null,
+                "blog": null,
+                "company": null,
+                "created_at": "2011-10-16T14:36:46Z",
+                "email": "nyu@lyloa.net",
+                "events_url": "https://api.github.com/users/Lyloa/events{/privacy}",
+                "followers": 1,
+                "followers_url": "https://api.github.com/users/Lyloa/followers",
+                "following": 0,
+                "following_url": "https://api.github.com/users/Lyloa/following{/other_user}",
+                "gists_url": "https://api.github.com/users/Lyloa/gists{/gist_id}",
+                "gravatar_id": "bc866ac54680ae164e60621a247c5717",
+                "hireable": false,
+                "html_url": "https://github.com/Lyloa",
+                "id": 1131432,
+                "location": "Paris",
+                "login": "Lyloa",
+                "name": "Lyloa",
+                "organizations_url": "https://api.github.com/users/Lyloa/orgs",
+                "public_gists": 0,
+                "public_repos": 0,
+                "received_events_url": "https://api.github.com/users/Lyloa/received_events",
+                "repos_url": "https://api.github.com/users/Lyloa/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/Lyloa/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/Lyloa/subscriptions",
+                "type": "User",
+                "updated_at": "2013-12-17T04:18:58Z",
+                "url": "https://api.github.com/users/Lyloa"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Fri, 20 Dec 2013 06:28:24 GMT",
+                "etag": "\"d2a89337818ccbec48a9bcf995b605d5\"",
+                "last-modified": "Tue, 17 Dec 2013 04:18:58 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "4C79374B:0E9B:3D4F46:52B3E387",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4762",
+                "x-ratelimit-reset": "1387522558"
+            },
+            "status": 200
+        }
+    }
+]

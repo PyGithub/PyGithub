@@ -1,0 +1,105 @@
+base: Entity
+attributes:
+  - name: followers_url
+    type: string
+  - name: following_url
+    type: string
+  - name: gists_url
+    type: string
+  - name: gravatar_id
+    type: string
+  - name: hireable
+    type: bool
+  - name: organizations_url
+    type: string
+  - name: received_events_url
+    type: string
+  - name: site_admin
+    type: bool
+  - name: starred_url
+    type: string
+  - name: subscriptions_url
+    type: string
+deprecated_attributes:
+  - bio
+methods:
+  - name: get_followers
+    end_point: GET /users/:user/followers
+    url_template: attribute followers_url
+    return_strategy: paginatedList(User)
+  - name: get_following
+    end_point: GET /users/:user/following
+    url_template: attribute following_url
+    return_strategy: paginatedList(User)
+  - name: get_orgs
+    end_point: GET /users/:user/orgs
+    url_template: attribute organizations_url
+    return_strategy: paginatedList(Organization)
+  - name: get_repo
+    end_point: GET /repos/:owner/:repo
+    parameters:
+      - name: repo
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute login
+      - name: repo
+        value: parameter repo
+    return_strategy: instanceFromAttributes(Repository)
+  - name: get_repos
+    end_point: GET /users/:user/repos
+    optional_parameters:
+      - name: sort
+        type:
+          meta: enum
+          values: [created, updated, pushed, full_name]
+      - name: direction
+        type:
+          meta: enum
+          values: [asc, desc]
+      - name: type
+        type:
+          meta: enum
+          values: [all, owner, forks, sources, member]
+    url_template: attribute repos_url
+    url_arguments:
+      - name: sort
+        value: parameter sort
+      - name: direction
+        value: parameter direction
+      - name: type
+        value: parameter type
+    return_strategy: paginatedList(Repository)
+  - name: get_starred
+    end_point: GET /users/:user/starred
+    optional_parameters:
+      - name: sort
+        type:
+          meta: enum
+          values: [created, updated]
+      - name: direction
+        type:
+          meta: enum
+          values: [asc, desc]
+    url_template: attribute starred_url
+    url_arguments:
+      - name: sort
+        value: parameter sort
+      - name: direction
+        value: parameter direction
+    return_strategy: paginatedList(Repository)
+  - name: get_subscriptions
+    end_point: GET /users/:user/subscriptions
+    url_template: attribute subscriptions_url
+    return_strategy: paginatedList(Repository)
+  - name: has_in_following
+    end_point: GET /users/:user/following/:target_user
+    parameters:
+      - name: target_user
+        type: User
+    url_template: attribute following_url
+    url_template_arguments:
+      - name: other_user
+        value: parameter target_user
+    return_strategy: boolFromStatus

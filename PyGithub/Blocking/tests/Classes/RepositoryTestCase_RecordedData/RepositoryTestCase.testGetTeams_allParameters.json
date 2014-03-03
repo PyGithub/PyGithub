@@ -1,0 +1,209 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/FatherBeaver",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/branches{/branch}",
+                "clone_url": "https://github.com/BeaverSoftware/FatherBeaver.git",
+                "collaborators_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/comments{/number}",
+                "commits_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/contributors",
+                "created_at": "2012-02-09T19:32:21Z",
+                "default_branch": "master",
+                "description": "",
+                "downloads_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/downloads",
+                "events_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/forks",
+                "full_name": "BeaverSoftware/FatherBeaver",
+                "git_commits_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/git/tags{/sha}",
+                "git_url": "git://github.com/BeaverSoftware/FatherBeaver.git",
+                "has_downloads": true,
+                "has_issues": true,
+                "has_wiki": true,
+                "homepage": "",
+                "hooks_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/hooks",
+                "html_url": "https://github.com/BeaverSoftware/FatherBeaver",
+                "id": 3400397,
+                "issue_comment_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/issues{/number}",
+                "keys_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/languages",
+                "merges_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/merges",
+                "milestones_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/milestones{/number}",
+                "mirror_url": null,
+                "name": "FatherBeaver",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "organization": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "owner": {
+                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
+                    "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/BeaverSoftware/gists{/gist_id}",
+                    "gravatar_id": "d563e337cac2fdc644e2aaaad1e23266",
+                    "html_url": "https://github.com/BeaverSoftware",
+                    "id": 1424031,
+                    "login": "BeaverSoftware",
+                    "organizations_url": "https://api.github.com/users/BeaverSoftware/orgs",
+                    "received_events_url": "https://api.github.com/users/BeaverSoftware/received_events",
+                    "repos_url": "https://api.github.com/users/BeaverSoftware/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/BeaverSoftware/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/BeaverSoftware/subscriptions",
+                    "type": "Organization",
+                    "url": "https://api.github.com/users/BeaverSoftware"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/pulls{/number}",
+                "pushed_at": null,
+                "releases_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/releases{/id}",
+                "size": 56,
+                "ssh_url": "git@github.com:BeaverSoftware/FatherBeaver.git",
+                "stargazers_count": 2,
+                "stargazers_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/stargazers",
+                "statuses_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/statuses/{sha}",
+                "subscribers_count": 1,
+                "subscribers_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/subscribers",
+                "subscription_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/subscription",
+                "svn_url": "https://github.com/BeaverSoftware/FatherBeaver",
+                "tags_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/tags",
+                "teams_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/teams",
+                "trees_url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver/git/trees{/sha}",
+                "updated_at": "2013-01-07T19:41:51Z",
+                "url": "https://api.github.com/repos/BeaverSoftware/FatherBeaver",
+                "watchers": 2,
+                "watchers_count": 2
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 18:10:27 GMT",
+                "etag": "\"6f6fcdc005a597b2958ed0599a78a19a\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:328F:13BCF9:5308E813",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4980",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/BeaverSoftware/FatherBeaver/teams",
+                "query": {
+                    "per_page": "1"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "id": 141496,
+                    "members_url": "https://api.github.com/teams/141496/members{/member}",
+                    "name": "Members",
+                    "permission": "push",
+                    "repositories_url": "https://api.github.com/teams/141496/repos",
+                    "slug": "members",
+                    "url": "https://api.github.com/teams/141496"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Feb 2014 18:10:27 GMT",
+                "etag": "\"c27161c1b2fedfaa00e776b3cb201b12\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:328F:13BD20:5308E813",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4979",
+                "x-ratelimit-reset": "1393093999"
+            },
+            "status": 200
+        }
+    }
+]

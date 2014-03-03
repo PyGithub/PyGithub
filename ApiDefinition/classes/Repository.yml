@@ -1,0 +1,283 @@
+structures:
+  - name: AnonymousContributor
+    attributes:
+      - name: contributions
+        type: int
+      - name: name
+        type: string
+      - name: type
+        type: string
+  - name: Permissions
+    attributes:
+      - name: admin
+        type: bool
+      - name: pull
+        type: bool
+      - name: push
+        type: bool
+attributes:
+  - name: archive_url
+    type: string
+  - name: assignees_url
+    type: string
+  - name: blobs_url
+    type: string
+  - name: branches_url
+    type: string
+  - name: clone_url
+    type: string
+  - name: collaborators_url
+    type: string
+  - name: comments_url
+    type: string
+  - name: commits_url
+    type: string
+  - name: compare_url
+    type: string
+  - name: contents_url
+    type: string
+  - name: contributors_url
+    type: string
+  - name: created_at
+    type: datetime
+  - name: default_branch
+    type: string
+  - name: description
+    type: string
+  - name: downloads_url
+    type: string
+  - name: events_url
+    type: string
+  - name: fork
+    type: bool
+  - name: forks
+    type: int
+  - name: forks_count
+    type: int
+  - name: forks_url
+    type: string
+  - name: full_name
+    type: string
+  - name: git_commits_url
+    type: string
+  - name: git_refs_url
+    type: string
+  - name: git_tags_url
+    type: string
+  - name: git_url
+    type: string
+  - name: has_issues
+    type: bool
+  - name: has_wiki
+    type: bool
+  - name: homepage
+    type: string
+  - name: hooks_url
+    type: string
+  - name: html_url
+    type: string
+  - name: id
+    type: int
+  - name: issue_comment_url
+    type: string
+  - name: issue_events_url
+    type: string
+  - name: issues_url
+    type: string
+  - name: keys_url
+    type: string
+  - name: labels_url
+    type: string
+  - name: language
+    type: string
+  - name: languages_url
+    type: string
+  - name: merges_url
+    type: string
+  - name: milestones_url
+    type: string
+  - name: mirror_url
+    type: string
+  - name: name
+    type: string
+  - name: network_count
+    type: int
+  - name: notifications_url
+    type: string
+  - name: open_issues
+    type: int
+  - name: open_issues_count
+    type: int
+  - name: owner
+    types: [User, Organization]
+  - name: parent
+    type: Repository
+  - name: permissions
+    type: Permissions
+  - name: private
+    type: bool
+  - name: pulls_url
+    type: string
+  - name: pushed_at
+    type: datetime
+  - name: releases_url
+    type: string
+  - name: size
+    type: int
+  - name: source
+    type: Repository
+  - name: ssh_url
+    type: string
+  - name: stargazers_count
+    type: int
+  - name: stargazers_url
+    type: string
+  - name: statuses_url
+    type: string
+  - name: subscribers_count
+    type: int
+  - name: subscribers_url
+    type: string
+  - name: subscription_url
+    type: string
+  - name: svn_url
+    type: string
+  - name: tags_url
+    type: string
+  - name: teams_url
+    type: string
+  - name: trees_url
+    type: string
+  - name: updated_at
+    type: datetime
+  - name: url
+    type: string
+  - name: watchers
+    type: int
+  - name: watchers_count
+    type: int
+deprecated_attributes:
+  - has_downloads
+  - master_branch
+  - organization
+methods:
+  - name: add_to_collaborators
+    end_point: PUT /repos/:owner/:repo/collaborators/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute collaborators_url
+    url_template_arguments:
+      - name: collaborator
+        value: parameter user
+    return_strategy: none
+  - name: delete
+    end_point: DELETE /repos/:owner/:repo
+    url_template: attribute url
+    return_strategy: none
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo
+    optional_parameters:
+      - name: name
+        type: string
+      - name: description
+        types: [string, Reset]
+      - name: homepage
+        types: [string, Reset]
+      - name: private
+        type: bool
+      - name: has_issues
+        type: bool
+      - name: has_wiki
+        type: bool
+      - name: default_branch
+        type: string
+    url_template: attribute url
+    post_arguments:
+      - name: name
+        value: parameter name
+      - name: description
+        value: parameter description
+      - name: homepage
+        value: parameter homepage
+      - name: private
+        value: parameter private
+      - name: has_issues
+        value: parameter has_issues
+      - name: has_wiki
+        value: parameter has_wiki
+      - name: default_branch
+        value: parameter default_branch
+    return_strategy: updateSelfThen(none)
+  - name: get_assignees
+    end_point: GET /repos/:owner/:repo/assignees
+    url_template: attribute assignees_url
+    return_strategy: paginatedList(User)
+  - name: get_collaborators
+    end_point: GET /repos/:owner/:repo/collaborators
+    url_template: attribute collaborators_url
+    return_strategy: paginatedList(User)
+  - name: get_contributors
+    end_point: GET /repos/:owner/:repo/contributors
+    optional_parameters:
+      - name: anon
+        type: bool
+    url_template: attribute contributors_url
+    url_arguments:
+      - name: anon
+        value: parameter anon
+    return_strategy: paginatedList(union(Contributor, AnonymousContributor))
+  - name: get_forks
+    end_point: GET /repos/:owner/:repo/forks
+    optional_parameters:
+      - name: sort
+        type:
+          meta: enum
+          values: [newest, oldest, stargazers]
+    url_template: attribute forks_url
+    url_arguments:
+      - name: sort
+        value: parameter sort
+    return_strategy: paginatedList(Repository)
+  - name: get_stargazers
+    end_point: GET /repos/:owner/:repo/stargazers
+    url_template: attribute stargazers_url
+    return_strategy: paginatedList(User)
+  - name: get_subscribers
+    end_point: GET /repos/:owner/:repo/subscribers
+    url_template: attribute subscribers_url
+    return_strategy: paginatedList(User)
+  - name: get_teams
+    end_point: GET /repos/:owner/:repo/teams
+    url_template: attribute teams_url
+    return_strategy: paginatedList(Team)
+  - name: has_in_assignees
+    end_point: GET /repos/:owner/:repo/assignees/:assignee
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute assignees_url
+    url_template_arguments:
+      - name: user
+        value: parameter user
+    return_strategy: boolFromStatus
+  - name: has_in_collaborators
+    end_point: GET /repos/:owner/:repo/collaborators/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute collaborators_url
+    url_template_arguments:
+      - name: collaborator
+        value: parameter user
+    return_strategy: boolFromStatus
+  - name: remove_from_collaborators
+    end_point: DELETE /repos/:owner/:repo/collaborators/:user
+    parameters:
+      - name: user
+        type: User
+    url_template: attribute collaborators_url
+    url_template_arguments:
+      - name: collaborator
+        value: parameter user
+    return_strategy: none
