@@ -1,42 +1,36 @@
 This is a Python (2 and 3) library to access the `Github API v3 <http://developer.github.com/v3>`_.
-With it, you can manage your `Github <http://github.com>`_ resources (repositories, user profiles, organizations, etc.) from Python scripts.
+With it, you can manage `Github <http://github.com>`_ resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
-It covers the **full** API (except recent additions, see "What's missing" bellow), and all methods are tested against the real Github site.
+It covers almost the full API (see "What's missing" bellow), and all methods are tested against the real Github site.
 
 Should you have any question, any remark, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
 
-PyGithub is stable. I will maintain it up to date with the API, and fix bugs if any, but I don't plan new heavy developments.
+PyGithub 1.x.x is stable and I don't plan to spend time adding missing functionalities. I still accept you pull requests.
+Here is the `references documentation `_.
 
+I'm currently devloping the `version 2 of PyGithub <https://github.com/jacquev6/PyGithub/tree/develop_v2>`_.
+Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#migration-strategy-and-maintenance-schedule>`_, including a migration planning.
 
 What's new?
 ===========
 
-Version 2 is coming
---------------------
+Version 2.0.0-alpha.1 (March 2nd, 2014)
+---------------------------------------
 
-As of December 15th, 2013, I plan to spend more time on version 2. I'll continue to maintain version 1, investigating and fixing bugs, but I'm not going to actively implement missing features. I'll still be glad to accept pull requests.
+This first alpha version focuses on the bases and on the interactions between users, organizations and repositories.
 
-More info on version 2 in the coming weeks, and here is an issue to discuss the topic: https://github.com/jacquev6/PyGithub/issues/217
-
-`Version 1.23.0 <https://github.com/jacquev6/PyGithub/issues?milestone=35&state=closed>`_ (December 23th, 2013)
+`Version 1.24.0 <https://github.com/jacquev6/PyGithub/issues?milestone=36&state=closed>`_ (March 2nd, 2014)
 ---------------------------------------------------------------------------------------------------------------
 
-* `Fix <https://github.com/jacquev6/PyGithub/issues/216>`__ all that is based on headers in Python 3 (pagination, conditional request, rate_limit...), huge thanks to `cwarren-mw <https://github.com/cwarren-mw>`__ for finding the bug
-* `Accept <https://github.com/jacquev6/PyGithub/pull/218>`__ strings for assignees and collaborators, thanks to `farrd <https://github.com/farrd>`__
-* `Ease <https://github.com/jacquev6/PyGithub/pull/220>`__ two-factor authentication by adding 'onetime_password' to AuthenticatedUser.create_authorization, thanks to `cameronbwhite <https://github.com/cameronbwhite>`__
+* `Implement <https://github.com/jacquev6/PyGithub/pull/224>`__ search, thanks to `thialfihar <https://github.com/thialfihar>`__ for the pull request
 
 Twitter
 -------
 
-Starting with version 1.21.0, I'm going to tweet each new release. I rarely tweet, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
+I tweet each new release. I rarely tweet, and always about software development, so you might want to `follow me <https://twitter.com/jacquev6>`_ to stay informed.
 
-What's missing?
-===============
-
-We now have automated ways to list URLs documented in `the reference of Github API v3 <http://developer.github.com>`_ and not covered by PyGithub.
-
-Github API v3 URLs not (yet) covered by PyGithub
-------------------------------------------------
+What's missing in versions 1.x.x? Github API v3 URLs not covered by v1
+======================================================================
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/authorizations/clients/:client_id`` (PUT)
@@ -75,8 +69,3 @@ Github API v3 URLs not (yet) covered by PyGithub
 * ``/search/issues`` (GET)
 * ``/search/repositories`` (GET)
 * ``/search/users`` (GET)
-
-Documentation
-=============
-
-All the documentation is here: http://jacquev6.github.com/PyGithub.
