@@ -19,6 +19,9 @@ Version 2.0.0-alpha.1 (March 2nd, 2014)
 
 This first alpha version focuses on the bases and on the interactions between users, organizations and repositories.
 
+Please comment on `those issues <https://github.com/jacquev6/PyGithub/issues?labels=Prioritization%2Cv2&milestone=&page=1&state=open>`_
+to help me prioritize the next developments. And do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
+
 `Version 1.24.0 <https://github.com/jacquev6/PyGithub/issues?milestone=36&state=closed>`_ (March 2nd, 2014)
 ---------------------------------------------------------------------------------------------------------------
 
@@ -65,7 +68,3 @@ What's missing in versions 1.x.x? Github API v3 URLs not covered by v1
 * ``/repos/:owner/:repo/subscription`` (DELETE)
 * ``/repos/:owner/:repo/subscription`` (GET)
 * ``/repos/:owner/:repo/subscription`` (PUT)
-* ``/search/code`` (GET)
-* ``/search/issues`` (GET)
-* ``/search/repositories`` (GET)
-* ``/search/users`` (GET)
