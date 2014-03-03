@@ -402,7 +402,7 @@ class Github(object):
         :param sort: string ('indexed')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.CodeSearchResult.CodeSearchResult`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.ContentFile.ContentFile`
         """
         assert isinstance(query, (str, unicode)), query
         url_parameters = dict()

@@ -227,3 +227,6 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetNotificationsWithOtherArguments(self):
         self.assertListKeyEqual(self.user.get_notifications(all=True), lambda n: n.id, [])
+
+    def testGetTeams(self):
+        self.assertListKeyEqual(self.user.get_teams(), lambda t: t.name, ["Owners", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries"])
