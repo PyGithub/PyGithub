@@ -25,9 +25,13 @@
 ################################################################################
 
 import base64
+import sys
 
 import github.GithubObject
 import github.Repository
+
+
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
@@ -46,7 +50,11 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     @property
     def decoded_content(self):
         assert self.encoding == "base64", "unsupported encoding: %s" % self.encoding
-        return base64.b64decode(self.content)
+        if atLeastPython3:
+            content = bytearray(self.content, "utf-8")  # pragma no cover (covered by tests with Python 3.2)
+        else:
+            content = self.content
+        return base64.b64decode(content)
 
     @property
     def encoding(self):
