@@ -22,10 +22,10 @@ This first alpha version focuses on the bases and on the interactions between us
 Please comment on `those issues <https://github.com/jacquev6/PyGithub/issues?labels=Prioritization%2Cv2&milestone=&page=1&state=open>`_
 to help me prioritize the next developments. And do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
 
-`Version 1.24.0 <https://github.com/jacquev6/PyGithub/issues?milestone=36&state=closed>`_ (March 2nd, 2014)
+`Version 1.24.1 <https://github.com/jacquev6/PyGithub/issues?milestone=37&state=closed>`_ (March 16th, 2014)
 ---------------------------------------------------------------------------------------------------------------
 
-* `Implement <https://github.com/jacquev6/PyGithub/pull/224>`__ search, thanks to `thialfihar <https://github.com/thialfihar>`__ for the pull request
+* `Fix <https://github.com/jacquev6/PyGithub/pull/237>`__ urlquoting in search, thanks to `cro <https://github.com/cro>`__ for the pull request
 
 Twitter
 -------
