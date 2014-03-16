@@ -253,7 +253,7 @@ class Github(object):
         assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
         args = {} if language is github.GithubObject.NotSet else {"language": language}
         return Legacy.PaginatedList(
-            "/legacy/repos/search/" + urllib.quote(keyword),
+            "/legacy/repos/search/" + urllib.quote_plus(keyword, safe='/%:><'),
             args,
             self.__requester,
             "repositories",
@@ -269,7 +269,7 @@ class Github(object):
         """
         assert isinstance(keyword, (str, unicode)), keyword
         return Legacy.PaginatedList(
-            "/legacy/user/search/" + urllib.quote(keyword),
+            "/legacy/user/search/" + urllib.quote_plus(keyword, safe='/%:><'),
             {},
             self.__requester,
             "users",
@@ -345,7 +345,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote(query))
+            query_chunks.append(urllib.quote_plus(query, safe='/%:><'))
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
@@ -380,7 +380,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote(query))
+            query_chunks.append(urllib.quote_plus(query, safe='%/:><'))
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
@@ -415,7 +415,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote(query))
+            query_chunks.append(urllib.quote_plus(query, safe='%/:><'))
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
