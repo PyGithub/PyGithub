@@ -310,7 +310,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks += query.split()
+            query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
@@ -345,7 +345,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote_plus(query, safe='/%:><'))
+            query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
@@ -380,7 +380,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote_plus(query, safe='%/:><'))
+            query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))
@@ -415,7 +415,7 @@ class Github(object):
 
         query_chunks = []
         if query:
-            query_chunks.append(urllib.quote_plus(query, safe='%/:><'))
+            query_chunks.append(query)
 
         for qualifier, value in qualifiers.items():
             query_chunks.append("%s:%s" % (qualifier, value))

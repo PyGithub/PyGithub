@@ -62,3 +62,13 @@ class Search(Framework.TestCase):
             self.assertEqual(files[0].decoded_content[:30], b'https\nGET\napi.github.com\nNone\n')
         else:
             self.assertEqual(files[0].decoded_content[:30], "https\nGET\napi.github.com\nNone\n")
+
+    def testUrlquotingOfQualifiers(self):
+        # Example taken from #236
+        issues = self.g.search_issues("repo:saltstack/salt-api type:Issues", updated=">2014-03-04T18:28:11Z")
+        self.assertEqual(issues[0].id, 29138794)
+
+    def testUrlquotingOfQuery(self):
+        # Example taken from #236
+        issues = self.g.search_issues("repo:saltstack/salt-api type:Issues updated:>2014-03-04T18:28:11Z")
+        self.assertEqual(issues[0].id, 29138794)
