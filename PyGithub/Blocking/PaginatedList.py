@@ -51,12 +51,12 @@ length::
 If you really mean to take the length of a PaginatedList, you have to explicitelly construct a list and then use its length::
 
     >>> len(list(user.get_repos()))
-    25
+    27
 
 But often, there is an attribute in the parent object::
 
     >>> user.public_repos
-    22
+    24
     >>> user.owned_private_repos
     3
 
