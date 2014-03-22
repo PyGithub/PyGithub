@@ -33,6 +33,6 @@ def main():
     print("Functionalities:", "OK" if testsResult else "FAIL")
     print("Test coverage:", "OK" if coverageResult else "FAIL")
     print("====================================")
-    sys.exit(0 if testsResult and coverageResult else 1)
+    sys.exit(0 if testsResult else 1)
 
 main()

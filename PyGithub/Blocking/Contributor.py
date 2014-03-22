@@ -30,7 +30,7 @@ class Contributor(PyGithub.Blocking.User.User):
 
     def _initAttributes(self, contributions=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Contributor, self)._initAttributes(**kwds)
-        self.__contributions = self._createIntAttribute("Contributor.contributions", contributions)
+        self.__contributions = PyGithub.Blocking.Attributes.IntAttribute("Contributor.contributions", contributions)
 
     def _updateAttributes(self, eTag, contributions=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Contributor, self)._updateAttributes(eTag, **kwds)

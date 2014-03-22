@@ -46,7 +46,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def add_to_starred(self, repo):
         """
@@ -61,7 +61,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def add_to_subscriptions(self, repo):
         """
@@ -76,7 +76,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def create_fork(self, repo):
         """
@@ -92,7 +92,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "POST", url)
+        r = self.Session._request("POST", url)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def create_key(self, title, key):
         """
@@ -110,7 +111,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/keys")
         postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
-        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, auto_init=None, gitignore_template=None):
         """
@@ -150,7 +152,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/repos")
         postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, auto_init=auto_init, gitignore_template=gitignore_template)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def create_subscription(self, repo, subscribed, ignored):
         """
@@ -171,7 +174,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
         postArguments = PyGithub.Blocking.Parameters.dictionary(subscribed=subscribed, ignored=ignored)
-        return self._createInstance(PyGithub.Blocking.Subscription.Subscription, "PUT", url, postArguments=postArguments)
+        r = self.Session._request("PUT", url, postArguments=postArguments)
+        return PyGithub.Blocking.Subscription.Subscription(self.Session, r.json(), r.headers.get("ETag"))
 
     def edit(self, name=None, email=None, blog=None, company=None, location=None, hireable=None):
         """
@@ -203,7 +207,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user")
         postArguments = PyGithub.Blocking.Parameters.dictionary(blog=blog, company=company, email=email, hireable=hireable, location=location, name=name)
-        self._updateWith("PATCH", url, postArguments=postArguments)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
 
     def get_followers(self, per_page=None):
         """
@@ -220,7 +225,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/followers")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_following(self, per_page=None):
         """
@@ -237,7 +242,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/following")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_key(self, id):
         """
@@ -252,7 +257,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         id = PyGithub.Blocking.Parameters.normalizeInt(id)
 
         url = uritemplate.expand("https://api.github.com/user/keys/{id}", id=str(id))
-        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_keys(self):
         """
@@ -264,7 +270,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         url = uritemplate.expand("https://api.github.com/user/keys")
-        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+        r = self.Session._request("GET", url)
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
 
     def get_orgs(self, per_page=None):
         """
@@ -281,7 +288,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/orgs")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Organization.Organization, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Organization.Organization, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
         """
@@ -299,7 +306,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, sort=None, direction=None, type=None, per_page=None):
         """
@@ -325,7 +333,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/repos")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
         """
@@ -348,7 +356,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/starred")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_subscription(self, repo):
         """
@@ -363,7 +371,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
-        return self._createInstance(PyGithub.Blocking.Subscription.Subscription, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Subscription.Subscription(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_subscriptions(self, per_page=None):
         """
@@ -380,7 +389,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_teams(self, per_page=None):
         """
@@ -397,7 +406,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/teams")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Team.Team, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_following(self, user):
         """
@@ -412,7 +421,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def has_in_starred(self, repo):
         """
@@ -427,7 +440,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def has_in_subscriptions(self, repo):
         """
@@ -442,7 +459,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def remove_from_following(self, user):
         """
@@ -457,7 +478,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def remove_from_starred(self, repo):
         """
@@ -472,7 +493,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def remove_from_subscriptions(self, repo):
         """
@@ -487,4 +508,4 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)

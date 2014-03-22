@@ -37,9 +37,9 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitCommit.Author, self)._initAttributes(**kwds)
-            self.__date = self._createDatetimeAttribute("GitCommit.Author.date", date)
-            self.__email = self._createStringAttribute("GitCommit.Author.email", email)
-            self.__name = self._createStringAttribute("GitCommit.Author.name", name)
+            self.__date = PyGithub.Blocking.Attributes.DatetimeAttribute("GitCommit.Author.date", date)
+            self.__email = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.Author.email", email)
+            self.__name = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.Author.name", name)
 
         def _updateAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitCommit.Author, self)._updateAttributes(**kwds)
@@ -70,12 +70,12 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, author=PyGithub.Blocking.Attributes.Absent, committer=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, message=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, parents=None, tree=None, **kwds):
         super(GitCommit, self)._initAttributes(**kwds)
-        self.__author = self._createStructAttribute("GitCommit.author", GitCommit.Author, author)
-        self.__committer = self._createStructAttribute("GitCommit.committer", GitCommit.Author, committer)
-        self.__html_url = self._createStringAttribute("GitCommit.html_url", html_url)
-        self.__message = self._createStringAttribute("GitCommit.message", message)
-        self.__sha = self._createStringAttribute("GitCommit.sha", sha)
-        self.__url = self._createStringAttribute("GitCommit.url", url)
+        self.__author = PyGithub.Blocking.Attributes.StructAttribute("GitCommit.author", self.Session, GitCommit.Author, author)
+        self.__committer = PyGithub.Blocking.Attributes.StructAttribute("GitCommit.committer", self.Session, GitCommit.Author, committer)
+        self.__html_url = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.html_url", html_url)
+        self.__message = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.message", message)
+        self.__sha = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.sha", sha)
+        self.__url = PyGithub.Blocking.Attributes.StringAttribute("GitCommit.url", url)
 
     def _updateAttributes(self, eTag, author=PyGithub.Blocking.Attributes.Absent, committer=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, message=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, parents=None, tree=None, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)

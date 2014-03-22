@@ -48,16 +48,16 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def _initAttributes(self, followers_url=PyGithub.Blocking.Attributes.Absent, following_url=PyGithub.Blocking.Attributes.Absent, gists_url=PyGithub.Blocking.Attributes.Absent, gravatar_id=PyGithub.Blocking.Attributes.Absent, hireable=PyGithub.Blocking.Attributes.Absent, organizations_url=PyGithub.Blocking.Attributes.Absent, received_events_url=PyGithub.Blocking.Attributes.Absent, site_admin=PyGithub.Blocking.Attributes.Absent, starred_url=PyGithub.Blocking.Attributes.Absent, subscriptions_url=PyGithub.Blocking.Attributes.Absent, bio=None, **kwds):
         super(User, self)._initAttributes(**kwds)
-        self.__followers_url = self._createStringAttribute("User.followers_url", followers_url)
-        self.__following_url = self._createStringAttribute("User.following_url", following_url)
-        self.__gists_url = self._createStringAttribute("User.gists_url", gists_url)
-        self.__gravatar_id = self._createStringAttribute("User.gravatar_id", gravatar_id)
-        self.__hireable = self._createBoolAttribute("User.hireable", hireable)
-        self.__organizations_url = self._createStringAttribute("User.organizations_url", organizations_url)
-        self.__received_events_url = self._createStringAttribute("User.received_events_url", received_events_url)
-        self.__site_admin = self._createBoolAttribute("User.site_admin", site_admin)
-        self.__starred_url = self._createStringAttribute("User.starred_url", starred_url)
-        self.__subscriptions_url = self._createStringAttribute("User.subscriptions_url", subscriptions_url)
+        self.__followers_url = PyGithub.Blocking.Attributes.StringAttribute("User.followers_url", followers_url)
+        self.__following_url = PyGithub.Blocking.Attributes.StringAttribute("User.following_url", following_url)
+        self.__gists_url = PyGithub.Blocking.Attributes.StringAttribute("User.gists_url", gists_url)
+        self.__gravatar_id = PyGithub.Blocking.Attributes.StringAttribute("User.gravatar_id", gravatar_id)
+        self.__hireable = PyGithub.Blocking.Attributes.BoolAttribute("User.hireable", hireable)
+        self.__organizations_url = PyGithub.Blocking.Attributes.StringAttribute("User.organizations_url", organizations_url)
+        self.__received_events_url = PyGithub.Blocking.Attributes.StringAttribute("User.received_events_url", received_events_url)
+        self.__site_admin = PyGithub.Blocking.Attributes.BoolAttribute("User.site_admin", site_admin)
+        self.__starred_url = PyGithub.Blocking.Attributes.StringAttribute("User.starred_url", starred_url)
+        self.__subscriptions_url = PyGithub.Blocking.Attributes.StringAttribute("User.subscriptions_url", subscriptions_url)
 
     def _updateAttributes(self, eTag, followers_url=PyGithub.Blocking.Attributes.Absent, following_url=PyGithub.Blocking.Attributes.Absent, gists_url=PyGithub.Blocking.Attributes.Absent, gravatar_id=PyGithub.Blocking.Attributes.Absent, hireable=PyGithub.Blocking.Attributes.Absent, organizations_url=PyGithub.Blocking.Attributes.Absent, received_events_url=PyGithub.Blocking.Attributes.Absent, site_admin=PyGithub.Blocking.Attributes.Absent, starred_url=PyGithub.Blocking.Attributes.Absent, subscriptions_url=PyGithub.Blocking.Attributes.Absent, bio=None, **kwds):
         super(User, self)._updateAttributes(eTag, **kwds)
@@ -167,7 +167,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.followers_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_following(self, per_page=None):
         """
@@ -184,7 +184,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.following_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_keys(self):
         """
@@ -196,7 +196,8 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         url = uritemplate.expand("https://api.github.com/users/{user}/keys", user=self.login)
-        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+        r = self.Session._request("GET", url)
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
 
     def get_orgs(self, per_page=None):
         """
@@ -213,7 +214,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.organizations_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Organization.Organization, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Organization.Organization, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
         """
@@ -231,7 +232,8 @@ class User(PyGithub.Blocking.Entity.Entity):
         repo = PyGithub.Blocking.Parameters.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, sort=None, direction=None, type=None, per_page=None):
         """
@@ -257,7 +259,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.repos_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
         """
@@ -280,7 +282,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.starred_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_subscriptions(self, per_page=None):
         """
@@ -297,7 +299,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.subscriptions_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_following(self, target_user):
         """
@@ -312,4 +314,8 @@ class User(PyGithub.Blocking.Entity.Entity):
         target_user = PyGithub.Blocking.Parameters.normalizeUser(target_user)
 
         url = uritemplate.expand(self.following_url, other_user=target_user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False

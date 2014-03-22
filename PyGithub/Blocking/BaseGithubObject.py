@@ -47,27 +47,6 @@ class SessionedGithubObject(object):
         for name, value in unexpected.iteritems():
             log.info(self.__class__.__name__ + " received an unexpected attribute: '" + name + "' with value " + repr(value))
 
-    def _createIntAttribute(self, name, value):
-        return PyGithub.Blocking.Attributes.BuiltinAttribute(name, int, value)
-
-    def _createStringAttribute(self, name, value):
-        return PyGithub.Blocking.Attributes.BuiltinAttribute(name, basestring, value)
-
-    def _createBoolAttribute(self, name, value):
-        return PyGithub.Blocking.Attributes.BuiltinAttribute(name, bool, value)
-
-    def _createDatetimeAttribute(self, name, value):
-        return PyGithub.Blocking.Attributes.DatetimeAttribute(name, value)
-
-    def _createStructAttribute(self, name, klass, value):
-        return PyGithub.Blocking.Attributes.StructAttribute(name, self.__session, klass, value)
-
-    def _createClassAttribute(self, name, klass, value):
-        return PyGithub.Blocking.Attributes.ClassAttribute(name, self.__session, klass, value)
-
-    def _createUnionAttribute(self, name, key, factories, value):
-        return PyGithub.Blocking.Attributes.UnionAttribute(name, self.__session, key, factories, value)
-
     @property
     def Session(self):
         """
@@ -75,32 +54,6 @@ class SessionedGithubObject(object):
         `rate limit <http://developer.github.com/v3/#rate-limiting>`_ in :attr:`.RateLimit`
         """
         return self.__session
-
-    def _createInstance(self, klass, verb, url, **kwds):
-        r = self.__session._request(verb, url, **kwds)
-        return klass(self.__session, r.json(), r.headers.get("ETag"))
-
-    def _createStruct(self, klass, verb, url, **kwds):
-        r = self.__session._request(verb, url, **kwds)
-        return klass(self.__session, r.json())
-
-    def _createPaginatedList(self, klass, verb, url, **kwds):
-        return PyGithub.Blocking.PaginatedList.PaginatedList(klass, self.__session, verb, url, **kwds)
-
-    def _triggerSideEffect(self, verb, url, **kwds):
-        r = self.__session._request(verb, url, **kwds)
-
-    def _createBool(self, verb, url, **kwds):
-        r = self.__session._request(verb, url, accept404=True, **kwds)
-        return r.status_code == 204
-
-    def _returnRawData(self, verb, url, **kwds):
-        r = self.__session._request(verb, url, **kwds)
-        return r.json()
-
-    def _createList(self, klass, verb, url, **kwds):
-        r = self.__session._request(verb, url, **kwds)
-        return [klass(self.__session, a, None) for a in r.json()]
 
 
 class UpdatableGithubObject(SessionedGithubObject):
@@ -134,7 +87,3 @@ class UpdatableGithubObject(SessionedGithubObject):
     def _updateAttributes(self, eTag, **kwds):
         self.__eTag = eTag
         super(UpdatableGithubObject, self)._updateAttributes(**kwds)
-
-    def _updateWith(self, verb, url, **kwds):
-        r = self.Session._request(verb, url, **kwds)
-        self._updateAttributes(r.headers.get("ETag"), **r.json())

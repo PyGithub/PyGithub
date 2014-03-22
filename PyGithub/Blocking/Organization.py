@@ -37,9 +37,9 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
     def _initAttributes(self, billing_email=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, public_members_url=PyGithub.Blocking.Attributes.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         super(Organization, self)._initAttributes(**kwds)
-        self.__billing_email = self._createStringAttribute("Organization.billing_email", billing_email)
-        self.__members_url = self._createStringAttribute("Organization.members_url", members_url)
-        self.__public_members_url = self._createStringAttribute("Organization.public_members_url", public_members_url)
+        self.__billing_email = PyGithub.Blocking.Attributes.StringAttribute("Organization.billing_email", billing_email)
+        self.__members_url = PyGithub.Blocking.Attributes.StringAttribute("Organization.members_url", members_url)
+        self.__public_members_url = PyGithub.Blocking.Attributes.StringAttribute("Organization.public_members_url", public_members_url)
 
     def _updateAttributes(self, eTag, billing_email=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, public_members_url=PyGithub.Blocking.Attributes.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         super(Organization, self)._updateAttributes(eTag, **kwds)
@@ -84,7 +84,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def create_fork(self, repo):
         """
@@ -101,7 +101,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         postArguments = PyGithub.Blocking.Parameters.dictionary(organization=self.login)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, team_id=None, auto_init=None, gitignore_template=None):
         """
@@ -144,7 +145,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.repos_url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def create_team(self, name, repo_names=None, permission=None):
         """
@@ -166,7 +168,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
         postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, permission=permission, repo_names=repo_names)
-        return self._createInstance(PyGithub.Blocking.Team.Team, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.Team.Team(self.Session, r.json(), r.headers.get("ETag"))
 
     def edit(self, billing_email=None, blog=None, company=None, email=None, location=None, name=None):
         """
@@ -198,7 +201,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(billing_email=billing_email, blog=blog, company=company, email=email, location=location, name=name)
-        self._updateWith("PATCH", url, postArguments=postArguments)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
 
     def get_members(self, filter=None, per_page=None):
         """
@@ -218,7 +222,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.members_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(filter=filter, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_public_members(self, per_page=None):
         """
@@ -235,7 +239,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.public_members_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
         """
@@ -253,7 +257,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         repo = PyGithub.Blocking.Parameters.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, type=None, per_page=None):
         """
@@ -273,7 +278,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.repos_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(type=type, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_teams(self, per_page=None):
         """
@@ -290,7 +295,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Team.Team, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_members(self, user):
         """
@@ -305,7 +310,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def has_in_public_members(self, user):
         """
@@ -320,7 +329,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def remove_from_members(self, user):
         """
@@ -335,7 +348,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def remove_from_public_members(self, user):
         """
@@ -350,4 +363,4 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)

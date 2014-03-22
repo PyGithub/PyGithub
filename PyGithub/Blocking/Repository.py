@@ -62,9 +62,9 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, contributions=None, name=None, type=None, **kwds):
             super(Repository.AnonymousContributor, self)._initAttributes(**kwds)
-            self.__contributions = self._createIntAttribute("Repository.AnonymousContributor.contributions", contributions)
-            self.__name = self._createStringAttribute("Repository.AnonymousContributor.name", name)
-            self.__type = self._createStringAttribute("Repository.AnonymousContributor.type", type)
+            self.__contributions = PyGithub.Blocking.Attributes.IntAttribute("Repository.AnonymousContributor.contributions", contributions)
+            self.__name = PyGithub.Blocking.Attributes.StringAttribute("Repository.AnonymousContributor.name", name)
+            self.__type = PyGithub.Blocking.Attributes.StringAttribute("Repository.AnonymousContributor.type", type)
 
         @property
         def contributions(self):
@@ -95,8 +95,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, commit=None, content=None, **kwds):
             super(Repository.ContentCommit, self)._initAttributes(**kwds)
-            self.__commit = self._createClassAttribute("Repository.ContentCommit.commit", PyGithub.Blocking.GitCommit.GitCommit, commit)
-            self.__content = self._createClassAttribute("Repository.ContentCommit.content", PyGithub.Blocking.File.File, content)
+            self.__commit = PyGithub.Blocking.Attributes.ClassAttribute("Repository.ContentCommit.commit", self.Session, PyGithub.Blocking.GitCommit.GitCommit, commit)
+            self.__content = PyGithub.Blocking.Attributes.ClassAttribute("Repository.ContentCommit.content", self.Session, PyGithub.Blocking.File.File, content)
 
         @property
         def commit(self):
@@ -120,9 +120,9 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, admin=None, pull=None, push=None, **kwds):
             super(Repository.Permissions, self)._initAttributes(**kwds)
-            self.__admin = self._createBoolAttribute("Repository.Permissions.admin", admin)
-            self.__pull = self._createBoolAttribute("Repository.Permissions.pull", pull)
-            self.__push = self._createBoolAttribute("Repository.Permissions.push", push)
+            self.__admin = PyGithub.Blocking.Attributes.BoolAttribute("Repository.Permissions.admin", admin)
+            self.__pull = PyGithub.Blocking.Attributes.BoolAttribute("Repository.Permissions.pull", pull)
+            self.__push = PyGithub.Blocking.Attributes.BoolAttribute("Repository.Permissions.push", push)
 
         def _updateAttributes(self, admin=None, pull=None, push=None, **kwds):
             super(Repository.Permissions, self)._updateAttributes(**kwds)
@@ -153,76 +153,76 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, archive_url=PyGithub.Blocking.Attributes.Absent, assignees_url=PyGithub.Blocking.Attributes.Absent, blobs_url=PyGithub.Blocking.Attributes.Absent, branches_url=PyGithub.Blocking.Attributes.Absent, clone_url=PyGithub.Blocking.Attributes.Absent, collaborators_url=PyGithub.Blocking.Attributes.Absent, comments_url=PyGithub.Blocking.Attributes.Absent, commits_url=PyGithub.Blocking.Attributes.Absent, compare_url=PyGithub.Blocking.Attributes.Absent, contents_url=PyGithub.Blocking.Attributes.Absent, contributors_url=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, default_branch=PyGithub.Blocking.Attributes.Absent, description=PyGithub.Blocking.Attributes.Absent, downloads_url=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, fork=PyGithub.Blocking.Attributes.Absent, forks=PyGithub.Blocking.Attributes.Absent, forks_count=PyGithub.Blocking.Attributes.Absent, forks_url=PyGithub.Blocking.Attributes.Absent, full_name=PyGithub.Blocking.Attributes.Absent, git_commits_url=PyGithub.Blocking.Attributes.Absent, git_refs_url=PyGithub.Blocking.Attributes.Absent, git_tags_url=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, has_issues=PyGithub.Blocking.Attributes.Absent, has_wiki=PyGithub.Blocking.Attributes.Absent, homepage=PyGithub.Blocking.Attributes.Absent, hooks_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, issue_comment_url=PyGithub.Blocking.Attributes.Absent, issue_events_url=PyGithub.Blocking.Attributes.Absent, issues_url=PyGithub.Blocking.Attributes.Absent, keys_url=PyGithub.Blocking.Attributes.Absent, labels_url=PyGithub.Blocking.Attributes.Absent, language=PyGithub.Blocking.Attributes.Absent, languages_url=PyGithub.Blocking.Attributes.Absent, merges_url=PyGithub.Blocking.Attributes.Absent, milestones_url=PyGithub.Blocking.Attributes.Absent, mirror_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, network_count=PyGithub.Blocking.Attributes.Absent, notifications_url=PyGithub.Blocking.Attributes.Absent, open_issues=PyGithub.Blocking.Attributes.Absent, open_issues_count=PyGithub.Blocking.Attributes.Absent, owner=PyGithub.Blocking.Attributes.Absent, parent=PyGithub.Blocking.Attributes.Absent, permissions=PyGithub.Blocking.Attributes.Absent, private=PyGithub.Blocking.Attributes.Absent, pulls_url=PyGithub.Blocking.Attributes.Absent, pushed_at=PyGithub.Blocking.Attributes.Absent, releases_url=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, source=PyGithub.Blocking.Attributes.Absent, ssh_url=PyGithub.Blocking.Attributes.Absent, stargazers_count=PyGithub.Blocking.Attributes.Absent, stargazers_url=PyGithub.Blocking.Attributes.Absent, statuses_url=PyGithub.Blocking.Attributes.Absent, subscribers_count=PyGithub.Blocking.Attributes.Absent, subscribers_url=PyGithub.Blocking.Attributes.Absent, subscription_url=PyGithub.Blocking.Attributes.Absent, svn_url=PyGithub.Blocking.Attributes.Absent, tags_url=PyGithub.Blocking.Attributes.Absent, teams_url=PyGithub.Blocking.Attributes.Absent, trees_url=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, watchers=PyGithub.Blocking.Attributes.Absent, watchers_count=PyGithub.Blocking.Attributes.Absent, has_downloads=None, master_branch=None, organization=None, **kwds):
         super(Repository, self)._initAttributes(**kwds)
-        self.__archive_url = self._createStringAttribute("Repository.archive_url", archive_url)
-        self.__assignees_url = self._createStringAttribute("Repository.assignees_url", assignees_url)
-        self.__blobs_url = self._createStringAttribute("Repository.blobs_url", blobs_url)
-        self.__branches_url = self._createStringAttribute("Repository.branches_url", branches_url)
-        self.__clone_url = self._createStringAttribute("Repository.clone_url", clone_url)
-        self.__collaborators_url = self._createStringAttribute("Repository.collaborators_url", collaborators_url)
-        self.__comments_url = self._createStringAttribute("Repository.comments_url", comments_url)
-        self.__commits_url = self._createStringAttribute("Repository.commits_url", commits_url)
-        self.__compare_url = self._createStringAttribute("Repository.compare_url", compare_url)
-        self.__contents_url = self._createStringAttribute("Repository.contents_url", contents_url)
-        self.__contributors_url = self._createStringAttribute("Repository.contributors_url", contributors_url)
-        self.__created_at = self._createDatetimeAttribute("Repository.created_at", created_at)
-        self.__default_branch = self._createStringAttribute("Repository.default_branch", default_branch)
-        self.__description = self._createStringAttribute("Repository.description", description)
-        self.__downloads_url = self._createStringAttribute("Repository.downloads_url", downloads_url)
-        self.__events_url = self._createStringAttribute("Repository.events_url", events_url)
-        self.__fork = self._createBoolAttribute("Repository.fork", fork)
-        self.__forks = self._createIntAttribute("Repository.forks", forks)
-        self.__forks_count = self._createIntAttribute("Repository.forks_count", forks_count)
-        self.__forks_url = self._createStringAttribute("Repository.forks_url", forks_url)
-        self.__full_name = self._createStringAttribute("Repository.full_name", full_name)
-        self.__git_commits_url = self._createStringAttribute("Repository.git_commits_url", git_commits_url)
-        self.__git_refs_url = self._createStringAttribute("Repository.git_refs_url", git_refs_url)
-        self.__git_tags_url = self._createStringAttribute("Repository.git_tags_url", git_tags_url)
-        self.__git_url = self._createStringAttribute("Repository.git_url", git_url)
-        self.__has_issues = self._createBoolAttribute("Repository.has_issues", has_issues)
-        self.__has_wiki = self._createBoolAttribute("Repository.has_wiki", has_wiki)
-        self.__homepage = self._createStringAttribute("Repository.homepage", homepage)
-        self.__hooks_url = self._createStringAttribute("Repository.hooks_url", hooks_url)
-        self.__html_url = self._createStringAttribute("Repository.html_url", html_url)
-        self.__id = self._createIntAttribute("Repository.id", id)
-        self.__issue_comment_url = self._createStringAttribute("Repository.issue_comment_url", issue_comment_url)
-        self.__issue_events_url = self._createStringAttribute("Repository.issue_events_url", issue_events_url)
-        self.__issues_url = self._createStringAttribute("Repository.issues_url", issues_url)
-        self.__keys_url = self._createStringAttribute("Repository.keys_url", keys_url)
-        self.__labels_url = self._createStringAttribute("Repository.labels_url", labels_url)
-        self.__language = self._createStringAttribute("Repository.language", language)
-        self.__languages_url = self._createStringAttribute("Repository.languages_url", languages_url)
-        self.__merges_url = self._createStringAttribute("Repository.merges_url", merges_url)
-        self.__milestones_url = self._createStringAttribute("Repository.milestones_url", milestones_url)
-        self.__mirror_url = self._createStringAttribute("Repository.mirror_url", mirror_url)
-        self.__name = self._createStringAttribute("Repository.name", name)
-        self.__network_count = self._createIntAttribute("Repository.network_count", network_count)
-        self.__notifications_url = self._createStringAttribute("Repository.notifications_url", notifications_url)
-        self.__open_issues = self._createIntAttribute("Repository.open_issues", open_issues)
-        self.__open_issues_count = self._createIntAttribute("Repository.open_issues_count", open_issues_count)
-        self.__owner = self._createUnionAttribute("Repository.owner", "type", dict(User=PyGithub.Blocking.User.User, Organization=PyGithub.Blocking.Organization.Organization), owner)
-        self.__parent = self._createClassAttribute("Repository.parent", Repository, parent)
-        self.__permissions = self._createStructAttribute("Repository.permissions", Repository.Permissions, permissions)
-        self.__private = self._createBoolAttribute("Repository.private", private)
-        self.__pulls_url = self._createStringAttribute("Repository.pulls_url", pulls_url)
-        self.__pushed_at = self._createDatetimeAttribute("Repository.pushed_at", pushed_at)
-        self.__releases_url = self._createStringAttribute("Repository.releases_url", releases_url)
-        self.__size = self._createIntAttribute("Repository.size", size)
-        self.__source = self._createClassAttribute("Repository.source", Repository, source)
-        self.__ssh_url = self._createStringAttribute("Repository.ssh_url", ssh_url)
-        self.__stargazers_count = self._createIntAttribute("Repository.stargazers_count", stargazers_count)
-        self.__stargazers_url = self._createStringAttribute("Repository.stargazers_url", stargazers_url)
-        self.__statuses_url = self._createStringAttribute("Repository.statuses_url", statuses_url)
-        self.__subscribers_count = self._createIntAttribute("Repository.subscribers_count", subscribers_count)
-        self.__subscribers_url = self._createStringAttribute("Repository.subscribers_url", subscribers_url)
-        self.__subscription_url = self._createStringAttribute("Repository.subscription_url", subscription_url)
-        self.__svn_url = self._createStringAttribute("Repository.svn_url", svn_url)
-        self.__tags_url = self._createStringAttribute("Repository.tags_url", tags_url)
-        self.__teams_url = self._createStringAttribute("Repository.teams_url", teams_url)
-        self.__trees_url = self._createStringAttribute("Repository.trees_url", trees_url)
-        self.__updated_at = self._createDatetimeAttribute("Repository.updated_at", updated_at)
-        self.__url = self._createStringAttribute("Repository.url", url)
-        self.__watchers = self._createIntAttribute("Repository.watchers", watchers)
-        self.__watchers_count = self._createIntAttribute("Repository.watchers_count", watchers_count)
+        self.__archive_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.archive_url", archive_url)
+        self.__assignees_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.assignees_url", assignees_url)
+        self.__blobs_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.blobs_url", blobs_url)
+        self.__branches_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.branches_url", branches_url)
+        self.__clone_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.clone_url", clone_url)
+        self.__collaborators_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.collaborators_url", collaborators_url)
+        self.__comments_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.comments_url", comments_url)
+        self.__commits_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.commits_url", commits_url)
+        self.__compare_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.compare_url", compare_url)
+        self.__contents_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.contents_url", contents_url)
+        self.__contributors_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.contributors_url", contributors_url)
+        self.__created_at = PyGithub.Blocking.Attributes.DatetimeAttribute("Repository.created_at", created_at)
+        self.__default_branch = PyGithub.Blocking.Attributes.StringAttribute("Repository.default_branch", default_branch)
+        self.__description = PyGithub.Blocking.Attributes.StringAttribute("Repository.description", description)
+        self.__downloads_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.downloads_url", downloads_url)
+        self.__events_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.events_url", events_url)
+        self.__fork = PyGithub.Blocking.Attributes.BoolAttribute("Repository.fork", fork)
+        self.__forks = PyGithub.Blocking.Attributes.IntAttribute("Repository.forks", forks)
+        self.__forks_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.forks_count", forks_count)
+        self.__forks_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.forks_url", forks_url)
+        self.__full_name = PyGithub.Blocking.Attributes.StringAttribute("Repository.full_name", full_name)
+        self.__git_commits_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.git_commits_url", git_commits_url)
+        self.__git_refs_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.git_refs_url", git_refs_url)
+        self.__git_tags_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.git_tags_url", git_tags_url)
+        self.__git_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.git_url", git_url)
+        self.__has_issues = PyGithub.Blocking.Attributes.BoolAttribute("Repository.has_issues", has_issues)
+        self.__has_wiki = PyGithub.Blocking.Attributes.BoolAttribute("Repository.has_wiki", has_wiki)
+        self.__homepage = PyGithub.Blocking.Attributes.StringAttribute("Repository.homepage", homepage)
+        self.__hooks_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.hooks_url", hooks_url)
+        self.__html_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.html_url", html_url)
+        self.__id = PyGithub.Blocking.Attributes.IntAttribute("Repository.id", id)
+        self.__issue_comment_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.issue_comment_url", issue_comment_url)
+        self.__issue_events_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.issue_events_url", issue_events_url)
+        self.__issues_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.issues_url", issues_url)
+        self.__keys_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.keys_url", keys_url)
+        self.__labels_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.labels_url", labels_url)
+        self.__language = PyGithub.Blocking.Attributes.StringAttribute("Repository.language", language)
+        self.__languages_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.languages_url", languages_url)
+        self.__merges_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.merges_url", merges_url)
+        self.__milestones_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.milestones_url", milestones_url)
+        self.__mirror_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.mirror_url", mirror_url)
+        self.__name = PyGithub.Blocking.Attributes.StringAttribute("Repository.name", name)
+        self.__network_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.network_count", network_count)
+        self.__notifications_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.notifications_url", notifications_url)
+        self.__open_issues = PyGithub.Blocking.Attributes.IntAttribute("Repository.open_issues", open_issues)
+        self.__open_issues_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.open_issues_count", open_issues_count)
+        self.__owner = PyGithub.Blocking.Attributes.UnionAttribute("Repository.owner", self.Session, "type", dict(User=PyGithub.Blocking.User.User, Organization=PyGithub.Blocking.Organization.Organization), owner)
+        self.__parent = PyGithub.Blocking.Attributes.ClassAttribute("Repository.parent", self.Session, Repository, parent)
+        self.__permissions = PyGithub.Blocking.Attributes.StructAttribute("Repository.permissions", self.Session, Repository.Permissions, permissions)
+        self.__private = PyGithub.Blocking.Attributes.BoolAttribute("Repository.private", private)
+        self.__pulls_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.pulls_url", pulls_url)
+        self.__pushed_at = PyGithub.Blocking.Attributes.DatetimeAttribute("Repository.pushed_at", pushed_at)
+        self.__releases_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.releases_url", releases_url)
+        self.__size = PyGithub.Blocking.Attributes.IntAttribute("Repository.size", size)
+        self.__source = PyGithub.Blocking.Attributes.ClassAttribute("Repository.source", self.Session, Repository, source)
+        self.__ssh_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.ssh_url", ssh_url)
+        self.__stargazers_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.stargazers_count", stargazers_count)
+        self.__stargazers_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.stargazers_url", stargazers_url)
+        self.__statuses_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.statuses_url", statuses_url)
+        self.__subscribers_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.subscribers_count", subscribers_count)
+        self.__subscribers_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.subscribers_url", subscribers_url)
+        self.__subscription_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.subscription_url", subscription_url)
+        self.__svn_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.svn_url", svn_url)
+        self.__tags_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.tags_url", tags_url)
+        self.__teams_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.teams_url", teams_url)
+        self.__trees_url = PyGithub.Blocking.Attributes.StringAttribute("Repository.trees_url", trees_url)
+        self.__updated_at = PyGithub.Blocking.Attributes.DatetimeAttribute("Repository.updated_at", updated_at)
+        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Repository.url", url)
+        self.__watchers = PyGithub.Blocking.Attributes.IntAttribute("Repository.watchers", watchers)
+        self.__watchers_count = PyGithub.Blocking.Attributes.IntAttribute("Repository.watchers_count", watchers_count)
 
     def _updateAttributes(self, eTag, archive_url=PyGithub.Blocking.Attributes.Absent, assignees_url=PyGithub.Blocking.Attributes.Absent, blobs_url=PyGithub.Blocking.Attributes.Absent, branches_url=PyGithub.Blocking.Attributes.Absent, clone_url=PyGithub.Blocking.Attributes.Absent, collaborators_url=PyGithub.Blocking.Attributes.Absent, comments_url=PyGithub.Blocking.Attributes.Absent, commits_url=PyGithub.Blocking.Attributes.Absent, compare_url=PyGithub.Blocking.Attributes.Absent, contents_url=PyGithub.Blocking.Attributes.Absent, contributors_url=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, default_branch=PyGithub.Blocking.Attributes.Absent, description=PyGithub.Blocking.Attributes.Absent, downloads_url=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, fork=PyGithub.Blocking.Attributes.Absent, forks=PyGithub.Blocking.Attributes.Absent, forks_count=PyGithub.Blocking.Attributes.Absent, forks_url=PyGithub.Blocking.Attributes.Absent, full_name=PyGithub.Blocking.Attributes.Absent, git_commits_url=PyGithub.Blocking.Attributes.Absent, git_refs_url=PyGithub.Blocking.Attributes.Absent, git_tags_url=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, has_issues=PyGithub.Blocking.Attributes.Absent, has_wiki=PyGithub.Blocking.Attributes.Absent, homepage=PyGithub.Blocking.Attributes.Absent, hooks_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, issue_comment_url=PyGithub.Blocking.Attributes.Absent, issue_events_url=PyGithub.Blocking.Attributes.Absent, issues_url=PyGithub.Blocking.Attributes.Absent, keys_url=PyGithub.Blocking.Attributes.Absent, labels_url=PyGithub.Blocking.Attributes.Absent, language=PyGithub.Blocking.Attributes.Absent, languages_url=PyGithub.Blocking.Attributes.Absent, merges_url=PyGithub.Blocking.Attributes.Absent, milestones_url=PyGithub.Blocking.Attributes.Absent, mirror_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, network_count=PyGithub.Blocking.Attributes.Absent, notifications_url=PyGithub.Blocking.Attributes.Absent, open_issues=PyGithub.Blocking.Attributes.Absent, open_issues_count=PyGithub.Blocking.Attributes.Absent, owner=PyGithub.Blocking.Attributes.Absent, parent=PyGithub.Blocking.Attributes.Absent, permissions=PyGithub.Blocking.Attributes.Absent, private=PyGithub.Blocking.Attributes.Absent, pulls_url=PyGithub.Blocking.Attributes.Absent, pushed_at=PyGithub.Blocking.Attributes.Absent, releases_url=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, source=PyGithub.Blocking.Attributes.Absent, ssh_url=PyGithub.Blocking.Attributes.Absent, stargazers_count=PyGithub.Blocking.Attributes.Absent, stargazers_url=PyGithub.Blocking.Attributes.Absent, statuses_url=PyGithub.Blocking.Attributes.Absent, subscribers_count=PyGithub.Blocking.Attributes.Absent, subscribers_url=PyGithub.Blocking.Attributes.Absent, subscription_url=PyGithub.Blocking.Attributes.Absent, svn_url=PyGithub.Blocking.Attributes.Absent, tags_url=PyGithub.Blocking.Attributes.Absent, teams_url=PyGithub.Blocking.Attributes.Absent, trees_url=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, watchers=PyGithub.Blocking.Attributes.Absent, watchers_count=PyGithub.Blocking.Attributes.Absent, has_downloads=None, master_branch=None, organization=None, **kwds):
         super(Repository, self)._updateAttributes(eTag, **kwds)
@@ -870,7 +870,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def create_file(self, path, message, content, branch=None, author=None, committer=None):
         """
@@ -900,7 +900,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         postArguments = PyGithub.Blocking.Parameters.dictionary(branch=branch, message=message, content=content, committer=committer, author=author)
-        return self._createStruct(Repository.ContentCommit, "PUT", url, postArguments=postArguments)
+        r = self.Session._request("PUT", url, postArguments=postArguments)
+        return Repository.ContentCommit(self.Session, r.json())
 
     def create_key(self, title, key):
         """
@@ -918,7 +919,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
-        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "POST", url, postArguments=postArguments)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
 
     def delete(self):
         """
@@ -930,7 +932,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         url = uritemplate.expand(self.url)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def edit(self, name=None, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, default_branch=None):
         """
@@ -968,7 +970,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_issues=has_issues, has_wiki=has_wiki, default_branch=default_branch)
-        self._updateWith("PATCH", url, postArguments=postArguments)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
 
     def get_assignees(self, per_page=None):
         """
@@ -985,7 +988,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.assignees_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_collaborators(self, per_page=None):
         """
@@ -1002,7 +1005,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.collaborators_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_contributors(self, anon=None, per_page=None):
         """
@@ -1022,7 +1025,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.contributors_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(anon=anon, per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_dir_content(self, path, ref=None):
         """
@@ -1042,7 +1045,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
-        return self._createList(PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File)), "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
 
     def get_file_content(self, path, ref=None):
         """
@@ -1062,7 +1066,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
-        return self._createInstance(PyGithub.Blocking.File.File, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.File.File(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_forks(self, sort=None, per_page=None):
         """
@@ -1082,7 +1087,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.forks_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, per_page=per_page)
-        return self._createPaginatedList(Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_key(self, id):
         """
@@ -1097,7 +1102,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         id = PyGithub.Blocking.Parameters.normalizeInt(id)
 
         url = uritemplate.expand(self.keys_url, key_id=str(id))
-        return self._createInstance(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_keys(self):
         """
@@ -1109,7 +1115,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         url = uritemplate.expand(self.keys_url)
-        return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+        r = self.Session._request("GET", url)
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
 
     def get_readme(self, ref=None):
         """
@@ -1126,7 +1133,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/readme", owner=self.owner.login, repo=self.name)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
-        return self._createInstance(PyGithub.Blocking.File.File, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.File.File(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_stargazers(self, per_page=None):
         """
@@ -1143,7 +1151,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.stargazers_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_subscribers(self, per_page=None):
         """
@@ -1160,7 +1168,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.subscribers_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_teams(self, per_page=None):
         """
@@ -1177,7 +1185,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.teams_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Team.Team, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_assignees(self, user):
         """
@@ -1192,7 +1200,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.assignees_url, user=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def has_in_collaborators(self, user):
         """
@@ -1207,7 +1219,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def remove_from_collaborators(self, user):
         """
@@ -1222,4 +1238,4 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)

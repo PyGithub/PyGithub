@@ -29,12 +29,12 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Subscription, self)._initAttributes(**kwds)
-        self.__created_at = self._createDatetimeAttribute("Subscription.created_at", created_at)
-        self.__ignored = self._createBoolAttribute("Subscription.ignored", ignored)
-        self.__reason = self._createStringAttribute("Subscription.reason", reason)
-        self.__repository_url = self._createStringAttribute("Subscription.repository_url", repository_url)
-        self.__subscribed = self._createBoolAttribute("Subscription.subscribed", subscribed)
-        self.__url = self._createStringAttribute("Subscription.url", url)
+        self.__created_at = PyGithub.Blocking.Attributes.DatetimeAttribute("Subscription.created_at", created_at)
+        self.__ignored = PyGithub.Blocking.Attributes.BoolAttribute("Subscription.ignored", ignored)
+        self.__reason = PyGithub.Blocking.Attributes.StringAttribute("Subscription.reason", reason)
+        self.__repository_url = PyGithub.Blocking.Attributes.StringAttribute("Subscription.repository_url", repository_url)
+        self.__subscribed = PyGithub.Blocking.Attributes.BoolAttribute("Subscription.subscribed", subscribed)
+        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Subscription.url", url)
 
     def _updateAttributes(self, eTag, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Subscription, self)._updateAttributes(eTag, **kwds)
@@ -103,7 +103,7 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         url = uritemplate.expand(self.url)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def edit(self, subscribed, ignored):
         """
@@ -122,4 +122,5 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(subscribed=subscribed, ignored=ignored)
-        self._updateWith("PUT", url, postArguments=postArguments)
+        r = self.Session._request("PUT", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())

@@ -40,8 +40,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, name=None, source=None, **kwds):
             super(Github.GitIgnoreTemplate, self)._initAttributes(**kwds)
-            self.__name = self._createStringAttribute("Github.GitIgnoreTemplate.name", name)
-            self.__source = self._createStringAttribute("Github.GitIgnoreTemplate.source", source)
+            self.__name = PyGithub.Blocking.Attributes.StringAttribute("Github.GitIgnoreTemplate.name", name)
+            self.__source = PyGithub.Blocking.Attributes.StringAttribute("Github.GitIgnoreTemplate.source", source)
 
         @property
         def name(self):
@@ -65,7 +65,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, resources=None, rate=None, **kwds):
             super(Github.RateLimit, self)._initAttributes(**kwds)
-            self.__resources = self._createStructAttribute("Github.RateLimit.resources", Github.Resources, resources)
+            self.__resources = PyGithub.Blocking.Attributes.StructAttribute("Github.RateLimit.resources", self.Session, Github.Resources, resources)
 
         @property
         def resources(self):
@@ -83,9 +83,9 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, limit=None, remaining=None, reset=None, **kwds):
             super(Github.RateLimits, self)._initAttributes(**kwds)
-            self.__limit = self._createIntAttribute("Github.RateLimits.limit", limit)
-            self.__remaining = self._createIntAttribute("Github.RateLimits.remaining", remaining)
-            self.__reset = self._createDatetimeAttribute("Github.RateLimits.reset", reset)
+            self.__limit = PyGithub.Blocking.Attributes.IntAttribute("Github.RateLimits.limit", limit)
+            self.__remaining = PyGithub.Blocking.Attributes.IntAttribute("Github.RateLimits.remaining", remaining)
+            self.__reset = PyGithub.Blocking.Attributes.DatetimeAttribute("Github.RateLimits.reset", reset)
 
         def _updateAttributes(self, limit=None, remaining=None, reset=None, **kwds):
             super(Github.RateLimits, self)._updateAttributes(**kwds)
@@ -122,8 +122,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, core=None, search=None, **kwds):
             super(Github.Resources, self)._initAttributes(**kwds)
-            self.__core = self._createStructAttribute("Github.Resources.core", Github.RateLimits, core)
-            self.__search = self._createStructAttribute("Github.Resources.search", Github.RateLimits, search)
+            self.__core = PyGithub.Blocking.Attributes.StructAttribute("Github.Resources.core", self.Session, Github.RateLimits, core)
+            self.__search = PyGithub.Blocking.Attributes.StructAttribute("Github.Resources.search", self.Session, Github.RateLimits, search)
 
         @property
         def core(self):
@@ -149,7 +149,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
 
         url = uritemplate.expand("https://api.github.com/user")
-        return self._createInstance(PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_gitignore_template(self, name):
         """
@@ -164,7 +165,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         name = PyGithub.Blocking.Parameters.normalizeString(name)
 
         url = uritemplate.expand("https://api.github.com/gitignore/templates/{name}", name=name)
-        return self._createStruct(Github.GitIgnoreTemplate, "GET", url)
+        r = self.Session._request("GET", url)
+        return Github.GitIgnoreTemplate(self.Session, r.json())
 
     def get_gitignore_templates(self):
         """
@@ -176,7 +178,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
 
         url = uritemplate.expand("https://api.github.com/gitignore/templates")
-        return self._returnRawData("GET", url)
+        r = self.Session._request("GET", url)
+        return r.json()
 
     def get_org(self, org):
         """
@@ -191,7 +194,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         org = PyGithub.Blocking.Parameters.normalizeString(org)
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}", org=org)
-        return self._createInstance(PyGithub.Blocking.Organization.Organization, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Organization.Organization(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_rate_limit(self):
         """
@@ -203,7 +207,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
 
         url = uritemplate.expand("https://api.github.com/rate_limit")
-        return self._createStruct(Github.RateLimit, "GET", url)
+        r = self.Session._request("GET", url)
+        return Github.RateLimit(self.Session, r.json())
 
     def get_repo(self, repo):
         """
@@ -221,7 +226,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         repo = PyGithub.Blocking.Parameters.normalizeTwoStringsString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        return self._createInstance(PyGithub.Blocking.Repository.Repository, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, since=None):
         """
@@ -238,7 +244,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repositories")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(since=since)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_team(self, id):
         """
@@ -253,7 +259,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         id = PyGithub.Blocking.Parameters.normalizeInt(id)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}", id=str(id))
-        return self._createInstance(PyGithub.Blocking.Team.Team, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.Team.Team(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_user(self, user):
         """
@@ -268,7 +275,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeString(user)
 
         url = uritemplate.expand("https://api.github.com/users/{user}", user=user)
-        return self._createInstance(PyGithub.Blocking.User.User, "GET", url)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.User.User(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_users(self, since=None):
         """
@@ -285,4 +293,4 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/users")
         urlArguments = PyGithub.Blocking.Parameters.dictionary(since=since)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)

@@ -36,16 +36,16 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, id=PyGithub.Blocking.Attributes.Absent, members_count=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, organization=PyGithub.Blocking.Attributes.Absent, permission=PyGithub.Blocking.Attributes.Absent, repos_count=PyGithub.Blocking.Attributes.Absent, repositories_url=PyGithub.Blocking.Attributes.Absent, slug=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Team, self)._initAttributes(**kwds)
-        self.__id = self._createIntAttribute("Team.id", id)
-        self.__members_count = self._createIntAttribute("Team.members_count", members_count)
-        self.__members_url = self._createStringAttribute("Team.members_url", members_url)
-        self.__name = self._createStringAttribute("Team.name", name)
-        self.__organization = self._createClassAttribute("Team.organization", PyGithub.Blocking.Organization.Organization, organization)
-        self.__permission = self._createStringAttribute("Team.permission", permission)
-        self.__repos_count = self._createIntAttribute("Team.repos_count", repos_count)
-        self.__repositories_url = self._createStringAttribute("Team.repositories_url", repositories_url)
-        self.__slug = self._createStringAttribute("Team.slug", slug)
-        self.__url = self._createStringAttribute("Team.url", url)
+        self.__id = PyGithub.Blocking.Attributes.IntAttribute("Team.id", id)
+        self.__members_count = PyGithub.Blocking.Attributes.IntAttribute("Team.members_count", members_count)
+        self.__members_url = PyGithub.Blocking.Attributes.StringAttribute("Team.members_url", members_url)
+        self.__name = PyGithub.Blocking.Attributes.StringAttribute("Team.name", name)
+        self.__organization = PyGithub.Blocking.Attributes.ClassAttribute("Team.organization", self.Session, PyGithub.Blocking.Organization.Organization, organization)
+        self.__permission = PyGithub.Blocking.Attributes.StringAttribute("Team.permission", permission)
+        self.__repos_count = PyGithub.Blocking.Attributes.IntAttribute("Team.repos_count", repos_count)
+        self.__repositories_url = PyGithub.Blocking.Attributes.StringAttribute("Team.repositories_url", repositories_url)
+        self.__slug = PyGithub.Blocking.Attributes.StringAttribute("Team.slug", slug)
+        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Team.url", url)
 
     def _updateAttributes(self, eTag, id=PyGithub.Blocking.Attributes.Absent, members_count=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, organization=PyGithub.Blocking.Attributes.Absent, permission=PyGithub.Blocking.Attributes.Absent, repos_count=PyGithub.Blocking.Attributes.Absent, repositories_url=PyGithub.Blocking.Attributes.Absent, slug=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Team, self)._updateAttributes(eTag, **kwds)
@@ -153,7 +153,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def add_to_repos(self, repo):
         """
@@ -168,7 +168,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{org}/{repo}", id=str(self.id), org=repo[0], repo=repo[1])
-        self._triggerSideEffect("PUT", url)
+        r = self.Session._request("PUT", url)
 
     def delete(self):
         """
@@ -180,7 +180,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         url = uritemplate.expand(self.url)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def edit(self, name=None, permission=None):
         """
@@ -200,7 +200,8 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, permission=permission)
-        self._updateWith("PATCH", url, postArguments=postArguments)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
 
     def get_members(self, per_page=None):
         """
@@ -217,7 +218,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.members_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.User.User, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repos(self, per_page=None):
         """
@@ -234,7 +235,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.repositories_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
-        return self._createPaginatedList(PyGithub.Blocking.Repository.Repository, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_members(self, user):
         """
@@ -249,7 +250,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def has_in_repos(self, repo):
         """
@@ -264,7 +269,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
-        return self._createBool("GET", url)
+        r = self.Session._request("GET", url, accept404=True)
+        if r.status_code == 204:
+            return True
+        else:
+            return False
 
     def remove_from_members(self, user):
         """
@@ -279,7 +288,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         user = PyGithub.Blocking.Parameters.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)
 
     def remove_from_repos(self, repo):
         """
@@ -294,4 +303,4 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)

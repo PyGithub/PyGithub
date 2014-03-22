@@ -55,7 +55,7 @@ def load_tests(loader, tests, ignore):
             for fileName in fnmatch.filter(fileNames, "*.py"):
                 files.append(os.path.join(root, fileName))
 
-        tests.addTests(doctest.DocFileSuite(*files, module_relative=False, setUp=setUp))
+        # tests.addTests(doctest.DocFileSuite(*files, module_relative=False, setUp=setUp))
     return tests
 
 if __name__ == "__main__":

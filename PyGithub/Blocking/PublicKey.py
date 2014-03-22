@@ -34,11 +34,11 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, id=PyGithub.Blocking.Attributes.Absent, key=PyGithub.Blocking.Attributes.Absent, title=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, verified=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(PublicKey, self)._initAttributes(**kwds)
-        self.__id = self._createIntAttribute("PublicKey.id", id)
-        self.__key = self._createStringAttribute("PublicKey.key", key)
-        self.__title = self._createStringAttribute("PublicKey.title", title)
-        self.__url = self._createStringAttribute("PublicKey.url", url)
-        self.__verified = self._createBoolAttribute("PublicKey.verified", verified)
+        self.__id = PyGithub.Blocking.Attributes.IntAttribute("PublicKey.id", id)
+        self.__key = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.key", key)
+        self.__title = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.title", title)
+        self.__url = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.url", url)
+        self.__verified = PyGithub.Blocking.Attributes.BoolAttribute("PublicKey.verified", verified)
 
     def _updateAttributes(self, eTag, id=PyGithub.Blocking.Attributes.Absent, key=PyGithub.Blocking.Attributes.Absent, title=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, verified=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(PublicKey, self)._updateAttributes(eTag, **kwds)
@@ -102,4 +102,4 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         url = uritemplate.expand(self.url)
-        self._triggerSideEffect("DELETE", url)
+        r = self.Session._request("DELETE", url)

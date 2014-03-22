@@ -98,7 +98,7 @@ class DatetimeAttribute(_Attribute):
                 self.setInvalidValue(value, datetime.datetime)
 
 
-class BuiltinAttribute(_Attribute):
+class _BuiltinAttribute(_Attribute):
     def __init__(self, name, type, value):
         self.__type = type
         _Attribute.__init__(self, name, value)
@@ -108,6 +108,21 @@ class BuiltinAttribute(_Attribute):
             self.setValidValue(value)
         else:
             self.setInvalidValue(value, self.__type)
+
+
+class StringAttribute(_BuiltinAttribute):
+    def __init__(self, name, value):
+        _BuiltinAttribute.__init__(self, name, basestring, value)
+
+
+class IntAttribute(_BuiltinAttribute):
+    def __init__(self, name, value):
+        _BuiltinAttribute.__init__(self, name, int, value)
+
+
+class BoolAttribute(_BuiltinAttribute):
+    def __init__(self, name, value):
+        _BuiltinAttribute.__init__(self, name, bool, value)
 
 
 class ClassAttribute(_Attribute):
