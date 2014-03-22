@@ -6,7 +6,17 @@ Introduction
 Installation
 ------------
 
-While v2 is in alpha, you have to clone or download it from `Github <https://github.com/jacquev6/PyGithub/tree/develop_v2>`__ and run ``python setup.py install``. You may want to use `Virtualenv <http://www.virtualenv.org/>`__.
+While v2 is in alpha, you have to clone or download it from `Github <https://github.com/jacquev6/PyGithub/tree/develop_v2>`__ and run ``python setup.py install``. You may want to use `Virtualenv <http://www.virtualenv.org/>`__ to avoid conflicts with your existing install of v1::
+
+    git clone git@github.com:jacquev6/PyGithub --branch develop_v2
+    cd PyGithub
+    virtualenv env
+    source env/bin/activate
+    pip install -r requirements.txt
+    python setup.py install
+    python -c "import PyGithub"
+
+
 
 First use
 ---------
