@@ -1,0 +1,22 @@
+attributes:
+  - name: content
+    type: string
+  - name: encoding
+    type: string
+  - name: git_url
+    type: string
+  - name: html_url
+    type: string
+  - name: name
+    type: string
+  - name: path
+    type: string
+  - name: sha
+    type: string
+  - name: size
+    type: int
+  - name: type
+    type: string
+  - name: url
+    type: string
+deprecated_attributes: [_links]

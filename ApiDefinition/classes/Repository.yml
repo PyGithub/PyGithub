@@ -241,6 +241,46 @@ methods:
       - name: anon
         value: parameter anon
     return_strategy: paginatedList(union(Contributor, AnonymousContributor))
+  - name: get_dir_content
+    parameters:
+      - name: path
+        type: string
+    optional_parameters:
+      - name: ref
+        type: string
+    end_point: GET /repos/:owner/:repo/contents/:path
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: path
+        value: parameter path
+    url_arguments:
+      - name: ref
+        value: parameter ref
+    return_strategy: listOf(union(File, Dir))
+  - name: get_file_content
+    parameters:
+      - name: path
+        type: string
+    optional_parameters:
+      - name: ref
+        type: string
+    end_point: GET /repos/:owner/:repo/contents/:path
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: path
+        value: parameter path
+    url_arguments:
+      - name: ref
+        value: parameter ref
+    return_strategy: instanceFromAttributes(File)
   - name: get_forks
     end_point: GET /repos/:owner/:repo/forks
     optional_parameters:
@@ -267,6 +307,21 @@ methods:
     end_point: GET /repos/:owner/:repo/keys
     url_template: attribute keys_url
     return_strategy: listOf(PublicKey)
+  - name: get_readme
+    optional_parameters:
+      - name: ref
+        type: string
+    end_point: GET /repos/:owner/:repo/readme
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    url_arguments:
+      - name: ref
+        value: parameter ref
+    return_strategy: instanceFromAttributes(File)
   - name: get_stargazers
     end_point: GET /repos/:owner/:repo/stargazers
     url_template: attribute stargazers_url

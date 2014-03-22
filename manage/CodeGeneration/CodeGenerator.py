@@ -293,6 +293,9 @@ class CodeGenerator:
     def generateCodeForListOfClassReturnStrategy(self, method):
         return 'return self._createList({}, {})'.format(("" if method.returnStrategy.returnType.content is method.containerClass else method.returnStrategy.returnType.content.module + ".") + method.returnStrategy.returnType.content.name, self.generateCallArguments(method))
 
+    def generateCodeForListOfUnionReturnStrategy(self, method):
+        return 'return self._createList(PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File)), {})'.format(self.generateCallArguments(method))
+
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)
         if len(m.urlArguments) != 0:

@@ -5,6 +5,8 @@
 import datetime
 
 import PyGithub.Blocking
+import PyGithub.Blocking.Dir
+import PyGithub.Blocking.File
 import PyGithub.Blocking.User
 
 import PyGithub.Blocking.tests.Framework as Framework
@@ -371,3 +373,35 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
     def testCreateKey(self):
         key = self.g.get_repo("jacquev6/CodingDojos").create_key("vincent@test", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkQih2DtSwBzLUtSNYEKULlI5M1qa6vnq42xt9qZpkLav3G9eD/GqJRST+zZMsyfpP62PtiYKXJdLJX2MQIzUgI2PzNy+iMy+ldiTEABYEOCa+BH9+x2R5xXGlmmCPblpamx3kstGtCTa3LSkyIvxbt5vjbXCyThhJaSKyh+42Uedcz7l0y/TODhnkpid/5eiBz6k0VEbFfhM6h71eBdCFpeMJIhGaPTjbKsEjXIK0SRe0v0UQnpXJQkhAINbm+q/2yjt7zwBF74u6tQjRqJK7vQO2k47ZmFMAGeIxS6GheI+JPmwtHkxvfaJjy2lIGX+rt3lkW8xEUxiMTlxeh+0R")
         self.assertEqual(key.id, 7229238)
+
+    def testGetReadme(self):
+        readme = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_readme()
+        self.assertEqual(readme.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
+
+    def testGetReadme_allParameters(self):
+        # @todoAlpha ref can also be a GitObject
+        readme = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_readme(ref="develop")
+        self.assertEqual(readme.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=develop")
+
+    def testGetFileContent(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("README.md")
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
+
+    def testGetFileContentWithinDirectory(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("a/foo.md")
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/a/foo.md?ref=master")
+
+    def testGetFileContent_allParameters(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("toto.md", ref="develop")
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/toto.md?ref=develop")
+
+    def testGetRootDirContent(self):
+        contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("")
+        self.assertEqual(len(contents), 2)
+        self.assertIsInstance(contents[0], PyGithub.Blocking.File.File)
+        self.assertIsInstance(contents[1], PyGithub.Blocking.Dir.Dir)
+
+    def testDirContent_allParameters(self):
+        contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("a/b", ref="master")
+        self.assertEqual(len(contents), 1)
+        self.assertIsInstance(contents[0], PyGithub.Blocking.Dir.Dir)

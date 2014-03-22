@@ -643,7 +643,9 @@ GET /repos/:owner/:repo/contents/:path
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/contents#get-contents>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_dir_content`
+  * :meth:`.Repository.get_file_content`
 
 PUT /repos/:owner/:repo/contents/:path
 --------------------------------------
@@ -1260,7 +1262,8 @@ GET /repos/:owner/:repo/readme
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/contents#get-the-readme>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_readme`
 
 GET /repos/:owner/:repo/releases
 --------------------------------

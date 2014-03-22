@@ -16,6 +16,8 @@ import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
 import PyGithub.Blocking.Contributor
+import PyGithub.Blocking.Dir
+import PyGithub.Blocking.File
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Team
@@ -966,6 +968,46 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         urlArguments = PyGithub.Blocking.Parameters.dictionary(anon=anon, per_page=per_page)
         return self._createPaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), "GET", url, urlArguments=urlArguments)
 
+    def get_dir_content(self, path, ref=None):
+        """
+        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.get_file_content`
+
+        :param path: mandatory :class:`string`
+        :param ref: optional :class:`string`
+        :rtype: :class:`list` of :class:`.File` or :class:`.Dir`
+        """
+
+        path = PyGithub.Blocking.Parameters.normalizeString(path)
+        if ref is not None:
+            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
+        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
+        return self._createList(PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File)), "GET", url, urlArguments=urlArguments)
+
+    def get_file_content(self, path, ref=None):
+        """
+        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.get_dir_content`
+
+        :param path: mandatory :class:`string`
+        :param ref: optional :class:`string`
+        :rtype: :class:`.File`
+        """
+
+        path = PyGithub.Blocking.Parameters.normalizeString(path)
+        if ref is not None:
+            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
+        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
+        return self._createInstance(PyGithub.Blocking.File.File, "GET", url, urlArguments=urlArguments)
+
     def get_forks(self, sort=None, per_page=None):
         """
         Calls the `GET /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks#list-forks>`__ end point.
@@ -1012,6 +1054,23 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url)
         return self._createList(PyGithub.Blocking.PublicKey.PublicKey, "GET", url)
+
+    def get_readme(self, ref=None):
+        """
+        Calls the `GET /repos/:owner/:repo/readme <http://developer.github.com/v3/repos/contents#get-the-readme>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param ref: optional :class:`string`
+        :rtype: :class:`.File`
+        """
+
+        if ref is not None:
+            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/readme", owner=self.owner.login, repo=self.name)
+        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
+        return self._createInstance(PyGithub.Blocking.File.File, "GET", url, urlArguments=urlArguments)
 
     def get_stargazers(self, per_page=None):
         """
