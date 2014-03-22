@@ -1,0 +1,275 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/PyGithubIntegrationTests",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "archive_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/{archive_format}{/ref}",
+                "assignees_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/assignees{/user}",
+                "blobs_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs{/sha}",
+                "branches_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/branches{/branch}",
+                "clone_url": "https://github.com/jacquev6/PyGithubIntegrationTests.git",
+                "collaborators_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/collaborators{/collaborator}",
+                "comments_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/comments{/number}",
+                "commits_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/commits{/sha}",
+                "compare_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/compare/{base}...{head}",
+                "contents_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/{+path}",
+                "contributors_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contributors",
+                "created_at": "2014-03-22T16:12:40Z",
+                "default_branch": "master",
+                "description": "Dummy repo to be modified by PyGithub's integration tests",
+                "downloads_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/downloads",
+                "events_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/events",
+                "fork": false,
+                "forks": 0,
+                "forks_count": 0,
+                "forks_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/forks",
+                "full_name": "jacquev6/PyGithubIntegrationTests",
+                "git_commits_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/commits{/sha}",
+                "git_refs_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/refs{/sha}",
+                "git_tags_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/tags{/sha}",
+                "git_url": "git://github.com/jacquev6/PyGithubIntegrationTests.git",
+                "has_downloads": true,
+                "has_issues": true,
+                "has_wiki": false,
+                "homepage": null,
+                "hooks_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/hooks",
+                "html_url": "https://github.com/jacquev6/PyGithubIntegrationTests",
+                "id": 18013723,
+                "issue_comment_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/issues/comments/{number}",
+                "issue_events_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/issues/events{/number}",
+                "issues_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/issues{/number}",
+                "keys_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/keys{/key_id}",
+                "labels_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/labels{/name}",
+                "language": null,
+                "languages_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/languages",
+                "merges_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/merges",
+                "milestones_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/milestones{/number}",
+                "mirror_url": null,
+                "name": "PyGithubIntegrationTests",
+                "network_count": 0,
+                "notifications_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/notifications{?since,all,participating}",
+                "open_issues": 0,
+                "open_issues_count": 0,
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "permissions": {
+                    "admin": true,
+                    "pull": true,
+                    "push": true
+                },
+                "private": false,
+                "pulls_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/pulls{/number}",
+                "pushed_at": "2014-03-22T17:53:17Z",
+                "releases_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/releases{/id}",
+                "size": 0,
+                "ssh_url": "git@github.com:jacquev6/PyGithubIntegrationTests.git",
+                "stargazers_count": 0,
+                "stargazers_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/stargazers",
+                "statuses_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/statuses/{sha}",
+                "subscribers_count": 0,
+                "subscribers_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/subscribers",
+                "subscription_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/subscription",
+                "svn_url": "https://github.com/jacquev6/PyGithubIntegrationTests",
+                "tags_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/tags",
+                "teams_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/teams",
+                "trees_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/trees{/sha}",
+                "updated_at": "2014-03-22T17:53:18Z",
+                "url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests",
+                "watchers": 0,
+                "watchers_count": 0
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Mar 2014 18:45:36 GMT",
+                "etag": "\"51253b08e1030f44b98223c426b27d7c\"",
+                "last-modified": "Sat, 22 Mar 2014 17:53:18 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:26C3:1DBF949:532DDA50",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4996",
+                "x-ratelimit-reset": "1395516835",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/PyGithubIntegrationTests/contents/",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "_links": {
+                        "git": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                        "html": "https://github.com/jacquev6/PyGithubIntegrationTests/blob/master/README.md",
+                        "self": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master"
+                    },
+                    "git_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                    "html_url": "https://github.com/jacquev6/PyGithubIntegrationTests/blob/master/README.md",
+                    "name": "README.md",
+                    "path": "README.md",
+                    "sha": "76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                    "size": 109,
+                    "type": "file",
+                    "url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master"
+                },
+                {
+                    "_links": {
+                        "git": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/trees/1b5e66c31c97d735d6c35beecca1e2a783ab8151",
+                        "html": "https://github.com/jacquev6/PyGithubIntegrationTests/tree/master/a",
+                        "self": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/a?ref=master"
+                    },
+                    "git_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/trees/1b5e66c31c97d735d6c35beecca1e2a783ab8151",
+                    "html_url": "https://github.com/jacquev6/PyGithubIntegrationTests/tree/master/a",
+                    "name": "a",
+                    "path": "a",
+                    "sha": "1b5e66c31c97d735d6c35beecca1e2a783ab8151",
+                    "size": null,
+                    "type": "dir",
+                    "url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/a?ref=master"
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Mar 2014 18:45:36 GMT",
+                "etag": "\"51253b08e1030f44b98223c426b27d7c\"",
+                "last-modified": "Sat, 22 Mar 2014 17:53:18 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:26C3:1DBF95D:532DDA50",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4995",
+                "x-ratelimit-reset": "1395516835",
+                "x-served-by": "6d7de9e645814cac34ea2a8d72ba3141"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/repos/jacquev6/PyGithubIntegrationTests/contents/README.md",
+                "query": {
+                    "ref": "master"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "_links": {
+                    "git": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                    "html": "https://github.com/jacquev6/PyGithubIntegrationTests/blob/master/README.md",
+                    "self": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master"
+                },
+                "content": "UHlHaXRodWJJbnRlZ3JhdGlvblRlc3RzCj09PT09PT09PT09PT09PT09PT09\nPT09PQoKRHVtbXkgcmVwbyB0byBiZSBtb2RpZmllZCBieSBQeUdpdGh1Yidz\nIGludGVncmF0aW9uIHRlc3RzCg==\n",
+                "encoding": "base64",
+                "git_url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                "html_url": "https://github.com/jacquev6/PyGithubIntegrationTests/blob/master/README.md",
+                "name": "README.md",
+                "path": "README.md",
+                "sha": "76a7c87928c256c0dec34784ffaf9b936162bfa3",
+                "size": 109,
+                "type": "file",
+                "url": "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 22 Mar 2014 18:45:36 GMT",
+                "etag": "\"c78e078b161b818cf5776449fd95d024\"",
+                "last-modified": "Sat, 22 Mar 2014 17:39:24 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:26C3:1DBF975:532DDA50",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4994",
+                "x-ratelimit-reset": "1395516835",
+                "x-served-by": "c046d59f93ede9ab52d5ac29f1ed70f7"
+            },
+            "status": 200
+        }
+    }
+]

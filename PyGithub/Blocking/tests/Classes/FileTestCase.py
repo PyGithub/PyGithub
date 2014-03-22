@@ -23,3 +23,9 @@ class FileTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(f.size, 109)
         self.assertEqual(f.type, "file")
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
+
+    def testLazyCompletion(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("")[0]
+        self.assertEqual(f.size, 109)
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
+        self.assertEqual(len(f.content), 151)

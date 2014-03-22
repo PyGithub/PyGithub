@@ -401,7 +401,7 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertIsInstance(contents[0], PyGithub.Blocking.File.File)
         self.assertIsInstance(contents[1], PyGithub.Blocking.Dir.Dir)
 
-    def testDirContent_allParameters(self):
+    def testGetDirContent_allParameters(self):
         contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("a/b", ref="master")
         self.assertEqual(len(contents), 1)
         self.assertIsInstance(contents[0], PyGithub.Blocking.Dir.Dir)
