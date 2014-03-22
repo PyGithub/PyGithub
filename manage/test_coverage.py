@@ -25,7 +25,7 @@ def main():
     import PyGithub.tests
     unitTests = unittest.main(exit=False, module=PyGithub.tests)
     cov.stop()
-    # cov.html_report(directory="test_coverage")
+    cov.html_report(directory="test_coverage")
     coverageResult = cov.report() == 100.
     testsResult = unitTests.result.wasSuccessful()
     print()

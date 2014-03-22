@@ -15,6 +15,8 @@ import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
+import PyGithub.Blocking.GitCommit
+
 
 class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -23,6 +25,7 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :attr:`.ContentCommit.content`
       * :meth:`.Repository.get_dir_content`
       * :meth:`.Repository.get_file_content`
       * :meth:`.Repository.get_readme`
@@ -133,3 +136,54 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
+
+    def delete(self, message, author=None, committer=None):
+        """
+        Calls the `DELETE /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#delete-a-file>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param message: mandatory :class:`string`
+        :param author: optional :class:`GitAuthor`
+        :param committer: optional :class:`GitAuthor`
+        :rtype: :class:`.GitCommit`
+        """
+
+        message = PyGithub.Blocking.Parameters.normalizeString(message)
+        if author is not None:
+            author = PyGithub.Blocking.Parameters.normalizeGitAuthor(author)
+        if committer is not None:
+            committer = PyGithub.Blocking.Parameters.normalizeGitAuthor(committer)
+
+        url = uritemplate.expand(self.url)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(sha=self.sha, message=message, committer=committer, author=author)
+        r = self.Session._request("DELETE", url, postArguments=postArguments)
+        return PyGithub.Blocking.GitCommit.GitCommit(self.Session, r.json()["commit"], None)
+
+    def edit(self, message, content, author=None, committer=None):
+        """
+        Calls the `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#update-a-file>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.create_file`
+
+        :param message: mandatory :class:`string`
+        :param content: mandatory :class:`string`
+        :param author: optional :class:`GitAuthor`
+        :param committer: optional :class:`GitAuthor`
+        :rtype: :class:`.GitCommit`
+        """
+
+        message = PyGithub.Blocking.Parameters.normalizeString(message)
+        content = PyGithub.Blocking.Parameters.normalizeString(content)
+        if author is not None:
+            author = PyGithub.Blocking.Parameters.normalizeGitAuthor(author)
+        if committer is not None:
+            committer = PyGithub.Blocking.Parameters.normalizeGitAuthor(committer)
+
+        url = uritemplate.expand(self.url)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(sha=self.sha, message=message, content=content, committer=committer, author=author)
+        r = self.Session._request("PUT", url, postArguments=postArguments)
+        self._updateAttributes(None, **(r.json()["content"]))
+        self.__content.update(content)
+        return PyGithub.Blocking.GitCommit.GitCommit(self.Session, r.json()["commit"], None)

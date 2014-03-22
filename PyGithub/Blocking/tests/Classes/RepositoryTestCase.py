@@ -405,3 +405,23 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("a/b", ref="master")
         self.assertEqual(len(contents), 1)
         self.assertIsInstance(contents[0], PyGithub.Blocking.Dir.Dir)
+
+    def testCreateFile(self):
+        cc = self.g.get_repo("jacquev6/PyGithubIntegrationTests").create_file("hello.md", "Add hello.md", "SGVsbG8sIFdvcmxkIQ==")
+        self.assertEqual(cc.content.size, 13)
+        self.assertEqual(cc.content.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/hello.md?ref=master")
+        self.assertEqual(cc.commit.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/commits/4289f250d2144c637b255e5765ef0fac00f4d8d4")
+
+    def testCreateFile_allParameters(self):
+        cc = self.g.get_repo("jacquev6/PyGithubIntegrationTests").create_file(
+            "hello.md",
+            "Add hello.md",
+            "SGVsbG8sIFdvcmxkIQ==",
+            branch="develop",
+            committer={"name": "John Doe", "email": "john@doe.com"},
+            author={"name": "Jane Doe", "email": "jane@doe.com"},  # @todoAlpha Use a GitCommit.Author? Does the api accept an undocumented date?
+        )
+        self.assertEqual(cc.content.size, 13)
+        self.assertEqual(cc.content.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/hello.md?ref=develop")
+        self.assertEqual(cc.commit.author.name, "Jane Doe")
+        self.assertEqual(cc.commit.committer.email, "john@doe.com")

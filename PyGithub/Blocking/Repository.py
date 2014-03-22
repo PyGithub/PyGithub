@@ -18,6 +18,7 @@ import PyGithub.Blocking.Attributes
 import PyGithub.Blocking.Contributor
 import PyGithub.Blocking.Dir
 import PyGithub.Blocking.File
+import PyGithub.Blocking.GitCommit
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Team
@@ -85,6 +86,31 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             :type: :class:`string`
             """
             return self.__type.value
+
+    class ContentCommit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.Repository.create_file`
+        """
+
+        def _initAttributes(self, commit=None, content=None, **kwds):
+            super(Repository.ContentCommit, self)._initAttributes(**kwds)
+            self.__commit = self._createClassAttribute("Repository.ContentCommit.commit", PyGithub.Blocking.GitCommit.GitCommit, commit)
+            self.__content = self._createClassAttribute("Repository.ContentCommit.content", PyGithub.Blocking.File.File, content)
+
+        @property
+        def commit(self):
+            """
+            :type: :class:`.GitCommit`
+            """
+            return self.__commit.value
+
+        @property
+        def content(self):
+            """
+            :type: :class:`.File`
+            """
+            return self.__content.value
 
     class Permissions(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
@@ -845,6 +871,36 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         self._triggerSideEffect("PUT", url)
+
+    def create_file(self, path, message, content, branch=None, author=None, committer=None):
+        """
+        Calls the `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#update-a-file>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.File.edit`
+
+        :param path: mandatory :class:`string`
+        :param message: mandatory :class:`string`
+        :param content: mandatory :class:`string`
+        :param branch: optional :class:`string`
+        :param author: optional :class:`GitAuthor`
+        :param committer: optional :class:`GitAuthor`
+        :rtype: :class:`.ContentCommit`
+        """
+
+        path = PyGithub.Blocking.Parameters.normalizeString(path)
+        message = PyGithub.Blocking.Parameters.normalizeString(message)
+        content = PyGithub.Blocking.Parameters.normalizeString(content)
+        if branch is not None:
+            branch = PyGithub.Blocking.Parameters.normalizeString(branch)
+        if author is not None:
+            author = PyGithub.Blocking.Parameters.normalizeGitAuthor(author)
+        if committer is not None:
+            committer = PyGithub.Blocking.Parameters.normalizeGitAuthor(committer)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(branch=branch, message=message, content=content, committer=committer, author=author)
+        return self._createStruct(Repository.ContentCommit, "PUT", url, postArguments=postArguments)
 
     def create_key(self, title, key):
         """

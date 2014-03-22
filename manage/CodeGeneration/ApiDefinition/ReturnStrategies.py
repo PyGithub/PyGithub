@@ -20,12 +20,17 @@ class NoneReturnStrategy(ReturnStrategy):
 
 
 class UpdateSelfReturnStrategy(ReturnStrategy):
-    def __init__(self, then):
+    def __init__(self, then, attribute=None):
         self.__then = then
+        self.__attribute = attribute
 
     @property
     def returnType(self):
         return self.__then.returnType
+
+    @property
+    def attribute(self):
+        return self.__attribute
 
 
 class BoolReturnStrategy(ReturnStrategy):
@@ -35,12 +40,17 @@ class BoolReturnStrategy(ReturnStrategy):
 
 
 class InstanceReturnStrategy(ReturnStrategy):
-    def __init__(self, type):
+    def __init__(self, type, attribute=None):
         self.__type = type
+        self.__attribute = attribute
 
     @property
     def returnType(self):
         return self.__type
+
+    @property
+    def attribute(self):
+        return self.__attribute
 
 
 class StructureReturnStrategy(ReturnStrategy):

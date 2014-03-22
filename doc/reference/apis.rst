@@ -636,7 +636,8 @@ DELETE /repos/:owner/:repo/contents/:path
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/contents#delete-a-file>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.File.delete`
 
 GET /repos/:owner/:repo/contents/:path
 --------------------------------------
@@ -652,7 +653,9 @@ PUT /repos/:owner/:repo/contents/:path
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/contents#update-a-file>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.File.edit`
+  * :meth:`.Repository.create_file`
 
 GET /repos/:owner/:repo/contributors
 ------------------------------------

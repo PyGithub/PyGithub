@@ -15,6 +15,12 @@ structures:
         type: bool
       - name: push
         type: bool
+  - name: ContentCommit
+    attributes:
+      - name: content
+        type: File
+      - name: commit
+        type: GitCommit
 attributes:
   - name: archive_url
     type: string
@@ -171,6 +177,42 @@ methods:
       - name: collaborator
         value: parameter user
     return_strategy: none
+  - name: create_file
+    parameters:
+      - name: path
+        type: string
+      - name: message
+        type: string
+      - name: content
+        type: string
+    optional_parameters:
+      - name: branch
+        type: string
+      - name: author
+        type: GitAuthor
+      - name: committer
+        type: GitAuthor
+    end_point: PUT /repos/:owner/:repo/contents/:path
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: path
+        value: parameter path
+    post_arguments:
+      - name: branch
+        value: parameter branch
+      - name: message
+        value: parameter message
+      - name: content
+        value: parameter content
+      - name: committer
+        value: parameter committer
+      - name: author
+        value: parameter author
+    return_strategy: structFromAttributes(ContentCommit)
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:

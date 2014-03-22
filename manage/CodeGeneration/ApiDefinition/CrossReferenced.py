@@ -198,6 +198,8 @@ class Class(AttributedType):
 
         for s in self.__tmp_structures.values():
             s._crossReference(types, endPoints)
+            for a in s._AttributedType__tmp_attributes:
+                self.__tmp_dependencies.add(a.type)
 
         for m in self.__tmp_methods.values():
             m._crossReference(types, endPoints)
@@ -308,6 +310,16 @@ class Method(Member):
                 unimplementedParameters.remove("bio")
             if self.containerClass.name == "Repository" and self.__name == "edit":
                 unimplementedParameters.remove("has_downloads")
+            if self.containerClass.name == "Repository" and self.__name == "create_file":
+                unimplementedParameters.remove("sha")
+                unimplementedParameters.remove("name")
+                unimplementedParameters.remove("email")
+            if self.containerClass.name == "File" and self.__name in ["edit", "delete"]:
+                unimplementedParameters.remove("sha")
+                unimplementedParameters.remove("name")
+                unimplementedParameters.remove("email")
+                unimplementedParameters.remove("path")
+                unimplementedParameters.remove("branch")
             if len(unimplementedParameters) > 0:
                 print(self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
 
@@ -419,7 +431,7 @@ class Definition(object):
         builder = Class("Builder", "Builder", None, [], [], [build], [])
 
         types = {t: Typing.BuiltinType(t) for t in ["int", "bool", "string", "datetime"]}
-        types.update({t: Typing.BuiltinType(t) for t in ["Reset", "TwoStrings"]})  # @todoAlpha Fix this: those are not builtins
+        types.update({t: Typing.BuiltinType(t) for t in ["Reset", "TwoStrings", "GitAuthor"]})  # @todoAlpha Fix this: those are not builtins
         types.update({t: Class("PyGithub.Blocking.BaseGithubObject", t, None, [], [], [], []) for t in ["SessionedGithubObject", "UpdatableGithubObject"]})
         types.update(classes)
 

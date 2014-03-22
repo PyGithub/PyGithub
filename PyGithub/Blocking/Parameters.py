@@ -138,3 +138,10 @@ def normalizeGitIgnoreTemplateString(tmpl):
         return tmpl
     else:
         raise TypeError()
+
+
+def normalizeGitAuthor(a):
+    if isinstance(a, dict):
+        return a
+    else:
+        raise TypeError()

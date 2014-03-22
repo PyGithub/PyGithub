@@ -1,0 +1,25 @@
+structures:
+  - name: Author
+    attributes:
+    - name: name
+      type: string
+    - name: email
+      type: string
+    - name: date
+      type: datetime
+attributes:
+  - name: author
+    type: Author
+  - name: committer
+    type: Author
+  - name: sha
+    type: string
+  - name: url
+    type: string
+  - name: html_url
+    type: string
+  - name: message
+    type: string
+deprecated_attributes:
+  - tree  # todoAlpha
+  - parents  # todoAlpha
