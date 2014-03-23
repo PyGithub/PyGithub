@@ -124,7 +124,14 @@ class YmlGenerator:
                         yield "        value: " + postArgument.value.origin + " " + postArgument.value.value
 
                 if len(method.effects) == 1:
-                    yield "    effect: update"
+                    yield "    effect: " + method.effects[0]
+                elif len(method.effects) > 1:
+                    yield "    effects:"
+                    for effect in method.effects:
+                        yield "      - " + effect
+
+                if method.returnFrom is not None:
+                    yield "    return_from: " + method.returnFrom
 
                 returnType = method.returnType
                 if returnType is Typing.NoneType:

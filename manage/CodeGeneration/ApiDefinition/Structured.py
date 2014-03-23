@@ -11,7 +11,7 @@ import glob
 Class = collections.namedtuple("Class", "name, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
-Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnType")
+Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
 Parameter = collections.namedtuple("Parameter", "name, type, optional")
 Argument = collections.namedtuple("Argument", "name, value")
@@ -22,8 +22,6 @@ ScalarType = collections.namedtuple("ScalarType", "name")
 LinearCollectionType = collections.namedtuple("LinearCollectionType", "container, content")
 UnionType = collections.namedtuple("UnionType", "types")
 EnumType = collections.namedtuple("EnumType", "values")
-
-UpdateSelfEffect = collections.namedtuple("UpdateSelfEffect", "")
 
 
 class Definition(object):
@@ -103,7 +101,7 @@ class Definition(object):
             type=self.__buildType(type)
         )
 
-    def __buildMethod(self, name, url_template, effect=None, effects=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
+    def __buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
         assert isinstance(name, str), name
         return Method(
             name=name,
@@ -115,6 +113,7 @@ class Definition(object):
             urlArguments=[self.__buildArgument(**a) for a in url_arguments],
             postArguments=[self.__buildArgument(**a) for a in post_arguments],
             effects=[self.__buildEffect(e) for e in self.__makeList(effect, effects)],
+            returnFrom=return_from,
             returnType=self.__buildType(return_type)
         )
 
@@ -164,7 +163,7 @@ class Definition(object):
             assert False, description  # pragma no cover
 
     def __buildEffect(self, effect):
-        return UpdateSelfEffect()
+        return effect  # @todoGeni Structure
 
     def __validate(self, dirName):
         with open(os.path.join(dirName, "unimplemented.yml")) as f:

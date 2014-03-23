@@ -42,6 +42,7 @@ methods:
         value: parameter committer
       - name: author
         value: parameter author
+    return_from: json.commit
     return_type: GitCommit
   - name: edit
     end_point: PUT /repos/:owner/:repo/contents/:path
@@ -67,5 +68,8 @@ methods:
         value: parameter committer
       - name: author
         value: parameter author
-    effect: update
+    effects:
+      - update from json.content
+      - update_attr content from parameter content
+    return_from: json.commit
     return_type: GitCommit

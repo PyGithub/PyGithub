@@ -265,7 +265,14 @@ class CodeGenerator:
             yield from self.generateCodeForEffect(method, effect)
 
     def generateCodeForEffect(self, method, effect):
-        yield 'self._updateAttributes(r.headers.get("ETag"), **r.json())'
+        if effect == "update":
+            yield 'self._updateAttributes(r.headers.get("ETag"), **r.json())'
+        elif effect == "update from json.content":
+            yield 'self._updateAttributes(None, **(r.json()["content"]))'
+        elif effect == "update_attr content from parameter content":
+            yield "self.__content.update(content)"
+        else:
+            assert False  # pragma no cover
 
     def generateCodeForReturnValue(self, method):
         yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.category)(method)
@@ -274,7 +281,12 @@ class CodeGenerator:
         return []
 
     def generateCodeForClassReturnValue(self, method):
-        yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+        if method.returnFrom is None:
+            yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+        elif method.returnFrom == "json.commit":
+            yield 'return {}(self.Session, r.json()["commit"], None)'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+        else:
+            assert False  # pragma no cover
 
     def generateCodeForLinearCollectionReturnValue(self, method):
         yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.container.name)(method)

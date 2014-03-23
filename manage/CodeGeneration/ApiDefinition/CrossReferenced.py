@@ -274,7 +274,7 @@ class Structure(AttributedType, Member):
 
 
 class Method(Member):
-    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnType):
+    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType):
         Member.__init__(self, containerClass)
         self.__name = name
         self.__parameters = [Parameter(*p) for p in parameters]
@@ -283,6 +283,7 @@ class Method(Member):
         self.__urlArguments = [Argument(*a) for a in urlArguments]
         self.__postArguments = [Argument(*a) for a in postArguments]
         self.__effects = effects
+        self.__returnFrom = returnFrom
 
         self.__tmp_endPointDescriptions = endPoints
         self.__tmp_returnTypeDescription = returnType
@@ -372,6 +373,10 @@ class Method(Member):
         return self.__urlArguments
 
     @property
+    def returnFrom(self):
+        return self.__returnFrom
+
+    @property
     def returnType(self):
         return self.__returnType
 
@@ -429,7 +434,7 @@ class Definition(object):
 
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
-        build = Structured.Method("Build", [], [], "end_point", [], [], [], [], Structured.ScalarType("Github"))
+        build = Structured.Method("Build", [], [], "end_point", [], [], [], [], None, Structured.ScalarType("Github"))
         self.__builder = Class("Builder", "Builder", None, [], [], [build], [])
 
         typesRepo = Typing.Repository()
