@@ -337,6 +337,9 @@ class Method(Member):
                 unimplementedParameters.remove("email")
                 unimplementedParameters.remove("path")
                 unimplementedParameters.remove("branch")
+            if self.containerClass.name == "Dir" and self.__name in ["get_content"]:
+                unimplementedParameters.remove("path")
+                unimplementedParameters.remove("ref")
             if len(unimplementedParameters) > 0:
                 print(self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
 

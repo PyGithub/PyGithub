@@ -15,6 +15,8 @@ import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
+import PyGithub.Blocking.File
+
 
 class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -23,6 +25,7 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.Dir.get_content`
       * :meth:`.Repository.get_dir_content`
     """
 
@@ -111,3 +114,18 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
+
+    def get_content(self):
+        """
+        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.get_dir_content`
+          * :meth:`.Repository.get_file_content`
+
+        :rtype: :class:`list` of :class:`.File` or :class:`.Dir`
+        """
+
+        url = uritemplate.expand(self.url)
+        r = self.Session._request("GET", url)
+        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]

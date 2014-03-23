@@ -26,6 +26,7 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :attr:`.ContentCommit.content`
+      * :meth:`.Dir.get_content`
       * :meth:`.Repository.get_dir_content`
       * :meth:`.Repository.get_file_content`
       * :meth:`.Repository.get_readme`

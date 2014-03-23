@@ -17,3 +17,11 @@ attributes:
     type: string
 deprecated_attributes:
   - _links
+methods:
+  - name: get_content
+    end_point: GET /repos/:owner/:repo/contents/:path
+    url_template: attribute url
+    return_type:
+      container: list
+      content:
+        union: [File, Dir]

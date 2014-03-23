@@ -1032,6 +1032,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
 
         The following methods also call this end point:
+          * :meth:`.Dir.get_content`
           * :meth:`.Repository.get_file_content`
 
         :param path: mandatory :class:`string`
@@ -1053,6 +1054,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
 
         The following methods also call this end point:
+          * :meth:`.Dir.get_content`
           * :meth:`.Repository.get_dir_content`
 
         :param path: mandatory :class:`string`
