@@ -6,7 +6,7 @@
 Access to the session
 ---------------------
 
-All objects returned by PyGithub inherit a :attr:`.Session` attribute. You can use it to access session-wide
+All objects returned by PyGithub have a :attr:`.Session` attribute. You can use it to access session-wide
 information, like your `rate limit <http://developer.github.com/v3/#rate-limiting>`_ in :attr:`.RateLimit`.
 
 
