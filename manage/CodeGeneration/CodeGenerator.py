@@ -229,7 +229,10 @@ class CodeGenerator:
         if len(method.postArguments) != 0:
             yield "postArguments = PyGithub.Blocking.Parameters.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
-        yield from self.generateCodeForReturnStrategy(method)
+        if not method.returnType.name.startswith("PaginatedList of"):
+            yield "r = self.Session._request({})".format(self.generateCallArguments(method))
+        yield from self.generateCodeForEffects(method)
+        yield from self.generateCodeForReturnValue(method)
 
     def generateCodeToNormalizeParameter(self, parameter):
         return self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.category)(parameter)
@@ -257,61 +260,61 @@ class CodeGenerator:
         t = parameter.type.types[0]
         return "{} = PyGithub.Blocking.Parameters.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
 
-    def generateCodeForReturnStrategy(self, method):
-        yield from self.getMethod("generateCodeFor{}ReturnStrategy", method.returnStrategy.name)(method)
+    def generateCodeForEffects(self, method):
+        for effect in method.effects:
+            yield from self.generateCodeForEffect(method, effect)
 
-    def generateCodeForBoolReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
+    def generateCodeForEffect(self, method, effect):
+        yield 'self._updateAttributes(r.headers.get("ETag"), **r.json())'
+
+    def generateCodeForReturnValue(self, method):
+        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.category)(method)
+
+    def generateCodeForNoneReturnValue(self, method):
+        return []
+
+    def generateCodeForClassReturnValue(self, method):
+        yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+
+    def generateCodeForLinearCollectionReturnValue(self, method):
+        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.container.name)(method)
+
+    def generateCodeForPaginatedListReturnValue(self, method):
+        yield from self.getMethod("generateCodeForPaginatedListOf{}ReturnValue", method.returnType.content.category)(method)
+
+    def generateCodeForPaginatedListOfClassReturnValue(self, method):
+        yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
+
+    def generateCodeForPaginatedListOfUnionReturnValue(self, method):
+        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), self.Session, {})'.format(self.generateCallArguments(method))
+
+    def generateCodeForListReturnValue(self, method):
+        yield from self.getMethod("generateCodeForListOf{}ReturnValue", method.returnType.content.category)(method)
+
+    def generateCodeForListOfBuiltinReturnValue(self, method):
+        yield "return r.json()"
+
+    def generateCodeForListOfClassReturnValue(self, method):
+        yield "return [{}(self.Session, a, None) for a in r.json()]".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
+
+    def generateCodeForListOfUnionReturnValue(self, method):
+        yield 'return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]'
+
+    def generateCodeForBuiltinReturnValue(self, method):
+        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.name)(method)
+
+    def generateCodeForStructReturnValue(self, method):
+        yield "return {}(self.Session, r.json())".format(method.containerClass.name + "." + method.returnType.name)
+
+    def generateCodeForBoolReturnValue(self, method):
         yield "if r.status_code == 204:"  # To force coverage of both cases in all classes
         yield "    return True"
         yield "else:"
         yield "    return False"
 
-    def generateCodeForInstanceReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(("" if method.returnStrategy.returnType is method.containerClass else method.returnStrategy.returnType.module + ".") + method.returnStrategy.returnType.name)
-
-    def generateCodeForNoneReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-
-    def generateCodeForPaginatedListReturnStrategy(self, method):
-        yield from self.getMethod("generateCodeForPaginatedListOf{}ReturnStrategy", method.returnStrategy.returnType.content.category)(method)
-
-    def generateCodeForPaginatedListOfClassReturnStrategy(self, method):
-        yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnStrategy.returnType.content is method.containerClass else method.returnStrategy.returnType.content.module + ".") + method.returnStrategy.returnType.content.name, self.generateCallArguments(method))
-
-    def generateCodeForPaginatedListOfUnionReturnStrategy(self, method):
-        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), self.Session, {})'.format(self.generateCallArguments(method))
-
-    def generateCodeForPaginatedListWithoutPerPageReturnStrategy(self, method):
-        yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnStrategy.returnType.content is method.containerClass else method.returnStrategy.returnType.content.module + ".") + method.returnStrategy.returnType.content.name, self.generateCallArguments(method))
-
-    def generateCodeForStructureReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield "return {}(self.Session, r.json())".format(method.containerClass.name + "." + method.returnStrategy.returnType.name)
-
-    def generateCodeForUpdateSelfReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield 'self._updateAttributes(r.headers.get("ETag"), **r.json())'
-
-    def generateCodeForListOfReturnStrategy(self, method):
-        yield from self.getMethod("generateCodeForListOf{}ReturnStrategy", method.returnStrategy.returnType.content.category)(method)
-
-    def generateCodeForListOfBuiltinReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield "return r.json()"
-
-    def generateCodeForListOfClassReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield "return [{}(self.Session, a, None) for a in r.json()]".format(("" if method.returnStrategy.returnType.content is method.containerClass else method.returnStrategy.returnType.content.module + ".") + method.returnStrategy.returnType.content.name)
-
-    def generateCodeForListOfUnionReturnStrategy(self, method):
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
-        yield 'return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]'
-
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)
-        if m.returnStrategy.name == "Bool":
+        if m.returnType.name == "bool":
             args += ", accept404=True"
         if len(m.urlArguments) != 0:
             args += ", urlArguments=urlArguments"

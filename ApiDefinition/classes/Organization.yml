@@ -26,7 +26,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: create_fork
     end_point: POST /repos/:owner/:repo/forks
     parameters:
@@ -41,7 +41,7 @@ methods:
     post_arguments:
       - name: organization
         value: attribute login
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: create_repo
     end_point: POST /orgs/:org/repos
     parameters:
@@ -65,7 +65,7 @@ methods:
       - name: auto_init
         type: bool
       - name: gitignore_template
-        type: Github.GitIgnoreTemplate
+        type: GitIgnoreTemplate
     url_template: attribute repos_url
     post_arguments:
       - name: name
@@ -88,7 +88,7 @@ methods:
         value: parameter auto_init
       - name: gitignore_template
         value: parameter gitignore_template
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: create_team
     end_point: POST /orgs/:org/teams
     parameters:
@@ -97,12 +97,11 @@ methods:
     optional_parameters:
       - name: repo_names
         type:
-          meta: list
-          type: Repository
+          container: list
+          content: Repository
       - name: permission
         type:
-          meta: enum
-          values: [pull, push, admin]
+          enum: [pull, push, admin]
     url_template: end_point
     url_template_arguments:
       - name: org
@@ -114,22 +113,27 @@ methods:
         value: parameter permission
       - name: repo_names
         value: parameter repo_names
-    return_strategy: instanceFromAttributes(Team)
+    return_type: Team
   - name: edit
     end_point: PATCH /orgs/:org
     optional_parameters:
       - name: billing_email
         type: string
       - name: blog
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: company
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: email
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: location
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: name
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
     url_template: attribute url
     post_arguments:
       - name: billing_email
@@ -144,23 +148,37 @@ methods:
         value: parameter location
       - name: name
         value: parameter name
-    return_strategy: updateSelfThen(none)
+    effect: update
+    return_type: none
   - name: get_members
     end_point: GET /orgs/:org/members
     optional_parameters:
       - name: filter
         type:
-          meta: enum
-          values: [all, 2fa_disabled]
+          enum: [all, 2fa_disabled]
+      - name: per_page
+        type: int
     url_template: attribute members_url
     url_arguments:
       - name: filter
         value: parameter filter
-    return_strategy: paginatedList(User)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_public_members
     end_point: GET /orgs/:org/public_members
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute public_members_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_repo
     end_point: GET /repos/:owner/:repo
     parameters:
@@ -172,26 +190,39 @@ methods:
         value: attribute login
       - name: repo
         value: parameter repo
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: get_repos
     end_point: GET /orgs/:org/repos
     optional_parameters:
       - name: type
         type:
-          meta: enum
-          values: [all, public, private, forks, sources, member]
+          enum: [all, public, private, forks, sources, member]
+      - name: per_page
+        type: int
     url_template: attribute repos_url
     url_arguments:
       - name: type
         value: parameter type
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_teams
     end_point: GET /orgs/:org/teams
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
     url_template_arguments:
       - name: org
         value: attribute login
-    return_strategy: paginatedList(Team)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Team
   - name: has_in_members
     end_point: GET /orgs/:org/members/:user
     parameters:
@@ -201,7 +232,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: has_in_public_members
     end_point: GET /orgs/:org/public_members/:user
     parameters:
@@ -211,7 +242,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: remove_from_members
     end_point: DELETE /orgs/:org/members/:user
     parameters:
@@ -221,7 +252,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: remove_from_public_members
     end_point: DELETE /orgs/:org/public_members/:user
     parameters:
@@ -231,4 +262,4 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: none
+    return_type: none

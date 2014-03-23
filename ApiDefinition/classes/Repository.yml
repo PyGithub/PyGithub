@@ -7,6 +7,12 @@ structures:
         type: string
       - name: type
         type: string
+  - name: ContentCommit
+    attributes:
+      - name: commit
+        type: GitCommit
+      - name: content
+        type: File
   - name: Permissions
     attributes:
       - name: admin
@@ -15,12 +21,6 @@ structures:
         type: bool
       - name: push
         type: bool
-  - name: ContentCommit
-    attributes:
-      - name: content
-        type: File
-      - name: commit
-        type: GitCommit
 attributes:
   - name: archive_url
     type: string
@@ -115,7 +115,8 @@ attributes:
   - name: open_issues_count
     type: int
   - name: owner
-    types: [User, Organization]
+    type:
+      union: [User, Organization]
   - name: parent
     type: Repository
   - name: permissions
@@ -176,8 +177,9 @@ methods:
     url_template_arguments:
       - name: collaborator
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: create_file
+    end_point: PUT /repos/:owner/:repo/contents/:path
     parameters:
       - name: path
         type: string
@@ -192,7 +194,6 @@ methods:
         type: GitAuthor
       - name: committer
         type: GitAuthor
-    end_point: PUT /repos/:owner/:repo/contents/:path
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -212,7 +213,7 @@ methods:
         value: parameter committer
       - name: author
         value: parameter author
-    return_strategy: structFromAttributes(ContentCommit)
+    return_type: ContentCommit
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:
@@ -226,20 +227,22 @@ methods:
         value: parameter title
       - name: key
         value: parameter key
-    return_strategy: instanceFromAttributes(PublicKey)
+    return_type: PublicKey
   - name: delete
     end_point: DELETE /repos/:owner/:repo
     url_template: attribute url
-    return_strategy: none
+    return_type: none
   - name: edit
     end_point: PATCH /repos/:owner/:repo
     optional_parameters:
       - name: name
         type: string
       - name: description
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: homepage
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: private
         type: bool
       - name: has_issues
@@ -264,33 +267,57 @@ methods:
         value: parameter has_wiki
       - name: default_branch
         value: parameter default_branch
-    return_strategy: updateSelfThen(none)
+    effect: update
+    return_type: none
   - name: get_assignees
     end_point: GET /repos/:owner/:repo/assignees
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute assignees_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_collaborators
     end_point: GET /repos/:owner/:repo/collaborators
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute collaborators_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_contributors
     end_point: GET /repos/:owner/:repo/contributors
     optional_parameters:
       - name: anon
         type: bool
+      - name: per_page
+        type: int
     url_template: attribute contributors_url
     url_arguments:
       - name: anon
         value: parameter anon
-    return_strategy: paginatedList(union(Contributor, AnonymousContributor))
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content:
+        union: [Contributor, AnonymousContributor]
   - name: get_dir_content
+    end_point: GET /repos/:owner/:repo/contents/:path
     parameters:
       - name: path
         type: string
     optional_parameters:
       - name: ref
         type: string
-    end_point: GET /repos/:owner/:repo/contents/:path
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -302,15 +329,18 @@ methods:
     url_arguments:
       - name: ref
         value: parameter ref
-    return_strategy: listOf(union(File, Dir))
+    return_type:
+      container: list
+      content:
+        union: [File, Dir]
   - name: get_file_content
+    end_point: GET /repos/:owner/:repo/contents/:path
     parameters:
       - name: path
         type: string
     optional_parameters:
       - name: ref
         type: string
-    end_point: GET /repos/:owner/:repo/contents/:path
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -322,38 +352,45 @@ methods:
     url_arguments:
       - name: ref
         value: parameter ref
-    return_strategy: instanceFromAttributes(File)
+    return_type: File
   - name: get_forks
     end_point: GET /repos/:owner/:repo/forks
     optional_parameters:
       - name: sort
         type:
-          meta: enum
-          values: [newest, oldest, stargazers]
+          enum: [newest, oldest, stargazers]
+      - name: per_page
+        type: int
     url_template: attribute forks_url
     url_arguments:
       - name: sort
         value: parameter sort
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_key
+    end_point: GET /repos/:owner/:repo/keys/:id
     parameters:
       - name: id
         type: int
-    end_point: GET /repos/:owner/:repo/keys/:id
     url_template: attribute keys_url
     url_template_arguments:
       - name: key_id
         value: parameter id
-    return_strategy: instanceFromAttributes(PublicKey)
+    return_type: PublicKey
   - name: get_keys
     end_point: GET /repos/:owner/:repo/keys
     url_template: attribute keys_url
-    return_strategy: listOf(PublicKey)
+    return_type:
+      container: list
+      content: PublicKey
   - name: get_readme
+    end_point: GET /repos/:owner/:repo/readme
     optional_parameters:
       - name: ref
         type: string
-    end_point: GET /repos/:owner/:repo/readme
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -363,19 +400,43 @@ methods:
     url_arguments:
       - name: ref
         value: parameter ref
-    return_strategy: instanceFromAttributes(File)
+    return_type: File
   - name: get_stargazers
     end_point: GET /repos/:owner/:repo/stargazers
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute stargazers_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_subscribers
     end_point: GET /repos/:owner/:repo/subscribers
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute subscribers_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_teams
     end_point: GET /repos/:owner/:repo/teams
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute teams_url
-    return_strategy: paginatedList(Team)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Team
   - name: has_in_assignees
     end_point: GET /repos/:owner/:repo/assignees/:assignee
     parameters:
@@ -385,7 +446,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: has_in_collaborators
     end_point: GET /repos/:owner/:repo/collaborators/:user
     parameters:
@@ -395,7 +456,7 @@ methods:
     url_template_arguments:
       - name: collaborator
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: remove_from_collaborators
     end_point: DELETE /repos/:owner/:repo/collaborators/:user
     parameters:
@@ -405,4 +466,4 @@ methods:
     url_template_arguments:
       - name: collaborator
         value: parameter user
-    return_strategy: none
+    return_type: none

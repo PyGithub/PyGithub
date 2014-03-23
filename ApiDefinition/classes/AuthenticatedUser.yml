@@ -9,7 +9,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: add_to_starred
     end_point: PUT /user/starred/:owner/:repo
     parameters:
@@ -21,7 +21,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none
   - name: add_to_subscriptions
     end_point: PUT /user/subscriptions/:owner/:repo
     parameters:
@@ -33,7 +33,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none
   - name: create_fork
     end_point: POST /repos/:owner/:repo/forks
     parameters:
@@ -45,7 +45,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: create_key
     end_point: POST /user/keys
     parameters:
@@ -59,7 +59,7 @@ methods:
         value: parameter title
       - name: key
         value: parameter key
-    return_strategy: instanceFromAttributes(PublicKey)
+    return_type: PublicKey
   - name: create_repo
     end_point: POST /user/repos
     parameters:
@@ -81,7 +81,7 @@ methods:
       - name: auto_init
         type: bool
       - name: gitignore_template
-        type: Github.GitIgnoreTemplate
+        type: GitIgnoreTemplate
     url_template: end_point
     post_arguments:
       - name: name
@@ -102,7 +102,7 @@ methods:
         value: parameter auto_init
       - name: gitignore_template
         value: parameter gitignore_template
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: create_subscription
     end_point: PUT /repos/:owner/:repo/subscription
     parameters:
@@ -123,22 +123,28 @@ methods:
         value: parameter subscribed
       - name: ignored
         value: parameter ignored
-    return_strategy: instanceFromAttributes(Subscription)
+    return_type: Subscription
   - name: edit
     end_point: PATCH /user
     optional_parameters:
       - name: name
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: email
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: blog
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: company
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: location
-        types: [string, Reset]
+        type:
+          union: [string, Reset]
       - name: hireable
-        types: [bool, Reset]
+        type:
+          union: [bool, Reset]
     url_template: end_point
     post_arguments:
       - name: blog
@@ -153,33 +159,60 @@ methods:
         value: parameter location
       - name: name
         value: parameter name
-    return_strategy: updateSelfThen(none)
+    effect: update
+    return_type: none
   - name: get_followers
     end_point: GET /user/followers
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_following
     end_point: GET /user/following
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_key
+    end_point: GET /user/keys/:id
     parameters:
       - name: id
         type: int
-    end_point: GET /user/keys/:id
     url_template: end_point
     url_template_arguments:
       - name: id
         value: parameter id
-    return_strategy: instanceFromAttributes(PublicKey)
+    return_type: PublicKey
   - name: get_keys
     end_point: GET /user/keys
     url_template: end_point
-    return_strategy: listOf(PublicKey)
+    return_type:
+      container: list
+      content: PublicKey
   - name: get_orgs
     end_point: GET /user/orgs
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
-    return_strategy: paginatedList(Organization)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Organization
   - name: get_repo
     end_point: GET /repos/:owner/:repo
     parameters:
@@ -191,22 +224,21 @@ methods:
         value: attribute login
       - name: repo
         value: parameter repo
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: get_repos
     end_point: GET /user/repos
     optional_parameters:
       - name: sort
         type:
-          meta: enum
-          values: [created, updated, pushed, full_name]
+          enum: [created, updated, pushed, full_name]
       - name: direction
         type:
-          meta: enum
-          values: [asc, desc]
+          enum: [asc, desc]
       - name: type
         type:
-          meta: enum
-          values: [all, owner, public, private, member]
+          enum: [all, owner, public, private, member]
+      - name: per_page
+        type: int
     url_template: end_point
     url_arguments:
       - name: sort
@@ -215,25 +247,33 @@ methods:
         value: parameter direction
       - name: type
         value: parameter type
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_starred
     end_point: GET /user/starred
     optional_parameters:
       - name: sort
         type:
-          meta: enum
-          values: [created, updated]
+          enum: [created, updated]
       - name: direction
         type:
-          meta: enum
-          values: [asc, desc]
+          enum: [asc, desc]
+      - name: per_page
+        type: int
     url_template: end_point
     url_arguments:
       - name: sort
         value: parameter sort
       - name: direction
         value: parameter direction
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_subscription
     end_point: GET /repos/:owner/:repo/subscription
     parameters:
@@ -245,15 +285,31 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: instanceFromAttributes(Subscription)
+    return_type: Subscription
   - name: get_subscriptions
     end_point: GET /user/subscriptions
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
-    return_strategy: paginatedList(Repository)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_teams
     end_point: GET /user/teams
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: end_point
-    return_strategy: paginatedList(Team)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Team
   - name: has_in_following
     end_point: GET /user/following/:user
     parameters:
@@ -263,7 +319,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: has_in_starred
     end_point: GET /user/starred/:owner/:repo
     parameters:
@@ -275,7 +331,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: has_in_subscriptions
     end_point: GET /user/subscriptions/:owner/:repo
     parameters:
@@ -287,7 +343,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: remove_from_following
     end_point: DELETE /user/following/:user
     parameters:
@@ -297,7 +353,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: remove_from_starred
     end_point: DELETE /user/starred/:owner/:repo
     parameters:
@@ -309,7 +365,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none
   - name: remove_from_subscriptions
     end_point: DELETE /user/subscriptions/:owner/:repo
     parameters:
@@ -321,4 +377,4 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none

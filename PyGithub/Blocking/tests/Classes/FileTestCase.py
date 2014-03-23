@@ -79,3 +79,4 @@ class FileTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(commit.sha, "3bd4ab4a7dc9bcd03dc9a87b402c87eae9931e50")
         self.assertEqual(commit.author.name, "Jane Doe")
         self.assertEqual(commit.committer.email, "john@doe.com")
+        # @todoAlpha Re-add attributes tree and parents in GitCommit

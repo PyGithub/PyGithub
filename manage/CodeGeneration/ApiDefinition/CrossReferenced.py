@@ -6,7 +6,6 @@ import re
 
 import CodeGeneration.ApiDefinition.Structured as Structured
 import CodeGeneration.ApiDefinition.Typing as Typing
-import CodeGeneration.ApiDefinition.ReturnStrategies as ReturnStrategies
 
 
 class EndPoint(object):
@@ -17,14 +16,19 @@ class EndPoint(object):
         self.__parameters = parameters
         self.__doc = doc
 
-        self.__tmp_methods = []
+        self.__methods = []
 
-    def _addMethod(self, method):
-        self.__tmp_methods.append(method)
+    def _reference(self, typesRepo, endPointsRepo):
+        pass
+
+    def _propagate(self):
+        pass
 
     def _finalize(self):
-        self.__methods = sorted(self.__tmp_methods, key=lambda m: (m.containerClass.name, m.name))
-        del self.__tmp_methods
+        self.__methods = sorted(self.__methods, key=lambda m: (m.containerClass.name, m.name))
+
+    def _addMethod(self, method):
+        self.__methods.append(method)
 
     @property
     def verb(self):
@@ -55,22 +59,25 @@ class AttributedType(Typing.SimpleType):
     def __init__(self, name, category, attributes, deprecatedAttributes):
         Typing.Type.__init__(self, name, category)
         self.__deprecatedAttributes = sorted(deprecatedAttributes)
+        self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
+        self.__factories = []
 
-        self.__tmp_attributes = [Attribute(self, *a) for a in attributes]
-        self.__tmp_factories = []
+    def _reference(self, typesRepo, endPointsRepo):
+        for a in self.__attributes:
+            a._reference(typesRepo, endPointsRepo)
 
-    def _crossReference(self, types, endPoints):
-        for a in self.__tmp_attributes:
-            a._crossReference(types, endPoints)
-
-    def _addFactory(self, f):
-        self.__tmp_factories.append(f)
+    def _propagate(self):
+        for a in self.__attributes:
+            a._propagate()
 
     def _finalize(self):
-        self.__attributes = sorted(self.__tmp_attributes, key=lambda a: a.name)
-        del self.__tmp_attributes
-        self.__factories = sorted(self.__tmp_factories, key=lambda f: (f.object.containerClass.name, f.object.name))
-        del self.__tmp_factories
+        self.__factories = sorted(self.__factories, key=lambda f: (f.object.containerClass.name, f.object.name))
+
+        for a in self.__attributes:
+            a._finalize()
+
+    def _addFactory(self, f):
+        self.__factories.append(f)
 
     @property
     def factories(self):
@@ -86,6 +93,7 @@ class AttributedType(Typing.SimpleType):
 
     @property
     def isUpdatable(self):
+        # @todoGeni Could we pre-compute that?
         return (
             self.name == "RateLimits"
             or any(f.category == "attribute" and f.object.containerClass.isUpdatable for f in self.__factories)
@@ -102,26 +110,23 @@ class Member(object):
 
 
 class Attribute(Member):
-    def __init__(self, containerClass, name, types):
+    def __init__(self, containerClass, name, type):
         Member.__init__(self, containerClass)
         self.__name = name
 
-        self.__tmp_types = types
+        self.__tmp_typeDescription = type
 
-    def _crossReference(self, types, endPoints):
-        ts = []
-        for typeName in self.__tmp_types:
-            t = types[typeName]
-            ts.append(t)
+    def _reference(self, typesRepo, endPointsRepo):
+        self.__type = typesRepo.get(self.__tmp_typeDescription)
+        del self.__tmp_typeDescription
+
+    def _propagate(self):
+        for t in self.__type.underlyingTypes:
             if isinstance(t, AttributedType):
                 t._addFactory(Factory("attribute", self))
-        del self.__tmp_types
 
-        assert len(ts) != 0
-        if len(ts) > 1:
-            self.__type = Typing.UnionType(*ts)
-        else:
-            self.__type = ts[0]
+    def _finalize(self):
+        pass
 
     @property
     def name(self):
@@ -151,7 +156,7 @@ class Value(object):
         if value == "end_point":
             self.__origin = "end_point"
         else:
-            self.__origin, self.__value = value.split(" ")
+            self.__origin, self.__value = value.split(" ")  # @todoGeni Do this parsing in Structured
             assert self.__origin in ["attribute", "parameter", "ownerFromRepo", "nameFromRepo"]
 
     @property
@@ -173,62 +178,65 @@ class Class(AttributedType):
     def __init__(self, module, name, base, structures, attributes, methods, deprecatedAttributes):
         AttributedType.__init__(self, name, "class", attributes, deprecatedAttributes)
         self.__module = module
-        self.__tmp_base = base
-        self.__tmp_structures = {s.name: Structure(self, *s) for s in structures}
-        self.__tmp_methods = {m.name: Method(self, *m) for m in methods}
-        self.__tmp_derived = []
-        self.__tmp_dependencies = set()
+        self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
+        self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.name)
+        self.__derived = []
 
-    def _crossReference(self, types, endPoints):
-        types = dict(types)
-        types.update(self.__tmp_structures)
+        self.__tmp_baseTypeDescription = base
 
-        AttributedType._crossReference(self, types, endPoints)
+    def _reference(self, typesRepo, endPointsRepo):
+        AttributedType._reference(self, typesRepo, endPointsRepo)
 
-        if self.__tmp_base is None:
+        for s in self.__structures:
+            s._reference(typesRepo, endPointsRepo)
+
+        for m in self.__methods:
+            m._reference(typesRepo, endPointsRepo)
+
+        if self.__tmp_baseTypeDescription is None:
             if self.name == "Github":
-                self.__base = types["SessionedGithubObject"]
+                self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
             else:
-                self.__base = types["UpdatableGithubObject"]
-        else:
-            self.__base = types[self.__tmp_base]
-            self.__base.__tmp_derived.append(self)
-            self.__tmp_dependencies.add(self.__base)
-        del self.__tmp_base
+                self.__tmp_baseTypeDescription = Structured.ScalarType("UpdatableGithubObject")
+        self.__base = typesRepo.get(self.__tmp_baseTypeDescription)
+        self.__base.__derived.append(self)
+        del self.__tmp_baseTypeDescription
 
-        for s in self.__tmp_structures.values():
-            s._crossReference(types, endPoints)
-            for a in s._AttributedType__tmp_attributes:
-                self.__tmp_dependencies.add(a.type)
+    def _propagate(self):
+        AttributedType._propagate(self)
 
-        for m in self.__tmp_methods.values():
-            m._crossReference(types, endPoints)
-            self.__tmp_dependencies.update(m.returnStrategy.returnType.underlyingTypes)
+        for s in self.__structures:
+            s._propagate()
+
+        for m in self.__methods:
+            m._propagate()
+
+        dependencies = set()
+        if self.__base.name not in ["SessionedGithubObject", "UpdatableGithubObject"]:
+            dependencies.add(self.__base)
+
+        for s in self.__structures:
+            for a in s.attributes:
+                dependencies.update(a.type.underlyingTypes)
+
+        for m in self.__methods:
+            dependencies.update(m.returnType.underlyingTypes)
+
+        for a in self.attributes:
+            dependencies.update(a.type.underlyingTypes)
+
+        self.__dependencies = sorted((d for d in dependencies if d.category == "class" and d.name != "PaginatedList" and d.name != self.name), key=lambda c: c.name)
 
     def _finalize(self):
         AttributedType._finalize(self)
 
-        for s in self.__tmp_structures.values():
+        for s in self.__structures:
             s._finalize()
-        self.__structures = sorted(self.__tmp_structures.values(), key=lambda s: s.name)
-        del self.__tmp_structures
 
-        for m in self.__tmp_methods.values():
+        for m in self.__methods:
             m._finalize()
-        self.__methods = sorted(self.__tmp_methods.values(), key=lambda m: m.name)
-        del self.__tmp_methods
 
-        self.__derived = sorted(self.__tmp_derived, key=lambda d: d.name)
-        del self.__tmp_derived
-
-        for a in self.attributes:
-            self.__tmp_dependencies.update(a.type.underlyingTypes)
-
-        self.__dependencies = sorted((d for d in self.__tmp_dependencies if d.category == "class" and d.name != "PaginatedList" and d.name != self.name), key=lambda c: c.name)
-        del self.__tmp_dependencies
-
-    def _getStruct(self, name):
-        return self.__tmp_structures[name]
+        self.__derived = sorted(self.__derived, key=lambda d: d.name)
 
     @property
     def module(self):
@@ -266,7 +274,7 @@ class Structure(AttributedType, Member):
 
 
 class Method(Member):
-    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy):
+    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnType):
         Member.__init__(self, containerClass)
         self.__name = name
         self.__parameters = [Parameter(*p) for p in parameters]
@@ -274,29 +282,37 @@ class Method(Member):
         self.__urlTemplateArguments = [Argument(*a) for a in urlTemplateArguments]
         self.__urlArguments = [Argument(*a) for a in urlArguments]
         self.__postArguments = [Argument(*a) for a in postArguments]
+        self.__effects = effects
 
-        self.__tmp_endPoints = endPoints
-        self.__tmp_returnStrategy = returnStrategy
+        self.__tmp_endPointDescriptions = endPoints
+        self.__tmp_returnTypeDescription = returnType
 
-    def _crossReference(self, types, endPoints):
-        eps = []
-        for ep in self.__tmp_endPoints:
-            ep = endPoints[ep]
-            ep._addMethod(self)
-            eps.append(ep)
-        self.__endPoints = sorted(eps, key=lambda ep: (ep.url, ep.verb))
-
+    def _reference(self, typesRepo, endPointsRepo):
         for p in self.__parameters:
-            p._crossReference(types, endPoints)
+            p._reference(typesRepo, endPointsRepo)
 
-        self.__returnStrategy = ReturnStrategies.parse(types.values(), self.__tmp_returnStrategy)
-        for t in self.returnType.underlyingTypes:
+        self.__endPoints = sorted((endPointsRepo.get(ep) for ep in self.__tmp_endPointDescriptions), key=lambda ep: (ep.url, ep.verb))
+        del self.__tmp_endPointDescriptions
+
+        self.__returnType = typesRepo.get(self.__tmp_returnTypeDescription)
+        del self.__tmp_returnTypeDescription
+
+    def _propagate(self):
+        for p in self.__parameters:
+            p._propagate()
+
+        for ep in self.__endPoints:
+            ep._addMethod(self)
+
+        for t in self.__returnType.underlyingTypes:
             if isinstance(t, AttributedType):
                 t._addFactory(Factory("method", self))
 
     def _finalize(self):
+        for p in self.__parameters:
+            p._finalize()
+
         self.__displayWarnings()
-        del self.__tmp_endPoints
 
     def __displayWarnings(self):  # pragma no cover
         for ep in self.__endPoints:
@@ -340,10 +356,6 @@ class Method(Member):
         return self.__parameters
 
     @property
-    def returnStrategy(self):
-        return self.__returnStrategy
-
-    @property
     def urlTemplate(self):
         return self.__urlTemplate
 
@@ -361,49 +373,37 @@ class Method(Member):
 
     @property
     def returnType(self):
-        return self.__returnStrategy.returnType
+        return self.__returnType
+
+    @property
+    def effects(self):
+        return self.__effects
 
 
 class Parameter(object):
-    def __init__(self, name, types, optional):
+    def __init__(self, name, type, optional):
         self.__name = name
         self.__optional = optional
-        self.__tmp_types = types
+        self.__tmp_typeDescription = type
 
-    def _crossReference(self, types, endPoints):
-        ts = []
-        for typeName in self.__tmp_types:
-            if isinstance(typeName, str):
-                if "." in typeName:
-                    className, structName = typeName.split(".")
-                    ts.append(types[className]._getStruct(structName))
-                else:
-                    ts.append(types[typeName])
-            elif isinstance(typeName, Structured.Enum):
-                ts.append(Typing.EnumeratedType(*typeName.values))
-            elif isinstance(typeName, Structured.List):
-                ts.append(Typing.LinearCollection(Typing.BuiltinType("list"), types[typeName.type]))
-            else:
-                assert False, typeName  # pragma no cover
+    def _reference(self, typesRepo, endPointsRepo):
+        t = typesRepo.get(self.__tmp_typeDescription)
+        del self.__tmp_typeDescription
 
-        for typeName in self.__tmp_types:
-            if isinstance(typeName, str):
-                if "." in typeName:
-                    ts.append(Typing.BuiltinType("string"))
-                else:
-                    c = types[typeName]
-                    if c.category == "class" and len(self.__tmp_types) == 1:
-                        ts.append(Typing.BuiltinType("string"))  # @todoGeni The fact that c can be replaced by a string should be in ApiDefinition/c.yml
-                        if c.name == "Repository":
-                            ts.append(Typing.BuiltinType("TwoStrings"))  # @todoGeni The fact that c can be replaced by a 2-tuple of strings should be in ApiDefinition/c.yml
-
-        del self.__tmp_types
-
-        assert len(ts) != 0
-        if len(ts) > 1:
+        # @todoGeni Replace this logic by something like self.__type = t.getParameterType()
+        if isinstance(t, AttributedType):
+            ts = [t, Typing.BuiltinType("string")]  # @todoGeni The fact that c can be replaced by a string should be in ApiDefinition/c.yml
+            if t.name == "Repository":
+                ts.append(Typing.BuiltinType("TwoStrings"))  # @todoGeni The fact that c can be replaced by a 2-tuple of strings should be in ApiDefinition/c.yml
             self.__type = Typing.UnionType(*ts)
         else:
-            self.__type = ts[0]
+            self.__type = t
+
+    def _propagate(self):
+        pass
+
+    def _finalize(self):
+        pass
 
     @property
     def name(self):
@@ -424,29 +424,56 @@ class Definition(object):
     Only one object represents each conceptual object.
     """
     def __init__(self, definition):
-        endPoints = {ep.verb + " " + ep.url: EndPoint(*ep) for ep in definition.endPoints}
-        classes = {c.name: Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes}
+        self.__endPoints = sorted((EndPoint(*ep) for ep in definition.endPoints), key=lambda ep: (ep.url, ep.verb))
+        self.__classes = sorted((Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes), key=lambda c: c.name)
 
-        build = Structured.Method("build", [], [], "end_point", [], [], [], "instanceFromAttributes(Github)")
-        builder = Class("Builder", "Builder", None, [], [], [build], [])
+        endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
-        types = {t: Typing.BuiltinType(t) for t in ["int", "bool", "string", "datetime"]}
-        types.update({t: Typing.BuiltinType(t) for t in ["Reset", "TwoStrings", "GitAuthor"]})  # @todoAlpha Fix this: those are not builtins
-        types.update({t: Class("PyGithub.Blocking.BaseGithubObject", t, None, [], [], [], []) for t in ["SessionedGithubObject", "UpdatableGithubObject"]})
-        types.update(classes)
+        build = Structured.Method("Build", [], [], "end_point", [], [], [], [], Structured.ScalarType("Github"))
+        self.__builder = Class("Builder", "Builder", None, [], [], [build], [])
 
-        for c in classes.values():
-            c._crossReference(types, endPoints)
-        builder._crossReference(types, endPoints)
+        typesRepo = Typing.Repository()
+        for t in ["int", "bool", "string", "datetime", "list"]:
+            typesRepo.register(Typing.BuiltinType(t))
+        for t in ["Reset", "TwoStrings", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
+            typesRepo.register(Typing.BuiltinType(t))
+        for t in ["SessionedGithubObject", "UpdatableGithubObject", "PaginatedList"]:
+            typesRepo.register(Class("PyGithub.Blocking.BaseGithubObject", t, None, [], [], [], []))
+        for c in self.__classes:
+            typesRepo.register(c)
+            for s in c.structures:
+                typesRepo.register(s)
 
-        for ep in endPoints.values():
-            ep._finalize()
-        for c in classes.values():
+        self._reference(typesRepo, endPointsRepo)
+        self._propagate()
+        self._finalize()
+
+    def _reference(self, typesRepo, endPointsRepo):
+        for c in self.__classes:
+            c._reference(typesRepo, endPointsRepo)
+
+        self.__builder._reference(typesRepo, endPointsRepo)
+
+        for ep in self.__endPoints:
+            ep._reference(typesRepo, endPointsRepo)
+
+    def _propagate(self):
+        for c in self.__classes:
+            c._propagate()
+
+        self.__builder._propagate()
+
+        for ep in self.__endPoints:
+            ep._propagate()
+
+    def _finalize(self):
+        for c in self.__classes:
             c._finalize()
-        builder._finalize()
 
-        self.__endPoints = sorted(endPoints.values(), key=lambda ep: (ep.url, ep.verb))
-        self.__classes = sorted(classes.values(), key=lambda c: c.name)
+        self.__builder._finalize()
+
+        for ep in self.__endPoints:
+            ep._finalize()
 
     @property
     def classes(self):

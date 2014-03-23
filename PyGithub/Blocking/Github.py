@@ -29,7 +29,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
-      * :meth:`.Builder.build`
+      * :meth:`.Builder.Build`
     """
 
     class GitIgnoreTemplate(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):

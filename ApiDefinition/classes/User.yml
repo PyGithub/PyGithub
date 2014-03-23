@@ -25,23 +25,49 @@ deprecated_attributes:
 methods:
   - name: get_followers
     end_point: GET /users/:user/followers
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute followers_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_following
     end_point: GET /users/:user/following
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute following_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_keys
     end_point: GET /users/:user/keys
     url_template: end_point
     url_template_arguments:
       - name: user
         value: attribute login
-    return_strategy: listOf(PublicKey)
+    return_type:
+      container: list
+      content: PublicKey
   - name: get_orgs
     end_point: GET /users/:user/orgs
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute organizations_url
-    return_strategy: paginatedList(Organization)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Organization
   - name: get_repo
     end_point: GET /repos/:owner/:repo
     parameters:
@@ -53,22 +79,21 @@ methods:
         value: attribute login
       - name: repo
         value: parameter repo
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: get_repos
     end_point: GET /users/:user/repos
     optional_parameters:
       - name: sort
         type:
-          meta: enum
-          values: [created, updated, pushed, full_name]
+          enum: [created, updated, pushed, full_name]
       - name: direction
         type:
-          meta: enum
-          values: [asc, desc]
+          enum: [asc, desc]
       - name: type
         type:
-          meta: enum
-          values: [all, owner, forks, sources, member]
+          enum: [all, owner, forks, sources, member]
+      - name: per_page
+        type: int
     url_template: attribute repos_url
     url_arguments:
       - name: sort
@@ -77,29 +102,45 @@ methods:
         value: parameter direction
       - name: type
         value: parameter type
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_starred
     end_point: GET /users/:user/starred
     optional_parameters:
       - name: sort
         type:
-          meta: enum
-          values: [created, updated]
+          enum: [created, updated]
       - name: direction
         type:
-          meta: enum
-          values: [asc, desc]
+          enum: [asc, desc]
+      - name: per_page
+        type: int
     url_template: attribute starred_url
     url_arguments:
       - name: sort
         value: parameter sort
       - name: direction
         value: parameter direction
-    return_strategy: paginatedList(Repository)
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_subscriptions
     end_point: GET /users/:user/subscriptions
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute subscriptions_url
-    return_strategy: paginatedList(Repository)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: has_in_following
     end_point: GET /users/:user/following/:target_user
     parameters:
@@ -109,4 +150,4 @@ methods:
     url_template_arguments:
       - name: other_user
         value: parameter target_user
-    return_strategy: boolFromStatus
+    return_type: bool

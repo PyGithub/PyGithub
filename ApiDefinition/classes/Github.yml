@@ -1,4 +1,10 @@
 structures:
+  - name: GitIgnoreTemplate
+    attributes:
+      - name: name
+        type: string
+      - name: source
+        type: string
   - name: RateLimit
     attributes:
       - name: resources
@@ -19,21 +25,11 @@ structures:
         type: RateLimits
       - name: search
         type: RateLimits
-  - name: GitIgnoreTemplate
-    attributes:
-      - name: name
-        type: string
-      - name: source
-        type: string
 methods:
   - name: get_authenticated_user
     end_point: GET /user
     url_template: end_point
-    return_strategy: instanceFromAttributes(AuthenticatedUser)
-  - name: get_gitignore_templates
-    end_point: GET /gitignore/templates
-    url_template: end_point
-    return_strategy: listOf(string)
+    return_type: AuthenticatedUser
   - name: get_gitignore_template
     end_point: GET /gitignore/templates/:name
     parameters:
@@ -43,7 +39,13 @@ methods:
     url_template_arguments:
       - name: name
         value: parameter name
-    return_strategy: structFromAttributes(GitIgnoreTemplate)
+    return_type: GitIgnoreTemplate
+  - name: get_gitignore_templates
+    end_point: GET /gitignore/templates
+    url_template: end_point
+    return_type:
+      container: list
+      content: string
   - name: get_org
     end_point: GET /orgs/:org
     parameters:
@@ -53,35 +55,37 @@ methods:
     url_template_arguments:
       - name: org
         value: parameter org
-    return_strategy: instanceFromAttributes(Organization)
+    return_type: Organization
   - name: get_rate_limit
     end_point: GET /rate_limit
     url_template: end_point
-    return_strategy: structFromAttributes(RateLimit)
+    return_type: RateLimit
   - name: get_repo
     end_point: GET /repos/:owner/:repo
     parameters:
       - name: repo
-        types:
-          - TwoStrings
-          - string
+        type:
+          union: [TwoStrings, string]
     url_template: end_point
     url_template_arguments:
       - name: owner
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: instanceFromAttributes(Repository)
+    return_type: Repository
   - name: get_repos
     end_point: GET /repositories
     optional_parameters:
       - name: since
-        types: [Repository, int]
+        type:
+          union: [Repository, int]
     url_template: end_point
     url_arguments:
       - name: since
         value: parameter since
-    return_strategy: paginatedListWithoutPerPage(Repository)
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: get_team
     end_point: GET /teams/:id
     parameters:
@@ -91,7 +95,7 @@ methods:
     url_template_arguments:
       - name: id
         value: parameter id
-    return_strategy: instanceFromAttributes(Team)
+    return_type: Team
   - name: get_user
     end_point: GET /users/:user
     parameters:
@@ -101,14 +105,17 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
-    return_strategy: instanceFromAttributes(User)
+    return_type: User
   - name: get_users
     end_point: GET /users
     optional_parameters:
       - name: since
-        types: [User, int]
+        type:
+          union: [User, int]
     url_template: end_point
     url_arguments:
       - name: since
         value: parameter since
-    return_strategy: paginatedListWithoutPerPage(User)
+    return_type:
+      container: PaginatedList
+      content: User

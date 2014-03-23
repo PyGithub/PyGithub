@@ -2,6 +2,8 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import CodeGeneration.ApiDefinition.Structured as Structured
+
 
 class Type(object):
     def __init__(self, name, category):
@@ -78,3 +80,32 @@ class EnumeratedType(SimpleType):
     @property
     def values(self):
         return self.__values
+
+
+class Repository(object):
+    def __init__(self):
+        self.__simpleTypes = {}
+
+    def register(self, t):
+        if isinstance(t, SimpleType):
+            assert t.name not in self.__simpleTypes
+            self.__simpleTypes[t.name] = t
+        else:
+            assert False, t  # pragma no cover
+
+    def get(self, description):
+        # @todoGeni Create a single instance of all types
+        if description is Structured.NoneType:
+            return NoneType
+        elif isinstance(description, Structured.ScalarType):
+            return self.__simpleTypes[description.name]
+        elif isinstance(description, Structured.UnionType):
+            return UnionType(*[self.get(t) for t in description.types])
+        elif isinstance(description, Structured.EnumType):
+            return EnumeratedType(*description.values)
+        elif isinstance(description, Structured.LinearCollectionType):
+            container = self.get(description.container)
+            content = self.get(description.content)
+            return LinearCollection(container, content)
+        else:
+            assert False, description  # pragma no cover

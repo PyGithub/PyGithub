@@ -6,18 +6,24 @@ import yaml
 import collections
 import os
 import glob
-import types
 
 
-EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
-Enum = collections.namedtuple("Enum", "name, values")
-List = collections.namedtuple("List", "type")
-Structure = collections.namedtuple("Structure", "name, attributes, deprecatedAttributes")
 Class = collections.namedtuple("Class", "name, base, structures, attributes, methods, deprecatedAttributes")
-Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, returnStrategy")
-Parameter = collections.namedtuple("Parameter", "name, types, optional")
+Structure = collections.namedtuple("Structure", "name, attributes, deprecatedAttributes")
+Attribute = collections.namedtuple("Attribute", "name, type")
+Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnType")
+EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
+Parameter = collections.namedtuple("Parameter", "name, type, optional")
 Argument = collections.namedtuple("Argument", "name, value")
-Attribute = collections.namedtuple("Attribute", "name, types")
+
+NoneType_ = collections.namedtuple("NoneType_", "")
+NoneType = NoneType_()
+ScalarType = collections.namedtuple("ScalarType", "name")
+LinearCollectionType = collections.namedtuple("LinearCollectionType", "container, content")
+UnionType = collections.namedtuple("UnionType", "types")
+EnumType = collections.namedtuple("EnumType", "values")
+
+UpdateSelfEffect = collections.namedtuple("UpdateSelfEffect", "")
 
 
 class Definition(object):
@@ -74,7 +80,7 @@ class Definition(object):
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
         return Class(
             name=name,
-            base=base,
+            base=self.__buildType(base),
             structures=[self.__buildStructure(**s) for s in structures],
             attributes=[self.__buildAttribute(**a) for a in attributes],
             methods=[self.__buildMethod(**m) for m in methods],
@@ -90,74 +96,44 @@ class Definition(object):
             deprecatedAttributes=deprecated_attributes
         )
 
-    def __buildAttribute(self, name, **typeArgs):
+    def __buildAttribute(self, name, type):
         assert isinstance(name, str), name
         return Attribute(
             name=name,
-            types=self.__buildTypes(**typeArgs)
+            type=self.__buildType(type)
         )
 
-    def __buildTypes(self, type=None, types=None):
-        if types is None:
-            types = []
-        if type is not None:
-            types.append(type)
-        assert len(types) != 0
-        return [self.__buildType(t) for t in types]
-
-    def __buildType(self, type):
-        if isinstance(type, str):
-            if len(type.split(" ")) != 1:
-                print("WARNING: type seems to be complex but not structured: ", type)  # pragma no cover
-            return type
-        else:
-            return self.__buildAnonymousType(**type)
-
-    def __buildAnonymousType(self, meta, **kwds):
-        if meta == "enum":
-            return self.__buildEnum(**kwds)
-        elif meta == "list":
-            return self.__buildList(**kwds)
-        else:
-            assert False, "Unknown meta" + meta  # pragma no cover
-
-    def __buildEnum(self, values):
-        assert all(isinstance(v, str) for v in values), values
-        return Enum(None, values)
-
-    def __buildList(self, type):
-        return List(type)
-
-    def __buildMethod(self, name, url_template, return_strategy, end_point=None, end_points=[], url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
+    def __buildMethod(self, name, url_template, effect=None, effects=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
         assert isinstance(name, str), name
-        end_points = list(end_points)
-        if end_point is not None:
-            end_points.append(end_point)
-
-        if return_strategy.startswith("paginatedList("):
-            optional_parameters = list(optional_parameters)
-            optional_parameters.append(dict(name="per_page", type="int"))
-            url_arguments = list(url_arguments)
-            url_arguments.append(dict(name="per_page", value="parameter per_page"))
-
         return Method(
             name=name,
-            endPoints=end_points,
+            endPoints=self.__makeList(end_point, end_points),
             parameters=[self.__buildParameter(optional=False, **p) for p in parameters]
             + [self.__buildParameter(optional=True, **p) for p in optional_parameters],
             urlTemplate=self.__buildValue(url_template),
             urlTemplateArguments=[self.__buildArgument(**a) for a in url_template_arguments],
             urlArguments=[self.__buildArgument(**a) for a in url_arguments],
             postArguments=[self.__buildArgument(**a) for a in post_arguments],
-            returnStrategy=self.__buildReturnStrategy(return_strategy)
+            effects=[self.__buildEffect(e) for e in self.__makeList(effect, effects)],
+            returnType=self.__buildType(return_type)
         )
 
-    def __buildParameter(self, name, optional, **typeArgs):
+    def __makeList(self, element, elements):
+        if elements is None:
+            if element is None:
+                return []
+            else:
+                return [element]
+        else:
+            assert element is None
+            return elements
+
+    def __buildParameter(self, name, optional, type):
         assert isinstance(name, str), name
         assert isinstance(optional, bool), optional
         return Parameter(
             name=name,
-            types=self.__buildTypes(**typeArgs),
+            type=self.__buildType(type),
             optional=optional
         )
 
@@ -171,8 +147,24 @@ class Definition(object):
     def __buildValue(self, value):
         return value  # @todoGeni Structure
 
-    def __buildReturnStrategy(self, strategy):
-        return strategy  # @todoGeni Structure (strategy/purpose/whatever: this is the most complex topic)
+    def __buildType(self, description):
+        if description is None:
+            return None
+        elif description == "none":
+            return NoneType
+        elif isinstance(description, str):
+            return ScalarType(description)
+        elif "container" in description:
+            return LinearCollectionType(self.__buildType(description["container"]), self.__buildType(description["content"]))
+        elif "union" in description:
+            return UnionType([self.__buildType(t) for t in description["union"]])
+        elif "enum" in description:
+            return EnumType(description["enum"])
+        else:
+            assert False, description  # pragma no cover
+
+    def __buildEffect(self, effect):
+        return UpdateSelfEffect()
 
     def __validate(self, dirName):
         with open(os.path.join(dirName, "unimplemented.yml")) as f:

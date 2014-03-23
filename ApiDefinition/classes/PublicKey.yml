@@ -12,7 +12,7 @@ attributes:
 methods:
   - name: delete
     end_points:
-      - DELETE /user/keys/:id
       - DELETE /repos/:owner/:repo/keys/:id
+      - DELETE /user/keys/:id
     url_template: attribute url
-    return_strategy: none
+    return_type: none

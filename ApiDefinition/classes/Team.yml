@@ -29,7 +29,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: add_to_repos
     end_point: PUT /teams/:id/repos/:org/:repo
     parameters:
@@ -43,11 +43,11 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none
   - name: delete
     end_point: DELETE /teams/:id
     url_template: attribute url
-    return_strategy: none
+    return_type: none
   - name: edit
     end_point: PATCH /teams/:id
     optional_parameters:
@@ -55,23 +55,39 @@ methods:
         type: string
       - name: permission
         type:
-          meta: enum
-          values: [push, pull, admin]
+          enum: [push, pull, admin]
     url_template: attribute url
     post_arguments:
       - name: name
         value: parameter name
       - name: permission
         value: parameter permission
-    return_strategy: updateSelfThen(none)
+    effect: update
+    return_type: none
   - name: get_members
     end_point: GET /teams/:id/members
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute members_url
-    return_strategy: paginatedList(User)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: User
   - name: get_repos
     end_point: GET /teams/:id/repos
+    optional_parameters:
+      - name: per_page
+        type: int
     url_template: attribute repositories_url
-    return_strategy: paginatedList(Repository)
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Repository
   - name: has_in_members
     end_point: GET /teams/:id/members/:user
     parameters:
@@ -81,7 +97,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: has_in_repos
     end_point: GET /teams/:id/repos/:owner/:repo
     parameters:
@@ -95,7 +111,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: boolFromStatus
+    return_type: bool
   - name: remove_from_members
     end_point: DELETE /teams/:id/members/:user
     parameters:
@@ -105,7 +121,7 @@ methods:
     url_template_arguments:
       - name: member
         value: parameter user
-    return_strategy: none
+    return_type: none
   - name: remove_from_repos
     end_point: DELETE /teams/:id/repos/:owner/:repo
     parameters:
@@ -119,4 +135,4 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
-    return_strategy: none
+    return_type: none

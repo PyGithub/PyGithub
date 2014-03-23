@@ -24,7 +24,7 @@ class Generator(object):
         for klass in self.__definition.classes:
             self.__writeFile(self.rstGenerator.generateClass(klass), os.path.join("doc", "reference", "classes", klass.name + ".rst"))
             self.__writeFile(self.codeGenerator.generateClass(klass), os.path.join("PyGithub", "Blocking", klass.name + ".py"))
-            # self.__writeFile(self.ymlGenerator.generateClass(klass), os.path.join("ApiDefinition", "classes", klass.name + ".yml"))
+            self.__writeFile(self.ymlGenerator.generateClass(klass), os.path.join("ApiDefinition", "classes", klass.name + ".yml"))
 
     def __writeFile(self, content, output):
         content = list(content)

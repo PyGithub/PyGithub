@@ -19,9 +19,32 @@ attributes:
     type: string
   - name: url
     type: string
-deprecated_attributes: [_links]
+deprecated_attributes:
+  - _links
 methods:
+  - name: delete
+    end_point: DELETE /repos/:owner/:repo/contents/:path
+    parameters:
+      - name: message
+        type: string
+    optional_parameters:
+      - name: author
+        type: GitAuthor
+      - name: committer
+        type: GitAuthor
+    url_template: attribute url
+    post_arguments:
+      - name: sha
+        value: attribute sha
+      - name: message
+        value: parameter message
+      - name: committer
+        value: parameter committer
+      - name: author
+        value: parameter author
+    return_type: GitCommit
   - name: edit
+    end_point: PUT /repos/:owner/:repo/contents/:path
     parameters:
       - name: message
         type: string
@@ -32,7 +55,6 @@ methods:
         type: GitAuthor
       - name: committer
         type: GitAuthor
-    end_point: PUT /repos/:owner/:repo/contents/:path
     url_template: attribute url
     post_arguments:
       - name: sha
@@ -45,25 +67,5 @@ methods:
         value: parameter committer
       - name: author
         value: parameter author
-    return_strategy: updateSelfThen(instanceFromAttributes(GitCommit, "commit"), "content")
-  - name: delete
-    parameters:
-      - name: message
-        type: string
-    optional_parameters:
-      - name: author
-        type: GitAuthor
-      - name: committer
-        type: GitAuthor
-    end_point: DELETE /repos/:owner/:repo/contents/:path
-    url_template: attribute url
-    post_arguments:
-      - name: sha
-        value: attribute sha
-      - name: message
-        value: parameter message
-      - name: committer
-        value: parameter committer
-      - name: author
-        value: parameter author
-    return_strategy: instanceFromAttributes(GitCommit, "commit")
+    effect: update
+    return_type: GitCommit

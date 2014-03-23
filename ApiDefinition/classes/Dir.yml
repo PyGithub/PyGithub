@@ -15,4 +15,5 @@ attributes:
     type: string
   - name: url
     type: string
-deprecated_attributes: [_links]
+deprecated_attributes:
+  - _links

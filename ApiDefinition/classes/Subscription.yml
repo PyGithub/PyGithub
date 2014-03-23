@@ -15,7 +15,7 @@ methods:
   - name: delete
     end_point: DELETE /repos/:owner/:repo/subscription
     url_template: attribute url
-    return_strategy: none
+    return_type: none
   - name: edit
     end_point: PUT /repos/:owner/:repo/subscription
     parameters:
@@ -29,4 +29,5 @@ methods:
         value: parameter subscribed
       - name: ignored
         value: parameter ignored
-    return_strategy: updateSelfThen(none)
+    effect: update
+    return_type: none
