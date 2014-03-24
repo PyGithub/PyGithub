@@ -95,7 +95,7 @@ class AttributedType(Typing.SimpleType):
     def isUpdatable(self):
         # @todoGeni Could we pre-compute that?
         return (
-            self.name == "RateLimits"
+            self.name == "RateLimits"  # @todoGeni remove hard-coded name
             or any(f.category == "attribute" and f.object.containerClass.isUpdatable for f in self.__factories)
         )
 
@@ -194,7 +194,7 @@ class Class(AttributedType):
             m._reference(typesRepo, endPointsRepo)
 
         if self.__tmp_baseTypeDescription is None:
-            if self.name in ["Github", "Dir", "PublicKey"]:
+            if self.name in ["Github", "Dir", "PublicKey"]:  # @todoGeni remove hard-coded names
                 self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
             else:
                 self.__tmp_baseTypeDescription = Structured.ScalarType("UpdatableGithubObject")
@@ -264,7 +264,7 @@ class Class(AttributedType):
 
     @property
     def isUpdatable(self):
-        return self.name not in ["Dir", "PublicKey"]
+        return self.name not in ["Dir", "PublicKey"]  # @todoGeni remove hard-coded name
 
 
 class Structure(AttributedType, Member):
