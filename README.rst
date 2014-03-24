@@ -14,7 +14,7 @@ Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#mig
 What's new?
 ===========
 
-Version 2.0.0-alpha.2 (March 23nd, 2014)
+Version 2.0.0-alpha.2 (March 23rd, 2014)
 ----------------------------------------
 
 What's now covered by v2:
