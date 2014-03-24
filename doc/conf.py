@@ -2,6 +2,8 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+# @todoAlpha In the doc of each method, link to the tests that use it (good examples for the doc)
+
 import sys
 import os
 import shutil

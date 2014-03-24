@@ -920,7 +920,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.keys_url)
         postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
 
     def delete(self):
         """
@@ -1047,7 +1047,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
+        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
 
     def get_file_content(self, path, ref=None):
         """
@@ -1105,7 +1105,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url, key_id=str(id))
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
 
     def get_keys(self):
         """
@@ -1118,7 +1118,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url)
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a) for a in r.json()]
 
     def get_readme(self, ref=None):
         """

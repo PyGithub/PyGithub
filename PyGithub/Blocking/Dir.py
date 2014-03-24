@@ -18,9 +18,9 @@ import PyGithub.Blocking.Attributes
 import PyGithub.Blocking.File
 
 
-class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
-    Base class: :class:`.UpdatableGithubObject`
+    Base class: :class:`.SessionedGithubObject`
 
     Derived classes: none.
 
@@ -40,23 +40,11 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__type = PyGithub.Blocking.Attributes.StringAttribute("Dir.type", type)
         self.__url = PyGithub.Blocking.Attributes.StringAttribute("Dir.url", url)
 
-    def _updateAttributes(self, eTag, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
-        super(Dir, self)._updateAttributes(eTag, **kwds)
-        self.__git_url.update(git_url)
-        self.__html_url.update(html_url)
-        self.__name.update(name)
-        self.__path.update(path)
-        self.__sha.update(sha)
-        self.__size.update(size)
-        self.__type.update(type)
-        self.__url.update(url)
-
     @property
     def git_url(self):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__git_url.needsLazyCompletion)
         return self.__git_url.value
 
     @property
@@ -64,7 +52,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__html_url.needsLazyCompletion)
         return self.__html_url.value
 
     @property
@@ -72,7 +59,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__name.needsLazyCompletion)
         return self.__name.value
 
     @property
@@ -80,7 +66,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__path.needsLazyCompletion)
         return self.__path.value
 
     @property
@@ -88,7 +73,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__sha.needsLazyCompletion)
         return self.__sha.value
 
     @property
@@ -96,7 +80,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`int`
         """
-        self._completeLazily(self.__size.needsLazyCompletion)
         return self.__size.value
 
     @property
@@ -104,7 +87,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
 
     @property
@@ -112,7 +94,6 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
 
     def get_content(self):
@@ -128,4 +109,4 @@ class Dir(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
+        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]

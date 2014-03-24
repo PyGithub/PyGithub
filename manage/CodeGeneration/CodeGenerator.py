@@ -102,15 +102,16 @@ class CodeGenerator:
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
             )
-            yield (
-                PS.Method("_updateAttributes")
-                .parameter("eTag")
-                .parameters((a.name, "PyGithub.Blocking.Attributes.Absent") for a in klass.attributes)
-                .parameters((a, "None") for a in klass.deprecatedAttributes)
-                .parameter("**kwds")
-                .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
-                .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
-            )
+            if klass.isUpdatable:
+                yield (
+                    PS.Method("_updateAttributes")
+                    .parameter("eTag")
+                    .parameters((a.name, "PyGithub.Blocking.Attributes.Absent") for a in klass.attributes)
+                    .parameters((a, "None") for a in klass.deprecatedAttributes)
+                    .parameter("**kwds")
+                    .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
+                    .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
+                )
 
     def createCallForAttributeInitializer(self, attribute):
         return self.getMethod("createCallFor{}AttributeInitializer", attribute.type.category)(attribute)
@@ -164,12 +165,12 @@ class CodeGenerator:
         return '"{}"'.format(".".join(name))
 
     def createClassProperty(self, attribute):
-        return (
-            PS.Property(attribute.name)
-            .docstring(":type: {}".format(self.generateDocForType(attribute.type)))
-            .body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.name))
-            .body("return self.__{}.value".format(attribute.name))
-        )
+        p = PS.Property(attribute.name)
+        p.docstring(":type: {}".format(self.generateDocForType(attribute.type)))
+        if attribute.containerClass.isUpdatable:
+            p.body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.name))
+        p.body("return self.__{}.value".format(attribute.name))
+        return p
 
     def createClassMethod(self, method):
         return (
@@ -281,12 +282,17 @@ class CodeGenerator:
         return []
 
     def generateCodeForClassReturnValue(self, method):
+        typeName = ("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name
         if method.returnFrom is None:
-            yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+            if method.returnType.isUpdatable:
+                base = 'return {}(self.Session, r.json(), r.headers.get("ETag"))'
+            else:
+                base = 'return {}(self.Session, r.json())'
         elif method.returnFrom == "json.commit":
-            yield 'return {}(self.Session, r.json()["commit"], None)'.format(("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name)
+            base = 'return {}(self.Session, r.json()["commit"], None)'
         else:
             assert False  # pragma no cover
+        yield base.format(typeName)
 
     def generateCodeForLinearCollectionReturnValue(self, method):
         yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.container.name)(method)
@@ -307,10 +313,14 @@ class CodeGenerator:
         yield "return r.json()"
 
     def generateCodeForListOfClassReturnValue(self, method):
-        yield "return [{}(self.Session, a, None) for a in r.json()]".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
+        if method.returnType.content.isUpdatable:
+            base = "return [{}(self.Session, a, None) for a in r.json()]"
+        else:
+            base = "return [{}(self.Session, a) for a in r.json()]"
+        yield base.format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
 
     def generateCodeForListOfUnionReturnValue(self, method):
-        yield 'return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=PyGithub.Blocking.Dir.Dir, file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]'
+        yield 'return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]'
 
     def generateCodeForBuiltinReturnValue(self, method):
         yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.name)(method)

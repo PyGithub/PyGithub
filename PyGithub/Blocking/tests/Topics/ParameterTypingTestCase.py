@@ -110,3 +110,9 @@ class ParameterTypingTestCase(Framework.SimpleLoginTestCase):
         org = self.g.get_org("BeaverSoftware")
         with self.assertRaises(TypeError):
             org.create_repo("potential-octo-lana", auto_init=True, gitignore_template=42)
+
+    @Framework.SharesDataWith(testAcceptTwoStringsAsRepoFullName)
+    def testDontAcceptIntAsGitAuthor(self):
+        repo = self.g.get_repo(("jacquev6", "PyGithub"))
+        with self.assertRaises(TypeError):
+            repo.create_file("path/to/file", "Comment", "content", author=42)

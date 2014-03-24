@@ -197,7 +197,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/users/{user}/keys", user=self.login)
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a) for a in r.json()]
 
     def get_orgs(self, per_page=None):
         """

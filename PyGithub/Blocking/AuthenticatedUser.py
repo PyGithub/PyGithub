@@ -112,7 +112,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/user/keys")
         postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, auto_init=None, gitignore_template=None):
         """
@@ -258,7 +258,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/keys/{id}", id=str(id))
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json(), r.headers.get("ETag"))
+        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
 
     def get_keys(self):
         """
@@ -271,7 +271,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/keys")
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a, None) for a in r.json()]
+        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a) for a in r.json()]
 
     def get_orgs(self, per_page=None):
         """

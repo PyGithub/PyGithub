@@ -194,7 +194,7 @@ class Class(AttributedType):
             m._reference(typesRepo, endPointsRepo)
 
         if self.__tmp_baseTypeDescription is None:
-            if self.name == "Github":
+            if self.name in ["Github", "Dir", "PublicKey"]:
                 self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
             else:
                 self.__tmp_baseTypeDescription = Structured.ScalarType("UpdatableGithubObject")
@@ -264,7 +264,7 @@ class Class(AttributedType):
 
     @property
     def isUpdatable(self):
-        return True
+        return self.name not in ["Dir", "PublicKey"]
 
 
 class Structure(AttributedType, Member):

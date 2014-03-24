@@ -141,6 +141,7 @@ def normalizeGitIgnoreTemplateString(tmpl):
 
 
 def normalizeGitAuthor(a):
+    # @todoAlpha Devise a strategy for structured input data
     if isinstance(a, dict):
         return a
     else:

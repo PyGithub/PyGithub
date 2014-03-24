@@ -16,9 +16,9 @@ import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
 
-class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class PublicKey(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
-    Base class: :class:`.UpdatableGithubObject`
+    Base class: :class:`.SessionedGithubObject`
 
     Derived classes: none.
 
@@ -40,20 +40,11 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__url = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.url", url)
         self.__verified = PyGithub.Blocking.Attributes.BoolAttribute("PublicKey.verified", verified)
 
-    def _updateAttributes(self, eTag, id=PyGithub.Blocking.Attributes.Absent, key=PyGithub.Blocking.Attributes.Absent, title=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, verified=PyGithub.Blocking.Attributes.Absent, **kwds):
-        super(PublicKey, self)._updateAttributes(eTag, **kwds)
-        self.__id.update(id)
-        self.__key.update(key)
-        self.__title.update(title)
-        self.__url.update(url)
-        self.__verified.update(verified)
-
     @property
     def id(self):
         """
         :type: :class:`int`
         """
-        self._completeLazily(self.__id.needsLazyCompletion)
         return self.__id.value
 
     @property
@@ -61,7 +52,6 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__key.needsLazyCompletion)
         return self.__key.value
 
     @property
@@ -69,7 +59,6 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__title.needsLazyCompletion)
         return self.__title.value
 
     @property
@@ -77,7 +66,6 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
 
     @property
@@ -85,7 +73,6 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         :type: :class:`bool`
         """
-        self._completeLazily(self.__verified.needsLazyCompletion)
         return self.__verified.value
 
     def delete(self):
