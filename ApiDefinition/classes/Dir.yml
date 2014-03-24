@@ -24,4 +24,4 @@ methods:
     return_type:
       container: list
       content:
-        union: [File, Dir]
+        union: [File, Dir, Submodule, SymLink]

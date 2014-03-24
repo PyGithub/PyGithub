@@ -16,6 +16,8 @@ import PyGithub.Blocking.Parameters
 import PyGithub.Blocking.Attributes
 
 import PyGithub.Blocking.File
+import PyGithub.Blocking.Submodule
+import PyGithub.Blocking.SymLink
 
 
 class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
@@ -103,9 +105,20 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         The following methods also call this end point:
           * :meth:`.Repository.get_contents`
 
-        :rtype: :class:`list` of :class:`.File` or :class:`.Dir`
+        :rtype: :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
+        ret = []
+        for d in r.json():
+            if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
+                c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)
+            elif d["type"] == "file":
+                c = PyGithub.Blocking.File.File(self.Session, d, None)
+            elif d["type"] == "symlink":
+                c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)
+            elif d["type"] == "dir":  # pragma no branch (defensive programming)
+                c = PyGithub.Blocking.Dir.Dir(self.Session, d)
+            ret.append(c)
+        return ret

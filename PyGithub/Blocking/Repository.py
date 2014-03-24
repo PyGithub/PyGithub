@@ -1030,9 +1030,9 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         data = r.json()
         if isinstance(data, list):
-            r = []
+            ret = []
             for d in data:
-                if d["type"] == "file" and d["size"] is None:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
+                if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
                     c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)
                 elif d["type"] == "file":
                     c = PyGithub.Blocking.File.File(self.Session, d, None)
@@ -1040,8 +1040,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
                     c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)
                 elif d["type"] == "dir":  # pragma no branch (defensive programming)
                     c = PyGithub.Blocking.Dir.Dir(self.Session, d)
-                r.append(c)
-            return r
+                ret.append(c)
+            return ret
         elif data["type"] == "submodule":
             return PyGithub.Blocking.Submodule.Submodule(self.Session, data, r.headers.get("ETag"))
         elif data["type"] == "file":

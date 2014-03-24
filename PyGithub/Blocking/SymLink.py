@@ -23,6 +23,7 @@ class SymLink(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.Dir.get_contents`
       * :meth:`.Repository.get_contents`
     """
 
