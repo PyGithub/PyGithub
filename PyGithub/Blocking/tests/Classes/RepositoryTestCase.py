@@ -230,6 +230,7 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(users[0].contributions, 1041)
         self.assertTrue(isinstance(users[0], PyGithub.Blocking.User.User))
         self.assertEqual(users[1].login, "akfish")
+        self.assertEqual(users[1].type, "User")
 
     def testGetContributors_allParameters(self):
         users = self.g.get_repo("jacquev6/PyGithub").get_contributors(anon=True, per_page=3)
