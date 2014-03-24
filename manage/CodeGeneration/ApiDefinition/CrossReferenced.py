@@ -337,7 +337,7 @@ class Method(Member):
                 unimplementedParameters.remove("email")
                 unimplementedParameters.remove("path")
                 unimplementedParameters.remove("branch")
-            if self.containerClass.name == "Dir" and self.__name in ["get_content"]:
+            if self.containerClass.name == "Dir" and self.__name in ["get_contents"]:
                 unimplementedParameters.remove("path")
                 unimplementedParameters.remove("ref")
             if len(unimplementedParameters) > 0:

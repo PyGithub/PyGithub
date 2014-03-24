@@ -313,11 +313,7 @@ class CodeGenerator:
         yield "return r.json()"
 
     def generateCodeForListOfClassReturnValue(self, method):
-        if method.returnType.content.isUpdatable:
-            base = "return [{}(self.Session, a, None) for a in r.json()]"
-        else:
-            base = "return [{}(self.Session, a) for a in r.json()]"
-        yield base.format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
+        yield "return [{}(self.Session, a) for a in r.json()]".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
 
     def generateCodeForListOfUnionReturnValue(self, method):
         yield 'return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]'
@@ -333,6 +329,29 @@ class CodeGenerator:
         yield "    return True"
         yield "else:"
         yield "    return False"
+
+    def generateCodeForUnionReturnValue(self, method):
+        # @todoGeni Generalize
+        yield 'data = r.json()'
+        yield 'if isinstance(data, list):'
+        yield '    r = []'
+        yield '    for d in data:'
+        yield '        if d["type"] == "file" and d["size"] is None:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490'
+        yield '            c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)'
+        yield '        elif d["type"] == "file":'
+        yield '            c = PyGithub.Blocking.File.File(self.Session, d, None)'
+        yield '        elif d["type"] == "symlink":'
+        yield '            c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)'
+        yield '        elif d["type"] == "dir":  # pragma no branch (defensive programming)'
+        yield '            c = PyGithub.Blocking.Dir.Dir(self.Session, d)'
+        yield '        r.append(c)'
+        yield '    return r'
+        yield 'elif data["type"] == "submodule":'
+        yield '    return PyGithub.Blocking.Submodule.Submodule(self.Session, data, r.headers.get("ETag"))'
+        yield 'elif data["type"] == "file":'
+        yield '    return PyGithub.Blocking.File.File(self.Session, data, r.headers.get("ETag"))'
+        yield 'elif data["type"] == "symlink":  # pragma no branch (defensive programming)'
+        yield '    return PyGithub.Blocking.SymLink.SymLink(self.Session, data, r.headers.get("ETag"))'
 
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)

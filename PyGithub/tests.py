@@ -16,7 +16,9 @@ from PyGithub.Blocking.tests.Classes.GithubTestCase import *
 from PyGithub.Blocking.tests.Classes.OrganizationTestCase import *
 from PyGithub.Blocking.tests.Classes.PublicKeyTestCase import *
 from PyGithub.Blocking.tests.Classes.RepositoryTestCase import *
+from PyGithub.Blocking.tests.Classes.SubmoduleTestCase import *
 from PyGithub.Blocking.tests.Classes.SubscriptionTestCase import *
+from PyGithub.Blocking.tests.Classes.SymLinkTestCase import *
 from PyGithub.Blocking.tests.Classes.TeamTestCase import *
 from PyGithub.Blocking.tests.Classes.UserTestCase import *
 

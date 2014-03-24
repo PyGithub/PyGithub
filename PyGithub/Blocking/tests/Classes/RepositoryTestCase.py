@@ -383,28 +383,50 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         readme = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_readme(ref="develop")
         self.assertEqual(readme.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=develop")
 
-    def testGetFileContent(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("README.md")
+    def testGetFileContents(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("README.md")
+        self.assertIsInstance(f, PyGithub.Blocking.File.File)
+        self.assertEqual(f.type, "file")
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
 
-    def testGetFileContentWithinDirectory(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("a/foo.md")
+    def testGetSymlinkContents(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("SymLink.rst")
+        self.assertIsInstance(f, PyGithub.Blocking.SymLink.SymLink)
+        self.assertEqual(f.type, "symlink")
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/SymLink.rst?ref=master")
+
+    def testGetSubmoduleContents(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("PyGithub")
+        self.assertIsInstance(f, PyGithub.Blocking.Submodule.Submodule)
+        self.assertEqual(f.type, "submodule")
+        self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/PyGithub?ref=master")
+
+    def testGetFileContentsWithinDirectory(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("a/foo.md")
+        self.assertIsInstance(f, PyGithub.Blocking.File.File)
+        self.assertEqual(f.type, "file")
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/a/foo.md?ref=master")
 
-    def testGetFileContent_allParameters(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("toto.md", ref="develop")
+    def testGetFileContents_allParameters(self):
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("toto.md", ref="develop")
+        self.assertIsInstance(f, PyGithub.Blocking.File.File)
+        self.assertEqual(f.type, "file")
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/toto.md?ref=develop")
 
-    def testGetRootDirContent(self):
-        contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("")
-        self.assertEqual(len(contents), 2)
+    def testGetRootDirContents(self):
+        contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("")
+        self.assertIsInstance(contents, list)
+        self.assertEqual(len(contents), 5)
         self.assertIsInstance(contents[0], PyGithub.Blocking.File.File)
-        self.assertIsInstance(contents[1], PyGithub.Blocking.Dir.Dir)
-
-    def testGetDirContent_allParameters(self):
-        contents = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("a/b", ref="master")
-        self.assertEqual(len(contents), 1)
-        self.assertIsInstance(contents[0], PyGithub.Blocking.Dir.Dir)
+        self.assertIsInstance(contents[1], PyGithub.Blocking.Submodule.Submodule)
+        self.assertIsInstance(contents[2], PyGithub.Blocking.File.File)
+        self.assertIsInstance(contents[3], PyGithub.Blocking.SymLink.SymLink)
+        self.assertIsInstance(contents[4], PyGithub.Blocking.Dir.Dir)
+        self.assertEqual(contents[0].type, "file")
+        self.assertEqual(contents[1].type, "file")  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
+        self.assertEqual(contents[2].type, "file")
+        self.assertEqual(contents[3].type, "symlink")
+        self.assertEqual(contents[4].type, "dir")
 
     def testCreateFile(self):
         cc = self.g.get_repo("jacquev6/PyGithubIntegrationTests").create_file("hello.md", "Add hello.md", "SGVsbG8sIFdvcmxkIQ==")

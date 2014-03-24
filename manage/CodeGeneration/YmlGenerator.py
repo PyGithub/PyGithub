@@ -138,6 +138,16 @@ class YmlGenerator:
                     yield "    return_type: none"
                 elif isinstance(returnType, (CrossReferenced.Class, CrossReferenced.Structure, Typing.BuiltinType)):
                     yield "    return_type: " + returnType.name
+                elif isinstance(returnType, Typing.UnionType):
+                    # @todoGeni Generalize
+                    yield "    return_type:"
+                    yield "      union:"
+                    yield "        - File"
+                    yield "        - SymLink"
+                    yield "        - Submodule"
+                    yield "        - container: list"
+                    yield "          content:"
+                    yield "            union: [File, Dir, SymLink, Submodule]"
                 elif isinstance(returnType, Typing.LinearCollection):
                     yield "    return_type:"
                     yield "      container: " + returnType.container.name

@@ -25,8 +25,8 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
-      * :meth:`.Dir.get_content`
-      * :meth:`.Repository.get_dir_content`
+      * :meth:`.Dir.get_contents`
+      * :meth:`.Repository.get_contents`
     """
 
     def _initAttributes(self, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
@@ -96,13 +96,12 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
         return self.__url.value
 
-    def get_content(self):
+    def get_contents(self):
         """
         Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
 
         The following methods also call this end point:
-          * :meth:`.Repository.get_dir_content`
-          * :meth:`.Repository.get_file_content`
+          * :meth:`.Repository.get_contents`
 
         :rtype: :class:`list` of :class:`.File` or :class:`.Dir`
         """

@@ -645,9 +645,8 @@ GET /repos/:owner/:repo/contents/:path
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/contents#get-contents>`__)
 
 Implemented in PyGithub by:
-  * :meth:`.Dir.get_content`
-  * :meth:`.Repository.get_dir_content`
-  * :meth:`.Repository.get_file_content`
+  * :meth:`.Dir.get_contents`
+  * :meth:`.Repository.get_contents`
 
 PUT /repos/:owner/:repo/contents/:path
 --------------------------------------

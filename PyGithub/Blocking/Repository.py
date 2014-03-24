@@ -21,6 +21,8 @@ import PyGithub.Blocking.File
 import PyGithub.Blocking.GitCommit
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
+import PyGithub.Blocking.Submodule
+import PyGithub.Blocking.SymLink
 import PyGithub.Blocking.Team
 import PyGithub.Blocking.User
 
@@ -1007,6 +1009,46 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
+    def get_contents(self, path, ref=None):
+        """
+        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Dir.get_contents`
+
+        :param path: mandatory :class:`string`
+        :param ref: optional :class:`string`
+        :rtype: :class:`.File` or :class:`.SymLink` or :class:`.Submodule` or :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.SymLink` or :class:`.Submodule`
+        """
+
+        path = PyGithub.Blocking.Parameters.normalizeString(path)
+        if ref is not None:
+            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
+        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        data = r.json()
+        if isinstance(data, list):
+            r = []
+            for d in data:
+                if d["type"] == "file" and d["size"] is None:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
+                    c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)
+                elif d["type"] == "file":
+                    c = PyGithub.Blocking.File.File(self.Session, d, None)
+                elif d["type"] == "symlink":
+                    c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)
+                elif d["type"] == "dir":  # pragma no branch (defensive programming)
+                    c = PyGithub.Blocking.Dir.Dir(self.Session, d)
+                r.append(c)
+            return r
+        elif data["type"] == "submodule":
+            return PyGithub.Blocking.Submodule.Submodule(self.Session, data, r.headers.get("ETag"))
+        elif data["type"] == "file":
+            return PyGithub.Blocking.File.File(self.Session, data, r.headers.get("ETag"))
+        elif data["type"] == "symlink":  # pragma no branch (defensive programming)
+            return PyGithub.Blocking.SymLink.SymLink(self.Session, data, r.headers.get("ETag"))
+
     def get_contributors(self, anon=None, per_page=None):
         """
         Calls the `GET /repos/:owner/:repo/contributors <http://developer.github.com/v3/repos#list-contributors>`__ end point.
@@ -1026,50 +1068,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.contributors_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(anon=anon, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), self.Session, "GET", url, urlArguments=urlArguments)
-
-    def get_dir_content(self, path, ref=None):
-        """
-        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
-
-        The following methods also call this end point:
-          * :meth:`.Dir.get_content`
-          * :meth:`.Repository.get_file_content`
-
-        :param path: mandatory :class:`string`
-        :param ref: optional :class:`string`
-        :rtype: :class:`list` of :class:`.File` or :class:`.Dir`
-        """
-
-        path = PyGithub.Blocking.Parameters.normalizeString(path)
-        if ref is not None:
-            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
-
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
-        r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return [PyGithub.Blocking.Attributes.Switch("type", dict(dir=lambda session, attributes, eTag: PyGithub.Blocking.Dir.Dir(session, attributes), file=PyGithub.Blocking.File.File))(self.Session, a, None) for a in r.json()]
-
-    def get_file_content(self, path, ref=None):
-        """
-        Calls the `GET /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#get-contents>`__ end point.
-
-        The following methods also call this end point:
-          * :meth:`.Dir.get_content`
-          * :meth:`.Repository.get_dir_content`
-
-        :param path: mandatory :class:`string`
-        :param ref: optional :class:`string`
-        :rtype: :class:`.File`
-        """
-
-        path = PyGithub.Blocking.Parameters.normalizeString(path)
-        if ref is not None:
-            ref = PyGithub.Blocking.Parameters.normalizeString(ref)
-
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(ref=ref)
-        r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return PyGithub.Blocking.File.File(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_forks(self, sort=None, per_page=None):
         """

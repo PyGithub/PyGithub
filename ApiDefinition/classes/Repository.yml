@@ -293,6 +293,33 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_contents
+    end_point: GET /repos/:owner/:repo/contents/:path
+    parameters:
+      - name: path
+        type: string
+    optional_parameters:
+      - name: ref
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: path
+        value: parameter path
+    url_arguments:
+      - name: ref
+        value: parameter ref
+    return_type:
+      union:
+        - File
+        - SymLink
+        - Submodule
+        - container: list
+          content:
+            union: [File, Dir, SymLink, Submodule]
   - name: get_contributors
     end_point: GET /repos/:owner/:repo/contributors
     optional_parameters:
@@ -310,49 +337,6 @@ methods:
       container: PaginatedList
       content:
         union: [Contributor, AnonymousContributor]
-  - name: get_dir_content
-    end_point: GET /repos/:owner/:repo/contents/:path
-    parameters:
-      - name: path
-        type: string
-    optional_parameters:
-      - name: ref
-        type: string
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: attribute owner.login
-      - name: repo
-        value: attribute name
-      - name: path
-        value: parameter path
-    url_arguments:
-      - name: ref
-        value: parameter ref
-    return_type:
-      container: list
-      content:
-        union: [File, Dir]
-  - name: get_file_content
-    end_point: GET /repos/:owner/:repo/contents/:path
-    parameters:
-      - name: path
-        type: string
-    optional_parameters:
-      - name: ref
-        type: string
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: attribute owner.login
-      - name: repo
-        value: attribute name
-      - name: path
-        value: parameter path
-    url_arguments:
-      - name: ref
-        value: parameter ref
-    return_type: File
   - name: get_forks
     end_point: GET /repos/:owner/:repo/forks
     optional_parameters:

@@ -12,7 +12,7 @@ import PyGithub.Blocking.tests.Framework as Framework
 
 class FileTestCase(Framework.SimpleLoginTestCase):
     def testAttributes(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("README.md")
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("README.md")
         self.assertEqual(len(f.content), 151)
         self.assertEqual(f.encoding, "base64")
         self.assertEqual(f.git_url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/76a7c87928c256c0dec34784ffaf9b936162bfa3")
@@ -25,13 +25,13 @@ class FileTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
 
     def testLazyCompletion(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("")[0]
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("")[0]
         self.assertEqual(f.size, 109)
         self.assertEqual(f.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/README.md?ref=master")
         self.assertEqual(len(f.content), 151)
 
     def testEdit(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("README.md")
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("README.md")
         self.assertEqual(f.size, 109)
         self.assertEqual(f.content, "UHlHaXRodWJJbnRlZ3JhdGlvblRlc3RzCj09PT09PT09PT09PT09PT09PT09\nPT09PQoKRHVtbXkgcmVwbyB0byBiZSBtb2RpZmllZCBieSBQeUdpdGh1Yidz\nIGludGVncmF0aW9uIHRlc3RzCg==\n")
 
@@ -53,7 +53,7 @@ class FileTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(commit.committer.email, "john@doe.com")
 
     def testEditWithInvalidEncoding(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("README.md")
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("README.md")
         self.assertEqual(f.size, 109)
         self.assertEqual(f.content, "UHlHaXRodWJJbnRlZ3JhdGlvblRlc3RzCj09PT09PT09PT09PT09PT09PT09\nPT09PQoKRHVtbXkgcmVwbyB0byBiZSBtb2RpZmllZCBieSBQeUdpdGh1Yidz\nIGludGVncmF0aW9uIHRlc3RzCg==\n")
 
@@ -64,7 +64,7 @@ class FileTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(f.content, "UHlHaXRodWJJbnRlZ3JhdGlvblRlc3RzCj09PT09PT09PT09PT09PT09PT09\nPT09PQoKRHVtbXkgcmVwbyB0byBiZSBtb2RpZmllZCBieSBQeUdpdGh1Yidz\nIGludGVncmF0aW9uIHRlc3RzCg==\n")
 
     def testDelete(self):
-        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_file_content("hello.md")
+        f = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("hello.md")
 
         commit = f.delete("Delete hello.md")
         self.assertEqual(commit.sha, "7a408b2242ed53f057b7df08403c75c1d72f6635")

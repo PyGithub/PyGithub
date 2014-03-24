@@ -12,7 +12,7 @@ import PyGithub.Blocking.tests.Framework as Framework
 
 class DirTestCase(Framework.SimpleLoginTestCase):
     def testAttributes(self):
-        d = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("")[1]
+        d = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("")[1]
         self.assertEqual(d.git_url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/trees/1b5e66c31c97d735d6c35beecca1e2a783ab8151")
         self.assertEqual(d.html_url, "https://github.com/jacquev6/PyGithubIntegrationTests/tree/master/a")
         self.assertEqual(d.name, "a")
@@ -22,10 +22,10 @@ class DirTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(d.type, "dir")
         self.assertEqual(d.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/a?ref=master")
 
-    def testGetContent(self):
-        d = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_dir_content("a")[0]
+    def testGetContents(self):
+        d = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_contents("a")[0]
         self.assertEqual(d.path, "a/b")
-        content = d.get_content()
+        content = d.get_contents()
         self.assertEqual(len(content), 1)
         self.assertEqual(content[0].path, "a/b/c")
 
