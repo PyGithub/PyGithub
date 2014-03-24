@@ -14,10 +14,13 @@ Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#mig
 What's new?
 ===========
 
-Version 2.0.0-alpha.1 (March 2nd, 2014)
----------------------------------------
+Version 2.0.0-alpha.2 (March 23nd, 2014)
+----------------------------------------
 
-This first alpha version focuses on the bases and on the interactions between users, organizations and repositories.
+What's now covered by v2:
+
+* Interaction between Repositories, Users, Organizations, Teams. Start with `the user guide <http://jacquev6.github.io/PyGithub/v2/user_guide.html#access-to-common-resources>`__.
+* Getting and modifiying repository contents. Start with `Repository.get_contents <http://jacquev6.github.io/PyGithub/v2/reference/classes/Repository.html#PyGithub.Blocking.Repository.Repository.get_contents>`__.
 
 Please comment on `those issues <https://github.com/jacquev6/PyGithub/issues?labels=Prioritization%2Cv2&milestone=&page=1&state=open>`_
 to help me prioritize the next developments. And do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
