@@ -98,11 +98,11 @@ class ReferenceDocumentation:
 
     def readFiles(self):
         for root, _, fileNames in os.walk(self.rootDirectory):
-            for fileName in fnmatch.filter(fileNames, '*.md'):
-                fileName = os.path.join(root, fileName)
-                file = File(fileName)
-                self.files.append(file)
-                # file.printStructure()
+            if not root.endswith("content/changes"):
+                for fileName in fnmatch.filter(fileNames, '*.md'):
+                    fileName = os.path.join(root, fileName)
+                    file = File(fileName)
+                    self.files.append(file)
 
     def analyseFiles(self):
         for f in self.files:

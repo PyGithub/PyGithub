@@ -183,6 +183,20 @@ PATCH /gists/:id
 
 Not yet implemented in PyGithub.
 
+GET /gists/:id/commits
+----------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gist-commits>`__)
+
+Not yet implemented in PyGithub.
+
+GET /gists/:id/forks
+--------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gist-forks>`__)
+
+Not yet implemented in PyGithub.
+
 POST /gists/:id/forks
 ---------------------
 

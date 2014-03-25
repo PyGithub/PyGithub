@@ -71,7 +71,12 @@
   - verb: PATCH
     parameters: [content, description, filename, files]
     doc: http://developer.github.com/v3/gists#edit-a-gist
+/gists/:id/commits:
+  - verb: GET
+    doc: http://developer.github.com/v3/gists#list-gist-commits
 /gists/:id/forks:
+  - verb: GET
+    doc: http://developer.github.com/v3/gists#list-gist-forks
   - verb: POST
     doc: http://developer.github.com/v3/gists#fork-a-gist
 /gists/:id/star:
@@ -175,7 +180,7 @@
     parameters: [type]
     doc: http://developer.github.com/v3/repos#list-organization-repositories
   - verb: POST
-    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, name, private, team_id]
+    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, license_template, name, private, team_id]
     doc: http://developer.github.com/v3/repos#create
 /orgs/:org/teams:
   - verb: GET
@@ -475,7 +480,7 @@
     doc: http://developer.github.com/v3/repos/pages#list-latest-pages-build
 /repos/:owner/:repo/pulls:
   - verb: GET
-    parameters: [base, head, state]
+    parameters: [base, direction, head, sort, state]
     doc: http://developer.github.com/v3/pulls#list-pull-requests
   - verb: POST
     parameters: [base, body, head, issue, title]
@@ -685,7 +690,7 @@
     parameters: [direction, sort, type]
     doc: http://developer.github.com/v3/repos#list-your-repositories
   - verb: POST
-    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, name, private, team_id]
+    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, license_template, name, private, team_id]
     doc: http://developer.github.com/v3/repos#create
 /user/starred:
   - verb: GET
