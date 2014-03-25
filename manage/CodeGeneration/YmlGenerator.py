@@ -3,181 +3,210 @@
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
 import itertools
+import collections
 
 import CodeGeneration.ApiDefinition.Typing as Typing
 import CodeGeneration.ApiDefinition.CrossReferenced as CrossReferenced
 
 
+class YmlPrettyPrinter:
+    def p(self, value):
+        yield from self.rec(value)
+
+    def rec(self, value):
+        if isinstance(value, collections.OrderedDict):
+            yield from self.recDict(value.items())
+        elif isinstance(value, dict):
+            yield from self.recDict(sorted(value.items()))
+        elif isinstance(value, list):
+            yield from self.recList(value)
+        elif isinstance(value, tuple):
+            assert all(isinstance(item, str) for item in value)
+            yield "[" + ", ".join(value) + "]"
+        elif isinstance(value, str):
+            yield value
+        else:
+            assert False, value  # pragma no cover
+
+    def recList(self, items):
+        for v in items:
+            lines = list(self.rec(v))
+            yield from ["- " + lines[0]] + ["  " + l for l in lines[1:]]
+
+    def recDict(self, items):
+        for k, v in items:
+            lines = list(self.rec(v))
+            if len(lines) == 1 and not isinstance(v, (dict, list)):
+                yield k + ": " + lines[0]
+            else:
+                yield from [k + ":"] + ["  " + l for l in lines]
+
+
 class YmlGenerator:
     def generateEndpoints(self, endPoints):
-        for url, endPoints in itertools.groupby(endPoints, lambda ep: ep.url):
-            yield "{}:".format(url)
-            for endPoint in endPoints:
-                yield "  - verb: {}".format(endPoint.verb)
-                if len(endPoint.parameters) != 0:
-                    yield "    parameters: [{}]".format(", ".join(endPoint.parameters))
-                yield "    doc: {}".format(endPoint.doc)
+        yield from YmlPrettyPrinter().p(self.createDataForEndPoints(endPoints))
+
+    def createDataForEndPoints(self, endPoints):
+        return {
+            url: [self.createDataForEndPoint(endPoint) for endPoint in endPoints]
+            for url, endPoints in itertools.groupby(endPoints, lambda ep: ep.url)
+        }
+
+    def createDataForEndPoint(self, endPoint):
+        data = collections.OrderedDict()
+        data["verb"] = endPoint.verb
+        if len(endPoint.parameters) != 0:
+            data["parameters"] = tuple(endPoint.parameters)
+        data["doc"] = endPoint.doc
+        return data
 
     def generateClass(self, klass):
+        yield from YmlPrettyPrinter().p(self.createDataForKlass(klass))
+
+    def createDataForKlass(self, klass):
+        data = collections.OrderedDict()
+
         if klass.base.name not in ["UpdatableGithubObject", "SessionedGithubObject"]:
-            yield "base: " + klass.base.name
-        yield "updatable: " + ("true" if klass.isUpdatable else "false")
+            data["base"] = klass.base.name
+
+        data["updatable"] = "true" if klass.isUpdatable else "false"
+
         if len(klass.structures) != 0:
-            yield "structures:"
-            for structure in klass.structures:
-                yield "  - name: " + structure.name
-                yield "    updatable: " + ("true" if structure.isUpdatable else "false")
-                yield "    attributes:"
-                for attribute in structure.attributes:
-                    yield "      - name: " + attribute.name
-                    yield "        type: " + attribute.type.name
-                if len(structure.deprecatedAttributes) != 0:
-                    yield "    deprecated_attributes:"
-                    for attribute in structure.deprecatedAttributes:
-                        yield "      - " + attribute
+            data["structures"] = [self.createDataForStrukture(structure) for structure in klass.structures]
+
         if len(klass.attributes) != 0:
-            yield "attributes:"
-            for attribute in klass.attributes:
-                yield "  - name: " + attribute.name
-                if attribute.type.category in ["builtin", "struct", "class"]:
-                    yield "    type: " + attribute.type.name
-                elif attribute.type.category == "union":
-                    yield "    type:"
-                    yield "      union: [" + ", ".join(t.name for t in attribute.type.types) + "]"
-                else:
-                    assert False  # pragma no cover
+            data["attributes"] = [self.createDataForAttribute(attribute) for attribute in klass.attributes]
+
         if len(klass.deprecatedAttributes) != 0:
-            yield "deprecated_attributes:"
-            for attribute in klass.deprecatedAttributes:
-                yield "  - " + attribute
+            data["deprecated_attributes"] = list(klass.deprecatedAttributes)
+
         if len(klass.methods) != 0:
-            yield "methods:"
-            for method in klass.methods:
-                yield "  - name: " + method.name
-                if len(method.endPoints) == 1:
-                    yield "    end_point: " + method.endPoints[0].verb + " " + method.endPoints[0].url
-                else:
-                    yield "    end_points:"
-                    for ep in method.endPoints:
-                        yield "      - " + ep.verb + " " + ep.url
-                if not all(p.optional for p in method.parameters):
-                    yield "    parameters:"
-                    for parameter in method.parameters:
-                        if not parameter.optional:
-                            yield "      - name: " + parameter.name
-                            if parameter.type.category == "union":
-                                if parameter.type.types[0].name == "TwoStrings":
-                                    yield "        type:"
-                                    yield "          union: [TwoStrings, string]"
-                                else:
-                                    yield "        type: " + parameter.type.types[0].name
-                            elif parameter.type.category in ["builtin"]:
-                                yield "        type: " + parameter.type.name
-                            else:
-                                assert False  # pragma no cover
+            data["methods"] = [self.createDataForMethod(method) for method in klass.methods]
 
-                if any(p.optional for p in method.parameters):
-                    yield "    optional_parameters:"
-                    for parameter in method.parameters:
-                        if parameter.optional:
-                            yield "      - name: " + parameter.name
-                            if parameter.type.category == "enum":
-                                yield "        type:"
-                                yield "          enum: [" + ", ".join(parameter.type.values) + "]"
-                            elif parameter.type.category == "union":
-                                if parameter.type.types[1].name == "Reset":
-                                    yield "        type:"
-                                    yield "          union: [" + parameter.type.types[0].name + ", Reset]"
-                                elif parameter.type.types[1].name == "string":
-                                    yield "        type: " + parameter.type.types[0].name
-                                else:
-                                    yield "        type:"
-                                    yield "          union: [" + ", ".join(t.name for t in parameter.type.types) + "]"
-                            elif parameter.type.category == "linear_collection":
-                                yield "        type:"
-                                yield "          container: list"
-                                yield "          content: " + parameter.type.content.name
-                            elif parameter.type.category in ["builtin"]:
-                                yield "        type: " + parameter.type.name
-                            else:
-                                assert False  # pragma no cover
+        return data
 
-                yield "    url_template: " + self.value(method.urlTemplate)
+    def createDataForStrukture(self, structure):
+        data = collections.OrderedDict()
+        data["name"] = structure.name
+        data["updatable"] = ("true" if structure.isUpdatable else "false")
+        data["attributes"] = [self.createDataForAttribute(attribute) for attribute in structure.attributes]
+        if len(structure.deprecatedAttributes) != 0:
+            data["deprecated_attributes"] = tuple(structure.deprecatedAttributes)
+        return data
 
-                if len(method.urlTemplateArguments) != 0:
-                    yield "    url_template_arguments:"
-                    for urlTemplateArgument in method.urlTemplateArguments:
-                        yield "      - name: " + urlTemplateArgument.name
-                        yield "        value: " + self.value(urlTemplateArgument.value)
+    def createDataForMethod(self, method):
+        data = collections.OrderedDict()
 
-                if len(method.urlArguments) != 0:
-                    yield "    url_arguments:"
-                    for urlArgument in method.urlArguments:
-                        yield "      - name: " + urlArgument.name
-                        yield "        value: " + self.value(urlArgument.value)
+        data["name"] = method.name
 
-                if len(method.postArguments) != 0:
-                    yield "    post_arguments:"
-                    for postArgument in method.postArguments:
-                        yield "      - name: " + postArgument.name
-                        yield "        value: " + self.value(postArgument.value)
+        if len(method.endPoints) == 1:
+            data["end_point"] = method.endPoints[0].verb + " " + method.endPoints[0].url
+        else:
+            data["end_points"] = [ep.verb + " " + ep.url for ep in method.endPoints]
 
-                if len(method.effects) == 1:
-                    yield "    effect: " + method.effects[0]
-                elif len(method.effects) > 1:
-                    yield "    effects:"
-                    for effect in method.effects:
-                        yield "      - " + effect
+        if not all(p.optional for p in method.parameters):
+            data["parameters"] = []
+        if any(p.optional for p in method.parameters):
+            data["optional_parameters"] = []
+        for parameter in method.parameters:
+            p = self.createDataForParameter(parameter)
+            if parameter.optional:
+                data["optional_parameters"].append(p)
+            else:
+                data["parameters"].append(p)
 
-                if method.returnFrom is not None:
-                    yield "    return_from: " + method.returnFrom
+        data["url_template"] = self.createDataForValue(method.urlTemplate)
 
-                returnType = method.returnType
-                if returnType is Typing.NoneType:
-                    yield "    return_type: none"
-                elif isinstance(returnType, (CrossReferenced.Class, CrossReferenced.Structure, Typing.BuiltinType)):
-                    yield "    return_type: " + returnType.name
-                elif isinstance(returnType, Typing.UnionType):
-                    # @todoGeni Generalize
-                    yield "    return_type:"
-                    yield "      union:"
-                    yield "        - File"
-                    yield "        - SymLink"
-                    yield "        - Submodule"
-                    yield "        - container: list"
-                    yield "          content:"
-                    yield "            union: [File, Dir, SymLink, Submodule]"
-                elif isinstance(returnType, Typing.LinearCollection):
-                    yield "    return_type:"
-                    yield "      container: " + returnType.container.name
-                    if isinstance(returnType.content, (CrossReferenced.Class, CrossReferenced.Structure, Typing.BuiltinType)):
-                        yield "      content: " + returnType.content.name
-                    elif isinstance(returnType.content, (Typing.UnionType)):
-                        yield "      content:"
-                        yield "        union: [" + ", ".join(t.name for t in returnType.content.types) + "]"
-                    else:
-                        assert False  # pragma no cover
-                else:
-                    assert False  # pragma no cover
+        if len(method.urlTemplateArguments) != 0:
+            data["url_template_arguments"] = [self.createDataForArgument(argument) for argument in method.urlTemplateArguments]
 
-    def value(self, value):
-        return self.getMethod("valueFor{}", value.__class__.__name__)(value)
+        if len(method.urlArguments) != 0:
+            data["url_arguments"] = [self.createDataForArgument(argument) for argument in method.urlArguments]
 
-    def valueForEndPointValue(self, value):
+        if len(method.postArguments) != 0:
+            data["post_arguments"] = [self.createDataForArgument(argument) for argument in method.postArguments]
+
+        if len(method.effects) == 1:
+            data["effect"] = method.effects[0]
+        elif len(method.effects) > 1:
+            data["effects"] = list(method.effects)
+
+        if method.returnFrom is not None:
+            data["return_from"] = method.returnFrom
+
+        data["return_type"] = self.createDataForType(method.returnType)
+
+        return data
+
+    def createDataForAttribute(self, attribute):
+        data = collections.OrderedDict()
+        data["name"] = attribute.name
+        data["type"] = self.createDataForType(attribute.type)
+        return data
+
+    createDataForParameter = createDataForAttribute
+
+    def createDataForArgument(self, argument):
+        data = collections.OrderedDict()
+        data["name"] = argument.name
+        data["value"] = self.createDataForValue(argument.value)
+        return data
+
+    def createDataForValue(self, value):
+        return self.getMethod("createDataFor{}", value.__class__.__name__)(value)
+
+    def createDataForEndPointValue(self, value):
         return "end_point"
 
-    def valueForParameterValue(self, value):
+    def createDataForParameterValue(self, value):
         return "parameter " + value.parameter
 
-    def valueForAttributeValue(self, value):
+    def createDataForAttributeValue(self, value):
         return "attribute " + value.attribute
 
-    def valueForRepositoryNameValue(self, value):
+    def createDataForRepositoryNameValue(self, value):
         return "nameFromRepo " + value.repository
 
-    def valueForRepositoryOwnerValue(self, value):
+    def createDataForRepositoryOwnerValue(self, value):
         return "ownerFromRepo " + value.repository
 
+    def createDataForType(self, type):
+        return self.getMethod("createDataFor{}", type.__class__.__name__)(type)
+
+    def createDataForUnionType(self, type):
+        if (
+            # @todoGeni Do something?
+            len(type.types) == 2 and type.types[0].name != "TwoStrings" and type.types[1].name == "string"
+            or len(type.types) == 3 and type.types[1].name == "string" and type.types[2].name == "TwoStrings"
+        ):
+            return self.createDataForType(type.types[0])
+        else:
+            types = [self.createDataForType(t) for t in type.types]
+            if all(isinstance(t, str) for t in types):
+                types = tuple(types)
+            return {"union": types}
+
+    def createDataForNoneType(self, type):
+        return "none"
+
+    def createDataForClass(self, type):
+        return type.name
+
+    def createDataForBuiltinType(self, type):
+        return type.name
+
+    def createDataForLinearCollection(self, type):
+        data = collections.OrderedDict()
+        data["container"] = self.createDataForType(type.container)
+        data["content"] = self.createDataForType(type.content)
+        return data
+
+    def createDataForEnumeratedType(self, type):
+        return {"enum": tuple(type.values)}
+
+    def createDataForStructure(self, type):
+        return type.name
+
     def getMethod(self, scheme, *names):
-        name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.split("_")) for name in names))
+        name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.strip("_").split("_")) for name in names))
         return getattr(self, name)

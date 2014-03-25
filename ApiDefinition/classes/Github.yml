@@ -12,8 +12,7 @@ structures:
     attributes:
       - name: resources
         type: Resources
-    deprecated_attributes:
-      - rate
+    deprecated_attributes: [rate]
   - name: RateLimits
     updatable: true
     attributes:
