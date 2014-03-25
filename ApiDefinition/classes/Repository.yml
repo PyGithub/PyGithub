@@ -218,6 +218,25 @@ methods:
       - name: author
         value: parameter author
     return_type: ContentCommit
+  - name: create_git_blob
+    end_point: POST /repos/:owner/:repo/git/blobs
+    parameters:
+      - name: content
+        type: string
+      - name: encoding
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: content
+        value: parameter content
+      - name: encoding
+        value: parameter encoding
+    return_type: GitBlob
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:
@@ -358,6 +377,20 @@ methods:
     return_type:
       container: PaginatedList
       content: Repository
+  - name: get_git_blob
+    end_point: GET /repos/:owner/:repo/git/blobs/:sha
+    parameters:
+      - name: sha
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: sha
+        value: parameter sha
+    return_type: GitBlob
   - name: get_key
     end_point: GET /repos/:owner/:repo/keys/:id
     parameters:

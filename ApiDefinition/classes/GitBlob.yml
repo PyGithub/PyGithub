@@ -1,0 +1,12 @@
+updatable: true
+attributes:
+  - name: content
+    type: string
+  - name: encoding
+    type: string
+  - name: sha
+    type: string
+  - name: size
+    type: int
+  - name: url
+    type: string

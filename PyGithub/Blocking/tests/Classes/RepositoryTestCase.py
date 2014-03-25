@@ -448,3 +448,11 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(cc.content.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/contents/hello.md?ref=develop")
         self.assertEqual(cc.commit.author.name, "Jane Doe")
         self.assertEqual(cc.commit.committer.email, "john@doe.com")
+
+    def testCreateGitBlob(self):
+        blob = self.g.get_repo("jacquev6/PyGithubIntegrationTests").create_git_blob("This is some content", "utf8")
+        self.assertEqual(blob.sha, "3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+
+    def testGetGitBlob(self):
+        blob = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+        self.assertEqual(blob.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")

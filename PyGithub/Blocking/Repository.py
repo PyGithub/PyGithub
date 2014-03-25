@@ -18,6 +18,7 @@ import PyGithub.Blocking.Attributes
 import PyGithub.Blocking.Contributor
 import PyGithub.Blocking.Dir
 import PyGithub.Blocking.File
+import PyGithub.Blocking.GitBlob
 import PyGithub.Blocking.GitCommit
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
@@ -905,6 +906,25 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("PUT", url, postArguments=postArguments)
         return Repository.ContentCommit(self.Session, r.json())
 
+    def create_git_blob(self, content, encoding):
+        """
+        Calls the `POST /repos/:owner/:repo/git/blobs <http://developer.github.com/v3/git/blobs#create-a-blob>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param content: mandatory :class:`string`
+        :param encoding: mandatory :class:`string`
+        :rtype: :class:`.GitBlob`
+        """
+
+        content = PyGithub.Blocking.Parameters.normalizeString(content)
+        encoding = PyGithub.Blocking.Parameters.normalizeString(encoding)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/blobs", owner=self.owner.login, repo=self.name)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(content=content, encoding=encoding)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), None)
+
     def create_key(self, title, key):
         """
         Calls the `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys#create>`__ end point.
@@ -1088,6 +1108,22 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.forks_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(Repository, self.Session, "GET", url, urlArguments=urlArguments)
+
+    def get_git_blob(self, sha):
+        """
+        Calls the `GET /repos/:owner/:repo/git/blobs/:sha <http://developer.github.com/v3/git/blobs#get-a-blob>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.GitBlob`
+        """
+
+        sha = PyGithub.Blocking.Parameters.normalizeString(sha)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/blobs/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_key(self, id):
         """
