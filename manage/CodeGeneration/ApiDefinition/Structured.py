@@ -8,6 +8,7 @@ import os
 import glob
 
 
+# Monomorphic structures
 Class = collections.namedtuple("Class", "name, updatable, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
@@ -16,12 +17,20 @@ EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
 Parameter = collections.namedtuple("Parameter", "name, type, optional")
 Argument = collections.namedtuple("Argument", "name, value")
 
+# Polymorphic structures: types
 NoneType_ = collections.namedtuple("NoneType_", "")
 NoneType = NoneType_()
 ScalarType = collections.namedtuple("ScalarType", "name")
 LinearCollectionType = collections.namedtuple("LinearCollectionType", "container, content")
 UnionType = collections.namedtuple("UnionType", "types")
 EnumType = collections.namedtuple("EnumType", "values")
+
+# Polymorphic structures: values
+AttributeValue = collections.namedtuple("AttributeValue", "attribute")
+EndPointValue = collections.namedtuple("EndPointValue", "")
+ParameterValue = collections.namedtuple("ParameterValue", "parameter")
+RepositoryOwnerValue = collections.namedtuple("RepositoryOwnerValue", "repository")
+RepositoryNameValue = collections.namedtuple("RepositoryNameValue", "repository")
 
 
 class Definition(object):
@@ -146,7 +155,20 @@ class Definition(object):
         )
 
     def __buildValue(self, value):
-        return value  # @todoGeni Structure
+        if value == "end_point":
+            return EndPointValue()
+        else:
+            origin, value = value.split()
+            if origin == "attribute":
+                return AttributeValue(value)
+            elif origin == "parameter":
+                return ParameterValue(value)
+            elif origin == "ownerFromRepo":
+                return RepositoryOwnerValue(value)
+            elif origin == "nameFromRepo":
+                return RepositoryNameValue(value)
+            else:
+                assert False, origin  # pragma no cover
 
     def __buildType(self, description):
         if description is None:

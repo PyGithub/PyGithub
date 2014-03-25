@@ -403,26 +403,28 @@ class CodeGenerator:
         return " or ".join(self.generateDocForType(st) for st in type.types)
 
     def generateCodeForValue(self, method, value):
-        return self.getMethod("generateCodeForValueFrom{}", value.origin)(method, value)
+        return self.getMethod("generateCodeFor{}", value.__class__.__name__)(method, value)
 
-    def generateCodeForValueFromEndPoint(self, method, value):
+    def generateCodeForEndPointValue(self, method, value):
         return '"https://api.github.com{}"'.format(method.endPoints[0].urlTemplate)
 
-    def generateCodeForValueFromAttribute(self, method, value):
-        return "self.{}".format(value.value)
+    def generateCodeForAttributeValue(self, method, value):
+        return "self.{}".format(value.attribute)
 
-    def generateCodeForValueFromNameFromRepo(self, method, value):
-        return "repo[1]"
+    def generateCodeForRepositoryNameValue(self, method, value):
+        return "{}[1]".format(value.repository)
 
-    def generateCodeForValueFromOwnerFromRepo(self, method, value):
-        return "repo[0]"
+    def generateCodeForRepositoryOwnerValue(self, method, value):
+        return "{}[0]".format(value.repository)
 
-    def generateCodeForValueFromParameter(self, method, value):
-        return value.value
+    def generateCodeForParameterValue(self, method, value):
+        return value.parameter
 
     def generateCodeForStringValue(self, method, value):
         format = "{}"
-        if value.value == "id":  # @todoGeni Test against the type instead of the name
+        if value.__class__.__name__[:-5] == "Parameter" and value.parameter == "id":  # @todoGeni Test against the type instead of the name
+            format = "str({})"
+        if value.__class__.__name__[:-5] == "Attribute" and value.attribute == "id":  # @todoGeni Test against the type instead of the name
             format = "str({})"
         return format.format(self.generateCodeForValue(method, value))
 

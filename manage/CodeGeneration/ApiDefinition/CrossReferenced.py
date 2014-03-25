@@ -2,6 +2,8 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import collections
+import itertools
 import re
 
 import CodeGeneration.ApiDefinition.Structured as Structured
@@ -148,27 +150,17 @@ class Argument(object):
         return self.__value
 
 
-class Value(object):
-    def __init__(self, value):
-        if value == "end_point":
-            self.__origin = "end_point"
-        else:
-            self.__origin, self.__value = value.split(" ")  # @todoGeni Do this parsing in Structured
-            assert self.__origin in ["attribute", "parameter", "ownerFromRepo", "nameFromRepo"]
-
-    @property
-    def origin(self):
-        return self.__origin
-
-    @property
-    def value(self):
-        return self.__value
+def Value(value):
+    return globals()[value.__class__.__name__](*value)  # Why not...
 
 
-class Factory:
-    def __init__(self, category, object):
-        self.category = category
-        self.object = object
+AttributeValue = collections.namedtuple("AttributeValue", "attribute")
+EndPointValue = collections.namedtuple("EndPointValue", "")
+ParameterValue = collections.namedtuple("ParameterValue", "parameter")
+RepositoryOwnerValue = collections.namedtuple("RepositoryOwnerValue", "repository")
+RepositoryNameValue = collections.namedtuple("RepositoryNameValue", "repository")
+
+Factory = collections.namedtuple("Factory", "category, object")
 
 
 class Class(AttributedType):
@@ -336,7 +328,11 @@ class Method(Member):
             if len(unimplementedParameters) > 0:
                 print(self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
 
-        unusedParameters = set(p.name for p in self.__parameters) - set(a.value.value for a in self.__urlTemplateArguments) - set((a.value.value for a in self.__urlArguments)) - set((a.value.value for a in self.__postArguments))
+        unusedParameters = (
+            set(p.name for p in self.__parameters)
+            - set(a.value.parameter for a in itertools.chain(self.__urlTemplateArguments, self.__urlArguments, self.__postArguments) if isinstance(a.value, ParameterValue))
+            - set(a.value.repository for a in itertools.chain(self.__urlTemplateArguments, self.__urlArguments, self.__postArguments) if isinstance(a.value, (RepositoryNameValue, RepositoryOwnerValue)))
+        )
         if len(unusedParameters) > 0:
             print(self.containerClass.name + "." + self.__name, "does not use following parameters:", ", ".join(unusedParameters))
 
@@ -385,6 +381,7 @@ class Parameter(object):
     def __init__(self, name, type, optional):
         self.__name = name
         self.__optional = optional
+        # @todoGeni Couldn't we do something to factorize all this "descrition -> type" logic? Maybe with a metaclass?
         self.__tmp_typeDescription = type
 
     def _reference(self, typesRepo, endPointsRepo):
@@ -430,7 +427,7 @@ class Definition(object):
 
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
-        build = Structured.Method("Build", [], [], "end_point", [], [], [], [], None, Structured.ScalarType("Github"))
+        build = Structured.Method("Build", [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.ScalarType("Github"))
         self.__builder = Class("Builder", "Builder", False, None, [], [], [build], [])
 
         typesRepo = Typing.Repository()

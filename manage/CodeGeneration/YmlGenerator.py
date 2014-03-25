@@ -102,28 +102,25 @@ class YmlGenerator:
                             else:
                                 assert False  # pragma no cover
 
-                if method.urlTemplate.origin in ["attribute", "parameter", "ownerFromRepo", "nameFromRepo"]:
-                    yield "    url_template: " + method.urlTemplate.origin + " " + method.urlTemplate.value
-                else:
-                    yield "    url_template: " + method.urlTemplate.origin
+                yield "    url_template: " + self.value(method.urlTemplate)
 
                 if len(method.urlTemplateArguments) != 0:
                     yield "    url_template_arguments:"
                     for urlTemplateArgument in method.urlTemplateArguments:
                         yield "      - name: " + urlTemplateArgument.name
-                        yield "        value: " + urlTemplateArgument.value.origin + " " + urlTemplateArgument.value.value
+                        yield "        value: " + self.value(urlTemplateArgument.value)
 
                 if len(method.urlArguments) != 0:
                     yield "    url_arguments:"
                     for urlArgument in method.urlArguments:
                         yield "      - name: " + urlArgument.name
-                        yield "        value: " + urlArgument.value.origin + " " + urlArgument.value.value
+                        yield "        value: " + self.value(urlArgument.value)
 
                 if len(method.postArguments) != 0:
                     yield "    post_arguments:"
                     for postArgument in method.postArguments:
                         yield "      - name: " + postArgument.name
-                        yield "        value: " + postArgument.value.origin + " " + postArgument.value.value
+                        yield "        value: " + self.value(postArgument.value)
 
                 if len(method.effects) == 1:
                     yield "    effect: " + method.effects[0]
@@ -162,3 +159,25 @@ class YmlGenerator:
                         assert False  # pragma no cover
                 else:
                     assert False  # pragma no cover
+
+    def value(self, value):
+        return self.getMethod("valueFor{}", value.__class__.__name__)(value)
+
+    def valueForEndPointValue(self, value):
+        return "end_point"
+
+    def valueForParameterValue(self, value):
+        return "parameter " + value.parameter
+
+    def valueForAttributeValue(self, value):
+        return "attribute " + value.attribute
+
+    def valueForRepositoryNameValue(self, value):
+        return "nameFromRepo " + value.repository
+
+    def valueForRepositoryOwnerValue(self, value):
+        return "ownerFromRepo " + value.repository
+
+    def getMethod(self, scheme, *names):
+        name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.split("_")) for name in names))
+        return getattr(self, name)
