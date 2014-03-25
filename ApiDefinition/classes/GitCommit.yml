@@ -1,5 +1,7 @@
+updatable: true
 structures:
   - name: Author
+    updatable: true
     attributes:
       - name: date
         type: datetime

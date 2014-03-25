@@ -1,5 +1,7 @@
+updatable: true
 structures:
   - name: AnonymousContributor
+    updatable: false
     attributes:
       - name: contributions
         type: int
@@ -8,12 +10,14 @@ structures:
       - name: type
         type: string
   - name: ContentCommit
+    updatable: false
     attributes:
       - name: commit
         type: GitCommit
       - name: content
         type: File
   - name: Permissions
+    updatable: true
     attributes:
       - name: admin
         type: bool

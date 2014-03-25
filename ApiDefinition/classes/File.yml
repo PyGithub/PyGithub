@@ -1,3 +1,4 @@
+updatable: true
 attributes:
   - name: content
     type: string

@@ -56,10 +56,11 @@ class EndPoint(object):
 
 
 class AttributedType(Typing.SimpleType):
-    def __init__(self, name, category, attributes, deprecatedAttributes):
+    def __init__(self, name, category, updatable, attributes, deprecatedAttributes):
         Typing.Type.__init__(self, name, category)
-        self.__deprecatedAttributes = sorted(deprecatedAttributes)
+        self.__updatable = updatable
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
+        self.__deprecatedAttributes = sorted(deprecatedAttributes)
         self.__factories = []
 
     def _reference(self, typesRepo, endPointsRepo):
@@ -93,11 +94,7 @@ class AttributedType(Typing.SimpleType):
 
     @property
     def isUpdatable(self):
-        # @todoGeni Could we pre-compute that?
-        return (
-            self.name == "RateLimits"  # @todoGeni remove hard-coded name
-            or any(f.category == "attribute" and f.object.containerClass.isUpdatable for f in self.__factories)
-        )
+        return self.__updatable
 
 
 class Member(object):
@@ -175,8 +172,8 @@ class Factory:
 
 
 class Class(AttributedType):
-    def __init__(self, module, name, base, structures, attributes, methods, deprecatedAttributes):
-        AttributedType.__init__(self, name, "class", attributes, deprecatedAttributes)
+    def __init__(self, module, name, updatable, base, structures, attributes, methods, deprecatedAttributes):
+        AttributedType.__init__(self, name, "class", updatable, attributes, deprecatedAttributes)
         self.__module = module
         self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
         self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.name)
@@ -194,10 +191,10 @@ class Class(AttributedType):
             m._reference(typesRepo, endPointsRepo)
 
         if self.__tmp_baseTypeDescription is None:
-            if self.name in ["Github", "Dir", "PublicKey"]:  # @todoGeni remove hard-coded names
-                self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
-            else:
+            if self.isUpdatable:
                 self.__tmp_baseTypeDescription = Structured.ScalarType("UpdatableGithubObject")
+            else:
+                self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
         self.__base = typesRepo.get(self.__tmp_baseTypeDescription)
         self.__base.__derived.append(self)
         del self.__tmp_baseTypeDescription
@@ -262,14 +259,10 @@ class Class(AttributedType):
     def dependencies(self):
         return self.__dependencies
 
-    @property
-    def isUpdatable(self):
-        return self.name not in ["Dir", "PublicKey"]  # @todoGeni remove hard-coded name
-
 
 class Structure(AttributedType, Member):
-    def __init__(self, containerClass, name, attributes, deprecatedAttributes):
-        AttributedType.__init__(self, name, "struct", attributes, deprecatedAttributes)
+    def __init__(self, containerClass, name, updatable, attributes, deprecatedAttributes):
+        AttributedType.__init__(self, name, "struct", updatable, attributes, deprecatedAttributes)
         Member.__init__(self, containerClass)
 
 
@@ -438,7 +431,7 @@ class Definition(object):
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
         build = Structured.Method("Build", [], [], "end_point", [], [], [], [], None, Structured.ScalarType("Github"))
-        self.__builder = Class("Builder", "Builder", None, [], [], [build], [])
+        self.__builder = Class("Builder", "Builder", False, None, [], [], [build], [])
 
         typesRepo = Typing.Repository()
         for t in ["int", "bool", "string", "datetime", "list"]:
@@ -446,7 +439,7 @@ class Definition(object):
         for t in ["Reset", "TwoStrings", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
             typesRepo.register(Typing.BuiltinType(t))
         for t in ["SessionedGithubObject", "UpdatableGithubObject", "PaginatedList"]:
-            typesRepo.register(Class("PyGithub.Blocking.BaseGithubObject", t, None, [], [], [], []))
+            typesRepo.register(Class("PyGithub.Blocking.BaseGithubObject", t, False, None, [], [], [], []))
         for c in self.__classes:
             typesRepo.register(c)
             for s in c.structures:

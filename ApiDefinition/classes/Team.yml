@@ -1,3 +1,4 @@
+updatable: true
 attributes:
   - name: id
     type: int

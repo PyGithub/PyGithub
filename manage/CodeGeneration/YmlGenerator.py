@@ -21,10 +21,12 @@ class YmlGenerator:
     def generateClass(self, klass):
         if klass.base.name not in ["UpdatableGithubObject", "SessionedGithubObject"]:
             yield "base: " + klass.base.name
+        yield "updatable: " + ("true" if klass.isUpdatable else "false")
         if len(klass.structures) != 0:
             yield "structures:"
             for structure in klass.structures:
                 yield "  - name: " + structure.name
+                yield "    updatable: " + ("true" if structure.isUpdatable else "false")
                 yield "    attributes:"
                 for attribute in structure.attributes:
                     yield "      - name: " + attribute.name

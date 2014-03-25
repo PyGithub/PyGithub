@@ -1,3 +1,4 @@
+updatable: false
 attributes:
   - name: git_url
     type: string

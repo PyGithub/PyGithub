@@ -1,4 +1,5 @@
 base: User
+updatable: true
 methods:
   - name: add_to_following
     end_point: PUT /user/following/:user

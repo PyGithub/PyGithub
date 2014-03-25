@@ -1,17 +1,21 @@
+updatable: false
 structures:
   - name: GitIgnoreTemplate
+    updatable: false
     attributes:
       - name: name
         type: string
       - name: source
         type: string
   - name: RateLimit
+    updatable: false
     attributes:
       - name: resources
         type: Resources
     deprecated_attributes:
       - rate
   - name: RateLimits
+    updatable: true
     attributes:
       - name: limit
         type: int
@@ -20,6 +24,7 @@ structures:
       - name: reset
         type: datetime
   - name: Resources
+    updatable: false
     attributes:
       - name: core
         type: RateLimits

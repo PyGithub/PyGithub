@@ -1,3 +1,4 @@
+updatable: true
 attributes:
   - name: created_at
     type: datetime

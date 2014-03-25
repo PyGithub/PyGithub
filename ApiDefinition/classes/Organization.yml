@@ -1,4 +1,5 @@
 base: Entity
+updatable: true
 attributes:
   - name: billing_email
     type: string

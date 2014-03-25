@@ -8,8 +8,8 @@ import os
 import glob
 
 
-Class = collections.namedtuple("Class", "name, base, structures, attributes, methods, deprecatedAttributes")
-Structure = collections.namedtuple("Structure", "name, attributes, deprecatedAttributes")
+Class = collections.namedtuple("Class", "name, updatable, base, structures, attributes, methods, deprecatedAttributes")
+Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
 Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
@@ -72,12 +72,13 @@ class Definition(object):
             data = yaml.load(f.read())
         return self.__buildClass(name, **data)
 
-    def __buildClass(self, name, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
+    def __buildClass(self, name, updatable, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
         assert isinstance(base, (type(None), str)), base
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
         return Class(
             name=name,
+            updatable=updatable,
             base=self.__buildType(base),
             structures=[self.__buildStructure(**s) for s in structures],
             attributes=[self.__buildAttribute(**a) for a in attributes],
@@ -85,11 +86,12 @@ class Definition(object):
             deprecatedAttributes=deprecated_attributes
         )
 
-    def __buildStructure(self, name, attributes=[], deprecated_attributes=[]):
+    def __buildStructure(self, name, updatable, attributes=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
         return Structure(
             name=name,
+            updatable=updatable,
             attributes=[self.__buildAttribute(**a) for a in attributes],
             deprecatedAttributes=deprecated_attributes
         )
