@@ -34,6 +34,13 @@ methods:
     end_point: GET /user
     url_template: end_point
     return_type: AuthenticatedUser
+  - name: get_emojis
+    end_point: GET /emojis
+    url_template: end_point
+    return_type:
+      container: dict
+      key: string
+      value: string
   - name: get_gitignore_template
     end_point: GET /gitignore/templates/:name
     parameters:

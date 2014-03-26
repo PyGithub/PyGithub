@@ -152,6 +152,19 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         r = self.Session._request("GET", url)
         return PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(self.Session, r.json(), r.headers.get("ETag"))
 
+    def get_emojis(self):
+        """
+        Calls the `GET /emojis <http://developer.github.com/v3/emojis#emojis>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`dict` of :class:`string` to :class:`string`
+        """
+
+        url = uritemplate.expand("https://api.github.com/emojis")
+        r = self.Session._request("GET", url)
+        return r.json()
+
     def get_gitignore_template(self, name):
         """
         Calls the `GET /gitignore/templates/:name <http://developer.github.com/v3/gitignore#get-a-single-template>`__ end point.

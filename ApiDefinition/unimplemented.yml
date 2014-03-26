@@ -6,7 +6,6 @@
 /authorizations: [GET, POST]
 /authorizations/:id: [DELETE, GET, PATCH]
 /authorizations/clients/:client_id: [PUT]
-/emojis: [GET]
 /events: [GET]
 /feeds: [GET]
 /gists: [GET, POST]

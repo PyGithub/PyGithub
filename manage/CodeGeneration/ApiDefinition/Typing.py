@@ -55,6 +55,30 @@ class LinearCollection(Type):
         return self.__container.underlyingTypes | self.__content.underlyingTypes
 
 
+class MappingCollection(Type):
+    def __init__(self, container, key, value):
+        Type.__init__(self, container.name + " of " + key.name + " to " + value.name, "mapping_collection")
+        self.__container = container
+        self.__key = key
+        self.__value = value
+
+    @property
+    def container(self):
+        return self.__container
+
+    @property
+    def key(self):
+        return self.__key
+
+    @property
+    def value(self):
+        return self.__value
+
+    @property
+    def underlyingTypes(self):
+        return self.__container.underlyingTypes | self.__key.underlyingTypes | self.__value.underlyingTypes
+
+
 class UnionType(Type):
     def __init__(self, *types):
         Type.__init__(self, " or ".join(t.name for t in types), "union")
@@ -107,5 +131,10 @@ class Repository(object):
             container = self.get(description.container)
             content = self.get(description.content)
             return LinearCollection(container, content)
+        elif isinstance(description, Structured.MappingCollectionType):
+            container = self.get(description.container)
+            key = self.get(description.key)
+            value = self.get(description.value)
+            return MappingCollection(container, key, value)
         else:
             assert False, description  # pragma no cover

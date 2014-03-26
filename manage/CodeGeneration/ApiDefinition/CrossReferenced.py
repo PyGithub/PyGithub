@@ -431,7 +431,7 @@ class Definition(object):
         self.__builder = Class("Builder", "Builder", False, None, [], [], [build], [])
 
         typesRepo = Typing.Repository()
-        for t in ["int", "bool", "string", "datetime", "list"]:
+        for t in ["int", "bool", "string", "datetime", "list", "dict"]:
             typesRepo.register(Typing.BuiltinType(t))
         for t in ["Reset", "TwoStrings", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
             typesRepo.register(Typing.BuiltinType(t))

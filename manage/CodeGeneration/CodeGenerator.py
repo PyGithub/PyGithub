@@ -296,6 +296,9 @@ class CodeGenerator:
             assert False  # pragma no cover
         yield base.format(typeName)
 
+    def generateCodeForMappingCollectionReturnValue(self, method):
+        yield "return r.json()"
+
     def generateCodeForLinearCollectionReturnValue(self, method):
         yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.container.name)(method)
 
@@ -394,6 +397,9 @@ class CodeGenerator:
 
     def generateDocForLinearCollectionType(self, type):
         return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.content)
+
+    def generateDocForMappingCollectionType(self, type):
+        return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.key) + " to " + self.generateDocForType(type.value)
 
     def generateDocForNoneType(self, type):
         return "None"

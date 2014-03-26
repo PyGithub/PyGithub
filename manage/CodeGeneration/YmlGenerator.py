@@ -215,6 +215,13 @@ class YmlGenerator:
         data["content"] = self.createDataForType(type.content)
         return data
 
+    def createDataForMappingCollection(self, type):
+        data = collections.OrderedDict()
+        data["container"] = self.createDataForType(type.container)
+        data["key"] = self.createDataForType(type.key)
+        data["value"] = self.createDataForType(type.value)
+        return data
+
     def createDataForEnumeratedType(self, type):
         return {"enum": tuple(type.values)}
 

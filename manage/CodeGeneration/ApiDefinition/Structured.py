@@ -22,6 +22,7 @@ NoneType_ = collections.namedtuple("NoneType_", "")
 NoneType = NoneType_()
 ScalarType = collections.namedtuple("ScalarType", "name")
 LinearCollectionType = collections.namedtuple("LinearCollectionType", "container, content")
+MappingCollectionType = collections.namedtuple("MappingCollectionType", "container, key, value")
 UnionType = collections.namedtuple("UnionType", "types")
 EnumType = collections.namedtuple("EnumType", "values")
 
@@ -178,7 +179,12 @@ class Definition(object):
         elif isinstance(description, str):
             return ScalarType(description)
         elif "container" in description:
-            return LinearCollectionType(self.__buildType(description["container"]), self.__buildType(description["content"]))
+            if "content" in description:
+                return LinearCollectionType(self.__buildType(description["container"]), self.__buildType(description["content"]))
+            elif "key" in description and "value" in description:
+                return MappingCollectionType(self.__buildType(description["container"]), self.__buildType(description["key"]), self.__buildType(description["value"]))
+            else:
+                assert False, description  # pragma no cover
         elif "union" in description:
             return UnionType([self.__buildType(t) for t in description["union"]])
         elif "enum" in description:
