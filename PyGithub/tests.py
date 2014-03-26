@@ -14,6 +14,7 @@ from PyGithub.Blocking.tests.Classes.DirTestCase import *
 from PyGithub.Blocking.tests.Classes.FileTestCase import *
 from PyGithub.Blocking.tests.Classes.GitBlobTestCase import *
 from PyGithub.Blocking.tests.Classes.GithubTestCase import *
+from PyGithub.Blocking.tests.Classes.GitTreeTestCase import *
 from PyGithub.Blocking.tests.Classes.OrganizationTestCase import *
 from PyGithub.Blocking.tests.Classes.PublicKeyTestCase import *
 from PyGithub.Blocking.tests.Classes.RepositoryTestCase import *

@@ -237,6 +237,23 @@ methods:
       - name: encoding
         value: parameter encoding
     return_type: GitBlob
+  - name: create_git_tree
+    end_point: POST /repos/:owner/:repo/git/trees
+    parameters:
+      - name: tree
+        type:
+          container: list
+          content: dict
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: tree
+        value: parameter tree
+    return_type: GitTree
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:
@@ -391,6 +408,20 @@ methods:
       - name: sha
         value: parameter sha
     return_type: GitBlob
+  - name: get_git_tree
+    end_point: GET /repos/:owner/:repo/git/trees/:sha
+    parameters:
+      - name: sha
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: sha
+        value: parameter sha
+    return_type: GitTree
   - name: get_key
     end_point: GET /repos/:owner/:repo/keys/:id
     parameters:

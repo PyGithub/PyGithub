@@ -49,8 +49,6 @@
 /repos/:owner/:repo/git/refs/:ref: [DELETE, GET, PATCH]
 /repos/:owner/:repo/git/tags: [POST]
 /repos/:owner/:repo/git/tags/:sha: [GET]
-/repos/:owner/:repo/git/trees: [POST]
-/repos/:owner/:repo/git/trees/:sha: [GET]
 /repos/:owner/:repo/hooks: [GET, POST]
 /repos/:owner/:repo/hooks/:id: [DELETE, GET, PATCH]
 /repos/:owner/:repo/hooks/:id/pings: [POST]

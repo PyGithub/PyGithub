@@ -8,6 +8,30 @@ log = logging.getLogger(__name__)
 
 import PyGithub.Blocking.Exceptions
 
+"""
+This module is a bit contrieved because of the following goals:
+
+1) Lazy completion should be done only when strictly necessary, that is when the user
+accesses an attribute that has never been returned by GitHub.
+
+2) Whenever GitHub returns data that PyGithub can't interpret as the expected type,
+we want to log a warning as soon as possible, but we want to defer raising the actual
+exception for as long as we can.
+
+A few examples:
+
+If PyGithub expects a bool and GitHub sends a string, then PyGithub should raise the
+BadAttributeException when the user accesses the attribute.
+
+If PyGithub expects a list of bool and GitHub sends [true, false, "foobar"],
+PyGithub should raise the BadAttributeException only when the user accesses the attribute.
+(We can't raise later because we need to present the attribute as a plain list of booleans)
+
+If PyGithub expects a list of a Structured type with a boolean attribute b, and GitHub
+returns [{"b": true}, {"b": "foobar"}], then PyGithub should raise when the user accesses
+the .b property of the second element of the list.
+"""
+
 
 class _Absent:
     pass

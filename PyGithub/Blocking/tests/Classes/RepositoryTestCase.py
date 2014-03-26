@@ -456,3 +456,7 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
     def testGetGitBlob(self):
         blob = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(blob.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
+
+    def testGetGitTree(self):
+        tree = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_git_tree("83e7163e208723d366a758b7cbef1042e77b9e8b")
+        self.assertEqual(tree.sha, "83e7163e208723d366a758b7cbef1042e77b9e8b")

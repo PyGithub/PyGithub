@@ -264,6 +264,9 @@ class CodeGenerator:
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
         return "{} = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
+    def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
+        return "{} = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+
     def generateCodeToNormalizeParameterSince(self, parameter):
         t = parameter.type.types[0]
         return "{} = PyGithub.Blocking.Parameters.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)

@@ -20,6 +20,7 @@ import PyGithub.Blocking.Dir
 import PyGithub.Blocking.File
 import PyGithub.Blocking.GitBlob
 import PyGithub.Blocking.GitCommit
+import PyGithub.Blocking.GitTree
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Submodule
@@ -925,6 +926,24 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), None)
 
+    def create_git_tree(self, tree):
+        """
+        Calls the `POST /repos/:owner/:repo/git/trees <http://developer.github.com/v3/git/trees#create-a-tree>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.GitTree.create_modified_copy`
+
+        :param tree: mandatory :class:`list` of :class:`dict`
+        :rtype: :class:`.GitTree`
+        """
+
+        tree = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalizeDict, tree)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(tree=tree)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return PyGithub.Blocking.GitTree.GitTree(self.Session, r.json(), r.headers.get("ETag"))
+
     def create_key(self, title, key):
         """
         Calls the `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys#create>`__ end point.
@@ -1124,6 +1143,22 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/blobs/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
         r = self.Session._request("GET", url)
         return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), r.headers.get("ETag"))
+
+    def get_git_tree(self, sha):
+        """
+        Calls the `GET /repos/:owner/:repo/git/trees/:sha <http://developer.github.com/v3/git/trees#get-a-tree>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.GitTree`
+        """
+
+        sha = PyGithub.Blocking.Parameters.normalizeString(sha)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.GitTree.GitTree(self.Session, r.json(), r.headers.get("ETag"))
 
     def get_key(self, id):
         """
