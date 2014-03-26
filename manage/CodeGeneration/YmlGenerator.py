@@ -43,6 +43,20 @@ class YmlPrettyPrinter:
 
 
 class YmlGenerator:
+    def generateUnimplemented(self, classes, endPoints):
+        yield from YmlPrettyPrinter().p(self.createDataForUnimplemented(classes, endPoints))
+
+    def createDataForUnimplemented(self, classes, endPoints):
+        data = {
+            url: set(ep.verb for ep in endPoints)
+            for url, endPoints in itertools.groupby(endPoints, lambda ep: ep.url)
+        }
+        for klass in classes:
+            for method in klass.methods:
+                for ep in method.endPoints:
+                    data[ep.url].discard(ep.verb)
+        return {k: tuple(sorted(v)) for k, v in data.items() if len(v) != 0}
+
     def generateEndpoints(self, endPoints):
         yield from YmlPrettyPrinter().p(self.createDataForEndPoints(endPoints))
 
