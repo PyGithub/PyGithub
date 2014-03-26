@@ -104,7 +104,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
-    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, team_id=None, auto_init=None, gitignore_template=None):
+    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, team_id=None, auto_init=None, gitignore_template=None, license_template=None):
         """
         Calls the `POST /orgs/:org/repos <http://developer.github.com/v3/repos#create>`__ end point.
 
@@ -120,6 +120,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param team_id: optional :class:`.Team` or :class:`string`
         :param auto_init: optional :class:`bool`
         :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string`
+        :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
 
@@ -142,9 +143,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
             auto_init = PyGithub.Blocking.Parameters.normalizeBool(auto_init)
         if gitignore_template is not None:
             gitignore_template = PyGithub.Blocking.Parameters.normalizeGitIgnoreTemplateString(gitignore_template)
+        if license_template is not None:
+            license_template = PyGithub.Blocking.Parameters.normalizeString(license_template)
 
         url = uritemplate.expand(self.repos_url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template)
+        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 

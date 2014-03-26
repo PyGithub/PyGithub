@@ -197,7 +197,7 @@ class OrganizationTestCase(Framework.SimpleLoginTestCase):
         org = self.g.get_org("BeaverSoftware")
         with self.assertRaises(PyGithub.Blocking.ObjectNotFoundException):
             org.get_repo("potential-octo-lana")
-        repo = org.create_repo("potential-octo-lana", description="Created with PyGithub v2", has_issues=False, has_wiki=False, private=False, auto_init=True, gitignore_template="C", homepage="http://foo.bar", has_downloads=False, team_id=141496)
+        repo = org.create_repo("potential-octo-lana", description="Created with PyGithub v2", has_issues=False, has_wiki=False, private=False, auto_init=True, gitignore_template="C", homepage="http://foo.bar", has_downloads=False, team_id=141496, license_template="mit")
         self.assertEqual(repo.full_name, "BeaverSoftware/potential-octo-lana")
         repo.delete()
 

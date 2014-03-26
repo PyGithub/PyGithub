@@ -67,6 +67,8 @@ methods:
         type: bool
       - name: gitignore_template
         type: GitIgnoreTemplate
+      - name: license_template
+        type: string
     url_template: attribute repos_url
     post_arguments:
       - name: name
@@ -89,6 +91,8 @@ methods:
         value: parameter auto_init
       - name: gitignore_template
         value: parameter gitignore_template
+      - name: license_template
+        value: parameter license_template
     return_type: Repository
   - name: create_team
     end_point: POST /orgs/:org/teams

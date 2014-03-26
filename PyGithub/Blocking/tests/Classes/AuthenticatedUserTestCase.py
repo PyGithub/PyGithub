@@ -233,7 +233,7 @@ class AuthenticatedUserTestCase(Framework.SimpleLoginTestCase):
         u = self.g.get_authenticated_user()
         with self.assertRaises(PyGithub.Blocking.ObjectNotFoundException):
             u.get_repo("potential-octo-lana")
-        repo = u.create_repo("potential-octo-lana", description="Created with PyGithub v2", has_issues=False, has_wiki=False, private=True, auto_init=True, gitignore_template="C", homepage="http://foo.bar", has_downloads=False)
+        repo = u.create_repo("potential-octo-lana", description="Created with PyGithub v2", has_issues=False, has_wiki=False, private=True, auto_init=True, gitignore_template="C", homepage="http://foo.bar", has_downloads=False, license_template="mozilla")
         self.assertEqual(repo.full_name, "jacquev6/potential-octo-lana")
         repo.delete()
 

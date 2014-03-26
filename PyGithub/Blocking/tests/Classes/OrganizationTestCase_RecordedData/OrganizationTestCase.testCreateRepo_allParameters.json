@@ -18,13 +18,13 @@
         },
         "response": {
             "body": {
-                "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                "avatar_url": "https://avatars.githubusercontent.com/u/1424031?",
                 "billing_email": "BeaverSoftware@vincent-jacques.net",
                 "blog": null,
                 "collaborators": 0,
                 "company": null,
                 "created_at": "2012-02-09T19:20:12Z",
-                "disk_usage": 84,
+                "disk_usage": 56,
                 "email": null,
                 "events_url": "https://api.github.com/orgs/BeaverSoftware/events",
                 "followers": 0,
@@ -34,7 +34,7 @@
                 "location": "Paris, France",
                 "login": "BeaverSoftware",
                 "members_url": "https://api.github.com/orgs/BeaverSoftware/members{/member}",
-                "name": null,
+                "name": "Beaver Software",
                 "owned_private_repos": 0,
                 "plan": {
                     "name": "free",
@@ -48,29 +48,30 @@
                 "repos_url": "https://api.github.com/orgs/BeaverSoftware/repos",
                 "total_private_repos": 0,
                 "type": "Organization",
-                "updated_at": "2013-12-21T04:06:00Z",
+                "updated_at": "2014-02-23T05:51:58Z",
                 "url": "https://api.github.com/orgs/BeaverSoftware"
             },
             "headers": {
                 "access-control-allow-credentials": "true",
                 "access-control-allow-origin": "*",
-                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
                 "cache-control": "private, max-age=60, s-maxage=60",
                 "content-encoding": "gzip",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
-                "etag": "\"c8ee35376edbc79d2fef53174c7db24a\"",
-                "last-modified": "Sat, 21 Dec 2013 04:06:00 GMT",
+                "date": "Wed, 26 Mar 2014 00:51:30 GMT",
+                "etag": "\"10200d9dde9b635b0887543e37b33178\"",
+                "last-modified": "Sun, 23 Feb 2014 05:51:58 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "transfer-encoding": "chunked",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "4C79374B:32C9:9AE11D:52B513EA",
+                "x-github-request-id": "62E81E32:2C21:2E8BA10:53322492",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4976",
-                "x-ratelimit-reset": "1387601164"
+                "x-ratelimit-remaining": "4995",
+                "x-ratelimit-reset": "1395798688",
+                "x-served-by": "03d91026ad8428f4d9966d7434f9d82e"
             },
             "status": 200
         }
@@ -100,19 +101,19 @@
             "headers": {
                 "access-control-allow-credentials": "true",
                 "access-control-allow-origin": "*",
-                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
                 "content-encoding": "gzip",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
+                "date": "Wed, 26 Mar 2014 00:51:30 GMT",
                 "server": "GitHub.com",
                 "status": "404 Not Found",
                 "transfer-encoding": "chunked",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "4C79374B:32C9:9AE144:52B513EA",
+                "x-github-request-id": "62E81E32:2C21:2E8BA7A:53322492",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4975",
-                "x-ratelimit-reset": "1387601164"
+                "x-ratelimit-remaining": "4994",
+                "x-ratelimit-reset": "1395798688"
             },
             "status": 404
         }
@@ -127,6 +128,7 @@
                 "has_issues": false,
                 "has_wiki": false,
                 "homepage": "http://foo.bar",
+                "license_template": "mit",
                 "name": "potential-octo-lana",
                 "private": false,
                 "team_id": 141496
@@ -135,7 +137,7 @@
                 "Accept": "application/vnd.github.v3.full+json",
                 "Accept-Encoding": "gzip, deflate, compress",
                 "Authorization": "Basic removed=",
-                "Content-Length": "251",
+                "Content-Length": "278",
                 "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
             },
             "url": {
@@ -159,7 +161,7 @@
                 "compare_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/compare/{base}...{head}",
                 "contents_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/contents/{+path}",
                 "contributors_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/contributors",
-                "created_at": "2013-12-21T04:07:06Z",
+                "created_at": "2014-03-26T00:51:31Z",
                 "default_branch": "master",
                 "description": "Created with PyGithub v2",
                 "downloads_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/downloads",
@@ -179,7 +181,7 @@
                 "homepage": "http://foo.bar",
                 "hooks_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/hooks",
                 "html_url": "https://github.com/BeaverSoftware/potential-octo-lana",
-                "id": 15353586,
+                "id": 18122144,
                 "issue_comment_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues/comments/{number}",
                 "issue_events_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues/events{/number}",
                 "issues_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/issues{/number}",
@@ -196,7 +198,7 @@
                 "open_issues": 0,
                 "open_issues_count": 0,
                 "organization": {
-                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/1424031?",
                     "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
                     "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
                     "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
@@ -215,7 +217,7 @@
                     "url": "https://api.github.com/users/BeaverSoftware"
                 },
                 "owner": {
-                    "avatar_url": "https://gravatar.com/avatar/d563e337cac2fdc644e2aaaad1e23266?d=https%3A%2F%2Fidenticons.github.com%2Fde8dec416975d0a85845b1b88385b9d5.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/1424031?",
                     "events_url": "https://api.github.com/users/BeaverSoftware/events{/privacy}",
                     "followers_url": "https://api.github.com/users/BeaverSoftware/followers",
                     "following_url": "https://api.github.com/users/BeaverSoftware/following{/other_user}",
@@ -240,7 +242,7 @@
                 },
                 "private": false,
                 "pulls_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/pulls{/number}",
-                "pushed_at": "2013-12-21T04:07:06Z",
+                "pushed_at": "2014-03-26T00:51:31Z",
                 "releases_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/releases{/id}",
                 "size": 0,
                 "ssh_url": "git@github.com:BeaverSoftware/potential-octo-lana.git",
@@ -254,7 +256,7 @@
                 "tags_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/tags",
                 "teams_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/teams",
                 "trees_url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana/git/trees{/sha}",
-                "updated_at": "2013-12-21T04:07:06Z",
+                "updated_at": "2014-03-26T00:51:31Z",
                 "url": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana",
                 "watchers": 0,
                 "watchers_count": 0
@@ -262,22 +264,22 @@
             "headers": {
                 "access-control-allow-credentials": "true",
                 "access-control-allow-origin": "*",
-                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
                 "cache-control": "private, max-age=60, s-maxage=60",
-                "content-length": "6599",
+                "content-length": "6413",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 21 Dec 2013 04:07:06 GMT",
-                "etag": "\"5e0839f254c8d99d0fff36022dfcb04a\"",
+                "date": "Wed, 26 Mar 2014 00:51:31 GMT",
+                "etag": "\"99b429d7e5fd04cc56608f64a3c6575d\"",
                 "location": "https://api.github.com/repos/BeaverSoftware/potential-octo-lana",
                 "server": "GitHub.com",
                 "status": "201 Created",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "4C79374B:32C9:9AE162:52B513EA",
+                "x-github-request-id": "62E81E32:2C21:2E8BAC3:53322492",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4974",
-                "x-ratelimit-reset": "1387601164"
+                "x-ratelimit-remaining": "4993",
+                "x-ratelimit-reset": "1395798688"
             },
             "status": 201
         }
@@ -305,17 +307,18 @@
             "headers": {
                 "access-control-allow-credentials": "true",
                 "access-control-allow-origin": "*",
-                "access-control-expose-headers": "ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
-                "date": "Sat, 21 Dec 2013 04:07:07 GMT",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "date": "Wed, 26 Mar 2014 00:51:31 GMT",
                 "server": "GitHub.com",
                 "status": "204 No Content",
                 "vary": "Accept-Encoding",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "4C79374B:32C9:9AE1B7:52B513EA",
+                "x-github-request-id": "62E81E32:2C21:2E8BB42:53322493",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4973",
-                "x-ratelimit-reset": "1387601164"
+                "x-ratelimit-remaining": "4992",
+                "x-ratelimit-reset": "1395798688",
+                "x-served-by": "d818ddef80f4c7d10683dd483558952a"
             },
             "status": 204
         }

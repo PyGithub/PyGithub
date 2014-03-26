@@ -83,6 +83,8 @@ methods:
         type: bool
       - name: gitignore_template
         type: GitIgnoreTemplate
+      - name: license_template
+        type: string
     url_template: end_point
     post_arguments:
       - name: name
@@ -103,6 +105,8 @@ methods:
         value: parameter auto_init
       - name: gitignore_template
         value: parameter gitignore_template
+      - name: license_template
+        value: parameter license_template
     return_type: Repository
   - name: create_subscription
     end_point: PUT /repos/:owner/:repo/subscription
