@@ -283,12 +283,14 @@ class CodeGenerator:
 
     def generateCodeForClassReturnValue(self, method):
         typeName = ("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name
-        if method.returnFrom is None:
+        if method.name == "create_git_blob":  # @todoGeni Remove hard-coded value
+            base = 'return {}(self.Session, r.json(), None)'
+        elif method.returnFrom is None:
             if method.returnType.isUpdatable:
                 base = 'return {}(self.Session, r.json(), r.headers.get("ETag"))'
             else:
                 base = 'return {}(self.Session, r.json())'
-        elif method.returnFrom == "json.commit":
+        elif method.returnFrom == "json.commit" or method.name == "create_git_blob":
             base = 'return {}(self.Session, r.json()["commit"], None)'
         else:
             assert False  # pragma no cover
