@@ -9,9 +9,11 @@ Github
 
 .. autoclass:: PyGithub.Blocking.Github::Github()
     :members:
-    :exclude-members: GitIgnoreTemplate, RateLimit, RateLimits, Resources
+    :exclude-members: GitIgnoreTemplate, Meta, RateLimit, RateLimits, Resources
 
     .. autoclass:: PyGithub.Blocking.Github::Github.GitIgnoreTemplate()
+        :members:
+    .. autoclass:: PyGithub.Blocking.Github::Github.Meta()
         :members:
     .. autoclass:: PyGithub.Blocking.Github::Github.RateLimit()
         :members:

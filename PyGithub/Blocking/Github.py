@@ -57,6 +57,39 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__source.value
 
+    class Meta(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.Github.get_meta`
+        """
+
+        def _initAttributes(self, git=None, hooks=None, verifiable_password_authentication=None, **kwds):
+            super(Github.Meta, self)._initAttributes(**kwds)
+            self.__git = PyGithub.Blocking.Attributes.ListOfStringAttribute("Github.Meta.git", git)
+            self.__hooks = PyGithub.Blocking.Attributes.ListOfStringAttribute("Github.Meta.hooks", hooks)
+            self.__verifiable_password_authentication = PyGithub.Blocking.Attributes.BoolAttribute("Github.Meta.verifiable_password_authentication", verifiable_password_authentication)
+
+        @property
+        def git(self):
+            """
+            :type: :class:`list` of :class:`string`
+            """
+            return self.__git.value
+
+        @property
+        def hooks(self):
+            """
+            :type: :class:`list` of :class:`string`
+            """
+            return self.__hooks.value
+
+        @property
+        def verifiable_password_authentication(self):
+            """
+            :type: :class:`bool`
+            """
+            return self.__verifiable_password_authentication.value
+
     class RateLimit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
@@ -193,6 +226,19 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         url = uritemplate.expand("https://api.github.com/gitignore/templates")
         r = self.Session._request("GET", url)
         return r.json()
+
+    def get_meta(self):
+        """
+        Calls the `GET /meta <http://developer.github.com/v3/meta#meta>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`.Meta`
+        """
+
+        url = uritemplate.expand("https://api.github.com/meta")
+        r = self.Session._request("GET", url)
+        return Github.Meta(self.Session, r.json())
 
     def get_org(self, org):
         """

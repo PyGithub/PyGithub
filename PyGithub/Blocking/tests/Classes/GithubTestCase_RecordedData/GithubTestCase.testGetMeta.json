@@ -1,0 +1,53 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/meta",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "git": [
+                    "192.30.252.0/22"
+                ],
+                "hooks": [
+                    "192.30.252.0/22"
+                ],
+                "verifiable_password_authentication": true
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Wed, 26 Mar 2014 02:07:06 GMT",
+                "etag": "\"0e55e64e6ebc025415bbaaa89f45977a\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81E32:5C6A:211369E:53323649",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4999",
+                "x-ratelimit-reset": "1395803226",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499"
+            },
+            "status": 200
+        }
+    }
+]

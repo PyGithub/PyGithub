@@ -7,6 +7,19 @@ structures:
         type: string
       - name: source
         type: string
+  - name: Meta
+    updatable: false
+    attributes:
+      - name: git
+        type:
+          container: list
+          content: string
+      - name: hooks
+        type:
+          container: list
+          content: string
+      - name: verifiable_password_authentication
+        type: bool
   - name: RateLimit
     updatable: false
     attributes:
@@ -57,6 +70,10 @@ methods:
     return_type:
       container: list
       content: string
+  - name: get_meta
+    end_point: GET /meta
+    url_template: end_point
+    return_type: Meta
   - name: get_org
     end_point: GET /orgs/:org
     parameters:

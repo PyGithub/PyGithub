@@ -22,7 +22,6 @@
 /hub: [POST]
 /issues: [GET]
 /markdown: [POST]
-/meta: [GET]
 /networks/:owner/:repo/events: [GET]
 /notifications: [GET, PUT]
 /notifications/threads/:id: [GET, PATCH]

@@ -125,3 +125,9 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
             "zzz": "https://github.global.ssl.fastly.net/images/icons/emoji/zzz.png?v5",
         }.items():
             self.assertEqual(emojis[k], v)
+
+    def testGetMeta(self):
+        meta = self.g.get_meta()
+        self.assertEqual(meta.git, ["192.30.252.0/22"])
+        self.assertEqual(meta.hooks, ["192.30.252.0/22"])
+        self.assertEqual(meta.verifiable_password_authentication, True)

@@ -116,6 +116,13 @@ class CodeGenerator:
     def createCallForAttributeInitializer(self, attribute):
         return self.getMethod("createCallFor{}AttributeInitializer", attribute.type.category)(attribute)
 
+    def createCallForLinearCollectionAttributeInitializer(self, attribute):
+        return (
+            PS.Call("PyGithub.Blocking.Attributes.ListOfStringAttribute")
+            .arg(self.generateFullyQualifiedAttributeName(attribute))
+            .arg(attribute.name)
+        )
+
     def createCallForBuiltinAttributeInitializer(self, attribute):
         return (
             PS.Call("PyGithub.Blocking.Attributes.{}Attribute".format(attribute.type.name.capitalize()))

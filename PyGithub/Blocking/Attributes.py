@@ -125,6 +125,17 @@ class BoolAttribute(_BuiltinAttribute):
         _BuiltinAttribute.__init__(self, name, bool, value)
 
 
+class ListOfStringAttribute(_Attribute):
+    def __init__(self, name, value):
+        _Attribute.__init__(self, name, value)
+
+    def doUpdate(self, value):
+        if isinstance(value, list) and all(isinstance(e, basestring) for e in value):
+            self.setValidValue(value)
+        else:
+            self.setInvalidValue(value, [str])
+
+
 class ClassAttribute(_Attribute):
     def __init__(self, name, session, klass, value):
         self.__session = session
