@@ -19,19 +19,19 @@ class BadAttributeExceptionTestCase(Framework.SimpleLoginTestCase):
     def testBadBuiltinAttribute(self):
         self.expectLog(
             logging.WARNING,
-            "Attribute Repository.forks is expected to be a int but GitHub API v3 returned u'abcd'",
-            "Attribute Repository.forks is expected to be a int but GitHub API v3 returned 'abcd'",
+            "Attribute Repository.forks_count is expected to be a int but GitHub API v3 returned u'abcd'",
+            "Attribute Repository.forks_count is expected to be a int but GitHub API v3 returned 'abcd'",
         )
         r = self.g.get_repo("jacquev6/PyGithub")
 
         with self.assertRaises(PyGithub.Blocking.BadAttributeException) as cm:
-            r.forks
-        self.assertEqual(cm.exception.args, ("Repository.forks", int, "abcd"))
+            r.forks_count
+        self.assertEqual(cm.exception.args, ("Repository.forks_count", int, "abcd"))
         self.assertIn(
             str(cm.exception),
             [
-                "Attribute Repository.forks is expected to be a int but GitHub API v3 returned u'abcd'",
-                "Attribute Repository.forks is expected to be a int but GitHub API v3 returned 'abcd'",
+                "Attribute Repository.forks_count is expected to be a int but GitHub API v3 returned u'abcd'",
+                "Attribute Repository.forks_count is expected to be a int but GitHub API v3 returned 'abcd'",
             ]
         )
 

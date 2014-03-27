@@ -32,7 +32,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.downloads_url, "https://api.github.com/repos/jacquev6/PyGithub/downloads")
         self.assertEqual(r.events_url, "https://api.github.com/repos/jacquev6/PyGithub/events")
         self.assertEqual(r.fork, False)
-        self.assertEqual(r.forks, 89)
         self.assertEqual(r.forks_count, 89)
         self.assertEqual(r.forks_url, "https://api.github.com/repos/jacquev6/PyGithub/forks")
         self.assertEqual(r.full_name, "jacquev6/PyGithub")
@@ -59,7 +58,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.name, "PyGithub")
         self.assertEqual(r.network_count, 89)
         self.assertEqual(r.notifications_url, "https://api.github.com/repos/jacquev6/PyGithub/notifications{?since,all,participating}")
-        self.assertEqual(r.open_issues, 26)
         self.assertEqual(r.open_issues_count, 26)
         self.assertEqual(r.owner.login, "jacquev6")
         self.assertEqual(r.owner.type, "User")
@@ -85,7 +83,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.trees_url, "https://api.github.com/repos/jacquev6/PyGithub/git/trees{/sha}")
         self.assertEqual(r.updated_at, datetime.datetime(2013, 12, 19, 9, 39, 44))
         self.assertEqual(r.url, "https://api.github.com/repos/jacquev6/PyGithub")
-        self.assertEqual(r.watchers, 315)
         self.assertEqual(r.watchers_count, 315)
 
     def testAttributesOfOtherRepository(self):
@@ -107,7 +104,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.downloads_url, "https://api.github.com/repos/nvie/gitflow/downloads")
         self.assertEqual(r.events_url, "https://api.github.com/repos/nvie/gitflow/events")
         self.assertEqual(r.fork, False)
-        self.assertEqual(r.forks, 897)
         self.assertEqual(r.forks_count, 897)
         self.assertEqual(r.forks_url, "https://api.github.com/repos/nvie/gitflow/forks")
         self.assertEqual(r.full_name, "nvie/gitflow")
@@ -134,7 +130,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.name, "gitflow")
         self.assertEqual(r.network_count, 897)
         self.assertEqual(r.notifications_url, "https://api.github.com/repos/nvie/gitflow/notifications{?since,all,participating}")
-        self.assertEqual(r.open_issues, 176)
         self.assertEqual(r.open_issues_count, 176)
         self.assertEqual(r.owner.login, "nvie")
         self.assertEqual(r.owner.type, "User")
@@ -160,7 +155,6 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(r.trees_url, "https://api.github.com/repos/nvie/gitflow/git/trees{/sha}")
         self.assertEqual(r.updated_at, datetime.datetime(2013, 12, 20, 5, 57, 21))
         self.assertEqual(r.url, "https://api.github.com/repos/nvie/gitflow")
-        self.assertEqual(r.watchers, 7973)
         self.assertEqual(r.watchers_count, 7973)
 
     def testAttributesOfFork(self):

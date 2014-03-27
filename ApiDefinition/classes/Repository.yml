@@ -60,8 +60,6 @@ attributes:
     type: string
   - name: fork
     type: bool
-  - name: forks
-    type: int
   - name: forks_count
     type: int
   - name: forks_url
@@ -114,8 +112,6 @@ attributes:
     type: int
   - name: notifications_url
     type: string
-  - name: open_issues
-    type: int
   - name: open_issues_count
     type: int
   - name: owner
@@ -163,14 +159,15 @@ attributes:
     type: datetime
   - name: url
     type: string
-  - name: watchers
-    type: int
   - name: watchers_count
     type: int
 deprecated_attributes:
+  - forks
   - has_downloads
   - master_branch
+  - open_issues
   - organization
+  - watchers
 methods:
   - name: add_to_collaborators
     end_point: PUT /repos/:owner/:repo/collaborators/:user
