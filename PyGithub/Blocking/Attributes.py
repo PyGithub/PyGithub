@@ -2,6 +2,7 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import collections
 import datetime
 import logging
 log = logging.getLogger(__name__)
@@ -33,202 +34,169 @@ the .b property of the second element of the list.
 """
 
 
-class _Absent:
+Absent = collections.namedtuple("Absent", "")()
+
+
+class _ConversionException(Exception):
     pass
-Absent = _Absent()
 
 
-class _ValueHandler:
-    needsLazyCompletion = False
-
-    def getValidValue(self):
-        return None
-
-
-class __NoneValueHandler(_ValueHandler):
-    def get(self):
-        return None
-_NoneValueHandler = __NoneValueHandler()
-
-
-class __AbsentValueHandler(_ValueHandler):
-    needsLazyCompletion = True
-
-    def get(self):
-        return None
-_AbsentValueHandler = __AbsentValueHandler()
-
-
-class _ValidValueHandler(_ValueHandler):
-    def __init__(self, value):
-        self.__value = value
-
-    def get(self):
-        return self.__value
-
-    def getValidValue(self):
-        return self.__value
-
-
-class _InvalidValueHandler(_ValueHandler):
-    def __init__(self, name, value, type):
-        self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(name, type, value)
-        log.warning(self.__exception)
-
-    def get(self):
-        raise self.__exception
-
-
-class _Attribute(object):
-    def __init__(self, name, value):
+class Attribute(object):
+    def __init__(self, name, conv, value):
         self.__name = name
-        self.__valueHandler = _AbsentValueHandler
+        self.__conv = conv
+        self.__type = conv.desc
+        self.__value = Absent
+        self.__exception = None
         self.update(value)
 
-    def setValidValue(self, value):
-        self.__valueHandler = _ValidValueHandler(value)
+    def update(self, value):
+        if value is Absent:
+            return
+        self.__exception = None
+        if value is None:
+            self.__value = None
+        else:
+            try:
+                # Passing the previous value to conv(..) allows it to update
+                # the value if needed (instead of just overriding it)
+                self.__value = self.__conv(None if self.__value is Absent else self.__value, value)
+            except _ConversionException, e:
+                log.warn("Attribute " + self.__name + " is expected to be a " + self.__type + " but GitHub API v3 returned " + repr(value))
+                self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(self.__name, self.__type, value, e)
 
-    def setInvalidValue(self, value, type):
-        self.__valueHandler = _InvalidValueHandler(self.__name, value, type)
+    @property
+    def name(self):
+        return self.__name
 
     @property
     def value(self):
-        return self.__valueHandler.get()
-
-    def update(self, value):
-        if value is None:
-            self.__valueHandler = _NoneValueHandler
-        elif value is not Absent:
-            self.doUpdate(value)
+        if self.__exception is None:
+            if self.__value is Absent:
+                return None
+            else:
+                return self.__value
+        else:
+            raise self.__exception
 
     @property
     def needsLazyCompletion(self):
-        return self.__valueHandler.needsLazyCompletion
-
-    def getValidValue(self):
-        return self.__valueHandler.getValidValue()
+        return self.__value is Absent and self.__exception is None
 
 
-class DatetimeAttribute(_Attribute):
-    def doUpdate(self, value):
-        # @todoBeta Return "aware" datetimes
-        # See https://gist.github.com/jul1an/5488075 for a start
+class BuiltinConverter(object):
+    def __init__(self, type):
+        self.__type = type
+
+    def __call__(self, previousValue, value):
+        if isinstance(value, self.__type):
+            return value
+        else:
+            raise _ConversionException()
+
+    @property
+    def desc(self):
+        return self.__type.__name__
+
+
+IntConverter = BuiltinConverter(int)
+StringConverter = BuiltinConverter(basestring)
+BoolConverter = BuiltinConverter(bool)
+
+
+class _DatetimeConverter(object):
+    desc = "datetime"
+
+    def __call__(self, previousValue, value):
         if isinstance(value, int):
-            self.setValidValue(datetime.datetime.utcfromtimestamp(value))
+            return datetime.datetime.utcfromtimestamp(value)
         else:
             try:
-                self.setValidValue(datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ"))
-            except (ValueError, TypeError):
-                self.setInvalidValue(value, datetime.datetime)
+                return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+            except (ValueError, TypeError), e:
+                raise _ConversionException(e)
 
 
-class _BuiltinAttribute(_Attribute):
-    def __init__(self, name, type, value):
-        self.__type = type
-        _Attribute.__init__(self, name, value)
-
-    def doUpdate(self, value):
-        if isinstance(value, self.__type):
-            self.setValidValue(value)
-        else:
-            self.setInvalidValue(value, self.__type)
+DatetimeConverter = _DatetimeConverter()
 
 
-class StringAttribute(_BuiltinAttribute):
-    def __init__(self, name, value):
-        _BuiltinAttribute.__init__(self, name, basestring, value)
+class ListConverter(object):
+    def __init__(self, content):
+        self.__content = content
 
-
-class IntAttribute(_BuiltinAttribute):
-    def __init__(self, name, value):
-        _BuiltinAttribute.__init__(self, name, int, value)
-
-
-class BoolAttribute(_BuiltinAttribute):
-    def __init__(self, name, value):
-        _BuiltinAttribute.__init__(self, name, bool, value)
-
-
-class ListOfStringAttribute(_Attribute):
-    def __init__(self, name, value):
-        _Attribute.__init__(self, name, value)
-
-    def doUpdate(self, value):
-        if isinstance(value, list) and all(isinstance(e, basestring) for e in value):
-            self.setValidValue(value)
-        else:
-            self.setInvalidValue(value, [str])
-
-
-class ClassAttribute(_Attribute):
-    def __init__(self, name, session, klass, value):
-        self.__session = session
-        self.__class = klass
-        _Attribute.__init__(self, name, value)
-
-    def doUpdate(self, value):
-        if isinstance(value, dict):
-            valid = self.getValidValue()
-            if valid is None:
-                self.setValidValue(self.__class(self.__session, value, None))
+    def __call__(self, previousValue, value):
+        if isinstance(value, list):
+            new = [self.__content(None, v) for v in value]  # @todoAlpha Pass the previousValue instead of None
+            if previousValue is None:
+                return new
             else:
-                valid._updateAttributes(None, **value)
+                previousValue[:] = new
+                return previousValue
         else:
-            self.setInvalidValue(value, self.__class)
+            raise _ConversionException()
+
+    @property
+    def desc(self):
+        return "list of " + self.__content.desc
 
 
-class StructAttribute(_Attribute):
-    def __init__(self, name, session, struct, value):
+class _StructureConverter(object):
+    def __init__(self, session, struct):
         self.__session = session
         self.__struct = struct
-        _Attribute.__init__(self, name, value)
 
-    def doUpdate(self, value):
+    def __call__(self, previousValue, value):
         if isinstance(value, dict):
-            valid = self.getValidValue()
-            if valid is None:
-                self.setValidValue(self.__struct(self.__session, value))
+            if previousValue is None:
+                return self.create(self.__struct, self.__session, value)
             else:
-                valid._updateAttributes(**value)
+                self.update(previousValue, value)
+                return previousValue
         else:
-            self.setInvalidValue(value, self.__struct)
+            raise _ConversionException()
+
+    @property
+    def desc(self):
+        return self.__struct.__name__
 
 
-class Switch:
+class StructureConverter(_StructureConverter):
+    def create(self, type, session, value):
+        return type(session, value)
+
+    def update(self, previousValue, value):
+        previousValue._updateAttributes(**value)
+
+
+class ClassConverter(_StructureConverter):
+    def create(self, type, session, value):
+        return type(session, value, None)
+
+    def update(self, previousValue, value):
+        previousValue._updateAttributes(None, **value)
+
+
+class KeyedStructureUnionConverter(object):
     def __init__(self, key, factories):
         self.__key = key
         self.__factories = factories
 
-    def __call__(self, session, attributes, eTag):
-        if self.__key in attributes:
-            factory = self.__factories.get(attributes[self.__key])
-            if factory is not None:
-                return factory(session, attributes, eTag)
-        return None
-
-    def types(self):
-        return sorted(self.__factories.itervalues(), key=lambda c: c.__name__)
-
-
-class UnionAttribute(_Attribute):
-    def __init__(self, name, session, key, factories, value):
-        self.__session = session
-        self.__switch = Switch(key, factories)
-        _Attribute.__init__(self, name, value)
-
-    def doUpdate(self, value):
+    def __call__(self, previousValue, value):
         if isinstance(value, dict):
-            valid = self.getValidValue()
-            if valid is None:
-                sValue = self.__switch(self.__session, value, None)
-                if sValue is None:
-                    self.__setInvalidValue(value)
-                else:
-                    self.setValidValue(sValue)
+            key = value.get(self.__key)
+            if key is None:
+                raise _ConversionException()
             else:
-                valid._updateAttributes(None, **value)
+                factory = self.__factories.get(key)
+                if factory is None:
+                    raise _ConversionException()
+                else:
+                    if previousValue is not None and getattr(previousValue, self.__key) != key:
+                        previousValue = None
+                    return factory(previousValue, value)
         else:
-            self.__setInvalidValue(value)
+            raise _ConversionException()
 
-    def __setInvalidValue(self, value):
-        self.setInvalidValue(value, self.__switch.types())
+    @property
+    def desc(self):
+        return " or ".join(sorted(c.desc for c in self.__factories.values()))

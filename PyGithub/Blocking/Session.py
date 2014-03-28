@@ -29,7 +29,7 @@ class Session(object):
         self.__requestsSession.headers["User-Agent"] = self.__userAgent
         self.__requestsSession.headers["Accept"] = "application/vnd.github.v3.full+json"
         self.__authenticator.prepareSession(self.__requestsSession)
-        self.__rate_limit = PyGithub.Blocking.Attributes.StructAttribute("RateLimit", self, PyGithub.Blocking.Github.Github.RateLimits, PyGithub.Blocking.Attributes.Absent)
+        self.__rate_limit = PyGithub.Blocking.Attributes.Attribute("RateLimit", PyGithub.Blocking.Attributes.StructureConverter(self, PyGithub.Blocking.Github.Github.RateLimits), PyGithub.Blocking.Attributes.Absent)
         self.__oauth_scopes = None
         self.__accepted_oauth_scopes = None
 

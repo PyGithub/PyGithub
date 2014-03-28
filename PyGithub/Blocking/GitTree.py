@@ -30,8 +30,8 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, sha=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, tree=None, **kwds):
         super(GitTree, self)._initAttributes(**kwds)
-        self.__sha = PyGithub.Blocking.Attributes.StringAttribute("GitTree.sha", sha)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("GitTree.url", url)
+        self.__sha = PyGithub.Blocking.Attributes.Attribute("GitTree.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("GitTree.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, sha=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, tree=None, **kwds):
         super(GitTree, self)._updateAttributes(eTag, **kwds)

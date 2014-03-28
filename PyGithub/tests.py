@@ -24,8 +24,8 @@ from PyGithub.Blocking.tests.Classes.SymLinkTestCase import *
 from PyGithub.Blocking.tests.Classes.TeamTestCase import *
 from PyGithub.Blocking.tests.Classes.UserTestCase import *
 
+from PyGithub.Blocking.tests.Topics.AttributesTestCase import *
 from PyGithub.Blocking.tests.Topics.AuthenticationTestCase import *
-from PyGithub.Blocking.tests.Topics.BadAttributeExceptionTestCase import *
 from PyGithub.Blocking.tests.Topics.DebugMessagesTestCases import *
 from PyGithub.Blocking.tests.Topics.LazyCompletionTestCase import *
 from PyGithub.Blocking.tests.Topics.PaginationTestCases import *

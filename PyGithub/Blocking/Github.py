@@ -40,8 +40,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, name=None, source=None, **kwds):
             super(Github.GitIgnoreTemplate, self)._initAttributes(**kwds)
-            self.__name = PyGithub.Blocking.Attributes.StringAttribute("Github.GitIgnoreTemplate.name", name)
-            self.__source = PyGithub.Blocking.Attributes.StringAttribute("Github.GitIgnoreTemplate.source", source)
+            self.__name = PyGithub.Blocking.Attributes.Attribute("Github.GitIgnoreTemplate.name", PyGithub.Blocking.Attributes.StringConverter, name)
+            self.__source = PyGithub.Blocking.Attributes.Attribute("Github.GitIgnoreTemplate.source", PyGithub.Blocking.Attributes.StringConverter, source)
 
         @property
         def name(self):
@@ -65,9 +65,9 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, git=None, hooks=None, verifiable_password_authentication=None, **kwds):
             super(Github.Meta, self)._initAttributes(**kwds)
-            self.__git = PyGithub.Blocking.Attributes.ListOfStringAttribute("Github.Meta.git", git)
-            self.__hooks = PyGithub.Blocking.Attributes.ListOfStringAttribute("Github.Meta.hooks", hooks)
-            self.__verifiable_password_authentication = PyGithub.Blocking.Attributes.BoolAttribute("Github.Meta.verifiable_password_authentication", verifiable_password_authentication)
+            self.__git = PyGithub.Blocking.Attributes.Attribute("Github.Meta.git", PyGithub.Blocking.Attributes.ListConverter(PyGithub.Blocking.Attributes.StringConverter), git)
+            self.__hooks = PyGithub.Blocking.Attributes.Attribute("Github.Meta.hooks", PyGithub.Blocking.Attributes.ListConverter(PyGithub.Blocking.Attributes.StringConverter), hooks)
+            self.__verifiable_password_authentication = PyGithub.Blocking.Attributes.Attribute("Github.Meta.verifiable_password_authentication", PyGithub.Blocking.Attributes.BoolConverter, verifiable_password_authentication)
 
         @property
         def git(self):
@@ -98,7 +98,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, resources=None, rate=None, **kwds):
             super(Github.RateLimit, self)._initAttributes(**kwds)
-            self.__resources = PyGithub.Blocking.Attributes.StructAttribute("Github.RateLimit.resources", self.Session, Github.Resources, resources)
+            self.__resources = PyGithub.Blocking.Attributes.Attribute("Github.RateLimit.resources", PyGithub.Blocking.Attributes.StructureConverter(self.Session, Github.Resources), resources)
 
         @property
         def resources(self):
@@ -116,9 +116,9 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, limit=None, remaining=None, reset=None, **kwds):
             super(Github.RateLimits, self)._initAttributes(**kwds)
-            self.__limit = PyGithub.Blocking.Attributes.IntAttribute("Github.RateLimits.limit", limit)
-            self.__remaining = PyGithub.Blocking.Attributes.IntAttribute("Github.RateLimits.remaining", remaining)
-            self.__reset = PyGithub.Blocking.Attributes.DatetimeAttribute("Github.RateLimits.reset", reset)
+            self.__limit = PyGithub.Blocking.Attributes.Attribute("Github.RateLimits.limit", PyGithub.Blocking.Attributes.IntConverter, limit)
+            self.__remaining = PyGithub.Blocking.Attributes.Attribute("Github.RateLimits.remaining", PyGithub.Blocking.Attributes.IntConverter, remaining)
+            self.__reset = PyGithub.Blocking.Attributes.Attribute("Github.RateLimits.reset", PyGithub.Blocking.Attributes.DatetimeConverter, reset)
 
         def _updateAttributes(self, limit=None, remaining=None, reset=None, **kwds):
             super(Github.RateLimits, self)._updateAttributes(**kwds)
@@ -155,8 +155,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         def _initAttributes(self, core=None, search=None, **kwds):
             super(Github.Resources, self)._initAttributes(**kwds)
-            self.__core = PyGithub.Blocking.Attributes.StructAttribute("Github.Resources.core", self.Session, Github.RateLimits, core)
-            self.__search = PyGithub.Blocking.Attributes.StructAttribute("Github.Resources.search", self.Session, Github.RateLimits, search)
+            self.__core = PyGithub.Blocking.Attributes.Attribute("Github.Resources.core", PyGithub.Blocking.Attributes.StructureConverter(self.Session, Github.RateLimits), core)
+            self.__search = PyGithub.Blocking.Attributes.Attribute("Github.Resources.search", PyGithub.Blocking.Attributes.StructureConverter(self.Session, Github.RateLimits), search)
 
         @property
         def core(self):

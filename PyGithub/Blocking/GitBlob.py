@@ -29,11 +29,11 @@ class GitBlob(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(GitBlob, self)._initAttributes(**kwds)
-        self.__content = PyGithub.Blocking.Attributes.StringAttribute("GitBlob.content", content)
-        self.__encoding = PyGithub.Blocking.Attributes.StringAttribute("GitBlob.encoding", encoding)
-        self.__sha = PyGithub.Blocking.Attributes.StringAttribute("GitBlob.sha", sha)
-        self.__size = PyGithub.Blocking.Attributes.IntAttribute("GitBlob.size", size)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("GitBlob.url", url)
+        self.__content = PyGithub.Blocking.Attributes.Attribute("GitBlob.content", PyGithub.Blocking.Attributes.StringConverter, content)
+        self.__encoding = PyGithub.Blocking.Attributes.Attribute("GitBlob.encoding", PyGithub.Blocking.Attributes.StringConverter, encoding)
+        self.__sha = PyGithub.Blocking.Attributes.Attribute("GitBlob.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
+        self.__size = PyGithub.Blocking.Attributes.Attribute("GitBlob.size", PyGithub.Blocking.Attributes.IntConverter, size)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("GitBlob.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(GitBlob, self)._updateAttributes(eTag, **kwds)

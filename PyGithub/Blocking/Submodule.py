@@ -29,15 +29,15 @@ class Submodule(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, submodule_git_url=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
         super(Submodule, self)._initAttributes(**kwds)
-        self.__git_url = PyGithub.Blocking.Attributes.StringAttribute("Submodule.git_url", git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.StringAttribute("Submodule.html_url", html_url)
-        self.__name = PyGithub.Blocking.Attributes.StringAttribute("Submodule.name", name)
-        self.__path = PyGithub.Blocking.Attributes.StringAttribute("Submodule.path", path)
-        self.__sha = PyGithub.Blocking.Attributes.StringAttribute("Submodule.sha", sha)
-        self.__size = PyGithub.Blocking.Attributes.IntAttribute("Submodule.size", size)
-        self.__submodule_git_url = PyGithub.Blocking.Attributes.StringAttribute("Submodule.submodule_git_url", submodule_git_url)
-        self.__type = PyGithub.Blocking.Attributes.StringAttribute("Submodule.type", type)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Submodule.url", url)
+        self.__git_url = PyGithub.Blocking.Attributes.Attribute("Submodule.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
+        self.__html_url = PyGithub.Blocking.Attributes.Attribute("Submodule.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
+        self.__name = PyGithub.Blocking.Attributes.Attribute("Submodule.name", PyGithub.Blocking.Attributes.StringConverter, name)
+        self.__path = PyGithub.Blocking.Attributes.Attribute("Submodule.path", PyGithub.Blocking.Attributes.StringConverter, path)
+        self.__sha = PyGithub.Blocking.Attributes.Attribute("Submodule.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
+        self.__size = PyGithub.Blocking.Attributes.Attribute("Submodule.size", PyGithub.Blocking.Attributes.IntConverter, size)
+        self.__submodule_git_url = PyGithub.Blocking.Attributes.Attribute("Submodule.submodule_git_url", PyGithub.Blocking.Attributes.StringConverter, submodule_git_url)
+        self.__type = PyGithub.Blocking.Attributes.Attribute("Submodule.type", PyGithub.Blocking.Attributes.StringConverter, type)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("Submodule.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, submodule_git_url=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
         super(Submodule, self)._updateAttributes(eTag, **kwds)

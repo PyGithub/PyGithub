@@ -36,16 +36,16 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, id=PyGithub.Blocking.Attributes.Absent, members_count=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, organization=PyGithub.Blocking.Attributes.Absent, permission=PyGithub.Blocking.Attributes.Absent, repos_count=PyGithub.Blocking.Attributes.Absent, repositories_url=PyGithub.Blocking.Attributes.Absent, slug=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Team, self)._initAttributes(**kwds)
-        self.__id = PyGithub.Blocking.Attributes.IntAttribute("Team.id", id)
-        self.__members_count = PyGithub.Blocking.Attributes.IntAttribute("Team.members_count", members_count)
-        self.__members_url = PyGithub.Blocking.Attributes.StringAttribute("Team.members_url", members_url)
-        self.__name = PyGithub.Blocking.Attributes.StringAttribute("Team.name", name)
-        self.__organization = PyGithub.Blocking.Attributes.ClassAttribute("Team.organization", self.Session, PyGithub.Blocking.Organization.Organization, organization)
-        self.__permission = PyGithub.Blocking.Attributes.StringAttribute("Team.permission", permission)
-        self.__repos_count = PyGithub.Blocking.Attributes.IntAttribute("Team.repos_count", repos_count)
-        self.__repositories_url = PyGithub.Blocking.Attributes.StringAttribute("Team.repositories_url", repositories_url)
-        self.__slug = PyGithub.Blocking.Attributes.StringAttribute("Team.slug", slug)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Team.url", url)
+        self.__id = PyGithub.Blocking.Attributes.Attribute("Team.id", PyGithub.Blocking.Attributes.IntConverter, id)
+        self.__members_count = PyGithub.Blocking.Attributes.Attribute("Team.members_count", PyGithub.Blocking.Attributes.IntConverter, members_count)
+        self.__members_url = PyGithub.Blocking.Attributes.Attribute("Team.members_url", PyGithub.Blocking.Attributes.StringConverter, members_url)
+        self.__name = PyGithub.Blocking.Attributes.Attribute("Team.name", PyGithub.Blocking.Attributes.StringConverter, name)
+        self.__organization = PyGithub.Blocking.Attributes.Attribute("Team.organization", PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization), organization)
+        self.__permission = PyGithub.Blocking.Attributes.Attribute("Team.permission", PyGithub.Blocking.Attributes.StringConverter, permission)
+        self.__repos_count = PyGithub.Blocking.Attributes.Attribute("Team.repos_count", PyGithub.Blocking.Attributes.IntConverter, repos_count)
+        self.__repositories_url = PyGithub.Blocking.Attributes.Attribute("Team.repositories_url", PyGithub.Blocking.Attributes.StringConverter, repositories_url)
+        self.__slug = PyGithub.Blocking.Attributes.Attribute("Team.slug", PyGithub.Blocking.Attributes.StringConverter, slug)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("Team.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, id=PyGithub.Blocking.Attributes.Absent, members_count=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, organization=PyGithub.Blocking.Attributes.Absent, permission=PyGithub.Blocking.Attributes.Absent, repos_count=PyGithub.Blocking.Attributes.Absent, repositories_url=PyGithub.Blocking.Attributes.Absent, slug=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Team, self)._updateAttributes(eTag, **kwds)

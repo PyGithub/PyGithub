@@ -114,53 +114,35 @@ class CodeGenerator:
                 )
 
     def createCallForAttributeInitializer(self, attribute):
-        return self.getMethod("createCallFor{}AttributeInitializer", attribute.type.category)(attribute)
-
-    def createCallForLinearCollectionAttributeInitializer(self, attribute):
         return (
-            PS.Call("PyGithub.Blocking.Attributes.ListOfStringAttribute")
+            PS.Call("PyGithub.Blocking.Attributes.Attribute")
             .arg(self.generateFullyQualifiedAttributeName(attribute))
+            .arg(self.generateCodeForConverter(attribute, attribute.type))
             .arg(attribute.name)
         )
 
-    def createCallForBuiltinAttributeInitializer(self, attribute):
-        return (
-            PS.Call("PyGithub.Blocking.Attributes.{}Attribute".format(attribute.type.name.capitalize()))
-            .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg(attribute.name)
-        )
+    def generateCodeForConverter(self, attribute, type):
+        return self.getMethod("generateCodeFor{}Converter", type.category)(attribute, type)
 
-    def createCallForClassAttributeInitializer(self, attribute):
-        if attribute.type.name == attribute.containerClass.name:
-            type = attribute.type.name
+    def generateCodeForLinearCollectionConverter(self, attribute, type):
+        return "PyGithub.Blocking.Attributes.ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
+
+    def generateCodeForBuiltinConverter(self, attribute, type):
+        return "PyGithub.Blocking.Attributes.{}Converter".format(type.name.capitalize())
+
+    def generateCodeForClassConverter(self, attribute, type):
+        if type.name == attribute.containerClass.name:
+            typeName = type.name
         else:
-            type = "{}.{}".format(attribute.type.module, attribute.type.name)
-        return (
-            PS.Call("PyGithub.Blocking.Attributes.ClassAttribute")
-            .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg("self.Session")
-            .arg(type)
-            .arg(attribute.name)
-        )
+            typeName = "{}.{}".format(type.module, type.name)
+        return "PyGithub.Blocking.Attributes.ClassConverter(self.Session, {})".format(typeName)
 
-    def createCallForUnionAttributeInitializer(self, attribute):
-        return (
-            PS.Call("PyGithub.Blocking.Attributes.UnionAttribute")
-            .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg("self.Session")
-            .arg('"type"')
-            .arg("dict({})".format(", ".join("{}={}.{}".format(t.name, t.module, t.name) for t in attribute.type.types)))
-            .arg(attribute.name)
-        )
+    def generateCodeForUnionConverter(self, attribute, type):
+        converters = {t.name: self.generateCodeForConverter(attribute, t) for t in type.types}
+        return 'PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict({}))'.format(", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
 
-    def createCallForStructAttributeInitializer(self, attribute):
-        return (
-            PS.Call("PyGithub.Blocking.Attributes.StructAttribute")
-            .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg("self.Session")
-            .arg("{}.{}".format(attribute.type.containerClass.name, attribute.type.name))
-            .arg(attribute.name)
-        )
+    def generateCodeForStructConverter(self, attribute, type):
+        return "PyGithub.Blocking.Attributes.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
 
     def generateFullyQualifiedAttributeName(self, attribute):
         name = [attribute.name]
@@ -319,7 +301,7 @@ class CodeGenerator:
         yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
 
     def generateCodeForPaginatedListOfUnionReturnValue(self, method):
-        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Attributes.Switch("type", dict(Anonymous=lambda session, attributes, eTag: PyGithub.Blocking.Repository.Repository.AnonymousContributor(session, attributes), User=PyGithub.Blocking.Contributor.Contributor)), self.Session, {})'.format(self.generateCallArguments(method))
+        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict(Anonymous=PyGithub.Blocking.Attributes.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=PyGithub.Blocking.Attributes.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, {})'.format(self.generateCallArguments(method))
 
     def generateCodeForListReturnValue(self, method):
         yield from self.getMethod("generateCodeForListOf{}ReturnValue", method.returnType.content.category)(method)

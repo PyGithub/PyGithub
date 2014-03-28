@@ -21,19 +21,6 @@ class BadAttributeException(PyGithubException):
     Raised when GitHub API v3 returns an attribute that doesn't match the expected type or format.
     """
 
-    def __init__(self, name, type, value):
-        PyGithubException.__init__(self, name, type, value)
-        self.__name = name
-        self.__type = type
-        self.__value = value
-
-    def __str__(self):
-        if isinstance(self.__type, list):
-            names = " or ".join(t.__name__ for t in self.__type)
-        else:
-            names = self.__type.__name__
-        return "Attribute " + self.__name + " is expected to be a " + names + " but GitHub API v3 returned " + repr(self.__value)
-
 
 class ClientErrorException(PyGithubException):
     """

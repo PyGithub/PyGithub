@@ -48,16 +48,16 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def _initAttributes(self, followers_url=PyGithub.Blocking.Attributes.Absent, following_url=PyGithub.Blocking.Attributes.Absent, gists_url=PyGithub.Blocking.Attributes.Absent, gravatar_id=PyGithub.Blocking.Attributes.Absent, hireable=PyGithub.Blocking.Attributes.Absent, organizations_url=PyGithub.Blocking.Attributes.Absent, received_events_url=PyGithub.Blocking.Attributes.Absent, site_admin=PyGithub.Blocking.Attributes.Absent, starred_url=PyGithub.Blocking.Attributes.Absent, subscriptions_url=PyGithub.Blocking.Attributes.Absent, bio=None, **kwds):
         super(User, self)._initAttributes(**kwds)
-        self.__followers_url = PyGithub.Blocking.Attributes.StringAttribute("User.followers_url", followers_url)
-        self.__following_url = PyGithub.Blocking.Attributes.StringAttribute("User.following_url", following_url)
-        self.__gists_url = PyGithub.Blocking.Attributes.StringAttribute("User.gists_url", gists_url)
-        self.__gravatar_id = PyGithub.Blocking.Attributes.StringAttribute("User.gravatar_id", gravatar_id)
-        self.__hireable = PyGithub.Blocking.Attributes.BoolAttribute("User.hireable", hireable)
-        self.__organizations_url = PyGithub.Blocking.Attributes.StringAttribute("User.organizations_url", organizations_url)
-        self.__received_events_url = PyGithub.Blocking.Attributes.StringAttribute("User.received_events_url", received_events_url)
-        self.__site_admin = PyGithub.Blocking.Attributes.BoolAttribute("User.site_admin", site_admin)
-        self.__starred_url = PyGithub.Blocking.Attributes.StringAttribute("User.starred_url", starred_url)
-        self.__subscriptions_url = PyGithub.Blocking.Attributes.StringAttribute("User.subscriptions_url", subscriptions_url)
+        self.__followers_url = PyGithub.Blocking.Attributes.Attribute("User.followers_url", PyGithub.Blocking.Attributes.StringConverter, followers_url)
+        self.__following_url = PyGithub.Blocking.Attributes.Attribute("User.following_url", PyGithub.Blocking.Attributes.StringConverter, following_url)
+        self.__gists_url = PyGithub.Blocking.Attributes.Attribute("User.gists_url", PyGithub.Blocking.Attributes.StringConverter, gists_url)
+        self.__gravatar_id = PyGithub.Blocking.Attributes.Attribute("User.gravatar_id", PyGithub.Blocking.Attributes.StringConverter, gravatar_id)
+        self.__hireable = PyGithub.Blocking.Attributes.Attribute("User.hireable", PyGithub.Blocking.Attributes.BoolConverter, hireable)
+        self.__organizations_url = PyGithub.Blocking.Attributes.Attribute("User.organizations_url", PyGithub.Blocking.Attributes.StringConverter, organizations_url)
+        self.__received_events_url = PyGithub.Blocking.Attributes.Attribute("User.received_events_url", PyGithub.Blocking.Attributes.StringConverter, received_events_url)
+        self.__site_admin = PyGithub.Blocking.Attributes.Attribute("User.site_admin", PyGithub.Blocking.Attributes.BoolConverter, site_admin)
+        self.__starred_url = PyGithub.Blocking.Attributes.Attribute("User.starred_url", PyGithub.Blocking.Attributes.StringConverter, starred_url)
+        self.__subscriptions_url = PyGithub.Blocking.Attributes.Attribute("User.subscriptions_url", PyGithub.Blocking.Attributes.StringConverter, subscriptions_url)
 
     def _updateAttributes(self, eTag, followers_url=PyGithub.Blocking.Attributes.Absent, following_url=PyGithub.Blocking.Attributes.Absent, gists_url=PyGithub.Blocking.Attributes.Absent, gravatar_id=PyGithub.Blocking.Attributes.Absent, hireable=PyGithub.Blocking.Attributes.Absent, organizations_url=PyGithub.Blocking.Attributes.Absent, received_events_url=PyGithub.Blocking.Attributes.Absent, site_admin=PyGithub.Blocking.Attributes.Absent, starred_url=PyGithub.Blocking.Attributes.Absent, subscriptions_url=PyGithub.Blocking.Attributes.Absent, bio=None, **kwds):
         super(User, self)._updateAttributes(eTag, **kwds)

@@ -29,12 +29,12 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Subscription, self)._initAttributes(**kwds)
-        self.__created_at = PyGithub.Blocking.Attributes.DatetimeAttribute("Subscription.created_at", created_at)
-        self.__ignored = PyGithub.Blocking.Attributes.BoolAttribute("Subscription.ignored", ignored)
-        self.__reason = PyGithub.Blocking.Attributes.StringAttribute("Subscription.reason", reason)
-        self.__repository_url = PyGithub.Blocking.Attributes.StringAttribute("Subscription.repository_url", repository_url)
-        self.__subscribed = PyGithub.Blocking.Attributes.BoolAttribute("Subscription.subscribed", subscribed)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("Subscription.url", url)
+        self.__created_at = PyGithub.Blocking.Attributes.Attribute("Subscription.created_at", PyGithub.Blocking.Attributes.DatetimeConverter, created_at)
+        self.__ignored = PyGithub.Blocking.Attributes.Attribute("Subscription.ignored", PyGithub.Blocking.Attributes.BoolConverter, ignored)
+        self.__reason = PyGithub.Blocking.Attributes.Attribute("Subscription.reason", PyGithub.Blocking.Attributes.StringConverter, reason)
+        self.__repository_url = PyGithub.Blocking.Attributes.Attribute("Subscription.repository_url", PyGithub.Blocking.Attributes.StringConverter, repository_url)
+        self.__subscribed = PyGithub.Blocking.Attributes.Attribute("Subscription.subscribed", PyGithub.Blocking.Attributes.BoolConverter, subscribed)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("Subscription.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(Subscription, self)._updateAttributes(eTag, **kwds)

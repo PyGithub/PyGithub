@@ -34,11 +34,11 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
     def _initAttributes(self, id=PyGithub.Blocking.Attributes.Absent, key=PyGithub.Blocking.Attributes.Absent, title=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, verified=PyGithub.Blocking.Attributes.Absent, **kwds):
         super(PublicKey, self)._initAttributes(**kwds)
-        self.__id = PyGithub.Blocking.Attributes.IntAttribute("PublicKey.id", id)
-        self.__key = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.key", key)
-        self.__title = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.title", title)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("PublicKey.url", url)
-        self.__verified = PyGithub.Blocking.Attributes.BoolAttribute("PublicKey.verified", verified)
+        self.__id = PyGithub.Blocking.Attributes.Attribute("PublicKey.id", PyGithub.Blocking.Attributes.IntConverter, id)
+        self.__key = PyGithub.Blocking.Attributes.Attribute("PublicKey.key", PyGithub.Blocking.Attributes.StringConverter, key)
+        self.__title = PyGithub.Blocking.Attributes.Attribute("PublicKey.title", PyGithub.Blocking.Attributes.StringConverter, title)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("PublicKey.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__verified = PyGithub.Blocking.Attributes.Attribute("PublicKey.verified", PyGithub.Blocking.Attributes.BoolConverter, verified)
 
     @property
     def id(self):

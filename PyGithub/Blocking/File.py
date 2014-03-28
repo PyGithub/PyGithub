@@ -33,16 +33,16 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     def _initAttributes(self, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
         super(File, self)._initAttributes(**kwds)
-        self.__content = PyGithub.Blocking.Attributes.StringAttribute("File.content", content)
-        self.__encoding = PyGithub.Blocking.Attributes.StringAttribute("File.encoding", encoding)
-        self.__git_url = PyGithub.Blocking.Attributes.StringAttribute("File.git_url", git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.StringAttribute("File.html_url", html_url)
-        self.__name = PyGithub.Blocking.Attributes.StringAttribute("File.name", name)
-        self.__path = PyGithub.Blocking.Attributes.StringAttribute("File.path", path)
-        self.__sha = PyGithub.Blocking.Attributes.StringAttribute("File.sha", sha)
-        self.__size = PyGithub.Blocking.Attributes.IntAttribute("File.size", size)
-        self.__type = PyGithub.Blocking.Attributes.StringAttribute("File.type", type)
-        self.__url = PyGithub.Blocking.Attributes.StringAttribute("File.url", url)
+        self.__content = PyGithub.Blocking.Attributes.Attribute("File.content", PyGithub.Blocking.Attributes.StringConverter, content)
+        self.__encoding = PyGithub.Blocking.Attributes.Attribute("File.encoding", PyGithub.Blocking.Attributes.StringConverter, encoding)
+        self.__git_url = PyGithub.Blocking.Attributes.Attribute("File.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
+        self.__html_url = PyGithub.Blocking.Attributes.Attribute("File.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
+        self.__name = PyGithub.Blocking.Attributes.Attribute("File.name", PyGithub.Blocking.Attributes.StringConverter, name)
+        self.__path = PyGithub.Blocking.Attributes.Attribute("File.path", PyGithub.Blocking.Attributes.StringConverter, path)
+        self.__sha = PyGithub.Blocking.Attributes.Attribute("File.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
+        self.__size = PyGithub.Blocking.Attributes.Attribute("File.size", PyGithub.Blocking.Attributes.IntConverter, size)
+        self.__type = PyGithub.Blocking.Attributes.Attribute("File.type", PyGithub.Blocking.Attributes.StringConverter, type)
+        self.__url = PyGithub.Blocking.Attributes.Attribute("File.url", PyGithub.Blocking.Attributes.StringConverter, url)
 
     def _updateAttributes(self, eTag, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
         super(File, self)._updateAttributes(eTag, **kwds)
