@@ -92,7 +92,7 @@ class BuiltinConverter(object):
         if isinstance(value, self.__type):
             return value
         else:
-            raise _ConversionException()
+            raise _ConversionException("Not a " + self.desc)
 
     @property
     def desc(self):
@@ -133,7 +133,7 @@ class ListConverter(object):
                 previousValue[:] = new
                 return previousValue
         else:
-            raise _ConversionException()
+            raise _ConversionException("Not a list")
 
     @property
     def desc(self):
@@ -153,7 +153,7 @@ class _StructureConverter(object):
                 self.update(previousValue, value)
                 return previousValue
         else:
-            raise _ConversionException()
+            raise _ConversionException("Not a dict")
 
     @property
     def desc(self):
@@ -185,17 +185,17 @@ class KeyedStructureUnionConverter(object):
         if isinstance(value, dict):
             key = value.get(self.__key)
             if key is None:
-                raise _ConversionException()
+                raise _ConversionException("No " + self.__key + " attribute")
             else:
                 factory = self.__factories.get(key)
                 if factory is None:
-                    raise _ConversionException()
+                    raise _ConversionException("No factory for " + key)
                 else:
                     if previousValue is not None and getattr(previousValue, self.__key) != key:
                         previousValue = None
                     return factory(previousValue, value)
         else:
-            raise _ConversionException()
+            raise _ConversionException("Not a dict")
 
     @property
     def desc(self):

@@ -1,7 +1,7 @@
 updatable: true
 structures:
   - name: Author
-    updatable: true
+    updatable: false
     attributes:
       - name: date
         type: datetime
@@ -18,10 +18,13 @@ attributes:
     type: string
   - name: message
     type: string
+  - name: parents
+    type:
+      container: list
+      content: GitCommit
   - name: sha
     type: string
+  - name: tree
+    type: GitTree
   - name: url
     type: string
-deprecated_attributes:
-  - parents
-  - tree

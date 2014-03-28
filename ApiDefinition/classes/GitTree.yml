@@ -1,11 +1,34 @@
 updatable: true
+structures:
+  - name: GitSubmodule
+    updatable: false
+    attributes:
+      - name: mode
+        type: string
+      - name: path
+        type: string
+      - name: sha
+        type: string
+      - name: type
+        type: string
 attributes:
+  - name: mode
+    type: string
+  - name: path
+    type: string
   - name: sha
+    type: string
+  - name: tree
+    type:
+      container: list
+      content:
+        union: [GitTree, GitBlob, GitSubmodule]
+        key: type
+        keys: [tree, blob, commit]
+  - name: type
     type: string
   - name: url
     type: string
-deprecated_attributes:
-  - tree
 methods:
   - name: create_modified_copy
     end_point: POST /repos/:owner/:repo/git/trees

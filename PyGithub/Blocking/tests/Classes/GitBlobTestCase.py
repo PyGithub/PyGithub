@@ -17,8 +17,11 @@ class GitBlobTestCase(Framework.SimpleLoginTestCase):
         blob = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(blob.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
         self.assertEqual(blob.encoding, "base64")
+        self.assertEqual(blob.mode, None)
+        self.assertEqual(blob.path, None)
         self.assertEqual(blob.sha, "3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(blob.size, 20)
+        self.assertEqual(blob.type, None)
         self.assertEqual(blob.url, "https://api.github.com/repos/jacquev6/PyGithubIntegrationTests/git/blobs/3daf0da6bca38181ab52610dd6af6e92f1a5469d")
 
     def testLazyCompletion(self):

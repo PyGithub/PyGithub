@@ -23,7 +23,7 @@ NoneType = NoneType_()
 ScalarType = collections.namedtuple("ScalarType", "name")
 LinearCollectionType = collections.namedtuple("LinearCollectionType", "container, content")
 MappingCollectionType = collections.namedtuple("MappingCollectionType", "container, key, value")
-UnionType = collections.namedtuple("UnionType", "types")
+UnionType = collections.namedtuple("UnionType", "types, key, keys")
 EnumType = collections.namedtuple("EnumType", "values")
 
 # Polymorphic structures: values
@@ -186,7 +186,7 @@ class Definition(object):
             else:
                 assert False, description  # pragma no cover
         elif "union" in description:
-            return UnionType([self.__buildType(t) for t in description["union"]])
+            return UnionType([self.__buildType(t) for t in description["union"]], description.get("key"), description.get("keys"))
         elif "enum" in description:
             return EnumType(description["enum"])
         else:

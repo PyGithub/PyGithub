@@ -198,7 +198,12 @@ class YmlGenerator:
             types = [self.createDataForType(t) for t in type.types]
             if all(isinstance(t, str) for t in types):
                 types = tuple(types)
-            return {"union": types}
+            data = collections.OrderedDict(union=types)
+            if type.key is not None:
+                data["key"] = type.key
+            if type.keys is not None:
+                data["keys"] = tuple(type.keys)
+            return data
 
     def createDataForNoneType(self, type):
         return "none"

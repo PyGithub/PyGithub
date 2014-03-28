@@ -9,3 +9,7 @@ GitTree
 
 .. autoclass:: PyGithub.Blocking.GitTree::GitTree()
     :members:
+    :exclude-members: GitSubmodule
+
+    .. autoclass:: PyGithub.Blocking.GitTree::GitTree.GitSubmodule()
+        :members:

@@ -138,8 +138,8 @@ class CodeGenerator:
         return "PyGithub.Blocking.Attributes.ClassConverter(self.Session, {})".format(typeName)
 
     def generateCodeForUnionConverter(self, attribute, type):
-        converters = {t.name: self.generateCodeForConverter(attribute, t) for t in type.types}
-        return 'PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict({}))'.format(", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
+        converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
+        return 'PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
 
     def generateCodeForStructConverter(self, attribute, type):
         return "PyGithub.Blocking.Attributes.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)

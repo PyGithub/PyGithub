@@ -393,7 +393,7 @@ class Parameter(object):
             ts = [t, Typing.BuiltinType("string")]  # @todoGeni The fact that c can be replaced by a string should be in ApiDefinition/c.yml
             if t.name == "Repository":
                 ts.append(Typing.BuiltinType("TwoStrings"))  # @todoGeni The fact that c can be replaced by a 2-tuple of strings should be in ApiDefinition/c.yml
-            self.__type = Typing.UnionType(*ts)
+            self.__type = Typing.UnionType(ts, None, None)
         else:
             self.__type = t
 

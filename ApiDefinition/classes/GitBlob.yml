@@ -4,9 +4,15 @@ attributes:
     type: string
   - name: encoding
     type: string
+  - name: mode
+    type: string
+  - name: path
+    type: string
   - name: sha
     type: string
   - name: size
     type: int
+  - name: type
+    type: string
   - name: url
     type: string

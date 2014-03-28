@@ -1114,6 +1114,22 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("GET", url)
         return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), r.headers.get("ETag"))
 
+    def get_git_commit(self, sha):
+        """
+        Calls the `GET /repos/:owner/:repo/git/commits/:sha <http://developer.github.com/v3/git/commits#get-a-commit>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.GitCommit`
+        """
+
+        sha = PyGithub.Blocking.Parameters.normalizeString(sha)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/commits/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
+        r = self.Session._request("GET", url)
+        return PyGithub.Blocking.GitCommit.GitCommit(self.Session, r.json(), r.headers.get("ETag"))
+
     def get_git_tree(self, sha):
         """
         Calls the `GET /repos/:owner/:repo/git/trees/:sha <http://developer.github.com/v3/git/trees#get-a-tree>`__ end point.

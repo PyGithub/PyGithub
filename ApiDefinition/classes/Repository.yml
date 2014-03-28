@@ -117,6 +117,8 @@ attributes:
   - name: owner
     type:
       union: [User, Organization]
+      key: type
+      keys: [User, Organization]
   - name: parent
     type: Repository
   - name: permissions
@@ -405,6 +407,20 @@ methods:
       - name: sha
         value: parameter sha
     return_type: GitBlob
+  - name: get_git_commit
+    end_point: GET /repos/:owner/:repo/git/commits/:sha
+    parameters:
+      - name: sha
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+      - name: sha
+        value: parameter sha
+    return_type: GitCommit
   - name: get_git_tree
     end_point: GET /repos/:owner/:repo/git/trees/:sha
     parameters:

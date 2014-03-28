@@ -44,7 +44,6 @@
 /repos/:owner/:repo/downloads/:id: [DELETE, GET]
 /repos/:owner/:repo/events: [GET]
 /repos/:owner/:repo/git/commits: [POST]
-/repos/:owner/:repo/git/commits/:sha: [GET]
 /repos/:owner/:repo/git/refs: [GET, POST]
 /repos/:owner/:repo/git/refs/:ref: [DELETE, GET, PATCH]
 /repos/:owner/:repo/git/tags: [POST]
