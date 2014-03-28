@@ -4,6 +4,7 @@
 
 import datetime
 import logging
+import sys
 import unittest
 
 import MockMockMock
@@ -115,7 +116,7 @@ class BuiltinConverterTestCase(unittest.TestCase):
             PyGithub.Blocking.Attributes.IntConverter(None, "42")
 
     def testStringConverterDescription(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.StringConverter.desc, "basestring")
+        self.assertEqual(PyGithub.Blocking.Attributes.StringConverter.desc, "str" if sys.hexversion >= 0x03000000 else "basestring")
 
     def testStringConversion(self):
         self.assertEqual(PyGithub.Blocking.Attributes.StringConverter(None, "42"), "42")
