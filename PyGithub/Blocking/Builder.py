@@ -28,8 +28,29 @@ For reference, see :class:`.Builder`.
 
 import PyGithub
 import PyGithub.Blocking.Github
-import PyGithub.Blocking.Authenticators
 import PyGithub.Blocking.Session
+
+
+class _AnonymousAuthenticator:
+    def prepareSession(self, session):
+        pass
+
+
+class _LoginAuthenticator:
+    def __init__(self, login, password):
+        self.__login = login
+        self.__password = password
+
+    def prepareSession(self, session):
+        session.auth = (self.__login, self.__password)
+
+
+class _OauthAuthenticator:
+    def __init__(self, token):
+        self.__token = token
+
+    def prepareSession(self, session):
+        session.headers["Authorization"] = "token " + self.__token
 
 
 class Builder(object):
@@ -40,7 +61,7 @@ class Builder(object):
     defaultUserAgent = "jacquev6/PyGithub/" + PyGithub.Version
 
     def __init__(self):
-        self.__authenticator = PyGithub.Blocking.Authenticators.AnonymousAuthenticator()
+        self.__authenticator = _AnonymousAuthenticator()
         self.__perPage = None
         self.__userAgent = Builder.defaultUserAgent
 
@@ -48,14 +69,14 @@ class Builder(object):
         """
         Use `basic authentication via username and password <http://developer.github.com/v3/auth/#via-username-and-password>`_.
         """
-        self.__authenticator = PyGithub.Blocking.Authenticators.LoginAuthenticator(login, password)
+        self.__authenticator = _LoginAuthenticator(login, password)
         return self
 
     def OAuth(self, token):
         """
         Use `OAuth authentication <http://developer.github.com/v3/oauth/>`_.
         """
-        self.__authenticator = PyGithub.Blocking.Authenticators.OauthAuthenticator(token)
+        self.__authenticator = _OauthAuthenticator(token)
         return self
 
     def PerPage(self, per_page):
