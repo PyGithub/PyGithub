@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.GitTree
 
@@ -41,9 +42,9 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitCommit.Author, self)._initAttributes(**kwds)
-            self.__date = PyGithub.Blocking.Attributes.Attribute("GitCommit.Author.date", PyGithub.Blocking.Attributes.DatetimeConverter, date)
-            self.__email = PyGithub.Blocking.Attributes.Attribute("GitCommit.Author.email", PyGithub.Blocking.Attributes.StringConverter, email)
-            self.__name = PyGithub.Blocking.Attributes.Attribute("GitCommit.Author.name", PyGithub.Blocking.Attributes.StringConverter, name)
+            self.__date = rcv.Attribute("GitCommit.Author.date", rcv.DatetimeConverter, date)
+            self.__email = rcv.Attribute("GitCommit.Author.email", rcv.StringConverter, email)
+            self.__name = rcv.Attribute("GitCommit.Author.name", rcv.StringConverter, name)
 
         @property
         def date(self):
@@ -66,18 +67,18 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, author=PyGithub.Blocking.Attributes.Absent, committer=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, message=PyGithub.Blocking.Attributes.Absent, parents=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, tree=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitCommit, self)._initAttributes(**kwds)
-        self.__author = PyGithub.Blocking.Attributes.Attribute("GitCommit.author", PyGithub.Blocking.Attributes.StructureConverter(self.Session, GitCommit.Author), author)
-        self.__committer = PyGithub.Blocking.Attributes.Attribute("GitCommit.committer", PyGithub.Blocking.Attributes.StructureConverter(self.Session, GitCommit.Author), committer)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("GitCommit.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__message = PyGithub.Blocking.Attributes.Attribute("GitCommit.message", PyGithub.Blocking.Attributes.StringConverter, message)
-        self.__parents = PyGithub.Blocking.Attributes.Attribute("GitCommit.parents", PyGithub.Blocking.Attributes.ListConverter(PyGithub.Blocking.Attributes.ClassConverter(self.Session, GitCommit)), parents)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("GitCommit.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__tree = PyGithub.Blocking.Attributes.Attribute("GitCommit.tree", PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("GitCommit.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__author = rcv.Attribute("GitCommit.author", rcv.StructureConverter(self.Session, GitCommit.Author), author)
+        self.__committer = rcv.Attribute("GitCommit.committer", rcv.StructureConverter(self.Session, GitCommit.Author), committer)
+        self.__html_url = rcv.Attribute("GitCommit.html_url", rcv.StringConverter, html_url)
+        self.__message = rcv.Attribute("GitCommit.message", rcv.StringConverter, message)
+        self.__parents = rcv.Attribute("GitCommit.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, GitCommit)), parents)
+        self.__sha = rcv.Attribute("GitCommit.sha", rcv.StringConverter, sha)
+        self.__tree = rcv.Attribute("GitCommit.tree", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
+        self.__url = rcv.Attribute("GitCommit.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=PyGithub.Blocking.Attributes.Absent, committer=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, message=PyGithub.Blocking.Attributes.Absent, parents=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, tree=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
         self.__committer.update(committer)

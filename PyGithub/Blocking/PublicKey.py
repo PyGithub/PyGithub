@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class PublicKey(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
@@ -32,13 +33,13 @@ class PublicKey(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
       * :meth:`.User.get_keys`
     """
 
-    def _initAttributes(self, id=PyGithub.Blocking.Attributes.Absent, key=PyGithub.Blocking.Attributes.Absent, title=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, verified=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, id=rcv.Absent, key=rcv.Absent, title=rcv.Absent, url=rcv.Absent, verified=rcv.Absent, **kwds):
         super(PublicKey, self)._initAttributes(**kwds)
-        self.__id = PyGithub.Blocking.Attributes.Attribute("PublicKey.id", PyGithub.Blocking.Attributes.IntConverter, id)
-        self.__key = PyGithub.Blocking.Attributes.Attribute("PublicKey.key", PyGithub.Blocking.Attributes.StringConverter, key)
-        self.__title = PyGithub.Blocking.Attributes.Attribute("PublicKey.title", PyGithub.Blocking.Attributes.StringConverter, title)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("PublicKey.url", PyGithub.Blocking.Attributes.StringConverter, url)
-        self.__verified = PyGithub.Blocking.Attributes.Attribute("PublicKey.verified", PyGithub.Blocking.Attributes.BoolConverter, verified)
+        self.__id = rcv.Attribute("PublicKey.id", rcv.IntConverter, id)
+        self.__key = rcv.Attribute("PublicKey.key", rcv.StringConverter, key)
+        self.__title = rcv.Attribute("PublicKey.title", rcv.StringConverter, title)
+        self.__url = rcv.Attribute("PublicKey.url", rcv.StringConverter, url)
+        self.__verified = rcv.Attribute("PublicKey.verified", rcv.BoolConverter, verified)
 
     @property
     def id(self):

@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class Submodule(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
@@ -27,19 +28,19 @@ class Submodule(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, submodule_git_url=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, submodule_git_url=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._initAttributes(**kwds)
-        self.__git_url = PyGithub.Blocking.Attributes.Attribute("Submodule.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("Submodule.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("Submodule.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("Submodule.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("Submodule.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("Submodule.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__submodule_git_url = PyGithub.Blocking.Attributes.Attribute("Submodule.submodule_git_url", PyGithub.Blocking.Attributes.StringConverter, submodule_git_url)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("Submodule.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("Submodule.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__git_url = rcv.Attribute("Submodule.git_url", rcv.StringConverter, git_url)
+        self.__html_url = rcv.Attribute("Submodule.html_url", rcv.StringConverter, html_url)
+        self.__name = rcv.Attribute("Submodule.name", rcv.StringConverter, name)
+        self.__path = rcv.Attribute("Submodule.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("Submodule.sha", rcv.StringConverter, sha)
+        self.__size = rcv.Attribute("Submodule.size", rcv.IntConverter, size)
+        self.__submodule_git_url = rcv.Attribute("Submodule.submodule_git_url", rcv.StringConverter, submodule_git_url)
+        self.__type = rcv.Attribute("Submodule.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("Submodule.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, submodule_git_url=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, submodule_git_url=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._updateAttributes(eTag, **kwds)
         self.__git_url.update(git_url)
         self.__html_url.update(html_url)

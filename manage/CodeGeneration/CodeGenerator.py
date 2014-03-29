@@ -14,7 +14,8 @@ class CodeGenerator:
         yield ""
         yield "import PyGithub.Blocking.BaseGithubObject"
         yield "import PyGithub.Blocking.Parameters"
-        yield "import PyGithub.Blocking.Attributes"
+        yield "import PyGithub.Blocking.PaginatedList"
+        yield "import PyGithub.Blocking._receive as rcv"
         if len(klass.dependencies) != 0:
             yield ""
             for d in klass.dependencies:
@@ -96,7 +97,7 @@ class CodeGenerator:
         if len(klass.attributes) != 0:
             yield (  # pragma no branch
                 PS.Method("_initAttributes")
-                .parameters((a.name, "PyGithub.Blocking.Attributes.Absent") for a in klass.attributes)
+                .parameters((a.name, "rcv.Absent") for a in klass.attributes)
                 .parameters((a, "None") for a in klass.deprecatedAttributes)
                 .parameter("**kwds")
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
@@ -106,7 +107,7 @@ class CodeGenerator:
                 yield (
                     PS.Method("_updateAttributes")
                     .parameter("eTag")
-                    .parameters((a.name, "PyGithub.Blocking.Attributes.Absent") for a in klass.attributes)
+                    .parameters((a.name, "rcv.Absent") for a in klass.attributes)
                     .parameters((a, "None") for a in klass.deprecatedAttributes)
                     .parameter("**kwds")
                     .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
@@ -115,7 +116,7 @@ class CodeGenerator:
 
     def createCallForAttributeInitializer(self, attribute):
         return (
-            PS.Call("PyGithub.Blocking.Attributes.Attribute")
+            PS.Call("rcv.Attribute")
             .arg(self.generateFullyQualifiedAttributeName(attribute))
             .arg(self.generateCodeForConverter(attribute, attribute.type))
             .arg(attribute.name)
@@ -125,24 +126,24 @@ class CodeGenerator:
         return self.getMethod("generateCodeFor{}Converter", type.category)(attribute, type)
 
     def generateCodeForLinearCollectionConverter(self, attribute, type):
-        return "PyGithub.Blocking.Attributes.ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
+        return "rcv.ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
 
     def generateCodeForBuiltinConverter(self, attribute, type):
-        return "PyGithub.Blocking.Attributes.{}Converter".format(type.name.capitalize())
+        return "rcv.{}Converter".format(type.name.capitalize())
 
     def generateCodeForClassConverter(self, attribute, type):
         if type.name == attribute.containerClass.name:
             typeName = type.name
         else:
             typeName = "{}.{}".format(type.module, type.name)
-        return "PyGithub.Blocking.Attributes.ClassConverter(self.Session, {})".format(typeName)
+        return "rcv.ClassConverter(self.Session, {})".format(typeName)
 
     def generateCodeForUnionConverter(self, attribute, type):
         converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
-        return 'PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
+        return 'rcv.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
 
     def generateCodeForStructConverter(self, attribute, type):
-        return "PyGithub.Blocking.Attributes.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
+        return "rcv.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
 
     def generateFullyQualifiedAttributeName(self, attribute):
         name = [attribute.name]
@@ -301,7 +302,7 @@ class CodeGenerator:
         yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
 
     def generateCodeForPaginatedListOfUnionReturnValue(self, method):
-        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict(Anonymous=PyGithub.Blocking.Attributes.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=PyGithub.Blocking.Attributes.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, {})'.format(self.generateCallArguments(method))
+        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, {})'.format(self.generateCallArguments(method))
 
     def generateCodeForListReturnValue(self, method):
         yield from self.getMethod("generateCodeForListOf{}ReturnValue", method.returnType.content.category)(method)

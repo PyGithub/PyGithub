@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.GitCommit
 
@@ -31,20 +32,20 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_readme`
     """
 
-    def _initAttributes(self, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _initAttributes(self, content=rcv.Absent, encoding=rcv.Absent, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(File, self)._initAttributes(**kwds)
-        self.__content = PyGithub.Blocking.Attributes.Attribute("File.content", PyGithub.Blocking.Attributes.StringConverter, content)
-        self.__encoding = PyGithub.Blocking.Attributes.Attribute("File.encoding", PyGithub.Blocking.Attributes.StringConverter, encoding)
-        self.__git_url = PyGithub.Blocking.Attributes.Attribute("File.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("File.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("File.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("File.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("File.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("File.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("File.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("File.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__content = rcv.Attribute("File.content", rcv.StringConverter, content)
+        self.__encoding = rcv.Attribute("File.encoding", rcv.StringConverter, encoding)
+        self.__git_url = rcv.Attribute("File.git_url", rcv.StringConverter, git_url)
+        self.__html_url = rcv.Attribute("File.html_url", rcv.StringConverter, html_url)
+        self.__name = rcv.Attribute("File.name", rcv.StringConverter, name)
+        self.__path = rcv.Attribute("File.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("File.sha", rcv.StringConverter, sha)
+        self.__size = rcv.Attribute("File.size", rcv.IntConverter, size)
+        self.__type = rcv.Attribute("File.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("File.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, content=rcv.Absent, encoding=rcv.Absent, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(File, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)

@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.Entity
 import PyGithub.Blocking.Repository
@@ -35,13 +36,13 @@ class Organization(PyGithub.Blocking.Entity.Entity):
       * :meth:`.User.get_orgs`
     """
 
-    def _initAttributes(self, billing_email=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, public_members_url=PyGithub.Blocking.Attributes.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
+    def _initAttributes(self, billing_email=rcv.Absent, members_url=rcv.Absent, public_members_url=rcv.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         super(Organization, self)._initAttributes(**kwds)
-        self.__billing_email = PyGithub.Blocking.Attributes.Attribute("Organization.billing_email", PyGithub.Blocking.Attributes.StringConverter, billing_email)
-        self.__members_url = PyGithub.Blocking.Attributes.Attribute("Organization.members_url", PyGithub.Blocking.Attributes.StringConverter, members_url)
-        self.__public_members_url = PyGithub.Blocking.Attributes.Attribute("Organization.public_members_url", PyGithub.Blocking.Attributes.StringConverter, public_members_url)
+        self.__billing_email = rcv.Attribute("Organization.billing_email", rcv.StringConverter, billing_email)
+        self.__members_url = rcv.Attribute("Organization.members_url", rcv.StringConverter, members_url)
+        self.__public_members_url = rcv.Attribute("Organization.public_members_url", rcv.StringConverter, public_members_url)
 
-    def _updateAttributes(self, eTag, billing_email=PyGithub.Blocking.Attributes.Absent, members_url=PyGithub.Blocking.Attributes.Absent, public_members_url=PyGithub.Blocking.Attributes.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
+    def _updateAttributes(self, eTag, billing_email=rcv.Absent, members_url=rcv.Absent, public_members_url=rcv.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         super(Organization, self)._updateAttributes(eTag, **kwds)
         self.__billing_email.update(billing_email)
         self.__members_url.update(members_url)

@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class GitBlob(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
@@ -28,18 +29,18 @@ class GitBlob(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_git_blob`
     """
 
-    def _initAttributes(self, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, mode=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, content=rcv.Absent, encoding=rcv.Absent, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitBlob, self)._initAttributes(**kwds)
-        self.__content = PyGithub.Blocking.Attributes.Attribute("GitBlob.content", PyGithub.Blocking.Attributes.StringConverter, content)
-        self.__encoding = PyGithub.Blocking.Attributes.Attribute("GitBlob.encoding", PyGithub.Blocking.Attributes.StringConverter, encoding)
-        self.__mode = PyGithub.Blocking.Attributes.Attribute("GitBlob.mode", PyGithub.Blocking.Attributes.StringConverter, mode)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("GitBlob.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("GitBlob.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("GitBlob.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("GitBlob.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("GitBlob.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__content = rcv.Attribute("GitBlob.content", rcv.StringConverter, content)
+        self.__encoding = rcv.Attribute("GitBlob.encoding", rcv.StringConverter, encoding)
+        self.__mode = rcv.Attribute("GitBlob.mode", rcv.StringConverter, mode)
+        self.__path = rcv.Attribute("GitBlob.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("GitBlob.sha", rcv.StringConverter, sha)
+        self.__size = rcv.Attribute("GitBlob.size", rcv.IntConverter, size)
+        self.__type = rcv.Attribute("GitBlob.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("GitBlob.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=PyGithub.Blocking.Attributes.Absent, encoding=PyGithub.Blocking.Attributes.Absent, mode=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, content=rcv.Absent, encoding=rcv.Absent, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitBlob, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)

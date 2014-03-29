@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.File
 import PyGithub.Blocking.Submodule
@@ -31,16 +32,16 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(Dir, self)._initAttributes(**kwds)
-        self.__git_url = PyGithub.Blocking.Attributes.Attribute("Dir.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("Dir.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("Dir.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("Dir.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("Dir.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("Dir.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("Dir.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("Dir.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__git_url = rcv.Attribute("Dir.git_url", rcv.StringConverter, git_url)
+        self.__html_url = rcv.Attribute("Dir.html_url", rcv.StringConverter, html_url)
+        self.__name = rcv.Attribute("Dir.name", rcv.StringConverter, name)
+        self.__path = rcv.Attribute("Dir.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("Dir.sha", rcv.StringConverter, sha)
+        self.__size = rcv.Attribute("Dir.size", rcv.IntConverter, size)
+        self.__type = rcv.Attribute("Dir.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("Dir.url", rcv.StringConverter, url)
 
     @property
     def git_url(self):

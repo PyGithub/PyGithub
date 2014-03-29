@@ -22,9 +22,6 @@ was created or last updated.
 import logging
 log = logging.getLogger(__name__)
 
-import PyGithub.Blocking.Attributes
-import PyGithub.Blocking.PaginatedList
-
 
 class SessionedGithubObject(object):
     """

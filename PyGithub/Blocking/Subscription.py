@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
@@ -27,16 +28,16 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.get_subscription`
     """
 
-    def _initAttributes(self, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, created_at=rcv.Absent, ignored=rcv.Absent, reason=rcv.Absent, repository_url=rcv.Absent, subscribed=rcv.Absent, url=rcv.Absent, **kwds):
         super(Subscription, self)._initAttributes(**kwds)
-        self.__created_at = PyGithub.Blocking.Attributes.Attribute("Subscription.created_at", PyGithub.Blocking.Attributes.DatetimeConverter, created_at)
-        self.__ignored = PyGithub.Blocking.Attributes.Attribute("Subscription.ignored", PyGithub.Blocking.Attributes.BoolConverter, ignored)
-        self.__reason = PyGithub.Blocking.Attributes.Attribute("Subscription.reason", PyGithub.Blocking.Attributes.StringConverter, reason)
-        self.__repository_url = PyGithub.Blocking.Attributes.Attribute("Subscription.repository_url", PyGithub.Blocking.Attributes.StringConverter, repository_url)
-        self.__subscribed = PyGithub.Blocking.Attributes.Attribute("Subscription.subscribed", PyGithub.Blocking.Attributes.BoolConverter, subscribed)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("Subscription.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__created_at = rcv.Attribute("Subscription.created_at", rcv.DatetimeConverter, created_at)
+        self.__ignored = rcv.Attribute("Subscription.ignored", rcv.BoolConverter, ignored)
+        self.__reason = rcv.Attribute("Subscription.reason", rcv.StringConverter, reason)
+        self.__repository_url = rcv.Attribute("Subscription.repository_url", rcv.StringConverter, repository_url)
+        self.__subscribed = rcv.Attribute("Subscription.subscribed", rcv.BoolConverter, subscribed)
+        self.__url = rcv.Attribute("Subscription.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, created_at=PyGithub.Blocking.Attributes.Absent, ignored=PyGithub.Blocking.Attributes.Absent, reason=PyGithub.Blocking.Attributes.Absent, repository_url=PyGithub.Blocking.Attributes.Absent, subscribed=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, created_at=rcv.Absent, ignored=rcv.Absent, reason=rcv.Absent, repository_url=rcv.Absent, subscribed=rcv.Absent, url=rcv.Absent, **kwds):
         super(Subscription, self)._updateAttributes(eTag, **kwds)
         self.__created_at.update(created_at)
         self.__ignored.update(ignored)

@@ -9,7 +9,8 @@ import unittest
 
 import MockMockMock
 
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.Exceptions
+import PyGithub.Blocking._receive as rcv
 
 
 class AttributeTestCase(unittest.TestCase):
@@ -17,7 +18,7 @@ class AttributeTestCase(unittest.TestCase):
         self.mocks = MockMockMock.Engine()
         self.conv = self.mocks.create("conv")
         self.conv.expect.desc.andReturn("desc")
-        self.a = PyGithub.Blocking.Attributes.Attribute("name", self.conv.object, PyGithub.Blocking.Attributes.Absent)
+        self.a = rcv.Attribute("name", self.conv.object, rcv.Absent)
 
         self.log = logging.getLogger("PyGithub")
         for handler in self.log.handlers:
@@ -50,7 +51,7 @@ class AttributeTestCase(unittest.TestCase):
         self.assertEqual(self.a.value, None)
 
     def testUpdateAttributeWithAbsent(self):
-        self.a.update(PyGithub.Blocking.Attributes.Absent)
+        self.a.update(rcv.Absent)
 
         self.assertEqual(self.a.value, None)
 
@@ -65,12 +66,12 @@ class AttributeTestCase(unittest.TestCase):
         self.conv.expect(None, 42).andReturn(42)
 
         self.a.update(42)
-        self.a.update(PyGithub.Blocking.Attributes.Absent)
+        self.a.update(rcv.Absent)
 
         self.assertEqual(self.a.value, 42)
 
     def testUpdateAttributeWithInvalidValue(self):
-        e = PyGithub.Blocking.Attributes._ConversionException()
+        e = rcv._ConversionException()
         self.conv.expect(None, 42).andRaise(e)
         self.expectLog(logging.WARN, "Attribute name is expected to be a desc but GitHub API v3 returned 42")
 
@@ -93,7 +94,7 @@ class AttributeTestCase(unittest.TestCase):
     def testUpdateAfterException(self):
         v = []
         self.conv.expect(None, 42).andReturn(v)
-        self.conv.expect(v, 43).andRaise(PyGithub.Blocking.Attributes._ConversionException())
+        self.conv.expect(v, 43).andRaise(rcv._ConversionException())
         self.expectLog(logging.WARN, "Attribute name is expected to be a desc but GitHub API v3 returned 43")
         self.conv.expect(v, 44).andReturn(v)
 
@@ -106,48 +107,48 @@ class AttributeTestCase(unittest.TestCase):
 
 class BuiltinConverterTestCase(unittest.TestCase):
     def testIntegerConverterDescription(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.IntConverter.desc, "int")
+        self.assertEqual(rcv.IntConverter.desc, "int")
 
     def testIntegerConversion(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.IntConverter(None, 42), 42)
+        self.assertEqual(rcv.IntConverter(None, 42), 42)
 
     def testBadIntegerConversion(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
-            PyGithub.Blocking.Attributes.IntConverter(None, "42")
+        with self.assertRaises(rcv._ConversionException):
+            rcv.IntConverter(None, "42")
 
     def testStringConverterDescription(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.StringConverter.desc, "str" if sys.hexversion >= 0x03000000 else "basestring")
+        self.assertEqual(rcv.StringConverter.desc, "str" if sys.hexversion >= 0x03000000 else "basestring")
 
     def testStringConversion(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.StringConverter(None, "42"), "42")
+        self.assertEqual(rcv.StringConverter(None, "42"), "42")
 
     def testBadStringConversion(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
-            PyGithub.Blocking.Attributes.StringConverter(None, 42)
+        with self.assertRaises(rcv._ConversionException):
+            rcv.StringConverter(None, 42)
 
     def testDatetimeConverterDescription(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.DatetimeConverter.desc, "datetime")
+        self.assertEqual(rcv.DatetimeConverter.desc, "datetime")
 
     def testDatetimeConversionFromInt(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.DatetimeConverter(None, 1395971262), datetime.datetime(2014, 3, 28, 1, 47, 42))
+        self.assertEqual(rcv.DatetimeConverter(None, 1395971262), datetime.datetime(2014, 3, 28, 1, 47, 42))
 
     def testDatetimeConversionFromString(self):
-        self.assertEqual(PyGithub.Blocking.Attributes.DatetimeConverter(None, "2010-07-09T06:10:06Z"), datetime.datetime(2010, 7, 9, 6, 10, 6))
+        self.assertEqual(rcv.DatetimeConverter(None, "2010-07-09T06:10:06Z"), datetime.datetime(2010, 7, 9, 6, 10, 6))
 
     def testBadDatetimeConversion(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
-            PyGithub.Blocking.Attributes.DatetimeConverter(None, 4.5)
+        with self.assertRaises(rcv._ConversionException):
+            rcv.DatetimeConverter(None, 4.5)
 
     def testBadDatetimeConversionFromString(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
-            PyGithub.Blocking.Attributes.DatetimeConverter(None, "foobar")
+        with self.assertRaises(rcv._ConversionException):
+            rcv.DatetimeConverter(None, "foobar")
 
 
 class ListConverterTestCase(unittest.TestCase):
     def setUp(self):
         self.mocks = MockMockMock.Engine()
         self.content = self.mocks.create("content")
-        self.conv = PyGithub.Blocking.Attributes.ListConverter(self.content.object)
+        self.conv = rcv.ListConverter(self.content.object)
 
     def tearDown(self):
         self.mocks.tearDown()
@@ -163,14 +164,14 @@ class ListConverterTestCase(unittest.TestCase):
         self.assertEqual(self.conv(None, [42, 43]), ["42", "43"])
 
     def testNotAList(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, 42)
 
     def testBadElement(self):
         self.content.expect(None, 42).andReturn("42")
-        self.content.expect(None, 43).andRaise(PyGithub.Blocking.Attributes._ConversionException())
+        self.content.expect(None, 43).andRaise(rcv._ConversionException())
 
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, [42, 43, 44])
 
     def testSecondConversionKeepsInstance(self):
@@ -190,19 +191,19 @@ class StructureConverterTestCase(unittest.TestCase):
     class TheStruct(object):
         def __init__(self, session, attributes):
             self.Session = session
-            self.__foo = PyGithub.Blocking.Attributes.Attribute("TheStruct.foo", PyGithub.Blocking.Attributes.StringConverter, PyGithub.Blocking.Attributes.Absent)
+            self.__foo = rcv.Attribute("TheStruct.foo", rcv.StringConverter, rcv.Absent)
             self._updateAttributes(**attributes)
 
         @property
         def foo(self):
             return self.__foo.value
 
-        def _updateAttributes(self, foo=PyGithub.Blocking.Attributes.Absent, **kwds):
+        def _updateAttributes(self, foo=rcv.Absent, **kwds):
             self.__foo.update(foo)
 
     def setUp(self):
         self.session = (42,)
-        self.conv = PyGithub.Blocking.Attributes.StructureConverter(self.session, self.TheStruct)
+        self.conv = rcv.StructureConverter(self.session, self.TheStruct)
 
     def testDescription(self):
         self.assertEqual(self.conv.desc, "TheStruct")
@@ -228,7 +229,7 @@ class StructureConverterTestCase(unittest.TestCase):
         self.assertEqual(instance2.foo, "baz")
 
     def testFailedConversion(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, [])
 
 
@@ -239,7 +240,7 @@ class KeyedStructureUnionConverterTestCase(unittest.TestCase):
         self.conv2 = self.mocks.create("conv2")
         self.instance1 = self.mocks.create("instance1")
         self.instance2 = self.mocks.create("instance2")
-        self.conv = PyGithub.Blocking.Attributes.KeyedStructureUnionConverter(
+        self.conv = rcv.KeyedStructureUnionConverter(
             "key",
             {
                 "val1": self.conv1.object,
@@ -259,15 +260,15 @@ class KeyedStructureUnionConverterTestCase(unittest.TestCase):
         self.assertIs(actual, instance)
 
     def testBadKey(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, {"key": "not_a_val"})
 
     def testNoKey(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, {})
 
     def testNotADict(self):
-        with self.assertRaises(PyGithub.Blocking.Attributes._ConversionException):
+        with self.assertRaises(rcv._ConversionException):
             self.conv(None, 42)
 
     def testTwoConversionsOfSameKey(self):

@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class SymLink(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
@@ -27,19 +28,19 @@ class SymLink(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, target=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, target=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(SymLink, self)._initAttributes(**kwds)
-        self.__git_url = PyGithub.Blocking.Attributes.Attribute("SymLink.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("SymLink.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("SymLink.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("SymLink.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("SymLink.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("SymLink.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__target = PyGithub.Blocking.Attributes.Attribute("SymLink.target", PyGithub.Blocking.Attributes.StringConverter, target)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("SymLink.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("SymLink.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__git_url = rcv.Attribute("SymLink.git_url", rcv.StringConverter, git_url)
+        self.__html_url = rcv.Attribute("SymLink.html_url", rcv.StringConverter, html_url)
+        self.__name = rcv.Attribute("SymLink.name", rcv.StringConverter, name)
+        self.__path = rcv.Attribute("SymLink.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("SymLink.sha", rcv.StringConverter, sha)
+        self.__size = rcv.Attribute("SymLink.size", rcv.IntConverter, size)
+        self.__target = rcv.Attribute("SymLink.target", rcv.StringConverter, target)
+        self.__type = rcv.Attribute("SymLink.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("SymLink.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, git_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, target=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, target=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
         super(SymLink, self)._updateAttributes(eTag, **kwds)
         self.__git_url.update(git_url)
         self.__html_url.update(html_url)

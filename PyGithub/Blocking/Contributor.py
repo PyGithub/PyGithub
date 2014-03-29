@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.User
 
@@ -28,11 +29,11 @@ class Contributor(PyGithub.Blocking.User.User):
       * :meth:`.Repository.get_contributors`
     """
 
-    def _initAttributes(self, contributions=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, contributions=rcv.Absent, **kwds):
         super(Contributor, self)._initAttributes(**kwds)
-        self.__contributions = PyGithub.Blocking.Attributes.Attribute("Contributor.contributions", PyGithub.Blocking.Attributes.IntConverter, contributions)
+        self.__contributions = rcv.Attribute("Contributor.contributions", rcv.IntConverter, contributions)
 
-    def _updateAttributes(self, eTag, contributions=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, contributions=rcv.Absent, **kwds):
         super(Contributor, self)._updateAttributes(eTag, **kwds)
         self.__contributions.update(contributions)
 

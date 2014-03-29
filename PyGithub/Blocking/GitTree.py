@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.GitBlob
 
@@ -40,10 +41,10 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, mode=None, path=None, sha=None, type=None, **kwds):
             super(GitTree.GitSubmodule, self)._initAttributes(**kwds)
-            self.__mode = PyGithub.Blocking.Attributes.Attribute("GitTree.GitSubmodule.mode", PyGithub.Blocking.Attributes.StringConverter, mode)
-            self.__path = PyGithub.Blocking.Attributes.Attribute("GitTree.GitSubmodule.path", PyGithub.Blocking.Attributes.StringConverter, path)
-            self.__sha = PyGithub.Blocking.Attributes.Attribute("GitTree.GitSubmodule.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-            self.__type = PyGithub.Blocking.Attributes.Attribute("GitTree.GitSubmodule.type", PyGithub.Blocking.Attributes.StringConverter, type)
+            self.__mode = rcv.Attribute("GitTree.GitSubmodule.mode", rcv.StringConverter, mode)
+            self.__path = rcv.Attribute("GitTree.GitSubmodule.path", rcv.StringConverter, path)
+            self.__sha = rcv.Attribute("GitTree.GitSubmodule.sha", rcv.StringConverter, sha)
+            self.__type = rcv.Attribute("GitTree.GitSubmodule.type", rcv.StringConverter, type)
 
         @property
         def mode(self):
@@ -73,16 +74,16 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__type.value
 
-    def _initAttributes(self, mode=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, tree=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitTree, self)._initAttributes(**kwds)
-        self.__mode = PyGithub.Blocking.Attributes.Attribute("GitTree.mode", PyGithub.Blocking.Attributes.StringConverter, mode)
-        self.__path = PyGithub.Blocking.Attributes.Attribute("GitTree.path", PyGithub.Blocking.Attributes.StringConverter, path)
-        self.__sha = PyGithub.Blocking.Attributes.Attribute("GitTree.sha", PyGithub.Blocking.Attributes.StringConverter, sha)
-        self.__tree = PyGithub.Blocking.Attributes.Attribute("GitTree.tree", PyGithub.Blocking.Attributes.ListConverter(PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict(blob=PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=PyGithub.Blocking.Attributes.StructureConverter(self.Session, GitTree.GitSubmodule), tree=PyGithub.Blocking.Attributes.ClassConverter(self.Session, GitTree)))), tree)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("GitTree.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("GitTree.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__mode = rcv.Attribute("GitTree.mode", rcv.StringConverter, mode)
+        self.__path = rcv.Attribute("GitTree.path", rcv.StringConverter, path)
+        self.__sha = rcv.Attribute("GitTree.sha", rcv.StringConverter, sha)
+        self.__tree = rcv.Attribute("GitTree.tree", rcv.ListConverter(rcv.KeyedStructureUnionConverter("type", dict(blob=rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=rcv.StructureConverter(self.Session, GitTree.GitSubmodule), tree=rcv.ClassConverter(self.Session, GitTree)))), tree)
+        self.__type = rcv.Attribute("GitTree.type", rcv.StringConverter, type)
+        self.__url = rcv.Attribute("GitTree.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, mode=PyGithub.Blocking.Attributes.Absent, path=PyGithub.Blocking.Attributes.Absent, sha=PyGithub.Blocking.Attributes.Absent, tree=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitTree, self)._updateAttributes(eTag, **kwds)
         self.__mode.update(mode)
         self.__path.update(path)

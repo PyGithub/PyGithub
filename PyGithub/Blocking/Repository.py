@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.Contributor
 import PyGithub.Blocking.Dir
@@ -66,9 +67,9 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, contributions=None, name=None, type=None, **kwds):
             super(Repository.AnonymousContributor, self)._initAttributes(**kwds)
-            self.__contributions = PyGithub.Blocking.Attributes.Attribute("Repository.AnonymousContributor.contributions", PyGithub.Blocking.Attributes.IntConverter, contributions)
-            self.__name = PyGithub.Blocking.Attributes.Attribute("Repository.AnonymousContributor.name", PyGithub.Blocking.Attributes.StringConverter, name)
-            self.__type = PyGithub.Blocking.Attributes.Attribute("Repository.AnonymousContributor.type", PyGithub.Blocking.Attributes.StringConverter, type)
+            self.__contributions = rcv.Attribute("Repository.AnonymousContributor.contributions", rcv.IntConverter, contributions)
+            self.__name = rcv.Attribute("Repository.AnonymousContributor.name", rcv.StringConverter, name)
+            self.__type = rcv.Attribute("Repository.AnonymousContributor.type", rcv.StringConverter, type)
 
         @property
         def contributions(self):
@@ -99,8 +100,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, commit=None, content=None, **kwds):
             super(Repository.ContentCommit, self)._initAttributes(**kwds)
-            self.__commit = PyGithub.Blocking.Attributes.Attribute("Repository.ContentCommit.commit", PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
-            self.__content = PyGithub.Blocking.Attributes.Attribute("Repository.ContentCommit.content", PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.File.File), content)
+            self.__commit = rcv.Attribute("Repository.ContentCommit.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
+            self.__content = rcv.Attribute("Repository.ContentCommit.content", rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), content)
 
         @property
         def commit(self):
@@ -124,9 +125,9 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, admin=None, pull=None, push=None, **kwds):
             super(Repository.Permissions, self)._initAttributes(**kwds)
-            self.__admin = PyGithub.Blocking.Attributes.Attribute("Repository.Permissions.admin", PyGithub.Blocking.Attributes.BoolConverter, admin)
-            self.__pull = PyGithub.Blocking.Attributes.Attribute("Repository.Permissions.pull", PyGithub.Blocking.Attributes.BoolConverter, pull)
-            self.__push = PyGithub.Blocking.Attributes.Attribute("Repository.Permissions.push", PyGithub.Blocking.Attributes.BoolConverter, push)
+            self.__admin = rcv.Attribute("Repository.Permissions.admin", rcv.BoolConverter, admin)
+            self.__pull = rcv.Attribute("Repository.Permissions.pull", rcv.BoolConverter, pull)
+            self.__push = rcv.Attribute("Repository.Permissions.push", rcv.BoolConverter, push)
 
         def _updateAttributes(self, admin=None, pull=None, push=None, **kwds):
             super(Repository.Permissions, self)._updateAttributes(**kwds)
@@ -155,77 +156,77 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__push.value
 
-    def _initAttributes(self, archive_url=PyGithub.Blocking.Attributes.Absent, assignees_url=PyGithub.Blocking.Attributes.Absent, blobs_url=PyGithub.Blocking.Attributes.Absent, branches_url=PyGithub.Blocking.Attributes.Absent, clone_url=PyGithub.Blocking.Attributes.Absent, collaborators_url=PyGithub.Blocking.Attributes.Absent, comments_url=PyGithub.Blocking.Attributes.Absent, commits_url=PyGithub.Blocking.Attributes.Absent, compare_url=PyGithub.Blocking.Attributes.Absent, contents_url=PyGithub.Blocking.Attributes.Absent, contributors_url=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, default_branch=PyGithub.Blocking.Attributes.Absent, description=PyGithub.Blocking.Attributes.Absent, downloads_url=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, fork=PyGithub.Blocking.Attributes.Absent, forks_count=PyGithub.Blocking.Attributes.Absent, forks_url=PyGithub.Blocking.Attributes.Absent, full_name=PyGithub.Blocking.Attributes.Absent, git_commits_url=PyGithub.Blocking.Attributes.Absent, git_refs_url=PyGithub.Blocking.Attributes.Absent, git_tags_url=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, has_issues=PyGithub.Blocking.Attributes.Absent, has_wiki=PyGithub.Blocking.Attributes.Absent, homepage=PyGithub.Blocking.Attributes.Absent, hooks_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, issue_comment_url=PyGithub.Blocking.Attributes.Absent, issue_events_url=PyGithub.Blocking.Attributes.Absent, issues_url=PyGithub.Blocking.Attributes.Absent, keys_url=PyGithub.Blocking.Attributes.Absent, labels_url=PyGithub.Blocking.Attributes.Absent, language=PyGithub.Blocking.Attributes.Absent, languages_url=PyGithub.Blocking.Attributes.Absent, merges_url=PyGithub.Blocking.Attributes.Absent, milestones_url=PyGithub.Blocking.Attributes.Absent, mirror_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, network_count=PyGithub.Blocking.Attributes.Absent, notifications_url=PyGithub.Blocking.Attributes.Absent, open_issues_count=PyGithub.Blocking.Attributes.Absent, owner=PyGithub.Blocking.Attributes.Absent, parent=PyGithub.Blocking.Attributes.Absent, permissions=PyGithub.Blocking.Attributes.Absent, private=PyGithub.Blocking.Attributes.Absent, pulls_url=PyGithub.Blocking.Attributes.Absent, pushed_at=PyGithub.Blocking.Attributes.Absent, releases_url=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, source=PyGithub.Blocking.Attributes.Absent, ssh_url=PyGithub.Blocking.Attributes.Absent, stargazers_count=PyGithub.Blocking.Attributes.Absent, stargazers_url=PyGithub.Blocking.Attributes.Absent, statuses_url=PyGithub.Blocking.Attributes.Absent, subscribers_count=PyGithub.Blocking.Attributes.Absent, subscribers_url=PyGithub.Blocking.Attributes.Absent, subscription_url=PyGithub.Blocking.Attributes.Absent, svn_url=PyGithub.Blocking.Attributes.Absent, tags_url=PyGithub.Blocking.Attributes.Absent, teams_url=PyGithub.Blocking.Attributes.Absent, trees_url=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, watchers_count=PyGithub.Blocking.Attributes.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
+    def _initAttributes(self, archive_url=rcv.Absent, assignees_url=rcv.Absent, blobs_url=rcv.Absent, branches_url=rcv.Absent, clone_url=rcv.Absent, collaborators_url=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, compare_url=rcv.Absent, contents_url=rcv.Absent, contributors_url=rcv.Absent, created_at=rcv.Absent, default_branch=rcv.Absent, description=rcv.Absent, downloads_url=rcv.Absent, events_url=rcv.Absent, fork=rcv.Absent, forks_count=rcv.Absent, forks_url=rcv.Absent, full_name=rcv.Absent, git_commits_url=rcv.Absent, git_refs_url=rcv.Absent, git_tags_url=rcv.Absent, git_url=rcv.Absent, has_issues=rcv.Absent, has_wiki=rcv.Absent, homepage=rcv.Absent, hooks_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, issue_comment_url=rcv.Absent, issue_events_url=rcv.Absent, issues_url=rcv.Absent, keys_url=rcv.Absent, labels_url=rcv.Absent, language=rcv.Absent, languages_url=rcv.Absent, merges_url=rcv.Absent, milestones_url=rcv.Absent, mirror_url=rcv.Absent, name=rcv.Absent, network_count=rcv.Absent, notifications_url=rcv.Absent, open_issues_count=rcv.Absent, owner=rcv.Absent, parent=rcv.Absent, permissions=rcv.Absent, private=rcv.Absent, pulls_url=rcv.Absent, pushed_at=rcv.Absent, releases_url=rcv.Absent, size=rcv.Absent, source=rcv.Absent, ssh_url=rcv.Absent, stargazers_count=rcv.Absent, stargazers_url=rcv.Absent, statuses_url=rcv.Absent, subscribers_count=rcv.Absent, subscribers_url=rcv.Absent, subscription_url=rcv.Absent, svn_url=rcv.Absent, tags_url=rcv.Absent, teams_url=rcv.Absent, trees_url=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, watchers_count=rcv.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
         super(Repository, self)._initAttributes(**kwds)
-        self.__archive_url = PyGithub.Blocking.Attributes.Attribute("Repository.archive_url", PyGithub.Blocking.Attributes.StringConverter, archive_url)
-        self.__assignees_url = PyGithub.Blocking.Attributes.Attribute("Repository.assignees_url", PyGithub.Blocking.Attributes.StringConverter, assignees_url)
-        self.__blobs_url = PyGithub.Blocking.Attributes.Attribute("Repository.blobs_url", PyGithub.Blocking.Attributes.StringConverter, blobs_url)
-        self.__branches_url = PyGithub.Blocking.Attributes.Attribute("Repository.branches_url", PyGithub.Blocking.Attributes.StringConverter, branches_url)
-        self.__clone_url = PyGithub.Blocking.Attributes.Attribute("Repository.clone_url", PyGithub.Blocking.Attributes.StringConverter, clone_url)
-        self.__collaborators_url = PyGithub.Blocking.Attributes.Attribute("Repository.collaborators_url", PyGithub.Blocking.Attributes.StringConverter, collaborators_url)
-        self.__comments_url = PyGithub.Blocking.Attributes.Attribute("Repository.comments_url", PyGithub.Blocking.Attributes.StringConverter, comments_url)
-        self.__commits_url = PyGithub.Blocking.Attributes.Attribute("Repository.commits_url", PyGithub.Blocking.Attributes.StringConverter, commits_url)
-        self.__compare_url = PyGithub.Blocking.Attributes.Attribute("Repository.compare_url", PyGithub.Blocking.Attributes.StringConverter, compare_url)
-        self.__contents_url = PyGithub.Blocking.Attributes.Attribute("Repository.contents_url", PyGithub.Blocking.Attributes.StringConverter, contents_url)
-        self.__contributors_url = PyGithub.Blocking.Attributes.Attribute("Repository.contributors_url", PyGithub.Blocking.Attributes.StringConverter, contributors_url)
-        self.__created_at = PyGithub.Blocking.Attributes.Attribute("Repository.created_at", PyGithub.Blocking.Attributes.DatetimeConverter, created_at)
-        self.__default_branch = PyGithub.Blocking.Attributes.Attribute("Repository.default_branch", PyGithub.Blocking.Attributes.StringConverter, default_branch)
-        self.__description = PyGithub.Blocking.Attributes.Attribute("Repository.description", PyGithub.Blocking.Attributes.StringConverter, description)
-        self.__downloads_url = PyGithub.Blocking.Attributes.Attribute("Repository.downloads_url", PyGithub.Blocking.Attributes.StringConverter, downloads_url)
-        self.__events_url = PyGithub.Blocking.Attributes.Attribute("Repository.events_url", PyGithub.Blocking.Attributes.StringConverter, events_url)
-        self.__fork = PyGithub.Blocking.Attributes.Attribute("Repository.fork", PyGithub.Blocking.Attributes.BoolConverter, fork)
-        self.__forks_count = PyGithub.Blocking.Attributes.Attribute("Repository.forks_count", PyGithub.Blocking.Attributes.IntConverter, forks_count)
-        self.__forks_url = PyGithub.Blocking.Attributes.Attribute("Repository.forks_url", PyGithub.Blocking.Attributes.StringConverter, forks_url)
-        self.__full_name = PyGithub.Blocking.Attributes.Attribute("Repository.full_name", PyGithub.Blocking.Attributes.StringConverter, full_name)
-        self.__git_commits_url = PyGithub.Blocking.Attributes.Attribute("Repository.git_commits_url", PyGithub.Blocking.Attributes.StringConverter, git_commits_url)
-        self.__git_refs_url = PyGithub.Blocking.Attributes.Attribute("Repository.git_refs_url", PyGithub.Blocking.Attributes.StringConverter, git_refs_url)
-        self.__git_tags_url = PyGithub.Blocking.Attributes.Attribute("Repository.git_tags_url", PyGithub.Blocking.Attributes.StringConverter, git_tags_url)
-        self.__git_url = PyGithub.Blocking.Attributes.Attribute("Repository.git_url", PyGithub.Blocking.Attributes.StringConverter, git_url)
-        self.__has_issues = PyGithub.Blocking.Attributes.Attribute("Repository.has_issues", PyGithub.Blocking.Attributes.BoolConverter, has_issues)
-        self.__has_wiki = PyGithub.Blocking.Attributes.Attribute("Repository.has_wiki", PyGithub.Blocking.Attributes.BoolConverter, has_wiki)
-        self.__homepage = PyGithub.Blocking.Attributes.Attribute("Repository.homepage", PyGithub.Blocking.Attributes.StringConverter, homepage)
-        self.__hooks_url = PyGithub.Blocking.Attributes.Attribute("Repository.hooks_url", PyGithub.Blocking.Attributes.StringConverter, hooks_url)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("Repository.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__id = PyGithub.Blocking.Attributes.Attribute("Repository.id", PyGithub.Blocking.Attributes.IntConverter, id)
-        self.__issue_comment_url = PyGithub.Blocking.Attributes.Attribute("Repository.issue_comment_url", PyGithub.Blocking.Attributes.StringConverter, issue_comment_url)
-        self.__issue_events_url = PyGithub.Blocking.Attributes.Attribute("Repository.issue_events_url", PyGithub.Blocking.Attributes.StringConverter, issue_events_url)
-        self.__issues_url = PyGithub.Blocking.Attributes.Attribute("Repository.issues_url", PyGithub.Blocking.Attributes.StringConverter, issues_url)
-        self.__keys_url = PyGithub.Blocking.Attributes.Attribute("Repository.keys_url", PyGithub.Blocking.Attributes.StringConverter, keys_url)
-        self.__labels_url = PyGithub.Blocking.Attributes.Attribute("Repository.labels_url", PyGithub.Blocking.Attributes.StringConverter, labels_url)
-        self.__language = PyGithub.Blocking.Attributes.Attribute("Repository.language", PyGithub.Blocking.Attributes.StringConverter, language)
-        self.__languages_url = PyGithub.Blocking.Attributes.Attribute("Repository.languages_url", PyGithub.Blocking.Attributes.StringConverter, languages_url)
-        self.__merges_url = PyGithub.Blocking.Attributes.Attribute("Repository.merges_url", PyGithub.Blocking.Attributes.StringConverter, merges_url)
-        self.__milestones_url = PyGithub.Blocking.Attributes.Attribute("Repository.milestones_url", PyGithub.Blocking.Attributes.StringConverter, milestones_url)
-        self.__mirror_url = PyGithub.Blocking.Attributes.Attribute("Repository.mirror_url", PyGithub.Blocking.Attributes.StringConverter, mirror_url)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("Repository.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__network_count = PyGithub.Blocking.Attributes.Attribute("Repository.network_count", PyGithub.Blocking.Attributes.IntConverter, network_count)
-        self.__notifications_url = PyGithub.Blocking.Attributes.Attribute("Repository.notifications_url", PyGithub.Blocking.Attributes.StringConverter, notifications_url)
-        self.__open_issues_count = PyGithub.Blocking.Attributes.Attribute("Repository.open_issues_count", PyGithub.Blocking.Attributes.IntConverter, open_issues_count)
-        self.__owner = PyGithub.Blocking.Attributes.Attribute("Repository.owner", PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict(Organization=PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization), User=PyGithub.Blocking.Attributes.ClassConverter(self.Session, PyGithub.Blocking.User.User))), owner)
-        self.__parent = PyGithub.Blocking.Attributes.Attribute("Repository.parent", PyGithub.Blocking.Attributes.ClassConverter(self.Session, Repository), parent)
-        self.__permissions = PyGithub.Blocking.Attributes.Attribute("Repository.permissions", PyGithub.Blocking.Attributes.StructureConverter(self.Session, Repository.Permissions), permissions)
-        self.__private = PyGithub.Blocking.Attributes.Attribute("Repository.private", PyGithub.Blocking.Attributes.BoolConverter, private)
-        self.__pulls_url = PyGithub.Blocking.Attributes.Attribute("Repository.pulls_url", PyGithub.Blocking.Attributes.StringConverter, pulls_url)
-        self.__pushed_at = PyGithub.Blocking.Attributes.Attribute("Repository.pushed_at", PyGithub.Blocking.Attributes.DatetimeConverter, pushed_at)
-        self.__releases_url = PyGithub.Blocking.Attributes.Attribute("Repository.releases_url", PyGithub.Blocking.Attributes.StringConverter, releases_url)
-        self.__size = PyGithub.Blocking.Attributes.Attribute("Repository.size", PyGithub.Blocking.Attributes.IntConverter, size)
-        self.__source = PyGithub.Blocking.Attributes.Attribute("Repository.source", PyGithub.Blocking.Attributes.ClassConverter(self.Session, Repository), source)
-        self.__ssh_url = PyGithub.Blocking.Attributes.Attribute("Repository.ssh_url", PyGithub.Blocking.Attributes.StringConverter, ssh_url)
-        self.__stargazers_count = PyGithub.Blocking.Attributes.Attribute("Repository.stargazers_count", PyGithub.Blocking.Attributes.IntConverter, stargazers_count)
-        self.__stargazers_url = PyGithub.Blocking.Attributes.Attribute("Repository.stargazers_url", PyGithub.Blocking.Attributes.StringConverter, stargazers_url)
-        self.__statuses_url = PyGithub.Blocking.Attributes.Attribute("Repository.statuses_url", PyGithub.Blocking.Attributes.StringConverter, statuses_url)
-        self.__subscribers_count = PyGithub.Blocking.Attributes.Attribute("Repository.subscribers_count", PyGithub.Blocking.Attributes.IntConverter, subscribers_count)
-        self.__subscribers_url = PyGithub.Blocking.Attributes.Attribute("Repository.subscribers_url", PyGithub.Blocking.Attributes.StringConverter, subscribers_url)
-        self.__subscription_url = PyGithub.Blocking.Attributes.Attribute("Repository.subscription_url", PyGithub.Blocking.Attributes.StringConverter, subscription_url)
-        self.__svn_url = PyGithub.Blocking.Attributes.Attribute("Repository.svn_url", PyGithub.Blocking.Attributes.StringConverter, svn_url)
-        self.__tags_url = PyGithub.Blocking.Attributes.Attribute("Repository.tags_url", PyGithub.Blocking.Attributes.StringConverter, tags_url)
-        self.__teams_url = PyGithub.Blocking.Attributes.Attribute("Repository.teams_url", PyGithub.Blocking.Attributes.StringConverter, teams_url)
-        self.__trees_url = PyGithub.Blocking.Attributes.Attribute("Repository.trees_url", PyGithub.Blocking.Attributes.StringConverter, trees_url)
-        self.__updated_at = PyGithub.Blocking.Attributes.Attribute("Repository.updated_at", PyGithub.Blocking.Attributes.DatetimeConverter, updated_at)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("Repository.url", PyGithub.Blocking.Attributes.StringConverter, url)
-        self.__watchers_count = PyGithub.Blocking.Attributes.Attribute("Repository.watchers_count", PyGithub.Blocking.Attributes.IntConverter, watchers_count)
+        self.__archive_url = rcv.Attribute("Repository.archive_url", rcv.StringConverter, archive_url)
+        self.__assignees_url = rcv.Attribute("Repository.assignees_url", rcv.StringConverter, assignees_url)
+        self.__blobs_url = rcv.Attribute("Repository.blobs_url", rcv.StringConverter, blobs_url)
+        self.__branches_url = rcv.Attribute("Repository.branches_url", rcv.StringConverter, branches_url)
+        self.__clone_url = rcv.Attribute("Repository.clone_url", rcv.StringConverter, clone_url)
+        self.__collaborators_url = rcv.Attribute("Repository.collaborators_url", rcv.StringConverter, collaborators_url)
+        self.__comments_url = rcv.Attribute("Repository.comments_url", rcv.StringConverter, comments_url)
+        self.__commits_url = rcv.Attribute("Repository.commits_url", rcv.StringConverter, commits_url)
+        self.__compare_url = rcv.Attribute("Repository.compare_url", rcv.StringConverter, compare_url)
+        self.__contents_url = rcv.Attribute("Repository.contents_url", rcv.StringConverter, contents_url)
+        self.__contributors_url = rcv.Attribute("Repository.contributors_url", rcv.StringConverter, contributors_url)
+        self.__created_at = rcv.Attribute("Repository.created_at", rcv.DatetimeConverter, created_at)
+        self.__default_branch = rcv.Attribute("Repository.default_branch", rcv.StringConverter, default_branch)
+        self.__description = rcv.Attribute("Repository.description", rcv.StringConverter, description)
+        self.__downloads_url = rcv.Attribute("Repository.downloads_url", rcv.StringConverter, downloads_url)
+        self.__events_url = rcv.Attribute("Repository.events_url", rcv.StringConverter, events_url)
+        self.__fork = rcv.Attribute("Repository.fork", rcv.BoolConverter, fork)
+        self.__forks_count = rcv.Attribute("Repository.forks_count", rcv.IntConverter, forks_count)
+        self.__forks_url = rcv.Attribute("Repository.forks_url", rcv.StringConverter, forks_url)
+        self.__full_name = rcv.Attribute("Repository.full_name", rcv.StringConverter, full_name)
+        self.__git_commits_url = rcv.Attribute("Repository.git_commits_url", rcv.StringConverter, git_commits_url)
+        self.__git_refs_url = rcv.Attribute("Repository.git_refs_url", rcv.StringConverter, git_refs_url)
+        self.__git_tags_url = rcv.Attribute("Repository.git_tags_url", rcv.StringConverter, git_tags_url)
+        self.__git_url = rcv.Attribute("Repository.git_url", rcv.StringConverter, git_url)
+        self.__has_issues = rcv.Attribute("Repository.has_issues", rcv.BoolConverter, has_issues)
+        self.__has_wiki = rcv.Attribute("Repository.has_wiki", rcv.BoolConverter, has_wiki)
+        self.__homepage = rcv.Attribute("Repository.homepage", rcv.StringConverter, homepage)
+        self.__hooks_url = rcv.Attribute("Repository.hooks_url", rcv.StringConverter, hooks_url)
+        self.__html_url = rcv.Attribute("Repository.html_url", rcv.StringConverter, html_url)
+        self.__id = rcv.Attribute("Repository.id", rcv.IntConverter, id)
+        self.__issue_comment_url = rcv.Attribute("Repository.issue_comment_url", rcv.StringConverter, issue_comment_url)
+        self.__issue_events_url = rcv.Attribute("Repository.issue_events_url", rcv.StringConverter, issue_events_url)
+        self.__issues_url = rcv.Attribute("Repository.issues_url", rcv.StringConverter, issues_url)
+        self.__keys_url = rcv.Attribute("Repository.keys_url", rcv.StringConverter, keys_url)
+        self.__labels_url = rcv.Attribute("Repository.labels_url", rcv.StringConverter, labels_url)
+        self.__language = rcv.Attribute("Repository.language", rcv.StringConverter, language)
+        self.__languages_url = rcv.Attribute("Repository.languages_url", rcv.StringConverter, languages_url)
+        self.__merges_url = rcv.Attribute("Repository.merges_url", rcv.StringConverter, merges_url)
+        self.__milestones_url = rcv.Attribute("Repository.milestones_url", rcv.StringConverter, milestones_url)
+        self.__mirror_url = rcv.Attribute("Repository.mirror_url", rcv.StringConverter, mirror_url)
+        self.__name = rcv.Attribute("Repository.name", rcv.StringConverter, name)
+        self.__network_count = rcv.Attribute("Repository.network_count", rcv.IntConverter, network_count)
+        self.__notifications_url = rcv.Attribute("Repository.notifications_url", rcv.StringConverter, notifications_url)
+        self.__open_issues_count = rcv.Attribute("Repository.open_issues_count", rcv.IntConverter, open_issues_count)
+        self.__owner = rcv.Attribute("Repository.owner", rcv.KeyedStructureUnionConverter("type", dict(Organization=rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization), User=rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))), owner)
+        self.__parent = rcv.Attribute("Repository.parent", rcv.ClassConverter(self.Session, Repository), parent)
+        self.__permissions = rcv.Attribute("Repository.permissions", rcv.StructureConverter(self.Session, Repository.Permissions), permissions)
+        self.__private = rcv.Attribute("Repository.private", rcv.BoolConverter, private)
+        self.__pulls_url = rcv.Attribute("Repository.pulls_url", rcv.StringConverter, pulls_url)
+        self.__pushed_at = rcv.Attribute("Repository.pushed_at", rcv.DatetimeConverter, pushed_at)
+        self.__releases_url = rcv.Attribute("Repository.releases_url", rcv.StringConverter, releases_url)
+        self.__size = rcv.Attribute("Repository.size", rcv.IntConverter, size)
+        self.__source = rcv.Attribute("Repository.source", rcv.ClassConverter(self.Session, Repository), source)
+        self.__ssh_url = rcv.Attribute("Repository.ssh_url", rcv.StringConverter, ssh_url)
+        self.__stargazers_count = rcv.Attribute("Repository.stargazers_count", rcv.IntConverter, stargazers_count)
+        self.__stargazers_url = rcv.Attribute("Repository.stargazers_url", rcv.StringConverter, stargazers_url)
+        self.__statuses_url = rcv.Attribute("Repository.statuses_url", rcv.StringConverter, statuses_url)
+        self.__subscribers_count = rcv.Attribute("Repository.subscribers_count", rcv.IntConverter, subscribers_count)
+        self.__subscribers_url = rcv.Attribute("Repository.subscribers_url", rcv.StringConverter, subscribers_url)
+        self.__subscription_url = rcv.Attribute("Repository.subscription_url", rcv.StringConverter, subscription_url)
+        self.__svn_url = rcv.Attribute("Repository.svn_url", rcv.StringConverter, svn_url)
+        self.__tags_url = rcv.Attribute("Repository.tags_url", rcv.StringConverter, tags_url)
+        self.__teams_url = rcv.Attribute("Repository.teams_url", rcv.StringConverter, teams_url)
+        self.__trees_url = rcv.Attribute("Repository.trees_url", rcv.StringConverter, trees_url)
+        self.__updated_at = rcv.Attribute("Repository.updated_at", rcv.DatetimeConverter, updated_at)
+        self.__url = rcv.Attribute("Repository.url", rcv.StringConverter, url)
+        self.__watchers_count = rcv.Attribute("Repository.watchers_count", rcv.IntConverter, watchers_count)
 
-    def _updateAttributes(self, eTag, archive_url=PyGithub.Blocking.Attributes.Absent, assignees_url=PyGithub.Blocking.Attributes.Absent, blobs_url=PyGithub.Blocking.Attributes.Absent, branches_url=PyGithub.Blocking.Attributes.Absent, clone_url=PyGithub.Blocking.Attributes.Absent, collaborators_url=PyGithub.Blocking.Attributes.Absent, comments_url=PyGithub.Blocking.Attributes.Absent, commits_url=PyGithub.Blocking.Attributes.Absent, compare_url=PyGithub.Blocking.Attributes.Absent, contents_url=PyGithub.Blocking.Attributes.Absent, contributors_url=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, default_branch=PyGithub.Blocking.Attributes.Absent, description=PyGithub.Blocking.Attributes.Absent, downloads_url=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, fork=PyGithub.Blocking.Attributes.Absent, forks_count=PyGithub.Blocking.Attributes.Absent, forks_url=PyGithub.Blocking.Attributes.Absent, full_name=PyGithub.Blocking.Attributes.Absent, git_commits_url=PyGithub.Blocking.Attributes.Absent, git_refs_url=PyGithub.Blocking.Attributes.Absent, git_tags_url=PyGithub.Blocking.Attributes.Absent, git_url=PyGithub.Blocking.Attributes.Absent, has_issues=PyGithub.Blocking.Attributes.Absent, has_wiki=PyGithub.Blocking.Attributes.Absent, homepage=PyGithub.Blocking.Attributes.Absent, hooks_url=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, issue_comment_url=PyGithub.Blocking.Attributes.Absent, issue_events_url=PyGithub.Blocking.Attributes.Absent, issues_url=PyGithub.Blocking.Attributes.Absent, keys_url=PyGithub.Blocking.Attributes.Absent, labels_url=PyGithub.Blocking.Attributes.Absent, language=PyGithub.Blocking.Attributes.Absent, languages_url=PyGithub.Blocking.Attributes.Absent, merges_url=PyGithub.Blocking.Attributes.Absent, milestones_url=PyGithub.Blocking.Attributes.Absent, mirror_url=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, network_count=PyGithub.Blocking.Attributes.Absent, notifications_url=PyGithub.Blocking.Attributes.Absent, open_issues_count=PyGithub.Blocking.Attributes.Absent, owner=PyGithub.Blocking.Attributes.Absent, parent=PyGithub.Blocking.Attributes.Absent, permissions=PyGithub.Blocking.Attributes.Absent, private=PyGithub.Blocking.Attributes.Absent, pulls_url=PyGithub.Blocking.Attributes.Absent, pushed_at=PyGithub.Blocking.Attributes.Absent, releases_url=PyGithub.Blocking.Attributes.Absent, size=PyGithub.Blocking.Attributes.Absent, source=PyGithub.Blocking.Attributes.Absent, ssh_url=PyGithub.Blocking.Attributes.Absent, stargazers_count=PyGithub.Blocking.Attributes.Absent, stargazers_url=PyGithub.Blocking.Attributes.Absent, statuses_url=PyGithub.Blocking.Attributes.Absent, subscribers_count=PyGithub.Blocking.Attributes.Absent, subscribers_url=PyGithub.Blocking.Attributes.Absent, subscription_url=PyGithub.Blocking.Attributes.Absent, svn_url=PyGithub.Blocking.Attributes.Absent, tags_url=PyGithub.Blocking.Attributes.Absent, teams_url=PyGithub.Blocking.Attributes.Absent, trees_url=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, watchers_count=PyGithub.Blocking.Attributes.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
+    def _updateAttributes(self, eTag, archive_url=rcv.Absent, assignees_url=rcv.Absent, blobs_url=rcv.Absent, branches_url=rcv.Absent, clone_url=rcv.Absent, collaborators_url=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, compare_url=rcv.Absent, contents_url=rcv.Absent, contributors_url=rcv.Absent, created_at=rcv.Absent, default_branch=rcv.Absent, description=rcv.Absent, downloads_url=rcv.Absent, events_url=rcv.Absent, fork=rcv.Absent, forks_count=rcv.Absent, forks_url=rcv.Absent, full_name=rcv.Absent, git_commits_url=rcv.Absent, git_refs_url=rcv.Absent, git_tags_url=rcv.Absent, git_url=rcv.Absent, has_issues=rcv.Absent, has_wiki=rcv.Absent, homepage=rcv.Absent, hooks_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, issue_comment_url=rcv.Absent, issue_events_url=rcv.Absent, issues_url=rcv.Absent, keys_url=rcv.Absent, labels_url=rcv.Absent, language=rcv.Absent, languages_url=rcv.Absent, merges_url=rcv.Absent, milestones_url=rcv.Absent, mirror_url=rcv.Absent, name=rcv.Absent, network_count=rcv.Absent, notifications_url=rcv.Absent, open_issues_count=rcv.Absent, owner=rcv.Absent, parent=rcv.Absent, permissions=rcv.Absent, private=rcv.Absent, pulls_url=rcv.Absent, pushed_at=rcv.Absent, releases_url=rcv.Absent, size=rcv.Absent, source=rcv.Absent, ssh_url=rcv.Absent, stargazers_count=rcv.Absent, stargazers_url=rcv.Absent, statuses_url=rcv.Absent, subscribers_count=rcv.Absent, subscribers_url=rcv.Absent, subscription_url=rcv.Absent, svn_url=rcv.Absent, tags_url=rcv.Absent, teams_url=rcv.Absent, trees_url=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, watchers_count=rcv.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
         super(Repository, self)._updateAttributes(eTag, **kwds)
         self.__archive_url.update(archive_url)
         self.__assignees_url.update(assignees_url)
@@ -1076,7 +1077,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.contributors_url)
         urlArguments = PyGithub.Blocking.Parameters.dictionary(anon=anon, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: PyGithub.Blocking.Attributes.KeyedStructureUnionConverter("type", dict(Anonymous=PyGithub.Blocking.Attributes.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=PyGithub.Blocking.Attributes.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, "GET", url, urlArguments=urlArguments)
+        return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_forks(self, sort=None, per_page=None):
         """

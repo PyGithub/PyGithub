@@ -13,7 +13,8 @@ import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
 import PyGithub.Blocking.Parameters
-import PyGithub.Blocking.Attributes
+import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._receive as rcv
 
 
 class Entity(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
@@ -35,10 +36,10 @@ class Entity(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         def _initAttributes(self, collaborators=None, name=None, private_repos=None, space=None, **kwds):
             super(Entity.Plan, self)._initAttributes(**kwds)
-            self.__collaborators = PyGithub.Blocking.Attributes.Attribute("Entity.Plan.collaborators", PyGithub.Blocking.Attributes.IntConverter, collaborators)
-            self.__name = PyGithub.Blocking.Attributes.Attribute("Entity.Plan.name", PyGithub.Blocking.Attributes.StringConverter, name)
-            self.__private_repos = PyGithub.Blocking.Attributes.Attribute("Entity.Plan.private_repos", PyGithub.Blocking.Attributes.IntConverter, private_repos)
-            self.__space = PyGithub.Blocking.Attributes.Attribute("Entity.Plan.space", PyGithub.Blocking.Attributes.IntConverter, space)
+            self.__collaborators = rcv.Attribute("Entity.Plan.collaborators", rcv.IntConverter, collaborators)
+            self.__name = rcv.Attribute("Entity.Plan.name", rcv.StringConverter, name)
+            self.__private_repos = rcv.Attribute("Entity.Plan.private_repos", rcv.IntConverter, private_repos)
+            self.__space = rcv.Attribute("Entity.Plan.space", rcv.IntConverter, space)
 
         def _updateAttributes(self, collaborators=None, name=None, private_repos=None, space=None, **kwds):
             super(Entity.Plan, self)._updateAttributes(**kwds)
@@ -75,35 +76,35 @@ class Entity(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__space.value
 
-    def _initAttributes(self, avatar_url=PyGithub.Blocking.Attributes.Absent, blog=PyGithub.Blocking.Attributes.Absent, collaborators=PyGithub.Blocking.Attributes.Absent, company=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, disk_usage=PyGithub.Blocking.Attributes.Absent, email=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, followers=PyGithub.Blocking.Attributes.Absent, following=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, location=PyGithub.Blocking.Attributes.Absent, login=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, owned_private_repos=PyGithub.Blocking.Attributes.Absent, plan=PyGithub.Blocking.Attributes.Absent, private_gists=PyGithub.Blocking.Attributes.Absent, public_gists=PyGithub.Blocking.Attributes.Absent, public_repos=PyGithub.Blocking.Attributes.Absent, repos_url=PyGithub.Blocking.Attributes.Absent, total_private_repos=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _initAttributes(self, avatar_url=rcv.Absent, blog=rcv.Absent, collaborators=rcv.Absent, company=rcv.Absent, created_at=rcv.Absent, disk_usage=rcv.Absent, email=rcv.Absent, events_url=rcv.Absent, followers=rcv.Absent, following=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, location=rcv.Absent, login=rcv.Absent, name=rcv.Absent, owned_private_repos=rcv.Absent, plan=rcv.Absent, private_gists=rcv.Absent, public_gists=rcv.Absent, public_repos=rcv.Absent, repos_url=rcv.Absent, total_private_repos=rcv.Absent, type=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
         super(Entity, self)._initAttributes(**kwds)
-        self.__avatar_url = PyGithub.Blocking.Attributes.Attribute("Entity.avatar_url", PyGithub.Blocking.Attributes.StringConverter, avatar_url)
-        self.__blog = PyGithub.Blocking.Attributes.Attribute("Entity.blog", PyGithub.Blocking.Attributes.StringConverter, blog)
-        self.__collaborators = PyGithub.Blocking.Attributes.Attribute("Entity.collaborators", PyGithub.Blocking.Attributes.IntConverter, collaborators)
-        self.__company = PyGithub.Blocking.Attributes.Attribute("Entity.company", PyGithub.Blocking.Attributes.StringConverter, company)
-        self.__created_at = PyGithub.Blocking.Attributes.Attribute("Entity.created_at", PyGithub.Blocking.Attributes.DatetimeConverter, created_at)
-        self.__disk_usage = PyGithub.Blocking.Attributes.Attribute("Entity.disk_usage", PyGithub.Blocking.Attributes.IntConverter, disk_usage)
-        self.__email = PyGithub.Blocking.Attributes.Attribute("Entity.email", PyGithub.Blocking.Attributes.StringConverter, email)
-        self.__events_url = PyGithub.Blocking.Attributes.Attribute("Entity.events_url", PyGithub.Blocking.Attributes.StringConverter, events_url)
-        self.__followers = PyGithub.Blocking.Attributes.Attribute("Entity.followers", PyGithub.Blocking.Attributes.IntConverter, followers)
-        self.__following = PyGithub.Blocking.Attributes.Attribute("Entity.following", PyGithub.Blocking.Attributes.IntConverter, following)
-        self.__html_url = PyGithub.Blocking.Attributes.Attribute("Entity.html_url", PyGithub.Blocking.Attributes.StringConverter, html_url)
-        self.__id = PyGithub.Blocking.Attributes.Attribute("Entity.id", PyGithub.Blocking.Attributes.IntConverter, id)
-        self.__location = PyGithub.Blocking.Attributes.Attribute("Entity.location", PyGithub.Blocking.Attributes.StringConverter, location)
-        self.__login = PyGithub.Blocking.Attributes.Attribute("Entity.login", PyGithub.Blocking.Attributes.StringConverter, login)
-        self.__name = PyGithub.Blocking.Attributes.Attribute("Entity.name", PyGithub.Blocking.Attributes.StringConverter, name)
-        self.__owned_private_repos = PyGithub.Blocking.Attributes.Attribute("Entity.owned_private_repos", PyGithub.Blocking.Attributes.IntConverter, owned_private_repos)
-        self.__plan = PyGithub.Blocking.Attributes.Attribute("Entity.plan", PyGithub.Blocking.Attributes.StructureConverter(self.Session, Entity.Plan), plan)
-        self.__private_gists = PyGithub.Blocking.Attributes.Attribute("Entity.private_gists", PyGithub.Blocking.Attributes.IntConverter, private_gists)
-        self.__public_gists = PyGithub.Blocking.Attributes.Attribute("Entity.public_gists", PyGithub.Blocking.Attributes.IntConverter, public_gists)
-        self.__public_repos = PyGithub.Blocking.Attributes.Attribute("Entity.public_repos", PyGithub.Blocking.Attributes.IntConverter, public_repos)
-        self.__repos_url = PyGithub.Blocking.Attributes.Attribute("Entity.repos_url", PyGithub.Blocking.Attributes.StringConverter, repos_url)
-        self.__total_private_repos = PyGithub.Blocking.Attributes.Attribute("Entity.total_private_repos", PyGithub.Blocking.Attributes.IntConverter, total_private_repos)
-        self.__type = PyGithub.Blocking.Attributes.Attribute("Entity.type", PyGithub.Blocking.Attributes.StringConverter, type)
-        self.__updated_at = PyGithub.Blocking.Attributes.Attribute("Entity.updated_at", PyGithub.Blocking.Attributes.DatetimeConverter, updated_at)
-        self.__url = PyGithub.Blocking.Attributes.Attribute("Entity.url", PyGithub.Blocking.Attributes.StringConverter, url)
+        self.__avatar_url = rcv.Attribute("Entity.avatar_url", rcv.StringConverter, avatar_url)
+        self.__blog = rcv.Attribute("Entity.blog", rcv.StringConverter, blog)
+        self.__collaborators = rcv.Attribute("Entity.collaborators", rcv.IntConverter, collaborators)
+        self.__company = rcv.Attribute("Entity.company", rcv.StringConverter, company)
+        self.__created_at = rcv.Attribute("Entity.created_at", rcv.DatetimeConverter, created_at)
+        self.__disk_usage = rcv.Attribute("Entity.disk_usage", rcv.IntConverter, disk_usage)
+        self.__email = rcv.Attribute("Entity.email", rcv.StringConverter, email)
+        self.__events_url = rcv.Attribute("Entity.events_url", rcv.StringConverter, events_url)
+        self.__followers = rcv.Attribute("Entity.followers", rcv.IntConverter, followers)
+        self.__following = rcv.Attribute("Entity.following", rcv.IntConverter, following)
+        self.__html_url = rcv.Attribute("Entity.html_url", rcv.StringConverter, html_url)
+        self.__id = rcv.Attribute("Entity.id", rcv.IntConverter, id)
+        self.__location = rcv.Attribute("Entity.location", rcv.StringConverter, location)
+        self.__login = rcv.Attribute("Entity.login", rcv.StringConverter, login)
+        self.__name = rcv.Attribute("Entity.name", rcv.StringConverter, name)
+        self.__owned_private_repos = rcv.Attribute("Entity.owned_private_repos", rcv.IntConverter, owned_private_repos)
+        self.__plan = rcv.Attribute("Entity.plan", rcv.StructureConverter(self.Session, Entity.Plan), plan)
+        self.__private_gists = rcv.Attribute("Entity.private_gists", rcv.IntConverter, private_gists)
+        self.__public_gists = rcv.Attribute("Entity.public_gists", rcv.IntConverter, public_gists)
+        self.__public_repos = rcv.Attribute("Entity.public_repos", rcv.IntConverter, public_repos)
+        self.__repos_url = rcv.Attribute("Entity.repos_url", rcv.StringConverter, repos_url)
+        self.__total_private_repos = rcv.Attribute("Entity.total_private_repos", rcv.IntConverter, total_private_repos)
+        self.__type = rcv.Attribute("Entity.type", rcv.StringConverter, type)
+        self.__updated_at = rcv.Attribute("Entity.updated_at", rcv.DatetimeConverter, updated_at)
+        self.__url = rcv.Attribute("Entity.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, avatar_url=PyGithub.Blocking.Attributes.Absent, blog=PyGithub.Blocking.Attributes.Absent, collaborators=PyGithub.Blocking.Attributes.Absent, company=PyGithub.Blocking.Attributes.Absent, created_at=PyGithub.Blocking.Attributes.Absent, disk_usage=PyGithub.Blocking.Attributes.Absent, email=PyGithub.Blocking.Attributes.Absent, events_url=PyGithub.Blocking.Attributes.Absent, followers=PyGithub.Blocking.Attributes.Absent, following=PyGithub.Blocking.Attributes.Absent, html_url=PyGithub.Blocking.Attributes.Absent, id=PyGithub.Blocking.Attributes.Absent, location=PyGithub.Blocking.Attributes.Absent, login=PyGithub.Blocking.Attributes.Absent, name=PyGithub.Blocking.Attributes.Absent, owned_private_repos=PyGithub.Blocking.Attributes.Absent, plan=PyGithub.Blocking.Attributes.Absent, private_gists=PyGithub.Blocking.Attributes.Absent, public_gists=PyGithub.Blocking.Attributes.Absent, public_repos=PyGithub.Blocking.Attributes.Absent, repos_url=PyGithub.Blocking.Attributes.Absent, total_private_repos=PyGithub.Blocking.Attributes.Absent, type=PyGithub.Blocking.Attributes.Absent, updated_at=PyGithub.Blocking.Attributes.Absent, url=PyGithub.Blocking.Attributes.Absent, **kwds):
+    def _updateAttributes(self, eTag, avatar_url=rcv.Absent, blog=rcv.Absent, collaborators=rcv.Absent, company=rcv.Absent, created_at=rcv.Absent, disk_usage=rcv.Absent, email=rcv.Absent, events_url=rcv.Absent, followers=rcv.Absent, following=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, location=rcv.Absent, login=rcv.Absent, name=rcv.Absent, owned_private_repos=rcv.Absent, plan=rcv.Absent, private_gists=rcv.Absent, public_gists=rcv.Absent, public_repos=rcv.Absent, repos_url=rcv.Absent, total_private_repos=rcv.Absent, type=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
         super(Entity, self)._updateAttributes(eTag, **kwds)
         self.__avatar_url.update(avatar_url)
         self.__blog.update(blog)
