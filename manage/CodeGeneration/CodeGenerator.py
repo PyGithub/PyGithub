@@ -13,8 +13,8 @@ class CodeGenerator:
         yield "import uritemplate"
         yield ""
         yield "import PyGithub.Blocking.BaseGithubObject"
-        yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking.PaginatedList"
+        yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking._receive as rcv"
         if len(klass.dependencies) != 0:
             yield ""
@@ -277,35 +277,28 @@ class CodeGenerator:
     def generateCodeForClassReturnValue(self, method):
         typeName = ("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name
         if method.name == "create_git_blob":  # @todoGeni Remove hard-coded value
-            base = 'return {}(self.Session, r.json(), None)'
+            yield 'return {}(self.Session, r.json(), None)'.format(typeName)
         elif method.returnFrom is None:
             if method.returnType.isUpdatable:
-                base = 'return {}(self.Session, r.json(), r.headers.get("ETag"))'
+                yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(typeName)
             else:
-                base = 'return {}(self.Session, r.json())'
+                yield 'return {}(self.Session, r.json())'.format(typeName)
         elif method.returnFrom == "json.commit" or method.name == "create_git_blob":
-            base = 'return {}(self.Session, r.json()["commit"], None)'
+            yield 'return {}(self.Session, r.json()["commit"], None)'.format(typeName)
         else:
             assert False  # pragma no cover
-        yield base.format(typeName)
 
     def generateCodeForMappingCollectionReturnValue(self, method):
         yield "return r.json()"
 
     def generateCodeForLinearCollectionReturnValue(self, method):
-        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.container.name)(method)
-
-    def generateCodeForPaginatedListReturnValue(self, method):
-        yield from self.getMethod("generateCodeForPaginatedListOf{}ReturnValue", method.returnType.content.category)(method)
+        yield from self.getMethod("generateCodeFor{}Of{}ReturnValue", method.returnType.container.name, method.returnType.content.category)(method)
 
     def generateCodeForPaginatedListOfClassReturnValue(self, method):
         yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
 
     def generateCodeForPaginatedListOfUnionReturnValue(self, method):
         yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(value), self.Session, {})'.format(self.generateCallArguments(method))
-
-    def generateCodeForListReturnValue(self, method):
-        yield from self.getMethod("generateCodeForListOf{}ReturnValue", method.returnType.content.category)(method)
 
     def generateCodeForListOfBuiltinReturnValue(self, method):
         yield "return r.json()"
