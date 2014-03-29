@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -150,14 +150,14 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.GitCommit`
         """
 
-        message = PyGithub.Blocking.Parameters.normalizeString(message)
+        message = snd.normalizeString(message)
         if author is not None:
-            author = PyGithub.Blocking.Parameters.normalizeGitAuthor(author)
+            author = snd.normalizeGitAuthor(author)
         if committer is not None:
-            committer = PyGithub.Blocking.Parameters.normalizeGitAuthor(committer)
+            committer = snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(sha=self.sha, message=message, committer=committer, author=author)
+        postArguments = snd.dictionary(sha=self.sha, message=message, committer=committer, author=author)
         r = self.Session._request("DELETE", url, postArguments=postArguments)
         return PyGithub.Blocking.GitCommit.GitCommit(self.Session, r.json()["commit"], None)
 
@@ -175,15 +175,15 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.GitCommit`
         """
 
-        message = PyGithub.Blocking.Parameters.normalizeString(message)
-        content = PyGithub.Blocking.Parameters.normalizeString(content)
+        message = snd.normalizeString(message)
+        content = snd.normalizeString(content)
         if author is not None:
-            author = PyGithub.Blocking.Parameters.normalizeGitAuthor(author)
+            author = snd.normalizeGitAuthor(author)
         if committer is not None:
-            committer = PyGithub.Blocking.Parameters.normalizeGitAuthor(committer)
+            committer = snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(sha=self.sha, message=message, content=content, committer=committer, author=author)
+        postArguments = snd.dictionary(sha=self.sha, message=message, content=content, committer=committer, author=author)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(None, **(r.json()["content"]))
         self.__content.update(content)

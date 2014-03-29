@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 

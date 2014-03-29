@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -209,7 +209,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :rtype: :class:`.GitIgnoreTemplate`
         """
 
-        name = PyGithub.Blocking.Parameters.normalizeString(name)
+        name = snd.normalizeString(name)
 
         url = uritemplate.expand("https://api.github.com/gitignore/templates/{name}", name=name)
         r = self.Session._request("GET", url)
@@ -251,7 +251,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :rtype: :class:`.Organization`
         """
 
-        org = PyGithub.Blocking.Parameters.normalizeString(org)
+        org = snd.normalizeString(org)
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}", org=org)
         r = self.Session._request("GET", url)
@@ -283,7 +283,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeTwoStringsString(repo)
+        repo = snd.normalizeTwoStringsString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url)
@@ -300,10 +300,10 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
 
         if since is not None:
-            since = PyGithub.Blocking.Parameters.normalizeRepositoryId(since)
+            since = snd.normalizeRepositoryId(since)
 
         url = uritemplate.expand("https://api.github.com/repositories")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(since=since)
+        urlArguments = snd.dictionary(since=since)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_team(self, id):
@@ -316,7 +316,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :rtype: :class:`.Team`
         """
 
-        id = PyGithub.Blocking.Parameters.normalizeInt(id)
+        id = snd.normalizeInt(id)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}", id=str(id))
         r = self.Session._request("GET", url)
@@ -332,7 +332,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :rtype: :class:`.User`
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeString(user)
+        user = snd.normalizeString(user)
 
         url = uritemplate.expand("https://api.github.com/users/{user}", user=user)
         r = self.Session._request("GET", url)
@@ -349,8 +349,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
 
         if since is not None:
-            since = PyGithub.Blocking.Parameters.normalizeUserId(since)
+            since = snd.normalizeUserId(since)
 
         url = uritemplate.expand("https://api.github.com/users")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(since=since)
+        urlArguments = snd.dictionary(since=since)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)

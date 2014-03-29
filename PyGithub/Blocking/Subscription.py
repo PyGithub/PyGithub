@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -118,10 +118,10 @@ class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: None
         """
 
-        subscribed = PyGithub.Blocking.Parameters.normalizeBool(subscribed)
-        ignored = PyGithub.Blocking.Parameters.normalizeBool(ignored)
+        subscribed = snd.normalizeBool(subscribed)
+        ignored = snd.normalizeBool(ignored)
 
         url = uritemplate.expand(self.url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(subscribed=subscribed, ignored=ignored)
+        postArguments = snd.dictionary(subscribed=subscribed, ignored=ignored)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())

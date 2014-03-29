@@ -13,7 +13,7 @@ class CodeGenerator:
         yield "import uritemplate"
         yield ""
         yield "import PyGithub.Blocking.BaseGithubObject"
-        yield "import PyGithub.Blocking.Parameters"
+        yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking.PaginatedList"
         yield "import PyGithub.Blocking._receive as rcv"
         if len(klass.dependencies) != 0:
@@ -216,9 +216,9 @@ class CodeGenerator:
         else:
             yield "url = uritemplate.expand({}, {})".format(self.generateCodeForValue(method, method.urlTemplate), ", ".join("{}={}".format(a.name, self.generateCodeForStringValue(method, a.value)) for a in method.urlTemplateArguments))  # pragma no branch
         if len(method.urlArguments) != 0:
-            yield "urlArguments = PyGithub.Blocking.Parameters.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
+            yield "urlArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
         if len(method.postArguments) != 0:
-            yield "postArguments = PyGithub.Blocking.Parameters.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
+            yield "postArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
         if not method.returnType.name.startswith("PaginatedList of"):
             yield "r = self.Session._request({})".format(self.generateCallArguments(method))
@@ -229,30 +229,30 @@ class CodeGenerator:
         return self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.category)(parameter)
 
     def generateCodeToNormalizeEnumParameter(self, parameter):
-        return "{} = PyGithub.Blocking.Parameters.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
+        return "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
     def generateCodeToNormalizeUnionParameter(self, parameter):
         if parameter.type.types[0].category == "class":
             t = parameter.type.types[0]
-            return "{} = PyGithub.Blocking.Parameters.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+            return "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
         else:
-            return "{} = PyGithub.Blocking.Parameters.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
+            return "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
 
     def generateCodeToNormalizeBuiltinParameter(self, parameter):
-        return "{} = PyGithub.Blocking.Parameters.normalize{}({})".format(parameter.name, self.capfirst(parameter.type.name), parameter.name)
+        return "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(parameter.type.name), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
         return self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
 
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
-        return "{} = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+        return "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
-        return "{} = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+        return "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeParameterSince(self, parameter):
         t = parameter.type.types[0]
-        return "{} = PyGithub.Blocking.Parameters.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+        return "{} = snd.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
 
     def generateCodeForEffects(self, method):
         for effect in method.effects:

@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -44,7 +44,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("PUT", url)
@@ -59,7 +59,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -74,7 +74,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -90,7 +90,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         r = self.Session._request("POST", url)
@@ -107,11 +107,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PublicKey`
         """
 
-        title = PyGithub.Blocking.Parameters.normalizeString(title)
-        key = PyGithub.Blocking.Parameters.normalizeString(key)
+        title = snd.normalizeString(title)
+        key = snd.normalizeString(key)
 
         url = uritemplate.expand("https://api.github.com/user/keys")
-        postArguments = PyGithub.Blocking.Parameters.dictionary(title=title, key=key)
+        postArguments = snd.dictionary(title=title, key=key)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
 
@@ -134,28 +134,28 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.Repository`
         """
 
-        name = PyGithub.Blocking.Parameters.normalizeString(name)
+        name = snd.normalizeString(name)
         if description is not None:
-            description = PyGithub.Blocking.Parameters.normalizeString(description)
+            description = snd.normalizeString(description)
         if homepage is not None:
-            homepage = PyGithub.Blocking.Parameters.normalizeString(homepage)
+            homepage = snd.normalizeString(homepage)
         if private is not None:
-            private = PyGithub.Blocking.Parameters.normalizeBool(private)
+            private = snd.normalizeBool(private)
         if has_issues is not None:
-            has_issues = PyGithub.Blocking.Parameters.normalizeBool(has_issues)
+            has_issues = snd.normalizeBool(has_issues)
         if has_wiki is not None:
-            has_wiki = PyGithub.Blocking.Parameters.normalizeBool(has_wiki)
+            has_wiki = snd.normalizeBool(has_wiki)
         if has_downloads is not None:
-            has_downloads = PyGithub.Blocking.Parameters.normalizeBool(has_downloads)
+            has_downloads = snd.normalizeBool(has_downloads)
         if auto_init is not None:
-            auto_init = PyGithub.Blocking.Parameters.normalizeBool(auto_init)
+            auto_init = snd.normalizeBool(auto_init)
         if gitignore_template is not None:
-            gitignore_template = PyGithub.Blocking.Parameters.normalizeGitIgnoreTemplateString(gitignore_template)
+            gitignore_template = snd.normalizeGitIgnoreTemplateString(gitignore_template)
         if license_template is not None:
-            license_template = PyGithub.Blocking.Parameters.normalizeString(license_template)
+            license_template = snd.normalizeString(license_template)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
-        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
+        postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
@@ -172,12 +172,12 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.Subscription`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
-        subscribed = PyGithub.Blocking.Parameters.normalizeBool(subscribed)
-        ignored = PyGithub.Blocking.Parameters.normalizeBool(ignored)
+        repo = snd.normalizeRepository(repo)
+        subscribed = snd.normalizeBool(subscribed)
+        ignored = snd.normalizeBool(ignored)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
-        postArguments = PyGithub.Blocking.Parameters.dictionary(subscribed=subscribed, ignored=ignored)
+        postArguments = snd.dictionary(subscribed=subscribed, ignored=ignored)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         return PyGithub.Blocking.Subscription.Subscription(self.Session, r.json(), r.headers.get("ETag"))
 
@@ -197,20 +197,20 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if name is not None:
-            name = PyGithub.Blocking.Parameters.normalizeStringReset(name)
+            name = snd.normalizeStringReset(name)
         if email is not None:
-            email = PyGithub.Blocking.Parameters.normalizeStringReset(email)
+            email = snd.normalizeStringReset(email)
         if blog is not None:
-            blog = PyGithub.Blocking.Parameters.normalizeStringReset(blog)
+            blog = snd.normalizeStringReset(blog)
         if company is not None:
-            company = PyGithub.Blocking.Parameters.normalizeStringReset(company)
+            company = snd.normalizeStringReset(company)
         if location is not None:
-            location = PyGithub.Blocking.Parameters.normalizeStringReset(location)
+            location = snd.normalizeStringReset(location)
         if hireable is not None:
-            hireable = PyGithub.Blocking.Parameters.normalizeBoolReset(hireable)
+            hireable = snd.normalizeBoolReset(hireable)
 
         url = uritemplate.expand("https://api.github.com/user")
-        postArguments = PyGithub.Blocking.Parameters.dictionary(blog=blog, company=company, email=email, hireable=hireable, location=location, name=name)
+        postArguments = snd.dictionary(blog=blog, company=company, email=email, hireable=hireable, location=location, name=name)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
@@ -225,10 +225,10 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/followers")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_following(self, per_page=None):
@@ -242,10 +242,10 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/following")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_key(self, id):
@@ -258,7 +258,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PublicKey`
         """
 
-        id = PyGithub.Blocking.Parameters.normalizeInt(id)
+        id = snd.normalizeInt(id)
 
         url = uritemplate.expand("https://api.github.com/user/keys/{id}", id=str(id))
         r = self.Session._request("GET", url)
@@ -288,10 +288,10 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/orgs")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Organization.Organization, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
@@ -307,7 +307,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeString(repo)
+        repo = snd.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
@@ -327,16 +327,16 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if sort is not None:
-            sort = PyGithub.Blocking.Parameters.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
+            sort = snd.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
         if direction is not None:
-            direction = PyGithub.Blocking.Parameters.normalizeEnum(direction, "asc", "desc")
+            direction = snd.normalizeEnum(direction, "asc", "desc")
         if type is not None:
-            type = PyGithub.Blocking.Parameters.normalizeEnum(type, "all", "owner", "public", "private", "member")
+            type = snd.normalizeEnum(type, "all", "owner", "public", "private", "member")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
+        urlArguments = snd.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
@@ -352,14 +352,14 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if sort is not None:
-            sort = PyGithub.Blocking.Parameters.normalizeEnum(sort, "created", "updated")
+            sort = snd.normalizeEnum(sort, "created", "updated")
         if direction is not None:
-            direction = PyGithub.Blocking.Parameters.normalizeEnum(direction, "asc", "desc")
+            direction = snd.normalizeEnum(direction, "asc", "desc")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/starred")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, per_page=per_page)
+        urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_subscription(self, repo):
@@ -372,7 +372,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.Subscription`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url)
@@ -389,10 +389,10 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_teams(self, per_page=None):
@@ -406,10 +406,10 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/teams")
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_following(self, user):
@@ -422,7 +422,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`bool`
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -441,7 +441,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`bool`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -460,7 +460,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`bool`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -479,7 +479,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("DELETE", url)
@@ -494,7 +494,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)
@@ -509,7 +509,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)

@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -151,9 +151,9 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.GitTree`
         """
 
-        tree = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalizeDict, tree)
+        tree = snd.normalizeList(snd.normalizeDict, tree)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(base_tree=self.sha, tree=tree)
+        postArguments = snd.dictionary(base_tree=self.sha, tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return GitTree(self.Session, r.json(), r.headers.get("ETag"))

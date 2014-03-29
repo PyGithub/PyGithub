@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -82,7 +82,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("PUT", url)
@@ -98,10 +98,10 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
-        postArguments = PyGithub.Blocking.Parameters.dictionary(organization=self.login)
+        postArguments = snd.dictionary(organization=self.login)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
@@ -125,30 +125,30 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.Repository`
         """
 
-        name = PyGithub.Blocking.Parameters.normalizeString(name)
+        name = snd.normalizeString(name)
         if description is not None:
-            description = PyGithub.Blocking.Parameters.normalizeString(description)
+            description = snd.normalizeString(description)
         if homepage is not None:
-            homepage = PyGithub.Blocking.Parameters.normalizeString(homepage)
+            homepage = snd.normalizeString(homepage)
         if private is not None:
-            private = PyGithub.Blocking.Parameters.normalizeBool(private)
+            private = snd.normalizeBool(private)
         if has_issues is not None:
-            has_issues = PyGithub.Blocking.Parameters.normalizeBool(has_issues)
+            has_issues = snd.normalizeBool(has_issues)
         if has_wiki is not None:
-            has_wiki = PyGithub.Blocking.Parameters.normalizeBool(has_wiki)
+            has_wiki = snd.normalizeBool(has_wiki)
         if has_downloads is not None:
-            has_downloads = PyGithub.Blocking.Parameters.normalizeBool(has_downloads)
+            has_downloads = snd.normalizeBool(has_downloads)
         if team_id is not None:
-            team_id = PyGithub.Blocking.Parameters.normalizeTeam(team_id)
+            team_id = snd.normalizeTeam(team_id)
         if auto_init is not None:
-            auto_init = PyGithub.Blocking.Parameters.normalizeBool(auto_init)
+            auto_init = snd.normalizeBool(auto_init)
         if gitignore_template is not None:
-            gitignore_template = PyGithub.Blocking.Parameters.normalizeGitIgnoreTemplateString(gitignore_template)
+            gitignore_template = snd.normalizeGitIgnoreTemplateString(gitignore_template)
         if license_template is not None:
-            license_template = PyGithub.Blocking.Parameters.normalizeString(license_template)
+            license_template = snd.normalizeString(license_template)
 
         url = uritemplate.expand(self.repos_url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
+        postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
 
@@ -164,14 +164,14 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.Team`
         """
 
-        name = PyGithub.Blocking.Parameters.normalizeString(name)
+        name = snd.normalizeString(name)
         if repo_names is not None:
-            repo_names = PyGithub.Blocking.Parameters.normalizeList(PyGithub.Blocking.Parameters.normalizeRepository, repo_names)
+            repo_names = snd.normalizeList(snd.normalizeRepository, repo_names)
         if permission is not None:
-            permission = PyGithub.Blocking.Parameters.normalizeEnum(permission, "pull", "push", "admin")
+            permission = snd.normalizeEnum(permission, "pull", "push", "admin")
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, permission=permission, repo_names=repo_names)
+        postArguments = snd.dictionary(name=name, permission=permission, repo_names=repo_names)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return PyGithub.Blocking.Team.Team(self.Session, r.json(), r.headers.get("ETag"))
 
@@ -191,20 +191,20 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         """
 
         if billing_email is not None:
-            billing_email = PyGithub.Blocking.Parameters.normalizeString(billing_email)
+            billing_email = snd.normalizeString(billing_email)
         if blog is not None:
-            blog = PyGithub.Blocking.Parameters.normalizeStringReset(blog)
+            blog = snd.normalizeStringReset(blog)
         if company is not None:
-            company = PyGithub.Blocking.Parameters.normalizeStringReset(company)
+            company = snd.normalizeStringReset(company)
         if email is not None:
-            email = PyGithub.Blocking.Parameters.normalizeStringReset(email)
+            email = snd.normalizeStringReset(email)
         if location is not None:
-            location = PyGithub.Blocking.Parameters.normalizeStringReset(location)
+            location = snd.normalizeStringReset(location)
         if name is not None:
-            name = PyGithub.Blocking.Parameters.normalizeStringReset(name)
+            name = snd.normalizeStringReset(name)
 
         url = uritemplate.expand(self.url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(billing_email=billing_email, blog=blog, company=company, email=email, location=location, name=name)
+        postArguments = snd.dictionary(billing_email=billing_email, blog=blog, company=company, email=email, location=location, name=name)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
@@ -220,12 +220,12 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         """
 
         if filter is not None:
-            filter = PyGithub.Blocking.Parameters.normalizeEnum(filter, "all", "2fa_disabled")
+            filter = snd.normalizeEnum(filter, "all", "2fa_disabled")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.members_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(filter=filter, per_page=per_page)
+        urlArguments = snd.dictionary(filter=filter, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_public_members(self, per_page=None):
@@ -239,10 +239,10 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.public_members_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
@@ -258,7 +258,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeString(repo)
+        repo = snd.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
@@ -276,12 +276,12 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         """
 
         if type is not None:
-            type = PyGithub.Blocking.Parameters.normalizeEnum(type, "all", "public", "private", "forks", "sources", "member")
+            type = snd.normalizeEnum(type, "all", "public", "private", "forks", "sources", "member")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(type=type, per_page=per_page)
+        urlArguments = snd.dictionary(type=type, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_teams(self, per_page=None):
@@ -295,10 +295,10 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_members(self, user):
@@ -311,7 +311,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`bool`
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -330,7 +330,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`bool`
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -349,7 +349,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("DELETE", url)
@@ -364,7 +364,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("DELETE", url)

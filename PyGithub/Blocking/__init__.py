@@ -6,7 +6,7 @@
 """
 
 from PyGithub.Blocking.Exceptions import *
-from PyGithub.Blocking.Parameters import Reset
+from PyGithub.Blocking._send import Reset
 
 # @todoSomeday Low-level API to access headers of last request?
 # @todoSomeday Open bug report to Github: master_branch is present in parent and source on GET /repo even with "Accept: v3"

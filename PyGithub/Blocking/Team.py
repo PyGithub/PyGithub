@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -151,7 +151,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("PUT", url)
@@ -166,7 +166,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{org}/{repo}", id=str(self.id), org=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -195,12 +195,12 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         if name is not None:
-            name = PyGithub.Blocking.Parameters.normalizeString(name)
+            name = snd.normalizeString(name)
         if permission is not None:
-            permission = PyGithub.Blocking.Parameters.normalizeEnum(permission, "push", "pull", "admin")
+            permission = snd.normalizeEnum(permission, "push", "pull", "admin")
 
         url = uritemplate.expand(self.url)
-        postArguments = PyGithub.Blocking.Parameters.dictionary(name=name, permission=permission)
+        postArguments = snd.dictionary(name=name, permission=permission)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
@@ -215,10 +215,10 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.members_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repos(self, per_page=None):
@@ -232,10 +232,10 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repositories_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_members(self, user):
@@ -248,7 +248,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`bool`
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -267,7 +267,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`bool`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -286,7 +286,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: None
         """
 
-        user = PyGithub.Blocking.Parameters.normalizeUser(user)
+        user = snd.normalizeUser(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("DELETE", url)
@@ -301,7 +301,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: None
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeRepository(repo)
+        repo = snd.normalizeRepository(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)

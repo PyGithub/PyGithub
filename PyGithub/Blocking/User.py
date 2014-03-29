@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 import uritemplate
 
 import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.Parameters
+import PyGithub.Blocking._send as snd
 import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
@@ -164,10 +164,10 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.followers_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_following(self, per_page=None):
@@ -181,10 +181,10 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.following_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(User, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_keys(self):
@@ -211,10 +211,10 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.organizations_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Organization.Organization, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_repo(self, repo):
@@ -230,7 +230,7 @@ class User(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.Repository`
         """
 
-        repo = PyGithub.Blocking.Parameters.normalizeString(repo)
+        repo = snd.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
@@ -250,16 +250,16 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if sort is not None:
-            sort = PyGithub.Blocking.Parameters.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
+            sort = snd.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
         if direction is not None:
-            direction = PyGithub.Blocking.Parameters.normalizeEnum(direction, "asc", "desc")
+            direction = snd.normalizeEnum(direction, "asc", "desc")
         if type is not None:
-            type = PyGithub.Blocking.Parameters.normalizeEnum(type, "all", "owner", "forks", "sources", "member")
+            type = snd.normalizeEnum(type, "all", "owner", "forks", "sources", "member")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
+        urlArguments = snd.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
@@ -275,14 +275,14 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if sort is not None:
-            sort = PyGithub.Blocking.Parameters.normalizeEnum(sort, "created", "updated")
+            sort = snd.normalizeEnum(sort, "created", "updated")
         if direction is not None:
-            direction = PyGithub.Blocking.Parameters.normalizeEnum(direction, "asc", "desc")
+            direction = snd.normalizeEnum(direction, "asc", "desc")
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.starred_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(sort=sort, direction=direction, per_page=per_page)
+        urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def get_subscriptions(self, per_page=None):
@@ -296,10 +296,10 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
 
         if per_page is not None:
-            per_page = PyGithub.Blocking.Parameters.normalizeInt(per_page)
+            per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.subscriptions_url)
-        urlArguments = PyGithub.Blocking.Parameters.dictionary(per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page)
         return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
 
     def has_in_following(self, target_user):
@@ -312,7 +312,7 @@ class User(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`bool`
         """
 
-        target_user = PyGithub.Blocking.Parameters.normalizeUser(target_user)
+        target_user = snd.normalizeUser(target_user)
 
         url = uritemplate.expand(self.following_url, other_user=target_user)
         r = self.Session._request("GET", url, accept404=True)
