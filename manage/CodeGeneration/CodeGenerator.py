@@ -302,7 +302,7 @@ class CodeGenerator:
         yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
 
     def generateCodeForPaginatedListOfUnionReturnValue(self, method):
-        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(None, value), self.Session, {})'.format(self.generateCallArguments(method))
+        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(value), self.Session, {})'.format(self.generateCallArguments(method))
 
     def generateCodeForListReturnValue(self, method):
         yield from self.getMethod("generateCodeForListOf{}ReturnValue", method.returnType.content.category)(method)

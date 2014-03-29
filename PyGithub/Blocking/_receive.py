@@ -60,7 +60,10 @@ class Attribute(object):
             try:
                 # Passing the previous value to conv(..) allows it to update
                 # the value if needed (instead of just overriding it)
-                self.__value = self.__conv(None if self.__value is Absent else self.__value, value)
+                if self.__value is Absent:
+                    self.__value = self.__conv(value)
+                else:
+                    self.__value = self.__conv(value, self.__value)
             except _ConversionException, e:
                 log.warn("Attribute " + self.__name + " is expected to be a " + self.__type + " but GitHub API v3 returned " + repr(value))
                 self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(self.__name, self.__type, value, e)
@@ -88,7 +91,7 @@ class BuiltinConverter(object):
     def __init__(self, type):
         self.__type = type
 
-    def __call__(self, previousValue, value):
+    def __call__(self, value, previousValue=None):
         if isinstance(value, self.__type):
             return value
         else:
@@ -107,7 +110,7 @@ BoolConverter = BuiltinConverter(bool)
 class _DatetimeConverter(object):
     desc = "datetime"
 
-    def __call__(self, previousValue, value):
+    def __call__(self, value, previousValue=None):
         if isinstance(value, int):
             return datetime.datetime.utcfromtimestamp(value)
         else:
@@ -124,9 +127,9 @@ class ListConverter(object):
     def __init__(self, content):
         self.__content = content
 
-    def __call__(self, previousValue, value):
+    def __call__(self, value, previousValue=None):
         if isinstance(value, list):
-            new = [self.__content(None, v) for v in value]  # @todoAlpha Pass the previousValue instead of None
+            new = [self.__content(v) for v in value]  # @todoAlpha Pass the previousValue instead of None
             if previousValue is None:
                 return new
             else:
@@ -145,12 +148,12 @@ class _StructureConverter(object):
         self.__session = session
         self.__struct = struct
 
-    def __call__(self, previousValue, value):
+    def __call__(self, value, previousValue=None):
         if isinstance(value, dict):
             if previousValue is None:
                 return self.create(self.__struct, self.__session, value)
             else:
-                self.update(previousValue, value)
+                self.update(value, previousValue)
                 return previousValue
         else:
             raise _ConversionException("Not a dict")
@@ -164,7 +167,7 @@ class StructureConverter(_StructureConverter):
     def create(self, type, session, value):
         return type(session, value)
 
-    def update(self, previousValue, value):
+    def update(self, value, previousValue):
         previousValue._updateAttributes(**value)
 
 
@@ -172,7 +175,7 @@ class ClassConverter(_StructureConverter):
     def create(self, type, session, value):
         return type(session, value, None)
 
-    def update(self, previousValue, value):
+    def update(self, value, previousValue):
         previousValue._updateAttributes(None, **value)
 
 
@@ -181,7 +184,7 @@ class KeyedStructureUnionConverter(object):
         self.__key = key
         self.__factories = factories
 
-    def __call__(self, previousValue, value):
+    def __call__(self, value, previousValue=None):
         if isinstance(value, dict):
             key = value.get(self.__key)
             if key is None:
@@ -193,7 +196,10 @@ class KeyedStructureUnionConverter(object):
                 else:
                     if previousValue is not None and getattr(previousValue, self.__key) != key:
                         previousValue = None
-                    return factory(previousValue, value)
+                    if previousValue is None:
+                        return factory(value)
+                    else:
+                        return factory(value, previousValue)
         else:
             raise _ConversionException("Not a dict")
 

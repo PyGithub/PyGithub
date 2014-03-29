@@ -31,10 +31,11 @@ from PyGithub.Blocking.tests.Topics.LazyCompletionTestCase import *
 from PyGithub.Blocking.tests.Topics.PaginationTestCases import *
 from PyGithub.Blocking.tests.Topics.ParameterTypingTestCase import *
 from PyGithub.Blocking.tests.Topics.RateLimitingTestCase import *
-from PyGithub.Blocking.tests.Topics.ReceiveTestCase import *
 from PyGithub.Blocking.tests.Topics.UnexpectedAttributeTestCase import *
 from PyGithub.Blocking.tests.Topics.UnusualErrorsTestCase import *
 from PyGithub.Blocking.tests.Topics.UpdateTestCase import *
+
+from PyGithub.unit_tests import *
 
 
 try:

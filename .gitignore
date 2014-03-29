@@ -7,6 +7,5 @@
 /MANIFEST
 /PyGithub.egg-info/
 /.coverage
-/test_coverage/
-/generation_coverage/
+/*_coverage/
 /gh-pages/

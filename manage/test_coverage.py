@@ -8,6 +8,7 @@ from __future__ import print_function
 import sys
 import coverage
 import os
+import types
 import unittest
 sys.path.append(".")
 
@@ -18,21 +19,32 @@ baseDirectory = "PyGithub"
 def main():
     cov = coverage.coverage(
         branch=True,
-        include=[os.path.join(baseDirectory, "*")],
-        omit=[os.path.join(baseDirectory, "tests.py"), os.path.join(baseDirectory, "Blocking", "tests", "*")]
+        omit=[os.path.join(baseDirectory, "Blocking", "tests", "*"), os.path.join(baseDirectory, "tests.py"), os.path.join(baseDirectory, "unit_tests.py")]
     )
     cov.start()
-    import PyGithub.tests
-    unitTests = unittest.main(exit=False, module=PyGithub.tests)
+
+    unitTestsResult = unittest.main(exit=False, module="PyGithub.unit_tests").result.wasSuccessful()
+
     cov.stop()
-    cov.html_report(directory="test_coverage")
-    coverageResult = cov.report() == 100.
-    testsResult = unitTests.result.wasSuccessful()
+    incForUnitTests = [os.path.join(baseDirectory, "*", "_*")]
+    cov.html_report(directory="unit_tests_coverage", include=incForUnitTests)
+    unitTestsCoverage = cov.report(include=incForUnitTests) == 100.
+    cov.start()
+
+    allTestsResult = unittest.main(exit=False, module="PyGithub.tests").result.wasSuccessful()
+
+    cov.stop()
+    incForAllTests = [os.path.join(baseDirectory, "*")]
+    cov.html_report(directory="all_tests_coverage", include=incForAllTests)
+    allTestsCoverage = cov.report(include=incForAllTests) == 100.
+
     print()
     print("====================================")
-    print("Functionalities:", "OK" if testsResult else "FAIL")
-    print("Test coverage:", "OK" if coverageResult else "FAIL")
+    print("= Unit tests:", "OK" if unitTestsResult else "FAIL")
+    print("= Unit tests coverage:", "OK" if unitTestsCoverage else "FAIL")
+    print("= All tests:", "OK" if allTestsResult else "FAIL")
+    print("= All tests coverage:", "OK" if allTestsCoverage else "FAIL")
     print("====================================")
-    sys.exit(0 if testsResult else 1)
+    sys.exit(0 if unitTestsResult and unitTestsCoverage and allTestsResult else 1)  # @todoAlpha add "and allTestsCoverage"
 
 main()
