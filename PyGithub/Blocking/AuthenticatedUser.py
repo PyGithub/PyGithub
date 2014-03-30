@@ -40,11 +40,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("PUT", url)
@@ -55,11 +55,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -70,11 +70,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -86,11 +86,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         The following methods also call this end point:
           * :meth:`.Organization.create_fork`
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Repository`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         r = self.Session._request("POST", url)
@@ -129,7 +129,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param has_wiki: optional :class:`bool`
         :param has_downloads: optional :class:`bool`
         :param auto_init: optional :class:`bool`
-        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string`
+        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
@@ -150,7 +150,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         if auto_init is not None:
             auto_init = snd.normalizeBool(auto_init)
         if gitignore_template is not None:
-            gitignore_template = snd.normalizeGitIgnoreTemplateString(gitignore_template)
+            gitignore_template = snd.normalizeGitIgnoreTemplateName(gitignore_template)
         if license_template is not None:
             license_template = snd.normalizeString(license_template)
 
@@ -166,13 +166,13 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         The following methods also call this end point:
           * :meth:`.Subscription.edit`
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :param subscribed: mandatory :class:`bool`
         :param ignored: mandatory :class:`bool`
         :rtype: :class:`.Subscription`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
         subscribed = snd.normalizeBool(subscribed)
         ignored = snd.normalizeBool(ignored)
 
@@ -383,11 +383,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Subscription`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url)
@@ -439,11 +439,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -455,11 +455,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`bool`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -471,11 +471,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`bool`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -487,11 +487,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("DELETE", url)
@@ -502,11 +502,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)
@@ -517,11 +517,11 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)

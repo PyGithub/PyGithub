@@ -838,11 +838,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         r = self.Session._request("PUT", url)
@@ -1253,11 +1253,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.assignees_url, user=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -1269,11 +1269,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -1285,11 +1285,11 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         r = self.Session._request("DELETE", url)

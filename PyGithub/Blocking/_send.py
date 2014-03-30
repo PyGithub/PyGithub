@@ -18,7 +18,7 @@ def dictionary(**args):
     return d
 
 
-def normalizeUser(user):
+def normalizeUserLogin(user):
     import PyGithub.Blocking.User
     if isinstance(user, PyGithub.Blocking.User.User):
         return user.login
@@ -28,7 +28,7 @@ def normalizeUser(user):
         raise TypeError()
 
 
-def normalizeRepository(repo):
+def normalizeRepositoryFullName(repo):
     import PyGithub.Blocking.Repository
     if isinstance(repo, PyGithub.Blocking.Repository.Repository):
         return (repo.owner.login, repo.name)
@@ -60,7 +60,7 @@ def normalizeRepositoryId(repo):
         raise TypeError()
 
 
-def normalizeTeam(team):
+def normalizeTeamId(team):
     import PyGithub.Blocking.Team
     if isinstance(team, PyGithub.Blocking.Team.Team):
         return team.id
@@ -126,12 +126,12 @@ def normalizeEnum(s, *values):
 
 
 def normalizeList(normalizeElement, l):
-    assert normalizeElement is normalizeRepository
+    assert normalizeElement is normalizeRepositoryFullName
     return ["/".join(normalizeElement(e)) for e in l]
 
 
-def normalizeGitIgnoreTemplateString(tmpl):
-    import PyGithub.Blocking.Github
+def normalizeGitIgnoreTemplateName(tmpl):
+    import PyGithub.Blocking.Github  # @todoAlpha Find a way to remove those local imports
     if isinstance(tmpl, PyGithub.Blocking.Github.Github.GitIgnoreTemplate):
         return tmpl.name
     elif isinstance(tmpl, basestring):

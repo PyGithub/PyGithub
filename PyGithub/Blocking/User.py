@@ -326,11 +326,11 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param target_user: mandatory :class:`.User` or :class:`string`
+        :param target_user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        target_user = snd.normalizeUser(target_user)
+        target_user = snd.normalizeUserLogin(target_user)
 
         url = uritemplate.expand(self.following_url, other_user=target_user)
         r = self.Session._request("GET", url, accept404=True)

@@ -93,7 +93,7 @@ methods:
     parameters:
       - name: repo
         type:
-          union: [TwoStrings, string]
+          union: ["(string, string)", string]
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -105,8 +105,7 @@ methods:
     end_point: GET /repositories
     optional_parameters:
       - name: since
-        type:
-          union: [Repository, int]
+        orig: Repository.id
     url_template: end_point
     url_arguments:
       - name: since
@@ -138,8 +137,7 @@ methods:
     end_point: GET /users
     optional_parameters:
       - name: since
-        type:
-          union: [User, int]
+        orig: User.id
     url_template: end_point
     url_arguments:
       - name: since

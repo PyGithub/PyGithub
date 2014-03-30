@@ -146,7 +146,7 @@ methods:
     end_point: GET /users/:user/following/:target_user
     parameters:
       - name: target_user
-        type: User
+        orig: User.login
     url_template: attribute following_url
     url_template_arguments:
       - name: other_user

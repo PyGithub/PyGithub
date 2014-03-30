@@ -14,7 +14,8 @@ Structure = collections.namedtuple("Structure", "name, updatable, attributes, de
 Attribute = collections.namedtuple("Attribute", "name, type")
 Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
-Parameter = collections.namedtuple("Parameter", "name, type, optional")
+Parameter = collections.namedtuple("Parameter", "name, type, orig, optional")
+ParameterOrigin = collections.namedtuple("ParameterOrigin", "type, attribute")
 Argument = collections.namedtuple("Argument", "name, value")
 
 # Polymorphic structures: types
@@ -139,14 +140,23 @@ class Definition(object):
             assert element is None
             return elements
 
-    def __buildParameter(self, name, optional, type):
+    def __buildParameter(self, name, optional, type=None, orig=None):
         assert isinstance(name, str), name
         assert isinstance(optional, bool), optional
         return Parameter(
             name=name,
             type=self.__buildType(type),
+            orig=self.__buildParameterOrigin(orig),
             optional=optional
         )
+
+    def __buildParameterOrigin(self, orig):
+        if orig is None:
+            return None
+        else:
+            assert isinstance(orig, str), orig
+            type, attribute = orig.split(".")
+            return ParameterOrigin(self.__buildType(type), attribute)
 
     def __buildArgument(self, name, value):
         assert isinstance(name, str), name

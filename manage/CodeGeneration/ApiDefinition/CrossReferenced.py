@@ -378,24 +378,28 @@ class Method(Member):
 
 
 class Parameter(object):
-    def __init__(self, name, type, optional):
+    def __init__(self, name, type, orig, optional):
         self.__name = name
         self.__optional = optional
         # @todoGeni Couldn't we do something to factorize all this "descrition -> type" logic? Maybe with a metaclass?
+        self.__tmp_originDescription = orig
         self.__tmp_typeDescription = type
 
     def _reference(self, typesRepo, endPointsRepo):
-        t = typesRepo.get(self.__tmp_typeDescription)
-        del self.__tmp_typeDescription
-
-        # @todoGeni Replace this logic by something like self.__type = t.getParameterType()
-        if isinstance(t, AttributedType):
-            ts = [t, Typing.BuiltinType("string")]  # @todoGeni The fact that c can be replaced by a string should be in ApiDefinition/c.yml
-            if t.name == "Repository":
-                ts.append(Typing.BuiltinType("TwoStrings"))  # @todoGeni The fact that c can be replaced by a 2-tuple of strings should be in ApiDefinition/c.yml
-            self.__type = Typing.UnionType(ts, None, None, None)
+        if self.__tmp_typeDescription is None:
+            types = [
+                typesRepo.get(self.__tmp_originDescription.type),
+                Typing.BuiltinType("int") if self.__tmp_originDescription.attribute == "id" else Typing.BuiltinType("string")  # @todoGeni Get the type of the attribute self.__tmp_originDescription.attribute
+            ]
+            if self.__tmp_originDescription.attribute == "full_name":
+                types.append(Typing.BuiltinType("(string, string)"))
+            self.__type = Typing.UnionType(types, None, None, None)
+            self.__orig = self.__tmp_originDescription.attribute
         else:
-            self.__type = t
+            self.__type = typesRepo.get(self.__tmp_typeDescription)
+            self.__orig = None
+        del self.__tmp_typeDescription
+        del self.__tmp_originDescription
 
     def _propagate(self):
         pass
@@ -410,6 +414,10 @@ class Parameter(object):
     @property
     def type(self):
         return self.__type
+
+    @property
+    def orig(self):
+        return self.__orig
 
     @property
     def optional(self):
@@ -433,7 +441,7 @@ class Definition(object):
         typesRepo = Typing.Repository()
         for t in ["int", "bool", "string", "datetime", "list", "dict"]:
             typesRepo.register(Typing.BuiltinType(t))
-        for t in ["Reset", "TwoStrings", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
+        for t in ["Reset", "(string, string)", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
             typesRepo.register(Typing.BuiltinType(t))
         for t in ["SessionedGithubObject", "UpdatableGithubObject", "PaginatedList"]:
             typesRepo.register(Class("PyGithub.Blocking.BaseGithubObject", t, False, None, [], [], [], []))

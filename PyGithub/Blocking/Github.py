@@ -279,7 +279,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
           * :meth:`.Organization.get_repo`
           * :meth:`.User.get_repo`
 
-        :param repo: mandatory :class:`TwoStrings` or :class:`string`
+        :param repo: mandatory :class:`(string, string)` or :class:`string`
         :rtype: :class:`.Repository`
         """
 
@@ -295,7 +295,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         This is the only method calling this end point.
 
-        :param since: optional :class:`.Repository` or :class:`int`
+        :param since: optional :class:`.Repository` or :class:`int` (its :attr:`.Repository.id`)
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
 
@@ -345,7 +345,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         This is the only method calling this end point.
 
-        :param since: optional :class:`.User` or :class:`int`
+        :param since: optional :class:`.User` or :class:`int` (its :attr:`.User.id`)
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 

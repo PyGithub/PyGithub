@@ -78,11 +78,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("PUT", url)
@@ -94,11 +94,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         The following methods also call this end point:
           * :meth:`.AuthenticatedUser.create_fork`
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Repository`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         postArguments = snd.dictionary(organization=self.login)
@@ -118,9 +118,9 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param has_issues: optional :class:`bool`
         :param has_wiki: optional :class:`bool`
         :param has_downloads: optional :class:`bool`
-        :param team_id: optional :class:`.Team` or :class:`string`
+        :param team_id: optional :class:`.Team` or :class:`int` (its :attr:`.Team.id`)
         :param auto_init: optional :class:`bool`
-        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string`
+        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
@@ -139,11 +139,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         if has_downloads is not None:
             has_downloads = snd.normalizeBool(has_downloads)
         if team_id is not None:
-            team_id = snd.normalizeTeam(team_id)
+            team_id = snd.normalizeTeamId(team_id)
         if auto_init is not None:
             auto_init = snd.normalizeBool(auto_init)
         if gitignore_template is not None:
-            gitignore_template = snd.normalizeGitIgnoreTemplateString(gitignore_template)
+            gitignore_template = snd.normalizeGitIgnoreTemplateName(gitignore_template)
         if license_template is not None:
             license_template = snd.normalizeString(license_template)
 
@@ -166,7 +166,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         name = snd.normalizeString(name)
         if repo_names is not None:
-            repo_names = snd.normalizeList(snd.normalizeRepository, repo_names)
+            repo_names = snd.normalizeList(snd.normalizeRepositoryFullName, repo_names)
         if permission is not None:
             permission = snd.normalizeEnum(permission, "pull", "push", "admin")
 
@@ -319,11 +319,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -335,11 +335,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -351,11 +351,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("DELETE", url)
@@ -366,11 +366,11 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("DELETE", url)

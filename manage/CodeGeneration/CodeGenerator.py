@@ -118,29 +118,29 @@ class CodeGenerator:
         return (
             PS.Call("rcv.Attribute")
             .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg(self.generateCodeForConverter(attribute, attribute.type))
+            .arg(self.generateCodeForConverter("rcv", attribute, attribute.type))
             .arg(attribute.name)
         )
 
-    def generateCodeForConverter(self, attribute, type):
-        return self.getMethod("generateCodeFor{}Converter", type.category)(attribute, type)
+    def generateCodeForConverter(self, module, attribute, type):
+        return module + "." + self.getMethod("generateCodeFor{}Converter", type.category)(module, attribute, type)
 
-    def generateCodeForLinearCollectionConverter(self, attribute, type):
-        return self.getMethod("generateCodeFor{}Converter", type.container.name)(attribute, type)
+    def generateCodeForLinearCollectionConverter(self, module, attribute, type):
+        return self.getMethod("generateCodeFor{}Converter", type.container.name)(module, attribute, type)
 
-    def generateCodeForListConverter(self, attribute, type):
-        return "rcv.ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
+    def generateCodeForListConverter(self, module, attribute, type):
+        return "ListConverter({})".format(self.generateCodeForConverter(module, attribute, type.content))
 
-    def generateCodeForPaginatedListConverter(self, attribute, type):
-        return "rcv.PaginatedListConverter(self.Session, {})".format(self.generateCodeForConverter(attribute, type.content))
+    def generateCodeForPaginatedListConverter(self, module, attribute, type):
+        return "PaginatedListConverter(self.Session, {})".format(self.generateCodeForConverter(module, attribute, type.content))
 
-    def generateCodeForMappingCollectionConverter(self, attribute, type):
-        return "rcv.DictConverter({}, {})".format(self.generateCodeForConverter(attribute, type.key), self.generateCodeForConverter(attribute, type.value))
+    def generateCodeForMappingCollectionConverter(self, module, attribute, type):
+        return "DictConverter({}, {})".format(self.generateCodeForConverter(module, attribute, type.key), self.generateCodeForConverter(module, attribute, type.value))
 
-    def generateCodeForBuiltinConverter(self, attribute, type):
-        return "rcv.{}Converter".format(type.name.capitalize())
+    def generateCodeForBuiltinConverter(self, module, attribute, type):
+        return "{}Converter".format(type.name.capitalize())
 
-    def generateCodeForClassConverter(self, attribute, type):
+    def generateCodeForClassConverter(self, module, attribute, type):
         if type.name == attribute.containerClass.name:
             typeName = type.name
         else:
@@ -149,25 +149,25 @@ class CodeGenerator:
             converterName = "ClassConverter"
         else:
             converterName = "StructureConverter"
-        return "rcv.{}(self.Session, {})".format(converterName, typeName)
+        return "{}(self.Session, {})".format(converterName, typeName)
 
-    def generateCodeForUnionConverter(self, attribute, type):
+    def generateCodeForUnionConverter(self, module, attribute, type):
         if type.key is not None:
-            converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
-            return 'rcv.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
+            converters = {k: self.generateCodeForConverter(module, attribute, t) for k, t in zip(type.keys, type.types)}
+            return 'KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
         elif type.converter is not None:
-            return 'rcv.{}UnionConverter({})'.format(
+            return '{}UnionConverter({})'.format(
                 type.converter,
-                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
+                ", ".join(self.generateCodeForConverter(module, attribute, t) for t in type.types)
             )
         else:
-            return 'rcv.{}UnionConverter({})'.format(
+            return '{}UnionConverter({})'.format(
                 "".join(t.name for t in type.types),
-                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
+                ", ".join(self.generateCodeForConverter(module, attribute, t) for t in type.types)
             )
 
-    def generateCodeForStructConverter(self, attribute, type):
-        return "rcv.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
+    def generateCodeForStructConverter(self, module, attribute, type):
+        return "StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
 
     def generateFullyQualifiedAttributeName(self, attribute):
         name = [attribute.name]
@@ -211,7 +211,8 @@ class CodeGenerator:
             yield ":param {}: {} {}".format(
                 parameter.name,
                 "optional" if parameter.optional else "mandatory",
-                self.generateDocForType(parameter.type)
+                # @todoGeni Fix the "its User.id" case: User inherits id from Entity and the doc has no link
+                self.generateDocForType(parameter.type) + ("" if parameter.orig is None else " (its :attr:`.{}.{}`)".format(parameter.type.types[0].name, parameter.orig))
             )
         yield ":rtype: " + self.generateDocForType(method.returnType)
 
@@ -227,11 +228,11 @@ class CodeGenerator:
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
                     if p.name == "since":
-                        yield "    " + self.generateCodeToNormalizeParameterSince(p)
+                        yield from PS.indent(self.generateCodeToNormalizeParameterSince(p))
                     else:
-                        yield "    " + self.generateCodeToNormalizeParameter(p)
+                        yield from PS.indent(self.generateCodeToNormalizeParameter(p))
                 else:
-                    yield self.generateCodeToNormalizeParameter(p)
+                    yield from self.generateCodeToNormalizeParameter(p)
             yield ""
 
         # @todoSomeday Open an issue to Github to make name optional in PATCH /repository
@@ -254,33 +255,37 @@ class CodeGenerator:
         yield from self.generateCodeForReturnValue(method)
 
     def generateCodeToNormalizeParameter(self, parameter):
-        return self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.category)(parameter)
+        yield from self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.category)(parameter)
 
     def generateCodeToNormalizeEnumParameter(self, parameter):
-        return "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
+        yield "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
     def generateCodeToNormalizeUnionParameter(self, parameter):
-        if parameter.type.types[0].category == "class":
-            t = parameter.type.types[0]
-            return "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+        if parameter.orig is None:
+            if parameter.type.types[0].category == "class":
+                t = parameter.type.types[0]
+                yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+            else:
+                yield "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
         else:
-            return "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
+            t = parameter.type.types[0]
+            yield "{} = snd.normalize{}{}({})".format(parameter.name, self.capfirst(t.name), "".join(p.capitalize() for p in parameter.orig.split("_")), parameter.name)
 
     def generateCodeToNormalizeBuiltinParameter(self, parameter):
-        return "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(parameter.type.name), parameter.name)
+        yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(parameter.type.name), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
-        return self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
+        yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
 
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
-        return "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+        yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
-        return "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeParameterSince(self, parameter):
         t = parameter.type.types[0]
-        return "{} = snd.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+        yield "{} = snd.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
 
     def generateCodeForEffects(self, method):
         for effect in method.effects:
@@ -315,7 +320,7 @@ class CodeGenerator:
                 args = 'r.json()["commit"]'
             else:
                 assert False  # pragma no cover
-            yield "return {}(None, {})".format(self.generateCodeForConverter(method, method.returnType), args)
+            yield "return {}(None, {})".format(self.generateCodeForConverter("rcv", method, method.returnType), args)
 
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)

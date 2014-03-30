@@ -22,9 +22,12 @@ class YmlPrettyPrinter:
             yield from self.recList(value)
         elif isinstance(value, tuple):
             assert all(isinstance(item, str) for item in value)
-            yield "[" + ", ".join(value) + "]"
+            yield "[" + ", ".join(list(self.rec(item))[0] for item in value) + "]"
         elif isinstance(value, str):
-            yield value
+            if "(" in value:
+                yield '"' + value + '"'
+            else:
+                yield value
         else:
             assert False, value  # pragma no cover
 
@@ -158,7 +161,14 @@ class YmlGenerator:
         data["type"] = self.createDataForType(attribute.type)
         return data
 
-    createDataForParameter = createDataForAttribute
+    def createDataForParameter(self, parameter):
+        data = collections.OrderedDict()
+        data["name"] = parameter.name
+        if parameter.orig is None:
+            data["type"] = self.createDataForType(parameter.type)
+        else:
+            data["orig"] = parameter.type.types[0].name + "." + parameter.orig
+        return data
 
     def createDataForArgument(self, argument):
         data = collections.OrderedDict()
@@ -190,8 +200,8 @@ class YmlGenerator:
     def createDataForUnionType(self, type):
         if (
             # @todoGeni Do something?
-            len(type.types) == 2 and type.types[0].name != "TwoStrings" and type.types[1].name == "string"
-            or len(type.types) == 3 and type.types[1].name == "string" and type.types[2].name == "TwoStrings"
+            len(type.types) == 2 and type.types[0].name != "(string, string)" and type.types[1].name == "string"
+            or len(type.types) == 3 and type.types[1].name == "string" and type.types[2].name == "(string, string)"
         ):
             return self.createDataForType(type.types[0])
         else:

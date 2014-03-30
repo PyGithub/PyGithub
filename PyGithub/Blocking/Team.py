@@ -147,11 +147,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("PUT", url)
@@ -162,11 +162,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{org}/{repo}", id=str(self.id), org=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -250,11 +250,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
@@ -266,11 +266,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`bool`
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
@@ -282,11 +282,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string`
+        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUser(user)
+        user = snd.normalizeUserLogin(user)
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("DELETE", url)
@@ -297,11 +297,11 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`TwoStrings`
+        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: None
         """
 
-        repo = snd.normalizeRepository(repo)
+        repo = snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)

@@ -22,7 +22,7 @@ methods:
     end_point: PUT /orgs/:org/public_members/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
@@ -32,7 +32,7 @@ methods:
     end_point: POST /repos/:owner/:repo/forks
     parameters:
       - name: repo
-        type: Repository
+        orig: Repository.full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -62,11 +62,11 @@ methods:
       - name: has_downloads
         type: bool
       - name: team_id
-        type: Team
+        orig: Team.id
       - name: auto_init
         type: bool
       - name: gitignore_template
-        type: GitIgnoreTemplate
+        orig: GitIgnoreTemplate.name
       - name: license_template
         type: string
     url_template: attribute repos_url
@@ -232,7 +232,7 @@ methods:
     end_point: GET /orgs/:org/members/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -243,7 +243,7 @@ methods:
     end_point: GET /orgs/:org/public_members/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
@@ -254,7 +254,7 @@ methods:
     end_point: DELETE /orgs/:org/members/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -264,7 +264,7 @@ methods:
     end_point: DELETE /orgs/:org/public_members/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member

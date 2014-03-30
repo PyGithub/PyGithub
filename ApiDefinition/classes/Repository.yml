@@ -175,7 +175,7 @@ methods:
     end_point: PUT /repos/:owner/:repo/collaborators/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
@@ -510,7 +510,7 @@ methods:
     end_point: GET /repos/:owner/:repo/assignees/:assignee
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute assignees_url
     url_template_arguments:
       - name: user
@@ -521,7 +521,7 @@ methods:
     end_point: GET /repos/:owner/:repo/collaborators/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
@@ -532,7 +532,7 @@ methods:
     end_point: DELETE /repos/:owner/:repo/collaborators/:user
     parameters:
       - name: user
-        type: User
+        orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
