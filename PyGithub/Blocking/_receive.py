@@ -8,6 +8,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import PyGithub.Blocking.Exceptions
+import PyGithub.Blocking.PaginatedList
 
 """
 This module is a bit contrieved because of the following goals:
@@ -50,7 +51,7 @@ class Attribute(object):
         self.__exception = None
         self.update(value)
 
-    def update(self, value):
+    def update(self, value, *args, **kwds):
         if value is Absent:
             return
         self.__exception = None
@@ -61,9 +62,9 @@ class Attribute(object):
                 # Passing the previous value to conv(..) allows it to update
                 # the value if needed (instead of just overriding it)
                 if self.__value is Absent:
-                    self.__value = self.__conv(value)
+                    self.__value = self.__conv(None, value, *args, **kwds)
                 else:
-                    self.__value = self.__conv(value, self.__value)
+                    self.__value = self.__conv(self.__value, value, *args, **kwds)
             except _ConversionException, e:
                 log.warn("Attribute " + self.__name + " is expected to be a " + self.__type + " but GitHub API v3 returned " + repr(value))
                 self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(self.__name, self.__type, value, e)
@@ -87,11 +88,11 @@ class Attribute(object):
         return self.__value is Absent and self.__exception is None
 
 
-class BuiltinConverter(object):
+class _BuiltinConverter(object):
     def __init__(self, type):
         self.__type = type
 
-    def __call__(self, value, previousValue=None):
+    def __call__(self, previousValue, value):
         if isinstance(value, self.__type):
             return value
         else:
@@ -102,15 +103,15 @@ class BuiltinConverter(object):
         return self.__type.__name__
 
 
-IntConverter = BuiltinConverter(int)
-StringConverter = BuiltinConverter(basestring)
-BoolConverter = BuiltinConverter(bool)
+IntConverter = _BuiltinConverter(int)
+StringConverter = _BuiltinConverter(basestring)
+BoolConverter = _BuiltinConverter(bool)
 
 
 class _DatetimeConverter(object):
     desc = "datetime"
 
-    def __call__(self, value, previousValue=None):
+    def __call__(self, previousValue, value):
         if isinstance(value, int):
             return datetime.datetime.utcfromtimestamp(value)
         else:
@@ -127,14 +128,16 @@ class ListConverter(object):
     def __init__(self, content):
         self.__content = content
 
-    def __call__(self, value, previousValue=None):
+    def __call__(self, previousValue, value):
+        if not isinstance(previousValue, list):
+            previousValue = []
         if isinstance(value, list):
-            new = [self.__content(v) for v in value]  # @todoAlpha Pass the previousValue instead of None
-            if previousValue is None:
-                return new
+            if len(value) == len(previousValue):
+                new = [self.__content(pv, v) for pv, v in zip(previousValue, value)]
             else:
-                previousValue[:] = new
-                return previousValue
+                new = [self.__content(None, v) for v in value]
+            previousValue[:] = new
+            return previousValue
         else:
             raise _ConversionException("Not a list")
 
@@ -143,17 +146,51 @@ class ListConverter(object):
         return "list of " + self.__content.desc
 
 
+class PaginatedListConverter(object):
+    def __init__(self, session, content):
+        self.__session = session
+        self.__content = content
+
+    def __call__(self, previousValue, r):
+        return PyGithub.Blocking.PaginatedList.PaginatedList(self.__session, self.__content, r)
+
+    @property
+    def desc(self):
+        return "PaginatedList of " + self.__content.desc
+
+
+class DictConverter(object):
+    def __init__(self, key, value):
+        self.__key = key
+        self.__value = value
+
+    def __call__(self, previousValue, value):
+        if not isinstance(previousValue, dict):
+            previousValue = {}
+        if isinstance(value, dict):
+            new = {kk: self.__value(previousValue.get(kk), v) for kk, v in ((self.__key(None, k), v) for k, v in value.iteritems())}
+            previousValue.clear()
+            previousValue.update(new)
+            return previousValue
+        else:
+            raise _ConversionException("Not a dict")
+
+    @property
+    def desc(self):
+        return "dict of " + self.__key.desc + " to " + self.__value.desc
+
+
 class _StructureConverter(object):
     def __init__(self, session, struct):
         self.__session = session
         self.__struct = struct
 
-    def __call__(self, value, previousValue=None):
+    def __call__(self, previousValue, value, eTag=None):
         if isinstance(value, dict):
-            if previousValue is None:
-                return self.create(self.__struct, self.__session, value)
+            if previousValue is None or previousValue.__class__ is not self.__struct:
+                return self.create(self.__struct, self.__session, value, eTag)
             else:
-                self.update(value, previousValue)
+                self.update(previousValue, value, eTag)
                 return previousValue
         else:
             raise _ConversionException("Not a dict")
@@ -164,45 +201,87 @@ class _StructureConverter(object):
 
 
 class StructureConverter(_StructureConverter):
-    def create(self, type, session, value):
+    def create(self, type, session, value, eTag):
         return type(session, value)
 
-    def update(self, value, previousValue):
+    def update(self, previousValue, value, eTag):
         previousValue._updateAttributes(**value)
 
 
 class ClassConverter(_StructureConverter):
-    def create(self, type, session, value):
-        return type(session, value, None)
+    def create(self, type, session, value, eTag):
+        return type(session, value, eTag)
 
-    def update(self, value, previousValue):
-        previousValue._updateAttributes(None, **value)
+    def update(self, previousValue, value, eTag):
+        previousValue._updateAttributes(eTag, **value)
 
 
 class KeyedStructureUnionConverter(object):
-    def __init__(self, key, factories):
+    def __init__(self, key, convs):
         self.__key = key
-        self.__factories = factories
+        self.__convs = convs
 
-    def __call__(self, value, previousValue=None):
+    def __call__(self, previousValue, value):
         if isinstance(value, dict):
             key = value.get(self.__key)
             if key is None:
                 raise _ConversionException("No " + self.__key + " attribute")
             else:
-                factory = self.__factories.get(key)
-                if factory is None:
-                    raise _ConversionException("No factory for " + key)
+                conv = self.__convs.get(key)
+                if conv is None:
+                    raise _ConversionException("No converter for key " + key)
                 else:
-                    if previousValue is not None and getattr(previousValue, self.__key) != key:
-                        previousValue = None
-                    if previousValue is None:
-                        return factory(value)
-                    else:
-                        return factory(value, previousValue)
+                    return conv(previousValue, value)
         else:
             raise _ConversionException("Not a dict")
 
     @property
     def desc(self):
-        return " or ".join(sorted(c.desc for c in self.__factories.values()))
+        return " or ".join(sorted(c.desc for c in self.__convs.values()))
+
+
+class FileDirSubmoduleSymLinkUnionConverter(object):
+    def __init__(self, file, dir, submodule, symlink):
+        self.__file = file
+        self.__dir = dir
+        self.__submodule = submodule
+        self.__symlink = symlink
+        self.__convs = (file, dir, submodule, symlink)
+
+    def __call__(self, previousValue, value):
+        if isinstance(value, dict):
+            type = value.get("type")
+            gitUrl = value.get("git_url", "")
+            if type == "file" and "/git/trees/" in gitUrl:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
+                return self.__submodule(previousValue, value)
+            elif type == "file":
+                return self.__file(previousValue, value)
+            elif type == "symlink":
+                return self.__symlink(previousValue, value)
+            elif type == "dir":
+                return self.__dir(previousValue, value)
+            else:
+                raise _ConversionException()
+        else:
+            raise _ConversionException("Not a dict")
+
+    @property
+    def desc(self):
+        return " or ".join(c.desc for c in self.__convs)
+
+
+class FirstMatchUnionConverter(object):
+    def __init__(self, *convs):
+        self.__convs = convs
+
+    def __call__(self, previousValue, value):
+        for conv in self.__convs:
+            try:
+                return conv(previousValue, value)
+            except _ConversionException:
+                pass
+        raise _ConversionException()
+
+    @property
+    def desc(self):
+        return " or ".join(sorted(c.desc for c in self.__convs))

@@ -214,12 +214,15 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.members_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_repos(self, per_page=None):
         """
@@ -231,12 +234,15 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repositories_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def has_in_members(self, user):
         """
@@ -252,10 +258,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_repos(self, repo):
         """
@@ -271,10 +274,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def remove_from_members(self, user):
         """

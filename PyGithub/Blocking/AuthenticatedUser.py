@@ -94,7 +94,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         r = self.Session._request("POST", url)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def create_key(self, title, key):
         """
@@ -113,7 +113,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/user/keys")
         postArguments = snd.dictionary(title=title, key=key)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, auto_init=None, gitignore_template=None, license_template=None):
         """
@@ -157,7 +157,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/user/repos")
         postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def create_subscription(self, repo, subscribed, ignored):
         """
@@ -179,7 +179,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
         postArguments = snd.dictionary(subscribed=subscribed, ignored=ignored)
         r = self.Session._request("PUT", url, postArguments=postArguments)
-        return PyGithub.Blocking.Subscription.Subscription(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Subscription.Subscription)(None, r.json(), r.headers.get("ETag"))
 
     def edit(self, name=None, email=None, blog=None, company=None, location=None, hireable=None):
         """
@@ -224,12 +224,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/followers")
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_following(self, per_page=None):
         """
@@ -241,12 +244,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/following")
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_key(self, id):
         """
@@ -262,7 +268,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/keys/{id}", id=str(id))
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def get_keys(self):
         """
@@ -275,7 +281,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/keys")
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a) for a in r.json()]
+        return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_orgs(self, per_page=None):
         """
@@ -287,12 +293,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PaginatedList` of :class:`.Organization`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/orgs")
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Organization.Organization, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization))(None, r)
 
     def get_repo(self, repo):
         """
@@ -311,7 +320,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, sort=None, direction=None, type=None, per_page=None):
         """
@@ -332,12 +341,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             direction = snd.normalizeEnum(direction, "asc", "desc")
         if type is not None:
             type = snd.normalizeEnum(type, "all", "owner", "public", "private", "member")
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
         urlArguments = snd.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
         """
@@ -355,12 +367,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             sort = snd.normalizeEnum(sort, "created", "updated")
         if direction is not None:
             direction = snd.normalizeEnum(direction, "asc", "desc")
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/starred")
         urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_subscription(self, repo):
         """
@@ -376,7 +391,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Subscription.Subscription(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Subscription.Subscription)(None, r.json(), r.headers.get("ETag"))
 
     def get_subscriptions(self, per_page=None):
         """
@@ -388,12 +403,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions")
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_teams(self, per_page=None):
         """
@@ -405,12 +423,15 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/teams")
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
     def has_in_following(self, user):
         """
@@ -426,10 +447,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_starred(self, repo):
         """
@@ -445,10 +463,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_subscriptions(self, repo):
         """
@@ -464,10 +479,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def remove_from_following(self, user):
         """

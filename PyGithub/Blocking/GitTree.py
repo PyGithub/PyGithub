@@ -156,4 +156,4 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
         postArguments = snd.dictionary(base_tree=self.sha, tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return GitTree(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, GitTree)(None, r.json(), r.headers.get("ETag"))

@@ -324,6 +324,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
+    return_from: status
     return_type: bool
   - name: has_in_starred
     end_point: GET /user/starred/:owner/:repo
@@ -336,6 +337,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
+    return_from: status
     return_type: bool
   - name: has_in_subscriptions
     end_point: GET /user/subscriptions/:owner/:repo
@@ -348,6 +350,7 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
+    return_from: status
     return_type: bool
   - name: remove_from_following
     end_point: DELETE /user/following/:user

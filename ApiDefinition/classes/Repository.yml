@@ -235,6 +235,7 @@ methods:
         value: parameter content
       - name: encoding
         value: parameter encoding
+    return_from: json
     return_type: GitBlob
   - name: create_git_tree
     end_point: POST /repos/:owner/:repo/git/trees
@@ -353,12 +354,13 @@ methods:
         value: parameter ref
     return_type:
       union:
-        - File
-        - SymLink
-        - Submodule
+        - union: [File, Submodule, SymLink]
+          key: type
+          keys: [file, submodule, symlink]
         - container: list
           content:
-            union: [File, Dir, SymLink, Submodule]
+            union: [File, Dir, Submodule, SymLink]
+      converter: FirstMatch
   - name: get_contributors
     end_point: GET /repos/:owner/:repo/contributors
     optional_parameters:
@@ -376,6 +378,8 @@ methods:
       container: PaginatedList
       content:
         union: [Contributor, AnonymousContributor]
+        key: type
+        keys: [User, Anonymous]
   - name: get_forks
     end_point: GET /repos/:owner/:repo/forks
     optional_parameters:
@@ -511,6 +515,7 @@ methods:
     url_template_arguments:
       - name: user
         value: parameter user
+    return_from: status
     return_type: bool
   - name: has_in_collaborators
     end_point: GET /repos/:owner/:repo/collaborators/:user
@@ -521,6 +526,7 @@ methods:
     url_template_arguments:
       - name: collaborator
         value: parameter user
+    return_from: status
     return_type: bool
   - name: remove_from_collaborators
     end_point: DELETE /repos/:owner/:repo/collaborators/:user

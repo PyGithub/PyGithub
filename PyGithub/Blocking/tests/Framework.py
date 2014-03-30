@@ -210,7 +210,11 @@ def createTestCase(builder):
             def __call__(self, args, kwds):
                 request = args[0]
                 sanitizeRequest(request)
-                return self.check(request)
+                if self.check(request):
+                    return True
+                else:
+                    print(request.url, "instead of", self.__url)
+                    return False
 
             def check(self, request):
                 requestBody = request.body

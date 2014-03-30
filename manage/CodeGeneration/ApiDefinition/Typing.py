@@ -80,11 +80,12 @@ class MappingCollection(Type):
 
 
 class UnionType(Type):
-    def __init__(self, types, key, keys):
+    def __init__(self, types, key, keys, converter):
         Type.__init__(self, " or ".join(t.name for t in types), "union")
         self.__types = types
         self.key = key
         self.keys = keys
+        self.converter = converter
 
     @property
     def types(self):
@@ -126,7 +127,7 @@ class Repository(object):
         elif isinstance(description, Structured.ScalarType):
             return self.__simpleTypes[description.name]
         elif isinstance(description, Structured.UnionType):
-            return UnionType([self.get(t) for t in description.types], description.key, description.keys)
+            return UnionType([self.get(t) for t in description.types], description.key, description.keys, description.converter)
         elif isinstance(description, Structured.EnumType):
             return EnumeratedType(*description.values)
         elif isinstance(description, Structured.LinearCollectionType):

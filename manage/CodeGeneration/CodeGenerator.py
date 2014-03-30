@@ -126,7 +126,16 @@ class CodeGenerator:
         return self.getMethod("generateCodeFor{}Converter", type.category)(attribute, type)
 
     def generateCodeForLinearCollectionConverter(self, attribute, type):
+        return self.getMethod("generateCodeFor{}Converter", type.container.name)(attribute, type)
+
+    def generateCodeForListConverter(self, attribute, type):
         return "rcv.ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
+
+    def generateCodeForPaginatedListConverter(self, attribute, type):
+        return "rcv.PaginatedListConverter(self.Session, {})".format(self.generateCodeForConverter(attribute, type.content))
+
+    def generateCodeForMappingCollectionConverter(self, attribute, type):
+        return "rcv.DictConverter({}, {})".format(self.generateCodeForConverter(attribute, type.key), self.generateCodeForConverter(attribute, type.value))
 
     def generateCodeForBuiltinConverter(self, attribute, type):
         return "rcv.{}Converter".format(type.name.capitalize())
@@ -136,11 +145,26 @@ class CodeGenerator:
             typeName = type.name
         else:
             typeName = "{}.{}".format(type.module, type.name)
-        return "rcv.ClassConverter(self.Session, {})".format(typeName)
+        if type.isUpdatable:
+            converterName = "ClassConverter"
+        else:
+            converterName = "StructureConverter"
+        return "rcv.{}(self.Session, {})".format(converterName, typeName)
 
     def generateCodeForUnionConverter(self, attribute, type):
-        converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
-        return 'rcv.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
+        if type.key is not None:
+            converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
+            return 'rcv.KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
+        elif type.converter is not None:
+            return 'rcv.{}UnionConverter({})'.format(
+                type.converter,
+                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
+            )
+        else:
+            return 'rcv.{}UnionConverter({})'.format(
+                "".join(t.name for t in type.types),
+                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
+            )
 
     def generateCodeForStructConverter(self, attribute, type):
         return "rcv.StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
@@ -195,7 +219,12 @@ class CodeGenerator:
         yield ""
         if len(method.parameters) != 0:
             for p in method.parameters:
-                if p.optional:
+                if p.name == "per_page":
+                    yield "if per_page is None:"
+                    yield "    per_page = self.Session.PerPage"
+                    yield "else:"
+                    yield "    per_page = snd.normalizeInt(per_page)"
+                elif p.optional:
                     yield "if {} is not None:".format(p.name)
                     if p.name == "since":
                         yield "    " + self.generateCodeToNormalizeParameterSince(p)
@@ -220,8 +249,7 @@ class CodeGenerator:
         if len(method.postArguments) != 0:
             yield "postArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
-        if not method.returnType.name.startswith("PaginatedList of"):
-            yield "r = self.Session._request({})".format(self.generateCallArguments(method))
+        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
         yield from self.generateCodeForEffects(method)
         yield from self.generateCodeForReturnValue(method)
 
@@ -269,92 +297,25 @@ class CodeGenerator:
             assert False  # pragma no cover
 
     def generateCodeForReturnValue(self, method):
-        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.category)(method)
-
-    def generateCodeForNoneReturnValue(self, method):
-        return []
-
-    def generateCodeForClassReturnValue(self, method):
-        typeName = ("" if method.returnType is method.containerClass else method.returnType.module + ".") + method.returnType.name
-        if method.name == "create_git_blob":  # @todoGeni Remove hard-coded value
-            yield 'return {}(self.Session, r.json(), None)'.format(typeName)
-        elif method.returnFrom is None:
-            if method.returnType.isUpdatable:
-                yield 'return {}(self.Session, r.json(), r.headers.get("ETag"))'.format(typeName)
-            else:
-                yield 'return {}(self.Session, r.json())'.format(typeName)
-        elif method.returnFrom == "json.commit" or method.name == "create_git_blob":
-            yield 'return {}(self.Session, r.json()["commit"], None)'.format(typeName)
+        if method.returnType.category == "none":
+            return []
         else:
-            assert False  # pragma no cover
-
-    def generateCodeForMappingCollectionReturnValue(self, method):
-        yield "return r.json()"
-
-    def generateCodeForLinearCollectionReturnValue(self, method):
-        yield from self.getMethod("generateCodeFor{}Of{}ReturnValue", method.returnType.container.name, method.returnType.content.category)(method)
-
-    def generateCodeForPaginatedListOfClassReturnValue(self, method):
-        yield "return PyGithub.Blocking.PaginatedList.PaginatedList({}, self.Session, {})".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name, self.generateCallArguments(method))
-
-    def generateCodeForPaginatedListOfUnionReturnValue(self, method):
-        yield 'return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(value), self.Session, {})'.format(self.generateCallArguments(method))
-
-    def generateCodeForListOfBuiltinReturnValue(self, method):
-        yield "return r.json()"
-
-    def generateCodeForListOfClassReturnValue(self, method):
-        yield "return [{}(self.Session, a) for a in r.json()]".format(("" if method.returnType.content is method.containerClass else method.returnType.content.module + ".") + method.returnType.content.name)
-
-    def generateCodeForListOfUnionReturnValue(self, method):
-        # @todoGeni Generalize
-        yield 'ret = []'
-        yield 'for d in r.json():'
-        yield '    if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490'
-        yield '        c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)'
-        yield '    elif d["type"] == "file":'
-        yield '        c = PyGithub.Blocking.File.File(self.Session, d, None)'
-        yield '    elif d["type"] == "symlink":'
-        yield '        c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)'
-        yield '    elif d["type"] == "dir":  # pragma no branch (defensive programming)'
-        yield '        c = PyGithub.Blocking.Dir.Dir(self.Session, d)'
-        yield '    ret.append(c)'
-        yield 'return ret'
-
-    def generateCodeForBuiltinReturnValue(self, method):
-        yield from self.getMethod("generateCodeFor{}ReturnValue", method.returnType.name)(method)
-
-    def generateCodeForStructReturnValue(self, method):
-        yield "return {}(self.Session, r.json())".format(method.containerClass.name + "." + method.returnType.name)
-
-    def generateCodeForBoolReturnValue(self, method):
-        yield "if r.status_code == 204:"  # To force coverage of both cases in all classes
-        yield "    return True"
-        yield "else:"
-        yield "    return False"
-
-    def generateCodeForUnionReturnValue(self, method):
-        # @todoGeni Generalize
-        yield 'data = r.json()'
-        yield 'if isinstance(data, list):'
-        yield '    ret = []'
-        yield '    for d in data:'
-        yield '        if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490'
-        yield '            c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)'
-        yield '        elif d["type"] == "file":'
-        yield '            c = PyGithub.Blocking.File.File(self.Session, d, None)'
-        yield '        elif d["type"] == "symlink":'
-        yield '            c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)'
-        yield '        elif d["type"] == "dir":  # pragma no branch (defensive programming)'
-        yield '            c = PyGithub.Blocking.Dir.Dir(self.Session, d)'
-        yield '        ret.append(c)'
-        yield '    return ret'
-        yield 'elif data["type"] == "submodule":'
-        yield '    return PyGithub.Blocking.Submodule.Submodule(self.Session, data, r.headers.get("ETag"))'
-        yield 'elif data["type"] == "file":'
-        yield '    return PyGithub.Blocking.File.File(self.Session, data, r.headers.get("ETag"))'
-        yield 'elif data["type"] == "symlink":  # pragma no branch (defensive programming)'
-        yield '    return PyGithub.Blocking.SymLink.SymLink(self.Session, data, r.headers.get("ETag"))'
+            if method.returnFrom is None:
+                if method.returnType.category == "class":
+                    args = 'r.json(), r.headers.get("ETag")'
+                elif method.returnType.category == "linear_collection" and method.returnType.container.name == "PaginatedList":
+                    args = "r"
+                else:
+                    args = "r.json()"
+            elif method.returnFrom == "json":
+                args = "r.json()"
+            elif method.returnFrom == "status":
+                args = "r.status_code == 204"
+            elif method.returnFrom == "json.commit":
+                args = 'r.json()["commit"]'
+            else:
+                assert False  # pragma no cover
+            yield "return {}(None, {})".format(self.generateCodeForConverter(method, method.returnType), args)
 
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)

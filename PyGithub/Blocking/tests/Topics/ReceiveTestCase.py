@@ -10,6 +10,7 @@ import unittest
 import MockMockMock
 
 import PyGithub.Blocking.Exceptions
+import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._receive as rcv
 
 
@@ -46,8 +47,10 @@ class AttributeTestCase(unittest.TestCase):
     def tearDown(self):
         self.mocks.tearDown()
 
-    def testCreateAttribute(self):
+    def testName(self):
         self.assertEqual(self.a.name, "name")
+
+    def testValueBeforeUpdate(self):
         self.assertEqual(self.a.value, None)
 
     def testUpdateAttributeWithAbsent(self):
@@ -61,15 +64,23 @@ class AttributeTestCase(unittest.TestCase):
         self.assertEqual(self.a.value, None)
 
     def testUpdateAttributeWithValidValue(self):
-        self.conv.expect(42).andReturn(42)
+        self.conv.expect(None, 42).andReturn(42)
 
         self.a.update(42)
 
         self.assertEqual(self.a.value, 42)
         self.assertFalse(self.a.needsLazyCompletion)
 
+    def testUpdateAttributeWithArgsAndKwds(self):
+        self.conv.expect(None, 42, 43, foo=44).andReturn(42)
+
+        self.a.update(42, 43, foo=44)
+
+        self.assertEqual(self.a.value, 42)
+        self.assertFalse(self.a.needsLazyCompletion)
+
     def testUpdateAttributeWithValidValueThenAbsent(self):
-        self.conv.expect(42).andReturn(42)
+        self.conv.expect(None, 42).andReturn(42)
 
         self.a.update(42)
         self.a.update(rcv.Absent)
@@ -77,7 +88,7 @@ class AttributeTestCase(unittest.TestCase):
         self.assertEqual(self.a.value, 42)
 
     def testUpdateAttributeWithValidValueThenNone(self):
-        self.conv.expect(42).andReturn(42)
+        self.conv.expect(None, 42).andReturn(42)
 
         self.a.update(42)
         self.a.update(None)
@@ -86,7 +97,7 @@ class AttributeTestCase(unittest.TestCase):
 
     def testUpdateAttributeWithInvalidValue(self):
         e = rcv._ConversionException()
-        self.conv.expect(42).andRaise(e)
+        self.conv.expect(None, 42).andRaise(e)
         self.expectLog(logging.WARN, "Attribute name is expected to be a desc but GitHub API v3 returned 42")
 
         self.a.update(42)
@@ -98,8 +109,8 @@ class AttributeTestCase(unittest.TestCase):
 
     def testUpdateTwice(self):
         v = []
-        self.conv.expect(42).andReturn(v)
-        self.conv.expect(43, v).andReturn(v)
+        self.conv.expect(None, 42).andReturn(v)
+        self.conv.expect(v, 43).andReturn(v)
 
         self.a.update(42)
         self.a.update(43)
@@ -108,10 +119,10 @@ class AttributeTestCase(unittest.TestCase):
 
     def testUpdateAfterException(self):
         v = []
-        self.conv.expect(42).andReturn(v)
-        self.conv.expect(43, v).andRaise(rcv._ConversionException())
+        self.conv.expect(None, 42).andReturn(v)
+        self.conv.expect(v, 43).andRaise(rcv._ConversionException())
         self.expectLog(logging.WARN, "Attribute name is expected to be a desc but GitHub API v3 returned 43")
-        self.conv.expect(44, v).andReturn(v)
+        self.conv.expect(v, 44).andReturn(v)
 
         self.a.update(42)
         self.a.update(43)
@@ -128,38 +139,38 @@ class BuiltinConverterTestCase(unittest.TestCase):
         self.assertEqual(rcv.IntConverter.desc, "int")
 
     def testIntegerConversion(self):
-        self.assertEqual(rcv.IntConverter(42), 42)
+        self.assertEqual(rcv.IntConverter(None, 42), 42)
 
     def testBadIntegerConversion(self):
         with self.assertRaises(rcv._ConversionException):
-            rcv.IntConverter("42")
+            rcv.IntConverter(None, "42")
 
     def testStringConverterDescription(self):
         self.assertEqual(rcv.StringConverter.desc, "str" if sys.hexversion >= 0x03000000 else "basestring")
 
     def testStringConversion(self):
-        self.assertEqual(rcv.StringConverter("42"), "42")
+        self.assertEqual(rcv.StringConverter(None, "42"), "42")
 
     def testBadStringConversion(self):
         with self.assertRaises(rcv._ConversionException):
-            rcv.StringConverter(42)
+            rcv.StringConverter(None, 42)
 
     def testDatetimeConverterDescription(self):
         self.assertEqual(rcv.DatetimeConverter.desc, "datetime")
 
     def testDatetimeConversionFromInt(self):
-        self.assertEqual(rcv.DatetimeConverter(1395971262), datetime.datetime(2014, 3, 28, 1, 47, 42))
+        self.assertEqual(rcv.DatetimeConverter(None, 1395971262), datetime.datetime(2014, 3, 28, 1, 47, 42))
 
     def testDatetimeConversionFromString(self):
-        self.assertEqual(rcv.DatetimeConverter("2010-07-09T06:10:06Z"), datetime.datetime(2010, 7, 9, 6, 10, 6))
+        self.assertEqual(rcv.DatetimeConverter(None, "2010-07-09T06:10:06Z"), datetime.datetime(2010, 7, 9, 6, 10, 6))
 
     def testBadDatetimeConversion(self):
         with self.assertRaises(rcv._ConversionException):
-            rcv.DatetimeConverter(4.5)
+            rcv.DatetimeConverter(None, 4.5)
 
     def testBadDatetimeConversionFromString(self):
         with self.assertRaises(rcv._ConversionException):
-            rcv.DatetimeConverter("foobar")
+            rcv.DatetimeConverter(None, "foobar")
 
 
 class ListConverterTestCase(unittest.TestCase):
@@ -176,33 +187,43 @@ class ListConverterTestCase(unittest.TestCase):
         self.assertEqual(self.conv.desc, "list of desc")
 
     def testGoodConversion(self):
-        self.content.expect(42).andReturn("42")
-        self.content.expect(43).andReturn("43")
+        self.content.expect(None, 42).andReturn("42")
+        self.content.expect(None, 43).andReturn("43")
 
-        self.assertEqual(self.conv([42, 43]), ["42", "43"])
+        self.assertEqual(self.conv(None, [42, 43]), ["42", "43"])
 
     def testNotAList(self):
         with self.assertRaises(rcv._ConversionException):
-            self.conv(42)
+            self.conv(None, 42)
 
     def testBadElement(self):
-        self.content.expect(42).andReturn("42")
-        self.content.expect(43).andRaise(rcv._ConversionException())
+        self.content.expect(None, 42).andReturn("42")
+        self.content.expect(None, 43).andRaise(rcv._ConversionException())
 
         with self.assertRaises(rcv._ConversionException):
-            self.conv([42, 43, 44])
+            self.conv(None, [42, 43, 44])
 
-    def testSecondConversionKeepsInstance(self):
-        self.content.expect(42).andReturn("42")
-        self.content.expect(43).andReturn("43")
-        self.content.expect(44).andReturn("44")
-        self.content.expect(45).andReturn("45")
+    def testSecondConversionWithDifferentLength(self):
+        self.content.expect(None, 44).andReturn("44")
+        self.content.expect(None, 45).andReturn("45")
 
-        list1 = self.conv([42, 43])
-        list2 = self.conv([44, 45], list1)
+        instance = []
+        ret = self.conv(instance, [44, 45])
+        self.assertEqual(ret, ["44", "45"])
+        self.assertIs(ret, instance)
 
-        self.assertEqual(list2, ["44", "45"])
-        self.assertIs(list2, list1)
+    def testSecondConversionWithSameLength(self):
+        self.content.expect(1, 44).andReturn("44")
+        self.content.expect(2, 45).andReturn("45")
+
+        instance = [1, 2]
+        ret = self.conv(instance, [44, 45])
+        self.assertEqual(ret, ["44", "45"])
+        self.assertIs(ret, instance)
+
+    def testConversionWithBadPreviousValue(self):
+        l = self.conv("bad", [])
+        self.assertEqual(l, [])
 
 
 class StructureConverterTestCase(unittest.TestCase):
@@ -227,28 +248,32 @@ class StructureConverterTestCase(unittest.TestCase):
         self.assertEqual(self.conv.desc, "TheStruct")
 
     def testConversion(self):
-        instance = self.conv({"foo": "bar"})
+        instance = self.conv(None, {"foo": "bar"})
         self.assertEqual(instance.foo, "bar")
         self.assertIs(instance.Session, self.session)
 
     def testConversionFromEmptyDict(self):
-        instance = self.conv({})
+        instance = self.conv(None, {})
         self.assertEqual(instance.foo, None)
 
     def testConversionWithUnexpectedKeys(self):
-        instance = self.conv({"toto": "tutu"})
+        instance = self.conv(None, {"toto": "tutu"})
         self.assertEqual(instance.foo, None)
 
+    def testConversionWithBadPreviousValue(self):
+        instance = self.conv(None, {"foo": "bar"}, "bad")
+        self.assertEqual(instance.foo, "bar")
+
     def testTwoConversions(self):
-        instance1 = self.conv({"foo": "bar"})
+        instance1 = self.conv(None, {"foo": "bar"})
         self.assertEqual(instance1.foo, "bar")
-        instance2 = self.conv({"foo": "baz"}, instance1)
+        instance2 = self.conv(instance1, {"foo": "baz"})
         self.assertIs(instance2, instance1)
         self.assertEqual(instance2.foo, "baz")
 
     def testFailedConversion(self):
         with self.assertRaises(rcv._ConversionException):
-            self.conv([])
+            self.conv(None, [])
 
 
 class ClassConverterTestCase(unittest.TestCase):
@@ -274,15 +299,21 @@ class ClassConverterTestCase(unittest.TestCase):
         self.assertEqual(self.conv.desc, "TheClass")
 
     def testConversion(self):
-        instance = self.conv({"foo": "bar"})
+        instance = self.conv(None, {"foo": "bar"})
         self.assertEqual(instance.foo, "bar")
         self.assertIs(instance.Session, self.session)
         self.assertIsNone(instance.eTag)
 
+    def testConversionWithEtag(self):
+        instance = self.conv(None, {"foo": "bar"}, 42)
+        self.assertEqual(instance.foo, "bar")
+        self.assertIs(instance.Session, self.session)
+        self.assertEqual(instance.eTag, 42)
+
     def testTwoConversions(self):
-        instance1 = self.conv({"foo": "bar"})
+        instance1 = self.conv(None, {"foo": "bar"})
         self.assertEqual(instance1.foo, "bar")
-        instance2 = self.conv({"foo": "baz"}, instance1)
+        instance2 = self.conv(instance1, {"foo": "baz"})
         self.assertIs(instance2, instance1)
         self.assertEqual(instance2.foo, "baz")
 
@@ -312,42 +343,219 @@ class KeyedStructureUnionConverterTestCase(unittest.TestCase):
         self.assertEqual(self.conv.desc, "desc1 or desc2")
 
     def testOneConversion(self):
-        instance = self.instance1.object
+        ret = (42,)
 
-        self.conv1.expect({"key": "val1"}).andReturn(instance)
+        self.conv1.expect(None, {"key": "val1"}).andReturn(ret)
 
-        actual = self.conv({"key": "val1"})
-        self.assertIs(actual, instance)
+        actual = self.conv(None, {"key": "val1"})
+        self.assertIs(actual, ret)
 
     def testBadKey(self):
         with self.assertRaises(rcv._ConversionException):
-            self.conv({"key": "not_a_val"})
+            self.conv(None, {"key": "not_a_val"})
 
     def testNoKey(self):
         with self.assertRaises(rcv._ConversionException):
-            self.conv({})
+            self.conv(None, {})
 
     def testNotADict(self):
         with self.assertRaises(rcv._ConversionException):
-            self.conv(42)
+            self.conv(None, 42)
 
     def testTwoConversionsOfSameKey(self):
-        instance = self.instance1.object
+        ret = (42,)
 
-        self.conv1.expect({"key": "val1", "foo": "bar"}).andReturn(instance)
-        self.instance1.expect.key.andReturn("val1")
-        self.conv1.expect({"key": "val1", "foo": "baz"}, instance).andReturn(instance)
+        self.conv1.expect(None, {"key": "val1", "foo": "bar"}).andReturn(ret)
+        self.conv1.expect(ret, {"key": "val1", "foo": "baz"}).andReturn(ret)
 
-        instance1 = self.conv({"key": "val1", "foo": "bar"})
-        instance2 = self.conv({"key": "val1", "foo": "baz"}, instance1)
-        self.assertIs(instance1, instance)
-        self.assertIs(instance2, instance1)
+        instance1 = self.conv(None, {"key": "val1", "foo": "bar"})
+        instance2 = self.conv(instance1, {"key": "val1", "foo": "baz"})
+        self.assertIs(instance1, ret)
+        self.assertIs(instance2, ret)
 
     def testTwoConversionsOfDifferentKeys(self):
-        self.conv1.expect({"key": "val1"}).andReturn(self.instance1.object)
-        self.instance1.expect.key.andReturn("val1")
-        self.conv2.expect({"key": "val2"}).andReturn(self.instance2.object)
+        ret1 = (42, )
+        ret2 = (43, )
 
-        instance1 = self.conv({"key": "val1"})
-        instance2 = self.conv({"key": "val2"}, instance1)
-        self.assertIsNot(instance2, instance1)
+        self.conv1.expect(None, {"key": "val1"}).andReturn(ret1)
+        self.conv2.expect(ret1, {"key": "val2"}).andReturn(ret2)
+
+        instance1 = self.conv(None, {"key": "val1"})
+        instance2 = self.conv(instance1, {"key": "val2"})
+        self.assertIs(instance1, ret1)
+        self.assertIs(instance2, ret2)
+
+
+class FirstMatchUnionConverterTestCase(unittest.TestCase):
+    def setUp(self):
+        self.mocks = MockMockMock.Engine()
+        self.conv1 = self.mocks.create("conv1")
+        self.conv2 = self.mocks.create("conv2")
+        self.instance1 = self.mocks.create("instance1")
+        self.instance2 = self.mocks.create("instance2")
+        self.conv = rcv.FirstMatchUnionConverter(self.conv1.object, self.conv2.object)
+
+    def tearDown(self):
+        self.mocks.tearDown()
+
+    def testDesc(self):
+        self.conv1.expect.desc.andReturn("desc1")
+        self.conv2.expect.desc.andReturn("desc2")
+
+        self.assertEqual(self.conv.desc, "desc1 or desc2")
+
+    def testFirstConverterMatches(self):
+        self.conv1.expect(None, 42).andReturn("42")
+
+        self.assertEqual(self.conv(None, 42), "42")
+
+    def testSecondConverterMatches(self):
+        self.conv1.expect(None, 42).andRaise(rcv._ConversionException())
+        self.conv2.expect(None, 42).andReturn("forty-two")
+
+        self.assertEqual(self.conv(None, 42), "forty-two")
+
+    def testNoConverterMatches(self):
+        self.conv1.expect(None, 42).andRaise(rcv._ConversionException())
+        self.conv2.expect(None, 42).andRaise(rcv._ConversionException())
+
+        with self.assertRaises(rcv._ConversionException):
+            self.conv(None, 42)
+
+
+class DictConverterTestCase(unittest.TestCase):
+    def setUp(self):
+        self.mocks = MockMockMock.Engine()
+        self.key = self.mocks.create("key")
+        self.value = self.mocks.create("value")
+        self.instance1 = self.mocks.create("instance1")
+        self.instance2 = self.mocks.create("instance2")
+        self.conv = rcv.DictConverter(self.key.object, self.value.object)
+
+    def tearDown(self):
+        self.mocks.tearDown()
+
+    def testDesc(self):
+        self.key.expect.desc.andReturn("desc1")
+        self.value.expect.desc.andReturn("desc2")
+
+        self.assertEqual(self.conv.desc, "dict of desc1 to desc2")
+
+    def testConversion(self):
+        self.key.expect(None, 42).andReturn("42")
+        self.value.expect(None, "57").andReturn(57)
+
+        self.assertEqual(self.conv(None, {42: "57"}), {"42": 57})
+
+    def testSecondConversionWithSameKey(self):
+        self.key.expect(None, 42).andReturn("42")
+        self.value.expect(57, "58").andReturn(58)
+
+        instance = {"42": 57}
+        ret = self.conv(instance, {42: "58"})
+        self.assertEqual(ret, {"42": 58})
+        self.assertIs(ret, instance)
+
+    def testSecondConversionWithDifferentKey(self):
+        self.key.expect(None, 43).andReturn("43")
+        self.value.expect(None, "58").andReturn(58)
+
+        instance = {"42": 57}
+        ret = self.conv(instance, {43: "58"})
+        self.assertEqual(ret, {"43": 58})
+        self.assertIs(ret, instance)
+
+    def testSecondConversionWithSeveralKeys(self):
+        with self.mocks.unordered:
+            with self.mocks.ordered:
+                self.key.expect(None, 42).andReturn("42")
+                self.value.expect(57, "47").andReturn(47)
+            with self.mocks.ordered:
+                self.key.expect(None, 44).andReturn("44")
+                self.value.expect(None, "59").andReturn(59)
+
+        instance = {"42": 57, "43": 58}
+        ret = self.conv(instance, {42: "47", 44: "59"})
+        self.assertEqual(ret, {"42": 47, "44": 59})
+        self.assertIs(ret, instance)
+
+    def testBadConversion(self):
+        with self.assertRaises(rcv._ConversionException):
+            self.conv(None, [])
+
+
+class PaginatedListConverterTestCase(unittest.TestCase):
+    def setUp(self):
+        self.mocks = MockMockMock.Engine()
+        self.session = (42, )
+        self.content = self.mocks.create("content")
+        self.request = self.mocks.create("request")
+        self.conv = rcv.PaginatedListConverter(self.session, self.content.object)
+
+    def tearDown(self):
+        self.mocks.tearDown()
+
+    def testDesc(self):
+        self.content.expect.desc.andReturn("desc")
+
+        self.assertEqual(self.conv.desc, "PaginatedList of desc")
+
+    def testCall(self):
+        self.request.expect.json().andReturn([])
+        self.request.expect.links.andReturn({})
+
+        l = self.conv(None, self.request.object)
+        self.assertIsInstance(l, PyGithub.Blocking.PaginatedList.PaginatedList)
+
+
+class FileDirSubmoduleSymLinkUnionConverterTestCase(unittest.TestCase):
+    def setUp(self):
+        self.mocks = MockMockMock.Engine()
+        self.file = self.mocks.create("file")
+        self.dir = self.mocks.create("dir")
+        self.submodule = self.mocks.create("submodule")
+        self.symlink = self.mocks.create("symlink")
+        self.conv = rcv.FileDirSubmoduleSymLinkUnionConverter(self.file.object, self.dir.object, self.submodule.object, self.symlink.object)
+
+    def tearDown(self):
+        self.mocks.tearDown()
+
+    def testDesc(self):
+        self.file.expect.desc.andReturn("file")
+        self.dir.expect.desc.andReturn("dir")
+        self.submodule.expect.desc.andReturn("submodule")
+        self.symlink.expect.desc.andReturn("symlink")
+
+        self.assertEqual(self.conv.desc, "file or dir or submodule or symlink")
+
+    def testBadConversion(self):
+        with self.assertRaises(rcv._ConversionException):
+            self.conv(None, [])
+
+    def testEmptyDict(self):
+        with self.assertRaises(rcv._ConversionException):
+            self.conv(None, {})
+
+    def testBadType(self):
+        with self.assertRaises(rcv._ConversionException):
+            self.conv(None, {"type": "foo"})
+
+    def testFile(self):
+        self.file.expect(None, {"type": "file"}).andReturn(42)
+
+        self.assertEqual(self.conv(None, {"type": "file"}), 42)
+
+    def testDir(self):
+        self.dir.expect(None, {"type": "dir"}).andReturn(42)
+
+        self.assertEqual(self.conv(None, {"type": "dir"}), 42)
+
+    def testSymlink(self):
+        self.symlink.expect(None, {"type": "symlink"}).andReturn(42)
+
+        self.assertEqual(self.conv(None, {"type": "symlink"}), 42)
+
+    def testSubmodule(self):
+        self.submodule.expect(None, {"type": "file", "git_url": "foo/git/trees/xxx"}).andReturn(42)
+
+        self.assertEqual(self.conv(None, {"type": "file", "git_url": "foo/git/trees/xxx"}), 42)

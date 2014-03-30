@@ -876,7 +876,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         postArguments = snd.dictionary(branch=branch, message=message, content=content, committer=committer, author=author)
         r = self.Session._request("PUT", url, postArguments=postArguments)
-        return Repository.ContentCommit(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, Repository.ContentCommit)(None, r.json())
 
     def create_git_blob(self, content, encoding):
         """
@@ -895,7 +895,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/blobs", owner=self.owner.login, repo=self.name)
         postArguments = snd.dictionary(content=content, encoding=encoding)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), None)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json())
 
     def create_git_tree(self, tree):
         """
@@ -913,7 +913,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
         postArguments = snd.dictionary(tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.GitTree.GitTree(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree)(None, r.json(), r.headers.get("ETag"))
 
     def create_key(self, title, key):
         """
@@ -932,7 +932,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.keys_url)
         postArguments = snd.dictionary(title=title, key=key)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def delete(self):
         """
@@ -995,12 +995,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.assignees_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_collaborators(self, per_page=None):
         """
@@ -1012,12 +1015,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.collaborators_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_contents(self, path, ref=None):
         """
@@ -1028,7 +1034,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         :param path: mandatory :class:`string`
         :param ref: optional :class:`string`
-        :rtype: :class:`.File` or :class:`.SymLink` or :class:`.Submodule` or :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.SymLink` or :class:`.Submodule`
+        :rtype: :class:`.File` or :class:`.Submodule` or :class:`.SymLink` or :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
 
         path = snd.normalizeString(path)
@@ -1038,26 +1044,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
         urlArguments = snd.dictionary(ref=ref)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        data = r.json()
-        if isinstance(data, list):
-            ret = []
-            for d in data:
-                if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
-                    c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)
-                elif d["type"] == "file":
-                    c = PyGithub.Blocking.File.File(self.Session, d, None)
-                elif d["type"] == "symlink":
-                    c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)
-                elif d["type"] == "dir":  # pragma no branch (defensive programming)
-                    c = PyGithub.Blocking.Dir.Dir(self.Session, d)
-                ret.append(c)
-            return ret
-        elif data["type"] == "submodule":
-            return PyGithub.Blocking.Submodule.Submodule(self.Session, data, r.headers.get("ETag"))
-        elif data["type"] == "file":
-            return PyGithub.Blocking.File.File(self.Session, data, r.headers.get("ETag"))
-        elif data["type"] == "symlink":  # pragma no branch (defensive programming)
-            return PyGithub.Blocking.SymLink.SymLink(self.Session, data, r.headers.get("ETag"))
+        return rcv.FirstMatchUnionConverter(rcv.KeyedStructureUnionConverter("type", dict(file=rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), submodule=rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), symlink=rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))), rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.StructureConverter(self.Session, PyGithub.Blocking.Dir.Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))))(None, r.json())
 
     def get_contributors(self, anon=None, per_page=None):
         """
@@ -1072,12 +1059,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         if anon is not None:
             anon = snd.normalizeBool(anon)
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.contributors_url)
         urlArguments = snd.dictionary(anon=anon, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(lambda session, value, eTag: rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(session, PyGithub.Blocking.Repository.Repository.AnonymousContributor), User=rcv.ClassConverter(session, PyGithub.Blocking.Contributor.Contributor)))(value), self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.KeyedStructureUnionConverter("type", dict(Anonymous=rcv.StructureConverter(self.Session, Repository.AnonymousContributor), User=rcv.ClassConverter(self.Session, PyGithub.Blocking.Contributor.Contributor))))(None, r)
 
     def get_forks(self, sort=None, per_page=None):
         """
@@ -1092,12 +1082,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         if sort is not None:
             sort = snd.normalizeEnum(sort, "newest", "oldest", "stargazers")
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.forks_url)
         urlArguments = snd.dictionary(sort=sort, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, Repository))(None, r)
 
     def get_git_blob(self, sha):
         """
@@ -1113,7 +1106,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/blobs/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.GitBlob.GitBlob(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json(), r.headers.get("ETag"))
 
     def get_git_commit(self, sha):
         """
@@ -1129,7 +1122,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/commits/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.GitCommit.GitCommit(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
 
     def get_git_tree(self, sha):
         """
@@ -1145,7 +1138,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.GitTree.GitTree(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree)(None, r.json(), r.headers.get("ETag"))
 
     def get_key(self, id):
         """
@@ -1161,7 +1154,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url, key_id=str(id))
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.PublicKey.PublicKey(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def get_keys(self):
         """
@@ -1174,7 +1167,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url)
         r = self.Session._request("GET", url)
-        return [PyGithub.Blocking.PublicKey.PublicKey(self.Session, a) for a in r.json()]
+        return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_readme(self, ref=None):
         """
@@ -1192,7 +1185,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/readme", owner=self.owner.login, repo=self.name)
         urlArguments = snd.dictionary(ref=ref)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return PyGithub.Blocking.File.File(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File)(None, r.json(), r.headers.get("ETag"))
 
     def get_stargazers(self, per_page=None):
         """
@@ -1204,12 +1197,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.stargazers_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_subscribers(self, per_page=None):
         """
@@ -1221,12 +1217,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.subscribers_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_teams(self, per_page=None):
         """
@@ -1238,12 +1237,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.teams_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
     def has_in_assignees(self, user):
         """
@@ -1259,10 +1261,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.assignees_url, user=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_collaborators(self, user):
         """
@@ -1278,10 +1277,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.collaborators_url, collaborator=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def remove_from_collaborators(self, user):
         """

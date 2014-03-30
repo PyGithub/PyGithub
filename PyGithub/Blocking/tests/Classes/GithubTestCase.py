@@ -58,7 +58,7 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
 
     def testPaginationOfGetReposSince(self):
         repos = self.g.get_repos(since=3544490)
-        self.assertEqual(repos[150].full_name, "swoosh/Hello-World")
+        self.assertEqual(repos[149].full_name, "swoosh/Hello-World")
 
     def testGetGitIgnoreTemplate(self):
         template = self.g.get_gitignore_template("C")

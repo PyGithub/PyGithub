@@ -103,7 +103,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         postArguments = snd.dictionary(organization=self.login)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, team_id=None, auto_init=None, gitignore_template=None, license_template=None):
         """
@@ -150,7 +150,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         url = uritemplate.expand(self.repos_url)
         postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def create_team(self, name, repo_names=None, permission=None):
         """
@@ -173,7 +173,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
         postArguments = snd.dictionary(name=name, permission=permission, repo_names=repo_names)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return PyGithub.Blocking.Team.Team(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team)(None, r.json(), r.headers.get("ETag"))
 
     def edit(self, billing_email=None, blog=None, company=None, email=None, location=None, name=None):
         """
@@ -221,12 +221,15 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         if filter is not None:
             filter = snd.normalizeEnum(filter, "all", "2fa_disabled")
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.members_url)
         urlArguments = snd.dictionary(filter=filter, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_public_members(self, per_page=None):
         """
@@ -238,12 +241,15 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.public_members_url)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_repo(self, repo):
         """
@@ -262,7 +268,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, type=None, per_page=None):
         """
@@ -277,12 +283,15 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         if type is not None:
             type = snd.normalizeEnum(type, "all", "public", "private", "forks", "sources", "member")
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
         urlArguments = snd.dictionary(type=type, per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_teams(self, per_page=None):
         """
@@ -294,12 +303,15 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
 
-        if per_page is not None:
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
         urlArguments = snd.dictionary(per_page=per_page)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Team.Team, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
     def has_in_members(self, user):
         """
@@ -315,10 +327,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_public_members(self, user):
         """
@@ -334,10 +343,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand(self.public_members_url, member=user)
         r = self.Session._request("GET", url, accept404=True)
-        if r.status_code == 204:
-            return True
-        else:
-            return False
+        return rcv.BoolConverter(None, r.status_code == 204)
 
     def remove_from_members(self, user):
         """

@@ -18,25 +18,25 @@
         },
         "response": {
             "body": {
-                "avatar_url": "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x",
+                "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
                 "bio": null,
                 "blog": "http://vincent-jacques.net",
                 "collaborators": 0,
                 "company": "Amazon",
                 "created_at": "2010-07-09T06:10:06Z",
-                "disk_usage": 89400,
+                "disk_usage": 109173,
                 "email": "vincent@vincent-jacques.net",
                 "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
-                "followers": 30,
+                "followers": 31,
                 "followers_url": "https://api.github.com/users/jacquev6/followers",
-                "following": 44,
+                "following": 45,
                 "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
                 "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
                 "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
                 "hireable": false,
                 "html_url": "https://github.com/jacquev6",
                 "id": 327146,
-                "location": "Seattle, WA, United States",
+                "location": "Seattle, WA, USA",
                 "login": "jacquev6",
                 "name": "Vincent Jacques",
                 "organizations_url": "https://api.github.com/users/jacquev6/orgs",
@@ -49,7 +49,7 @@
                 },
                 "private_gists": 6,
                 "public_gists": 5,
-                "public_repos": 20,
+                "public_repos": 24,
                 "received_events_url": "https://api.github.com/users/jacquev6/received_events",
                 "repos_url": "https://api.github.com/users/jacquev6/repos",
                 "site_admin": false,
@@ -57,7 +57,7 @@
                 "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
                 "total_private_repos": 3,
                 "type": "User",
-                "updated_at": "2014-02-23T00:25:13Z",
+                "updated_at": "2014-03-29T22:19:31Z",
                 "url": "https://api.github.com/users/jacquev6"
             },
             "headers": {
@@ -67,19 +67,20 @@
                 "cache-control": "private, max-age=60, s-maxage=60",
                 "content-encoding": "gzip",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sun, 23 Feb 2014 00:43:57 GMT",
-                "etag": "\"a9a13a9dca84cf988f5420dce3a4e7a9\"",
-                "last-modified": "Sun, 23 Feb 2014 00:25:13 GMT",
+                "date": "Sat, 29 Mar 2014 23:59:48 GMT",
+                "etag": "\"b8568744bebc315a655f2d9d7a763f9c\"",
+                "last-modified": "Sat, 29 Mar 2014 22:19:31 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "transfer-encoding": "chunked",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "62E81E32:732B:7F224C:5309444D",
+                "x-github-request-id": "62E81E32:1A95:5AF631E:53375E74",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4983",
-                "x-ratelimit-reset": "1393119064"
+                "x-ratelimit-remaining": "4996",
+                "x-ratelimit-reset": "1396140933",
+                "x-served-by": "971af40390ac4398fcdd45c8dab0fbe7"
             },
             "status": 200
         }
@@ -97,7 +98,6 @@
                 "netloc": "api.github.com",
                 "path": "/users",
                 "query": {
-                    "per_page": "4",
                     "since": "327146"
                 },
                 "scheme": "https"
@@ -107,7 +107,7 @@
         "response": {
             "body": [
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2577c665d58735f63c177b4c0c8858ad?d=https%3A%2F%2Fidenticons.github.com%2F0cc1c3336f15b8be86daf6fea34ea122.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327147?",
                     "events_url": "https://api.github.com/users/FRINOS/events{/privacy}",
                     "followers_url": "https://api.github.com/users/FRINOS/followers",
                     "following_url": "https://api.github.com/users/FRINOS/following{/other_user}",
@@ -126,7 +126,7 @@
                     "url": "https://api.github.com/users/FRINOS"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/7df3418c6c294e7547de3b467d993717?d=https%3A%2F%2Fidenticons.github.com%2F20d15dbafc9d307b8e39ef545fa1e834.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327148?",
                     "events_url": "https://api.github.com/users/vangu90/events{/privacy}",
                     "followers_url": "https://api.github.com/users/vangu90/followers",
                     "following_url": "https://api.github.com/users/vangu90/following{/other_user}",
@@ -145,7 +145,7 @@
                     "url": "https://api.github.com/users/vangu90"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/3c80c928ddf096d3d0e2e0fc022cfd8b?d=https%3A%2F%2Fidenticons.github.com%2F3f65a4b0ace1976a34bc32d76eb92e8f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327149?",
                     "events_url": "https://api.github.com/users/ankur881120/events{/privacy}",
                     "followers_url": "https://api.github.com/users/ankur881120/followers",
                     "following_url": "https://api.github.com/users/ankur881120/following{/other_user}",
@@ -164,7 +164,7 @@
                     "url": "https://api.github.com/users/ankur881120"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/d6aad124d57577a1a0e0a20ae50a6081?d=https%3A%2F%2Fidenticons.github.com%2F9e148cad97ed8dc8d13b24b865e5cd22.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327150?",
                     "events_url": "https://api.github.com/users/nuiNUInui-nuiNUInui/events{/privacy}",
                     "followers_url": "https://api.github.com/users/nuiNUInui-nuiNUInui/followers",
                     "following_url": "https://api.github.com/users/nuiNUInui-nuiNUInui/following{/other_user}",
@@ -183,7 +183,7 @@
                     "url": "https://api.github.com/users/nuiNUInui-nuiNUInui"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/784f548cc886c110380ae181ac02bb36?d=https%3A%2F%2Fidenticons.github.com%2F1f3669a8fc1bd46ef2db74694b7e1cc5.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327151?",
                     "events_url": "https://api.github.com/users/estiev/events{/privacy}",
                     "followers_url": "https://api.github.com/users/estiev/followers",
                     "following_url": "https://api.github.com/users/estiev/following{/other_user}",
@@ -202,7 +202,7 @@
                     "url": "https://api.github.com/users/estiev"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/0bc0e153c1822799bae6c4a89db17016?d=https%3A%2F%2Fidenticons.github.com%2F59c285c65ba99ad6bbfce6b8953a67ec.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327152?",
                     "events_url": "https://api.github.com/users/khemraj/events{/privacy}",
                     "followers_url": "https://api.github.com/users/khemraj/followers",
                     "following_url": "https://api.github.com/users/khemraj/following{/other_user}",
@@ -221,7 +221,7 @@
                     "url": "https://api.github.com/users/khemraj"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/30120ea513477ceeca80337e8d7efbac?d=https%3A%2F%2Fidenticons.github.com%2Fca405df545ef1bc8b75807120506d1aa.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327153?",
                     "events_url": "https://api.github.com/users/Unixx/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Unixx/followers",
                     "following_url": "https://api.github.com/users/Unixx/following{/other_user}",
@@ -240,7 +240,7 @@
                     "url": "https://api.github.com/users/Unixx"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/63fe421482bdd76cec187eb6abd6ffc1?d=https%3A%2F%2Fidenticons.github.com%2Fe959e82a32f12d5c31c3040d61bff667.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327155?",
                     "events_url": "https://api.github.com/users/mjaric/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mjaric/followers",
                     "following_url": "https://api.github.com/users/mjaric/following{/other_user}",
@@ -259,7 +259,7 @@
                     "url": "https://api.github.com/users/mjaric"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/43f500b212e3e0d885be6e791236e714?d=https%3A%2F%2Fidenticons.github.com%2F6aa4e5644224c21a2dca92608c68790e.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327156?",
                     "events_url": "https://api.github.com/users/lalitwankhade/events{/privacy}",
                     "followers_url": "https://api.github.com/users/lalitwankhade/followers",
                     "following_url": "https://api.github.com/users/lalitwankhade/following{/other_user}",
@@ -278,7 +278,7 @@
                     "url": "https://api.github.com/users/lalitwankhade"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/0074cf30a101387be5853ae7771de5bf?d=https%3A%2F%2Fidenticons.github.com%2F840d8cb33d6533ab3b814a63451fa3ce.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327157?",
                     "events_url": "https://api.github.com/users/mrwright/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mrwright/followers",
                     "following_url": "https://api.github.com/users/mrwright/following{/other_user}",
@@ -297,7 +297,7 @@
                     "url": "https://api.github.com/users/mrwright"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/6506c4e7e39329b466a6c010931d6943?d=https%3A%2F%2Fidenticons.github.com%2Fba7f825e00870cf88f00281dceb9e96d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327158?",
                     "events_url": "https://api.github.com/users/jrman52/events{/privacy}",
                     "followers_url": "https://api.github.com/users/jrman52/followers",
                     "following_url": "https://api.github.com/users/jrman52/following{/other_user}",
@@ -316,7 +316,7 @@
                     "url": "https://api.github.com/users/jrman52"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e6d3fa7e71b95e8d834a35807629f148?d=https%3A%2F%2Fidenticons.github.com%2F244caa58e7676d1ecd8970c1972de0f9.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327159?",
                     "events_url": "https://api.github.com/users/dn5354/events{/privacy}",
                     "followers_url": "https://api.github.com/users/dn5354/followers",
                     "following_url": "https://api.github.com/users/dn5354/following{/other_user}",
@@ -335,7 +335,7 @@
                     "url": "https://api.github.com/users/dn5354"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/834767147bc691a1a00416f39b670138?d=https%3A%2F%2Fidenticons.github.com%2Fdad5da38d1c3814001ce32e01d069570.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327160?",
                     "events_url": "https://api.github.com/users/lsp1357/events{/privacy}",
                     "followers_url": "https://api.github.com/users/lsp1357/followers",
                     "following_url": "https://api.github.com/users/lsp1357/following{/other_user}",
@@ -354,7 +354,7 @@
                     "url": "https://api.github.com/users/lsp1357"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/aff900b90f17dc2cff21dab6ada5b06c?d=https%3A%2F%2Fidenticons.github.com%2F75e7955d6f6df7dde8f517ee3b6c70d2.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327161?",
                     "events_url": "https://api.github.com/users/herm3s/events{/privacy}",
                     "followers_url": "https://api.github.com/users/herm3s/followers",
                     "following_url": "https://api.github.com/users/herm3s/following{/other_user}",
@@ -373,7 +373,7 @@
                     "url": "https://api.github.com/users/herm3s"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/3523d59f624a5cf46285dd78b5c32ef4?d=https%3A%2F%2Fidenticons.github.com%2F47b607de946750a1df87b745811e6c7a.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327162?",
                     "events_url": "https://api.github.com/users/a1291762/events{/privacy}",
                     "followers_url": "https://api.github.com/users/a1291762/followers",
                     "following_url": "https://api.github.com/users/a1291762/following{/other_user}",
@@ -392,7 +392,7 @@
                     "url": "https://api.github.com/users/a1291762"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/f566be3274ec73e3a6dda27bca11631c?d=https%3A%2F%2Fidenticons.github.com%2Fc5607b092581b68921a283e6b9951313.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327163?",
                     "events_url": "https://api.github.com/users/MiroK/events{/privacy}",
                     "followers_url": "https://api.github.com/users/MiroK/followers",
                     "following_url": "https://api.github.com/users/MiroK/following{/other_user}",
@@ -411,7 +411,7 @@
                     "url": "https://api.github.com/users/MiroK"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/72f9d55c199825d7808515fe24be58c4?d=https%3A%2F%2Fidenticons.github.com%2Fb62b44cfff0b828ebf6fbc0c0f19bc4c.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327164?",
                     "events_url": "https://api.github.com/users/mschock/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mschock/followers",
                     "following_url": "https://api.github.com/users/mschock/following{/other_user}",
@@ -430,7 +430,7 @@
                     "url": "https://api.github.com/users/mschock"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/059654dc913361f98a416773248c5dd1?d=https%3A%2F%2Fidenticons.github.com%2Fee874b117050ba3352dc5900ea47dc9f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327165?",
                     "events_url": "https://api.github.com/users/Voral/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Voral/followers",
                     "following_url": "https://api.github.com/users/Voral/following{/other_user}",
@@ -449,7 +449,7 @@
                     "url": "https://api.github.com/users/Voral"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/244e54a986ff98727d928fd9d78728c7?d=https%3A%2F%2Fidenticons.github.com%2F73ec4bceb4182ec014136748dc359a0e.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327166?",
                     "events_url": "https://api.github.com/users/myan/events{/privacy}",
                     "followers_url": "https://api.github.com/users/myan/followers",
                     "following_url": "https://api.github.com/users/myan/following{/other_user}",
@@ -468,7 +468,7 @@
                     "url": "https://api.github.com/users/myan"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/3b0a2597016f5f54cf3513e4f619d410?d=https%3A%2F%2Fidenticons.github.com%2F7da84a47abb812fb9f4379aa78c7e386.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327167?",
                     "events_url": "https://api.github.com/users/dorine/events{/privacy}",
                     "followers_url": "https://api.github.com/users/dorine/followers",
                     "following_url": "https://api.github.com/users/dorine/following{/other_user}",
@@ -487,7 +487,7 @@
                     "url": "https://api.github.com/users/dorine"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e2ecbbef19f2fbda7e33bbc000c74cdd?d=https%3A%2F%2Fidenticons.github.com%2F05932f3db4ec5702fa73c7309f969985.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327168?",
                     "events_url": "https://api.github.com/users/nxsky/events{/privacy}",
                     "followers_url": "https://api.github.com/users/nxsky/followers",
                     "following_url": "https://api.github.com/users/nxsky/following{/other_user}",
@@ -506,7 +506,7 @@
                     "url": "https://api.github.com/users/nxsky"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/7bcd2918244d7ddd74d7e7fe28403f76?d=https%3A%2F%2Fidenticons.github.com%2F91e5918160790e390fb1085cf60185c8.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327169?",
                     "events_url": "https://api.github.com/users/ramamuth/events{/privacy}",
                     "followers_url": "https://api.github.com/users/ramamuth/followers",
                     "following_url": "https://api.github.com/users/ramamuth/following{/other_user}",
@@ -525,7 +525,7 @@
                     "url": "https://api.github.com/users/ramamuth"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/dc6bc47373e0e995b64bcfa4da6c626d?d=https%3A%2F%2Fidenticons.github.com%2Fec9f69ffa0bd39f6e43f38b7513542c8.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327170?",
                     "events_url": "https://api.github.com/users/faiyazsyed/events{/privacy}",
                     "followers_url": "https://api.github.com/users/faiyazsyed/followers",
                     "following_url": "https://api.github.com/users/faiyazsyed/following{/other_user}",
@@ -544,7 +544,7 @@
                     "url": "https://api.github.com/users/faiyazsyed"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2ff19593236ca6a4a32970c33b78feb1?d=https%3A%2F%2Fidenticons.github.com%2Fa5c5673608ba25493e07cf7e7856e908.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327171?",
                     "events_url": "https://api.github.com/users/edichen/events{/privacy}",
                     "followers_url": "https://api.github.com/users/edichen/followers",
                     "following_url": "https://api.github.com/users/edichen/following{/other_user}",
@@ -563,7 +563,7 @@
                     "url": "https://api.github.com/users/edichen"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/cfa2a0958c41b83f8850729911d141bb?d=https%3A%2F%2Fidenticons.github.com%2F132045ce5975054de274bbc944d32a62.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327172?",
                     "events_url": "https://api.github.com/users/TuxTom/events{/privacy}",
                     "followers_url": "https://api.github.com/users/TuxTom/followers",
                     "following_url": "https://api.github.com/users/TuxTom/following{/other_user}",
@@ -582,7 +582,7 @@
                     "url": "https://api.github.com/users/TuxTom"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/b9278df3ccdfeb641d0a318d639faa12?d=https%3A%2F%2Fidenticons.github.com%2Fa3ecc3a88415ccb34862c1d25a75f699.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327173?",
                     "events_url": "https://api.github.com/users/mailtobilal/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mailtobilal/followers",
                     "following_url": "https://api.github.com/users/mailtobilal/following{/other_user}",
@@ -601,7 +601,7 @@
                     "url": "https://api.github.com/users/mailtobilal"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/769f21ff9d357b55d57f562104523a65?d=https%3A%2F%2Fidenticons.github.com%2F43c0e01a562dee5a3056491675bbfbbe.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327175?",
                     "events_url": "https://api.github.com/users/NickNeely/events{/privacy}",
                     "followers_url": "https://api.github.com/users/NickNeely/followers",
                     "following_url": "https://api.github.com/users/NickNeely/following{/other_user}",
@@ -620,7 +620,7 @@
                     "url": "https://api.github.com/users/NickNeely"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/8d9502ea1a0b48a2dfbde8763c0fdb71?d=https%3A%2F%2Fidenticons.github.com%2Fb0f33acd13a3ab541cf2aaea27f4fc2f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327176?",
                     "events_url": "https://api.github.com/users/emilacik/events{/privacy}",
                     "followers_url": "https://api.github.com/users/emilacik/followers",
                     "following_url": "https://api.github.com/users/emilacik/following{/other_user}",
@@ -639,7 +639,7 @@
                     "url": "https://api.github.com/users/emilacik"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/31d70ea06aa0a281e3db7cb30d89b5aa?d=https%3A%2F%2Fidenticons.github.com%2F1b531b4d94d48267a96535198183ce73.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327177?",
                     "events_url": "https://api.github.com/users/mschueler/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mschueler/followers",
                     "following_url": "https://api.github.com/users/mschueler/following{/other_user}",
@@ -658,7 +658,7 @@
                     "url": "https://api.github.com/users/mschueler"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2b1314661460a17a9ece25276048596c?d=https%3A%2F%2Fidenticons.github.com%2F49b4f6c3c507032a68e64d0e7cdec78d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327178?",
                     "events_url": "https://api.github.com/users/blacksudoku/events{/privacy}",
                     "followers_url": "https://api.github.com/users/blacksudoku/followers",
                     "following_url": "https://api.github.com/users/blacksudoku/following{/other_user}",
@@ -677,7 +677,7 @@
                     "url": "https://api.github.com/users/blacksudoku"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/5ac17cbce1dd8187eb2b401974fd27fd?d=https%3A%2F%2Fidenticons.github.com%2F156e8eca37ea69085d3f1562dd709306.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327179?",
                     "events_url": "https://api.github.com/users/orifjon/events{/privacy}",
                     "followers_url": "https://api.github.com/users/orifjon/followers",
                     "following_url": "https://api.github.com/users/orifjon/following{/other_user}",
@@ -696,7 +696,7 @@
                     "url": "https://api.github.com/users/orifjon"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/4ab118743cd5c778e7ea948a9812f264?d=https%3A%2F%2Fidenticons.github.com%2Fdf107b8f506e406c26e88955fe827861.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327180?",
                     "events_url": "https://api.github.com/users/comercy/events{/privacy}",
                     "followers_url": "https://api.github.com/users/comercy/followers",
                     "following_url": "https://api.github.com/users/comercy/following{/other_user}",
@@ -715,7 +715,7 @@
                     "url": "https://api.github.com/users/comercy"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/f0f931606836971a468604b73360eb04?d=https%3A%2F%2Fidenticons.github.com%2F16346007a3786ed540777e4b4914caf8.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327181?",
                     "events_url": "https://api.github.com/users/awwa/events{/privacy}",
                     "followers_url": "https://api.github.com/users/awwa/followers",
                     "following_url": "https://api.github.com/users/awwa/following{/other_user}",
@@ -734,7 +734,7 @@
                     "url": "https://api.github.com/users/awwa"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/747eb31a301a591b4cbfa64c46212b91?d=https%3A%2F%2Fidenticons.github.com%2Fd55d116a758ac3f75e689abcc26ef859.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327182?",
                     "events_url": "https://api.github.com/users/floyungame/events{/privacy}",
                     "followers_url": "https://api.github.com/users/floyungame/followers",
                     "following_url": "https://api.github.com/users/floyungame/following{/other_user}",
@@ -753,7 +753,7 @@
                     "url": "https://api.github.com/users/floyungame"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/4dd2c3243b0684979a13182490ca1ebb?d=https%3A%2F%2Fidenticons.github.com%2Fc14fb59c519272867aaf84c0fe7aa891.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327183?",
                     "events_url": "https://api.github.com/users/mytryk/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mytryk/followers",
                     "following_url": "https://api.github.com/users/mytryk/following{/other_user}",
@@ -772,7 +772,7 @@
                     "url": "https://api.github.com/users/mytryk"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/c373712a4cd465e276308535acce5946?d=https%3A%2F%2Fidenticons.github.com%2F731e526b94a28e39cbd29dab0c1133b2.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327184?",
                     "events_url": "https://api.github.com/users/unclejoe/events{/privacy}",
                     "followers_url": "https://api.github.com/users/unclejoe/followers",
                     "following_url": "https://api.github.com/users/unclejoe/following{/other_user}",
@@ -791,7 +791,7 @@
                     "url": "https://api.github.com/users/unclejoe"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/cbcc1f2795516ed08ff793c4a12fd560?d=https%3A%2F%2Fidenticons.github.com%2Fb4b08c5ea2593c0014e911f736c60306.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327185?",
                     "events_url": "https://api.github.com/users/waiwit/events{/privacy}",
                     "followers_url": "https://api.github.com/users/waiwit/followers",
                     "following_url": "https://api.github.com/users/waiwit/following{/other_user}",
@@ -810,7 +810,7 @@
                     "url": "https://api.github.com/users/waiwit"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e45ea7d8efcd297d0e8ff0b56ecb0a34?d=https%3A%2F%2Fidenticons.github.com%2F3433b449717ec9b3e9817434493ebfa2.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327186?",
                     "events_url": "https://api.github.com/users/TJotov/events{/privacy}",
                     "followers_url": "https://api.github.com/users/TJotov/followers",
                     "following_url": "https://api.github.com/users/TJotov/following{/other_user}",
@@ -829,7 +829,7 @@
                     "url": "https://api.github.com/users/TJotov"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/80997d864cb89efe495a1881a3b03b99?d=https%3A%2F%2Fidenticons.github.com%2F895d0b74c7a2d4bbe9f39f9e43f4a127.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327187?",
                     "events_url": "https://api.github.com/users/AMekss/events{/privacy}",
                     "followers_url": "https://api.github.com/users/AMekss/followers",
                     "following_url": "https://api.github.com/users/AMekss/following{/other_user}",
@@ -848,7 +848,7 @@
                     "url": "https://api.github.com/users/AMekss"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/dc0b1f74cd2c71a24479fdcbbbc2710f?d=https%3A%2F%2Fidenticons.github.com%2Fa964b7cdfed2f2e34bd733d9929362fc.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327188?",
                     "events_url": "https://api.github.com/users/ashutoshpandey1710/events{/privacy}",
                     "followers_url": "https://api.github.com/users/ashutoshpandey1710/followers",
                     "following_url": "https://api.github.com/users/ashutoshpandey1710/following{/other_user}",
@@ -867,7 +867,7 @@
                     "url": "https://api.github.com/users/ashutoshpandey1710"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/cdb84d8f460f3424c569be56383361f9?d=https%3A%2F%2Fidenticons.github.com%2Fcce181fbbea3cf078a3dc7c5af553585.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327189?",
                     "events_url": "https://api.github.com/users/bobyeh1390/events{/privacy}",
                     "followers_url": "https://api.github.com/users/bobyeh1390/followers",
                     "following_url": "https://api.github.com/users/bobyeh1390/following{/other_user}",
@@ -886,7 +886,7 @@
                     "url": "https://api.github.com/users/bobyeh1390"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/f197cbf268ebcd7c89c016808da2e323?d=https%3A%2F%2Fidenticons.github.com%2Fb2c1e81439121d45dd5345e0d373552d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327190?",
                     "events_url": "https://api.github.com/users/Xmenas/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Xmenas/followers",
                     "following_url": "https://api.github.com/users/Xmenas/following{/other_user}",
@@ -905,7 +905,7 @@
                     "url": "https://api.github.com/users/Xmenas"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2d14e85fef400226af5f15974c77ec95?d=https%3A%2F%2Fidenticons.github.com%2F5b6a5f6a24455f7d582f78b2a6b854be.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327191?",
                     "events_url": "https://api.github.com/users/mosazhi3n/events{/privacy}",
                     "followers_url": "https://api.github.com/users/mosazhi3n/followers",
                     "following_url": "https://api.github.com/users/mosazhi3n/following{/other_user}",
@@ -924,7 +924,7 @@
                     "url": "https://api.github.com/users/mosazhi3n"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/a153c6ce954a0476ab6b09ff3aeb9464?d=https%3A%2F%2Fidenticons.github.com%2F8d9cd0a0731b40b0725d25a100f2bf32.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327192?",
                     "events_url": "https://api.github.com/users/andrew-kaslick/events{/privacy}",
                     "followers_url": "https://api.github.com/users/andrew-kaslick/followers",
                     "following_url": "https://api.github.com/users/andrew-kaslick/following{/other_user}",
@@ -943,7 +943,7 @@
                     "url": "https://api.github.com/users/andrew-kaslick"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/c714303eb1bd8bcb6479cb827dc4a177?d=https%3A%2F%2Fidenticons.github.com%2Fe2b40a61903bc0fd001e6d5af09e4169.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327193?",
                     "events_url": "https://api.github.com/users/coloraldo/events{/privacy}",
                     "followers_url": "https://api.github.com/users/coloraldo/followers",
                     "following_url": "https://api.github.com/users/coloraldo/following{/other_user}",
@@ -962,7 +962,7 @@
                     "url": "https://api.github.com/users/coloraldo"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/21ad7dac4794694b08fb21d4e66d31bf?d=https%3A%2F%2Fidenticons.github.com%2Fde59209be129ebde2a2230000d2bcdc7.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327194?",
                     "events_url": "https://api.github.com/users/baruch95/events{/privacy}",
                     "followers_url": "https://api.github.com/users/baruch95/followers",
                     "following_url": "https://api.github.com/users/baruch95/following{/other_user}",
@@ -981,7 +981,7 @@
                     "url": "https://api.github.com/users/baruch95"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/eaf47a1ea7dfd0603e44bdb06fa420ab?d=https%3A%2F%2Fidenticons.github.com%2Fee502f88f509c08fb87b479420cdf8b6.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327195?",
                     "events_url": "https://api.github.com/users/PyKaB/events{/privacy}",
                     "followers_url": "https://api.github.com/users/PyKaB/followers",
                     "following_url": "https://api.github.com/users/PyKaB/following{/other_user}",
@@ -1000,7 +1000,7 @@
                     "url": "https://api.github.com/users/PyKaB"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/88c2734adc0ac9cdd683922009c42338?d=https%3A%2F%2Fidenticons.github.com%2F9b5dda2479e09bd1a8f62d2e987b6b6b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327196?",
                     "events_url": "https://api.github.com/users/HighRidas/events{/privacy}",
                     "followers_url": "https://api.github.com/users/HighRidas/followers",
                     "following_url": "https://api.github.com/users/HighRidas/following{/other_user}",
@@ -1019,7 +1019,7 @@
                     "url": "https://api.github.com/users/HighRidas"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/7a354c3be881e8dff77541cabb43831e?d=https%3A%2F%2Fidenticons.github.com%2F01bd0ded071c3da1515843676381dfc7.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327197?",
                     "events_url": "https://api.github.com/users/andola-cks/events{/privacy}",
                     "followers_url": "https://api.github.com/users/andola-cks/followers",
                     "following_url": "https://api.github.com/users/andola-cks/following{/other_user}",
@@ -1038,7 +1038,7 @@
                     "url": "https://api.github.com/users/andola-cks"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/d25e7f2d1b6651a2d829c488b5412bf0?d=https%3A%2F%2Fidenticons.github.com%2Ff3d559a2464c84d07f698525605b58fc.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327198?",
                     "events_url": "https://api.github.com/users/jimtreadway/events{/privacy}",
                     "followers_url": "https://api.github.com/users/jimtreadway/followers",
                     "following_url": "https://api.github.com/users/jimtreadway/following{/other_user}",
@@ -1057,7 +1057,7 @@
                     "url": "https://api.github.com/users/jimtreadway"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/a367f00d21bc986d5f74f6b56dabddb6?d=https%3A%2F%2Fidenticons.github.com%2Fa3818bb8c836c2337584ccf509160a7d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327199?",
                     "events_url": "https://api.github.com/users/c089/events{/privacy}",
                     "followers_url": "https://api.github.com/users/c089/followers",
                     "following_url": "https://api.github.com/users/c089/following{/other_user}",
@@ -1076,7 +1076,7 @@
                     "url": "https://api.github.com/users/c089"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/aac4ba76fdc7f2bb0ee57c0674b632bc?d=https%3A%2F%2Fidenticons.github.com%2Fba43fbe35b7115c80603dcfb59ac33bb.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327200?",
                     "events_url": "https://api.github.com/users/Nightw0rk/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Nightw0rk/followers",
                     "following_url": "https://api.github.com/users/Nightw0rk/following{/other_user}",
@@ -1095,7 +1095,7 @@
                     "url": "https://api.github.com/users/Nightw0rk"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/0de8efb5c5a6f6d9146fb2057c83e4e7?d=https%3A%2F%2Fidenticons.github.com%2F9c64fac4cc2d93c18ad067f079bef61a.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327201?",
                     "events_url": "https://api.github.com/users/Cael/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Cael/followers",
                     "following_url": "https://api.github.com/users/Cael/following{/other_user}",
@@ -1114,7 +1114,7 @@
                     "url": "https://api.github.com/users/Cael"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/6274c384e1f8aba64a1e51a418bd7abd?d=https%3A%2F%2Fidenticons.github.com%2Ff85908d2aca897cdbee5efa0478fc73d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327202?",
                     "events_url": "https://api.github.com/users/renganathan/events{/privacy}",
                     "followers_url": "https://api.github.com/users/renganathan/followers",
                     "following_url": "https://api.github.com/users/renganathan/following{/other_user}",
@@ -1133,7 +1133,7 @@
                     "url": "https://api.github.com/users/renganathan"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/05fc6835e821894b1ff75c46391eed7b?d=https%3A%2F%2Fidenticons.github.com%2Fc19dc1f734dcacfc8140edca2279065b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327203?",
                     "events_url": "https://api.github.com/users/rougier/events{/privacy}",
                     "followers_url": "https://api.github.com/users/rougier/followers",
                     "following_url": "https://api.github.com/users/rougier/following{/other_user}",
@@ -1152,7 +1152,7 @@
                     "url": "https://api.github.com/users/rougier"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/7cc7e56c3a5d9d3ead828bb192a97bf3?d=https%3A%2F%2Fidenticons.github.com%2Fb53b09982bb4f18c80d5a04a23b50010.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327204?",
                     "events_url": "https://api.github.com/users/pnoox/events{/privacy}",
                     "followers_url": "https://api.github.com/users/pnoox/followers",
                     "following_url": "https://api.github.com/users/pnoox/following{/other_user}",
@@ -1171,7 +1171,7 @@
                     "url": "https://api.github.com/users/pnoox"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2579d375d6e875e65547daae1d4b7277?d=https%3A%2F%2Fidenticons.github.com%2F8b53f761c32f01b61e5975627fced8b2.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327205?",
                     "events_url": "https://api.github.com/users/vijaya6jun/events{/privacy}",
                     "followers_url": "https://api.github.com/users/vijaya6jun/followers",
                     "following_url": "https://api.github.com/users/vijaya6jun/following{/other_user}",
@@ -1190,7 +1190,7 @@
                     "url": "https://api.github.com/users/vijaya6jun"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/57eb4cb4cd0d6c392d51903d384d8710?d=https%3A%2F%2Fidenticons.github.com%2Fdefb6e6c1c7ad1bd64063ab73b549132.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327206?",
                     "events_url": "https://api.github.com/users/iouz/events{/privacy}",
                     "followers_url": "https://api.github.com/users/iouz/followers",
                     "following_url": "https://api.github.com/users/iouz/following{/other_user}",
@@ -1209,7 +1209,7 @@
                     "url": "https://api.github.com/users/iouz"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/de1772cbe39d52477b8214bc821b86f0?d=https%3A%2F%2Fidenticons.github.com%2F0e01a430760c44158fe32fc7eb8e53ec.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327207?",
                     "events_url": "https://api.github.com/users/kais/events{/privacy}",
                     "followers_url": "https://api.github.com/users/kais/followers",
                     "following_url": "https://api.github.com/users/kais/following{/other_user}",
@@ -1228,7 +1228,7 @@
                     "url": "https://api.github.com/users/kais"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/b7235d5d6d4219245e706c0583b511f5?d=https%3A%2F%2Fidenticons.github.com%2Fcdde066ff9ed2e97df8bfefa0a315c39.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327208?",
                     "events_url": "https://api.github.com/users/hjj0501/events{/privacy}",
                     "followers_url": "https://api.github.com/users/hjj0501/followers",
                     "following_url": "https://api.github.com/users/hjj0501/following{/other_user}",
@@ -1247,7 +1247,7 @@
                     "url": "https://api.github.com/users/hjj0501"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/5b8a3275521bfaa80fb79eb11202d551?d=https%3A%2F%2Fidenticons.github.com%2Fefe2d094f516b62a1b1afcfcc57365b9.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327209?",
                     "events_url": "https://api.github.com/users/tenphi/events{/privacy}",
                     "followers_url": "https://api.github.com/users/tenphi/followers",
                     "following_url": "https://api.github.com/users/tenphi/following{/other_user}",
@@ -1266,7 +1266,7 @@
                     "url": "https://api.github.com/users/tenphi"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/b6765ab5a96c2e735e01a5d30c722c80?d=https%3A%2F%2Fidenticons.github.com%2F3930e767c10c6b0428571a29b051ca63.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327210?",
                     "events_url": "https://api.github.com/users/luoshanhe/events{/privacy}",
                     "followers_url": "https://api.github.com/users/luoshanhe/followers",
                     "following_url": "https://api.github.com/users/luoshanhe/following{/other_user}",
@@ -1285,7 +1285,7 @@
                     "url": "https://api.github.com/users/luoshanhe"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/f6953393c93f2647b44b2c775d5d9290?d=https%3A%2F%2Fidenticons.github.com%2F51d96e60d07b46ee8a1c169b0d779247.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327211?",
                     "events_url": "https://api.github.com/users/netimpulse/events{/privacy}",
                     "followers_url": "https://api.github.com/users/netimpulse/followers",
                     "following_url": "https://api.github.com/users/netimpulse/following{/other_user}",
@@ -1304,7 +1304,7 @@
                     "url": "https://api.github.com/users/netimpulse"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/dfe5ff5db3a95432acfd9cdbbef36541?d=https%3A%2F%2Fidenticons.github.com%2Fd458ea9701d7d9e10c0ed6036a61847f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327212?",
                     "events_url": "https://api.github.com/users/kirillzonov/events{/privacy}",
                     "followers_url": "https://api.github.com/users/kirillzonov/followers",
                     "following_url": "https://api.github.com/users/kirillzonov/following{/other_user}",
@@ -1323,7 +1323,7 @@
                     "url": "https://api.github.com/users/kirillzonov"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/a960efd2d99eeaaeb98359bcfb9d2c8e?d=https%3A%2F%2Fidenticons.github.com%2F7b7a8f5b89221e95ab435b6e9a937548.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327213?",
                     "events_url": "https://api.github.com/users/yandros/events{/privacy}",
                     "followers_url": "https://api.github.com/users/yandros/followers",
                     "following_url": "https://api.github.com/users/yandros/following{/other_user}",
@@ -1342,7 +1342,7 @@
                     "url": "https://api.github.com/users/yandros"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e2c9f7339e34042df0785c71440b5228?d=https%3A%2F%2Fidenticons.github.com%2F1623ef90006a2b405ad3954fe0b90e26.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327214?",
                     "events_url": "https://api.github.com/users/wiinnie-the-pooh/events{/privacy}",
                     "followers_url": "https://api.github.com/users/wiinnie-the-pooh/followers",
                     "following_url": "https://api.github.com/users/wiinnie-the-pooh/following{/other_user}",
@@ -1361,7 +1361,7 @@
                     "url": "https://api.github.com/users/wiinnie-the-pooh"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/6ce857f9a9e196a4d3232eec44ec4c5d?d=https%3A%2F%2Fidenticons.github.com%2F31a35937d00b527de7c076fc57269701.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327215?",
                     "events_url": "https://api.github.com/users/Wave2000/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Wave2000/followers",
                     "following_url": "https://api.github.com/users/Wave2000/following{/other_user}",
@@ -1380,7 +1380,7 @@
                     "url": "https://api.github.com/users/Wave2000"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/0d05b178f65b2e889fb952958ec5e462?d=https%3A%2F%2Fidenticons.github.com%2F4c60d0ff64f602f12c65bf251e51e4e4.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327216?",
                     "events_url": "https://api.github.com/users/max38/events{/privacy}",
                     "followers_url": "https://api.github.com/users/max38/followers",
                     "following_url": "https://api.github.com/users/max38/following{/other_user}",
@@ -1399,7 +1399,7 @@
                     "url": "https://api.github.com/users/max38"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/9464ea43ccd1588d52bac28145cf452a?d=https%3A%2F%2Fidenticons.github.com%2F307167fe43e09596deb7f1f1ffd420f3.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327217?",
                     "events_url": "https://api.github.com/users/james-rodgers/events{/privacy}",
                     "followers_url": "https://api.github.com/users/james-rodgers/followers",
                     "following_url": "https://api.github.com/users/james-rodgers/following{/other_user}",
@@ -1418,7 +1418,7 @@
                     "url": "https://api.github.com/users/james-rodgers"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e26553079e241cea13f6fb816496f1a1?d=https%3A%2F%2Fidenticons.github.com%2Fa5bda087b35392e0e0302ebf7816bc0d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327218?",
                     "events_url": "https://api.github.com/users/cogcomp/events{/privacy}",
                     "followers_url": "https://api.github.com/users/cogcomp/followers",
                     "following_url": "https://api.github.com/users/cogcomp/following{/other_user}",
@@ -1437,7 +1437,7 @@
                     "url": "https://api.github.com/users/cogcomp"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/819343cd9716d05f6fa33cada885f11d?d=https%3A%2F%2Fidenticons.github.com%2Fd5affc2085a1fb4ae4331d68144bd04d.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327219?",
                     "events_url": "https://api.github.com/users/rudrud/events{/privacy}",
                     "followers_url": "https://api.github.com/users/rudrud/followers",
                     "following_url": "https://api.github.com/users/rudrud/following{/other_user}",
@@ -1456,7 +1456,7 @@
                     "url": "https://api.github.com/users/rudrud"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/1282b0c3a90d3a8c53664c0d373a821a?d=https%3A%2F%2Fidenticons.github.com%2Fe7ee1a9705dd3f9b898f2126d699a0fc.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327220?",
                     "events_url": "https://api.github.com/users/aziziknown/events{/privacy}",
                     "followers_url": "https://api.github.com/users/aziziknown/followers",
                     "following_url": "https://api.github.com/users/aziziknown/following{/other_user}",
@@ -1475,7 +1475,7 @@
                     "url": "https://api.github.com/users/aziziknown"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/40bc384e083a06113b3ab1e53a22e7bb?d=https%3A%2F%2Fidenticons.github.com%2F0b7478136fbbbe69231a9cf8d58a72d6.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327221?",
                     "events_url": "https://api.github.com/users/collide-applications/events{/privacy}",
                     "followers_url": "https://api.github.com/users/collide-applications/followers",
                     "following_url": "https://api.github.com/users/collide-applications/following{/other_user}",
@@ -1494,7 +1494,7 @@
                     "url": "https://api.github.com/users/collide-applications"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/461e0447c0b251cd396ba69b1b13a528?d=https%3A%2F%2Fidenticons.github.com%2F9a94deaac8ff649db9a3dd0b93ee390b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327222?",
                     "events_url": "https://api.github.com/users/wdijker/events{/privacy}",
                     "followers_url": "https://api.github.com/users/wdijker/followers",
                     "following_url": "https://api.github.com/users/wdijker/following{/other_user}",
@@ -1513,7 +1513,7 @@
                     "url": "https://api.github.com/users/wdijker"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/09470c5b42143e50700158f6871cf7c6?d=https%3A%2F%2Fidenticons.github.com%2F9e3726006089e6fad96c937083ceac53.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327223?",
                     "events_url": "https://api.github.com/users/timhiggins/events{/privacy}",
                     "followers_url": "https://api.github.com/users/timhiggins/followers",
                     "following_url": "https://api.github.com/users/timhiggins/following{/other_user}",
@@ -1532,7 +1532,7 @@
                     "url": "https://api.github.com/users/timhiggins"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/2e8fdd3c9310038659b5726d056b2b6c?d=https%3A%2F%2Fidenticons.github.com%2Fb09fc1d0bc21f608511e330365af090b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327224?",
                     "events_url": "https://api.github.com/users/palogedi/events{/privacy}",
                     "followers_url": "https://api.github.com/users/palogedi/followers",
                     "following_url": "https://api.github.com/users/palogedi/following{/other_user}",
@@ -1551,7 +1551,7 @@
                     "url": "https://api.github.com/users/palogedi"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e636ab6a4e1df056511b1a7a347cb6da?d=https%3A%2F%2Fidenticons.github.com%2F1748854ccf05211a334bc1d5d10f15e0.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327225?",
                     "events_url": "https://api.github.com/users/Aseco/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Aseco/followers",
                     "following_url": "https://api.github.com/users/Aseco/following{/other_user}",
@@ -1570,7 +1570,7 @@
                     "url": "https://api.github.com/users/Aseco"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/e13b32ee84914e88d58905a4083a9f21?d=https%3A%2F%2Fidenticons.github.com%2Fe44887d8396aaf7b18e27cce4c138d70.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327226?",
                     "events_url": "https://api.github.com/users/leo72/events{/privacy}",
                     "followers_url": "https://api.github.com/users/leo72/followers",
                     "following_url": "https://api.github.com/users/leo72/following{/other_user}",
@@ -1589,7 +1589,7 @@
                     "url": "https://api.github.com/users/leo72"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/94bfee05d2a1f29928a0ebd8335030e7?d=https%3A%2F%2Fidenticons.github.com%2Fe6117ce5ac442b2b9f2d591d67a99b7f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327227?",
                     "events_url": "https://api.github.com/users/iluvijah/events{/privacy}",
                     "followers_url": "https://api.github.com/users/iluvijah/followers",
                     "following_url": "https://api.github.com/users/iluvijah/following{/other_user}",
@@ -1608,7 +1608,7 @@
                     "url": "https://api.github.com/users/iluvijah"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/11e386e595a17379f9f0ac67fdc1bec7?d=https%3A%2F%2Fidenticons.github.com%2F886e553a9ae7338b0fb966d68d124269.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327228?",
                     "events_url": "https://api.github.com/users/nmurray/events{/privacy}",
                     "followers_url": "https://api.github.com/users/nmurray/followers",
                     "following_url": "https://api.github.com/users/nmurray/following{/other_user}",
@@ -1627,7 +1627,7 @@
                     "url": "https://api.github.com/users/nmurray"
                 },
                 {
-                    "avatar_url": "https://identicons.github.com/41a912996e117dfecb9aea5082c04717.png",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327229?",
                     "events_url": "https://api.github.com/users/z00lus/events{/privacy}",
                     "followers_url": "https://api.github.com/users/z00lus/followers",
                     "following_url": "https://api.github.com/users/z00lus/following{/other_user}",
@@ -1646,7 +1646,7 @@
                     "url": "https://api.github.com/users/z00lus"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/ac8a0b2f533314973df63bad09574af7?d=https%3A%2F%2Fidenticons.github.com%2F7c8d886312b372ad81de98ed7e4a0fb0.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327230?",
                     "events_url": "https://api.github.com/users/venkmanuk/events{/privacy}",
                     "followers_url": "https://api.github.com/users/venkmanuk/followers",
                     "following_url": "https://api.github.com/users/venkmanuk/following{/other_user}",
@@ -1665,7 +1665,7 @@
                     "url": "https://api.github.com/users/venkmanuk"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/d805a9e1ea17638156b6a3607c9a4907?d=https%3A%2F%2Fidenticons.github.com%2Fb7ef38134ecabd15462b54966f4bad3a.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327231?",
                     "events_url": "https://api.github.com/users/Muskaria/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Muskaria/followers",
                     "following_url": "https://api.github.com/users/Muskaria/following{/other_user}",
@@ -1684,7 +1684,7 @@
                     "url": "https://api.github.com/users/Muskaria"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/0532471c18d27064eb940cf362c64343?d=https%3A%2F%2Fidenticons.github.com%2Fd007595b0d7865673d787b462bf41521.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327232?",
                     "events_url": "https://api.github.com/users/dbsichof/events{/privacy}",
                     "followers_url": "https://api.github.com/users/dbsichof/followers",
                     "following_url": "https://api.github.com/users/dbsichof/following{/other_user}",
@@ -1703,7 +1703,7 @@
                     "url": "https://api.github.com/users/dbsichof"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/6866921abb28d3cda0cf90af7dff44f0?d=https%3A%2F%2Fidenticons.github.com%2Fda04952c4ffdbb33aeae592269e34816.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327233?",
                     "events_url": "https://api.github.com/users/valley51/events{/privacy}",
                     "followers_url": "https://api.github.com/users/valley51/followers",
                     "following_url": "https://api.github.com/users/valley51/following{/other_user}",
@@ -1722,7 +1722,7 @@
                     "url": "https://api.github.com/users/valley51"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/52b1961bde705ea48b88cb5d70cd96ad?d=https%3A%2F%2Fidenticons.github.com%2Ffa749f144be3fac7745ff365e5017515.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327234?",
                     "events_url": "https://api.github.com/users/rodr-dpu/events{/privacy}",
                     "followers_url": "https://api.github.com/users/rodr-dpu/followers",
                     "following_url": "https://api.github.com/users/rodr-dpu/following{/other_user}",
@@ -1741,7 +1741,7 @@
                     "url": "https://api.github.com/users/rodr-dpu"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/b38f24a4ed98ca1b6776f8d120bad0c4?d=https%3A%2F%2Fidenticons.github.com%2Fc2d5b052ba7fe7f02a05636fc811c10c.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327235?",
                     "events_url": "https://api.github.com/users/lucaslcm/events{/privacy}",
                     "followers_url": "https://api.github.com/users/lucaslcm/followers",
                     "following_url": "https://api.github.com/users/lucaslcm/following{/other_user}",
@@ -1760,7 +1760,7 @@
                     "url": "https://api.github.com/users/lucaslcm"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/5dcc3aaea66586b4ffaf538edb47850b?d=https%3A%2F%2Fidenticons.github.com%2F4ca689562c939f7f656ea785f407e45e.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327236?",
                     "events_url": "https://api.github.com/users/biggytitbo/events{/privacy}",
                     "followers_url": "https://api.github.com/users/biggytitbo/followers",
                     "following_url": "https://api.github.com/users/biggytitbo/following{/other_user}",
@@ -1779,7 +1779,7 @@
                     "url": "https://api.github.com/users/biggytitbo"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/f46b6942be65359575174569d8979223?d=https%3A%2F%2Fidenticons.github.com%2Facc4e132777a44d2e28c72540d1c894f.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327237?",
                     "events_url": "https://api.github.com/users/jubianchi/events{/privacy}",
                     "followers_url": "https://api.github.com/users/jubianchi/followers",
                     "following_url": "https://api.github.com/users/jubianchi/following{/other_user}",
@@ -1798,7 +1798,7 @@
                     "url": "https://api.github.com/users/jubianchi"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/6b04f8f61808d795f91b36752aa9f6e2?d=https%3A%2F%2Fidenticons.github.com%2F6ce930e2320471e209d2d8823ee4fd80.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327238?",
                     "events_url": "https://api.github.com/users/guijarrodie/events{/privacy}",
                     "followers_url": "https://api.github.com/users/guijarrodie/followers",
                     "following_url": "https://api.github.com/users/guijarrodie/following{/other_user}",
@@ -1817,7 +1817,7 @@
                     "url": "https://api.github.com/users/guijarrodie"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/3af2e5dcebecb6e9ebd2df4fdb329d95?d=https%3A%2F%2Fidenticons.github.com%2Fd3e82cbf8254f7f5386af4441818f8aa.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327239?",
                     "events_url": "https://api.github.com/users/GeePeeGee/events{/privacy}",
                     "followers_url": "https://api.github.com/users/GeePeeGee/followers",
                     "following_url": "https://api.github.com/users/GeePeeGee/following{/other_user}",
@@ -1836,7 +1836,7 @@
                     "url": "https://api.github.com/users/GeePeeGee"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/c8c3c0a6734ea15f7a1ae4d4d3c9b718?d=https%3A%2F%2Fidenticons.github.com%2F39c77cf67577746a59d1581a28c4b103.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327240?",
                     "events_url": "https://api.github.com/users/Maptales/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Maptales/followers",
                     "following_url": "https://api.github.com/users/Maptales/following{/other_user}",
@@ -1855,7 +1855,7 @@
                     "url": "https://api.github.com/users/Maptales"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/7dc12a5cd78957b03f416cd98695229d?d=https%3A%2F%2Fidenticons.github.com%2F252fbc3c617e0f9356210f173b99a004.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327242?",
                     "events_url": "https://api.github.com/users/xyj/events{/privacy}",
                     "followers_url": "https://api.github.com/users/xyj/followers",
                     "following_url": "https://api.github.com/users/xyj/following{/other_user}",
@@ -1874,7 +1874,7 @@
                     "url": "https://api.github.com/users/xyj"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/d3c83b55c7115a75954b2e25e6a4f409?d=https%3A%2F%2Fidenticons.github.com%2F83c3e8dbf4e8011bcf7415026b661631.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327243?",
                     "events_url": "https://api.github.com/users/kprimrose/events{/privacy}",
                     "followers_url": "https://api.github.com/users/kprimrose/followers",
                     "following_url": "https://api.github.com/users/kprimrose/following{/other_user}",
@@ -1893,7 +1893,7 @@
                     "url": "https://api.github.com/users/kprimrose"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/41394824aacc1d9650ae3bcadb573742?d=https%3A%2F%2Fidenticons.github.com%2F3608cbd4e3301bfdf9b33010544a001b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327244?",
                     "events_url": "https://api.github.com/users/luczi87/events{/privacy}",
                     "followers_url": "https://api.github.com/users/luczi87/followers",
                     "following_url": "https://api.github.com/users/luczi87/following{/other_user}",
@@ -1912,7 +1912,7 @@
                     "url": "https://api.github.com/users/luczi87"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/b6ee6a22f3e2800f4bcfd91376358ee9?d=https%3A%2F%2Fidenticons.github.com%2F1ebdd9cb9c819408d89c54c28fab2166.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327245?",
                     "events_url": "https://api.github.com/users/forexsentral/events{/privacy}",
                     "followers_url": "https://api.github.com/users/forexsentral/followers",
                     "following_url": "https://api.github.com/users/forexsentral/following{/other_user}",
@@ -1931,7 +1931,7 @@
                     "url": "https://api.github.com/users/forexsentral"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/efc29d484497fab896f5227f2ffca8f0?d=https%3A%2F%2Fidenticons.github.com%2Fe20a5cd80bc43fe17943699a9c06a4ed.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327246?",
                     "events_url": "https://api.github.com/users/rc55/events{/privacy}",
                     "followers_url": "https://api.github.com/users/rc55/followers",
                     "following_url": "https://api.github.com/users/rc55/following{/other_user}",
@@ -1950,7 +1950,7 @@
                     "url": "https://api.github.com/users/rc55"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/84170f32ea5fea99757d047c02bb581e?d=https%3A%2F%2Fidenticons.github.com%2Ff8463a0280b7ce92681a2a838d9988c3.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327247?",
                     "events_url": "https://api.github.com/users/Tian/events{/privacy}",
                     "followers_url": "https://api.github.com/users/Tian/followers",
                     "following_url": "https://api.github.com/users/Tian/following{/other_user}",
@@ -1969,7 +1969,7 @@
                     "url": "https://api.github.com/users/Tian"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/241abac7b0ea2fdc39da4e98a8f97b06?d=https%3A%2F%2Fidenticons.github.com%2F8cb65df87209b2a70239966a5812aae5.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327248?",
                     "events_url": "https://api.github.com/users/stood/events{/privacy}",
                     "followers_url": "https://api.github.com/users/stood/followers",
                     "following_url": "https://api.github.com/users/stood/following{/other_user}",
@@ -1988,7 +1988,7 @@
                     "url": "https://api.github.com/users/stood"
                 },
                 {
-                    "avatar_url": "https://gravatar.com/avatar/3469e084b433b37420cc582e1a53cc4f?d=https%3A%2F%2Fidenticons.github.com%2Fc674538d28452f8817fc2e881b700d1b.png&r=x",
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327250?",
                     "events_url": "https://api.github.com/users/gspyrou/events{/privacy}",
                     "followers_url": "https://api.github.com/users/gspyrou/followers",
                     "following_url": "https://api.github.com/users/gspyrou/following{/other_user}",
@@ -2014,19 +2014,20 @@
                 "cache-control": "private, max-age=60, s-maxage=60",
                 "content-encoding": "gzip",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sun, 23 Feb 2014 00:43:58 GMT",
-                "etag": "\"60d481c769129314fc7e465d0523b42c\"",
-                "link": "<https://api.github.com/users?per_page=4&since=327250>; rel=\"next\", <https://api.github.com/users{?since}>; rel=\"first\"",
+                "date": "Sat, 29 Mar 2014 23:59:49 GMT",
+                "etag": "\"b5d8179a79596766080cb28475e0b68f\"",
+                "link": "<https://api.github.com/users?since=327250>; rel=\"next\", <https://api.github.com/users{?since}>; rel=\"first\"",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "transfer-encoding": "chunked",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
                 "x-content-type-options": "nosniff",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "62E81E32:732B:7F2275:5309444D",
+                "x-github-request-id": "62E81E32:1A95:5AF635E:53375E74",
                 "x-ratelimit-limit": "5000",
-                "x-ratelimit-remaining": "4982",
-                "x-ratelimit-reset": "1393119064"
+                "x-ratelimit-remaining": "4995",
+                "x-ratelimit-reset": "1396140933",
+                "x-served-by": "88d924ed861736d2749ce1a55766cb53"
             },
             "status": 200
         }

@@ -111,15 +111,4 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("GET", url)
-        ret = []
-        for d in r.json():
-            if d["type"] == "file" and "/git/trees/" in d["git_url"]:  # https://github.com/github/developer.github.com/commit/1b329b04cece9f3087faa7b1e0382317a9b93490
-                c = PyGithub.Blocking.Submodule.Submodule(self.Session, d, None)
-            elif d["type"] == "file":
-                c = PyGithub.Blocking.File.File(self.Session, d, None)
-            elif d["type"] == "symlink":
-                c = PyGithub.Blocking.SymLink.SymLink(self.Session, d, None)
-            elif d["type"] == "dir":  # pragma no branch (defensive programming)
-                c = PyGithub.Blocking.Dir.Dir(self.Session, d)
-            ret.append(c)
-        return ret
+        return rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.StructureConverter(self.Session, Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink)))(None, r.json())

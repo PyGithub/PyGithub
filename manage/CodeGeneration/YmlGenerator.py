@@ -203,6 +203,8 @@ class YmlGenerator:
                 data["key"] = type.key
             if type.keys is not None:
                 data["keys"] = tuple(type.keys)
+            if type.converter is not None:
+                data["converter"] = type.converter
             return data
 
     def createDataForNoneType(self, type):

@@ -184,7 +184,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/user")
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser)(None, r.json(), r.headers.get("ETag"))
 
     def get_emojis(self):
         """
@@ -197,7 +197,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/emojis")
         r = self.Session._request("GET", url)
-        return r.json()
+        return rcv.DictConverter(rcv.StringConverter, rcv.StringConverter)(None, r.json())
 
     def get_gitignore_template(self, name):
         """
@@ -213,7 +213,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/gitignore/templates/{name}", name=name)
         r = self.Session._request("GET", url)
-        return Github.GitIgnoreTemplate(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, Github.GitIgnoreTemplate)(None, r.json())
 
     def get_gitignore_templates(self):
         """
@@ -226,7 +226,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/gitignore/templates")
         r = self.Session._request("GET", url)
-        return r.json()
+        return rcv.ListConverter(rcv.StringConverter)(None, r.json())
 
     def get_meta(self):
         """
@@ -239,7 +239,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/meta")
         r = self.Session._request("GET", url)
-        return Github.Meta(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, Github.Meta)(None, r.json())
 
     def get_org(self, org):
         """
@@ -255,7 +255,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}", org=org)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Organization.Organization(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization)(None, r.json(), r.headers.get("ETag"))
 
     def get_rate_limit(self):
         """
@@ -268,7 +268,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/rate_limit")
         r = self.Session._request("GET", url)
-        return Github.RateLimit(self.Session, r.json())
+        return rcv.StructureConverter(self.Session, Github.RateLimit)(None, r.json())
 
     def get_repo(self, repo):
         """
@@ -287,7 +287,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Repository.Repository(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, since=None):
         """
@@ -304,7 +304,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/repositories")
         urlArguments = snd.dictionary(since=since)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.Repository.Repository, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_team(self, id):
         """
@@ -320,7 +321,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/teams/{id}", id=str(id))
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.Team.Team(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team)(None, r.json(), r.headers.get("ETag"))
 
     def get_user(self, user):
         """
@@ -336,7 +337,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/users/{user}", user=user)
         r = self.Session._request("GET", url)
-        return PyGithub.Blocking.User.User(self.Session, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User)(None, r.json(), r.headers.get("ETag"))
 
     def get_users(self, since=None):
         """
@@ -353,4 +354,5 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         url = uritemplate.expand("https://api.github.com/users")
         urlArguments = snd.dictionary(since=since)
-        return PyGithub.Blocking.PaginatedList.PaginatedList(PyGithub.Blocking.User.User, self.Session, "GET", url, urlArguments=urlArguments)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)

@@ -151,4 +151,5 @@ methods:
     url_template_arguments:
       - name: other_user
         value: parameter target_user
+    return_from: status
     return_type: bool

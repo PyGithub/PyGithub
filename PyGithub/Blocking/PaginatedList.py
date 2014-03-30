@@ -73,16 +73,11 @@ class PaginatedList(object):
     See also :meth:`.Builder.PerPage`.
     """
 
-    def __init__(self, klass, session, verb, url, urlArguments):
-        self.__contentClass = klass
+    def __init__(self, session, content, r):
         self.__session = session
-        self.__verb = verb
-        self.__url = url
+        self.__content = content
         self.__elements = []
-        if "per_page" not in urlArguments:
-            if session.PerPage is not None:
-                urlArguments["per_page"] = session.PerPage
-        self.__grow(urlArguments)
+        self.__growWith(r)
 
     def __getitem__(self, index):
         if isinstance(index, slice):
@@ -95,12 +90,13 @@ class PaginatedList(object):
 
     def __growToIndex(self, index):
         while len(self.__elements) <= index and self.__url is not None:
-            self.__grow({})
+            self.__growWith(self.__session._request("GET", self.__url))
 
-    def __grow(self, urlArguments):
-        r = self.__session._request("GET", self.__url, urlArguments)
+    def __growWith(self, r):
+        self.__elements += (self.__content(None, v) for v in r.json())
         self.__url = r.links.get("next", {"url": None})["url"]
-        self.__elements += [self.__contentClass(self.__session, e, None) for e in r.json()]
 
 # @todoAlpha class PaginatedListWithPages(PaginatedList):
     # def get_page(self, i):
+    # To be tested in each case with assertNotEqual(l[0].id, l.get_page(2)[0].id)
+    # because the GitHub API v3 can ignore the page argument (on /repositories for example)
