@@ -176,12 +176,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def user(self):
+    def owner(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
-        self._completeIfNotSet(self._user)
-        return self._user.value
+        self._completeIfNotSet(self._owner)
+        return self._owner.value
 
     def create_comment(self, body):
         """
@@ -316,7 +316,7 @@ class Gist(github.GithubObject.CompletableGithubObject):
         self._public = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
-        self._user = github.GithubObject.NotSet
+        self._owner = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "comments" in attributes:  # pragma no branch
@@ -353,5 +353,5 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+        if "owner" in attributes:  # pragma no branch
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
