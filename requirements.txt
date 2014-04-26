@@ -2,3 +2,4 @@ requests
 uritemplate.py
 simplejson
 MockMockMock
+coverage

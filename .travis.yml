@@ -2,5 +2,10 @@ language: python
 python:
   - "2.7"
   - "3.3"
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
 script:
-  - python setup.py test
+  - coverage run "--include=PyGithub/*" setup.py test
+after_success:
+  - coveralls
