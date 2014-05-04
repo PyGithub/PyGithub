@@ -103,8 +103,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         """
         if self._repository is github.GithubObject.NotSet:
             # The repository was not set automatically, so it must be looked up by url.
-            repo_url = "/".join(self.url.split("/")[:6])
-            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
+            repo_url = "/".join(self.url.split("/")[:6])  # pragma no cover (Should be covered)
+            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))  # pragma no cover (Should be covered)
         return self._repository.value
 
     @property

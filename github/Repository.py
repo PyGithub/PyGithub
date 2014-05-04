@@ -542,8 +542,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :type: integer
         """
-        self._completeIfNotSet(self._stargazers_count)
-        return self._stargazers_count.value
+        self._completeIfNotSet(self._stargazers_count)  # pragma no cover (Should be covered)
+        return self._stargazers_count.value  # pragma no cover (Should be covered)
 
     @property
     def stargazers_url(self):
