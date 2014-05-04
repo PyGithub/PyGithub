@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-############################ Copyrights and license ############################
+# ########################## Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -24,7 +24,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-################################################################################
+# ##############################################################################
 
 import github.GithubObject
 import github.PaginatedList

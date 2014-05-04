@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-############################ Copyrights and license ############################
+# ########################## Copyrights and license ############################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-################################################################################
+# ##############################################################################
 
 import github.GithubObject
 

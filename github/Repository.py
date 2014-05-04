@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-############################ Copyrights and license ############################
+# ########################## Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -27,7 +27,7 @@
 # You should have received a copy of the GNU Lesser General Public License     #
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
-################################################################################
+# ##############################################################################
 
 import urllib
 import datetime
