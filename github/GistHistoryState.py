@@ -157,6 +157,14 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def owner(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._owner)
+        return self._owner.value
+
+    @property
     def public(self):
         """
         :type: bool
@@ -212,6 +220,7 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
         self._history = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._owner = github.GithubObject.NotSet
         self._public = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -249,6 +258,8 @@ class GistHistoryState(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        if "owner" in attributes:  # pragma no branch
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
         if "updated_at" in attributes:  # pragma no branch
