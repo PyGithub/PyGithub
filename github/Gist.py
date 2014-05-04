@@ -152,6 +152,14 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def owner(self):
+        """
+        :type: :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._owner)
+        return self._owner.value
+
+    @property
     def public(self):
         """
         :type: bool
@@ -176,12 +184,12 @@ class Gist(github.GithubObject.CompletableGithubObject):
         return self._url.value
 
     @property
-    def owner(self):
+    def user(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
         """
-        self._completeIfNotSet(self._owner)
-        return self._owner.value
+        self._completeIfNotSet(self._user)
+        return self._user.value
 
     def create_comment(self, body):
         """
@@ -313,10 +321,11 @@ class Gist(github.GithubObject.CompletableGithubObject):
         self._history = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._owner = github.GithubObject.NotSet
         self._public = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
-        self._owner = github.GithubObject.NotSet
+        self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "comments" in attributes:  # pragma no branch
@@ -347,11 +356,13 @@ class Gist(github.GithubObject.CompletableGithubObject):
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
+        if "owner" in attributes:  # pragma no branch
+            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
         if "updated_at" in attributes:  # pragma no branch
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "owner" in attributes:  # pragma no branch
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+        if "user" in attributes:  # pragma no branch
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
