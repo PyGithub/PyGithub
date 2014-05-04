@@ -120,6 +120,9 @@ class Github(Framework.TestCase):
     def testGetRepoFromFullName(self):
         self.assertEqual(self.g.get_repo("jacquev6/PyGithub").description, "Python library implementing the full Github API v3")
 
+    def testGetRepoFromId(self):
+        self.assertEqual(self.g.get_repo(3544490).description, "Python library implementing the full Github API v3")
+
     def testGetGitignoreTemplates(self):
         self.assertEqual(self.g.get_gitignore_templates(), ["Actionscript", "Android", "AppceleratorTitanium", "Autotools", "Bancha", "C", "C++", "CFWheels", "CMake", "CSharp", "CakePHP", "Clojure", "CodeIgniter", "Compass", "Concrete5", "Coq", "Delphi", "Django", "Drupal", "Erlang", "ExpressionEngine", "Finale", "ForceDotCom", "FuelPHP", "GWT", "Go", "Grails", "Haskell", "Java", "Jboss", "Jekyll", "Joomla", "Jython", "Kohana", "LaTeX", "Leiningen", "LemonStand", "Lilypond", "Lithium", "Magento", "Maven", "Node", "OCaml", "Objective-C", "Opa", "OracleForms", "Perl", "PlayFramework", "Python", "Qooxdoo", "Qt", "R", "Rails", "RhodesRhomobile", "Ruby", "Scala", "Sdcc", "SeamGen", "SketchUp", "SugarCRM", "Symfony", "Symfony2", "SymphonyCMS", "Target3001", "Tasm", "Textpattern", "TurboGears2", "Unity", "VB.Net", "Waf", "Wordpress", "Yii", "ZendFramework", "gcov", "nanoc", "opencart"])
 
