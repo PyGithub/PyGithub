@@ -195,14 +195,14 @@ class GithubObject(object):
     @property
     def etag(self):
         '''
-        :type str
+        :type: str
         '''
         return self._headers.get(Consts.RES_ETAG)
 
     @property
     def last_modified(self):
         '''
-        :type str
+        :type: str
         '''
         return self._headers.get(Consts.RES_LAST_MODIFED)
 
