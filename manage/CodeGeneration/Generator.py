@@ -37,9 +37,9 @@ class Generator(object):
                 f.write("\n")
                 f.write("# Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>\n")
                 f.write("\n")
-                f.write("########################################################################\n")
-                f.write("###### This file is generated. Manual changes will likely be lost. #####\n")
-                f.write("########################################################################\n")
+                f.write("# ######################################################################\n")
+                f.write("# #### This file is generated. Manual changes will likely be lost. #####\n")
+                f.write("# ######################################################################\n")
                 f.write("\n")
             elif output.endswith(".rst"):
                 f.write(".. ########################################################################\n")

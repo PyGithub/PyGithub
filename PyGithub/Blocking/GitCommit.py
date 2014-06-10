@@ -2,9 +2,9 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
-########################################################################
-###### This file is generated. Manual changes will likely be lost. #####
-########################################################################
+# ######################################################################
+# #### This file is generated. Manual changes will likely be lost. #####
+# ######################################################################
 
 import logging
 log = logging.getLogger(__name__)
