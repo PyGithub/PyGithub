@@ -14,6 +14,7 @@ While v2 is in alpha, you have to clone or download it from `Github <https://git
     source env/bin/activate
     pip install -r requirements.txt
     python setup.py install
+    cd ..
     python -c "import PyGithub"
 
 
