@@ -262,11 +262,14 @@ class CodeGenerator:
 
     def generateCodeToNormalizeUnionParameter(self, parameter):
         if parameter.orig is None:
-            if parameter.type.types[0].category == "class":
-                t = parameter.type.types[0]
-                yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
-            else:
-                yield "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
+            # if parameter.type.types[0].category == "class":
+            #     t = parameter.type.types[0]
+            #     yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+            # else:
+                if parameter.name == "repo":
+                    yield "repo = snd.normalizeTwoStringsString(repo)"
+                else:
+                    yield "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
         else:
             t = parameter.type.types[0]
             yield "{} = snd.normalize{}{}({})".format(parameter.name, self.capfirst(t.name), "".join(p.capitalize() for p in parameter.orig.split("_")), parameter.name)
