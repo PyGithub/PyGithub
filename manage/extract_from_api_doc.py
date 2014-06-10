@@ -151,11 +151,15 @@ class ReferenceDocumentation:
                 line = line[1:]
             for v in ["GET", "PATCH", "DELETE", "POST", "PUT"]:
                 if line.startswith(v + " /"):
-                    verb, url = line.split(" ")
-                    if url in self.badlyNamedUrls:
-                        url = self.badlyNamedUrls[url]
-                    if url not in self.uninterestingUrls:
-                        endPoints.append(EndPoint(verb, url, doc))
+                    parts = line.split(" ")
+                    if len(parts) == 2:
+                        verb, url = parts
+                        if url in self.badlyNamedUrls:
+                            url = self.badlyNamedUrls[url]
+                        if url not in self.uninterestingUrls:
+                            endPoints.append(EndPoint(verb, url, doc))
+                    else:
+                        self.warning("Strange line", line)
         return endPoints
 
     def findParams(self, lines):
@@ -181,22 +185,24 @@ class ReferenceDocumentation:
     def warning(self, *texts):
         text = "WARNING: " + " ".join(texts)
         if text not in [
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search repositories -> Highlighting Repository Search Results",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search code -> Highlighting Code Search Results",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search issues -> Highlighting Issue Search Results",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search users -> Highlighting User Search Results",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/pulls.md -> Pull Requests -> Get a single pull request -> Mergability",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/orgs.md -> Organizations -> Edit an Organization -> Example",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/commits.md -> Commits -> Compare two commits -> Working with large comparisons",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Create a file -> Example Input",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Update a file -> Example Input",
-            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Delete a file -> Example Input",
             "WARNING: don't know what to do with section ../developer.github.com/content/v3/git/commits.md -> Commits -> Create a Commit -> Example Input",
             "WARNING: don't know what to do with section ../developer.github.com/content/v3/git/tags.md -> Tags -> Create a Tag Object -> Example Input",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/orgs.md -> Organizations -> Edit an Organization -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/pulls.md -> Pull Requests -> Get a single pull request -> Mergability",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos.md -> Repositories -> Create -> OAuth scope requirements",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/commits.md -> Commits -> Compare two commits -> Working with large comparisons",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Create a file -> Example Input",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Delete a file -> Example Input",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/repos/contents.md -> Contents -> Update a file -> Example Input",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search code -> Highlighting Code Search Results",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search issues -> Highlighting Issue Search Results",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search repositories -> Highlighting Repository Search Results",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/search.md -> Search -> Search users -> Highlighting User Search Results",
 
-            "WARNING: check that section ../developer.github.com/content/v3/rate_limit.md -> Rate Limit -> Get your current rate limit status -> Response -> Understanding Your Rate Limit Status is empty",
             "WARNING: check that section ../developer.github.com/content/v3/rate_limit.md -> Rate Limit -> Get your current rate limit status -> Response -> Deprecation Notice is empty",
-            "WARNING: check that section ../developer.github.com/content/v3/users/emails.md -> Emails -> List email addresses for a user -> Response -> Future Response is empty",
+            "WARNING: check that section ../developer.github.com/content/v3/rate_limit.md -> Rate Limit -> Get your current rate limit status -> Response -> Understanding Your Rate Limit Status is empty",
+
+            "WARNING: Strange line POST /payload HTTP/1.1",
         ]:
             print text
 

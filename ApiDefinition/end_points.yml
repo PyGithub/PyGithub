@@ -15,6 +15,8 @@
     doc: http://developer.github.com/v3/oauth_authorizations#revoke-an-authorization-for-an-application
   - verb: GET
     doc: http://developer.github.com/v3/oauth_authorizations#check-an-authorization
+  - verb: POST
+    doc: http://developer.github.com/v3/oauth_authorizations#reset-an-authorization
 /authorizations:
   - verb: GET
     doc: http://developer.github.com/v3/oauth_authorizations#list-your-authorizations
@@ -240,12 +242,17 @@
   - verb: GET
     parameters: [author, path, sha, since, until]
     doc: http://developer.github.com/v3/repos/commits#list-commits-on-a-repository
+/repos/:owner/:repo/commits/:ref/comments:
+  - verb: GET
+    doc: http://developer.github.com/v3/repos/comments#list-comments-for-a-single-commit
+/repos/:owner/:repo/commits/:ref/status:
+  - verb: GET
+    parameters: [ref]
+    doc: http://developer.github.com/v3/repos/statuses#get-the-combined-status-for-a-specific-ref
 /repos/:owner/:repo/commits/:sha:
   - verb: GET
     doc: http://developer.github.com/v3/repos/commits#get-a-single-commit
 /repos/:owner/:repo/commits/:sha/comments:
-  - verb: GET
-    doc: http://developer.github.com/v3/repos/comments#list-comments-for-a-single-commit
   - verb: POST
     parameters: [body, line, path, position, sha]
     doc: http://developer.github.com/v3/repos/comments#create-a-commit-comment
@@ -273,7 +280,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/deployments#list-deployments
   - verb: POST
-    parameters: [auto_merge, description, force, payload, ref]
+    parameters: [auto_merge, description, environment, force, payload, ref]
     doc: http://developer.github.com/v3/repos/deployments#create-a-deployment
 /repos/:owner/:repo/deployments/:id/statuses:
   - verb: GET
@@ -409,7 +416,7 @@
     doc: http://developer.github.com/v3/issues/comments#edit-a-comment
 /repos/:owner/:repo/issues/events:
   - verb: GET
-    doc: http://developer.github.com/v3/activity/events#list-issue-events-for-a-repository
+    doc: http://developer.github.com/v3/issues/events#list-events-for-a-repository
 /repos/:owner/:repo/issues/events/:id:
   - verb: GET
     doc: http://developer.github.com/v3/issues/events#get-a-single-event
@@ -508,7 +515,7 @@
     doc: http://developer.github.com/v3/pulls#get-if-a-pull-request-has-been-merged
   - verb: PUT
     parameters: [commit_message]
-    doc: http://developer.github.com/v3/pulls#merge-a-pull-request-merge-buttontrade
+    doc: http://developer.github.com/v3/pulls#merge-a-pull-request-merge-button
 /repos/:owner/:repo/pulls/comments:
   - verb: GET
     parameters: [direction, since, sort]
@@ -574,7 +581,7 @@
     doc: http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref
 /repos/:owner/:repo/statuses/:sha:
   - verb: POST
-    parameters: [description, state, target_url]
+    parameters: [context, description, state, target_url]
     doc: http://developer.github.com/v3/repos/statuses#create-a-status
 /repos/:owner/:repo/subscribers:
   - verb: GET

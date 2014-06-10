@@ -50,6 +50,13 @@ GET /applications/:client_id/tokens/:access_token
 
 Not yet implemented in PyGithub.
 
+POST /applications/:client_id/tokens/:access_token
+--------------------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/oauth_authorizations#reset-an-authorization>`__)
+
+Not yet implemented in PyGithub.
+
 GET /authorizations
 -------------------
 
@@ -612,17 +619,24 @@ GET /repos/:owner/:repo/commits
 
 Not yet implemented in PyGithub.
 
+GET /repos/:owner/:repo/commits/:ref/comments
+---------------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/comments#list-comments-for-a-single-commit>`__)
+
+Not yet implemented in PyGithub.
+
+GET /repos/:owner/:repo/commits/:ref/status
+-------------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/statuses#get-the-combined-status-for-a-specific-ref>`__)
+
+Not yet implemented in PyGithub.
+
 GET /repos/:owner/:repo/commits/:sha
 ------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/commits#get-a-single-commit>`__)
-
-Not yet implemented in PyGithub.
-
-GET /repos/:owner/:repo/commits/:sha/comments
----------------------------------------------
-
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/comments#list-comments-for-a-single-commit>`__)
 
 Not yet implemented in PyGithub.
 
@@ -1015,7 +1029,7 @@ Not yet implemented in PyGithub.
 GET /repos/:owner/:repo/issues/events
 -------------------------------------
 
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-issue-events-for-a-repository>`__)
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/events#list-events-for-a-repository>`__)
 
 Not yet implemented in PyGithub.
 
@@ -1250,7 +1264,7 @@ Not yet implemented in PyGithub.
 PUT /repos/:owner/:repo/pulls/:number/merge
 -------------------------------------------
 
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#merge-a-pull-request-merge-buttontrade>`__)
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#merge-a-pull-request-merge-button>`__)
 
 Not yet implemented in PyGithub.
 
