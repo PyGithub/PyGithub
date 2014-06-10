@@ -9,24 +9,26 @@ import shutil
 
 
 def main():
-    if not os.path.exists("gh-pages"):
-        subprocess.check_call([
-            "git",
-            "clone",
-            ".",
-            "gh-pages",
-            "-b", "gh-pages",
-        ])
-
-    os.chdir("gh-pages")
+    if os.path.exists("gh-pages"):
+        shutil.rmtree("gh-pages")
 
     subprocess.check_call([
         "git",
-        "pull",
-        "--ff-only",
-        "git@github.com:jacquev6/PyGithub",
+        "branch",
+        "-f",
         "gh-pages",
+        "github/gh-pages",
     ])
+
+    subprocess.check_call([
+        "git",
+        "clone",
+        ".",
+        "gh-pages",
+        "-b", "gh-pages",
+    ])
+
+    os.chdir("gh-pages")
 
     subprocess.check_call([
         "sphinx-build",
