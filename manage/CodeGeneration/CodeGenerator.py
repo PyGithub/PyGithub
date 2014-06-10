@@ -385,7 +385,7 @@ class CodeGenerator:
 
     def generateCodeForStringValue(self, method, value):
         format = "{}"
-        if value.__class__.__name__[:-5] == "Parameter" and value.parameter == "id":  # @todoGeni Test against the type instead of the name
+        if value.__class__.__name__[:-5] == "Parameter" and value.parameter in ["id", "number"]:  # @todoGeni Test against the type instead of the name
             format = "str({})"
         if value.__class__.__name__[:-5] == "Attribute" and value.attribute == "id":  # @todoGeni Test against the type instead of the name
             format = "str({})"

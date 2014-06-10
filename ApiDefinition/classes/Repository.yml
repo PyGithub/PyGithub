@@ -439,6 +439,16 @@ methods:
       - name: sha
         value: parameter sha
     return_type: GitTree
+  - name: get_issue
+    end_point: GET /repos/:owner/:repo/issues/:number
+    parameters:
+      - name: number
+        type: int
+    url_template: attribute issues_url
+    url_template_arguments:
+      - name: number
+        value: parameter number
+    return_type: Issue
   - name: get_key
     end_point: GET /repos/:owner/:repo/keys/:id
     parameters:
@@ -455,6 +465,26 @@ methods:
     return_type:
       container: list
       content: PublicKey
+  - name: get_label
+    end_point: GET /repos/:owner/:repo/labels/:name
+    parameters:
+      - name: name
+        type: string
+    url_template: attribute labels_url
+    url_template_arguments:
+      - name: name
+        value: parameter name
+    return_type: Label
+  - name: get_milestone
+    end_point: GET /repos/:owner/:repo/milestones/:number
+    parameters:
+      - name: number
+        type: int
+    url_template: attribute milestones_url
+    url_template_arguments:
+      - name: number
+        value: parameter number
+    return_type: Milestone
   - name: get_readme
     end_point: GET /repos/:owner/:repo/readme
     optional_parameters:

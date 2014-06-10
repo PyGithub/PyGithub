@@ -940,7 +940,8 @@ GET /repos/:owner/:repo/issues/:number
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#get-a-single-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_issue`
 
 PATCH /repos/:owner/:repo/issues/:number
 ----------------------------------------
@@ -1098,7 +1099,8 @@ GET /repos/:owner/:repo/labels/:name
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#get-a-single-label>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_label`
 
 PATCH /repos/:owner/:repo/labels/:name
 --------------------------------------
@@ -1147,7 +1149,8 @@ GET /repos/:owner/:repo/milestones/:number
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/milestones#get-a-single-milestone>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_milestone`
 
 PATCH /repos/:owner/:repo/milestones/:number
 --------------------------------------------

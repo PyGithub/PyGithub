@@ -1,0 +1,46 @@
+updatable: false
+attributes:
+  - name: assignee
+    type: User
+  - name: body
+    type: string
+  - name: body_html
+    type: string
+  - name: body_text
+    type: string
+  - name: closed_at
+    type: datetime
+  - name: closed_by
+    type: User
+  - name: comments
+    type: int
+  - name: comments_url
+    type: string
+  - name: created_at
+    type: datetime
+  - name: events_url
+    type: string
+  - name: html_url
+    type: string
+  - name: id
+    type: int
+  - name: labels
+    type:
+      container: list
+      content: Label
+  - name: labels_url
+    type: string
+  - name: milestone
+    type: Milestone
+  - name: number
+    type: int
+  - name: state
+    type: string
+  - name: title
+    type: string
+  - name: updated_at
+    type: datetime
+  - name: url
+    type: string
+  - name: user
+    type: User

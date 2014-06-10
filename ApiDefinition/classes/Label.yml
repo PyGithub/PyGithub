@@ -1,0 +1,8 @@
+updatable: false
+attributes:
+  - name: color
+    type: string
+  - name: name
+    type: string
+  - name: url
+    type: string

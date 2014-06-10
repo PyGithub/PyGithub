@@ -454,3 +454,15 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
     def testGetGitTree(self):
         tree = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_git_tree("83e7163e208723d366a758b7cbef1042e77b9e8b")
         self.assertEqual(tree.sha, "83e7163e208723d366a758b7cbef1042e77b9e8b")
+
+    def testGetIssue(self):
+        issue = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_issue(1)
+        self.assertEqual(issue.title, "First issue")
+
+    def testGetLabel(self):
+        label = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_label("bug")
+        self.assertEqual(label.color, "fc2929")
+
+    def testGetMilestone(self):
+        milestone = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_milestone(1)
+        self.assertEqual(milestone.title, "First milestone")

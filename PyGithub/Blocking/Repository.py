@@ -22,6 +22,9 @@ import PyGithub.Blocking.File
 import PyGithub.Blocking.GitBlob
 import PyGithub.Blocking.GitCommit
 import PyGithub.Blocking.GitTree
+import PyGithub.Blocking.Issue
+import PyGithub.Blocking.Label
+import PyGithub.Blocking.Milestone
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Submodule
@@ -1140,6 +1143,22 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree)(None, r.json(), r.headers.get("ETag"))
 
+    def get_issue(self, number):
+        """
+        Calls the `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues#get-a-single-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param number: mandatory :class:`int`
+        :rtype: :class:`.Issue`
+        """
+
+        number = snd.normalizeInt(number)
+
+        url = uritemplate.expand(self.issues_url, number=str(number))
+        r = self.Session._request("GET", url)
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
+
     def get_key(self, id):
         """
         Calls the `GET /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys#get>`__ end point.
@@ -1168,6 +1187,38 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         url = uritemplate.expand(self.keys_url)
         r = self.Session._request("GET", url)
         return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
+
+    def get_label(self, name):
+        """
+        Calls the `GET /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels#get-a-single-label>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param name: mandatory :class:`string`
+        :rtype: :class:`.Label`
+        """
+
+        name = snd.normalizeString(name)
+
+        url = uritemplate.expand(self.labels_url, name=name)
+        r = self.Session._request("GET", url)
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Label.Label)(None, r.json(), r.headers.get("ETag"))
+
+    def get_milestone(self, number):
+        """
+        Calls the `GET /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones#get-a-single-milestone>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param number: mandatory :class:`int`
+        :rtype: :class:`.Milestone`
+        """
+
+        number = snd.normalizeInt(number)
+
+        url = uritemplate.expand(self.milestones_url, number=str(number))
+        r = self.Session._request("GET", url)
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Milestone.Milestone)(None, r.json(), r.headers.get("ETag"))
 
     def get_readme(self, ref=None):
         """

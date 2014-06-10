@@ -16,6 +16,9 @@ from PyGithub.Blocking.tests.Classes.GitBlobTestCase import *
 from PyGithub.Blocking.tests.Classes.GitCommitTestCase import *
 from PyGithub.Blocking.tests.Classes.GithubTestCase import *
 from PyGithub.Blocking.tests.Classes.GitTreeTestCase import *
+from PyGithub.Blocking.tests.Classes.IssueTestCase import *
+from PyGithub.Blocking.tests.Classes.LabelTestCase import *
+from PyGithub.Blocking.tests.Classes.MilestoneTestCase import *
 from PyGithub.Blocking.tests.Classes.OrganizationTestCase import *
 from PyGithub.Blocking.tests.Classes.PublicKeyTestCase import *
 from PyGithub.Blocking.tests.Classes.RepositoryTestCase import *

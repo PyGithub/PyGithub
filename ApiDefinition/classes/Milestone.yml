@@ -1,0 +1,28 @@
+updatable: false
+attributes:
+  - name: closed_issues
+    type: int
+  - name: created_at
+    type: datetime
+  - name: creator
+    type: User
+  - name: description
+    type: string
+  - name: due_on
+    type: datetime
+  - name: id
+    type: int
+  - name: labels_url
+    type: string
+  - name: number
+    type: int
+  - name: open_issues
+    type: int
+  - name: state
+    type: string
+  - name: title
+    type: string
+  - name: updated_at
+    type: datetime
+  - name: url
+    type: string
