@@ -5,6 +5,7 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
+  - pip install requests==2.0.0 # @todoAlpha Remove this fixed requirement added because test framework fails with 2.2.x
 script:
   - coverage run "--include=PyGithub/*" setup.py test
 after_success:
