@@ -76,7 +76,7 @@ There are several ways to access a repository:
 
     >>> pygithub = me.get_repo("PyGithub")
     >>> print pygithub.description
-    Python library implementing the full Github API v3
+    Python library implementing the full GitHub API v3
 
 * if you have its full name, use :meth:`.Github.get_repo`::
 
@@ -88,7 +88,7 @@ There are several ways to access a repository:
 
     >>> apidoc = g.get_repo(("github", "developer.github.com"))
     >>> print apidoc.description
-    GitHub API documentation
+    GitHub Developer site
 
 * if you want to list someone's repositories, use :meth:`get_repos`::
 
