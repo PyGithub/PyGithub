@@ -23,9 +23,8 @@ class OAuth(object):
             Redirect user to request GitHub access.
         """
         params = {'client_id': self.client_id}
-        headers, data = self.requester.requestJsonAndCheck(
-            verb="GET", url=AUTHORIZE_URL, parameters=params)
-        return data
+        return  self.requester.__addParametersToUrl(url=AUTHORIZE_URL,
+                                                    parameters=params)
 
     def get_access_token(self, code):
         """Second step of the authentication process -
