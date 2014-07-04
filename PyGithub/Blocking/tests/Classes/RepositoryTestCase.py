@@ -463,6 +463,11 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
         label = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_label("bug")
         self.assertEqual(label.color, "fc2929")
 
+    # @todoAlpha follow-up with issue opened to github for labels with % sign
+    # def testGetLabel_weirdName(self):
+    #     label = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_label("space é % space")
+    #     self.assertEqual(label.name, "space é % space".decode("utf-8"))
+
     def testGetMilestone(self):
         milestone = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_milestone(1)
         self.assertEqual(milestone.title, "First milestone")
