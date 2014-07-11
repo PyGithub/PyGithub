@@ -216,6 +216,8 @@ class Definition(object):
             for m in c.methods:
                 implemented.update(m.endPoints)
 
+        print("INFO: Implemented end-points:", len(implemented), " - unimplemented end-points: ", len(unimplemented))
+
         inter = implemented & unimplemented
         assert len(inter) == 0, inter
         diff = unimplemented - allEndPoints
