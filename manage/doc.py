@@ -11,6 +11,8 @@ import shutil
 def main():
     if os.path.exists("gh-pages"):
         shutil.rmtree("gh-pages")
+    if os.path.exists("doc/doctrees"):
+        shutil.rmtree("doc/doctrees")
 
     subprocess.check_call([
         "git",
