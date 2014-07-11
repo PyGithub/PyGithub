@@ -5,7 +5,7 @@ It covers almost the full API (see "What's missing" bellow), and all methods are
 
 Should you have any question, any remark, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
 
-PyGithub 1.x.x is stable and I don't plan to spend time adding missing functionalities. I still accept you pull requests.
+PyGithub 1.x.x is stable and I don't plan to spend time adding missing functionalities. I still accept your pull requests.
 Here is the `references documentation <http://jacquev6.github.io/PyGithub/v1>`_.
 
 I'm currently developing the `version 2 of PyGithub <https://github.com/jacquev6/PyGithub/tree/develop_v2>`_.
