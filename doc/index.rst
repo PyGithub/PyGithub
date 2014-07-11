@@ -10,6 +10,7 @@ This documentation is structured as follows:
  * A short :ref:`introduction` to start using PyGithub in a few minutes
  * A brief :ref:`migration` to help you migrate your code from v1 to v2.
  * A comprehensive :ref:`user_guide` to cover all the topics you need to use PyGithub in your project
+ * A :ref:`cook_book`
  * A :ref:`rationale` to understand the choices made in the design of PyGithub
  * A thoroughly cross-linked :ref:`reference`
 
@@ -18,6 +19,7 @@ This documentation is structured as follows:
 
   introduction
   user_guide
+  cook_book
   rationale
   reference
   migration
