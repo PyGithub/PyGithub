@@ -206,9 +206,11 @@ class Definition(object):
         return effect  # @todoGeni Structure
 
     def __validate(self, dirName):
-        with open(os.path.join(dirName, "unimplemented.yml")) as f:
-            data = yaml.load(f.read())
-        unimplemented = set(verb + " " + url for url, verbs in data.items() for verb in verbs)
+        unimplemented = set()
+        for fileName in glob.glob(os.path.join(dirName, "unimplemented.*.yml")):
+            with open(fileName) as f:
+                data = yaml.load(f.read())
+                unimplemented.update(verb + " " + url for url, verbs in data.items() for verb in verbs)
 
         allEndPoints = set(ep.verb + " " + ep.url for ep in self.endPoints)
         implemented = set()

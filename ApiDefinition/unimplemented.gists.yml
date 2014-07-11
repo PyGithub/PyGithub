@@ -1,0 +1,8 @@
+/gists: [GET, POST]
+/gists/:id: [DELETE, GET, PATCH]
+/gists/:id/commits: [GET]
+/gists/:id/forks: [GET, POST]
+/gists/:id/star: [DELETE, GET, PUT]
+/gists/public: [GET]
+/gists/starred: [GET]
+/users/:username/gists: [GET]

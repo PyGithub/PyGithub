@@ -20,7 +20,6 @@ class Generator(object):
     def generate(self):
         self.__writeFile(self.rstGenerator.generateApis(self.__definition.endPoints), "doc/reference/apis.rst")
         self.__writeFile(self.ymlGenerator.generateEndpoints(self.__definition.endPoints), "ApiDefinition/end_points.yml")
-        self.__writeFile(self.ymlGenerator.generateUnimplemented(self.__definition.classes, self.__definition.endPoints), "ApiDefinition/unimplemented.yml")
 
         for klass in self.__definition.classes:
             self.__writeFile(self.rstGenerator.generateClass(klass), os.path.join("doc", "reference", "classes", klass.name + ".rst"))
