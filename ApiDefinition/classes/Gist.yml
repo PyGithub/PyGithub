@@ -1,4 +1,27 @@
 updatable: true
+structures:
+  - name: ChangeStatus
+    updatable: false
+    attributes:
+      - name: additions
+        type: int
+      - name: deletions
+        type: int
+      - name: total
+        type: int
+  - name: HistoryElement
+    updatable: false
+    attributes:
+      - name: change_status
+        type: ChangeStatus
+      - name: committed_at
+        type: datetime
+      - name: url
+        type: string
+      - name: user
+        type: User
+      - name: version
+        type: string
 attributes:
   - name: comments
     type: int
@@ -16,6 +39,10 @@ attributes:
     type: string
   - name: git_push_url
     type: string
+  - name: history
+    type:
+      container: list
+      content: HistoryElement
   - name: html_url
     type: string
   - name: id
@@ -28,12 +55,12 @@ attributes:
     type: datetime
   - name: url
     type: string
+  - name: user
+    type: User
 deprecated_attributes:
   - files
   - fork_of
   - forks
-  - history
-  - user
 methods:
   - name: delete
     end_point: DELETE /gists/:id

@@ -105,7 +105,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
         import PyGithub.Blocking.Gist
 
-        # files = snd.normalizeBool(files)
         if description is not None:
             description = snd.normalizeString(description)
         if public is not None:

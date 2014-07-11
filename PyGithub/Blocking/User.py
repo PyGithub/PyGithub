@@ -31,8 +31,10 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :meth:`.AuthenticatedUser.get_followers`
       * :meth:`.AuthenticatedUser.get_following`
       * :attr:`.Gist.owner`
+      * :attr:`.Gist.user`
       * :meth:`.Github.get_user`
       * :meth:`.Github.get_users`
+      * :attr:`.HistoryElement.user`
       * :attr:`.Issue.assignee`
       * :attr:`.Issue.closed_by`
       * :attr:`.Issue.user`

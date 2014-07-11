@@ -233,7 +233,9 @@ class CodeGenerator:
         yield ""
         if len(method.parameters) != 0:
             for p in method.parameters:
-                if p.name == "per_page":
+                if p.name == "files":  # @todoAlpha Remove this special case for AuthenticatedUser.create_gist when input type has been decided
+                    pass
+                elif p.name == "per_page":
                     yield "if per_page is None:"
                     yield "    per_page = self.Session.PerPage"
                     yield "else:"
