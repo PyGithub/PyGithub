@@ -61,6 +61,71 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__total.value
 
+    class GistFile(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :attr:`.Gist.files`
+        """
+
+        def _initAttributes(self, content=None, filename=None, language=None, raw_url=None, size=None, truncated=None, type=None, **kwds):
+            super(Gist.GistFile, self)._initAttributes(**kwds)
+            self.__content = rcv.Attribute("Gist.GistFile.content", rcv.StringConverter, content)
+            self.__filename = rcv.Attribute("Gist.GistFile.filename", rcv.StringConverter, filename)
+            self.__language = rcv.Attribute("Gist.GistFile.language", rcv.StringConverter, language)
+            self.__raw_url = rcv.Attribute("Gist.GistFile.raw_url", rcv.StringConverter, raw_url)
+            self.__size = rcv.Attribute("Gist.GistFile.size", rcv.IntConverter, size)
+            self.__truncated = rcv.Attribute("Gist.GistFile.truncated", rcv.BoolConverter, truncated)
+            self.__type = rcv.Attribute("Gist.GistFile.type", rcv.StringConverter, type)
+
+        @property
+        def content(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__content.value
+
+        @property
+        def filename(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__filename.value
+
+        @property
+        def language(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__language.value
+
+        @property
+        def raw_url(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__raw_url.value
+
+        @property
+        def size(self):
+            """
+            :type: :class:`int`
+            """
+            return self.__size.value
+
+        @property
+        def truncated(self):
+            """
+            :type: :class:`bool`
+            """
+            return self.__truncated.value
+
+        @property
+        def type(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__type.value
+
     class HistoryElement(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
@@ -110,7 +175,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__version.value
 
-    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, files=None, fork_of=None, forks=None, **kwds):
+    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, fork_of=None, forks=None, **kwds):
         import PyGithub.Blocking.User
         super(Gist, self)._initAttributes(**kwds)
         self.__comments = rcv.Attribute("Gist.comments", rcv.IntConverter, comments)
@@ -118,6 +183,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__commits_url = rcv.Attribute("Gist.commits_url", rcv.StringConverter, commits_url)
         self.__created_at = rcv.Attribute("Gist.created_at", rcv.DatetimeConverter, created_at)
         self.__description = rcv.Attribute("Gist.description", rcv.StringConverter, description)
+        self.__files = rcv.Attribute("Gist.files", rcv.DictConverter(rcv.StringConverter, rcv.StructureConverter(self.Session, Gist.GistFile)), files)
         self.__forks_url = rcv.Attribute("Gist.forks_url", rcv.StringConverter, forks_url)
         self.__git_pull_url = rcv.Attribute("Gist.git_pull_url", rcv.StringConverter, git_pull_url)
         self.__git_push_url = rcv.Attribute("Gist.git_push_url", rcv.StringConverter, git_push_url)
@@ -130,13 +196,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__url = rcv.Attribute("Gist.url", rcv.StringConverter, url)
         self.__user = rcv.Attribute("Gist.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, files=None, fork_of=None, forks=None, **kwds):
+    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, fork_of=None, forks=None, **kwds):
         super(Gist, self)._updateAttributes(eTag, **kwds)
         self.__comments.update(comments)
         self.__comments_url.update(comments_url)
         self.__commits_url.update(commits_url)
         self.__created_at.update(created_at)
         self.__description.update(description)
+        self.__files.update(files)
         self.__forks_url.update(forks_url)
         self.__git_pull_url.update(git_pull_url)
         self.__git_push_url.update(git_push_url)
@@ -188,6 +255,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__description.needsLazyCompletion)
         return self.__description.value
+
+    @property
+    def files(self):
+        """
+        :type: :class:`dict` of :class:`string` to :class:`.GistFile`
+        """
+        self._completeLazily(self.__files.needsLazyCompletion)
+        return self.__files.value
 
     @property
     def forks_url(self):

@@ -9,6 +9,23 @@ structures:
         type: int
       - name: total
         type: int
+  - name: GistFile
+    updatable: false
+    attributes:
+      - name: content
+        type: string
+      - name: filename
+        type: string
+      - name: language
+        type: string
+      - name: raw_url
+        type: string
+      - name: size
+        type: int
+      - name: truncated
+        type: bool
+      - name: type
+        type: string
   - name: HistoryElement
     updatable: false
     attributes:
@@ -33,6 +50,11 @@ attributes:
     type: datetime
   - name: description
     type: string
+  - name: files
+    type:
+      container: dict
+      key: string
+      value: GistFile
   - name: forks_url
     type: string
   - name: git_pull_url
@@ -58,7 +80,6 @@ attributes:
   - name: user
     type: User
 deprecated_attributes:
-  - files
   - fork_of
   - forks
 methods:
