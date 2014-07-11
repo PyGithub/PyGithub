@@ -30,7 +30,7 @@ Migration strategy and maintenance schedule
 Alpha
 -----
 
-The Alpha phase of PyGithub v2 started on March 2nd, 2014. During this phase:
+The Alpha phase of PyGithub v2 started on March 2nd, 2014. As of Jully 11th, we are still in the Alpha phase. During this phase:
 
  * You should continue to use v1 for your projects: I will continue to maintain v1, investigate and fix bugs and accept pull requests for new features but I won't spend time implementing new features.
  * You can use v2 if you want to have a preview or if you want to contribute to its development. v2 will be unstable: its API and behavior can change without any restriction. Development of v2 happens in branch `develop_v2 <https://github.com/jacquev6/PyGithub/tree/develop_v2>`__. Versions are taged v2.0.0-alpha.N where N is a simple integer.
