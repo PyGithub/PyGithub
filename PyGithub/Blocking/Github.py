@@ -16,13 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.AuthenticatedUser
-import PyGithub.Blocking.Gist
-import PyGithub.Blocking.Organization
-import PyGithub.Blocking.Repository
-import PyGithub.Blocking.Team
-import PyGithub.Blocking.User
-
 
 class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
@@ -182,6 +175,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         :rtype: :class:`.AuthenticatedUser`
         """
+        import PyGithub.Blocking.AuthenticatedUser
 
         url = uritemplate.expand("https://api.github.com/user")
         r = self.Session._request("GET", url)
@@ -209,6 +203,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param id: mandatory :class:`string`
         :rtype: :class:`.Gist`
         """
+        import PyGithub.Blocking.Gist
 
         id = snd.normalizeString(id)
 
@@ -267,6 +262,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param org: mandatory :class:`string`
         :rtype: :class:`.Organization`
         """
+        import PyGithub.Blocking.Organization
 
         org = snd.normalizeString(org)
 
@@ -299,6 +295,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param repo: mandatory :class:`(string, string)` or :class:`string`
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         repo = snd.normalizeTwoStringsString(repo)
 
@@ -315,6 +312,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param since: optional :class:`.Repository` or :class:`int` (its :attr:`.Repository.id`)
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if since is not None:
             since = snd.normalizeRepositoryId(since)
@@ -333,6 +332,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param id: mandatory :class:`int`
         :rtype: :class:`.Team`
         """
+        import PyGithub.Blocking.Team
 
         id = snd.normalizeInt(id)
 
@@ -349,6 +349,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param username: mandatory :class:`string`
         :rtype: :class:`.User`
         """
+        import PyGithub.Blocking.User
 
         username = snd.normalizeString(username)
 
@@ -365,6 +366,8 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param since: optional :class:`.User` or :class:`int` (its :attr:`.User.id`)
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if since is not None:
             since = snd.normalizeUserId(since)

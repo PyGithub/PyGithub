@@ -16,12 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.Gist
-import PyGithub.Blocking.Organization
-import PyGithub.Blocking.PublicKey
-import PyGithub.Blocking.Repository
-import PyGithub.Blocking.Subscription
-import PyGithub.Blocking.Team
 import PyGithub.Blocking.User
 
 
@@ -90,6 +84,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         repo = snd.normalizeRepositoryFullName(repo)
 
@@ -108,6 +103,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param public: optional :class:`bool`
         :rtype: :class:`.Gist`
         """
+        import PyGithub.Blocking.Gist
 
         # files = snd.normalizeBool(files)
         if description is not None:
@@ -130,6 +126,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param key: mandatory :class:`string`
         :rtype: :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         title = snd.normalizeString(title)
         key = snd.normalizeString(key)
@@ -157,6 +154,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         name = snd.normalizeString(name)
         if description is not None:
@@ -195,6 +193,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param ignored: mandatory :class:`bool`
         :rtype: :class:`.Subscription`
         """
+        import PyGithub.Blocking.Subscription
 
         repo = snd.normalizeRepositoryFullName(repo)
         subscribed = snd.normalizeBool(subscribed)
@@ -247,6 +246,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -267,6 +268,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -287,6 +290,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param id: mandatory :class:`int`
         :rtype: :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         id = snd.normalizeInt(id)
 
@@ -302,6 +306,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         :rtype: :class:`list` of :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         url = uritemplate.expand("https://api.github.com/user/keys")
         r = self.Session._request("GET", url)
@@ -316,6 +321,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Organization`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Organization
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -339,6 +346,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param repo: mandatory :class:`string`
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         repo = snd.normalizeString(repo)
 
@@ -358,6 +366,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if sort is not None:
             sort = snd.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
@@ -386,6 +396,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if sort is not None:
             sort = snd.normalizeEnum(sort, "created", "updated")
@@ -410,6 +422,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Subscription`
         """
+        import PyGithub.Blocking.Subscription
 
         repo = snd.normalizeRepositoryFullName(repo)
 
@@ -426,6 +439,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -446,6 +461,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Team
 
         if per_page is None:
             per_page = self.Session.PerPage

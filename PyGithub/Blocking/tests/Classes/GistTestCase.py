@@ -29,6 +29,8 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(g.public, True)
         self.assertEqual(g.updated_at, datetime.datetime(2013, 4, 8, 19, 4, 7))
         self.assertEqual(g.url, "https://api.github.com/gists/5339374")
+        self.assertEqual(g.owner.login, "jacquev6")
 
-    def testUpdate(self):
-        # @todoAlpha Test update on all classes?
+    # @todoAlpha Test update on all classes?
+    # def testUpdate(self):
+    #     pass

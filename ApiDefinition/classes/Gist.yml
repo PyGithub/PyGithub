@@ -20,6 +20,8 @@ attributes:
     type: string
   - name: id
     type: string
+  - name: owner
+    type: User
   - name: public
     type: bool
   - name: updated_at
@@ -31,7 +33,6 @@ deprecated_attributes:
   - fork_of
   - forks
   - history
-  - owner
   - user
 methods:
   - name: delete

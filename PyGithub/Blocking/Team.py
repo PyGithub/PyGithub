@@ -16,10 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.Organization
-import PyGithub.Blocking.Repository
-import PyGithub.Blocking.User
-
 
 class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -36,6 +32,7 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
 
     def _initAttributes(self, id=rcv.Absent, members_count=rcv.Absent, members_url=rcv.Absent, name=rcv.Absent, organization=rcv.Absent, permission=rcv.Absent, repos_count=rcv.Absent, repositories_url=rcv.Absent, slug=rcv.Absent, url=rcv.Absent, **kwds):
+        import PyGithub.Blocking.Organization
         super(Team, self)._initAttributes(**kwds)
         self.__id = rcv.Attribute("Team.id", rcv.IntConverter, id)
         self.__members_count = rcv.Attribute("Team.members_count", rcv.IntConverter, members_count)
@@ -213,6 +210,8 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -233,6 +232,8 @@ class Team(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if per_page is None:
             per_page = self.Session.PerPage

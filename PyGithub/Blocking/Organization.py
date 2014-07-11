@@ -17,9 +17,6 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.Entity
-import PyGithub.Blocking.Repository
-import PyGithub.Blocking.Team
-import PyGithub.Blocking.User
 
 
 class Organization(PyGithub.Blocking.Entity.Entity):
@@ -97,6 +94,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         repo = snd.normalizeRepositoryFullName(repo)
 
@@ -124,6 +122,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         name = snd.normalizeString(name)
         if description is not None:
@@ -163,6 +162,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param permission: optional "pull" or "push" or "admin"
         :rtype: :class:`.Team`
         """
+        import PyGithub.Blocking.Team
 
         name = snd.normalizeString(name)
         if repo_names is not None:
@@ -218,6 +218,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if filter is not None:
             filter = snd.normalizeEnum(filter, "all", "2fa_disabled")
@@ -240,6 +242,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -263,6 +267,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param repo: mandatory :class:`string`
         :rtype: :class:`.Repository`
         """
+        import PyGithub.Blocking.Repository
 
         repo = snd.normalizeString(repo)
 
@@ -280,6 +285,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Repository
 
         if type is not None:
             type = snd.normalizeEnum(type, "all", "public", "private", "forks", "sources", "member")
@@ -302,6 +309,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Team
 
         if per_page is None:
             per_page = self.Session.PerPage

@@ -28,7 +28,8 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Github.get_gist`
     """
 
-    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, files=None, fork_of=None, forks=None, history=None, owner=None, user=None, **kwds):
+    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, files=None, fork_of=None, forks=None, history=None, user=None, **kwds):
+        import PyGithub.Blocking.User
         super(Gist, self)._initAttributes(**kwds)
         self.__comments = rcv.Attribute("Gist.comments", rcv.IntConverter, comments)
         self.__comments_url = rcv.Attribute("Gist.comments_url", rcv.StringConverter, comments_url)
@@ -40,11 +41,12 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__git_push_url = rcv.Attribute("Gist.git_push_url", rcv.StringConverter, git_push_url)
         self.__html_url = rcv.Attribute("Gist.html_url", rcv.StringConverter, html_url)
         self.__id = rcv.Attribute("Gist.id", rcv.StringConverter, id)
+        self.__owner = rcv.Attribute("Gist.owner", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), owner)
         self.__public = rcv.Attribute("Gist.public", rcv.BoolConverter, public)
         self.__updated_at = rcv.Attribute("Gist.updated_at", rcv.DatetimeConverter, updated_at)
         self.__url = rcv.Attribute("Gist.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, files=None, fork_of=None, forks=None, history=None, owner=None, user=None, **kwds):
+    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, files=None, fork_of=None, forks=None, history=None, user=None, **kwds):
         super(Gist, self)._updateAttributes(eTag, **kwds)
         self.__comments.update(comments)
         self.__comments_url.update(comments_url)
@@ -56,6 +58,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__git_push_url.update(git_push_url)
         self.__html_url.update(html_url)
         self.__id.update(id)
+        self.__owner.update(owner)
         self.__public.update(public)
         self.__updated_at.update(updated_at)
         self.__url.update(url)
@@ -139,6 +142,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__id.needsLazyCompletion)
         return self.__id.value
+
+    @property
+    def owner(self):
+        """
+        :type: :class:`.User`
+        """
+        self._completeLazily(self.__owner.needsLazyCompletion)
+        return self.__owner.value
 
     @property
     def public(self):

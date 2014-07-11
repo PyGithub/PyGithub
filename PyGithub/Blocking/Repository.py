@@ -16,22 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.Contributor
-import PyGithub.Blocking.Dir
-import PyGithub.Blocking.File
-import PyGithub.Blocking.GitBlob
-import PyGithub.Blocking.GitCommit
-import PyGithub.Blocking.GitTree
-import PyGithub.Blocking.Issue
-import PyGithub.Blocking.Label
-import PyGithub.Blocking.Milestone
-import PyGithub.Blocking.Organization
-import PyGithub.Blocking.PublicKey
-import PyGithub.Blocking.Submodule
-import PyGithub.Blocking.SymLink
-import PyGithub.Blocking.Team
-import PyGithub.Blocking.User
-
 
 class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -160,6 +144,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             return self.__push.value
 
     def _initAttributes(self, archive_url=rcv.Absent, assignees_url=rcv.Absent, blobs_url=rcv.Absent, branches_url=rcv.Absent, clone_url=rcv.Absent, collaborators_url=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, compare_url=rcv.Absent, contents_url=rcv.Absent, contributors_url=rcv.Absent, created_at=rcv.Absent, default_branch=rcv.Absent, description=rcv.Absent, downloads_url=rcv.Absent, events_url=rcv.Absent, fork=rcv.Absent, forks_count=rcv.Absent, forks_url=rcv.Absent, full_name=rcv.Absent, git_commits_url=rcv.Absent, git_refs_url=rcv.Absent, git_tags_url=rcv.Absent, git_url=rcv.Absent, has_issues=rcv.Absent, has_wiki=rcv.Absent, homepage=rcv.Absent, hooks_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, issue_comment_url=rcv.Absent, issue_events_url=rcv.Absent, issues_url=rcv.Absent, keys_url=rcv.Absent, labels_url=rcv.Absent, language=rcv.Absent, languages_url=rcv.Absent, merges_url=rcv.Absent, milestones_url=rcv.Absent, mirror_url=rcv.Absent, name=rcv.Absent, network_count=rcv.Absent, notifications_url=rcv.Absent, open_issues_count=rcv.Absent, owner=rcv.Absent, parent=rcv.Absent, permissions=rcv.Absent, private=rcv.Absent, pulls_url=rcv.Absent, pushed_at=rcv.Absent, releases_url=rcv.Absent, size=rcv.Absent, source=rcv.Absent, ssh_url=rcv.Absent, stargazers_count=rcv.Absent, stargazers_url=rcv.Absent, statuses_url=rcv.Absent, subscribers_count=rcv.Absent, subscribers_url=rcv.Absent, subscription_url=rcv.Absent, svn_url=rcv.Absent, tags_url=rcv.Absent, teams_url=rcv.Absent, trees_url=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, watchers_count=rcv.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
+        import PyGithub.Blocking.Organization
+        import PyGithub.Blocking.User
         super(Repository, self)._initAttributes(**kwds)
         self.__archive_url = rcv.Attribute("Repository.archive_url", rcv.StringConverter, archive_url)
         self.__assignees_url = rcv.Attribute("Repository.assignees_url", rcv.StringConverter, assignees_url)
@@ -891,6 +877,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param encoding: mandatory :class:`string`
         :rtype: :class:`.GitBlob`
         """
+        import PyGithub.Blocking.GitBlob
 
         content = snd.normalizeString(content)
         encoding = snd.normalizeString(encoding)
@@ -910,6 +897,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param key: mandatory :class:`string`
         :rtype: :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         title = snd.normalizeString(title)
         key = snd.normalizeString(key)
@@ -979,6 +967,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -999,6 +989,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -1021,6 +1013,10 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param ref: optional :class:`string`
         :rtype: :class:`.File` or :class:`.Submodule` or :class:`.SymLink` or :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
+        import PyGithub.Blocking.Dir
+        import PyGithub.Blocking.File
+        import PyGithub.Blocking.Submodule
+        import PyGithub.Blocking.SymLink
 
         path = snd.normalizeString(path)
         if ref is not None:
@@ -1041,6 +1037,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Contributor` or :class:`.AnonymousContributor`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Contributor
 
         if anon is not None:
             anon = snd.normalizeBool(anon)
@@ -1064,6 +1062,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
+        import PyGithub.Blocking.BaseGithubObject
 
         if sort is not None:
             sort = snd.normalizeEnum(sort, "newest", "oldest", "stargazers")
@@ -1086,6 +1085,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param sha: mandatory :class:`string`
         :rtype: :class:`.GitBlob`
         """
+        import PyGithub.Blocking.GitBlob
 
         sha = snd.normalizeString(sha)
 
@@ -1102,6 +1102,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param sha: mandatory :class:`string`
         :rtype: :class:`.GitCommit`
         """
+        import PyGithub.Blocking.GitCommit
 
         sha = snd.normalizeString(sha)
 
@@ -1118,6 +1119,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param sha: mandatory :class:`string`
         :rtype: :class:`.GitTree`
         """
+        import PyGithub.Blocking.GitTree
 
         sha = snd.normalizeString(sha)
 
@@ -1134,6 +1136,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param number: mandatory :class:`int`
         :rtype: :class:`.Issue`
         """
+        import PyGithub.Blocking.Issue
 
         number = snd.normalizeInt(number)
 
@@ -1150,6 +1153,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param id: mandatory :class:`int`
         :rtype: :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         id = snd.normalizeInt(id)
 
@@ -1165,6 +1169,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         :rtype: :class:`list` of :class:`.PublicKey`
         """
+        import PyGithub.Blocking.PublicKey
 
         url = uritemplate.expand(self.keys_url)
         r = self.Session._request("GET", url)
@@ -1179,6 +1184,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param name: mandatory :class:`string`
         :rtype: :class:`.Label`
         """
+        import PyGithub.Blocking.Label
 
         name = snd.normalizeString(name)
 
@@ -1195,6 +1201,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param number: mandatory :class:`int`
         :rtype: :class:`.Milestone`
         """
+        import PyGithub.Blocking.Milestone
 
         number = snd.normalizeInt(number)
 
@@ -1211,6 +1218,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param ref: optional :class:`string`
         :rtype: :class:`.File`
         """
+        import PyGithub.Blocking.File
 
         if ref is not None:
             ref = snd.normalizeString(ref)
@@ -1229,6 +1237,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -1249,6 +1259,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.User
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -1269,6 +1281,8 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Team
 
         if per_page is None:
             per_page = self.Session.PerPage

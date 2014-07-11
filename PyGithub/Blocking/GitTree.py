@@ -16,8 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.GitBlob
-
 
 class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -73,6 +71,7 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             return self.__type.value
 
     def _initAttributes(self, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+        import PyGithub.Blocking.GitBlob
         super(GitTree, self)._initAttributes(**kwds)
         self.__mode = rcv.Attribute("GitTree.mode", rcv.StringConverter, mode)
         self.__path = rcv.Attribute("GitTree.path", rcv.StringConverter, path)

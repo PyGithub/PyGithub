@@ -16,8 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.User
-
 
 class Milestone(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
@@ -31,6 +29,7 @@ class Milestone(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
 
     def _initAttributes(self, closed_issues=rcv.Absent, created_at=rcv.Absent, creator=rcv.Absent, description=rcv.Absent, due_on=rcv.Absent, id=rcv.Absent, labels_url=rcv.Absent, number=rcv.Absent, open_issues=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+        import PyGithub.Blocking.User
         super(Milestone, self)._initAttributes(**kwds)
         self.__closed_issues = rcv.Attribute("Milestone.closed_issues", rcv.IntConverter, closed_issues)
         self.__created_at = rcv.Attribute("Milestone.created_at", rcv.DatetimeConverter, created_at)

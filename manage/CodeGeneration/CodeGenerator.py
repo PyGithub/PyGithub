@@ -16,10 +16,9 @@ class CodeGenerator:
         yield "import PyGithub.Blocking.PaginatedList"
         yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking._receive as rcv"
-        if len(klass.dependencies) != 0:
+        if klass.base.module != "PyGithub.Blocking.BaseGithubObject":
             yield ""
-            for d in klass.dependencies:
-                yield "import {}".format(d.module)
+            yield "import " + klass.base.module
         yield ""
         yield ""
 
@@ -95,11 +94,15 @@ class CodeGenerator:
 
     def createClassPrivateParts(self, klass):
         if len(klass.attributes) != 0:
-            yield (  # pragma no branch
+            init = (
                 PS.Method("_initAttributes")
                 .parameters((a.name, "rcv.Absent") for a in klass.attributes)
                 .parameters((a, "None") for a in klass.deprecatedAttributes)
                 .parameter("**kwds")
+            )
+            init.body(self.generateImportsForAllUnderlyingTypes(klass, [a.type for a in klass.attributes]))
+            yield (
+                init
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
             )
@@ -113,6 +116,15 @@ class CodeGenerator:
                     .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
                     .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
                 )
+
+    def generateImportsForAllUnderlyingTypes(self, klass, types):
+        imports = set()
+        for type in types:
+            for t in type.underlyingTypes:
+                if t.category == "class" and t is not klass:
+                    imports.add(t.module)
+        for i in sorted(imports):
+            yield "import " + i
 
     def createCallForAttributeInitializer(self, attribute):
         return (
@@ -217,6 +229,7 @@ class CodeGenerator:
         yield ":rtype: " + self.generateDocForType(method.returnType)
 
     def generateMethodBody(self, method):
+        yield from self.generateImportsForAllUnderlyingTypes(method.containerClass, [method.returnType])
         yield ""
         if len(method.parameters) != 0:
             for p in method.parameters:

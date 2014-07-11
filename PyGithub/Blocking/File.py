@@ -16,8 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.GitCommit
-
 
 class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -149,6 +147,7 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param committer: optional :class:`GitAuthor`
         :rtype: :class:`.GitCommit`
         """
+        import PyGithub.Blocking.GitCommit
 
         message = snd.normalizeString(message)
         if author is not None:
@@ -174,6 +173,7 @@ class File(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param committer: optional :class:`GitAuthor`
         :rtype: :class:`.GitCommit`
         """
+        import PyGithub.Blocking.GitCommit
 
         message = snd.normalizeString(message)
         content = snd.normalizeString(content)

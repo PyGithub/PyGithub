@@ -16,8 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.GitTree
-
 
 class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     """
@@ -68,6 +66,7 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             return self.__name.value
 
     def _initAttributes(self, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, url=rcv.Absent, **kwds):
+        import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
         self.__author = rcv.Attribute("GitCommit.author", rcv.StructureConverter(self.Session, GitCommit.Author), author)
         self.__committer = rcv.Attribute("GitCommit.committer", rcv.StructureConverter(self.Session, GitCommit.Author), committer)

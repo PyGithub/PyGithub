@@ -16,10 +16,6 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
-import PyGithub.Blocking.File
-import PyGithub.Blocking.Submodule
-import PyGithub.Blocking.SymLink
-
 
 class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
     """
@@ -108,6 +104,9 @@ class Dir(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
 
         :rtype: :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
+        import PyGithub.Blocking.File
+        import PyGithub.Blocking.Submodule
+        import PyGithub.Blocking.SymLink
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("GET", url)
