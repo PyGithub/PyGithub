@@ -172,14 +172,14 @@ deprecated_attributes:
   - watchers
 methods:
   - name: add_to_collaborators
-    end_point: PUT /repos/:owner/:repo/collaborators/:user
+    end_point: PUT /repos/:owner/:repo/collaborators/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
-        value: parameter user
+        value: parameter username
     return_type: none
   - name: create_file
     end_point: PUT /repos/:owner/:repo/contents/:path
@@ -539,32 +539,32 @@ methods:
   - name: has_in_assignees
     end_point: GET /repos/:owner/:repo/assignees/:assignee
     parameters:
-      - name: user
+      - name: assignee
         orig: User.login
     url_template: attribute assignees_url
     url_template_arguments:
       - name: user
-        value: parameter user
+        value: parameter assignee
     return_from: status
     return_type: bool
   - name: has_in_collaborators
-    end_point: GET /repos/:owner/:repo/collaborators/:user
+    end_point: GET /repos/:owner/:repo/collaborators/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
-        value: parameter user
+        value: parameter username
     return_from: status
     return_type: bool
   - name: remove_from_collaborators
-    end_point: DELETE /repos/:owner/:repo/collaborators/:user
+    end_point: DELETE /repos/:owner/:repo/collaborators/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
-        value: parameter user
+        value: parameter username
     return_type: none

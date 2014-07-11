@@ -323,19 +323,19 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team)(None, r.json(), r.headers.get("ETag"))
 
-    def get_user(self, user):
+    def get_user(self, username):
         """
-        Calls the `GET /users/:user <http://developer.github.com/v3/users#get-a-single-user>`__ end point.
+        Calls the `GET /users/:username <http://developer.github.com/v3/users#get-a-single-user>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`string`
+        :param username: mandatory :class:`string`
         :rtype: :class:`.User`
         """
 
-        user = snd.normalizeString(user)
+        username = snd.normalizeString(username)
 
-        url = uritemplate.expand("https://api.github.com/users/{user}", user=user)
+        url = uritemplate.expand("https://api.github.com/users/{username}", username=username)
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User)(None, r.json(), r.headers.get("ETag"))
 

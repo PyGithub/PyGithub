@@ -835,19 +835,19 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self._completeLazily(self.__watchers_count.needsLazyCompletion)
         return self.__watchers_count.value
 
-    def add_to_collaborators(self, user):
+    def add_to_collaborators(self, username):
         """
-        Calls the `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators#add-collaborator>`__ end point.
+        Calls the `PUT /repos/:owner/:repo/collaborators/:username <http://developer.github.com/v3/repos/collaborators#add-collaborator>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.collaborators_url, collaborator=user)
+        url = uritemplate.expand(self.collaborators_url, collaborator=username)
         r = self.Session._request("PUT", url)
 
     def create_file(self, path, message, content, branch=None, author=None, committer=None):
@@ -1298,49 +1298,49 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
-    def has_in_assignees(self, user):
+    def has_in_assignees(self, assignee):
         """
         Calls the `GET /repos/:owner/:repo/assignees/:assignee <http://developer.github.com/v3/issues/assignees#check-assignee>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUserLogin(user)
+        assignee = snd.normalizeUserLogin(assignee)
 
-        url = uritemplate.expand(self.assignees_url, user=user)
+        url = uritemplate.expand(self.assignees_url, user=assignee)
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
-    def has_in_collaborators(self, user):
+    def has_in_collaborators(self, username):
         """
-        Calls the `GET /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators#get>`__ end point.
+        Calls the `GET /repos/:owner/:repo/collaborators/:username <http://developer.github.com/v3/repos/collaborators#get>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.collaborators_url, collaborator=user)
+        url = uritemplate.expand(self.collaborators_url, collaborator=username)
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
-    def remove_from_collaborators(self, user):
+    def remove_from_collaborators(self, username):
         """
-        Calls the `DELETE /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators#remove-collaborator>`__ end point.
+        Calls the `DELETE /repos/:owner/:repo/collaborators/:username <http://developer.github.com/v3/repos/collaborators#remove-collaborator>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.collaborators_url, collaborator=user)
+        url = uritemplate.expand(self.collaborators_url, collaborator=username)
         r = self.Session._request("DELETE", url)

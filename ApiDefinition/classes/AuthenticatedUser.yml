@@ -2,14 +2,14 @@ base: User
 updatable: true
 methods:
   - name: add_to_following
-    end_point: PUT /user/following/:user
+    end_point: PUT /user/following/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: end_point
     url_template_arguments:
-      - name: user
-        value: parameter user
+      - name: username
+        value: parameter username
     return_type: none
   - name: add_to_starred
     end_point: PUT /user/starred/:owner/:repo
@@ -316,14 +316,14 @@ methods:
       container: PaginatedList
       content: Team
   - name: has_in_following
-    end_point: GET /user/following/:user
+    end_point: GET /user/following/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: end_point
     url_template_arguments:
-      - name: user
-        value: parameter user
+      - name: username
+        value: parameter username
     return_from: status
     return_type: bool
   - name: has_in_starred
@@ -353,14 +353,14 @@ methods:
     return_from: status
     return_type: bool
   - name: remove_from_following
-    end_point: DELETE /user/following/:user
+    end_point: DELETE /user/following/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: end_point
     url_template_arguments:
-      - name: user
-        value: parameter user
+      - name: username
+        value: parameter username
     return_type: none
   - name: remove_from_starred
     end_point: DELETE /user/starred/:owner/:repo

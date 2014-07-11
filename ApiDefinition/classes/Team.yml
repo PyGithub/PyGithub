@@ -22,14 +22,14 @@ attributes:
     type: string
 methods:
   - name: add_to_members
-    end_point: PUT /teams/:id/members/:user
+    end_point: PUT /teams/:id/members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_type: none
   - name: add_to_repos
     end_point: PUT /teams/:id/repos/:org/:repo
@@ -90,14 +90,14 @@ methods:
       container: PaginatedList
       content: Repository
   - name: has_in_members
-    end_point: GET /teams/:id/members/:user
+    end_point: GET /teams/:id/members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_from: status
     return_type: bool
   - name: has_in_repos
@@ -116,14 +116,14 @@ methods:
     return_from: status
     return_type: bool
   - name: remove_from_members
-    end_point: DELETE /teams/:id/members/:user
+    end_point: DELETE /teams/:id/members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_type: none
   - name: remove_from_repos
     end_point: DELETE /teams/:id/repos/:owner/:repo

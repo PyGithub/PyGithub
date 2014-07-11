@@ -217,6 +217,8 @@ class Definition(object):
                 implemented.update(m.endPoints)
 
         inter = implemented & unimplemented
-        union = implemented | unimplemented
         assert len(inter) == 0, inter
+        diff = unimplemented - allEndPoints
+        assert len(diff) == 0, diff
+        union = implemented | unimplemented
         assert union == allEndPoints, allEndPoints - union

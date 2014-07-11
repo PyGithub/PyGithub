@@ -29,6 +29,27 @@ GET /api/status.json
 
 Not yet implemented in PyGithub.
 
+GET /api/v3/enterprise/settings/license
+---------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/license#request>`__)
+
+Not yet implemented in PyGithub.
+
+GET /api/v3/enterprise/stats/:type
+----------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/admin_stats#request>`__)
+
+Not yet implemented in PyGithub.
+
+POST /api/v3/staff/indexing_jobs
+--------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/search_indexing#queue-an-indexing-job>`__)
+
+Not yet implemented in PyGithub.
+
 DELETE /applications/:client_id/tokens
 --------------------------------------
 
@@ -400,16 +421,16 @@ GET /orgs/:org/members
 Implemented in PyGithub by:
   * :meth:`.Organization.get_members`
 
-DELETE /orgs/:org/members/:user
--------------------------------
+DELETE /orgs/:org/members/:username
+-----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/members#remove-a-member>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Organization.remove_from_members`
 
-GET /orgs/:org/members/:user
-----------------------------
+GET /orgs/:org/members/:username
+--------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/members#check-membership>`__)
 
@@ -424,24 +445,24 @@ GET /orgs/:org/public_members
 Implemented in PyGithub by:
   * :meth:`.Organization.get_public_members`
 
-DELETE /orgs/:org/public_members/:user
---------------------------------------
+DELETE /orgs/:org/public_members/:username
+------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/members#conceal-a-users-membership>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Organization.remove_from_public_members`
 
-GET /orgs/:org/public_members/:user
------------------------------------
+GET /orgs/:org/public_members/:username
+---------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/members#check-public-membership>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Organization.has_in_public_members`
 
-PUT /orgs/:org/public_members/:user
------------------------------------
+PUT /orgs/:org/public_members/:username
+---------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/members#publicize-a-users-membership>`__)
 
@@ -560,24 +581,24 @@ GET /repos/:owner/:repo/collaborators
 Implemented in PyGithub by:
   * :meth:`.Repository.get_collaborators`
 
-DELETE /repos/:owner/:repo/collaborators/:user
-----------------------------------------------
+DELETE /repos/:owner/:repo/collaborators/:username
+--------------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/collaborators#remove-collaborator>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Repository.remove_from_collaborators`
 
-GET /repos/:owner/:repo/collaborators/:user
--------------------------------------------
+GET /repos/:owner/:repo/collaborators/:username
+-----------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/collaborators#get>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Repository.has_in_collaborators`
 
-PUT /repos/:owner/:repo/collaborators/:user
--------------------------------------------
+PUT /repos/:owner/:repo/collaborators/:username
+-----------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/collaborators#add-collaborator>`__)
 
@@ -630,6 +651,13 @@ GET /repos/:owner/:repo/commits/:ref/status
 -------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/statuses#get-the-combined-status-for-a-specific-ref>`__)
+
+Not yet implemented in PyGithub.
+
+GET /repos/:owner/:repo/commits/:ref/statuses
+---------------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref>`__)
 
 Not yet implemented in PyGithub.
 
@@ -1413,13 +1441,6 @@ GET /repos/:owner/:repo/stats/punch_card
 
 Not yet implemented in PyGithub.
 
-GET /repos/:owner/:repo/statuses/:ref
--------------------------------------
-
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref>`__)
-
-Not yet implemented in PyGithub.
-
 POST /repos/:owner/:repo/statuses/:sha
 --------------------------------------
 
@@ -1511,6 +1532,83 @@ GET /search/users
 
 Not yet implemented in PyGithub.
 
+GET /setup/api/configcheck
+--------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#check-configuration-status>`__)
+
+Not yet implemented in PyGithub.
+
+POST /setup/api/configure
+-------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#start-a-configuration-process>`__)
+
+Not yet implemented in PyGithub.
+
+GET /setup/api/maintenance
+--------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#check-maintenance-status>`__)
+
+Not yet implemented in PyGithub.
+
+POST /setup/api/maintenance
+---------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#enable-or-disable-maintenance-mode>`__)
+
+Not yet implemented in PyGithub.
+
+GET /setup/api/settings
+-----------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#retrieve-settings>`__)
+
+Not yet implemented in PyGithub.
+
+PUT /setup/api/settings
+-----------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#modify-settings>`__)
+
+Not yet implemented in PyGithub.
+
+DELETE /setup/api/settings/authorized-keys
+------------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#remove-an-authorized-ssh-key>`__)
+
+Not yet implemented in PyGithub.
+
+GET /setup/api/settings/authorized-keys
+---------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#retrieve-authorized-ssh-keys>`__)
+
+Not yet implemented in PyGithub.
+
+POST /setup/api/settings/authorized-keys
+----------------------------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#add-a-new-authorized-ssh-key>`__)
+
+Not yet implemented in PyGithub.
+
+POST /setup/api/start
+---------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#upload-a-license-and-software-package-for-the-first-time>`__)
+
+Not yet implemented in PyGithub.
+
+POST /setup/api/upgrade
+-----------------------
+
+(`Reference documentation of Github API v3 <http://developer.github.com/v3/enterprise/management_console#upgrade-a-license-or-software-package>`__)
+
+Not yet implemented in PyGithub.
+
 DELETE /teams/:id
 -----------------
 
@@ -1543,24 +1641,24 @@ GET /teams/:id/members
 Implemented in PyGithub by:
   * :meth:`.Team.get_members`
 
-DELETE /teams/:id/members/:user
--------------------------------
+DELETE /teams/:id/members/:username
+-----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/teams#remove-team-member>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Team.remove_from_members`
 
-GET /teams/:id/members/:user
-----------------------------
+GET /teams/:id/members/:username
+--------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/teams#get-team-member>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Team.has_in_members`
 
-PUT /teams/:id/members/:user
-----------------------------
+PUT /teams/:id/members/:username
+--------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs/teams#add-team-member>`__)
 
@@ -1652,24 +1750,24 @@ GET /user/following
 Implemented in PyGithub by:
   * :meth:`.AuthenticatedUser.get_following`
 
-DELETE /user/following/:user
-----------------------------
+DELETE /user/following/:username
+--------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#unfollow-a-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.AuthenticatedUser.remove_from_following`
 
-GET /user/following/:user
--------------------------
+GET /user/following/:username
+-----------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#check-if-you-are-following-a-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.AuthenticatedUser.has_in_following`
 
-PUT /user/following/:user
--------------------------
+PUT /user/following/:username
+-----------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#follow-a-user>`__)
 
@@ -1819,114 +1917,114 @@ GET /users
 Implemented in PyGithub by:
   * :meth:`.Github.get_users`
 
-GET /users/:user
-----------------
+GET /users/:username
+--------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users#get-a-single-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.Github.get_user`
 
-GET /users/:user/events
------------------------
+GET /users/:username/events
+---------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-events-performed-by-a-user>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/events/orgs/:org
----------------------------------
+GET /users/:username/events/orgs/:org
+-------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-events-for-an-organization>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/events/public
-------------------------------
+GET /users/:username/events/public
+----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-public-events-performed-by-a-user>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/followers
---------------------------
+GET /users/:username/followers
+------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#list-followers-of-a-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_followers`
 
-GET /users/:user/following
---------------------------
+GET /users/:username/following
+------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#list-users-followed-by-another-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_following`
 
-GET /users/:user/following/:target_user
----------------------------------------
+GET /users/:username/following/:target_user
+-------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/followers#check-if-one-user-follows-another>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.has_in_following`
 
-GET /users/:user/gists
-----------------------
+GET /users/:username/gists
+--------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gists>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/keys
----------------------
+GET /users/:username/keys
+-------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_keys`
 
-GET /users/:user/orgs
----------------------
+GET /users/:username/orgs
+-------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/orgs#list-user-organizations>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_orgs`
 
-GET /users/:user/received_events
---------------------------------
+GET /users/:username/received_events
+------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-events-that-a-user-has-received>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/received_events/public
----------------------------------------
+GET /users/:username/received_events/public
+-------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/events#list-public-events-that-a-user-has-received>`__)
 
 Not yet implemented in PyGithub.
 
-GET /users/:user/repos
-----------------------
+GET /users/:username/repos
+--------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos#list-user-repositories>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_repos`
 
-GET /users/:user/starred
-------------------------
+GET /users/:username/starred
+----------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/starring#list-repositories-being-starred>`__)
 
 Implemented in PyGithub by:
   * :meth:`.User.get_starred`
 
-GET /users/:user/subscriptions
-------------------------------
+GET /users/:username/subscriptions
+----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/watching#list-repositories-being-watched>`__)
 

@@ -19,14 +19,14 @@ deprecated_attributes:
   - subscriptions_url
 methods:
   - name: add_to_public_members
-    end_point: PUT /orgs/:org/public_members/:user
+    end_point: PUT /orgs/:org/public_members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_type: none
   - name: create_fork
     end_point: POST /repos/:owner/:repo/forks
@@ -229,44 +229,44 @@ methods:
       container: PaginatedList
       content: Team
   - name: has_in_members
-    end_point: GET /orgs/:org/members/:user
+    end_point: GET /orgs/:org/members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_from: status
     return_type: bool
   - name: has_in_public_members
-    end_point: GET /orgs/:org/public_members/:user
+    end_point: GET /orgs/:org/public_members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_from: status
     return_type: bool
   - name: remove_from_members
-    end_point: DELETE /orgs/:org/members/:user
+    end_point: DELETE /orgs/:org/members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_type: none
   - name: remove_from_public_members
-    end_point: DELETE /orgs/:org/public_members/:user
+    end_point: DELETE /orgs/:org/public_members/:username
     parameters:
-      - name: user
+      - name: username
         orig: User.login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
-        value: parameter user
+        value: parameter username
     return_type: none

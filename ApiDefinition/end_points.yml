@@ -7,6 +7,16 @@
 /api/status.json:
   - verb: GET
     doc: https://status.github.com/api
+/api/v3/enterprise/settings/license:
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/license#request
+/api/v3/enterprise/stats/:type:
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/admin_stats#request
+/api/v3/staff/indexing_jobs:
+  - verb: POST
+    parameters: [target]
+    doc: http://developer.github.com/v3/enterprise/search_indexing#queue-an-indexing-job
 /applications/:client_id/tokens:
   - verb: DELETE
     doc: http://developer.github.com/v3/oauth_authorizations#revoke-all-authorizations-for-an-application
@@ -162,7 +172,7 @@
   - verb: GET
     parameters: [filter]
     doc: http://developer.github.com/v3/orgs/members#members-list
-/orgs/:org/members/:user:
+/orgs/:org/members/:username:
   - verb: DELETE
     doc: http://developer.github.com/v3/orgs/members#remove-a-member
   - verb: GET
@@ -170,7 +180,7 @@
 /orgs/:org/public_members:
   - verb: GET
     doc: http://developer.github.com/v3/orgs/members#public-members-list
-/orgs/:org/public_members/:user:
+/orgs/:org/public_members/:username:
   - verb: DELETE
     doc: http://developer.github.com/v3/orgs/members#conceal-a-users-membership
   - verb: GET
@@ -220,7 +230,7 @@
 /repos/:owner/:repo/collaborators:
   - verb: GET
     doc: http://developer.github.com/v3/repos/collaborators#list
-/repos/:owner/:repo/collaborators/:user:
+/repos/:owner/:repo/collaborators/:username:
   - verb: DELETE
     doc: http://developer.github.com/v3/repos/collaborators#remove-collaborator
   - verb: GET
@@ -249,6 +259,10 @@
   - verb: GET
     parameters: [ref]
     doc: http://developer.github.com/v3/repos/statuses#get-the-combined-status-for-a-specific-ref
+/repos/:owner/:repo/commits/:ref/statuses:
+  - verb: GET
+    parameters: [ref]
+    doc: http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref
 /repos/:owner/:repo/commits/:sha:
   - verb: GET
     doc: http://developer.github.com/v3/repos/commits#get-a-single-commit
@@ -280,7 +294,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/deployments#list-deployments
   - verb: POST
-    parameters: [auto_merge, description, environment, force, payload, ref]
+    parameters: [auto_merge, description, environment, payload, ref, required_contexts]
     doc: http://developer.github.com/v3/repos/deployments#create-a-deployment
 /repos/:owner/:repo/deployments/:id/statuses:
   - verb: GET
@@ -575,10 +589,6 @@
 /repos/:owner/:repo/stats/punch_card:
   - verb: GET
     doc: http://developer.github.com/v3/repos/statistics#punch-card
-/repos/:owner/:repo/statuses/:ref:
-  - verb: GET
-    parameters: [ref]
-    doc: http://developer.github.com/v3/repos/statuses#list-statuses-for-a-specific-ref
 /repos/:owner/:repo/statuses/:sha:
   - verb: POST
     parameters: [context, description, state, target_url]
@@ -620,6 +630,42 @@
   - verb: GET
     parameters: [order, q, sort]
     doc: http://developer.github.com/v3/search#search-users
+/setup/api/configcheck:
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/management_console#check-configuration-status
+/setup/api/configure:
+  - verb: POST
+    parameters: [complete]
+    doc: http://developer.github.com/v3/enterprise/management_console#start-a-configuration-process
+/setup/api/maintenance:
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/management_console#check-maintenance-status
+  - verb: POST
+    parameters: [maintenance]
+    doc: http://developer.github.com/v3/enterprise/management_console#enable-or-disable-maintenance-mode
+/setup/api/settings:
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/management_console#retrieve-settings
+  - verb: PUT
+    parameters: [settings]
+    doc: http://developer.github.com/v3/enterprise/management_console#modify-settings
+/setup/api/settings/authorized-keys:
+  - verb: DELETE
+    parameters: [authorized_key]
+    doc: http://developer.github.com/v3/enterprise/management_console#remove-an-authorized-ssh-key
+  - verb: GET
+    doc: http://developer.github.com/v3/enterprise/management_console#retrieve-authorized-ssh-keys
+  - verb: POST
+    parameters: [authorized_key]
+    doc: http://developer.github.com/v3/enterprise/management_console#add-a-new-authorized-ssh-key
+/setup/api/start:
+  - verb: POST
+    parameters: [license, package, settings]
+    doc: http://developer.github.com/v3/enterprise/management_console#upload-a-license-and-software-package-for-the-first-time
+/setup/api/upgrade:
+  - verb: POST
+    parameters: [license, package]
+    doc: http://developer.github.com/v3/enterprise/management_console#upgrade-a-license-or-software-package
 /teams/:id:
   - verb: DELETE
     doc: http://developer.github.com/v3/orgs/teams#delete-team
@@ -631,7 +677,7 @@
 /teams/:id/members:
   - verb: GET
     doc: http://developer.github.com/v3/orgs/teams#list-team-members
-/teams/:id/members/:user:
+/teams/:id/members/:username:
   - verb: DELETE
     doc: http://developer.github.com/v3/orgs/teams#remove-team-member
   - verb: GET
@@ -668,7 +714,7 @@
 /user/following:
   - verb: GET
     doc: http://developer.github.com/v3/users/followers#list-users-followed-by-another-user
-/user/following/:user:
+/user/following/:username:
   - verb: DELETE
     doc: http://developer.github.com/v3/users/followers#unfollow-a-user
   - verb: GET
@@ -727,51 +773,51 @@
   - verb: GET
     parameters: [since]
     doc: http://developer.github.com/v3/users#get-all-users
-/users/:user:
+/users/:username:
   - verb: GET
     doc: http://developer.github.com/v3/users#get-a-single-user
-/users/:user/events:
+/users/:username/events:
   - verb: GET
     doc: http://developer.github.com/v3/activity/events#list-events-performed-by-a-user
-/users/:user/events/orgs/:org:
+/users/:username/events/orgs/:org:
   - verb: GET
     doc: http://developer.github.com/v3/activity/events#list-events-for-an-organization
-/users/:user/events/public:
+/users/:username/events/public:
   - verb: GET
     doc: http://developer.github.com/v3/activity/events#list-public-events-performed-by-a-user
-/users/:user/followers:
+/users/:username/followers:
   - verb: GET
     doc: http://developer.github.com/v3/users/followers#list-followers-of-a-user
-/users/:user/following:
+/users/:username/following:
   - verb: GET
     doc: http://developer.github.com/v3/users/followers#list-users-followed-by-another-user
-/users/:user/following/:target_user:
+/users/:username/following/:target_user:
   - verb: GET
     doc: http://developer.github.com/v3/users/followers#check-if-one-user-follows-another
-/users/:user/gists:
+/users/:username/gists:
   - verb: GET
     parameters: [since]
     doc: http://developer.github.com/v3/gists#list-gists
-/users/:user/keys:
+/users/:username/keys:
   - verb: GET
     doc: http://developer.github.com/v3/users/keys#list-public-keys-for-a-user
-/users/:user/orgs:
+/users/:username/orgs:
   - verb: GET
     doc: http://developer.github.com/v3/orgs#list-user-organizations
-/users/:user/received_events:
+/users/:username/received_events:
   - verb: GET
     doc: http://developer.github.com/v3/activity/events#list-events-that-a-user-has-received
-/users/:user/received_events/public:
+/users/:username/received_events/public:
   - verb: GET
     doc: http://developer.github.com/v3/activity/events#list-public-events-that-a-user-has-received
-/users/:user/repos:
+/users/:username/repos:
   - verb: GET
     parameters: [direction, sort, type]
     doc: http://developer.github.com/v3/repos#list-user-repositories
-/users/:user/starred:
+/users/:username/starred:
   - verb: GET
     parameters: [direction, sort]
     doc: http://developer.github.com/v3/activity/starring#list-repositories-being-starred
-/users/:user/subscriptions:
+/users/:username/subscriptions:
   - verb: GET
     doc: http://developer.github.com/v3/activity/watching#list-repositories-being-watched

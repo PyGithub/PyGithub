@@ -72,19 +72,19 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         self._completeLazily(self.__public_members_url.needsLazyCompletion)
         return self.__public_members_url.value
 
-    def add_to_public_members(self, user):
+    def add_to_public_members(self, username):
         """
-        Calls the `PUT /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members#publicize-a-users-membership>`__ end point.
+        Calls the `PUT /orgs/:org/public_members/:username <http://developer.github.com/v3/orgs/members#publicize-a-users-membership>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.public_members_url, member=user)
+        url = uritemplate.expand(self.public_members_url, member=username)
         r = self.Session._request("PUT", url)
 
     def create_fork(self, repo):
@@ -313,64 +313,64 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
-    def has_in_members(self, user):
+    def has_in_members(self, username):
         """
-        Calls the `GET /orgs/:org/members/:user <http://developer.github.com/v3/orgs/members#check-membership>`__ end point.
+        Calls the `GET /orgs/:org/members/:username <http://developer.github.com/v3/orgs/members#check-membership>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.members_url, member=user)
+        url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
-    def has_in_public_members(self, user):
+    def has_in_public_members(self, username):
         """
-        Calls the `GET /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members#check-public-membership>`__ end point.
+        Calls the `GET /orgs/:org/public_members/:username <http://developer.github.com/v3/orgs/members#check-public-membership>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.public_members_url, member=user)
+        url = uritemplate.expand(self.public_members_url, member=username)
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
-    def remove_from_members(self, user):
+    def remove_from_members(self, username):
         """
-        Calls the `DELETE /orgs/:org/members/:user <http://developer.github.com/v3/orgs/members#remove-a-member>`__ end point.
+        Calls the `DELETE /orgs/:org/members/:username <http://developer.github.com/v3/orgs/members#remove-a-member>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.members_url, member=user)
+        url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("DELETE", url)
 
-    def remove_from_public_members(self, user):
+    def remove_from_public_members(self, username):
         """
-        Calls the `DELETE /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members#conceal-a-users-membership>`__ end point.
+        Calls the `DELETE /orgs/:org/public_members/:username <http://developer.github.com/v3/orgs/members#conceal-a-users-membership>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand(self.public_members_url, member=user)
+        url = uritemplate.expand(self.public_members_url, member=username)
         r = self.Session._request("DELETE", url)

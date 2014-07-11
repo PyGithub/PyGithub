@@ -25,7 +25,7 @@ deprecated_attributes:
   - bio
 methods:
   - name: get_followers
-    end_point: GET /users/:user/followers
+    end_point: GET /users/:username/followers
     optional_parameters:
       - name: per_page
         type: int
@@ -37,7 +37,7 @@ methods:
       container: PaginatedList
       content: User
   - name: get_following
-    end_point: GET /users/:user/following
+    end_point: GET /users/:username/following
     optional_parameters:
       - name: per_page
         type: int
@@ -49,16 +49,16 @@ methods:
       container: PaginatedList
       content: User
   - name: get_keys
-    end_point: GET /users/:user/keys
+    end_point: GET /users/:username/keys
     url_template: end_point
     url_template_arguments:
-      - name: user
+      - name: username
         value: attribute login
     return_type:
       container: list
       content: PublicKey
   - name: get_orgs
-    end_point: GET /users/:user/orgs
+    end_point: GET /users/:username/orgs
     optional_parameters:
       - name: per_page
         type: int
@@ -82,7 +82,7 @@ methods:
         value: parameter repo
     return_type: Repository
   - name: get_repos
-    end_point: GET /users/:user/repos
+    end_point: GET /users/:username/repos
     optional_parameters:
       - name: sort
         type:
@@ -109,7 +109,7 @@ methods:
       container: PaginatedList
       content: Repository
   - name: get_starred
-    end_point: GET /users/:user/starred
+    end_point: GET /users/:username/starred
     optional_parameters:
       - name: sort
         type:
@@ -131,7 +131,7 @@ methods:
       container: PaginatedList
       content: Repository
   - name: get_subscriptions
-    end_point: GET /users/:user/subscriptions
+    end_point: GET /users/:username/subscriptions
     optional_parameters:
       - name: per_page
         type: int
@@ -143,7 +143,7 @@ methods:
       container: PaginatedList
       content: Repository
   - name: has_in_following
-    end_point: GET /users/:user/following/:target_user
+    end_point: GET /users/:username/following/:target_user
     parameters:
       - name: target_user
         orig: User.login

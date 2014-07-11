@@ -159,7 +159,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_followers(self, per_page=None):
         """
-        Calls the `GET /users/:user/followers <http://developer.github.com/v3/users/followers#list-followers-of-a-user>`__ end point.
+        Calls the `GET /users/:username/followers <http://developer.github.com/v3/users/followers#list-followers-of-a-user>`__ end point.
 
         This is the only method calling this end point.
 
@@ -179,7 +179,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_following(self, per_page=None):
         """
-        Calls the `GET /users/:user/following <http://developer.github.com/v3/users/followers#list-users-followed-by-another-user>`__ end point.
+        Calls the `GET /users/:username/following <http://developer.github.com/v3/users/followers#list-users-followed-by-another-user>`__ end point.
 
         This is the only method calling this end point.
 
@@ -199,20 +199,20 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_keys(self):
         """
-        Calls the `GET /users/:user/keys <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__ end point.
+        Calls the `GET /users/:username/keys <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__ end point.
 
         This is the only method calling this end point.
 
         :rtype: :class:`list` of :class:`.PublicKey`
         """
 
-        url = uritemplate.expand("https://api.github.com/users/{user}/keys", user=self.login)
+        url = uritemplate.expand("https://api.github.com/users/{username}/keys", username=self.login)
         r = self.Session._request("GET", url)
         return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_orgs(self, per_page=None):
         """
-        Calls the `GET /users/:user/orgs <http://developer.github.com/v3/orgs#list-user-organizations>`__ end point.
+        Calls the `GET /users/:username/orgs <http://developer.github.com/v3/orgs#list-user-organizations>`__ end point.
 
         This is the only method calling this end point.
 
@@ -251,7 +251,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_repos(self, sort=None, direction=None, type=None, per_page=None):
         """
-        Calls the `GET /users/:user/repos <http://developer.github.com/v3/repos#list-user-repositories>`__ end point.
+        Calls the `GET /users/:username/repos <http://developer.github.com/v3/repos#list-user-repositories>`__ end point.
 
         This is the only method calling this end point.
 
@@ -280,7 +280,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_starred(self, sort=None, direction=None, per_page=None):
         """
-        Calls the `GET /users/:user/starred <http://developer.github.com/v3/activity/starring#list-repositories-being-starred>`__ end point.
+        Calls the `GET /users/:username/starred <http://developer.github.com/v3/activity/starring#list-repositories-being-starred>`__ end point.
 
         This is the only method calling this end point.
 
@@ -306,7 +306,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def get_subscriptions(self, per_page=None):
         """
-        Calls the `GET /users/:user/subscriptions <http://developer.github.com/v3/activity/watching#list-repositories-being-watched>`__ end point.
+        Calls the `GET /users/:username/subscriptions <http://developer.github.com/v3/activity/watching#list-repositories-being-watched>`__ end point.
 
         This is the only method calling this end point.
 
@@ -326,7 +326,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
     def has_in_following(self, target_user):
         """
-        Calls the `GET /users/:user/following/:target_user <http://developer.github.com/v3/users/followers#check-if-one-user-follows-another>`__ end point.
+        Calls the `GET /users/:username/following/:target_user <http://developer.github.com/v3/users/followers#check-if-one-user-follows-another>`__ end point.
 
         This is the only method calling this end point.
 

@@ -124,14 +124,14 @@ methods:
         value: parameter id
     return_type: Team
   - name: get_user
-    end_point: GET /users/:user
+    end_point: GET /users/:username
     parameters:
-      - name: user
+      - name: username
         type: string
     url_template: end_point
     url_template_arguments:
-      - name: user
-        value: parameter user
+      - name: username
+        value: parameter username
     return_type: User
   - name: get_users
     end_point: GET /users

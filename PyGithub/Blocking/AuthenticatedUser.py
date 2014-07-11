@@ -34,19 +34,19 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
       * :meth:`.Github.get_authenticated_user`
     """
 
-    def add_to_following(self, user):
+    def add_to_following(self, username):
         """
-        Calls the `PUT /user/following/:user <http://developer.github.com/v3/users/followers#follow-a-user>`__ end point.
+        Calls the `PUT /user/following/:username <http://developer.github.com/v3/users/followers#follow-a-user>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
+        url = uritemplate.expand("https://api.github.com/user/following/{username}", username=username)
         r = self.Session._request("PUT", url)
 
     def add_to_starred(self, repo):
@@ -433,19 +433,19 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Team.Team))(None, r)
 
-    def has_in_following(self, user):
+    def has_in_following(self, username):
         """
-        Calls the `GET /user/following/:user <http://developer.github.com/v3/users/followers#check-if-you-are-following-a-user>`__ end point.
+        Calls the `GET /user/following/:username <http://developer.github.com/v3/users/followers#check-if-you-are-following-a-user>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
+        url = uritemplate.expand("https://api.github.com/user/following/{username}", username=username)
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
@@ -481,19 +481,19 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url, accept404=True)
         return rcv.BoolConverter(None, r.status_code == 204)
 
-    def remove_from_following(self, user):
+    def remove_from_following(self, username):
         """
-        Calls the `DELETE /user/following/:user <http://developer.github.com/v3/users/followers#unfollow-a-user>`__ end point.
+        Calls the `DELETE /user/following/:username <http://developer.github.com/v3/users/followers#unfollow-a-user>`__ end point.
 
         This is the only method calling this end point.
 
-        :param user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
-        user = snd.normalizeUserLogin(user)
+        username = snd.normalizeUserLogin(username)
 
-        url = uritemplate.expand("https://api.github.com/user/following/{user}", user=user)
+        url = uritemplate.expand("https://api.github.com/user/following/{username}", username=username)
         r = self.Session._request("DELETE", url)
 
     def remove_from_starred(self, repo):
