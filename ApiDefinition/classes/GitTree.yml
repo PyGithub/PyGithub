@@ -29,23 +29,3 @@ attributes:
     type: string
   - name: url
     type: string
-methods:
-  - name: create_modified_copy
-    end_point: POST /repos/:owner/:repo/git/trees
-    parameters:
-      - name: tree
-        type:
-          container: list
-          content: dict
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: attribute owner.login
-      - name: repo
-        value: attribute name
-    post_arguments:
-      - name: base_tree
-        value: attribute sha
-      - name: tree
-        value: parameter tree
-    return_type: GitTree

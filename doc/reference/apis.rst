@@ -881,9 +881,7 @@ POST /repos/:owner/:repo/git/trees
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/trees#create-a-tree>`__)
 
-Implemented in PyGithub by:
-  * :meth:`.GitTree.create_modified_copy`
-  * :meth:`.Repository.create_git_tree`
+Not yet implemented in PyGithub.
 
 GET /repos/:owner/:repo/git/trees/:sha
 --------------------------------------

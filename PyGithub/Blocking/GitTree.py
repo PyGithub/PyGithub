@@ -27,9 +27,7 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :attr:`.GitCommit.tree`
-      * :meth:`.GitTree.create_modified_copy`
       * :attr:`.GitTree.tree`
-      * :meth:`.Repository.create_git_tree`
       * :meth:`.Repository.get_git_tree`
     """
 
@@ -139,21 +137,3 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
-
-    def create_modified_copy(self, tree):
-        """
-        Calls the `POST /repos/:owner/:repo/git/trees <http://developer.github.com/v3/git/trees#create-a-tree>`__ end point.
-
-        The following methods also call this end point:
-          * :meth:`.Repository.create_git_tree`
-
-        :param tree: mandatory :class:`list` of :class:`dict`
-        :rtype: :class:`.GitTree`
-        """
-
-        tree = snd.normalizeList(snd.normalizeDict, tree)
-
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
-        postArguments = snd.dictionary(base_tree=self.sha, tree=tree)
-        r = self.Session._request("POST", url, postArguments=postArguments)
-        return rcv.ClassConverter(self.Session, GitTree)(None, r.json(), r.headers.get("ETag"))
