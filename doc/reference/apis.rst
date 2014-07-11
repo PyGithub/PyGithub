@@ -154,7 +154,8 @@ POST /gists
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#create-a-gist>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.create_gist`
 
 GET /gists/:gist_id/comments
 ----------------------------
@@ -196,14 +197,16 @@ DELETE /gists/:id
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#delete-a-gist>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Gist.delete`
 
 GET /gists/:id
 --------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#get-a-single-gist>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Github.get_gist`
 
 PATCH /gists/:id
 ----------------

@@ -11,6 +11,7 @@ This cook book shows you everything about `gists <https://gist.github.com>`__ an
 
 Initialization::
 
+    >>> import PyGithub
     >>> g = PyGithub.BlockingBuilder().Login("your_login", "your_password").Build()
 
 ..  Authenticate for doctest but don't show it in the doc
@@ -24,17 +25,16 @@ Initialization::
 Creating gists
 --------------
 
-The simplest, personal, public gist, with one file::
+The simplest, personal, private gist, with one file::
 
-    >>> gist = u.create_gist()
+    >>> gist = u.create_gist(files={"foo.txt":{"content": "barbaz"}})
     >>> print gist.owner.login
     jacquev6
-    >>> print gist.secret
+    >>> print gist.public
     False
 
 ..
     >>> gist.delete()
-    None
 
 An anonymous gist::
 

@@ -17,6 +17,7 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 import PyGithub.Blocking.AuthenticatedUser
+import PyGithub.Blocking.Gist
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.Repository
 import PyGithub.Blocking.Team
@@ -198,6 +199,22 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         url = uritemplate.expand("https://api.github.com/emojis")
         r = self.Session._request("GET", url)
         return rcv.DictConverter(rcv.StringConverter, rcv.StringConverter)(None, r.json())
+
+    def get_gist(self, id):
+        """
+        Calls the `GET /gists/:id <http://developer.github.com/v3/gists#get-a-single-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param id: mandatory :class:`string`
+        :rtype: :class:`.Gist`
+        """
+
+        id = snd.normalizeString(id)
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}", id=str(id))
+        r = self.Session._request("GET", url)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
 
     def get_gitignore_template(self, name):
         """

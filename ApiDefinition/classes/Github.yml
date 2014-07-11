@@ -54,6 +54,16 @@ methods:
       container: dict
       key: string
       value: string
+  - name: get_gist
+    end_point: GET /gists/:id
+    parameters:
+      - name: id
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter id
+    return_type: Gist
   - name: get_gitignore_template
     end_point: GET /gitignore/templates/:name
     parameters:

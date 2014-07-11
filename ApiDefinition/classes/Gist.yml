@@ -1,0 +1,40 @@
+updatable: true
+attributes:
+  - name: comments
+    type: int
+  - name: comments_url
+    type: string
+  - name: commits_url
+    type: string
+  - name: created_at
+    type: datetime
+  - name: description
+    type: string
+  - name: forks_url
+    type: string
+  - name: git_pull_url
+    type: string
+  - name: git_push_url
+    type: string
+  - name: html_url
+    type: string
+  - name: id
+    type: string
+  - name: public
+    type: bool
+  - name: updated_at
+    type: datetime
+  - name: url
+    type: string
+deprecated_attributes:
+  - files
+  - fork_of
+  - forks
+  - history
+  - owner
+  - user
+methods:
+  - name: delete
+    end_point: DELETE /gists/:id
+    url_template: attribute url
+    return_type: none

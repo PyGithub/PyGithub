@@ -16,6 +16,7 @@ import PyGithub.Blocking.PaginatedList
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
+import PyGithub.Blocking.Gist
 import PyGithub.Blocking.Organization
 import PyGithub.Blocking.PublicKey
 import PyGithub.Blocking.Repository
@@ -95,6 +96,29 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/forks", owner=repo[0], repo=repo[1])
         r = self.Session._request("POST", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
+
+    def create_gist(self, files, description=None, public=None):
+        """
+        Calls the `POST /gists <http://developer.github.com/v3/gists#create-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param files: mandatory :class:`bool`
+        :param description: optional :class:`string`
+        :param public: optional :class:`bool`
+        :rtype: :class:`.Gist`
+        """
+
+        # files = snd.normalizeBool(files)
+        if description is not None:
+            description = snd.normalizeString(description)
+        if public is not None:
+            public = snd.normalizeBool(public)
+
+        url = uritemplate.expand("https://api.github.com/gists")
+        postArguments = snd.dictionary(files=files, description=description, public=public)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
 
     def create_key(self, title, key):
         """

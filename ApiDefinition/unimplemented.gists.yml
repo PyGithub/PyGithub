@@ -1,5 +1,5 @@
-/gists: [GET, POST]
-/gists/:id: [DELETE, GET, PATCH]
+/gists: [GET]
+/gists/:id: [PATCH]
 /gists/:id/commits: [GET]
 /gists/:id/forks: [GET, POST]
 /gists/:id/star: [DELETE, GET, PUT]

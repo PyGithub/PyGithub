@@ -262,3 +262,24 @@ class AuthenticatedUserTestCase(Framework.SimpleLoginTestCase):
     def testCreateKey(self):
         key = self.g.get_authenticated_user().create_key("vincent@test", "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkQih2DtSwBzLUtSNYEKULlI5M1qa6vnq42xt9qZpkLav3G9eD/GqJRST+zZMsyfpP62PtiYKXJdLJX2MQIzUgI2PzNy+iMy+ldiTEABYEOCa+BH9+x2R5xXGlmmCPblpamx3kstGtCTa3LSkyIvxbt5vjbXCyThhJaSKyh+42Uedcz7l0y/TODhnkpid/5eiBz6k0VEbFfhM6h71eBdCFpeMJIhGaPTjbKsEjXIK0SRe0v0UQnpXJQkhAINbm+q/2yjt7zwBF74u6tQjRqJK7vQO2k47ZmFMAGeIxS6GheI+JPmwtHkxvfaJjy2lIGX+rt3lkW8xEUxiMTlxeh+0R")
         self.assertEqual(key.id, 7229148)
+
+    def testCreateEmptyGist(self):
+        u = self.g.get_authenticated_user()
+        with self.assertRaises(PyGithub.Blocking.UnprocessableEntityException):
+            u.create_gist(files={})
+
+    def testCreateSimpleGist(self):
+        # @todoAlpha Create input class for files?
+        g = self.g.get_authenticated_user().create_gist(files={"foo.txt": {"content": "barbaz"}})
+        self.assertEqual(g.id, "2be3fc042e4ab8314388")
+        g.delete()
+
+    def testCreateMultiFileGist(self):
+        g = self.g.get_authenticated_user().create_gist(files={"foo.txt": {"content": "barbaz"}, "bar.txt": {"content": "tartempion"}})
+        self.assertEqual(g.id, "3bfcace0846bc8f8e034")
+        g.delete()
+
+    def testCreateGist_allParameters(self):
+        g = self.g.get_authenticated_user().create_gist(files={"foo.txt": {"content": "barbaz"}}, public=True, description="Gist created by PyGithub")
+        self.assertEqual(g.id, "bc6bda17113030e2d8e5")
+        g.delete()

@@ -47,6 +47,25 @@ methods:
       - name: repo
         value: nameFromRepo repo
     return_type: Repository
+  - name: create_gist
+    end_point: POST /gists
+    parameters:
+      - name: files
+        type: bool
+    optional_parameters:
+      - name: description
+        type: string
+      - name: public
+        type: bool
+    url_template: end_point
+    post_arguments:
+      - name: files
+        value: parameter files
+      - name: description
+        value: parameter description
+      - name: public
+        value: parameter public
+    return_type: Gist
   - name: create_key
     end_point: POST /user/keys
     parameters:
