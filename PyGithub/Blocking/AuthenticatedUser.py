@@ -96,7 +96,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         """
         Calls the `POST /gists <http://developer.github.com/v3/gists#create-a-gist>`__ end point.
 
-        This is the only method calling this end point.
+        The following methods also call this end point:
+          * :meth:`.Github.create_anonymous_gist`
 
         :param files: mandatory :class:`bool`
         :param description: optional :class:`string`

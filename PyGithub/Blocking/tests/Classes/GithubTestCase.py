@@ -5,6 +5,7 @@
 import textwrap
 import datetime
 
+import PyGithub.Blocking
 import PyGithub.Blocking.tests.Framework as Framework
 
 
@@ -150,3 +151,20 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(gists[0].updated_at, datetime.datetime(2014, 7, 12, 2, 45, 24))
         self.assertEqual(gists[32].created_at, datetime.datetime(2010, 4, 24, 23, 17, 32))
         self.assertEqual(gists[32].updated_at, datetime.datetime(2014, 7, 12, 2, 42, 25))
+
+    def testCreateAnonymousGist(self):
+        g = self.g.create_anonymous_gist(files={"foo.txt": {"content": "barbaz"}})
+        self.assertIsNone(g.owner)
+        self.assertIsNone(g.user)
+        self.assertEqual(g.public, False)
+        with self.assertRaises(PyGithub.Blocking.ObjectNotFoundException):
+            g.delete()
+
+    def testCreateAnonymousGist_allParameters(self):
+        g = self.g.create_anonymous_gist(files={"foo.txt": {"content": "barbaz"}}, description="Created by PyGithub", public=True)
+        self.assertIsNone(g.owner)
+        self.assertIsNone(g.user)
+        self.assertEqual(g.description, "Created by PyGithub")
+        self.assertEqual(g.public, True)
+        with self.assertRaises(PyGithub.Blocking.ObjectNotFoundException):
+            g.delete()

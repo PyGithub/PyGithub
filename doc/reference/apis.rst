@@ -157,6 +157,7 @@ POST /gists
 
 Implemented in PyGithub by:
   * :meth:`.AuthenticatedUser.create_gist`
+  * :meth:`.Github.create_anonymous_gist`
 
 GET /gists/:gist_id/comments
 ----------------------------

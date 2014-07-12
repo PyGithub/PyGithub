@@ -167,6 +167,30 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__search.value
 
+    def create_anonymous_gist(self, files, description=None, public=None):
+        """
+        Calls the `POST /gists <http://developer.github.com/v3/gists#create-a-gist>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.AuthenticatedUser.create_gist`
+
+        :param files: mandatory :class:`bool`
+        :param description: optional :class:`string`
+        :param public: optional :class:`bool`
+        :rtype: :class:`.Gist`
+        """
+        import PyGithub.Blocking.Gist
+
+        if description is not None:
+            description = snd.normalizeString(description)
+        if public is not None:
+            public = snd.normalizeBool(public)
+
+        url = uritemplate.expand("https://api.github.com/gists")
+        postArguments = snd.dictionary(files=files, description=description, public=public)
+        r = self.Session._requestAnonymous("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
+
     def get_authenticated_user(self):
         """
         Calls the `GET /user <http://developer.github.com/v3/users#get-the-authenticated-user>`__ end point.

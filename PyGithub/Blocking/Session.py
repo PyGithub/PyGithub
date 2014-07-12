@@ -25,6 +25,9 @@ class Session(object):
         self.__authenticator = authenticator
         self.__perPage = perPage
         self.__userAgent = userAgent
+        self.__anonymousRequestsSession = requests.Session()
+        self.__anonymousRequestsSession.headers["User-Agent"] = self.__userAgent
+        self.__anonymousRequestsSession.headers["Accept"] = "application/vnd.github.v3.full+json"
         self.__requestsSession = requests.Session()
         self.__requestsSession.headers["User-Agent"] = self.__userAgent
         self.__requestsSession.headers["Accept"] = "application/vnd.github.v3.full+json"
@@ -73,7 +76,13 @@ class Session(object):
         """
         return self.__perPage
 
-    def _request(self, verb, url, urlArguments=None, postArguments=None, headers=None, accept404=False):
+    def _request(self, *args, **kwds):
+        return self.__request(self.__requestsSession, *args, **kwds)
+
+    def _requestAnonymous(self, *args, **kwds):
+        return self.__request(self.__anonymousRequestsSession, *args, **kwds)
+
+    def __request(self, requestsSession, verb, url, urlArguments=None, postArguments=None, headers=None, accept404=False):
         data = None
         if postArguments is not None:
             data = json.dumps(postArguments)
@@ -86,8 +95,8 @@ class Session(object):
                         urlArguments[k] = "false"
 
         request = requests.Request(verb, url, params=urlArguments, data=data, headers=headers)
-        prepared_request = self.__requestsSession.prepare_request(request)
-        response = self.__requestsSession.send(prepared_request)
+        prepared_request = requestsSession.prepare_request(request)
+        response = requestsSession.send(prepared_request)
         self.__logTransaction(prepared_request, response)
 
         # @todoAlpha Send PR to list PyGithubOAuthDemo in http://developer.github.com/v3/oauth_authorizations/#more-information

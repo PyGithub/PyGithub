@@ -43,6 +43,25 @@ structures:
       - name: search
         type: RateLimits
 methods:
+  - name: create_anonymous_gist
+    end_point: POST /gists
+    parameters:
+      - name: files
+        type: bool
+    optional_parameters:
+      - name: description
+        type: string
+      - name: public
+        type: bool
+    url_template: end_point
+    post_arguments:
+      - name: files
+        value: parameter files
+      - name: description
+        value: parameter description
+      - name: public
+        value: parameter public
+    return_type: Gist
   - name: get_authenticated_user
     end_point: GET /user
     url_template: end_point

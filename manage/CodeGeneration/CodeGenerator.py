@@ -265,7 +265,7 @@ class CodeGenerator:
         if len(method.postArguments) != 0:
             yield "postArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
-        yield "r = self.Session._request({})".format(self.generateCallArguments(method))
+        yield "r = self.Session._request{}({})".format("Anonymous" if method.name == "create_anonymous_gist" else "", self.generateCallArguments(method))  # @todoSomeday Remove hard-coded method name
         yield from self.generateCodeForEffects(method)
         yield from self.generateCodeForReturnValue(method)
 

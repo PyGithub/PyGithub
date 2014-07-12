@@ -86,7 +86,7 @@ def createTestCase(builder):
 
             self.g = builder.UserAgent("jacquev6/PyGithub/2; UnitTests recorder").Build()
 
-            self.__hackRequestsSession(self.g.Session._Session__requestsSession)
+            self.__hackRequestsSessions(self.g.Session)
 
         def __setUpRecordMode(self):
             method = getattr(self, self._testMethodName)
@@ -161,12 +161,14 @@ def createTestCase(builder):
                         os.unlink(self.fileName)
                     raise
 
-        def __hackRequestsSession(self, session):
+        def __hackRequestsSessions(self, session):
             adapter = self.mocksForRequests.create("adapter")
 
             if self.recordMode:
-                for k, v in session.adapters.iteritems():
-                    session.mount(k, adapter.record(v))
+                for k, v in session._Session__requestsSession.adapters.iteritems():
+                    session._Session__requestsSession.mount(k, adapter.record(v))
+                for k, v in session._Session__anonymousRequestsSession.adapters.iteritems():
+                    session._Session__anonymousRequestsSession.mount(k, adapter.record(v))
             else:
                 with open(self.fileName) as f:
                     records = json.load(f)
@@ -177,8 +179,10 @@ def createTestCase(builder):
                         self.__rebuildResponse(**record["response"])
                     )
 
-                for k, v in session.adapters.iteritems():
-                    session.mount(k, adapter.object)
+                for k, v in session._Session__requestsSession.adapters.iteritems():
+                    session._Session__requestsSession.mount(k, adapter.object)
+                for k, v in session._Session__anonymousRequestsSession.adapters.iteritems():
+                    session._Session__anonymousRequestsSession.mount(k, adapter.object)
 
         def __rebuildResponse(self, status, headers, body):
             response = requests.Response()

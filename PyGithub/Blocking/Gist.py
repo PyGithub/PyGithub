@@ -31,6 +31,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :attr:`.Gist.fork_of`
       * :attr:`.Gist.forks`
       * :meth:`.Gist.get_forks`
+      * :meth:`.Github.create_anonymous_gist`
       * :meth:`.Github.get_gist`
       * :meth:`.Github.get_public_gists`
       * :meth:`.User.get_gists`
