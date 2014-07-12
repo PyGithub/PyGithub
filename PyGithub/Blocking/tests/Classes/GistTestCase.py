@@ -49,3 +49,11 @@ class GistTestCase(Framework.SimpleLoginTestCase):
     # @todoAlpha Test update on all classes?
     # def testUpdate(self):
     #     pass
+
+    def testStarring(self):
+        g = self.g.get_gist("1942384")
+        self.assertTrue(g.is_starred())
+        g.reset_starred()
+        self.assertFalse(g.is_starred())
+        g.set_starred()
+        self.assertTrue(g.is_starred())

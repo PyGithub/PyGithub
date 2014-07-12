@@ -367,3 +367,40 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("DELETE", url)
+
+    def is_starred(self):
+        """
+        Calls the `GET /gists/:id/star <http://developer.github.com/v3/gists#check-if-a-gist-is-starred>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`bool`
+        """
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=str(self.id))
+        r = self.Session._request("GET", url, accept404=True)
+        return rcv.BoolConverter(None, r.status_code == 204)
+
+    def reset_starred(self):
+        """
+        Calls the `DELETE /gists/:id/star <http://developer.github.com/v3/gists#unstar-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=str(self.id))
+        r = self.Session._request("DELETE", url)
+
+    def set_starred(self):
+        """
+        Calls the `PUT /gists/:id/star <http://developer.github.com/v3/gists#star-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=str(self.id))
+        r = self.Session._request("PUT", url)

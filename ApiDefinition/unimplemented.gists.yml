@@ -1,4 +1,3 @@
 /gists/:id: [PATCH]
 /gists/:id/commits: [GET]
 /gists/:id/forks: [GET, POST]
-/gists/:id/star: [DELETE, GET, PUT]

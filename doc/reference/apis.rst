@@ -242,21 +242,24 @@ DELETE /gists/:id/star
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#unstar-a-gist>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Gist.reset_starred`
 
 GET /gists/:id/star
 -------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#check-if-a-gist-is-starred>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Gist.is_starred`
 
 PUT /gists/:id/star
 -------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#star-a-gist>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Gist.set_starred`
 
 GET /gists/public
 -----------------
