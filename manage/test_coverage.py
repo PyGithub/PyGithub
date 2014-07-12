@@ -26,9 +26,9 @@ class TestFamily(object):
     def run(self):
         print("==== Runing", self.description, "====")
         self.cov.start()
-        self.isResultOk = unittest.main(exit=False, module=self.module, argv=["test"]).result.wasSuccessful()
+        self.isResultOk = unittest.main(exit=False, module="PyGithub." + self.module, argv=["test"]).result.wasSuccessful()
         self.cov.stop()
-        self.cov.html_report(directory="unit_tests_coverage", include=self.include)
+        self.cov.html_report(directory=os.path.join("coverage", self.module), include=self.include)
         self.isCoverageOk = self.cov.report(include=self.include) == 100.
         print()
 
@@ -45,11 +45,11 @@ def main():
     cov.start()
 
     families = []
-    families.append(TestFamily(cov, "PyGithub.unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*"), os.path.join(baseDirectory, "Blocking", "PaginatedList.py")]))
+    families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*"), os.path.join(baseDirectory, "Blocking", "PaginatedList.py")]))
     if "--unit" not in sys.argv:
-        families.append(TestFamily(cov, "PyGithub.integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily(cov, "integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
     if "--all" in sys.argv:
-        families.append(TestFamily(cov, "PyGithub.doc_tests", "Doc tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily(cov, "doc_tests", "Doc tests", [os.path.join(baseDirectory, "*")]))
 
     for f in families:
         f.run()
