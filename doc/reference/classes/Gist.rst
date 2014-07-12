@@ -9,9 +9,11 @@ Gist
 
 .. autoclass:: PyGithub.Blocking.Gist::Gist()
     :members:
-    :exclude-members: ChangeStatus, GistFile, HistoryElement
+    :exclude-members: ChangeStatus, GistCommit, GistFile, HistoryElement
 
     .. autoclass:: PyGithub.Blocking.Gist::Gist.ChangeStatus()
+        :members:
+    .. autoclass:: PyGithub.Blocking.Gist::Gist.GistCommit()
         :members:
     .. autoclass:: PyGithub.Blocking.Gist::Gist.GistFile()
         :members:

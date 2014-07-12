@@ -40,6 +40,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     class ChangeStatus(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
+          * :attr:`.GistCommit.change_status`
           * :attr:`.HistoryElement.change_status`
         """
 
@@ -75,6 +76,55 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             :type: :class:`int`
             """
             return self.__total.value
+
+    class GistCommit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.Gist.get_commits`
+        """
+
+        def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
+            super(Gist.GistCommit, self)._initAttributes(**kwds)
+            self.__change_status = rcv.Attribute("Gist.GistCommit.change_status", rcv.StructureConverter(self.Session, Gist.ChangeStatus), change_status)
+            self.__committed_at = rcv.Attribute("Gist.GistCommit.committed_at", rcv.DatetimeConverter, committed_at)
+            self.__url = rcv.Attribute("Gist.GistCommit.url", rcv.StringConverter, url)
+            self.__user = rcv.Attribute("Gist.GistCommit.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
+            self.__version = rcv.Attribute("Gist.GistCommit.version", rcv.StringConverter, version)
+
+        @property
+        def change_status(self):
+            """
+            :type: :class:`.ChangeStatus`
+            """
+            return self.__change_status.value
+
+        @property
+        def committed_at(self):
+            """
+            :type: :class:`datetime`
+            """
+            return self.__committed_at.value
+
+        @property
+        def url(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__url.value
+
+        @property
+        def user(self):
+            """
+            :type: :class:`.User`
+            """
+            return self.__user.value
+
+        @property
+        def version(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__version.value
 
     class GistFile(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         """
@@ -448,6 +498,27 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         postArguments = snd.dictionary(description=description, files=files)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
+
+    def get_commits(self, per_page=None):
+        """
+        Calls the `GET /gists/:id/commits <http://developer.github.com/v3/gists#list-gist-commits>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.GistCommit`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.commits_url)
+        urlArguments = snd.dictionary(per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, Gist.GistCommit))(None, r)
 
     def get_forks(self, per_page=None):
         """

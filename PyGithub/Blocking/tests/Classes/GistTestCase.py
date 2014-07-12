@@ -27,7 +27,6 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(g.git_pull_url, "https://gist.github.com/5339374.git")
         self.assertEqual(g.git_push_url, "https://gist.github.com/5339374.git")
         self.assertEqual(len(g.history), 5)
-        # @todoAlpha HistoryElement has a url, should it be updatable?
         self.assertEqual(g.history[0].change_status.additions, 1)
         self.assertEqual(g.history[0].change_status.deletions, 1)
         self.assertEqual(g.history[0].change_status.total, 2)
@@ -42,10 +41,6 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(g.updated_at, datetime.datetime(2013, 4, 8, 19, 4, 7))
         self.assertEqual(g.url, "https://api.github.com/gists/5339374")
         self.assertIsNone(g.user)
-
-    # @todoAlpha Test update on all classes?
-    # def testUpdate(self):
-    #     pass
 
     def testForksAttributes(self):
         g = self.g.get_gist("6296732")
@@ -113,3 +108,21 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         # self.assertFalse("baz.txt" in g.files)
         # self.assertTrue("toto.txt" in g.files)
         g.edit(files={"toto.txt": {"filename": "baz.txt", "content": content}})
+
+    def testGetCommits(self):
+        g = self.g.get_gist("5339374")
+        commits = list(g.get_commits())
+        # @todoSomeday Consider opening an issue to GitHub so that they return the "link" header for pagination
+        self.assertEqual(len(commits), 4)
+        self.assertEqual(commits[0].change_status.additions, 1)
+        self.assertEqual(commits[0].change_status.deletions, 1)
+        self.assertEqual(commits[0].change_status.total, 2)
+        self.assertEqual(commits[0].committed_at, datetime.datetime(2014, 7, 12, 15, 14, 31))
+        self.assertEqual(commits[0].url, "https://api.github.com/gists/5339374/3b72d9ff2409918b89399eb29ba02913a4432214")
+        self.assertEqual(commits[0].user.login, "jacquev6")
+        self.assertEqual(commits[0].version, "3b72d9ff2409918b89399eb29ba02913a4432214")
+
+    def testGetCommits_allParameters(self):
+        g = self.g.get_gist("5339374")
+        commits = list(g.get_commits(per_page=7))
+        self.assertEqual(len(commits), 7)

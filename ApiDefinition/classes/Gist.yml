@@ -9,6 +9,19 @@ structures:
         type: int
       - name: total
         type: int
+  - name: GistCommit
+    updatable: false
+    attributes:
+      - name: change_status
+        type: ChangeStatus
+      - name: committed_at
+        type: datetime
+      - name: url
+        type: string
+      - name: user
+        type: User
+      - name: version
+        type: string
   - name: GistFile
     updatable: true
     attributes:
@@ -109,6 +122,18 @@ methods:
         value: parameter files
     effect: update
     return_type: none
+  - name: get_commits
+    end_point: GET /gists/:id/commits
+    optional_parameters:
+      - name: per_page
+        type: int
+    url_template: attribute commits_url
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: GistCommit
   - name: get_forks
     end_point: GET /gists/:id/forks
     optional_parameters:

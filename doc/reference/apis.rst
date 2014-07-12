@@ -223,7 +223,8 @@ GET /gists/:id/commits
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gist-commits>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Gist.get_commits`
 
 GET /gists/:id/forks
 --------------------
