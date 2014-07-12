@@ -36,6 +36,7 @@ class TestFamily(object):
         print("= {}: {}".format(self.description, "OK" if self.isResultOk else "FAIL"))
         print("= {} coverage: {}".format(self.description, "OK" if self.isCoverageOk else "FAIL"))
 
+
 def main():
     cov = coverage.coverage(
         branch=True,

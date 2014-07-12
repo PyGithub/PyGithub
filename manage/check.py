@@ -11,9 +11,8 @@ def main():
         "pep8",
         "--ignore=E501",
         ".",
-        "--exclude=*/CodeGeneration/*Templates",
     ])
 
 
 if __name__ == "__main__":
-    main()  # pragma no cover
+    main()
