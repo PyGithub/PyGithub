@@ -270,6 +270,31 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization)(None, r.json(), r.headers.get("ETag"))
 
+    def get_public_gists(self, since=None, per_page=None):
+        """
+        Calls the `GET /gists/public <http://developer.github.com/v3/gists#list-gists>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Gist
+
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand("https://api.github.com/gists/public")
+        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
+
     def get_rate_limit(self):
         """
         Calls the `GET /rate_limit <http://developer.github.com/v3/rate_limit#get-your-current-rate-limit-status>`__ end point.

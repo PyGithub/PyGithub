@@ -2,7 +2,7 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
-# import time
+import datetime
 
 import PyGithub.Blocking
 import PyGithub.Blocking.tests.Framework as Framework
@@ -74,6 +74,10 @@ class PaginationTestCase(Framework.createTestCase(PyGithub.Blocking.Builder.Buil
         repo = self.g.get_repo("jacquev6/PyGithub")
         stargazers = repo.get_stargazers()
         self.assertEqual(len(stargazers[:]), 315)
+
+    def testStopIterationOnEmptyPage(self):
+        gists = self.g.get_public_gists(since=datetime.datetime(2014, 7, 12, 2, 30, 0), per_page=10)
+        self.assertEqual(len(gists[:]), 32)
 
 
 class PaginationWithGlobalPerPageTestCase(Framework.createTestCase(PyGithub.Blocking.Builder.Builder().Login(Framework.login, Framework.password).PerPage(100))):

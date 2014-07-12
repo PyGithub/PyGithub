@@ -1,0 +1,1807 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/public",
+                "query": {
+                    "per_page": "10",
+                    "since": "2014-07-12T02:30:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/45fabe1b8199ad7e668d/comments",
+                    "commits_url": "https://api.github.com/gists/45fabe1b8199ad7e668d/commits",
+                    "created_at": "2014-07-12T02:45:23Z",
+                    "description": "Virtual to Arduino Multiplexer",
+                    "files": {
+                        "VirtualtoArduinoMultiplexer.groovy": {
+                            "filename": "VirtualtoArduinoMultiplexer.groovy",
+                            "language": "Groovy",
+                            "raw_url": "https://gist.githubusercontent.com/ogiewon/45fabe1b8199ad7e668d/raw/625b61cb5c91b2cb2ea2ccc9f6539770ddea8054/VirtualtoArduinoMultiplexer.groovy",
+                            "size": 5396,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/45fabe1b8199ad7e668d/forks",
+                    "git_pull_url": "https://gist.github.com/45fabe1b8199ad7e668d.git",
+                    "git_push_url": "https://gist.github.com/45fabe1b8199ad7e668d.git",
+                    "html_url": "https://gist.github.com/45fabe1b8199ad7e668d",
+                    "id": "45fabe1b8199ad7e668d",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5206084?",
+                        "events_url": "https://api.github.com/users/ogiewon/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/ogiewon/followers",
+                        "following_url": "https://api.github.com/users/ogiewon/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/ogiewon/gists{/gist_id}",
+                        "gravatar_id": "8407caec591498ab66f7d4bfb1a11ef2",
+                        "html_url": "https://github.com/ogiewon",
+                        "id": 5206084,
+                        "login": "ogiewon",
+                        "organizations_url": "https://api.github.com/users/ogiewon/orgs",
+                        "received_events_url": "https://api.github.com/users/ogiewon/received_events",
+                        "repos_url": "https://api.github.com/users/ogiewon/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/ogiewon/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/ogiewon/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/ogiewon"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:45:24Z",
+                    "url": "https://api.github.com/gists/45fabe1b8199ad7e668d",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/9931b9a20373a3443991/comments",
+                    "commits_url": "https://api.github.com/gists/9931b9a20373a3443991/commits",
+                    "created_at": "2014-07-12T02:44:27Z",
+                    "description": "Post-mortem",
+                    "files": {
+                        "readme.md": {
+                            "filename": "readme.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/nolanlawson/9931b9a20373a3443991/raw/6e959cc5f9f9e8839a92b48c2594560d349010c6/readme.md",
+                            "size": 2096,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/9931b9a20373a3443991/forks",
+                    "git_pull_url": "https://gist.github.com/9931b9a20373a3443991.git",
+                    "git_push_url": "https://gist.github.com/9931b9a20373a3443991.git",
+                    "html_url": "https://gist.github.com/9931b9a20373a3443991",
+                    "id": "9931b9a20373a3443991",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/283842?",
+                        "events_url": "https://api.github.com/users/nolanlawson/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nolanlawson/followers",
+                        "following_url": "https://api.github.com/users/nolanlawson/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nolanlawson/gists{/gist_id}",
+                        "gravatar_id": "c436dec61b906e27c963518d0ef1d972",
+                        "html_url": "https://github.com/nolanlawson",
+                        "id": 283842,
+                        "login": "nolanlawson",
+                        "organizations_url": "https://api.github.com/users/nolanlawson/orgs",
+                        "received_events_url": "https://api.github.com/users/nolanlawson/received_events",
+                        "repos_url": "https://api.github.com/users/nolanlawson/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nolanlawson/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nolanlawson/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nolanlawson"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:44:28Z",
+                    "url": "https://api.github.com/gists/9931b9a20373a3443991",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/1f597be3bbc098c50eb3/comments",
+                    "commits_url": "https://api.github.com/gists/1f597be3bbc098c50eb3/commits",
+                    "created_at": "2014-07-12T02:44:23Z",
+                    "description": "Here are some things you can do with Gists in GistBox.",
+                    "files": {
+                        "0_reuse_code.js": {
+                            "filename": "0_reuse_code.js",
+                            "language": "JavaScript",
+                            "raw_url": "https://gist.githubusercontent.com/codeFareith/1f597be3bbc098c50eb3/raw/2b8a5ccf55d94d29328a24ef3913ffb54841429c/0_reuse_code.js",
+                            "size": 126,
+                            "type": "application/javascript"
+                        },
+                        "1_ruby_quicksort.rb": {
+                            "filename": "1_ruby_quicksort.rb",
+                            "language": "Ruby",
+                            "raw_url": "https://gist.githubusercontent.com/codeFareith/1f597be3bbc098c50eb3/raw/b16d3e65da4810d1bf24fd231028f3775f7dcede/1_ruby_quicksort.rb",
+                            "size": 592,
+                            "type": "application/x-ruby"
+                        },
+                        "2_keyboard_shortcuts.md": {
+                            "filename": "2_keyboard_shortcuts.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/codeFareith/1f597be3bbc098c50eb3/raw/df51b18a3a36024d04f9348bd4e24f6991e41a02/2_keyboard_shortcuts.md",
+                            "size": 534,
+                            "type": "text/plain"
+                        },
+                        "3_cheesecake_recipe.md": {
+                            "filename": "3_cheesecake_recipe.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/codeFareith/1f597be3bbc098c50eb3/raw/f030315106c2b8dc0f52ad861f67223f88d4e35f/3_cheesecake_recipe.md",
+                            "size": 1821,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/1f597be3bbc098c50eb3/forks",
+                    "git_pull_url": "https://gist.github.com/1f597be3bbc098c50eb3.git",
+                    "git_push_url": "https://gist.github.com/1f597be3bbc098c50eb3.git",
+                    "html_url": "https://gist.github.com/1f597be3bbc098c50eb3",
+                    "id": "1f597be3bbc098c50eb3",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5126589?",
+                        "events_url": "https://api.github.com/users/codeFareith/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/codeFareith/followers",
+                        "following_url": "https://api.github.com/users/codeFareith/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/codeFareith/gists{/gist_id}",
+                        "gravatar_id": "1807324e5922fe9173ebf59a96efc34f",
+                        "html_url": "https://github.com/codeFareith",
+                        "id": 5126589,
+                        "login": "codeFareith",
+                        "organizations_url": "https://api.github.com/users/codeFareith/orgs",
+                        "received_events_url": "https://api.github.com/users/codeFareith/received_events",
+                        "repos_url": "https://api.github.com/users/codeFareith/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/codeFareith/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/codeFareith/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/codeFareith"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:44:23Z",
+                    "url": "https://api.github.com/gists/1f597be3bbc098c50eb3",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/8e0d9808a11b082c0d4b/comments",
+                    "commits_url": "https://api.github.com/gists/8e0d9808a11b082c0d4b/commits",
+                    "created_at": "2014-07-12T02:43:49Z",
+                    "description": "",
+                    "files": {
+                        "minify_wordpress": {
+                            "filename": "minify_wordpress",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/setuix/8e0d9808a11b082c0d4b/raw/35e54c7e3aa64d16f6fd1fab5573d87e2e993c40/minify_wordpress",
+                            "size": 3750,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/8e0d9808a11b082c0d4b/forks",
+                    "git_pull_url": "https://gist.github.com/8e0d9808a11b082c0d4b.git",
+                    "git_push_url": "https://gist.github.com/8e0d9808a11b082c0d4b.git",
+                    "html_url": "https://gist.github.com/8e0d9808a11b082c0d4b",
+                    "id": "8e0d9808a11b082c0d4b",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/7484004?",
+                        "events_url": "https://api.github.com/users/setuix/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/setuix/followers",
+                        "following_url": "https://api.github.com/users/setuix/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/setuix/gists{/gist_id}",
+                        "gravatar_id": "73b7716143e41b71711332bc5fc2cd52",
+                        "html_url": "https://github.com/setuix",
+                        "id": 7484004,
+                        "login": "setuix",
+                        "organizations_url": "https://api.github.com/users/setuix/orgs",
+                        "received_events_url": "https://api.github.com/users/setuix/received_events",
+                        "repos_url": "https://api.github.com/users/setuix/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/setuix/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/setuix/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/setuix"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:43:50Z",
+                    "url": "https://api.github.com/gists/8e0d9808a11b082c0d4b",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/e6424f520906e1bf0ee3/comments",
+                    "commits_url": "https://api.github.com/gists/e6424f520906e1bf0ee3/commits",
+                    "created_at": "2014-07-12T02:43:43Z",
+                    "description": "Lodz - Warta River-4",
+                    "files": {
+                        "openpanzer-save.json": {
+                            "filename": "openpanzer-save.json",
+                            "language": "JSON",
+                            "raw_url": "https://gist.githubusercontent.com/openpanzer/e6424f520906e1bf0ee3/raw/d6073814818c99d6bd274379c58a3327bdb15c69/openpanzer-save.json",
+                            "size": 343960,
+                            "type": "application/json"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/e6424f520906e1bf0ee3/forks",
+                    "git_pull_url": "https://gist.github.com/e6424f520906e1bf0ee3.git",
+                    "git_push_url": "https://gist.github.com/e6424f520906e1bf0ee3.git",
+                    "html_url": "https://gist.github.com/e6424f520906e1bf0ee3",
+                    "id": "e6424f520906e1bf0ee3",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5112272?",
+                        "events_url": "https://api.github.com/users/openpanzer/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/openpanzer/followers",
+                        "following_url": "https://api.github.com/users/openpanzer/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/openpanzer/gists{/gist_id}",
+                        "gravatar_id": "ca9cfcc6f82dd6fa2ba3fe57c9ee449e",
+                        "html_url": "https://github.com/openpanzer",
+                        "id": 5112272,
+                        "login": "openpanzer",
+                        "organizations_url": "https://api.github.com/users/openpanzer/orgs",
+                        "received_events_url": "https://api.github.com/users/openpanzer/received_events",
+                        "repos_url": "https://api.github.com/users/openpanzer/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/openpanzer/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/openpanzer/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/openpanzer"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:43:43Z",
+                    "url": "https://api.github.com/gists/e6424f520906e1bf0ee3",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/93bfdcb95948b09cf3e5/comments",
+                    "commits_url": "https://api.github.com/gists/93bfdcb95948b09cf3e5/commits",
+                    "created_at": "2014-07-12T02:43:16Z",
+                    "description": "VirtualContactSensor",
+                    "files": {
+                        "VirtualContactSensor.groovy": {
+                            "filename": "VirtualContactSensor.groovy",
+                            "language": "Groovy",
+                            "raw_url": "https://gist.githubusercontent.com/ogiewon/93bfdcb95948b09cf3e5/raw/40f464e41f45247197d4d428aaa355fb72d4b0ca/VirtualContactSensor.groovy",
+                            "size": 1565,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/93bfdcb95948b09cf3e5/forks",
+                    "git_pull_url": "https://gist.github.com/93bfdcb95948b09cf3e5.git",
+                    "git_push_url": "https://gist.github.com/93bfdcb95948b09cf3e5.git",
+                    "html_url": "https://gist.github.com/93bfdcb95948b09cf3e5",
+                    "id": "93bfdcb95948b09cf3e5",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5206084?",
+                        "events_url": "https://api.github.com/users/ogiewon/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/ogiewon/followers",
+                        "following_url": "https://api.github.com/users/ogiewon/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/ogiewon/gists{/gist_id}",
+                        "gravatar_id": "8407caec591498ab66f7d4bfb1a11ef2",
+                        "html_url": "https://github.com/ogiewon",
+                        "id": 5206084,
+                        "login": "ogiewon",
+                        "organizations_url": "https://api.github.com/users/ogiewon/orgs",
+                        "received_events_url": "https://api.github.com/users/ogiewon/received_events",
+                        "repos_url": "https://api.github.com/users/ogiewon/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/ogiewon/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/ogiewon/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/ogiewon"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:43:17Z",
+                    "url": "https://api.github.com/gists/93bfdcb95948b09cf3e5",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/65bcfeb352e549d50715/comments",
+                    "commits_url": "https://api.github.com/gists/65bcfeb352e549d50715/commits",
+                    "created_at": "2014-07-12T02:42:01Z",
+                    "description": "Colors in GIT",
+                    "files": {
+                        "git_color.md": {
+                            "filename": "git_color.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renanigt/65bcfeb352e549d50715/raw/7a95ab8e18e511667f674e26b8babdf32d4b3606/git_color.md",
+                            "size": 2078,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/65bcfeb352e549d50715/forks",
+                    "git_pull_url": "https://gist.github.com/65bcfeb352e549d50715.git",
+                    "git_push_url": "https://gist.github.com/65bcfeb352e549d50715.git",
+                    "html_url": "https://gist.github.com/65bcfeb352e549d50715",
+                    "id": "65bcfeb352e549d50715",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/212554?",
+                        "events_url": "https://api.github.com/users/renanigt/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/renanigt/followers",
+                        "following_url": "https://api.github.com/users/renanigt/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/renanigt/gists{/gist_id}",
+                        "gravatar_id": "3ceb47e5f936a03217c3ba8f1b6b629d",
+                        "html_url": "https://github.com/renanigt",
+                        "id": 212554,
+                        "login": "renanigt",
+                        "organizations_url": "https://api.github.com/users/renanigt/orgs",
+                        "received_events_url": "https://api.github.com/users/renanigt/received_events",
+                        "repos_url": "https://api.github.com/users/renanigt/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/renanigt/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/renanigt/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/renanigt"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:44:52Z",
+                    "url": "https://api.github.com/gists/65bcfeb352e549d50715",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/de647947e407d3afec55/comments",
+                    "commits_url": "https://api.github.com/gists/de647947e407d3afec55/commits",
+                    "created_at": "2014-07-12T02:41:42Z",
+                    "description": "rvm",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/ashleywillis/de647947e407d3afec55/raw/d9bb2790730a80e48c62a5ba84ac3318f28085e3/gistfile1.txt",
+                            "size": 5723,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/de647947e407d3afec55/forks",
+                    "git_pull_url": "https://gist.github.com/de647947e407d3afec55.git",
+                    "git_push_url": "https://gist.github.com/de647947e407d3afec55.git",
+                    "html_url": "https://gist.github.com/de647947e407d3afec55",
+                    "id": "de647947e407d3afec55",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1113260?",
+                        "events_url": "https://api.github.com/users/ashleywillis/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/ashleywillis/followers",
+                        "following_url": "https://api.github.com/users/ashleywillis/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/ashleywillis/gists{/gist_id}",
+                        "gravatar_id": "a3bf8fbb7c8049ff732ce3551f734800",
+                        "html_url": "https://github.com/ashleywillis",
+                        "id": 1113260,
+                        "login": "ashleywillis",
+                        "organizations_url": "https://api.github.com/users/ashleywillis/orgs",
+                        "received_events_url": "https://api.github.com/users/ashleywillis/received_events",
+                        "repos_url": "https://api.github.com/users/ashleywillis/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/ashleywillis/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/ashleywillis/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/ashleywillis"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:41:43Z",
+                    "url": "https://api.github.com/gists/de647947e407d3afec55",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/2ad5b0ba10728cd05268/comments",
+                    "commits_url": "https://api.github.com/gists/2ad5b0ba10728cd05268/commits",
+                    "created_at": "2014-07-12T02:41:30Z",
+                    "description": "Garage Door Device Type",
+                    "files": {
+                        "VirtualGarageDoor.groovy": {
+                            "filename": "VirtualGarageDoor.groovy",
+                            "language": "Groovy",
+                            "raw_url": "https://gist.githubusercontent.com/ogiewon/2ad5b0ba10728cd05268/raw/80d2390a8fd1621843ba03d8ce2bb214a47ea00c/VirtualGarageDoor.groovy",
+                            "size": 2626,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2ad5b0ba10728cd05268/forks",
+                    "git_pull_url": "https://gist.github.com/2ad5b0ba10728cd05268.git",
+                    "git_push_url": "https://gist.github.com/2ad5b0ba10728cd05268.git",
+                    "html_url": "https://gist.github.com/2ad5b0ba10728cd05268",
+                    "id": "2ad5b0ba10728cd05268",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5206084?",
+                        "events_url": "https://api.github.com/users/ogiewon/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/ogiewon/followers",
+                        "following_url": "https://api.github.com/users/ogiewon/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/ogiewon/gists{/gist_id}",
+                        "gravatar_id": "8407caec591498ab66f7d4bfb1a11ef2",
+                        "html_url": "https://github.com/ogiewon",
+                        "id": 5206084,
+                        "login": "ogiewon",
+                        "organizations_url": "https://api.github.com/users/ogiewon/orgs",
+                        "received_events_url": "https://api.github.com/users/ogiewon/received_events",
+                        "repos_url": "https://api.github.com/users/ogiewon/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/ogiewon/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/ogiewon/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/ogiewon"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:43:53Z",
+                    "url": "https://api.github.com/gists/2ad5b0ba10728cd05268",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/edf9aa6418b878f2aea3/comments",
+                    "commits_url": "https://api.github.com/gists/edf9aa6418b878f2aea3/commits",
+                    "created_at": "2014-07-12T02:37:46Z",
+                    "description": "Extempore 0.52 failing to build in Ubuntu 13.10 under linuxbrew",
+                    "files": {
+                        "above log 01.all.bash": {
+                            "filename": "above log 01.all.bash",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/candeira/edf9aa6418b878f2aea3/raw/f55b5f60636de471a7336dc5bf3e5b594b7ea78b/above%20log%2001.all.bash",
+                            "size": 2474,
+                            "type": "text/plain"
+                        },
+                        "output of HOMEBREW_MAKE_JOBS=1 brew install -v extempore 2>&1": {
+                            "filename": "output of HOMEBREW_MAKE_JOBS=1 brew install -v extempore 2>&1",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/candeira/edf9aa6418b878f2aea3/raw/56f9dc708d8fc455b0b402d4ee2abc88c73d5182/output%20of%20HOMEBREW_MAKE_JOBS=1%20brew%20install%20-v%20extempore%202%3E&1",
+                            "size": 14569,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/edf9aa6418b878f2aea3/forks",
+                    "git_pull_url": "https://gist.github.com/edf9aa6418b878f2aea3.git",
+                    "git_push_url": "https://gist.github.com/edf9aa6418b878f2aea3.git",
+                    "html_url": "https://gist.github.com/edf9aa6418b878f2aea3",
+                    "id": "edf9aa6418b878f2aea3",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/91694?",
+                        "events_url": "https://api.github.com/users/candeira/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/candeira/followers",
+                        "following_url": "https://api.github.com/users/candeira/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/candeira/gists{/gist_id}",
+                        "gravatar_id": "27290243e35a124cfea69a9e593f892f",
+                        "html_url": "https://github.com/candeira",
+                        "id": 91694,
+                        "login": "candeira",
+                        "organizations_url": "https://api.github.com/users/candeira/orgs",
+                        "received_events_url": "https://api.github.com/users/candeira/received_events",
+                        "repos_url": "https://api.github.com/users/candeira/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/candeira/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/candeira/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/candeira"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:37:47Z",
+                    "url": "https://api.github.com/gists/edf9aa6418b878f2aea3",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 02:46:34 GMT",
+                "etag": "\"1f8811f30a84ca69e0747b610cccc84b\"",
+                "link": "<https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=2>; rel=\"next\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=300>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:71ED2B1:53C0A18A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4796",
+                "x-ratelimit-reset": "1405134540",
+                "x-served-by": "d818ddef80f4c7d10683dd483558952a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/public",
+                "query": {
+                    "page": "2",
+                    "per_page": "10",
+                    "since": "2014-07-12T02:30:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/0132f783e90175e90526/comments",
+                    "commits_url": "https://api.github.com/gists/0132f783e90175e90526/commits",
+                    "created_at": "2014-07-12T02:36:42Z",
+                    "description": "Upper case to lower case...",
+                    "files": {
+                        "up2lc.sh": {
+                            "filename": "up2lc.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/kentatogashi/0132f783e90175e90526/raw/52edefaae752a397a08c9d26f3456b0bbfa29152/up2lc.sh",
+                            "size": 380,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/0132f783e90175e90526/forks",
+                    "git_pull_url": "https://gist.github.com/0132f783e90175e90526.git",
+                    "git_push_url": "https://gist.github.com/0132f783e90175e90526.git",
+                    "html_url": "https://gist.github.com/0132f783e90175e90526",
+                    "id": "0132f783e90175e90526",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/4276550?",
+                        "events_url": "https://api.github.com/users/kentatogashi/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/kentatogashi/followers",
+                        "following_url": "https://api.github.com/users/kentatogashi/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/kentatogashi/gists{/gist_id}",
+                        "gravatar_id": "55de93456e3158c5c1be73275361d407",
+                        "html_url": "https://github.com/kentatogashi",
+                        "id": 4276550,
+                        "login": "kentatogashi",
+                        "organizations_url": "https://api.github.com/users/kentatogashi/orgs",
+                        "received_events_url": "https://api.github.com/users/kentatogashi/received_events",
+                        "repos_url": "https://api.github.com/users/kentatogashi/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/kentatogashi/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/kentatogashi/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/kentatogashi"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:36:43Z",
+                    "url": "https://api.github.com/gists/0132f783e90175e90526",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/12c2f6ab07340190b1dd/comments",
+                    "commits_url": "https://api.github.com/gists/12c2f6ab07340190b1dd/commits",
+                    "created_at": "2014-07-12T02:36:40Z",
+                    "description": "",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/z123/12c2f6ab07340190b1dd/raw/10f182c0e1e50eca92f34ee86bb26b1a37de7d10/gistfile1.txt",
+                            "size": 1943,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/12c2f6ab07340190b1dd/forks",
+                    "git_pull_url": "https://gist.github.com/12c2f6ab07340190b1dd.git",
+                    "git_push_url": "https://gist.github.com/12c2f6ab07340190b1dd.git",
+                    "html_url": "https://gist.github.com/12c2f6ab07340190b1dd",
+                    "id": "12c2f6ab07340190b1dd",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/6239334?",
+                        "events_url": "https://api.github.com/users/z123/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/z123/followers",
+                        "following_url": "https://api.github.com/users/z123/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/z123/gists{/gist_id}",
+                        "gravatar_id": null,
+                        "html_url": "https://github.com/z123",
+                        "id": 6239334,
+                        "login": "z123",
+                        "organizations_url": "https://api.github.com/users/z123/orgs",
+                        "received_events_url": "https://api.github.com/users/z123/received_events",
+                        "repos_url": "https://api.github.com/users/z123/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/z123/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/z123/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/z123"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:36:41Z",
+                    "url": "https://api.github.com/gists/12c2f6ab07340190b1dd",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/01fe21f37ab0b4187e12/comments",
+                    "commits_url": "https://api.github.com/gists/01fe21f37ab0b4187e12/commits",
+                    "created_at": "2014-07-12T02:36:35Z",
+                    "description": "arduino usb port permission denied issue",
+                    "files": {
+                        "arduino_port.sh": {
+                            "filename": "arduino_port.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/orendon/01fe21f37ab0b4187e12/raw/9f60be504e1ded44a5adc72e602ba2595a5bbeba/arduino_port.sh",
+                            "size": 23,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/01fe21f37ab0b4187e12/forks",
+                    "git_pull_url": "https://gist.github.com/01fe21f37ab0b4187e12.git",
+                    "git_push_url": "https://gist.github.com/01fe21f37ab0b4187e12.git",
+                    "html_url": "https://gist.github.com/01fe21f37ab0b4187e12",
+                    "id": "01fe21f37ab0b4187e12",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1316543?",
+                        "events_url": "https://api.github.com/users/orendon/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/orendon/followers",
+                        "following_url": "https://api.github.com/users/orendon/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/orendon/gists{/gist_id}",
+                        "gravatar_id": "173104019df6584d65d2fca4c1128cf0",
+                        "html_url": "https://github.com/orendon",
+                        "id": 1316543,
+                        "login": "orendon",
+                        "organizations_url": "https://api.github.com/users/orendon/orgs",
+                        "received_events_url": "https://api.github.com/users/orendon/received_events",
+                        "repos_url": "https://api.github.com/users/orendon/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/orendon/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/orendon/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/orendon"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:36:36Z",
+                    "url": "https://api.github.com/gists/01fe21f37ab0b4187e12",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/fd389dafe84df1cc4913/comments",
+                    "commits_url": "https://api.github.com/gists/fd389dafe84df1cc4913/commits",
+                    "created_at": "2014-07-12T02:35:47Z",
+                    "description": "updateState",
+                    "files": {
+                        "backbone mixin": {
+                            "filename": "backbone mixin",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/moonlimb/fd389dafe84df1cc4913/raw/05c70a84d9b219e779f3d8c5c27759b051f7a333/backbone%20mixin",
+                            "size": 731,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/fd389dafe84df1cc4913/forks",
+                    "git_pull_url": "https://gist.github.com/fd389dafe84df1cc4913.git",
+                    "git_push_url": "https://gist.github.com/fd389dafe84df1cc4913.git",
+                    "html_url": "https://gist.github.com/fd389dafe84df1cc4913",
+                    "id": "fd389dafe84df1cc4913",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1931494?",
+                        "events_url": "https://api.github.com/users/moonlimb/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/moonlimb/followers",
+                        "following_url": "https://api.github.com/users/moonlimb/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/moonlimb/gists{/gist_id}",
+                        "gravatar_id": "ec4eadcb67a79be362707e1376ec398d",
+                        "html_url": "https://github.com/moonlimb",
+                        "id": 1931494,
+                        "login": "moonlimb",
+                        "organizations_url": "https://api.github.com/users/moonlimb/orgs",
+                        "received_events_url": "https://api.github.com/users/moonlimb/received_events",
+                        "repos_url": "https://api.github.com/users/moonlimb/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/moonlimb/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/moonlimb/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/moonlimb"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:35:48Z",
+                    "url": "https://api.github.com/gists/fd389dafe84df1cc4913",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/ab0726e6ad5f6f8fc06f/comments",
+                    "commits_url": "https://api.github.com/gists/ab0726e6ad5f6f8fc06f/commits",
+                    "created_at": "2014-07-12T02:35:18Z",
+                    "description": "Replicate Atom-Shell Stall/Idle Problem",
+                    "files": {
+                        "app.js": {
+                            "filename": "app.js",
+                            "language": "JavaScript",
+                            "raw_url": "https://gist.githubusercontent.com/cpsubrian/ab0726e6ad5f6f8fc06f/raw/c59d9b6344f1af00e504ba698129f07a34bbed8d/app.js",
+                            "size": 1,
+                            "type": "application/javascript"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/ab0726e6ad5f6f8fc06f/forks",
+                    "git_pull_url": "https://gist.github.com/ab0726e6ad5f6f8fc06f.git",
+                    "git_push_url": "https://gist.github.com/ab0726e6ad5f6f8fc06f.git",
+                    "html_url": "https://gist.github.com/ab0726e6ad5f6f8fc06f",
+                    "id": "ab0726e6ad5f6f8fc06f",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/319152?",
+                        "events_url": "https://api.github.com/users/cpsubrian/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/cpsubrian/followers",
+                        "following_url": "https://api.github.com/users/cpsubrian/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/cpsubrian/gists{/gist_id}",
+                        "gravatar_id": "541ee67a78d35a2aa8789c417ebae767",
+                        "html_url": "https://github.com/cpsubrian",
+                        "id": 319152,
+                        "login": "cpsubrian",
+                        "organizations_url": "https://api.github.com/users/cpsubrian/orgs",
+                        "received_events_url": "https://api.github.com/users/cpsubrian/received_events",
+                        "repos_url": "https://api.github.com/users/cpsubrian/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/cpsubrian/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/cpsubrian/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/cpsubrian"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:35:19Z",
+                    "url": "https://api.github.com/gists/ab0726e6ad5f6f8fc06f",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/f1591d612c19f5e2f2fc/comments",
+                    "commits_url": "https://api.github.com/gists/f1591d612c19f5e2f2fc/commits",
+                    "created_at": "2014-07-12T02:33:47Z",
+                    "description": "This is the CSS file that's failing to be picked up by convert-source-map. Mentioned here: https://github.com/thlorenz/convert-source-map/pull/6#issuecomment-48799449",
+                    "files": {
+                        "one-line-sourcemap.css": {
+                            "filename": "one-line-sourcemap.css",
+                            "language": "CSS",
+                            "raw_url": "https://gist.githubusercontent.com/joemaller/f1591d612c19f5e2f2fc/raw/8da3755557c86d00743506ff1bf9327e49438f2e/one-line-sourcemap.css",
+                            "size": 523,
+                            "type": "text/css"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/f1591d612c19f5e2f2fc/forks",
+                    "git_pull_url": "https://gist.github.com/f1591d612c19f5e2f2fc.git",
+                    "git_push_url": "https://gist.github.com/f1591d612c19f5e2f2fc.git",
+                    "html_url": "https://gist.github.com/f1591d612c19f5e2f2fc",
+                    "id": "f1591d612c19f5e2f2fc",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/8320?",
+                        "events_url": "https://api.github.com/users/joemaller/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/joemaller/followers",
+                        "following_url": "https://api.github.com/users/joemaller/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/joemaller/gists{/gist_id}",
+                        "gravatar_id": "97e98a58985d27d4830566d9be89c872",
+                        "html_url": "https://github.com/joemaller",
+                        "id": 8320,
+                        "login": "joemaller",
+                        "organizations_url": "https://api.github.com/users/joemaller/orgs",
+                        "received_events_url": "https://api.github.com/users/joemaller/received_events",
+                        "repos_url": "https://api.github.com/users/joemaller/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/joemaller/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/joemaller/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/joemaller"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:35:27Z",
+                    "url": "https://api.github.com/gists/f1591d612c19f5e2f2fc",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/def2261682edde3b9a96/comments",
+                    "commits_url": "https://api.github.com/gists/def2261682edde3b9a96/commits",
+                    "created_at": "2014-07-12T02:33:21Z",
+                    "description": "jump or execute a command - quick switch between apps",
+                    "files": {
+                        "jump_or_exec.rb": {
+                            "filename": "jump_or_exec.rb",
+                            "language": "Ruby",
+                            "raw_url": "https://gist.githubusercontent.com/shaoyanmin/def2261682edde3b9a96/raw/f2e84506ab970f523c48711ee3af7d55235ad314/jump_or_exec.rb",
+                            "size": 186,
+                            "type": "application/x-ruby"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/def2261682edde3b9a96/forks",
+                    "git_pull_url": "https://gist.github.com/def2261682edde3b9a96.git",
+                    "git_push_url": "https://gist.github.com/def2261682edde3b9a96.git",
+                    "html_url": "https://gist.github.com/def2261682edde3b9a96",
+                    "id": "def2261682edde3b9a96",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1150403?",
+                        "events_url": "https://api.github.com/users/shaoyanmin/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/shaoyanmin/followers",
+                        "following_url": "https://api.github.com/users/shaoyanmin/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/shaoyanmin/gists{/gist_id}",
+                        "gravatar_id": "3faf1f693a53333bc30ec0ec9a2d4bdc",
+                        "html_url": "https://github.com/shaoyanmin",
+                        "id": 1150403,
+                        "login": "shaoyanmin",
+                        "organizations_url": "https://api.github.com/users/shaoyanmin/orgs",
+                        "received_events_url": "https://api.github.com/users/shaoyanmin/received_events",
+                        "repos_url": "https://api.github.com/users/shaoyanmin/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/shaoyanmin/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/shaoyanmin/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/shaoyanmin"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:33:22Z",
+                    "url": "https://api.github.com/gists/def2261682edde3b9a96",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/ce001314c47a40471131/comments",
+                    "commits_url": "https://api.github.com/gists/ce001314c47a40471131/commits",
+                    "created_at": "2014-07-12T02:32:24Z",
+                    "description": "",
+                    "files": {
+                        "zshaddhistory()": {
+                            "filename": "zshaddhistory()",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/h17u/ce001314c47a40471131/raw/42b3fdcf64924b4939f6c21910264e219d00491e/zshaddhistory()",
+                            "size": 333,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/ce001314c47a40471131/forks",
+                    "git_pull_url": "https://gist.github.com/ce001314c47a40471131.git",
+                    "git_push_url": "https://gist.github.com/ce001314c47a40471131.git",
+                    "html_url": "https://gist.github.com/ce001314c47a40471131",
+                    "id": "ce001314c47a40471131",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1233333?",
+                        "events_url": "https://api.github.com/users/h17u/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/h17u/followers",
+                        "following_url": "https://api.github.com/users/h17u/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/h17u/gists{/gist_id}",
+                        "gravatar_id": "5c7586d85ae4fa595bfed9d0e615d022",
+                        "html_url": "https://github.com/h17u",
+                        "id": 1233333,
+                        "login": "h17u",
+                        "organizations_url": "https://api.github.com/users/h17u/orgs",
+                        "received_events_url": "https://api.github.com/users/h17u/received_events",
+                        "repos_url": "https://api.github.com/users/h17u/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/h17u/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/h17u/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/h17u"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:32:25Z",
+                    "url": "https://api.github.com/gists/ce001314c47a40471131",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/dfae4dd0f0d163be1d95/comments",
+                    "commits_url": "https://api.github.com/gists/dfae4dd0f0d163be1d95/commits",
+                    "created_at": "2014-07-12T02:32:23Z",
+                    "description": "",
+                    "files": {
+                        "user": {
+                            "filename": "user",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/pedroneves/dfae4dd0f0d163be1d95/raw/8918e36e6839b0fac0f0effc1152ef5db0e200a7/user",
+                            "size": 1021,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/dfae4dd0f0d163be1d95/forks",
+                    "git_pull_url": "https://gist.github.com/dfae4dd0f0d163be1d95.git",
+                    "git_push_url": "https://gist.github.com/dfae4dd0f0d163be1d95.git",
+                    "html_url": "https://gist.github.com/dfae4dd0f0d163be1d95",
+                    "id": "dfae4dd0f0d163be1d95",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/4944612?",
+                        "events_url": "https://api.github.com/users/pedroneves/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/pedroneves/followers",
+                        "following_url": "https://api.github.com/users/pedroneves/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/pedroneves/gists{/gist_id}",
+                        "gravatar_id": "117c88fcf170d602ccb319269e43794b",
+                        "html_url": "https://github.com/pedroneves",
+                        "id": 4944612,
+                        "login": "pedroneves",
+                        "organizations_url": "https://api.github.com/users/pedroneves/orgs",
+                        "received_events_url": "https://api.github.com/users/pedroneves/received_events",
+                        "repos_url": "https://api.github.com/users/pedroneves/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/pedroneves/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/pedroneves/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/pedroneves"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:45:34Z",
+                    "url": "https://api.github.com/gists/dfae4dd0f0d163be1d95",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5a20a9df864935f6f8c0/comments",
+                    "commits_url": "https://api.github.com/gists/5a20a9df864935f6f8c0/commits",
+                    "created_at": "2014-07-12T02:32:01Z",
+                    "description": "",
+                    "files": {
+                        "anagram.sh": {
+                            "filename": "anagram.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/skreuzer/5a20a9df864935f6f8c0/raw/d167fe76367662c40e756af9132a16c11d06af63/anagram.sh",
+                            "size": 779,
+                            "type": "application/x-sh"
+                        },
+                        "script_output": {
+                            "filename": "script_output",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/skreuzer/5a20a9df864935f6f8c0/raw/4e58b379d3d91c1a22d44341dc40d7779d13a147/script_output",
+                            "size": 230,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5a20a9df864935f6f8c0/forks",
+                    "git_pull_url": "https://gist.github.com/5a20a9df864935f6f8c0.git",
+                    "git_push_url": "https://gist.github.com/5a20a9df864935f6f8c0.git",
+                    "html_url": "https://gist.github.com/5a20a9df864935f6f8c0",
+                    "id": "5a20a9df864935f6f8c0",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/109427?",
+                        "events_url": "https://api.github.com/users/skreuzer/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/skreuzer/followers",
+                        "following_url": "https://api.github.com/users/skreuzer/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/skreuzer/gists{/gist_id}",
+                        "gravatar_id": "341d0956f776770ff417e47e63843e69",
+                        "html_url": "https://github.com/skreuzer",
+                        "id": 109427,
+                        "login": "skreuzer",
+                        "organizations_url": "https://api.github.com/users/skreuzer/orgs",
+                        "received_events_url": "https://api.github.com/users/skreuzer/received_events",
+                        "repos_url": "https://api.github.com/users/skreuzer/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/skreuzer/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/skreuzer/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/skreuzer"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:32:47Z",
+                    "url": "https://api.github.com/gists/5a20a9df864935f6f8c0",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 02:46:34 GMT",
+                "etag": "\"bdc9759d8544bf815a5dbfa939b4ed3a\"",
+                "link": "<https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=3>; rel=\"next\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=300>; rel=\"last\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=1>; rel=\"first\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=1>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:71ED308:53C0A18A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4795",
+                "x-ratelimit-reset": "1405134540",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/public",
+                "query": {
+                    "page": "3",
+                    "per_page": "10",
+                    "since": "2014-07-12T02:30:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/cf7bef93f748546e9351/comments",
+                    "commits_url": "https://api.github.com/gists/cf7bef93f748546e9351/commits",
+                    "created_at": "2014-07-12T02:30:59Z",
+                    "description": "creating zip file without input files.",
+                    "files": {
+                        "gistfile1.java": {
+                            "filename": "gistfile1.java",
+                            "language": "Java",
+                            "raw_url": "https://gist.githubusercontent.com/tomoTaka01/cf7bef93f748546e9351/raw/fe51cc8268aa5d8a8a2616399e15689355964578/gistfile1.java",
+                            "size": 1095,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/cf7bef93f748546e9351/forks",
+                    "git_pull_url": "https://gist.github.com/cf7bef93f748546e9351.git",
+                    "git_push_url": "https://gist.github.com/cf7bef93f748546e9351.git",
+                    "html_url": "https://gist.github.com/cf7bef93f748546e9351",
+                    "id": "cf7bef93f748546e9351",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1302883?",
+                        "events_url": "https://api.github.com/users/tomoTaka01/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/tomoTaka01/followers",
+                        "following_url": "https://api.github.com/users/tomoTaka01/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/tomoTaka01/gists{/gist_id}",
+                        "gravatar_id": "b1479c7e5dd9afdb8bbbb3a5940cc830",
+                        "html_url": "https://github.com/tomoTaka01",
+                        "id": 1302883,
+                        "login": "tomoTaka01",
+                        "organizations_url": "https://api.github.com/users/tomoTaka01/orgs",
+                        "received_events_url": "https://api.github.com/users/tomoTaka01/received_events",
+                        "repos_url": "https://api.github.com/users/tomoTaka01/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/tomoTaka01/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/tomoTaka01/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/tomoTaka01"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:31:00Z",
+                    "url": "https://api.github.com/gists/cf7bef93f748546e9351",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3e3e04997b3c0202ad7b/comments",
+                    "commits_url": "https://api.github.com/gists/3e3e04997b3c0202ad7b/commits",
+                    "created_at": "2014-07-12T02:30:51Z",
+                    "description": "Load directory.",
+                    "files": {
+                        "load_dir.py": {
+                            "filename": "load_dir.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/gartenfeld/3e3e04997b3c0202ad7b/raw/cea58f63f0ebf251f86f73680bf3b231d12dda28/load_dir.py",
+                            "size": 702,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3e3e04997b3c0202ad7b/forks",
+                    "git_pull_url": "https://gist.github.com/3e3e04997b3c0202ad7b.git",
+                    "git_push_url": "https://gist.github.com/3e3e04997b3c0202ad7b.git",
+                    "html_url": "https://gist.github.com/3e3e04997b3c0202ad7b",
+                    "id": "3e3e04997b3c0202ad7b",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/1134883?",
+                        "events_url": "https://api.github.com/users/gartenfeld/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/gartenfeld/followers",
+                        "following_url": "https://api.github.com/users/gartenfeld/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/gartenfeld/gists{/gist_id}",
+                        "gravatar_id": "cd7505359520151043e11c40ffb43a08",
+                        "html_url": "https://github.com/gartenfeld",
+                        "id": 1134883,
+                        "login": "gartenfeld",
+                        "organizations_url": "https://api.github.com/users/gartenfeld/orgs",
+                        "received_events_url": "https://api.github.com/users/gartenfeld/received_events",
+                        "repos_url": "https://api.github.com/users/gartenfeld/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/gartenfeld/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/gartenfeld/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/gartenfeld"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:30:52Z",
+                    "url": "https://api.github.com/gists/3e3e04997b3c0202ad7b",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/13b064c2e9634bb135a9/comments",
+                    "commits_url": "https://api.github.com/gists/13b064c2e9634bb135a9/commits",
+                    "created_at": "2014-07-12T01:59:34Z",
+                    "description": "Common Lisp Hack night # 3",
+                    "files": {
+                        "maind.md": {
+                            "filename": "maind.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/topher6345/13b064c2e9634bb135a9/raw/b1290580407ee0820aad5adc421147736ddf933f/maind.md",
+                            "size": 695,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/13b064c2e9634bb135a9/forks",
+                    "git_pull_url": "https://gist.github.com/13b064c2e9634bb135a9.git",
+                    "git_push_url": "https://gist.github.com/13b064c2e9634bb135a9.git",
+                    "html_url": "https://gist.github.com/13b064c2e9634bb135a9",
+                    "id": "13b064c2e9634bb135a9",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/911359?",
+                        "events_url": "https://api.github.com/users/topher6345/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/topher6345/followers",
+                        "following_url": "https://api.github.com/users/topher6345/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/topher6345/gists{/gist_id}",
+                        "gravatar_id": "710108ade36c1cddcb33ae92e6e00c62",
+                        "html_url": "https://github.com/topher6345",
+                        "id": 911359,
+                        "login": "topher6345",
+                        "organizations_url": "https://api.github.com/users/topher6345/orgs",
+                        "received_events_url": "https://api.github.com/users/topher6345/received_events",
+                        "repos_url": "https://api.github.com/users/topher6345/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/topher6345/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/topher6345/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/topher6345"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:40:52Z",
+                    "url": "https://api.github.com/gists/13b064c2e9634bb135a9",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/ddd80477e9ae754f8a3e/comments",
+                    "commits_url": "https://api.github.com/gists/ddd80477e9ae754f8a3e/commits",
+                    "created_at": "2014-07-12T01:35:54Z",
+                    "description": "designer",
+                    "files": {
+                        "designer.html": {
+                            "filename": "designer.html",
+                            "language": "HTML",
+                            "raw_url": "https://gist.githubusercontent.com/audias/ddd80477e9ae754f8a3e/raw/8fe6c84c4dda37b375741d3511d293087c8a72e8/designer.html",
+                            "size": 244,
+                            "type": "text/html"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/ddd80477e9ae754f8a3e/forks",
+                    "git_pull_url": "https://gist.github.com/ddd80477e9ae754f8a3e.git",
+                    "git_push_url": "https://gist.github.com/ddd80477e9ae754f8a3e.git",
+                    "html_url": "https://gist.github.com/ddd80477e9ae754f8a3e",
+                    "id": "ddd80477e9ae754f8a3e",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/8135469?",
+                        "events_url": "https://api.github.com/users/audias/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/audias/followers",
+                        "following_url": "https://api.github.com/users/audias/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/audias/gists{/gist_id}",
+                        "gravatar_id": "8e74a715cca98a117fa30a35bb83e438",
+                        "html_url": "https://github.com/audias",
+                        "id": 8135469,
+                        "login": "audias",
+                        "organizations_url": "https://api.github.com/users/audias/orgs",
+                        "received_events_url": "https://api.github.com/users/audias/received_events",
+                        "repos_url": "https://api.github.com/users/audias/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/audias/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/audias/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/audias"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:32:37Z",
+                    "url": "https://api.github.com/gists/ddd80477e9ae754f8a3e",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/f877c3c8179d65a3e136/comments",
+                    "commits_url": "https://api.github.com/gists/f877c3c8179d65a3e136/commits",
+                    "created_at": "2014-07-12T00:04:28Z",
+                    "description": "simple fedmsg haskell thingy",
+                    "files": {
+                        "fedmsg.hs": {
+                            "filename": "fedmsg.hs",
+                            "language": "Haskell",
+                            "raw_url": "https://gist.githubusercontent.com/rossdylan/f877c3c8179d65a3e136/raw/5abef13b80f4818cf77acffe8fac806817a3ee97/fedmsg.hs",
+                            "size": 951,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/f877c3c8179d65a3e136/forks",
+                    "git_pull_url": "https://gist.github.com/f877c3c8179d65a3e136.git",
+                    "git_push_url": "https://gist.github.com/f877c3c8179d65a3e136.git",
+                    "html_url": "https://gist.github.com/f877c3c8179d65a3e136",
+                    "id": "f877c3c8179d65a3e136",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/343897?",
+                        "events_url": "https://api.github.com/users/rossdylan/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/rossdylan/followers",
+                        "following_url": "https://api.github.com/users/rossdylan/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/rossdylan/gists{/gist_id}",
+                        "gravatar_id": "bae1f5e07092320d67d1371d1614bd7d",
+                        "html_url": "https://github.com/rossdylan",
+                        "id": 343897,
+                        "login": "rossdylan",
+                        "organizations_url": "https://api.github.com/users/rossdylan/orgs",
+                        "received_events_url": "https://api.github.com/users/rossdylan/received_events",
+                        "repos_url": "https://api.github.com/users/rossdylan/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/rossdylan/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/rossdylan/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/rossdylan"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:31:35Z",
+                    "url": "https://api.github.com/gists/f877c3c8179d65a3e136",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/b67bd2c931a879265b2e/comments",
+                    "commits_url": "https://api.github.com/gists/b67bd2c931a879265b2e/commits",
+                    "created_at": "2014-07-11T23:14:52Z",
+                    "description": "",
+                    "files": {
+                        "codesprint_draft.md": {
+                            "filename": "codesprint_draft.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/iromli/b67bd2c931a879265b2e/raw/ce0f154d86f4dd327ccc14a2391158fd704774f6/codesprint_draft.md",
+                            "size": 1584,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/b67bd2c931a879265b2e/forks",
+                    "git_pull_url": "https://gist.github.com/b67bd2c931a879265b2e.git",
+                    "git_push_url": "https://gist.github.com/b67bd2c931a879265b2e.git",
+                    "html_url": "https://gist.github.com/b67bd2c931a879265b2e",
+                    "id": "b67bd2c931a879265b2e",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/231601?",
+                        "events_url": "https://api.github.com/users/iromli/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/iromli/followers",
+                        "following_url": "https://api.github.com/users/iromli/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/iromli/gists{/gist_id}",
+                        "gravatar_id": "3c2c7eb4182d059c8011f2f39e28e8e6",
+                        "html_url": "https://github.com/iromli",
+                        "id": 231601,
+                        "login": "iromli",
+                        "organizations_url": "https://api.github.com/users/iromli/orgs",
+                        "received_events_url": "https://api.github.com/users/iromli/received_events",
+                        "repos_url": "https://api.github.com/users/iromli/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/iromli/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/iromli/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/iromli"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:38:23Z",
+                    "url": "https://api.github.com/gists/b67bd2c931a879265b2e",
+                    "user": null
+                },
+                {
+                    "comments": 6,
+                    "comments_url": "https://api.github.com/gists/d931b07aa123a4ba7b6a/comments",
+                    "commits_url": "https://api.github.com/gists/d931b07aa123a4ba7b6a/commits",
+                    "created_at": "2014-07-10T13:26:11Z",
+                    "description": "",
+                    "files": {
+                        "request\u304a\u8a66\u3057\u30e1\u30e2.md": {
+                            "filename": "request\u304a\u8a66\u3057\u30e1\u30e2.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/tokunami/d931b07aa123a4ba7b6a/raw/dd759caeb1bdb226279fa455e3fa7ad685d6649d/request%E3%81%8A%E8%A9%A6%E3%81%97%E3%83%A1%E3%83%A2.md",
+                            "size": 672,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/d931b07aa123a4ba7b6a/forks",
+                    "git_pull_url": "https://gist.github.com/d931b07aa123a4ba7b6a.git",
+                    "git_push_url": "https://gist.github.com/d931b07aa123a4ba7b6a.git",
+                    "html_url": "https://gist.github.com/d931b07aa123a4ba7b6a",
+                    "id": "d931b07aa123a4ba7b6a",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/7335162?",
+                        "events_url": "https://api.github.com/users/tokunami/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/tokunami/followers",
+                        "following_url": "https://api.github.com/users/tokunami/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/tokunami/gists{/gist_id}",
+                        "gravatar_id": "886b3a336ec341d01b27ae2c6541a8eb",
+                        "html_url": "https://github.com/tokunami",
+                        "id": 7335162,
+                        "login": "tokunami",
+                        "organizations_url": "https://api.github.com/users/tokunami/orgs",
+                        "received_events_url": "https://api.github.com/users/tokunami/received_events",
+                        "repos_url": "https://api.github.com/users/tokunami/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/tokunami/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/tokunami/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/tokunami"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:34:52Z",
+                    "url": "https://api.github.com/gists/d931b07aa123a4ba7b6a",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/71a81bc3b831b7e33746/comments",
+                    "commits_url": "https://api.github.com/gists/71a81bc3b831b7e33746/commits",
+                    "created_at": "2014-07-09T10:37:27Z",
+                    "description": "Cleanup docker files: untagged containers and images.",
+                    "files": {
+                        "docker-cleanup.sh": {
+                            "filename": "docker-cleanup.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/nunogt/71a81bc3b831b7e33746/raw/f46942b12e1459db5abfe0ad8bbffaadc57702f8/docker-cleanup.sh",
+                            "size": 1499,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/71a81bc3b831b7e33746/forks",
+                    "git_pull_url": "https://gist.github.com/71a81bc3b831b7e33746.git",
+                    "git_push_url": "https://gist.github.com/71a81bc3b831b7e33746.git",
+                    "html_url": "https://gist.github.com/71a81bc3b831b7e33746",
+                    "id": "71a81bc3b831b7e33746",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/925946?",
+                        "events_url": "https://api.github.com/users/nunogt/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nunogt/followers",
+                        "following_url": "https://api.github.com/users/nunogt/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nunogt/gists{/gist_id}",
+                        "gravatar_id": "b5926874523dd64a3c69ca265bbfb278",
+                        "html_url": "https://github.com/nunogt",
+                        "id": 925946,
+                        "login": "nunogt",
+                        "organizations_url": "https://api.github.com/users/nunogt/orgs",
+                        "received_events_url": "https://api.github.com/users/nunogt/received_events",
+                        "repos_url": "https://api.github.com/users/nunogt/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nunogt/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nunogt/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nunogt"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:32:36Z",
+                    "url": "https://api.github.com/gists/71a81bc3b831b7e33746",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/ce6096c4ffc31a04e0a0/comments",
+                    "commits_url": "https://api.github.com/gists/ce6096c4ffc31a04e0a0/commits",
+                    "created_at": "2014-06-29T04:29:13Z",
+                    "description": "",
+                    "files": {
+                        "css.md": {
+                            "filename": "css.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/d251b2066c75c212039b6edae2884c9f9c24a9fc/css.md",
+                            "size": 74,
+                            "type": "text/plain"
+                        },
+                        "general.md": {
+                            "filename": "general.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/074b448c03cfc6f32b04dd1a0d9c1ceb31b3e53d/general.md",
+                            "size": 381,
+                            "type": "text/plain"
+                        },
+                        "html.md": {
+                            "filename": "html.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/be8e043a01fea81d4ea9317f76a23be363524120/html.md",
+                            "size": 83,
+                            "type": "text/plain"
+                        },
+                        "javascript.md": {
+                            "filename": "javascript.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/088eafa4bbdb44684108c14285ed4b1c17d28d87/javascript.md",
+                            "size": 87,
+                            "type": "text/plain"
+                        },
+                        "markdown.md": {
+                            "filename": "markdown.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/fab2b1c9e31bfd96ec1894a5706e3b9d364930e8/markdown.md",
+                            "size": 66,
+                            "type": "text/plain"
+                        },
+                        "shell.md": {
+                            "filename": "shell.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/renallery/ce6096c4ffc31a04e0a0/raw/c426c3ec8868596a27a9a2876ff145d00fdeb693/shell.md",
+                            "size": 68,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/ce6096c4ffc31a04e0a0/forks",
+                    "git_pull_url": "https://gist.github.com/ce6096c4ffc31a04e0a0.git",
+                    "git_push_url": "https://gist.github.com/ce6096c4ffc31a04e0a0.git",
+                    "html_url": "https://gist.github.com/ce6096c4ffc31a04e0a0",
+                    "id": "ce6096c4ffc31a04e0a0",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/5114030?",
+                        "events_url": "https://api.github.com/users/renallery/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/renallery/followers",
+                        "following_url": "https://api.github.com/users/renallery/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/renallery/gists{/gist_id}",
+                        "gravatar_id": "0563b35e73c95149fd25c9320cb9aa7c",
+                        "html_url": "https://github.com/renallery",
+                        "id": 5114030,
+                        "login": "renallery",
+                        "organizations_url": "https://api.github.com/users/renallery/orgs",
+                        "received_events_url": "https://api.github.com/users/renallery/received_events",
+                        "repos_url": "https://api.github.com/users/renallery/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/renallery/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/renallery/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/renallery"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:39:52Z",
+                    "url": "https://api.github.com/gists/ce6096c4ffc31a04e0a0",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3c9829b24df3aafef582/comments",
+                    "commits_url": "https://api.github.com/gists/3c9829b24df3aafef582/commits",
+                    "created_at": "2014-04-30T04:16:36Z",
+                    "description": "Stars, Forks & Issues for Popular Static Site Generators",
+                    "files": {
+                        "data.json": {
+                            "filename": "data.json",
+                            "language": "JSON",
+                            "raw_url": "https://gist.githubusercontent.com/biilmann/3c9829b24df3aafef582/raw/8ef0f14407328357f527f35c40274da3e886dded/data.json",
+                            "size": 545168,
+                            "type": "application/json"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3c9829b24df3aafef582/forks",
+                    "git_pull_url": "https://gist.github.com/3c9829b24df3aafef582.git",
+                    "git_push_url": "https://gist.github.com/3c9829b24df3aafef582.git",
+                    "html_url": "https://gist.github.com/3c9829b24df3aafef582",
+                    "id": "3c9829b24df3aafef582",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/6515?",
+                        "events_url": "https://api.github.com/users/biilmann/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/biilmann/followers",
+                        "following_url": "https://api.github.com/users/biilmann/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/biilmann/gists{/gist_id}",
+                        "gravatar_id": "a731bc19c3b04919610fcee6d0589914",
+                        "html_url": "https://github.com/biilmann",
+                        "id": 6515,
+                        "login": "biilmann",
+                        "organizations_url": "https://api.github.com/users/biilmann/orgs",
+                        "received_events_url": "https://api.github.com/users/biilmann/received_events",
+                        "repos_url": "https://api.github.com/users/biilmann/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/biilmann/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/biilmann/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/biilmann"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:30:42Z",
+                    "url": "https://api.github.com/gists/3c9829b24df3aafef582",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 02:46:34 GMT",
+                "etag": "\"eca724caec9d0c39e77c453a1be5a5c3\"",
+                "link": "<https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=4>; rel=\"next\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=300>; rel=\"last\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=1>; rel=\"first\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=2>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:71ED339:53C0A18A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4794",
+                "x-ratelimit-reset": "1405134540",
+                "x-served-by": "a8d8e492d6966f0c23dee2eed64c678a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/public",
+                "query": {
+                    "page": "4",
+                    "per_page": "10",
+                    "since": "2014-07-12T02:30:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/6683960/comments",
+                    "commits_url": "https://api.github.com/gists/6683960/commits",
+                    "created_at": "2013-09-24T12:22:33Z",
+                    "description": "Here are some things you can do with Gists in GistBox.",
+                    "files": {
+                        "0_reuse_code.js": {
+                            "filename": "0_reuse_code.js",
+                            "language": "JavaScript",
+                            "raw_url": "https://gist.githubusercontent.com/jookyboi/6683960/raw/2b8a5ccf55d94d29328a24ef3913ffb54841429c/0_reuse_code.js",
+                            "size": 126,
+                            "type": "application/javascript"
+                        },
+                        "1_ruby_quicksort.rb": {
+                            "filename": "1_ruby_quicksort.rb",
+                            "language": "Ruby",
+                            "raw_url": "https://gist.githubusercontent.com/jookyboi/6683960/raw/b16d3e65da4810d1bf24fd231028f3775f7dcede/1_ruby_quicksort.rb",
+                            "size": 592,
+                            "type": "application/x-ruby"
+                        },
+                        "2_keyboard_shortcuts.md": {
+                            "filename": "2_keyboard_shortcuts.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/jookyboi/6683960/raw/df51b18a3a36024d04f9348bd4e24f6991e41a02/2_keyboard_shortcuts.md",
+                            "size": 534,
+                            "type": "text/plain"
+                        },
+                        "3_cheesecake_recipe.md": {
+                            "filename": "3_cheesecake_recipe.md",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/jookyboi/6683960/raw/f030315106c2b8dc0f52ad861f67223f88d4e35f/3_cheesecake_recipe.md",
+                            "size": 1821,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/6683960/forks",
+                    "git_pull_url": "https://gist.github.com/6683960.git",
+                    "git_push_url": "https://gist.github.com/6683960.git",
+                    "html_url": "https://gist.github.com/6683960",
+                    "id": "6683960",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/570858?",
+                        "events_url": "https://api.github.com/users/jookyboi/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/jookyboi/followers",
+                        "following_url": "https://api.github.com/users/jookyboi/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/jookyboi/gists{/gist_id}",
+                        "gravatar_id": "910d1d2427f671a47417c1e195225fbc",
+                        "html_url": "https://github.com/jookyboi",
+                        "id": 570858,
+                        "login": "jookyboi",
+                        "organizations_url": "https://api.github.com/users/jookyboi/orgs",
+                        "received_events_url": "https://api.github.com/users/jookyboi/received_events",
+                        "repos_url": "https://api.github.com/users/jookyboi/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/jookyboi/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/jookyboi/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/jookyboi"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:44:23Z",
+                    "url": "https://api.github.com/gists/6683960",
+                    "user": null
+                },
+                {
+                    "comments": 5,
+                    "comments_url": "https://api.github.com/gists/938183/comments",
+                    "commits_url": "https://api.github.com/gists/938183/commits",
+                    "created_at": "2011-04-23T02:28:42Z",
+                    "description": "Faraday SSL example",
+                    "files": {
+                        "gistfile1.rb": {
+                            "filename": "gistfile1.rb",
+                            "language": "Ruby",
+                            "raw_url": "https://gist.githubusercontent.com/mislav/938183/raw/1b982e42862716e358ed9dfc3d937e9002e9756c/gistfile1.rb",
+                            "size": 909,
+                            "type": "application/x-ruby"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/938183/forks",
+                    "git_pull_url": "https://gist.github.com/938183.git",
+                    "git_push_url": "https://gist.github.com/938183.git",
+                    "html_url": "https://gist.github.com/938183",
+                    "id": "938183",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/887?",
+                        "events_url": "https://api.github.com/users/mislav/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/mislav/followers",
+                        "following_url": "https://api.github.com/users/mislav/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/mislav/gists{/gist_id}",
+                        "gravatar_id": "8f93a872e399bc1353cc8d4e791d5401",
+                        "html_url": "https://github.com/mislav",
+                        "id": 887,
+                        "login": "mislav",
+                        "organizations_url": "https://api.github.com/users/mislav/orgs",
+                        "received_events_url": "https://api.github.com/users/mislav/received_events",
+                        "repos_url": "https://api.github.com/users/mislav/repos",
+                        "site_admin": true,
+                        "starred_url": "https://api.github.com/users/mislav/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/mislav/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/mislav"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:34:53Z",
+                    "url": "https://api.github.com/gists/938183",
+                    "user": null
+                },
+                {
+                    "comments": 2,
+                    "comments_url": "https://api.github.com/gists/378036/comments",
+                    "commits_url": "https://api.github.com/gists/378036/commits",
+                    "created_at": "2010-04-24T23:17:32Z",
+                    "description": "Script for shutting down LaCie d2 Network version 1",
+                    "files": {
+                        "d2-Network-shutdown.py": {
+                            "filename": "d2-Network-shutdown.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/joscha/378036/raw/2fb38ac740d5b884da5760b8d801fb15e230e494/d2-Network-shutdown.py",
+                            "size": 1775,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/378036/forks",
+                    "git_pull_url": "https://gist.github.com/378036.git",
+                    "git_push_url": "https://gist.github.com/378036.git",
+                    "html_url": "https://gist.github.com/378036",
+                    "id": "378036",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/188038?",
+                        "events_url": "https://api.github.com/users/joscha/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/joscha/followers",
+                        "following_url": "https://api.github.com/users/joscha/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/joscha/gists{/gist_id}",
+                        "gravatar_id": "3911f3dda74ddc708ea8f10566c0d8c3",
+                        "html_url": "https://github.com/joscha",
+                        "id": 188038,
+                        "login": "joscha",
+                        "organizations_url": "https://api.github.com/users/joscha/orgs",
+                        "received_events_url": "https://api.github.com/users/joscha/received_events",
+                        "repos_url": "https://api.github.com/users/joscha/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/joscha/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/joscha/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/joscha"
+                    },
+                    "public": true,
+                    "updated_at": "2014-07-12T02:42:25Z",
+                    "url": "https://api.github.com/gists/378036",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 02:46:35 GMT",
+                "etag": "\"3ccb9abaeb1c856528693996a8123afb\"",
+                "link": "<https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=5>; rel=\"next\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=300>; rel=\"last\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=1>; rel=\"first\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=3>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:71ED37C:53C0A18A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4793",
+                "x-ratelimit-reset": "1405134540",
+                "x-served-by": "c046d59f93ede9ab52d5ac29f1ed70f7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/public",
+                "query": {
+                    "page": "5",
+                    "per_page": "10",
+                    "since": "2014-07-12T02:30:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "2",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 02:46:35 GMT",
+                "etag": "\"d0aeb1cda2a3f829ee9385f53f9457a6\"",
+                "link": "<https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=6>; rel=\"next\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=300>; rel=\"last\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=1>; rel=\"first\", <https://api.github.com/gists/public?per_page=10&since=2014-07-12T02%3A30%3A00Z&page=4>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:71ED3AB:53C0A18B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4792",
+                "x-ratelimit-reset": "1405134540",
+                "x-served-by": "a1d8c69b807c8e21f06cad9da377d1b0",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]

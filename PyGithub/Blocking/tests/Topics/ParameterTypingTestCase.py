@@ -116,3 +116,7 @@ class ParameterTypingTestCase(Framework.SimpleLoginTestCase):
         repo = self.g.get_repo(("jacquev6", "PyGithub"))
         with self.assertRaises(TypeError):
             repo.create_file("path/to/file", "Comment", "content", author=42)
+
+    def testDontAcceptIntAsDatetime(self):
+        with self.assertRaises(TypeError):
+            self.g.get_public_gists(since=10)

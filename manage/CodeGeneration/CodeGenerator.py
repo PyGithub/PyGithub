@@ -242,7 +242,7 @@ class CodeGenerator:
                     yield "    per_page = snd.normalizeInt(per_page)"
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
-                    if p.name == "since":
+                    if p.name == "since" and method.name in ["get_users", "get_repos"]:
                         yield from PS.indent(self.generateCodeToNormalizeParameterSince(p))
                     else:
                         yield from PS.indent(self.generateCodeToNormalizeParameter(p))

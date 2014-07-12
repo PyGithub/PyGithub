@@ -502,7 +502,6 @@ class PaginatedListConverterTestCase(unittest.TestCase):
 
     def testCall(self):
         self.request.expect.json().andReturn([])
-        self.request.expect.links.andReturn({})
 
         l = self.conv(None, self.request.object)
         self.assertIsInstance(l, PyGithub.Blocking.PaginatedList.PaginatedList)

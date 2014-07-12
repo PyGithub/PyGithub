@@ -2,6 +2,8 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import datetime
+
 
 class _Reset:
     pass
@@ -144,5 +146,13 @@ def normalizeGitAuthor(a):
     # @todoAlpha Devise a strategy for structured input data
     if isinstance(a, dict):
         return a
+    else:
+        raise TypeError()
+
+
+def normalizeDatetime(d):
+    # @todoAlpha Should we parse strings into datetime here?
+    if isinstance(d, datetime.datetime):
+        return d.isoformat() + "Z"  # @todoAlpha Use utcoffset? https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat
     else:
         raise TypeError()
