@@ -14,16 +14,16 @@ Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#mig
 What's new?
 ===========
 
-Version 2.0.0-alpha.2 (March 23rd, 2014)
+Version 2.0.0-alpha.3 (Jully 12th, 2014)
 ----------------------------------------
 
 What's now covered by v2:
 
+* Everything about Gists except comments. See `the cook-book <http://jacquev6.github.io/PyGithub/v2/cook_book.html#working-with-gists>`__.
 * Interaction between Repositories, Users, Organizations, Teams. Start with `the user guide <http://jacquev6.github.io/PyGithub/v2/user_guide.html#access-to-common-resources>`__.
 * Getting and modifiying repository contents. Start with `Repository.get_contents <http://jacquev6.github.io/PyGithub/v2/reference/classes/Repository.html#PyGithub.Blocking.Repository.Repository.get_contents>`__.
 
-Please comment on `those issues <https://github.com/jacquev6/PyGithub/issues?labels=Prioritization%2Cv2&milestone=&page=1&state=open>`_
-to help me prioritize the next developments. And do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
+Do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
 
 `Version 1.25.0 <https://github.com/jacquev6/PyGithub/issues?milestone=38&state=closed>`_ (May 4th, 2014)
 ---------------------------------------------------------------------------------------------------------
@@ -38,6 +38,8 @@ I tweet each new release. I rarely tweet, and always about software development,
 
 What's missing in versions 1.x.x? Github API v3 URLs not covered by v1
 ======================================================================
+
+A lot of things including the following URLs, and every new things published by GitHub recently. Being able to implement new GitHub features quicker is the main motivation for developing the v2 of PyGithub.
 
 * ``/applications/:client_id/tokens/:access_token`` (GET)
 * ``/authorizations/clients/:client_id`` (PUT)
