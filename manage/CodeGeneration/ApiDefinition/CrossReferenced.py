@@ -305,8 +305,11 @@ class Method(Member):
             if self.containerClass.name == "Dir" and self.__name in ["get_contents"]:
                 unimplementedParameters.remove("path")
                 unimplementedParameters.remove("ref")
+            if self.containerClass.name == "Gist" and self.__name in ["edit"]:
+                unimplementedParameters.remove("filename")
+                unimplementedParameters.remove("content")
             if len(unimplementedParameters) > 0:
-                print(self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
+                print("WARNING:", self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
 
         unusedParameters = (
             set(p.name for p in self.__parameters)
@@ -314,7 +317,7 @@ class Method(Member):
             - set(a.value.repository for a in itertools.chain(self.__urlTemplateArguments, self.__urlArguments, self.__postArguments) if isinstance(a.value, (RepositoryNameValue, RepositoryOwnerValue)))
         )
         if len(unusedParameters) > 0:
-            print(self.containerClass.name + "." + self.__name, "does not use following parameters:", ", ".join(unusedParameters))
+            print("WARNING:", self.containerClass.name + "." + self.__name, "does not use following parameters:", ", ".join(unusedParameters))
 
     @property
     def name(self):
