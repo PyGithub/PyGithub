@@ -47,6 +47,6 @@ if __name__ == "__main__":
             "License :: OSI Approved",
             "License :: OSI Approved :: MIT License",
         ],
-        test_suite="PyGithub.tests",
+        test_suite="PyGithub.integ_tests",
         use_2to3=True
     )

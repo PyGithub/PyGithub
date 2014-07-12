@@ -16,37 +16,46 @@ sys.path.append(".")
 baseDirectory = "PyGithub"
 
 
+class TestFamily(object):
+    def __init__(self, cov, module, description, include):
+        self.cov = cov
+        self.module = module
+        self.description = description
+        self.include = include
+
+    def run(self):
+        print("==== Runing", self.description, "====")
+        self.cov.start()
+        self.isResultOk = unittest.main(exit=False, module=self.module, argv=["test"]).result.wasSuccessful()
+        self.cov.stop()
+        self.cov.html_report(directory="unit_tests_coverage", include=self.include)
+        self.isCoverageOk = self.cov.report(include=self.include) == 100.
+        print()
+
+    def report(self):
+        print("= {}: {}".format(self.description, "OK" if self.isResultOk else "FAIL"))
+        print("= {} coverage: {}".format(self.description, "OK" if self.isCoverageOk else "FAIL"))
+
 def main():
     cov = coverage.coverage(
         branch=True,
-        omit=[os.path.join(baseDirectory, "Blocking", "tests", "*"), os.path.join(baseDirectory, "tests.py"), os.path.join(baseDirectory, "unit_tests.py")]
+        omit=[os.path.join(baseDirectory, "Blocking", "tests", "*"), os.path.join(baseDirectory, "*_tests.py")]
     )
     cov.start()
 
-    unitTestsResult = unittest.main(exit=False, module="PyGithub.unit_tests", argv=["test"]).result.wasSuccessful()
+    families = []
+    families.append(TestFamily(cov, "PyGithub.unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*"), os.path.join(baseDirectory, "Blocking", "PaginatedList.py")]))
+    if "--unit" not in sys.argv:
+        families.append(TestFamily(cov, "PyGithub.integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
+    if "--all" in sys.argv:
+        families.append(TestFamily(cov, "PyGithub.doc_tests", "Doc tests", [os.path.join(baseDirectory, "*")]))
 
-    cov.stop()
-    incForUnitTests = [os.path.join(baseDirectory, "*", "_*"), os.path.join(baseDirectory, "Blocking", "PaginatedList.py")]
-    cov.html_report(directory="unit_tests_coverage", include=incForUnitTests)
-    unitTestsCoverage = cov.report(include=incForUnitTests) == 100.
-    cov.start()
+    for f in families:
+        f.run()
 
-    if len(sys.argv) == 1:
-        allTestsResult = unittest.main(exit=False, module="PyGithub.tests", argv=["test"]).result.wasSuccessful()
-
-        cov.stop()
-        incForAllTests = [os.path.join(baseDirectory, "*")]
-        cov.html_report(directory="all_tests_coverage", include=incForAllTests)
-        allTestsCoverage = cov.report(include=incForAllTests) == 100.
-
-    print()
     print("====================================")
-    print("= Unit tests:", "OK" if unitTestsResult else "FAIL")
-    print("= Unit tests coverage:", "OK" if unitTestsCoverage else "FAIL")
-    if len(sys.argv) == 1:
-        print("= All tests:", "OK" if allTestsResult else "FAIL")
-        print("= All tests coverage:", "OK" if allTestsCoverage else "FAIL")
+    for f in families:
+        f.report()
     print("====================================")
-    sys.exit(0 if unitTestsResult and unitTestsCoverage and allTestsResult else 1)  # @todoAlpha add "and allTestsCoverage"
 
 main()
