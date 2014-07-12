@@ -1,7 +1,6 @@
 *.pyc
 
 /GithubCredentials.py
-/scripts/TwitterCredentials.py
 /dist/
 /build/
 /MANIFEST
