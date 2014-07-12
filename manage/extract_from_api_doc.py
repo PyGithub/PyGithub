@@ -185,6 +185,18 @@ class ReferenceDocumentation:
     def warning(self, *texts):
         text = "WARNING: " + " ".join(texts)
         if text not in [
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Add a new authorized SSH key -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Check configuration status -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Check maintenance status -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Enable or disable maintenance mode -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Modify settings -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Remove an authorized SSH key -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Retrieve authorized SSH keys -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Retrieve settings -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Start a configuration process -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Upgrade a license or software package -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/management_console.md -> Management Console -> Upload a license and software package for the first time -> Example",
+            "WARNING: don't know what to do with section ../developer.github.com/content/v3/enterprise/search_indexing.md -> Search Indexing -> Queue an indexing job -> Example",
             "WARNING: don't know what to do with section ../developer.github.com/content/v3/git/commits.md -> Commits -> Create a Commit -> Example Input",
             "WARNING: don't know what to do with section ../developer.github.com/content/v3/git/tags.md -> Tags -> Create a Tag Object -> Example Input",
             "WARNING: don't know what to do with section ../developer.github.com/content/v3/orgs.md -> Organizations -> Edit an Organization -> Example",
@@ -201,6 +213,8 @@ class ReferenceDocumentation:
 
             "WARNING: check that section ../developer.github.com/content/v3/rate_limit.md -> Rate Limit -> Get your current rate limit status -> Response -> Deprecation Notice is empty",
             "WARNING: check that section ../developer.github.com/content/v3/rate_limit.md -> Rate Limit -> Get your current rate limit status -> Response -> Understanding Your Rate Limit Status is empty",
+            "WARNING: check that section ../developer.github.com/content/v3/repos/deployments.md -> Deployments -> Create a Deployment -> Parameters -> Simple Example is empty",
+            "WARNING: check that section ../developer.github.com/content/v3/repos/deployments.md -> Deployments -> Create a Deployment -> Parameters -> Advanced Example is empty",
 
             "WARNING: Strange line POST /payload HTTP/1.1",
         ]:
