@@ -1,7 +1,7 @@
 updatable: true
 structures:
   - name: ChangeStatus
-    updatable: false
+    updatable: true
     attributes:
       - name: additions
         type: int
@@ -10,7 +10,7 @@ structures:
       - name: total
         type: int
   - name: GistFile
-    updatable: false
+    updatable: true
     attributes:
       - name: content
         type: string
@@ -27,7 +27,7 @@ structures:
       - name: type
         type: string
   - name: HistoryElement
-    updatable: false
+    updatable: true
     attributes:
       - name: change_status
         type: ChangeStatus
@@ -93,6 +93,21 @@ methods:
   - name: delete
     end_point: DELETE /gists/:id
     url_template: attribute url
+    return_type: none
+  - name: edit
+    end_point: PATCH /gists/:id
+    optional_parameters:
+      - name: description
+        type: string
+      - name: files
+        type: bool
+    url_template: attribute url
+    post_arguments:
+      - name: description
+        value: parameter description
+      - name: files
+        value: parameter files
+    effect: update
     return_type: none
   - name: get_forks
     end_point: GET /gists/:id/forks

@@ -80,3 +80,36 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         f = g.create_fork()
         self.assertEqual(f.owner.login, "jacquev6")
         f.delete()
+
+    def testEditAndUpdate(self):
+        g1 = self.g.get_gist("5339374")
+        self.assertEqual(g1.description, "Test gist for PyGithub")
+        g2 = self.g.get_gist("5339374")
+        self.assertFalse(g2.update())
+        g1.edit(description="Test gist for PyGithub - edited")
+        self.assertEqual(g1.description, "Test gist for PyGithub - edited")
+        self.assertFalse(g1.update())
+        self.assertTrue(g2.update())
+        self.assertEqual(g2.description, "Test gist for PyGithub - edited")
+        g1.edit(description="Test gist for PyGithub")
+
+    def testAddAndRemoveFile(self):
+        g = self.g.get_gist("5339374")
+        self.assertFalse("new.txt" in g.files)
+        g.edit(files={"new.txt": {"content": "Added"}})
+        self.assertTrue("new.txt" in g.files)
+        g.edit(files={"new.txt": None})
+        # @todoSomeday Consider opening an issue with GitHub because deleted files are still present in PATCH's response
+        self.assertTrue("new.txt" in g.files)
+        # But they disappear after an update
+        self.assertTrue(g.update())
+        self.assertFalse("new.txt" in g.files)
+
+    def testRenameFile(self):
+        g = self.g.get_gist("5339374")
+        self.assertTrue("baz.txt" in g.files)
+        content = g.files["baz.txt"].content
+        g.edit(files={"baz.txt": {"filename": "toto.txt", "content": content}})
+        # self.assertFalse("baz.txt" in g.files)
+        # self.assertTrue("toto.txt" in g.files)
+        g.edit(files={"toto.txt": {"filename": "baz.txt", "content": content}})

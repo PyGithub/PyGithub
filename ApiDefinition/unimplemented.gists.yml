@@ -1,2 +1,1 @@
-/gists/:id: [PATCH]
 /gists/:id/commits: [GET]

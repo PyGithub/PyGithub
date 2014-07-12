@@ -49,6 +49,12 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             self.__deletions = rcv.Attribute("Gist.ChangeStatus.deletions", rcv.IntConverter, deletions)
             self.__total = rcv.Attribute("Gist.ChangeStatus.total", rcv.IntConverter, total)
 
+        def _updateAttributes(self, additions=None, deletions=None, total=None, **kwds):
+            super(Gist.ChangeStatus, self)._updateAttributes(**kwds)
+            self.__additions.update(additions)
+            self.__deletions.update(deletions)
+            self.__total.update(total)
+
         @property
         def additions(self):
             """
@@ -85,6 +91,16 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             self.__size = rcv.Attribute("Gist.GistFile.size", rcv.IntConverter, size)
             self.__truncated = rcv.Attribute("Gist.GistFile.truncated", rcv.BoolConverter, truncated)
             self.__type = rcv.Attribute("Gist.GistFile.type", rcv.StringConverter, type)
+
+        def _updateAttributes(self, content=None, filename=None, language=None, raw_url=None, size=None, truncated=None, type=None, **kwds):
+            super(Gist.GistFile, self)._updateAttributes(**kwds)
+            self.__content.update(content)
+            self.__filename.update(filename)
+            self.__language.update(language)
+            self.__raw_url.update(raw_url)
+            self.__size.update(size)
+            self.__truncated.update(truncated)
+            self.__type.update(type)
 
         @property
         def content(self):
@@ -148,6 +164,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             self.__url = rcv.Attribute("Gist.HistoryElement.url", rcv.StringConverter, url)
             self.__user = rcv.Attribute("Gist.HistoryElement.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
             self.__version = rcv.Attribute("Gist.HistoryElement.version", rcv.StringConverter, version)
+
+        def _updateAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
+            super(Gist.HistoryElement, self)._updateAttributes(**kwds)
+            self.__change_status.update(change_status)
+            self.__committed_at.update(committed_at)
+            self.__url.update(url)
+            self.__user.update(user)
+            self.__version.update(version)
 
         @property
         def change_status(self):
@@ -405,6 +429,25 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("DELETE", url)
+
+    def edit(self, description=None, files=None):
+        """
+        Calls the `PATCH /gists/:id <http://developer.github.com/v3/gists#edit-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param description: optional :class:`string`
+        :param files: optional :class:`bool`
+        :rtype: None
+        """
+
+        if description is not None:
+            description = snd.normalizeString(description)
+
+        url = uritemplate.expand(self.url)
+        postArguments = snd.dictionary(description=description, files=files)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
 
     def get_forks(self, per_page=None):
         """

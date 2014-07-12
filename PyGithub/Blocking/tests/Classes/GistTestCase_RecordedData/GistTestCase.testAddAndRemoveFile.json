@@ -1,0 +1,1372 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/5339374",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/5339374/comments",
+                "commits_url": "https://api.github.com/gists/5339374/commits",
+                "created_at": "2013-04-08T18:46:14Z",
+                "description": "Test gist for PyGithub",
+                "files": {
+                    "baz.txt": {
+                        "content": "Bar -> baz",
+                        "filename": "baz.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/4821236b6b52e23dfbf8e39157d250f3461aa9c5/baz.txt",
+                        "size": 10,
+                        "truncated": false,
+                        "type": "text/plain"
+                    }
+                },
+                "forks": [],
+                "forks_url": "https://api.github.com/gists/5339374/forks",
+                "git_pull_url": "https://gist.github.com/5339374.git",
+                "git_push_url": "https://gist.github.com/5339374.git",
+                "history": [
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/90c7fb092a154192b5113e1dad95fa56755c396f",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "90c7fb092a154192b5113e1dad95fa56755c396f"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/ded24e4907284119c54dc92eaff5fbe89ee32d30",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "ded24e4907284119c54dc92eaff5fbe89ee32d30"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 1,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T19:04:07Z",
+                        "url": "https://api.github.com/gists/5339374/c670d47c5ffee49794a9793a513603fab578bc56",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "c670d47c5ffee49794a9793a513603fab578bc56"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:03:29Z",
+                        "url": "https://api.github.com/gists/5339374/54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:01:51Z",
+                        "url": "https://api.github.com/gists/5339374/eb21edfa28bdc9437f2fa42d3e921242d7d72655",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb21edfa28bdc9437f2fa42d3e921242d7d72655"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T18:50:40Z",
+                        "url": "https://api.github.com/gists/5339374/3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 2,
+                            "deletions": 0,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T18:46:14Z",
+                        "url": "https://api.github.com/gists/5339374/7887f7ac9eb5c1963004bdde3bcfe2221d9a0515",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "7887f7ac9eb5c1963004bdde3bcfe2221d9a0515"
+                    }
+                ],
+                "html_url": "https://gist.github.com/5339374",
+                "id": "5339374",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "public": true,
+                "updated_at": "2014-07-12T15:03:34Z",
+                "url": "https://api.github.com/gists/5339374",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 15:08:42 GMT",
+                "etag": "\"6a287783fa5b5476bd60f5d24467a291\"",
+                "last-modified": "Sat, 12 Jul 2014 15:03:34 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5934:433A512:53C14F7A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4955",
+                "x-ratelimit-reset": "1405178492",
+                "x-served-by": "62a1303ae95931e56e387e87d354bb24",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "files": {
+                    "new.txt": {
+                        "content": "Added"
+                    }
+                }
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "44",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/5339374",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "PATCH"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/5339374/comments",
+                "commits_url": "https://api.github.com/gists/5339374/commits",
+                "created_at": "2013-04-08T18:46:14Z",
+                "description": "Test gist for PyGithub",
+                "files": {
+                    "baz.txt": {
+                        "content": "Bar -> baz",
+                        "filename": "baz.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/4821236b6b52e23dfbf8e39157d250f3461aa9c5/baz.txt",
+                        "size": 10,
+                        "truncated": false,
+                        "type": "text/plain"
+                    },
+                    "new.txt": {
+                        "content": "Added",
+                        "filename": "new.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/87d2b203800386b1cc8735a7d540a33e246357fa/new.txt",
+                        "size": 5,
+                        "truncated": false,
+                        "type": "text/plain"
+                    }
+                },
+                "forks": [],
+                "forks_url": "https://api.github.com/gists/5339374/forks",
+                "git_pull_url": "https://gist.github.com/5339374.git",
+                "git_push_url": "https://gist.github.com/5339374.git",
+                "history": [
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:08:42Z",
+                        "url": "https://api.github.com/gists/5339374/eb6339eecaee0d60279dc5a02ae8b26651a9f2c0",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb6339eecaee0d60279dc5a02ae8b26651a9f2c0"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/90c7fb092a154192b5113e1dad95fa56755c396f",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "90c7fb092a154192b5113e1dad95fa56755c396f"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/ded24e4907284119c54dc92eaff5fbe89ee32d30",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "ded24e4907284119c54dc92eaff5fbe89ee32d30"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 1,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T19:04:07Z",
+                        "url": "https://api.github.com/gists/5339374/c670d47c5ffee49794a9793a513603fab578bc56",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "c670d47c5ffee49794a9793a513603fab578bc56"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:03:29Z",
+                        "url": "https://api.github.com/gists/5339374/54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:01:51Z",
+                        "url": "https://api.github.com/gists/5339374/eb21edfa28bdc9437f2fa42d3e921242d7d72655",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb21edfa28bdc9437f2fa42d3e921242d7d72655"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T18:50:40Z",
+                        "url": "https://api.github.com/gists/5339374/3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 2,
+                            "deletions": 0,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T18:46:14Z",
+                        "url": "https://api.github.com/gists/5339374/7887f7ac9eb5c1963004bdde3bcfe2221d9a0515",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "7887f7ac9eb5c1963004bdde3bcfe2221d9a0515"
+                    }
+                ],
+                "html_url": "https://gist.github.com/5339374",
+                "id": "5339374",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "public": true,
+                "updated_at": "2014-07-12T15:08:43Z",
+                "url": "https://api.github.com/gists/5339374",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 15:08:43 GMT",
+                "etag": "\"1854baed7e1fe87d11ad40106aa81f4b\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5934:433A532:53C14F7A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4954",
+                "x-ratelimit-reset": "1405178492",
+                "x-served-by": "03d91026ad8428f4d9966d7434f9d82e",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "files": {
+                    "new.txt": null
+                }
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "28",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/5339374",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "PATCH"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/5339374/comments",
+                "commits_url": "https://api.github.com/gists/5339374/commits",
+                "created_at": "2013-04-08T18:46:14Z",
+                "description": "Test gist for PyGithub",
+                "files": {
+                    "baz.txt": {
+                        "content": "Bar -> baz",
+                        "filename": "baz.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/4821236b6b52e23dfbf8e39157d250f3461aa9c5/baz.txt",
+                        "size": 10,
+                        "truncated": false,
+                        "type": "text/plain"
+                    },
+                    "new.txt": {
+                        "content": "Added",
+                        "filename": "new.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/87d2b203800386b1cc8735a7d540a33e246357fa/new.txt",
+                        "size": 5,
+                        "truncated": false,
+                        "type": "text/plain"
+                    }
+                },
+                "forks": [],
+                "forks_url": "https://api.github.com/gists/5339374/forks",
+                "git_pull_url": "https://gist.github.com/5339374.git",
+                "git_push_url": "https://gist.github.com/5339374.git",
+                "history": [
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:08:43Z",
+                        "url": "https://api.github.com/gists/5339374/e188d5b38b5b6b93cd37e5f36251c403f0a02027",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "e188d5b38b5b6b93cd37e5f36251c403f0a02027"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:08:42Z",
+                        "url": "https://api.github.com/gists/5339374/eb6339eecaee0d60279dc5a02ae8b26651a9f2c0",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb6339eecaee0d60279dc5a02ae8b26651a9f2c0"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/90c7fb092a154192b5113e1dad95fa56755c396f",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "90c7fb092a154192b5113e1dad95fa56755c396f"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/ded24e4907284119c54dc92eaff5fbe89ee32d30",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "ded24e4907284119c54dc92eaff5fbe89ee32d30"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 1,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T19:04:07Z",
+                        "url": "https://api.github.com/gists/5339374/c670d47c5ffee49794a9793a513603fab578bc56",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "c670d47c5ffee49794a9793a513603fab578bc56"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:03:29Z",
+                        "url": "https://api.github.com/gists/5339374/54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:01:51Z",
+                        "url": "https://api.github.com/gists/5339374/eb21edfa28bdc9437f2fa42d3e921242d7d72655",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb21edfa28bdc9437f2fa42d3e921242d7d72655"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T18:50:40Z",
+                        "url": "https://api.github.com/gists/5339374/3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 2,
+                            "deletions": 0,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T18:46:14Z",
+                        "url": "https://api.github.com/gists/5339374/7887f7ac9eb5c1963004bdde3bcfe2221d9a0515",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "7887f7ac9eb5c1963004bdde3bcfe2221d9a0515"
+                    }
+                ],
+                "html_url": "https://gist.github.com/5339374",
+                "id": "5339374",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "public": true,
+                "updated_at": "2014-07-12T15:08:43Z",
+                "url": "https://api.github.com/gists/5339374",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 15:08:43 GMT",
+                "etag": "\"cf5d0adc87b9a6898bd480ee54ea8837\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5934:433A551:53C14F7B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4953",
+                "x-ratelimit-reset": "1405178492",
+                "x-served-by": "c436b2b44345c72ff906059f604991e7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "If-None-Match": "\"cf5d0adc87b9a6898bd480ee54ea8837\"",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/5339374",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/5339374/comments",
+                "commits_url": "https://api.github.com/gists/5339374/commits",
+                "created_at": "2013-04-08T18:46:14Z",
+                "description": "Test gist for PyGithub",
+                "files": {
+                    "baz.txt": {
+                        "content": "Bar -> baz",
+                        "filename": "baz.txt",
+                        "language": null,
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/5339374/raw/4821236b6b52e23dfbf8e39157d250f3461aa9c5/baz.txt",
+                        "size": 10,
+                        "truncated": false,
+                        "type": "text/plain"
+                    }
+                },
+                "forks": [],
+                "forks_url": "https://api.github.com/gists/5339374/forks",
+                "git_pull_url": "https://gist.github.com/5339374.git",
+                "git_push_url": "https://gist.github.com/5339374.git",
+                "history": [
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:08:43Z",
+                        "url": "https://api.github.com/gists/5339374/e188d5b38b5b6b93cd37e5f36251c403f0a02027",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "e188d5b38b5b6b93cd37e5f36251c403f0a02027"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:08:42Z",
+                        "url": "https://api.github.com/gists/5339374/eb6339eecaee0d60279dc5a02ae8b26651a9f2c0",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb6339eecaee0d60279dc5a02ae8b26651a9f2c0"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/90c7fb092a154192b5113e1dad95fa56755c396f",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "90c7fb092a154192b5113e1dad95fa56755c396f"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2014-07-12T15:03:34Z",
+                        "url": "https://api.github.com/gists/5339374/ded24e4907284119c54dc92eaff5fbe89ee32d30",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "ded24e4907284119c54dc92eaff5fbe89ee32d30"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 1,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T19:04:07Z",
+                        "url": "https://api.github.com/gists/5339374/c670d47c5ffee49794a9793a513603fab578bc56",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "c670d47c5ffee49794a9793a513603fab578bc56"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:03:29Z",
+                        "url": "https://api.github.com/gists/5339374/54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "54cc5cd4c452d1a91d8e6241cbffaf6bc59e1b20"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T19:01:51Z",
+                        "url": "https://api.github.com/gists/5339374/eb21edfa28bdc9437f2fa42d3e921242d7d72655",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "eb21edfa28bdc9437f2fa42d3e921242d7d72655"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 0,
+                            "deletions": 1,
+                            "total": 1
+                        },
+                        "committed_at": "2013-04-08T18:50:40Z",
+                        "url": "https://api.github.com/gists/5339374/3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "3b66ad4cc07f2bebb2eae2b2f2eefba33d2fb2d5"
+                    },
+                    {
+                        "change_status": {
+                            "additions": 2,
+                            "deletions": 0,
+                            "total": 2
+                        },
+                        "committed_at": "2013-04-08T18:46:14Z",
+                        "url": "https://api.github.com/gists/5339374/7887f7ac9eb5c1963004bdde3bcfe2221d9a0515",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                            "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jacquev6/followers",
+                            "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                            "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                            "html_url": "https://github.com/jacquev6",
+                            "id": 327146,
+                            "login": "jacquev6",
+                            "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                            "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                            "repos_url": "https://api.github.com/users/jacquev6/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jacquev6"
+                        },
+                        "version": "7887f7ac9eb5c1963004bdde3bcfe2221d9a0515"
+                    }
+                ],
+                "html_url": "https://gist.github.com/5339374",
+                "id": "5339374",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "public": true,
+                "updated_at": "2014-07-12T15:08:43Z",
+                "url": "https://api.github.com/gists/5339374",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 15:08:43 GMT",
+                "etag": "\"5a623822727a2e60e36d51d03369af0e\"",
+                "last-modified": "Sat, 12 Jul 2014 15:08:43 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5934:433A573:53C14F7B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4952",
+                "x-ratelimit-reset": "1405178492",
+                "x-served-by": "c046d59f93ede9ab52d5ac29f1ed70f7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]
