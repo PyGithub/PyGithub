@@ -140,7 +140,7 @@ class Session(object):
                 else:
                     requestHeaders["Authorization"] = "Unknown not_logged"  # pragma no cover (defensive programming)
             elements = [request.method, request.url, sorted(requestHeaders.iteritems()), request.body, "=>", response.status_code, sorted(response.headers.iteritems()), response.text]
-            log.debug(" ".join([unicode(e) for e in elements]))
+            log.debug(" ".join(str(e) for e in elements))
 
     def __parseScopesHeader(self, header):
         if header is None:

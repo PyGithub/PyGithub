@@ -124,7 +124,7 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
             "zap": "https://github.global.ssl.fastly.net/images/icons/emoji/zap.png?v5",
             "zero": "https://github.global.ssl.fastly.net/images/icons/emoji/zero.png?v5",
             "zzz": "https://github.global.ssl.fastly.net/images/icons/emoji/zzz.png?v5",
-        }.items():
+        }.iteritems():
             self.assertEqual(emojis[k], v)
 
     def testGetMeta(self):

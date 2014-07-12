@@ -65,7 +65,7 @@ class Attribute(object):
                     self.__value = self.__conv(None, value, *args, **kwds)
                 else:
                     self.__value = self.__conv(self.__value, value, *args, **kwds)
-            except _ConversionException, e:
+            except _ConversionException as e:
                 log.warn("Attribute " + self.__name + " is expected to be a " + self.__type + " but GitHub API v3 returned " + repr(value))
                 self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(self.__name, self.__type, value, e)
 
@@ -117,7 +117,7 @@ class _DatetimeConverter(object):
         else:
             try:
                 return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
-            except (ValueError, TypeError), e:
+            except (ValueError, TypeError) as e:
                 raise _ConversionException(e)
 
 
@@ -237,7 +237,7 @@ class KeyedStructureUnionConverter(object):
 
     @property
     def desc(self):
-        return " or ".join(sorted(c.desc for c in self.__convs.values()))
+        return " or ".join(sorted(c.desc for c in self.__convs.itervalues()))
 
 
 class FileDirSubmoduleSymLinkUnionConverter(object):
