@@ -87,19 +87,23 @@ class Definition(object):
         assert isinstance(name, str), name
         assert isinstance(base, (type(None), str)), base
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
+        if not updatable and any(a["name"] == "url" for a in attributes):
+            print("WARNING:", name, "has a url attribute but is not updatable")
         return Class(
             name=name,
             updatable=updatable,
             base=self.__buildType(base),
-            structures=[self.__buildStructure(**s) for s in structures],
+            structures=[self.__buildStructure(name, **s) for s in structures],
             attributes=[self.__buildAttribute(**a) for a in attributes],
-            methods=[self.__buildMethod(**m) for m in methods],
+            methods=[self.__buildMethod(name, **m) for m in methods],
             deprecatedAttributes=deprecated_attributes
         )
 
-    def __buildStructure(self, name, updatable, attributes=[], deprecated_attributes=[]):
+    def __buildStructure(self, className, name, updatable, attributes=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
+        if not updatable and any(a["name"] == "url" for a in attributes):
+            print("WARNING:", className + "." + name, "has a url attribute but is not updatable")
         return Structure(
             name=name,
             updatable=updatable,
@@ -114,8 +118,17 @@ class Definition(object):
             type=self.__buildType(type)
         )
 
-    def __buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
+    def __buildMethod(self, className, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
         assert isinstance(name, str), name
+        if (
+            isinstance(return_type, dict)
+            and "container" in return_type
+            and return_type["container"] == "PaginatedList"
+            and all(p["name"] != "per_page" for p in optional_parameters)
+            and className != "Github"
+            and name not in ["get_repos", "get_users"]
+        ):
+            print("WARNING:", className + "." + name, "returns a paginated list but does not have a per_page parameter")
         return Method(
             name=name,
             endPoints=self.__makeList(end_point, end_points),
