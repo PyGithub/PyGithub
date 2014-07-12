@@ -1,0 +1,230 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                "bio": null,
+                "blog": "http://vincent-jacques.net",
+                "collaborators": 2,
+                "company": "Amazon",
+                "created_at": "2010-07-09T06:10:06Z",
+                "disk_usage": 111959,
+                "email": "vincent@vincent-jacques.net",
+                "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                "followers": 34,
+                "followers_url": "https://api.github.com/users/jacquev6/followers",
+                "following": 46,
+                "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                "hireable": false,
+                "html_url": "https://github.com/jacquev6",
+                "id": 327146,
+                "location": "Seattle, WA, USA",
+                "login": "jacquev6",
+                "name": "Vincent Jacques",
+                "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                "owned_private_repos": 4,
+                "plan": {
+                    "collaborators": 0,
+                    "name": "micro",
+                    "private_repos": 5,
+                    "space": 614400
+                },
+                "private_gists": 12,
+                "public_gists": 5,
+                "public_repos": 20,
+                "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                "repos_url": "https://api.github.com/users/jacquev6/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                "total_private_repos": 4,
+                "type": "User",
+                "updated_at": "2014-07-11T14:45:20Z",
+                "url": "https://api.github.com/users/jacquev6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:19:56 GMT",
+                "etag": "\"e8c2a1242b888604625334fbb027a981\"",
+                "last-modified": "Fri, 11 Jul 2014 14:45:20 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:728C626:53C0A95B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4982",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "62a1303ae95931e56e387e87d354bb24",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/starred",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 4,
+                    "comments_url": "https://api.github.com/gists/1942384/comments",
+                    "commits_url": "https://api.github.com/gists/1942384/commits",
+                    "created_at": "2012-02-29T16:47:12Z",
+                    "description": "How to error 500 Github API v3, as requested by Rick (GitHub Staff)",
+                    "files": {
+                        "fail_github.py": {
+                            "filename": "fail_github.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/jacquev6/1942384/raw/2fb3aa84e0efa50dc0f4c18b5df5b7b9ab27076b/fail_github.py",
+                            "size": 1636,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/1942384/forks",
+                    "git_pull_url": "https://gist.github.com/1942384.git",
+                    "git_push_url": "https://gist.github.com/1942384.git",
+                    "html_url": "https://gist.github.com/1942384",
+                    "id": "1942384",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                        "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/jacquev6/followers",
+                        "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                        "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                        "html_url": "https://github.com/jacquev6",
+                        "id": 327146,
+                        "login": "jacquev6",
+                        "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                        "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                        "repos_url": "https://api.github.com/users/jacquev6/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/jacquev6"
+                    },
+                    "public": true,
+                    "updated_at": "2012-02-29T16:47:12Z",
+                    "url": "https://api.github.com/gists/1942384",
+                    "user": null
+                },
+                {
+                    "comments": 1,
+                    "comments_url": "https://api.github.com/gists/dcb7de17e8a52b74541d/comments",
+                    "commits_url": "https://api.github.com/gists/dcb7de17e8a52b74541d/commits",
+                    "created_at": "2012-02-28T19:44:42Z",
+                    "description": "Cadfael: order of episodes in French DVD edition",
+                    "files": {
+                        "cadfael.txt": {
+                            "filename": "cadfael.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/jacquev6/dcb7de17e8a52b74541d/raw/48ca696645682d7430d73180814434e0284796b2/cadfael.txt",
+                            "size": 585,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/dcb7de17e8a52b74541d/forks",
+                    "git_pull_url": "https://gist.github.com/dcb7de17e8a52b74541d.git",
+                    "git_push_url": "https://gist.github.com/dcb7de17e8a52b74541d.git",
+                    "html_url": "https://gist.github.com/dcb7de17e8a52b74541d",
+                    "id": "dcb7de17e8a52b74541d",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                        "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/jacquev6/followers",
+                        "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                        "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                        "html_url": "https://github.com/jacquev6",
+                        "id": 327146,
+                        "login": "jacquev6",
+                        "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                        "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                        "repos_url": "https://api.github.com/users/jacquev6/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/jacquev6"
+                    },
+                    "public": false,
+                    "updated_at": "2012-02-28T19:44:42Z",
+                    "url": "https://api.github.com/gists/dcb7de17e8a52b74541d",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:19:56 GMT",
+                "etag": "\"71c09a588ec5a2e0c668cf1e0a4325fe\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5936:728C65C:53C0A95C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4981",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "971af40390ac4398fcdd45c8dab0fbe7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]

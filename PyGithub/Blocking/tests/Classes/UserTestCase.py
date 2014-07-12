@@ -162,3 +162,19 @@ class UserTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(len(keys), 5)
         self.assertEqual(keys[0].id, 112610)
         self.assertEqual(keys[1].id, 116764)
+
+    def testGetGists(self):
+        gists = list(self.g.get_user("nvie").get_gists())
+        self.assertEqual(len(gists), 39)
+        self.assertEqual(gists[0].created_at, datetime.datetime(2013, 11, 29, 8, 59, 2))
+        self.assertEqual(gists[38].created_at, datetime.datetime(2009, 12, 17, 9, 15, 52))
+        self.assertEqual(gists[0].updated_at, datetime.datetime(2014, 4, 22, 10, 2, 20))
+        self.assertEqual(gists[38].updated_at, datetime.datetime(2009, 12, 17, 9, 25, 29))
+
+    def testGetGists_allParameters(self):
+        gists = list(self.g.get_user("nvie").get_gists(per_page=3, since=datetime.datetime(2014, 1, 1, 0, 0, 0)))
+        self.assertEqual(len(gists), 4)
+        self.assertEqual(gists[0].created_at, datetime.datetime(2013, 11, 29, 8, 59, 2))
+        self.assertEqual(gists[3].created_at, datetime.datetime(2012, 5, 22, 15, 11, 17))
+        self.assertEqual(gists[0].updated_at, datetime.datetime(2014, 4, 22, 10, 2, 20))
+        self.assertEqual(gists[3].updated_at, datetime.datetime(2014, 1, 29, 14, 12, 19))

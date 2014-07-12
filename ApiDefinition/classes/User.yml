@@ -48,6 +48,22 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_gists
+    end_point: GET /users/:username/gists
+    optional_parameters:
+      - name: since
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: attribute gists_url
+    url_arguments:
+      - name: since
+        value: parameter since
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Gist
   - name: get_keys
     end_point: GET /users/:username/keys
     url_template: end_point

@@ -25,8 +25,11 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.create_gist`
+      * :meth:`.AuthenticatedUser.get_gists`
+      * :meth:`.AuthenticatedUser.get_starred_gists`
       * :meth:`.Github.get_gist`
       * :meth:`.Github.get_public_gists`
+      * :meth:`.User.get_gists`
     """
 
     class ChangeStatus(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):

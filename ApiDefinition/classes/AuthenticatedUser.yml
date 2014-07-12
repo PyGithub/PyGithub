@@ -209,6 +209,22 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_gists
+    end_point: GET /gists
+    optional_parameters:
+      - name: since
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: end_point
+    url_arguments:
+      - name: since
+        value: parameter since
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Gist
   - name: get_key
     end_point: GET /user/keys/:id
     parameters:
@@ -298,6 +314,22 @@ methods:
     return_type:
       container: PaginatedList
       content: Repository
+  - name: get_starred_gists
+    end_point: GET /gists/starred
+    optional_parameters:
+      - name: since
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: end_point
+    url_arguments:
+      - name: since
+        value: parameter since
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Gist
   - name: get_subscription
     end_point: GET /repos/:owner/:repo/subscription
     parameters:

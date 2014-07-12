@@ -199,6 +199,31 @@ class User(PyGithub.Blocking.Entity.Entity):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, User))(None, r)
 
+    def get_gists(self, since=None, per_page=None):
+        """
+        Calls the `GET /users/:username/gists <http://developer.github.com/v3/gists#list-gists>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Gist
+
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.gists_url)
+        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
+
     def get_keys(self):
         """
         Calls the `GET /users/:username/keys <http://developer.github.com/v3/users/keys#list-public-keys-for-a-user>`__ end point.

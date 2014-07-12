@@ -147,7 +147,8 @@ GET /gists
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gists>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_gists`
 
 POST /gists
 -----------
@@ -270,7 +271,8 @@ GET /gists/starred
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gists>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_starred_gists`
 
 GET /gitignore/templates
 ------------------------
@@ -1977,7 +1979,8 @@ GET /users/:username/gists
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#list-gists>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.User.get_gists`
 
 GET /users/:username/keys
 -------------------------

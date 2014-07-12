@@ -1,0 +1,142 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                "bio": null,
+                "blog": "http://vincent-jacques.net",
+                "collaborators": 2,
+                "company": "Amazon",
+                "created_at": "2010-07-09T06:10:06Z",
+                "disk_usage": 111959,
+                "email": "vincent@vincent-jacques.net",
+                "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                "followers": 34,
+                "followers_url": "https://api.github.com/users/jacquev6/followers",
+                "following": 46,
+                "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                "hireable": false,
+                "html_url": "https://github.com/jacquev6",
+                "id": 327146,
+                "location": "Seattle, WA, USA",
+                "login": "jacquev6",
+                "name": "Vincent Jacques",
+                "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                "owned_private_repos": 4,
+                "plan": {
+                    "collaborators": 0,
+                    "name": "micro",
+                    "private_repos": 5,
+                    "space": 614400
+                },
+                "private_gists": 12,
+                "public_gists": 5,
+                "public_repos": 20,
+                "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                "repos_url": "https://api.github.com/users/jacquev6/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                "total_private_repos": 4,
+                "type": "User",
+                "updated_at": "2014-07-11T14:45:20Z",
+                "url": "https://api.github.com/users/jacquev6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:21:20 GMT",
+                "etag": "\"e8c2a1242b888604625334fbb027a981\"",
+                "last-modified": "Fri, 11 Jul 2014 14:45:20 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5937:8533E20:53C0A9B0",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4980",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "a8d8e492d6966f0c23dee2eed64c678a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/starred",
+                "query": {
+                    "per_page": "10",
+                    "since": "2013-01-01T00:00:00Z"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "2",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:21:20 GMT",
+                "etag": "\"d0aeb1cda2a3f829ee9385f53f9457a6\"",
+                "link": "<https://api.github.com/gists/starred?per_page=10&since=2013-01-01T00%3A00%3A00Z&page=0>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5937:8533E7A:53C0A9B0",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4979",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]

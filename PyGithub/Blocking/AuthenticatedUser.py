@@ -280,6 +280,31 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
+    def get_gists(self, since=None, per_page=None):
+        """
+        Calls the `GET /gists <http://developer.github.com/v3/gists#list-gists>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Gist
+
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand("https://api.github.com/gists")
+        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
+
     def get_key(self, id):
         """
         Calls the `GET /user/keys/:id <http://developer.github.com/v3/users/keys#get-a-single-public-key>`__ end point.
@@ -411,6 +436,31 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
+
+    def get_starred_gists(self, since=None, per_page=None):
+        """
+        Calls the `GET /gists/starred <http://developer.github.com/v3/gists#list-gists>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+        import PyGithub.Blocking.Gist
+
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand("https://api.github.com/gists/starred")
+        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 
     def get_subscription(self, repo):
         """

@@ -283,3 +283,51 @@ class AuthenticatedUserTestCase(Framework.SimpleLoginTestCase):
         g = self.g.get_authenticated_user().create_gist(files={"foo.txt": {"content": "barbaz"}}, public=True, description="Gist created by PyGithub")
         self.assertEqual(g.id, "bc6bda17113030e2d8e5")
         g.delete()
+
+    def testGetGists(self):
+        gists = list(self.g.get_authenticated_user().get_gists())
+        self.assertEqual(len(gists), 8)
+        # Sorted by created_at, descending
+        self.assertEqual(gists[0].created_at, datetime.datetime(2013, 9, 4, 14, 30, 47))
+        self.assertEqual(gists[1].created_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(gists[2].created_at, datetime.datetime(2013, 4, 8, 18, 46, 14))
+        self.assertEqual(gists[3].created_at, datetime.datetime(2013, 4, 8, 8, 41, 31))
+        self.assertEqual(gists[4].created_at, datetime.datetime(2012, 9, 28, 14, 50, 53))
+        self.assertEqual(gists[5].created_at, datetime.datetime(2012, 4, 26, 13, 20, 53))
+        self.assertEqual(gists[6].created_at, datetime.datetime(2012, 2, 29, 16, 47, 12))
+        self.assertEqual(gists[7].created_at, datetime.datetime(2012, 2, 28, 19, 44, 42))
+        # Not sorted by updated_at
+        self.assertEqual(gists[0].updated_at, datetime.datetime(2013, 9, 4, 14, 30, 48))
+        self.assertEqual(gists[1].updated_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(gists[2].updated_at, datetime.datetime(2013, 4, 8, 19, 4, 7))
+        self.assertEqual(gists[3].updated_at, datetime.datetime(2013, 4, 8, 12, 52, 38))
+        self.assertEqual(gists[4].updated_at, datetime.datetime(2013, 12, 13, 19, 39, 4))  # Not sorted
+        self.assertEqual(gists[5].updated_at, datetime.datetime(2012, 4, 26, 13, 20, 53))
+        self.assertEqual(gists[6].updated_at, datetime.datetime(2012, 2, 29, 16, 47, 12))
+        self.assertEqual(gists[7].updated_at, datetime.datetime(2012, 2, 28, 19, 44, 42))
+
+    def testGetGists_allParameters(self):
+        gists = list(self.g.get_authenticated_user().get_gists(per_page=3, since=datetime.datetime(2013, 1, 1, 0, 0, 0)))
+        self.assertEqual(len(gists), 5)
+        # Sorted by created_at, descending
+        self.assertEqual(gists[0].created_at, datetime.datetime(2013, 9, 4, 14, 30, 47))
+        self.assertEqual(gists[1].created_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(gists[2].created_at, datetime.datetime(2013, 4, 8, 18, 46, 14))
+        self.assertEqual(gists[3].created_at, datetime.datetime(2013, 4, 8, 8, 41, 31))
+        self.assertEqual(gists[4].created_at, datetime.datetime(2012, 9, 28, 14, 50, 53))
+        # Filtered by updated_at
+        self.assertEqual(gists[0].updated_at, datetime.datetime(2013, 9, 4, 14, 30, 48))
+        self.assertEqual(gists[1].updated_at, datetime.datetime(2013, 8, 21, 16, 28, 24))
+        self.assertEqual(gists[2].updated_at, datetime.datetime(2013, 4, 8, 19, 4, 7))
+        self.assertEqual(gists[3].updated_at, datetime.datetime(2013, 4, 8, 12, 52, 38))
+        self.assertEqual(gists[4].updated_at, datetime.datetime(2013, 12, 13, 19, 39, 4))
+
+    def testGetStarredGists(self):
+        gists = list(self.g.get_authenticated_user().get_starred_gists())
+        self.assertEqual(len(gists), 2)
+        self.assertEqual(gists[0].updated_at, datetime.datetime(2012, 2, 29, 16, 47, 12))
+        self.assertEqual(gists[1].updated_at, datetime.datetime(2012, 2, 28, 19, 44, 42))
+
+    def testGetStarredGists_allParameters(self):
+        gists = list(self.g.get_authenticated_user().get_starred_gists(per_page=10, since=datetime.datetime(2013, 1, 1, 0, 0, 0)))
+        self.assertEqual(len(gists), 0)

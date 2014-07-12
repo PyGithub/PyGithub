@@ -1,0 +1,2330 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                "bio": null,
+                "blog": "http://nvie.com",
+                "company": "3rd Cloud",
+                "created_at": "2009-05-12T21:19:38Z",
+                "email": "vincent@3rdcloud.com",
+                "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                "followers": 709,
+                "followers_url": "https://api.github.com/users/nvie/followers",
+                "following": 44,
+                "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                "hireable": true,
+                "html_url": "https://github.com/nvie",
+                "id": 83844,
+                "location": "Netherlands",
+                "login": "nvie",
+                "name": "Vincent Driessen",
+                "organizations_url": "https://api.github.com/users/nvie/orgs",
+                "public_gists": 39,
+                "public_repos": 100,
+                "received_events_url": "https://api.github.com/users/nvie/received_events",
+                "repos_url": "https://api.github.com/users/nvie/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                "type": "User",
+                "updated_at": "2014-07-11T20:50:46Z",
+                "url": "https://api.github.com/users/nvie"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:18 GMT",
+                "etag": "\"f68c910b0d270fbf229e145480361b04\"",
+                "last-modified": "Fri, 11 Jul 2014 20:50:46 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96993:53C0A71A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4999",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "c436b2b44345c72ff906059f604991e7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/users/nvie/gists",
+                "query": {
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/7703144/comments",
+                    "commits_url": "https://api.github.com/gists/7703144/commits",
+                    "created_at": "2013-11-29T08:59:02Z",
+                    "description": "Really useful helper that I use constantly to force myself to write more efficient Django queries.",
+                    "files": {
+                        "ormtools.py": {
+                            "filename": "ormtools.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/7703144/raw/1af7b0619bc8c980ed26b0a02377cfe3e05b3dd7/ormtools.py",
+                            "size": 958,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/7703144/forks",
+                    "git_pull_url": "https://gist.github.com/7703144.git",
+                    "git_push_url": "https://gist.github.com/7703144.git",
+                    "html_url": "https://gist.github.com/7703144",
+                    "id": "7703144",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2014-04-22T10:02:20Z",
+                    "url": "https://api.github.com/gists/7703144",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5804375/comments",
+                    "commits_url": "https://api.github.com/gists/5804375/commits",
+                    "created_at": "2013-06-18T10:48:25Z",
+                    "description": "The sift itertool.",
+                    "files": {
+                        "sift.py": {
+                            "filename": "sift.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5804375/raw/aec2eca8b7f840f2b22f2a0a30daf40f91d3c537/sift.py",
+                            "size": 1344,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5804375/forks",
+                    "git_pull_url": "https://gist.github.com/5804375.git",
+                    "git_push_url": "https://gist.github.com/5804375.git",
+                    "html_url": "https://gist.github.com/5804375",
+                    "id": "5804375",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-09-27T07:06:14Z",
+                    "url": "https://api.github.com/gists/5804375",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5111715/comments",
+                    "commits_url": "https://api.github.com/gists/5111715/commits",
+                    "created_at": "2013-03-07T20:55:25Z",
+                    "description": "What's the best place to put this code? This is basically setup code that you want to execute on Django's boot time. I'm currently putting it in an arbitrary app's __init__.py, but that feels a bit lame. Ideas? Settings seems like a bad idea, too.",
+                    "files": {
+                        "where_to_put_this_best.py": {
+                            "filename": "where_to_put_this_best.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5111715/raw/2ca5ff69dace3a4ba0dd024acfb572277cc4e917/where_to_put_this_best.py",
+                            "size": 93,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5111715/forks",
+                    "git_pull_url": "https://gist.github.com/5111715.git",
+                    "git_push_url": "https://gist.github.com/5111715.git",
+                    "html_url": "https://gist.github.com/5111715",
+                    "id": "5111715",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-03-07T20:55:26Z",
+                    "url": "https://api.github.com/gists/5111715",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5083455/comments",
+                    "commits_url": "https://api.github.com/gists/5083455/commits",
+                    "created_at": "2013-03-04T16:24:47Z",
+                    "description": "The following code crashes when ran on Django==1.5, but it works fine on Django==1.4.3. (Both py27.)",
+                    "files": {
+                        "log.txt": {
+                            "filename": "log.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5083455/raw/367909db61ae3e57d8d3e6aef7442bb26dc015b0/log.txt",
+                            "size": 943,
+                            "type": "text/plain"
+                        },
+                        "minimal_example.py": {
+                            "filename": "minimal_example.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5083455/raw/9bea2b060071642332aed42bf9e45a813c1d54d2/minimal_example.py",
+                            "size": 173,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5083455/forks",
+                    "git_pull_url": "https://gist.github.com/5083455.git",
+                    "git_push_url": "https://gist.github.com/5083455.git",
+                    "html_url": "https://gist.github.com/5083455",
+                    "id": "5083455",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-03-04T16:32:42Z",
+                    "url": "https://api.github.com/gists/5083455",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:18 GMT",
+                "etag": "\"95d943be987a249e09415f70d469c674\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=2>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E969E9:53C0A71A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4998",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "88d924ed861736d2749ce1a55766cb53",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "2",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5082554/comments",
+                    "commits_url": "https://api.github.com/gists/5082554/commits",
+                    "created_at": "2013-03-04T14:25:57Z",
+                    "description": "Broken call to set_signed_cookie() since upgrading to Django 1.5.",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5082554/raw/7998aa50408d2007808bc6fb3fa8c97848f13984/gistfile1.txt",
+                            "size": 503,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5082554/forks",
+                    "git_pull_url": "https://gist.github.com/5082554.git",
+                    "git_push_url": "https://gist.github.com/5082554.git",
+                    "html_url": "https://gist.github.com/5082554",
+                    "id": "5082554",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-03-04T14:25:58Z",
+                    "url": "https://api.github.com/gists/5082554",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/5064055/comments",
+                    "commits_url": "https://api.github.com/gists/5064055/commits",
+                    "created_at": "2013-03-01T11:26:24Z",
+                    "description": "Use in place of `workon`. Put it in ~/bin.",
+                    "files": {
+                        "inve": {
+                            "filename": "inve",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/5064055/raw/5a3a3587cdab89d642c931c868de1302334a4cc2/inve",
+                            "size": 283,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/5064055/forks",
+                    "git_pull_url": "https://gist.github.com/5064055.git",
+                    "git_push_url": "https://gist.github.com/5064055.git",
+                    "html_url": "https://gist.github.com/5064055",
+                    "id": "5064055",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-03-01T12:36:48Z",
+                    "url": "https://api.github.com/gists/5064055",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/4943385/comments",
+                    "commits_url": "https://api.github.com/gists/4943385/commits",
+                    "created_at": "2013-02-13T09:43:16Z",
+                    "description": "This is my favorite way of automatically invoking the best suitable Python REPL. It is smart about the environment that it is invoked in (e.g. will respect your current virtual env) and is smart about which interpreter fits best (e.g. using `ipython` if available, or using `python manage.py shell` in case of Django, or `python manage.py shell_plus` if django-extensions is installed). Just run `p` anywhere.\r\n\r\nThis implementation is in fish's, because that's my current shell, but it's trivial to convert it to POSIX syntax.",
+                    "files": {
+                        "p.fish": {
+                            "filename": "p.fish",
+                            "language": "fish",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/4943385/raw/258d34d53a55bda97bf023a12a93146ee74fb52d/p.fish",
+                            "size": 1509,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/4943385/forks",
+                    "git_pull_url": "https://gist.github.com/4943385.git",
+                    "git_push_url": "https://gist.github.com/4943385.git",
+                    "html_url": "https://gist.github.com/4943385",
+                    "id": "4943385",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-02-13T15:46:44Z",
+                    "url": "https://api.github.com/gists/4943385",
+                    "user": null
+                },
+                {
+                    "comments": 19,
+                    "comments_url": "https://api.github.com/gists/4707624/comments",
+                    "commits_url": "https://api.github.com/gists/4707624/commits",
+                    "created_at": "2013-02-04T15:58:06Z",
+                    "description": "Which API is the nicest for the new RQ with concurrency?",
+                    "files": {
+                        "worker_poll.py": {
+                            "filename": "worker_poll.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/4707624/raw/cf571b20e953ff6282d3d1c22aecca2b7d20e3d8/worker_poll.py",
+                            "size": 855,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/4707624/forks",
+                    "git_pull_url": "https://gist.github.com/4707624.git",
+                    "git_push_url": "https://gist.github.com/4707624.git",
+                    "html_url": "https://gist.github.com/4707624",
+                    "id": "4707624",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2014-06-25T19:09:55Z",
+                    "url": "https://api.github.com/gists/4707624",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:18 GMT",
+                "etag": "\"0f985359ad2829cf18750b249b77610c\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=3>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96A37:53C0A71A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4997",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "c436b2b44345c72ff906059f604991e7",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "3",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/4619344/comments",
+                    "commits_url": "https://api.github.com/gists/4619344/commits",
+                    "created_at": "2013-01-24T09:50:56Z",
+                    "description": "I'm stuck with this problem for a long time now and could really use the help of a gevent expert. Anybody? Please?\r\n\r\nPlease read the comment on top of the file for a description. This is a minimal example that showcases my problem.",
+                    "files": {
+                        "problem.py": {
+                            "filename": "problem.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/4619344/raw/666694c505af1cc0ca1117c5d9ec77124d94a581/problem.py",
+                            "size": 1852,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/4619344/forks",
+                    "git_pull_url": "https://gist.github.com/4619344.git",
+                    "git_push_url": "https://gist.github.com/4619344.git",
+                    "html_url": "https://gist.github.com/4619344",
+                    "id": "4619344",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2013-01-24T10:22:17Z",
+                    "url": "https://api.github.com/gists/4619344",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/4194167/comments",
+                    "commits_url": "https://api.github.com/gists/4194167/commits",
+                    "created_at": "2012-12-03T10:49:04Z",
+                    "description": "Very rough script that cleans up all old branches that are loosely hanging around after a while. Also updates the origin remote.",
+                    "files": {
+                        "git-cleanup.sh": {
+                            "filename": "git-cleanup.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/4194167/raw/9273bc25efda6e786c6f6aec790bc5e680265462/git-cleanup.sh",
+                            "size": 1160,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/4194167/forks",
+                    "git_pull_url": "https://gist.github.com/4194167.git",
+                    "git_push_url": "https://gist.github.com/4194167.git",
+                    "html_url": "https://gist.github.com/4194167",
+                    "id": "4194167",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-12-04T06:32:29Z",
+                    "url": "https://api.github.com/gists/4194167",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3822268/comments",
+                    "commits_url": "https://api.github.com/gists/3822268/commits",
+                    "created_at": "2012-10-02T18:44:13Z",
+                    "description": "Cram test describing the interface for the pip-compile command.",
+                    "files": {
+                        "pip-compile-specifics.txt": {
+                            "filename": "pip-compile-specifics.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3822268/raw/2483967618765eb202c1ec60dd6fffa1f50e71d9/pip-compile-specifics.txt",
+                            "size": 84,
+                            "type": "text/plain"
+                        },
+                        "pip-compile.txt": {
+                            "filename": "pip-compile.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3822268/raw/217b641139adfbc2b6c29524b81c215afa17e78b/pip-compile.txt",
+                            "size": 74,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3822268/forks",
+                    "git_pull_url": "https://gist.github.com/3822268.git",
+                    "git_push_url": "https://gist.github.com/3822268.git",
+                    "html_url": "https://gist.github.com/3822268",
+                    "id": "3822268",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-10-02T18:53:05Z",
+                    "url": "https://api.github.com/gists/3822268",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3607425/comments",
+                    "commits_url": "https://api.github.com/gists/3607425/commits",
+                    "created_at": "2012-09-03T06:51:22Z",
+                    "description": "rq job attributes",
+                    "files": {
+                        "gistfile1.py": {
+                            "filename": "gistfile1.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3607425/raw/52043c5906fbefc78b90160c541fa17fe9a3dd67/gistfile1.py",
+                            "size": 221,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3607425/forks",
+                    "git_pull_url": "https://gist.github.com/3607425.git",
+                    "git_push_url": "https://gist.github.com/3607425.git",
+                    "html_url": "https://gist.github.com/3607425",
+                    "id": "3607425",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-09-03T06:51:22Z",
+                    "url": "https://api.github.com/gists/3607425",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:18 GMT",
+                "etag": "\"5ac85fc14f482260c8e65ca4763cbc29\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=4>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=2>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96A83:53C0A71A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4996",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "88d924ed861736d2749ce1a55766cb53",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "4",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 2,
+                    "comments_url": "https://api.github.com/gists/3541415/comments",
+                    "commits_url": "https://api.github.com/gists/3541415/commits",
+                    "created_at": "2012-08-30T21:22:56Z",
+                    "description": "Initial experiment with a possible new worker structure for RQ",
+                    "files": {
+                        "new_workers.py": {
+                            "filename": "new_workers.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3541415/raw/34f024afffa63702863217fc5085ec4b0cdb970b/new_workers.py",
+                            "size": 2424,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3541415/forks",
+                    "git_pull_url": "https://gist.github.com/3541415.git",
+                    "git_push_url": "https://gist.github.com/3541415.git",
+                    "html_url": "https://gist.github.com/3541415",
+                    "id": "3541415",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-08-30T21:22:56Z",
+                    "url": "https://api.github.com/gists/3541415",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3504535/comments",
+                    "commits_url": "https://api.github.com/gists/3504535/commits",
+                    "created_at": "2012-08-28T21:30:29Z",
+                    "description": "The following sample shows a pool of 5 child processes and submits calculations of the Fibonacci numbers 10..40 (this takes looooong).  What you can see is that all work is submitted (as `apply_async` doesn't block), instead of blocking after the fifth.",
+                    "files": {
+                        "workers.py": {
+                            "filename": "workers.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3504535/raw/c3f107ae5a494287e10466e0d65f9520a93f4489/workers.py",
+                            "size": 348,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3504535/forks",
+                    "git_pull_url": "https://gist.github.com/3504535.git",
+                    "git_push_url": "https://gist.github.com/3504535.git",
+                    "html_url": "https://gist.github.com/3504535",
+                    "id": "3504535",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-08-28T21:30:43Z",
+                    "url": "https://api.github.com/gists/3504535",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3353413/comments",
+                    "commits_url": "https://api.github.com/gists/3353413/commits",
+                    "created_at": "2012-08-14T22:03:52Z",
+                    "description": "rq-dashboard usage",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3353413/raw/071d857d818884901e3872e5ae620973cbcca122/gistfile1.txt",
+                            "size": 371,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3353413/forks",
+                    "git_pull_url": "https://gist.github.com/3353413.git",
+                    "git_push_url": "https://gist.github.com/3353413.git",
+                    "html_url": "https://gist.github.com/3353413",
+                    "id": "3353413",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-08-14T22:03:52Z",
+                    "url": "https://api.github.com/gists/3353413",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3353391/comments",
+                    "commits_url": "https://api.github.com/gists/3353391/commits",
+                    "created_at": "2012-08-14T21:59:33Z",
+                    "description": "rqworker usage",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3353391/raw/d12d27d080ec63fdc70ce2d4db6764455536a057/gistfile1.txt",
+                            "size": 818,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3353391/forks",
+                    "git_pull_url": "https://gist.github.com/3353391.git",
+                    "git_push_url": "https://gist.github.com/3353391.git",
+                    "html_url": "https://gist.github.com/3353391",
+                    "id": "3353391",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-08-14T21:59:33Z",
+                    "url": "https://api.github.com/gists/3353391",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:19 GMT",
+                "etag": "\"63e06a035217f681d80ff1a0df03d456\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=5>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=3>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96ACC:53C0A71A",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4995",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "5",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3180809/comments",
+                    "commits_url": "https://api.github.com/gists/3180809/commits",
+                    "created_at": "2012-07-26T07:46:47Z",
+                    "description": "Get Mountain Lion and Homebrew to Be Happy",
+                    "files": {
+                        "mountain-lion-brew-setup.markdown": {
+                            "filename": "mountain-lion-brew-setup.markdown",
+                            "language": "Markdown",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3180809/raw/d151e0c967587ee3e7eab106a9400d30877e7b68/mountain-lion-brew-setup.markdown",
+                            "size": 1275,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3180809/forks",
+                    "git_pull_url": "https://gist.github.com/3180809.git",
+                    "git_push_url": "https://gist.github.com/3180809.git",
+                    "html_url": "https://gist.github.com/3180809",
+                    "id": "3180809",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2014-04-08T18:19:17Z",
+                    "url": "https://api.github.com/gists/3180809",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3169317/comments",
+                    "commits_url": "https://api.github.com/gists/3169317/commits",
+                    "created_at": "2012-07-24T10:34:54Z",
+                    "description": "",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3169317/raw/c3b2ba6e27f584e135fd6712134493f89f008551/gistfile1.txt",
+                            "size": 2453,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3169317/forks",
+                    "git_pull_url": "https://gist.github.com/3169317.git",
+                    "git_push_url": "https://gist.github.com/3169317.git",
+                    "html_url": "https://gist.github.com/3169317",
+                    "id": "3169317",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-07-26T07:46:36Z",
+                    "url": "https://api.github.com/gists/3169317",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/3134932/comments",
+                    "commits_url": "https://api.github.com/gists/3134932/commits",
+                    "created_at": "2012-07-18T08:00:15Z",
+                    "description": "Finds files by extension starting from the current working directory.",
+                    "files": {
+                        "fnd.sh": {
+                            "filename": "fnd.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/3134932/raw/a3ced54ef80f7d6c3a1028174d6ee83bc7bbefec/fnd.sh",
+                            "size": 331,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/3134932/forks",
+                    "git_pull_url": "https://gist.github.com/3134932.git",
+                    "git_push_url": "https://gist.github.com/3134932.git",
+                    "html_url": "https://gist.github.com/3134932",
+                    "id": "3134932",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-07-18T08:00:15Z",
+                    "url": "https://api.github.com/gists/3134932",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/2881660/comments",
+                    "commits_url": "https://api.github.com/gists/2881660/commits",
+                    "created_at": "2012-06-06T12:55:03Z",
+                    "description": "Build errors with pandas (via pip)",
+                    "files": {
+                        "pip.log": {
+                            "filename": "pip.log",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/2881660/raw/545c17f0a846209a43ce96ee4d7ba06c392ee1e0/pip.log",
+                            "size": 12539,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2881660/forks",
+                    "git_pull_url": "https://gist.github.com/2881660.git",
+                    "git_push_url": "https://gist.github.com/2881660.git",
+                    "html_url": "https://gist.github.com/2881660",
+                    "id": "2881660",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-06-06T12:55:03Z",
+                    "url": "https://api.github.com/gists/2881660",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:19 GMT",
+                "etag": "\"820e97d5310ecf17c1bd85d51760a76a\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=6>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=4>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96B12:53C0A71B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4994",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "88d924ed861736d2749ce1a55766cb53",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "6",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/2794877/comments",
+                    "commits_url": "https://api.github.com/gists/2794877/commits",
+                    "created_at": "2012-05-26T18:34:18Z",
+                    "description": "The One Armed Frog (posted to thelistserve.com on May 26th 2012)",
+                    "files": {
+                        "the_one_armed_frog.txt": {
+                            "filename": "the_one_armed_frog.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/2794877/raw/cfbab16d54edfdcf6dae0a840a0866a07bc0f0da/the_one_armed_frog.txt",
+                            "size": 2046,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2794877/forks",
+                    "git_pull_url": "https://gist.github.com/2794877.git",
+                    "git_push_url": "https://gist.github.com/2794877.git",
+                    "html_url": "https://gist.github.com/2794877",
+                    "id": "2794877",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-05-26T18:35:54Z",
+                    "url": "https://api.github.com/gists/2794877",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/2784760/comments",
+                    "commits_url": "https://api.github.com/gists/2784760/commits",
+                    "created_at": "2012-05-24T22:57:25Z",
+                    "description": "Functional composition",
+                    "files": {
+                        "gistfile1.py": {
+                            "filename": "gistfile1.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/2784760/raw/96a96f3c75da02559b4b22096e17e86b860b7eff/gistfile1.py",
+                            "size": 255,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2784760/forks",
+                    "git_pull_url": "https://gist.github.com/2784760.git",
+                    "git_push_url": "https://gist.github.com/2784760.git",
+                    "html_url": "https://gist.github.com/2784760",
+                    "id": "2784760",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-05-24T22:57:25Z",
+                    "url": "https://api.github.com/gists/2784760",
+                    "user": null
+                },
+                {
+                    "comments": 1,
+                    "comments_url": "https://api.github.com/gists/2769669/comments",
+                    "commits_url": "https://api.github.com/gists/2769669/commits",
+                    "created_at": "2012-05-22T15:11:17Z",
+                    "description": "A WSGI middleware wrapper to add gzip to your WSGI app",
+                    "files": {
+                        "gzip_middleware.py": {
+                            "filename": "gzip_middleware.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/2769669/raw/57c9a22324ddd2b29d920f9b3cb2f64f57de1add/gzip_middleware.py",
+                            "size": 3690,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2769669/forks",
+                    "git_pull_url": "https://gist.github.com/2769669.git",
+                    "git_push_url": "https://gist.github.com/2769669.git",
+                    "html_url": "https://gist.github.com/2769669",
+                    "id": "2769669",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2014-01-29T14:12:19Z",
+                    "url": "https://api.github.com/gists/2769669",
+                    "user": null
+                },
+                {
+                    "comments": 1,
+                    "comments_url": "https://api.github.com/gists/2225508/comments",
+                    "commits_url": "https://api.github.com/gists/2225508/commits",
+                    "created_at": "2012-03-28T11:19:55Z",
+                    "description": "zsh-sourcing.txt",
+                    "files": {
+                        "gistfile1.txt": {
+                            "filename": "gistfile1.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/2225508/raw/9491da27599c9fe156452534ff152d4757264f5b/gistfile1.txt",
+                            "size": 332,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/2225508/forks",
+                    "git_pull_url": "https://gist.github.com/2225508.git",
+                    "git_push_url": "https://gist.github.com/2225508.git",
+                    "html_url": "https://gist.github.com/2225508",
+                    "id": "2225508",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-03-28T11:19:55Z",
+                    "url": "https://api.github.com/gists/2225508",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:19 GMT",
+                "etag": "\"7f3dc84a05e3a6c1e85696bb3926cb02\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=7>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=5>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96B6A:53C0A71B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4993",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "d818ddef80f4c7d10683dd483558952a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "7",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/1886939/comments",
+                    "commits_url": "https://api.github.com/gists/1886939/commits",
+                    "created_at": "2012-02-22T20:09:01Z",
+                    "description": "Example of a time-guarded context",
+                    "files": {
+                        "timeouts.py": {
+                            "filename": "timeouts.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/1886939/raw/061d77d30b196ec3fabee27b2084e2487cf1a000/timeouts.py",
+                            "size": 1982,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/1886939/forks",
+                    "git_pull_url": "https://gist.github.com/1886939.git",
+                    "git_push_url": "https://gist.github.com/1886939.git",
+                    "html_url": "https://gist.github.com/1886939",
+                    "id": "1886939",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-02-22T20:09:01Z",
+                    "url": "https://api.github.com/gists/1886939",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/1757965/comments",
+                    "commits_url": "https://api.github.com/gists/1757965/commits",
+                    "created_at": "2012-02-07T07:30:58Z",
+                    "description": "Infinite stdin and xargs",
+                    "files": {
+                        "gistfile1.sh": {
+                            "filename": "gistfile1.sh",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/1757965/raw/1dfb81a926592356d4d56e3cdfa31c70d1eb7166/gistfile1.sh",
+                            "size": 138,
+                            "type": "application/x-sh"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/1757965/forks",
+                    "git_pull_url": "https://gist.github.com/1757965.git",
+                    "git_push_url": "https://gist.github.com/1757965.git",
+                    "html_url": "https://gist.github.com/1757965",
+                    "id": "1757965",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2012-02-07T07:30:58Z",
+                    "url": "https://api.github.com/gists/1757965",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/1440744/comments",
+                    "commits_url": "https://api.github.com/gists/1440744/commits",
+                    "created_at": "2011-12-07T00:12:01Z",
+                    "description": "Sexy pixel generator for efficiently drawing ellipse (or circle) shapes, either outlined or filled.",
+                    "files": {
+                        "gistfile1.py": {
+                            "filename": "gistfile1.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/1440744/raw/f182ae6e94e416ae536ed15250d36c368bbff980/gistfile1.py",
+                            "size": 1753,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/1440744/forks",
+                    "git_pull_url": "https://gist.github.com/1440744.git",
+                    "git_push_url": "https://gist.github.com/1440744.git",
+                    "html_url": "https://gist.github.com/1440744",
+                    "id": "1440744",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2011-12-07T00:12:01Z",
+                    "url": "https://api.github.com/gists/1440744",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/893044/comments",
+                    "commits_url": "https://api.github.com/gists/893044/commits",
+                    "created_at": "2011-03-29T19:18:50Z",
+                    "description": "Using an SQLite in-memory store for your tests",
+                    "files": {
+                        "TestFoo.m": {
+                            "filename": "TestFoo.m",
+                            "language": "Objective-C",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/893044/raw/1aa13553da6599017f8959dbb86b071c09e30f5d/TestFoo.m",
+                            "size": 996,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/893044/forks",
+                    "git_pull_url": "https://gist.github.com/893044.git",
+                    "git_push_url": "https://gist.github.com/893044.git",
+                    "html_url": "https://gist.github.com/893044",
+                    "id": "893044",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2011-03-29T19:20:08Z",
+                    "url": "https://api.github.com/gists/893044",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:19 GMT",
+                "etag": "\"92c8568d16a7d0ec6e504391883dbd13\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=8>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=6>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96BBB:53C0A71B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4992",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "132026e9262a0093e437f99db5f1e499",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "8",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/731493/comments",
+                    "commits_url": "https://api.github.com/gists/731493/commits",
+                    "created_at": "2010-12-07T05:16:26Z",
+                    "description": null,
+                    "files": {
+                        "README.textile": {
+                            "filename": "README.textile",
+                            "language": "Textile",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/731493/raw/2fb71d4a79785df12b9ef2e600cf48c7b14587b2/README.textile",
+                            "size": 1069,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/731493/forks",
+                    "git_pull_url": "https://gist.github.com/731493.git",
+                    "git_push_url": "https://gist.github.com/731493.git",
+                    "html_url": "https://gist.github.com/731493",
+                    "id": "731493",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-12-07T05:17:10Z",
+                    "url": "https://api.github.com/gists/731493",
+                    "user": null
+                },
+                {
+                    "comments": 1,
+                    "comments_url": "https://api.github.com/gists/727282/comments",
+                    "commits_url": "https://api.github.com/gists/727282/commits",
+                    "created_at": "2010-12-03T17:56:43Z",
+                    "description": null,
+                    "files": {
+                        "gistfile1.py": {
+                            "filename": "gistfile1.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/727282/raw/25bb6d5cc074ae6adbfe7a43fd5f2419e2624d27/gistfile1.py",
+                            "size": 2863,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/727282/forks",
+                    "git_pull_url": "https://gist.github.com/727282.git",
+                    "git_push_url": "https://gist.github.com/727282.git",
+                    "html_url": "https://gist.github.com/727282",
+                    "id": "727282",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-12-03T17:57:04Z",
+                    "url": "https://api.github.com/gists/727282",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/632828/comments",
+                    "commits_url": "https://api.github.com/gists/632828/commits",
+                    "created_at": "2010-10-18T19:09:23Z",
+                    "description": null,
+                    "files": {
+                        "untitled.txt": {
+                            "filename": "untitled.txt",
+                            "language": null,
+                            "raw_url": "https://gist.githubusercontent.com/nvie/632828/raw/4a2986e566d67e1d3c9f7b634488a64b81dc9800/untitled.txt",
+                            "size": 740,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/632828/forks",
+                    "git_pull_url": "https://gist.github.com/632828.git",
+                    "git_push_url": "https://gist.github.com/632828.git",
+                    "html_url": "https://gist.github.com/632828",
+                    "id": "632828",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-10-19T09:06:02Z",
+                    "url": "https://api.github.com/gists/632828",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/337982/comments",
+                    "commits_url": "https://api.github.com/gists/337982/commits",
+                    "created_at": "2010-03-19T18:07:18Z",
+                    "description": null,
+                    "files": {
+                        "git-flow.rb": {
+                            "filename": "git-flow.rb",
+                            "language": "Ruby",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/337982/raw/230c2f1fbf87749e3fe5130b7cad997f29af5fa9/git-flow.rb",
+                            "size": 361,
+                            "type": "application/x-ruby"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/337982/forks",
+                    "git_pull_url": "https://gist.github.com/337982.git",
+                    "git_push_url": "https://gist.github.com/337982.git",
+                    "html_url": "https://gist.github.com/337982",
+                    "id": "337982",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-19T18:40:28Z",
+                    "url": "https://api.github.com/gists/337982",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:19 GMT",
+                "etag": "\"7bb66207f095ed7545129ce1d8252f3b\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=9>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=7>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96C13:53C0A71B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4991",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "62a1303ae95931e56e387e87d354bb24",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "9",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/321172/comments",
+                    "commits_url": "https://api.github.com/gists/321172/commits",
+                    "created_at": "2010-03-03T23:10:55Z",
+                    "description": null,
+                    "files": {
+                        "foo.py": {
+                            "filename": "foo.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/321172/raw/da46f0a1e6eb5bf12a055def0142e91fc7de9cf4/foo.py",
+                            "size": 214,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/321172/forks",
+                    "git_pull_url": "https://gist.github.com/321172.git",
+                    "git_push_url": "https://gist.github.com/321172.git",
+                    "html_url": "https://gist.github.com/321172",
+                    "id": "321172",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-03T23:30:13Z",
+                    "url": "https://api.github.com/gists/321172",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/321158/comments",
+                    "commits_url": "https://api.github.com/gists/321158/commits",
+                    "created_at": "2010-03-03T23:03:19Z",
+                    "description": null,
+                    "files": {
+                        "bar.py": {
+                            "filename": "bar.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/321158/raw/0865827ddf17b7fd9ddd98961dcb0b53f67f8b81/bar.py",
+                            "size": 41,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/321158/forks",
+                    "git_pull_url": "https://gist.github.com/321158.git",
+                    "git_push_url": "https://gist.github.com/321158.git",
+                    "html_url": "https://gist.github.com/321158",
+                    "id": "321158",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-03T23:30:06Z",
+                    "url": "https://api.github.com/gists/321158",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/321157/comments",
+                    "commits_url": "https://api.github.com/gists/321157/commits",
+                    "created_at": "2010-03-03T23:02:40Z",
+                    "description": null,
+                    "files": {
+                        "foo.py": {
+                            "filename": "foo.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/321157/raw/be6140c87ad5b82ce225aeb03a69327e84ca5436/foo.py",
+                            "size": 150,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/321157/forks",
+                    "git_pull_url": "https://gist.github.com/321157.git",
+                    "git_push_url": "https://gist.github.com/321157.git",
+                    "html_url": "https://gist.github.com/321157",
+                    "id": "321157",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-03T23:29:57Z",
+                    "url": "https://api.github.com/gists/321157",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/321155/comments",
+                    "commits_url": "https://api.github.com/gists/321155/commits",
+                    "created_at": "2010-03-03T23:02:06Z",
+                    "description": null,
+                    "files": {
+                        "foo.py": {
+                            "filename": "foo.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/321155/raw/d56a12e461ad8d33281b831ca33748453c1fc9b7/foo.py",
+                            "size": 32,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/321155/forks",
+                    "git_pull_url": "https://gist.github.com/321155.git",
+                    "git_push_url": "https://gist.github.com/321155.git",
+                    "html_url": "https://gist.github.com/321155",
+                    "id": "321155",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-03T23:29:49Z",
+                    "url": "https://api.github.com/gists/321155",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:20 GMT",
+                "etag": "\"b2b250bd331d129910f8d0b5c51d5310\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"next\", <https://api.github.com/user/83844/gists?per_page=4&page=10>; rel=\"last\", <https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=8>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96C64:53C0A71B",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4990",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "03d91026ad8428f4d9966d7434f9d82e",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/user/83844/gists",
+                "query": {
+                    "page": "10",
+                    "per_page": "4"
+                },
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": [
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/321150/comments",
+                    "commits_url": "https://api.github.com/gists/321150/commits",
+                    "created_at": "2010-03-03T22:58:44Z",
+                    "description": null,
+                    "files": {
+                        "foo.py": {
+                            "filename": "foo.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/321150/raw/945b4315f4321954014f0148c29dbcdcc2b61010/foo.py",
+                            "size": 159,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/321150/forks",
+                    "git_pull_url": "https://gist.github.com/321150.git",
+                    "git_push_url": "https://gist.github.com/321150.git",
+                    "html_url": "https://gist.github.com/321150",
+                    "id": "321150",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-03-03T23:29:41Z",
+                    "url": "https://api.github.com/gists/321150",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/290501/comments",
+                    "commits_url": "https://api.github.com/gists/290501/commits",
+                    "created_at": "2010-01-30T10:08:14Z",
+                    "description": null,
+                    "files": {
+                        "Evolution of a Python programmer.py": {
+                            "filename": "Evolution of a Python programmer.py",
+                            "language": "Python",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/290501/raw/3c46c2a90cc50b7a882a943fc615a986da3a3267/Evolution%20of%20a%20Python%20programmer.py",
+                            "size": 4053,
+                            "type": "application/x-python"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/290501/forks",
+                    "git_pull_url": "https://gist.github.com/290501.git",
+                    "git_push_url": "https://gist.github.com/290501.git",
+                    "html_url": "https://gist.github.com/290501",
+                    "id": "290501",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2010-01-30T10:08:25Z",
+                    "url": "https://api.github.com/gists/290501",
+                    "user": null
+                },
+                {
+                    "comments": 0,
+                    "comments_url": "https://api.github.com/gists/258640/comments",
+                    "commits_url": "https://api.github.com/gists/258640/commits",
+                    "created_at": "2009-12-17T09:15:52Z",
+                    "description": null,
+                    "files": {
+                        ".bashrc": {
+                            "filename": ".bashrc",
+                            "language": "Shell",
+                            "raw_url": "https://gist.githubusercontent.com/nvie/258640/raw/d6d36b652e35bc099120334d9f0a18dea3b886e7/.bashrc",
+                            "size": 619,
+                            "type": "text/plain"
+                        }
+                    },
+                    "forks_url": "https://api.github.com/gists/258640/forks",
+                    "git_pull_url": "https://gist.github.com/258640.git",
+                    "git_push_url": "https://gist.github.com/258640.git",
+                    "html_url": "https://gist.github.com/258640",
+                    "id": "258640",
+                    "owner": {
+                        "avatar_url": "https://avatars.githubusercontent.com/u/83844?",
+                        "events_url": "https://api.github.com/users/nvie/events{/privacy}",
+                        "followers_url": "https://api.github.com/users/nvie/followers",
+                        "following_url": "https://api.github.com/users/nvie/following{/other_user}",
+                        "gists_url": "https://api.github.com/users/nvie/gists{/gist_id}",
+                        "gravatar_id": "466ef7561a0b100dc5a1021959962d28",
+                        "html_url": "https://github.com/nvie",
+                        "id": 83844,
+                        "login": "nvie",
+                        "organizations_url": "https://api.github.com/users/nvie/orgs",
+                        "received_events_url": "https://api.github.com/users/nvie/received_events",
+                        "repos_url": "https://api.github.com/users/nvie/repos",
+                        "site_admin": false,
+                        "starred_url": "https://api.github.com/users/nvie/starred{/owner}{/repo}",
+                        "subscriptions_url": "https://api.github.com/users/nvie/subscriptions",
+                        "type": "User",
+                        "url": "https://api.github.com/users/nvie"
+                    },
+                    "public": true,
+                    "updated_at": "2009-12-17T09:25:29Z",
+                    "url": "https://api.github.com/gists/258640",
+                    "user": null
+                }
+            ],
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 03:10:20 GMT",
+                "etag": "\"bf40a13cc8962429796e9723a365a72a\"",
+                "link": "<https://api.github.com/user/83844/gists?per_page=4&page=1>; rel=\"first\", <https://api.github.com/user/83844/gists?per_page=4&page=9>; rel=\"prev\"",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:1162:6E96CB2:53C0A71C",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4989",
+                "x-ratelimit-reset": "1405138218",
+                "x-served-by": "a1d8c69b807c8e21f06cad9da377d1b0",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]
