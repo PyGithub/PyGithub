@@ -55,6 +55,12 @@ attributes:
       container: dict
       key: string
       value: GistFile
+  - name: fork_of
+    type: Gist
+  - name: forks
+    type:
+      container: list
+      content: Gist
   - name: forks_url
     type: string
   - name: git_pull_url
@@ -79,14 +85,27 @@ attributes:
     type: string
   - name: user
     type: User
-deprecated_attributes:
-  - fork_of
-  - forks
 methods:
+  - name: create_fork
+    end_point: POST /gists/:id/forks
+    url_template: attribute forks_url
+    return_type: Gist
   - name: delete
     end_point: DELETE /gists/:id
     url_template: attribute url
     return_type: none
+  - name: get_forks
+    end_point: GET /gists/:id/forks
+    optional_parameters:
+      - name: per_page
+        type: int
+    url_template: attribute forks_url
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Gist
   - name: is_starred
     end_point: GET /gists/:id/star
     url_template: end_point

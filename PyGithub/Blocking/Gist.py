@@ -27,6 +27,10 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.create_gist`
       * :meth:`.AuthenticatedUser.get_gists`
       * :meth:`.AuthenticatedUser.get_starred_gists`
+      * :meth:`.Gist.create_fork`
+      * :attr:`.Gist.fork_of`
+      * :attr:`.Gist.forks`
+      * :meth:`.Gist.get_forks`
       * :meth:`.Github.get_gist`
       * :meth:`.Github.get_public_gists`
       * :meth:`.User.get_gists`
@@ -179,7 +183,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__version.value
 
-    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, fork_of=None, forks=None, **kwds):
+    def _initAttributes(self, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, fork_of=rcv.Absent, forks=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, **kwds):
         import PyGithub.Blocking.User
         super(Gist, self)._initAttributes(**kwds)
         self.__comments = rcv.Attribute("Gist.comments", rcv.IntConverter, comments)
@@ -188,6 +192,8 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__created_at = rcv.Attribute("Gist.created_at", rcv.DatetimeConverter, created_at)
         self.__description = rcv.Attribute("Gist.description", rcv.StringConverter, description)
         self.__files = rcv.Attribute("Gist.files", rcv.DictConverter(rcv.StringConverter, rcv.StructureConverter(self.Session, Gist.GistFile)), files)
+        self.__fork_of = rcv.Attribute("Gist.fork_of", rcv.ClassConverter(self.Session, Gist), fork_of)
+        self.__forks = rcv.Attribute("Gist.forks", rcv.ListConverter(rcv.ClassConverter(self.Session, Gist)), forks)
         self.__forks_url = rcv.Attribute("Gist.forks_url", rcv.StringConverter, forks_url)
         self.__git_pull_url = rcv.Attribute("Gist.git_pull_url", rcv.StringConverter, git_pull_url)
         self.__git_push_url = rcv.Attribute("Gist.git_push_url", rcv.StringConverter, git_push_url)
@@ -200,7 +206,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__url = rcv.Attribute("Gist.url", rcv.StringConverter, url)
         self.__user = rcv.Attribute("Gist.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, fork_of=None, forks=None, **kwds):
+    def _updateAttributes(self, eTag, comments=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, created_at=rcv.Absent, description=rcv.Absent, files=rcv.Absent, fork_of=rcv.Absent, forks=rcv.Absent, forks_url=rcv.Absent, git_pull_url=rcv.Absent, git_push_url=rcv.Absent, history=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, owner=rcv.Absent, public=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, **kwds):
         super(Gist, self)._updateAttributes(eTag, **kwds)
         self.__comments.update(comments)
         self.__comments_url.update(comments_url)
@@ -208,6 +214,8 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self.__created_at.update(created_at)
         self.__description.update(description)
         self.__files.update(files)
+        self.__fork_of.update(fork_of)
+        self.__forks.update(forks)
         self.__forks_url.update(forks_url)
         self.__git_pull_url.update(git_pull_url)
         self.__git_push_url.update(git_push_url)
@@ -267,6 +275,22 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         """
         self._completeLazily(self.__files.needsLazyCompletion)
         return self.__files.value
+
+    @property
+    def fork_of(self):
+        """
+        :type: :class:`.Gist`
+        """
+        self._completeLazily(self.__fork_of.needsLazyCompletion)
+        return self.__fork_of.value
+
+    @property
+    def forks(self):
+        """
+        :type: :class:`list` of :class:`.Gist`
+        """
+        self._completeLazily(self.__forks.needsLazyCompletion)
+        return self.__forks.value
 
     @property
     def forks_url(self):
@@ -356,6 +380,19 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         self._completeLazily(self.__user.needsLazyCompletion)
         return self.__user.value
 
+    def create_fork(self):
+        """
+        Calls the `POST /gists/:id/forks <http://developer.github.com/v3/gists#fork-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`.Gist`
+        """
+
+        url = uritemplate.expand(self.forks_url)
+        r = self.Session._request("POST", url)
+        return rcv.ClassConverter(self.Session, Gist)(None, r.json(), r.headers.get("ETag"))
+
     def delete(self):
         """
         Calls the `DELETE /gists/:id <http://developer.github.com/v3/gists#delete-a-gist>`__ end point.
@@ -367,6 +404,27 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("DELETE", url)
+
+    def get_forks(self, per_page=None):
+        """
+        Calls the `GET /gists/:id/forks <http://developer.github.com/v3/gists#list-gist-forks>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist`
+        """
+        import PyGithub.Blocking.BaseGithubObject
+
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.forks_url)
+        urlArguments = snd.dictionary(per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, Gist))(None, r)
 
     def is_starred(self):
         """

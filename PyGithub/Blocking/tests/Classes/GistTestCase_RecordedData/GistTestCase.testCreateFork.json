@@ -1,0 +1,260 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/4059305",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/4059305/comments",
+                "commits_url": "https://api.github.com/gists/4059305/commits",
+                "created_at": "2012-11-12T13:07:53Z",
+                "description": "testing...",
+                "files": {
+                    "test.js": {
+                        "content": "var GitHubApi = require(\"github\");",
+                        "filename": "test.js",
+                        "language": "JavaScript",
+                        "raw_url": "https://gist.githubusercontent.com/jsvnm/4059305/raw/607b4f37b07d487e9b8b7504f9d1508374d2ea9d/test.js",
+                        "size": 34,
+                        "truncated": false,
+                        "type": "application/javascript"
+                    }
+                },
+                "forks": [],
+                "forks_url": "https://api.github.com/gists/4059305/forks",
+                "git_pull_url": "https://gist.github.com/4059305.git",
+                "git_push_url": "https://gist.github.com/4059305.git",
+                "history": [
+                    {
+                        "change_status": {
+                            "additions": 1,
+                            "deletions": 0,
+                            "total": 1
+                        },
+                        "committed_at": "2012-11-12T13:07:53Z",
+                        "url": "https://api.github.com/gists/4059305/edf35385c1cdfe31c7aaf5437446f75ee8f2721c",
+                        "user": {
+                            "avatar_url": "https://avatars.githubusercontent.com/u/97988?",
+                            "events_url": "https://api.github.com/users/jsvnm/events{/privacy}",
+                            "followers_url": "https://api.github.com/users/jsvnm/followers",
+                            "following_url": "https://api.github.com/users/jsvnm/following{/other_user}",
+                            "gists_url": "https://api.github.com/users/jsvnm/gists{/gist_id}",
+                            "gravatar_id": "935b1a2f11c5a118b06da0592bfd711a",
+                            "html_url": "https://github.com/jsvnm",
+                            "id": 97988,
+                            "login": "jsvnm",
+                            "organizations_url": "https://api.github.com/users/jsvnm/orgs",
+                            "received_events_url": "https://api.github.com/users/jsvnm/received_events",
+                            "repos_url": "https://api.github.com/users/jsvnm/repos",
+                            "site_admin": false,
+                            "starred_url": "https://api.github.com/users/jsvnm/starred{/owner}{/repo}",
+                            "subscriptions_url": "https://api.github.com/users/jsvnm/subscriptions",
+                            "type": "User",
+                            "url": "https://api.github.com/users/jsvnm"
+                        },
+                        "version": "edf35385c1cdfe31c7aaf5437446f75ee8f2721c"
+                    }
+                ],
+                "html_url": "https://gist.github.com/4059305",
+                "id": "4059305",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/97988?",
+                    "events_url": "https://api.github.com/users/jsvnm/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jsvnm/followers",
+                    "following_url": "https://api.github.com/users/jsvnm/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jsvnm/gists{/gist_id}",
+                    "gravatar_id": "935b1a2f11c5a118b06da0592bfd711a",
+                    "html_url": "https://github.com/jsvnm",
+                    "id": 97988,
+                    "login": "jsvnm",
+                    "organizations_url": "https://api.github.com/users/jsvnm/orgs",
+                    "received_events_url": "https://api.github.com/users/jsvnm/received_events",
+                    "repos_url": "https://api.github.com/users/jsvnm/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jsvnm/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jsvnm/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jsvnm"
+                },
+                "public": true,
+                "updated_at": "2012-11-12T13:07:53Z",
+                "url": "https://api.github.com/gists/4059305",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-encoding": "gzip",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 04:16:30 GMT",
+                "etag": "\"48907cae08da66dedd59a008c85ce5bc\"",
+                "last-modified": "Wed, 02 Jul 2014 08:49:41 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "transfer-encoding": "chunked",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5BD3:12FE0B0:53C0B69D",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4999",
+                "x-ratelimit-reset": "1405142190",
+                "x-served-by": "88d924ed861736d2749ce1a55766cb53",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/4059305/forks",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "https://api.github.com/gists/bfc868728f9c2941dcee/comments",
+                "commits_url": "https://api.github.com/gists/bfc868728f9c2941dcee/commits",
+                "created_at": "2014-07-12T04:16:30Z",
+                "description": "testing...",
+                "files": {
+                    "test.js": {
+                        "filename": "test.js",
+                        "language": "JavaScript",
+                        "raw_url": "https://gist.githubusercontent.com/jacquev6/bfc868728f9c2941dcee/raw/607b4f37b07d487e9b8b7504f9d1508374d2ea9d/test.js",
+                        "size": 34,
+                        "type": "application/javascript"
+                    }
+                },
+                "forks_url": "https://api.github.com/gists/bfc868728f9c2941dcee/forks",
+                "git_pull_url": "https://gist.github.com/bfc868728f9c2941dcee.git",
+                "git_push_url": "https://gist.github.com/bfc868728f9c2941dcee.git",
+                "html_url": "https://gist.github.com/bfc868728f9c2941dcee",
+                "id": "bfc868728f9c2941dcee",
+                "owner": {
+                    "avatar_url": "https://avatars.githubusercontent.com/u/327146?",
+                    "events_url": "https://api.github.com/users/jacquev6/events{/privacy}",
+                    "followers_url": "https://api.github.com/users/jacquev6/followers",
+                    "following_url": "https://api.github.com/users/jacquev6/following{/other_user}",
+                    "gists_url": "https://api.github.com/users/jacquev6/gists{/gist_id}",
+                    "gravatar_id": "b68de5ae38616c296fa345d2b9df2225",
+                    "html_url": "https://github.com/jacquev6",
+                    "id": 327146,
+                    "login": "jacquev6",
+                    "organizations_url": "https://api.github.com/users/jacquev6/orgs",
+                    "received_events_url": "https://api.github.com/users/jacquev6/received_events",
+                    "repos_url": "https://api.github.com/users/jacquev6/repos",
+                    "site_admin": false,
+                    "starred_url": "https://api.github.com/users/jacquev6/starred{/owner}{/repo}",
+                    "subscriptions_url": "https://api.github.com/users/jacquev6/subscriptions",
+                    "type": "User",
+                    "url": "https://api.github.com/users/jacquev6"
+                },
+                "public": true,
+                "updated_at": "2014-07-12T04:16:30Z",
+                "url": "https://api.github.com/gists/bfc868728f9c2941dcee",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "content-length": "1782",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 12 Jul 2014 04:16:30 GMT",
+                "etag": "\"46a9d33e2e952ca6a54b3c728b7e4c49\"",
+                "location": "https://api.github.com/gists/bfc868728f9c2941dcee",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5BD3:12FE0B6:53C0B69E",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4998",
+                "x-ratelimit-reset": "1405142190",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic removed=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "api.github.com",
+                "path": "/gists/bfc868728f9c2941dcee",
+                "query": {},
+                "scheme": "https"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "content-security-policy": "default-src 'none'",
+                "date": "Sat, 12 Jul 2014 04:16:30 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "strict-transport-security": "max-age=31536000; includeSubdomains",
+                "vary": "Accept-Encoding",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "62E81D14:5BD3:12FE0BD:53C0B69E",
+                "x-ratelimit-limit": "5000",
+                "x-ratelimit-remaining": "4997",
+                "x-ratelimit-reset": "1405142190",
+                "x-served-by": "d818ddef80f4c7d10683dd483558952a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 204
+        }
+    }
+]

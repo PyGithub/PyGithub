@@ -10,9 +10,6 @@ import PyGithub.Blocking.tests.Framework as Framework
 class GistTestCase(Framework.SimpleLoginTestCase):
     def testAttributes(self):
         g = self.g.get_gist("5339374")
-        # @todoAlpha files
-        # @todoAlpha forks
-        # @todoAlpha fork_of (seems to be present only on forks => testForksAttributes)
         self.assertEqual(g.comments, 0)
         self.assertEqual(g.comments_url, "https://api.github.com/gists/5339374/comments")
         self.assertEqual(g.commits_url, "https://api.github.com/gists/5339374/commits")
@@ -50,6 +47,10 @@ class GistTestCase(Framework.SimpleLoginTestCase):
     # def testUpdate(self):
     #     pass
 
+    def testForksAttributes(self):
+        g = self.g.get_gist("6296732")
+        self.assertEqual(g.fork_of.owner.login, "HyroVitalyProtago")
+
     def testStarring(self):
         g = self.g.get_gist("1942384")
         self.assertTrue(g.is_starred())
@@ -57,3 +58,25 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         self.assertFalse(g.is_starred())
         g.set_starred()
         self.assertTrue(g.is_starred())
+
+    def testGetForks(self):
+        g = self.g.get_gist("6296553")
+        # Inline forks, not very consistent with...
+        self.assertEqual(len(g.forks), 2)
+        self.assertEqual(g.forks[0].user.login, "jacquev6")
+        # ... subresource forks (owner <-> user).
+        forks = list(g.get_forks())
+        self.assertEqual(len(forks), 2)
+        self.assertEqual(forks[0].owner.login, "jacquev6")
+
+    def testGetForks_allParameters(self):
+        g = self.g.get_gist("6296553")
+        forks = list(g.get_forks(per_page=1))
+        self.assertEqual(forks[0].owner.login, "jacquev6")
+
+    def testCreateFork(self):
+        g = self.g.get_gist("4059305")
+        self.assertEqual(g.owner.login, "jsvnm")
+        f = g.create_fork()
+        self.assertEqual(f.owner.login, "jacquev6")
+        f.delete()

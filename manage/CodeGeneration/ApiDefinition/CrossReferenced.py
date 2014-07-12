@@ -306,7 +306,7 @@ class Method(Member):
             # @todoGeni Put those special cases in .yml definition files
             if self.containerClass.name == "AuthenticatedUser" and self.__name == "create_repo":
                 unimplementedParameters.remove("team_id")
-            if self.__name == "create_fork":
+            if self.containerClass.name in ["AuthenticatedUser", "User", "Organization"] and self.__name == "create_fork":
                 unimplementedParameters.remove("organization")
             if self.containerClass.name == "AuthenticatedUser" and self.__name == "edit":
                 unimplementedParameters.remove("bio")
