@@ -14,9 +14,9 @@ A complete example::
 
     >>> b = PyGithub.BlockingBuilder()
     >>> b.Login("your_login", "your_password")  # doctest: +ELLIPSIS
-    <PyGithub.Blocking.Builder.Builder object at 0x...>
+    <...Builder object at 0x...>
     >>> b.UserAgent("MyWonderfulApplication-1.0.0")  # doctest: +ELLIPSIS
-    <PyGithub.Blocking.Builder.Builder object at 0x...>
+    <...Builder object at 0x...>
     >>> g = b.Build()
 
 Because all methods return the builder itself, you can chain calls::
@@ -28,7 +28,7 @@ For reference, see :class:`.Builder`.
 
 import PyGithub
 import PyGithub.Blocking.Github
-import PyGithub.Blocking.Session
+import PyGithub.Blocking._session as _session
 
 
 class _AnonymousAuthenticator:
@@ -99,6 +99,6 @@ class Builder(object):
         Build and return a new instance of :class:`.Github`.
         """
         return PyGithub.Blocking.Github.Github(
-            PyGithub.Blocking.Session.Session(self.__authenticator, self.__perPage, self.__userAgent),
+            _session.Session(self.__authenticator, self.__perPage, self.__userAgent),
             {}
         )

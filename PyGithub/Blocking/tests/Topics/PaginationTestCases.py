@@ -4,11 +4,11 @@
 
 import datetime
 
-import PyGithub.Blocking
+import PyGithub
 import PyGithub.Blocking.tests.Framework as Framework
 
 
-class PaginationTestCase(Framework.createTestCase(PyGithub.Blocking.Builder.Builder().Login(Framework.login, Framework.password))):
+class PaginationTestCase(Framework.createTestCase(PyGithub.BlockingBuilder().Login(Framework.login, Framework.password))):
     def testIterationOnMultiplePages(self):
         repo = self.g.get_repo("jacquev6/PyGithub")
         stargazers = repo.get_stargazers()
@@ -80,7 +80,7 @@ class PaginationTestCase(Framework.createTestCase(PyGithub.Blocking.Builder.Buil
         self.assertEqual(len(gists[:]), 32)
 
 
-class PaginationWithGlobalPerPageTestCase(Framework.createTestCase(PyGithub.Blocking.Builder.Builder().Login(Framework.login, Framework.password).PerPage(100))):
+class PaginationWithGlobalPerPageTestCase(Framework.createTestCase(PyGithub.BlockingBuilder().Login(Framework.login, Framework.password).PerPage(100))):
     def testIterationOnMultiplePages(self):
         repo = self.g.get_repo("jacquev6/PyGithub")
         stargazers = repo.get_stargazers()

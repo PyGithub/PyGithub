@@ -5,7 +5,7 @@
 """
 """
 
-from PyGithub.Blocking.Exceptions import *
+from PyGithub.Blocking._exceptions import *
 from PyGithub.Blocking._send import Reset
 
 # @todoSomeday Low-level API to access headers of last request?

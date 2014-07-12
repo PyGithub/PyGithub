@@ -11,8 +11,8 @@ import unittest
 
 import MockMockMock
 
-import PyGithub.Blocking.Exceptions
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking
+import PyGithub.Blocking._paginated_list as pgl
 import PyGithub.Blocking._receive as rcv
 
 
@@ -104,7 +104,7 @@ class AttributeTestCase(unittest.TestCase):
 
         self.a.update(42)
 
-        with self.assertRaises(PyGithub.Blocking.Exceptions.BadAttributeException) as cm:
+        with self.assertRaises(PyGithub.Blocking.BadAttributeException) as cm:
             self.a.value
         self.assertEqual(cm.exception.args, ("name", "desc", 42, e))
         self.assertFalse(self.a.needsLazyCompletion)
@@ -506,7 +506,7 @@ class PaginatedListConverterTestCase(unittest.TestCase):
         self.request.expect.json().andReturn([])
 
         l = self.conv(None, self.request.object)
-        self.assertIsInstance(l, PyGithub.Blocking.PaginatedList.PaginatedList)
+        self.assertIsInstance(l, pgl.PaginatedList)
 
 
 class FileDirSubmoduleSymLinkUnionConverterTestCase(unittest.TestCase):

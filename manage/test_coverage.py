@@ -45,7 +45,7 @@ def main():
     cov.start()
 
     families = []
-    families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*"), os.path.join(baseDirectory, "Blocking", "PaginatedList.py")]))
+    families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
     if "--unit" not in sys.argv:
         families.append(TestFamily(cov, "integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
     if "--all" in sys.argv:

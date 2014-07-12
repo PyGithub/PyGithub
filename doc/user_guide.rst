@@ -8,12 +8,12 @@ User guide
 Configuring the GitHub session
 ------------------------------
 
-.. automodule:: PyGithub.Blocking.Builder
+.. automodule:: PyGithub.Blocking._builder
 
 Common functionalities
 ----------------------
 
-.. automodule:: PyGithub.Blocking.BaseGithubObject
+.. automodule:: PyGithub.Blocking._base_github_object
 
 .. @todoSomeday Fix this ref...
 .. _pagination_foo:
@@ -21,7 +21,7 @@ Common functionalities
 Pagination
 ----------
 
-.. automodule:: PyGithub.Blocking.PaginatedList
+.. automodule:: PyGithub.Blocking._paginated_list
 
 Naming conventions
 ------------------

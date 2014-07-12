@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+class Github(bgo.SessionedGithubObject):
     """
     Base class: :class:`.SessionedGithubObject`
 
@@ -27,7 +26,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
       * :meth:`.Builder.Build`
     """
 
-    class GitIgnoreTemplate(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class GitIgnoreTemplate(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_gitignore_template`
@@ -52,7 +51,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__source.value
 
-    class Meta(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class Meta(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_meta`
@@ -85,7 +84,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__verifiable_password_authentication.value
 
-    class RateLimit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class RateLimit(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_rate_limit`
@@ -102,7 +101,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__resources.value
 
-    class RateLimits(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class RateLimits(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Resources.core`
@@ -142,7 +141,7 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
             """
             return self.__reset.value
 
-    class Resources(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class Resources(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.RateLimit.resources`
@@ -304,7 +303,6 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Gist`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Gist
 
         if since is not None:
@@ -361,7 +359,6 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param since: optional :class:`.Repository` or :class:`int` (its :attr:`.Repository.id`)
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Repository
 
         if since is not None:
@@ -415,7 +412,6 @@ class Github(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
         :param since: optional :class:`.User` or :class:`int` (its :attr:`.User.id`)
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if since is not None:

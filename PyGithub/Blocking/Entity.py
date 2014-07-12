@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Entity(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class Entity(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -28,7 +27,7 @@ class Entity(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
     Methods and attributes returning instances of this class: none.
     """
 
-    class Plan(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class Plan(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Entity.plan`

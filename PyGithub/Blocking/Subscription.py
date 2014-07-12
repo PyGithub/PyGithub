@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Subscription(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class Subscription(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 

@@ -17,7 +17,7 @@ import sys
 import requests
 import MockMockMock
 
-import PyGithub.Blocking.Builder
+import PyGithub
 
 try:
     import GithubCredentials
@@ -254,17 +254,17 @@ def createTestCase(builder):
     return TestCase
 
 
-class SimpleLoginTestCase(createTestCase(PyGithub.Blocking.Builder.Builder().Login(login, password).PerPage(4))):
+class SimpleLoginTestCase(createTestCase(PyGithub.BlockingBuilder().Login(login, password).PerPage(4))):
     pass
 
 
-class SimpleAnonymousTestCase(createTestCase(PyGithub.Blocking.Builder.Builder().PerPage(4))):
+class SimpleAnonymousTestCase(createTestCase(PyGithub.BlockingBuilder().PerPage(4))):
     pass
 
 
-class SimpleOAuthWithoutScopesTestCase(createTestCase(PyGithub.Blocking.Builder.Builder().OAuth(token_without_scopes).PerPage(4))):
+class SimpleOAuthWithoutScopesTestCase(createTestCase(PyGithub.BlockingBuilder().OAuth(token_without_scopes).PerPage(4))):
     pass
 
 
-class SimpleOAuthWithScopesTestCase(createTestCase(PyGithub.Blocking.Builder.Builder().OAuth(token_with_scopes).PerPage(4))):
+class SimpleOAuthWithScopesTestCase(createTestCase(PyGithub.BlockingBuilder().OAuth(token_with_scopes).PerPage(4))):
     pass

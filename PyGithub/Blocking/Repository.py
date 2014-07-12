@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class Repository(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -46,7 +45,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.User.get_subscriptions`
     """
 
-    class AnonymousContributor(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class AnonymousContributor(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.get_contributors`
@@ -79,13 +78,15 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__type.value
 
-    class ContentCommit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class ContentCommit(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.create_file`
         """
 
         def _initAttributes(self, commit=None, content=None, **kwds):
+            import PyGithub.Blocking.File
+            import PyGithub.Blocking.GitCommit
             super(Repository.ContentCommit, self)._initAttributes(**kwds)
             self.__commit = rcv.Attribute("Repository.ContentCommit.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
             self.__content = rcv.Attribute("Repository.ContentCommit.content", rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), content)
@@ -104,7 +105,7 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__content.value
 
-    class Permissions(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class Permissions(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Repository.permissions`
@@ -967,7 +968,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -989,7 +989,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -1037,7 +1036,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Contributor` or :class:`.AnonymousContributor`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Contributor
 
         if anon is not None:
@@ -1062,7 +1060,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
-        import PyGithub.Blocking.BaseGithubObject
 
         if sort is not None:
             sort = snd.normalizeEnum(sort, "newest", "oldest", "stargazers")
@@ -1237,7 +1234,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -1259,7 +1255,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -1281,7 +1276,6 @@ class Repository(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Team
 
         if per_page is None:

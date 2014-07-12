@@ -12,8 +12,7 @@ class CodeGenerator:
         yield ""
         yield "import uritemplate"
         yield ""
-        yield "import PyGithub.Blocking.BaseGithubObject"
-        yield "import PyGithub.Blocking.PaginatedList"
+        yield "import PyGithub.Blocking._base_github_object as bgo"
         yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking._receive as rcv"
         if klass.base.module != "PyGithub.Blocking.BaseGithubObject":
@@ -24,7 +23,7 @@ class CodeGenerator:
 
         yield from (
             PS.Class(klass.name)
-            .base(klass.base.module + "." + klass.base.name)
+            .base((klass.base.module if klass.base.module != "PyGithub.Blocking.BaseGithubObject" else "bgo") + "." + klass.base.name)
             .docstring(self.generateDocStringForClass(klass))
             .elements(self.createClassStructure(s) for s in klass.structures)
             .elements(p for p in self.createClassPrivateParts(klass))
@@ -64,13 +63,14 @@ class CodeGenerator:
     def createClassStructure(self, structure):
         pyClass = (
             PS.Class(structure.name)
-            .base("PyGithub.Blocking.BaseGithubObject.SessionedGithubObject")
+            .base("bgo.SessionedGithubObject")
             .docstring(self.generateDocForFactories(structure))
             .element(
                 PS.Method("_initAttributes")
                 .parameters((a.name, "None") for a in structure.attributes)
                 .parameters((a, "None") for a in structure.deprecatedAttributes)
                 .parameter("**kwds")
+                .body(self.generateImportsForAllUnderlyingTypes(structure.containerClass.name, [a.type for a in structure.attributes]))
                 .body("super({}.{}, self)._initAttributes(**kwds)".format(structure.containerClass.name, structure.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in structure.attributes)
             )
@@ -121,7 +121,7 @@ class CodeGenerator:
         imports = set()
         for type in types:
             for t in type.underlyingTypes:
-                if t.category == "class" and t is not klass:
+                if t.category == "class" and t is not klass and t.module != "PyGithub.Blocking.BaseGithubObject":
                     imports.add(t.module)
         for i in sorted(imports):
             yield "import " + i

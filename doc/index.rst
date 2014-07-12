@@ -3,7 +3,7 @@ PyGithub
 
 PyGithub is a Python library to access the full `Github API v3 <http://developer.github.com/v3>`__.
 **This is the documentation of the v2**. While v2 is in alpha stage,
-you may want to continue to use `v1 <http://jacquev6.github.io/PyGithub/v1>`__ .
+you may want to continue to use `v1 <http://jacquev6.github.io/PyGithub/v1>`__.
 
 This documentation is structured as follows:
 

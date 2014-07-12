@@ -7,8 +7,8 @@ import datetime
 import logging
 log = logging.getLogger(__name__)
 
-import PyGithub.Blocking.Exceptions
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._exceptions as exn
+import PyGithub.Blocking._paginated_list as pgl
 
 """
 This module is a bit contrieved because of the following goals:
@@ -67,7 +67,7 @@ class Attribute(object):
                     self.__value = self.__conv(self.__value, value, *args, **kwds)
             except _ConversionException as e:
                 log.warn("Attribute " + self.__name + " is expected to be a " + self.__type + " but GitHub API v3 returned " + repr(value))
-                self.__exception = PyGithub.Blocking.Exceptions.BadAttributeException(self.__name, self.__type, value, e)
+                self.__exception = exn.BadAttributeException(self.__name, self.__type, value, e)
 
     @property
     def name(self):
@@ -152,7 +152,7 @@ class PaginatedListConverter(object):
         self.__content = content
 
     def __call__(self, previousValue, r):
-        return PyGithub.Blocking.PaginatedList.PaginatedList(self.__session, self.__content, r)
+        return pgl.PaginatedList(self.__session, self.__content, r)
 
     @property
     def desc(self):

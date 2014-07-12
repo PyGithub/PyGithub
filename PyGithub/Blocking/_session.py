@@ -10,7 +10,7 @@ import requests
 
 import PyGithub.Blocking.Github
 import PyGithub.Blocking._receive as rcv
-import PyGithub.Blocking.Exceptions
+import PyGithub.Blocking._exceptions as exn
 
 
 class Session(object):
@@ -117,21 +117,21 @@ class Session(object):
         status = response.status_code
         exceptionClass = None
         if status >= 400:
-            exceptionClass = PyGithub.Blocking.Exceptions.ClientErrorException
+            exceptionClass = exn.ClientErrorException
             if status == 401:
-                exceptionClass = PyGithub.Blocking.Exceptions.UnauthorizedException
+                exceptionClass = exn.UnauthorizedException
             if status == 403:
-                exceptionClass = PyGithub.Blocking.Exceptions.ForbiddenException
+                exceptionClass = exn.ForbiddenException
                 if self.RateLimit.remaining == 0:  # @todoBeta Check rate_limiting for search queries
-                    exceptionClass = PyGithub.Blocking.Exceptions.RateLimitExceededException
+                    exceptionClass = exn.RateLimitExceededException
             if status == 404:
-                exceptionClass = PyGithub.Blocking.Exceptions.ObjectNotFoundException
+                exceptionClass = exn.ObjectNotFoundException
                 if accept404:
                     exceptionClass = None
             if status == 422:
-                exceptionClass = PyGithub.Blocking.Exceptions.UnprocessableEntityException
+                exceptionClass = exn.UnprocessableEntityException
         if status >= 500:
-            exceptionClass = PyGithub.Blocking.Exceptions.ServerErrorException
+            exceptionClass = exn.ServerErrorException
         if exceptionClass is not None:
             raise exceptionClass(status, dict(response.headers), response.json())
 

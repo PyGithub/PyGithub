@@ -11,8 +11,7 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
@@ -246,7 +245,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -268,7 +266,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.User
 
         if per_page is None:
@@ -291,7 +288,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Gist`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Gist
 
         if since is not None:
@@ -346,7 +342,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Organization`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Organization
 
         if per_page is None:
@@ -391,7 +386,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Repository
 
         if sort is not None:
@@ -421,7 +415,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Repository
 
         if sort is not None:
@@ -448,7 +441,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Gist`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Gist
 
         if since is not None:
@@ -489,7 +481,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Repository
 
         if per_page is None:
@@ -511,7 +502,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Team`
         """
-        import PyGithub.Blocking.BaseGithubObject
         import PyGithub.Blocking.Team
 
         if per_page is None:

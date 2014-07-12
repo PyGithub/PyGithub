@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class Gist(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -37,7 +36,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.User.get_gists`
     """
 
-    class ChangeStatus(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class ChangeStatus(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GistCommit.change_status`
@@ -77,13 +76,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__total.value
 
-    class GistCommit(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class GistCommit(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Gist.get_commits`
         """
 
         def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
+            import PyGithub.Blocking.User
             super(Gist.GistCommit, self)._initAttributes(**kwds)
             self.__change_status = rcv.Attribute("Gist.GistCommit.change_status", rcv.StructureConverter(self.Session, Gist.ChangeStatus), change_status)
             self.__committed_at = rcv.Attribute("Gist.GistCommit.committed_at", rcv.DatetimeConverter, committed_at)
@@ -126,7 +126,7 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__version.value
 
-    class GistFile(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class GistFile(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Gist.files`
@@ -201,13 +201,14 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
             """
             return self.__type.value
 
-    class HistoryElement(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class HistoryElement(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Gist.history`
         """
 
         def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
+            import PyGithub.Blocking.User
             super(Gist.HistoryElement, self)._initAttributes(**kwds)
             self.__change_status = rcv.Attribute("Gist.HistoryElement.change_status", rcv.StructureConverter(self.Session, Gist.ChangeStatus), change_status)
             self.__committed_at = rcv.Attribute("Gist.HistoryElement.committed_at", rcv.DatetimeConverter, committed_at)
@@ -508,7 +509,6 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.GistCommit`
         """
-        import PyGithub.Blocking.BaseGithubObject
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -529,7 +529,6 @@ class Gist(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Gist`
         """
-        import PyGithub.Blocking.BaseGithubObject
 
         if per_page is None:
             per_page = self.Session.PerPage

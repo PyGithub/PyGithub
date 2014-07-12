@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class GitTree(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -29,7 +28,7 @@ class GitTree(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_git_tree`
     """
 
-    class GitSubmodule(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class GitSubmodule(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitTree.tree`

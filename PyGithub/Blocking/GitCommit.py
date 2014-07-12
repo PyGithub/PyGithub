@@ -11,13 +11,12 @@ log = logging.getLogger(__name__)
 
 import uritemplate
 
-import PyGithub.Blocking.BaseGithubObject
-import PyGithub.Blocking.PaginatedList
+import PyGithub.Blocking._base_github_object as bgo
 import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
+class GitCommit(bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -31,7 +30,7 @@ class GitCommit(PyGithub.Blocking.BaseGithubObject.UpdatableGithubObject):
       * :meth:`.Repository.get_git_commit`
     """
 
-    class Author(PyGithub.Blocking.BaseGithubObject.SessionedGithubObject):
+    class Author(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitCommit.author`
