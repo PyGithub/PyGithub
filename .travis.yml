@@ -1,7 +1,10 @@
 language: python
 python:
+  # 2.6 not supported because we use dict comprehensions
   - "2.7"
+  # 3.2 not supported because the Requests library seems to not work (not investigated deeply)
   - "3.3"
+  - "3.4"
 install:
   - pip install -r requirements.txt
   - pip install coveralls
