@@ -11,111 +11,132 @@ This cook book shows you everything about `gists <https://gist.github.com>`__ an
 
 Initialization::
 
+    >>> import datetime
     >>> import PyGithub
     >>> g = PyGithub.BlockingBuilder().Login("your_login", "your_password").Build()
 
 ..  Authenticate for doctest but don't show it in the doc
     >>> import GithubCredentials
     >>> g = PyGithub.BlockingBuilder().Login(GithubCredentials.login, GithubCredentials.password).Build()
+    >>> u = g.get_authenticated_user()
 
 ::
 
     >>> u = g.get_authenticated_user()
 
-Creating gists
---------------
+Creating and deleting gists
+---------------------------
 
-The simplest, personal, private gist, with one file::
+The simplest, personal, private gist, with one file and no description::
 
-    >>> gist = u.create_gist(files={"foo.txt":{"content": "barbaz"}})
+    >>> gist = u.create_gist(files={"foo.txt": {"content": "barbaz"}})
     >>> print gist.owner.login
     jacquev6
     >>> print gist.public
     False
+    >>> print len(gist.files)
+    1
+    >>> print gist.description
+    None
 
-..
+Deletion::
+
     >>> gist.delete()
 
-An anonymous gist::
+An anonymous, public gist, with several files and a description::
 
-    >>> gist = g.create_anonymous_gist()
+    >>> gist = g.create_anonymous_gist(files={"foo.txt": {"content": "barbaz"}, "bar.txt":{"content": "toto"}}, public=True, description="Created with PyGithub")
     >>> print gist.owner
     None
-
-.. Let's not polute GitHub
-    >>> gist.delete()
-    None
-
-A secret gist (works with personal and anonymous gists)::
-
-    >>> gist = u.create_gist(secret=True)
-    >>> print gist.secret
+    >>> print gist.public
     True
+    >>> print gist.description
+    Created with PyGithub
+    >>> print len(gist.files)
+    2
 
-..
-    >>> gist.delete()
-    None
-
-A gist with several files::
-
-    >>> gist = u.create_gist()
-
-..
-    >>> gist.delete()
-    None
+You can also fork an existing gist using :meth:`.Gist.create_fork`.
 
 Retrieving gists
 ----------------
 
-List public gists::
-
-    >>> g.get_public_gists()
-
 List personal gists::
 
-    >>> u.get_gists()
+    >>> for gist in u.get_gists():  # doctest: +ELLIPSIS
+    ...   print gist.description
+    ...
+    Test script for https://github.com/jacquev6/PyGithub/issues/194
+    Github API
+    Test gist for PyGithub
+    ...
+
+In addition to :meth:`.AuthenticatedUser.get_gists`, you can use :meth:`.AuthenticatedUser.get_starred_gists`, :meth:`.User.get_gists` and :meth:`.Github.get_public_gists` to retrieve lists of gists.
+
+Here are the gists modified by `Vincent Driessen <https://github.com/nvie>`__ since the begining of 2014. GitHub returns them ordered by descending creation date::
+
+    >>> for gist in g.get_user("nvie").get_gists(since=datetime.datetime(2014, 1, 1, 0, 0, 0)):
+    ...   print "{} ({}, {})".format(gist.description, gist.created_at, gist.updated_at)
+    ...
+    Really useful helper that I use constantly to force myself to write more efficient Django queries. (2013-11-29 08:59:02, 2014-04-22 10:02:20)
+    Which API is the nicest for the new RQ with concurrency? (2013-02-04 15:58:06, 2014-06-25 19:09:55)
+    Get Mountain Lion and Homebrew to Be Happy (2012-07-26 07:46:47, 2014-04-08 18:19:17)
+    A WSGI middleware wrapper to add gzip to your WSGI app (2012-05-22 15:11:17, 2014-01-29 14:12:19)
 
 Get a single gist::
 
-    >>> u.get_gist()
+    >>> gist = g.get_gist("5339374")
+    >>> print gist.id
+    5339374
+    >>> print gist.html_url  # Redirects to https://gist.github.com/jacquev6/5339374
+    https://gist.github.com/5339374
 
 Modifying gists
 ---------------
 
-Change attributes::
+Change description::
 
-    >>> gist.edit()
+    >>> print gist.description
+    Test gist for PyGithub
+    >>> gist.edit(description="Test gist for PyGithub - edited")
+    >>> print gist.description
+    Test gist for PyGithub - edited
 
-Add a file::
+..
+    >>> gist.edit(description="Test gist for PyGithub")
 
-    >>> gist.edit()
+Star and unstar::
 
-Delete a file::
-
-    >>> gist.edit()
-
-Rename a file::
-
-    >>> gist.edit()
-
-Starring and unstarring::
-
-    >>> gist.star()
+    >>> print gist.is_starred()
+    False
+    >>> gist.set_starred()
     >>> print gist.is_starred()
     True
-    >>> gist.unstar()
+    >>> gist.reset_starred()
     >>> print gist.is_starred()
     False
 
-Forking
--------
+Add a file (files not listed are kept unchanged)::
 
-    >>> fork = gist.create_fork()
+    >>> print gist.files.keys()
+    [u'baz.txt']
+    >>> gist.edit(files={"new.txt": {"content": "toto"}})
+    >>> print sorted(gist.files.keys())
+    [u'baz.txt', u'new.txt']
 
-..
-    >>> fork.delete()
+Move a file::
 
-Deleting gists
---------------
+    >>> gist.edit(files={"new.txt": {"content": "toto", "filename": "moved.txt"}})
+    >>> # For some reason, from time to time, the response to the PATCH request still contains new.txt. :meth:`.update` fixes that.
+    >>> gist.update() or True
+    True
+    >>> print sorted(gist.files.keys())
+    [u'baz.txt', u'moved.txt']
 
-    >>> gist.delete()
+Delete a file::
+
+    >>> gist.edit(files={"moved.txt": None})
+    >>> # Idem
+    >>> gist.update() or True
+    True
+    >>> print gist.files.keys()
+    [u'baz.txt']

@@ -45,10 +45,11 @@ def main():
     cov.start()
 
     families = []
-    families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
-    if "--unit" not in sys.argv:
+    if len(sys.argv) == 1 or "--unit" in sys.argv or "--all" in sys.argv:
+        families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
+    if len(sys.argv) == 1 or "--integ" in sys.argv or "--all" in sys.argv:
         families.append(TestFamily(cov, "integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
-    if "--all" in sys.argv:
+    if "--doc" in sys.argv or "--all" in sys.argv:
         families.append(TestFamily(cov, "doc_tests", "Doc tests", [os.path.join(baseDirectory, "*")]))
 
     for f in families:
