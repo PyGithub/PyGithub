@@ -101,7 +101,7 @@ class CodeGenerator:
                 .parameter("**kwds")
             )
             init.body(self.generateImportsForAllUnderlyingTypes(klass, [a.type for a in klass.attributes]))
-            yield (
+            yield (  # pragma no branch
                 init
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
@@ -297,9 +297,6 @@ class CodeGenerator:
 
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
         yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
-
-    def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeParameterSince(self, parameter):
         t = parameter.type.types[0]

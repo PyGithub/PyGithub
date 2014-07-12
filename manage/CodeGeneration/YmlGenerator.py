@@ -34,7 +34,7 @@ class YmlPrettyPrinter:
     def recList(self, items):
         for v in items:
             lines = list(self.rec(v))
-            yield from ["- " + lines[0]] + ["  " + l for l in lines[1:]]
+            yield from ["- " + lines[0]] + ["  " + l for l in lines[1:]]  # pragma no branch
 
     def recDict(self, items):
         for k, v in items:
@@ -42,7 +42,7 @@ class YmlPrettyPrinter:
             if len(lines) == 1 and not isinstance(v, (dict, list)):
                 yield k + ": " + lines[0]
             else:
-                yield from [k + ":"] + ["  " + l for l in lines]
+                yield from [k + ":"] + ["  " + l for l in lines]  # pragma no branch
 
 
 class YmlGenerator:
@@ -184,24 +184,17 @@ class YmlGenerator:
         return self.getMethod("createDataFor{}", type.__class__.__name__)(type)
 
     def createDataForUnionType(self, type):
-        if (
-            # @todoGeni Do something?
-            len(type.types) == 2 and type.types[0].name != "(string, string)" and type.types[1].name == "string"
-            or len(type.types) == 3 and type.types[1].name == "string" and type.types[2].name == "(string, string)"
-        ):
-            return self.createDataForType(type.types[0])
-        else:
-            types = [self.createDataForType(t) for t in type.types]
-            if all(isinstance(t, str) for t in types):
-                types = tuple(types)
-            data = collections.OrderedDict(union=types)
-            if type.key is not None:
-                data["key"] = type.key
-            if type.keys is not None:
-                data["keys"] = tuple(type.keys)
-            if type.converter is not None:
-                data["converter"] = type.converter
-            return data
+        types = [self.createDataForType(t) for t in type.types]
+        if all(isinstance(t, str) for t in types):
+            types = tuple(types)
+        data = collections.OrderedDict(union=types)
+        if type.key is not None:
+            data["key"] = type.key
+        if type.keys is not None:
+            data["keys"] = tuple(type.keys)
+        if type.converter is not None:
+            data["converter"] = type.converter
+        return data
 
     def createDataForNoneType(self, type):
         return "none"

@@ -128,7 +128,7 @@ class Definition(object):
             and className != "Github"
             and name not in ["get_repos", "get_users"]
         ):
-            print("WARNING:", className + "." + name, "returns a paginated list but does not have a per_page parameter")
+            print("WARNING:", className + "." + name, "returns a paginated list but does not have a per_page parameter")  # pragma no cover
         return Method(
             name=name,
             endPoints=self.__makeList(end_point, end_points),

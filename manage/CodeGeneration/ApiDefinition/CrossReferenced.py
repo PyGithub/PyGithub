@@ -200,22 +200,6 @@ class Class(AttributedType):
         for m in self.__methods:
             m._propagate()
 
-        dependencies = set()
-        if self.__base.name not in ["SessionedGithubObject", "UpdatableGithubObject"]:
-            dependencies.add(self.__base)
-
-        for s in self.__structures:
-            for a in s.attributes:
-                dependencies.update(a.type.underlyingTypes)
-
-        for m in self.__methods:
-            dependencies.update(m.returnType.underlyingTypes)
-
-        for a in self.attributes:
-            dependencies.update(a.type.underlyingTypes)
-
-        self.__dependencies = sorted((d for d in dependencies if d.category == "class" and d.name != "PaginatedList" and d.name != self.name), key=lambda c: c.name)
-
     def _finalize(self):
         AttributedType._finalize(self)
 
@@ -246,10 +230,6 @@ class Class(AttributedType):
     @property
     def methods(self):
         return self.__methods
-
-    @property
-    def dependencies(self):
-        return self.__dependencies
 
 
 class Structure(AttributedType, Member):
