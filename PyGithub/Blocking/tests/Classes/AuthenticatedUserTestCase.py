@@ -9,6 +9,12 @@ import PyGithub.Blocking
 import PyGithub.Blocking.tests.Framework as Framework
 
 
+class EnterpriseAdminAuthenticatedUserTestCase(Framework.createTestCase(PyGithub.BlockingBuilder().Enterprise("github.home.jacquev6.net").Login("ghe-admin", "password-admin-1"))):
+    def testAttributes(self):
+        u = self.g.get_authenticated_user()
+        self.assertIsNone(u.suspended_at)
+
+
 class AuthenticatedUserTestCase(Framework.SimpleLoginTestCase):
     def testAttributes(self):
         u = self.g.get_authenticated_user()

@@ -21,8 +21,9 @@ class Session(object):
     and then access its :attr:`.SessionedGithubObject.Session` attribute (or on any returned object).
     """
 
-    def __init__(self, authenticator, perPage, userAgent):
+    def __init__(self, authenticator, netloc, perPage, userAgent):
         self.__authenticator = authenticator
+        self.__netloc = netloc
         self.__perPage = perPage
         self.__userAgent = userAgent
         self.__anonymousRequestsSession = requests.Session()
@@ -83,6 +84,10 @@ class Session(object):
         return self.__request(self.__anonymousRequestsSession, *args, **kwds)
 
     def __request(self, requestsSession, verb, url, urlArguments=None, postArguments=None, headers=None, accept404=False):
+        # @todoAlpha Remove this hack, let classes know only about the path, and let Session decide about protocol and netloc
+        if self.__netloc is not None and url.startswith("https://api.github.com/"):
+            url = "http://" + self.__netloc + "/api/v3/" + url[23:]
+
         data = None
         if postArguments is not None:
             data = json.dumps(postArguments)

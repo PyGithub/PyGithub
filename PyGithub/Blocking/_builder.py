@@ -64,6 +64,7 @@ class Builder(object):
         self.__authenticator = _AnonymousAuthenticator()
         self.__perPage = None
         self.__userAgent = Builder.defaultUserAgent
+        self.__netloc = None
 
     def Login(self, login, password):
         """
@@ -77,6 +78,13 @@ class Builder(object):
         Use `OAuth authentication <http://developer.github.com/v3/oauth/>`_.
         """
         self.__authenticator = _OauthAuthenticator(token)
+        return self
+
+    def Enterprise(self, netloc):
+        """
+        Use the `GitHub Enterprise <https://enterprise.github.com/>`__ server with domain name or ip address `netloc`.
+        """
+        self.__netloc = netloc
         return self
 
     def PerPage(self, per_page):
@@ -99,6 +107,6 @@ class Builder(object):
         Build and return a new instance of :class:`.Github`.
         """
         return PyGithub.Blocking.Github.Github(
-            _session.Session(self.__authenticator, self.__perPage, self.__userAgent),
+            _session.Session(self.__authenticator, self.__netloc, self.__perPage, self.__userAgent),
             {}
         )
