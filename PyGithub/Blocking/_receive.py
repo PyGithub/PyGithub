@@ -118,7 +118,10 @@ class _DatetimeConverter(object):
             try:
                 return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
             except (ValueError, TypeError) as e:
-                raise _ConversionException(e)
+                try:
+                    return datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S+00:00")
+                except (ValueError, TypeError) as e:
+                    raise _ConversionException(e)
 
 
 DatetimeConverter = _DatetimeConverter()

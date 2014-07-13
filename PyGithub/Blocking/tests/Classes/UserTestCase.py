@@ -2,91 +2,97 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
-import datetime
-
-import PyGithub.Blocking.tests.Framework as Framework
+from PyGithub.Blocking.tests.Framework import *
 
 
-class UserTestCase(Framework.SimpleLoginTestCase):
-    def testAttributesOfAuthenticatedUser(self):
-        u = self.g.get_user("jacquev6")
-        self.assertEqual(u.avatar_url, "https://gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https%3A%2F%2Fidenticons.github.com%2Ffadfb5f7088ef66579d198a3c9a4935e.png&r=x")
-        self.assertEqual(u.blog, "http://vincent-jacques.net")
+# @todoAlpha What is happening when a suspended enterprise user tries to do anything?
+
+class UserAttributes(TestCase):
+    @Enterprise.User(1)
+    def testEnterpriseUserOnUser(self):
+        u = self.g.get_user("ghe-user-2")
+        self.assertEqual(u.avatar_url, "http://github.home.jacquev6.net/identicons/e4da3b7fbbce2345d7772b0674a318d5.png")
+        self.assertEqual(u.blog, "http://jacquev6.net/ghe-user-2")
+        self.assertIsNone(u.collaborators)
+        self.assertIsNone(u.company)
+        self.assertEqual(u.created_at, datetime.datetime(2014, 7, 13, 1, 36, 27))
+        self.assertIsNone(u.disk_usage)
+        self.assertEqual(u.email, "ghe-user-2@jacquev6.net")
+        self.assertEqual(u.events_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/events{/privacy}")
+        self.assertEqual(u.followers, 0)
+        self.assertEqual(u.followers_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/followers")
+        self.assertEqual(u.following, 0)
+        self.assertEqual(u.following_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/following{/other_user}")
+        self.assertEqual(u.gists_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/gists{/gist_id}")
+        self.assertEqual(u.gravatar_id, "193685b48463fc3ddb5d694e80118276")
+        self.assertFalse(u.hireable)
+        self.assertEqual(u.html_url, "http://github.home.jacquev6.net/ghe-user-2")
+        self.assertEqual(u.id, 5)
+        self.assertEqual(u.location, "Earth")
+        self.assertEqual(u.login, "ghe-user-2")
+        self.assertEqual(u.name, "Two Ghe")
+        self.assertEqual(u.organizations_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/orgs")
+        self.assertIsNone(u.owned_private_repos)
+        self.assertIsNone(u.plan)
+        self.assertIsNone(u.private_gists)
+        self.assertEqual(u.public_gists, 0)
+        self.assertEqual(u.public_repos, 0)
+        self.assertEqual(u.received_events_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/received_events")
+        self.assertEqual(u.repos_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/repos")
+        self.assertFalse(u.site_admin)
+        self.assertEqual(u.starred_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/starred{/owner}{/repo}")
+        self.assertEqual(u.subscriptions_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2/subscriptions")
+        self.assertIsNone(u.suspended_at)
+        self.assertEqual(u.type, "User")
+        self.assertEqual(u.updated_at, datetime.datetime(2014, 7, 13, 14, 7, 2))
+        self.assertEqual(u.url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-2")
+
+    @Enterprise.User(2)
+    def testEnterpriseUserOnSelf(self):
+        u = self.g.get_user("ghe-user-2")
         self.assertEqual(u.collaborators, 0)
-        self.assertEqual(u.company, "Amazon")
-        self.assertEqual(u.created_at, datetime.datetime(2010, 7, 9, 6, 10, 6))
-        self.assertEqual(u.disk_usage, 91985)
-        self.assertEqual(u.email, "vincent@vincent-jacques.net")
-        self.assertEqual(u.events_url, "https://api.github.com/users/jacquev6/events{/privacy}")
-        self.assertEqual(u.followers, 30)
-        self.assertEqual(u.followers_url, "https://api.github.com/users/jacquev6/followers")
-        self.assertEqual(u.following, 43)
-        self.assertEqual(u.following_url, "https://api.github.com/users/jacquev6/following{/other_user}")
-        self.assertEqual(u.gists_url, "https://api.github.com/users/jacquev6/gists{/gist_id}")
-        self.assertEqual(u.gravatar_id, "b68de5ae38616c296fa345d2b9df2225")
-        self.assertEqual(u.hireable, False)
-        self.assertEqual(u.html_url, "https://github.com/jacquev6")
-        self.assertEqual(u.id, 327146)
-        self.assertEqual(u.location, "Seattle, WA, United States")
-        self.assertEqual(u.login, "jacquev6")
-        self.assertEqual(u.name, "Vincent Jacques")
-        self.assertEqual(u.organizations_url, "https://api.github.com/users/jacquev6/orgs")
-        self.assertEqual(u.owned_private_repos, 3)
-        self.assertEqual(u.plan.collaborators, 1)
+        self.assertEqual(u.disk_usage, 0)
+        self.assertEqual(u.owned_private_repos, 0)
+        self.assertEqual(u.private_gists, 0)
+        self.assertEqual(u.total_private_repos, 0)
+
+    @Enterprise.User(1)
+    def testEnterpriseUserOnSuspendedUser(self):
+        u = self.g.get_user("ghe-suspended-1")
+        self.assertEqual(u.suspended_at, datetime.datetime(2014, 7, 13, 13, 56, 27))
+
+    @Enterprise.User(1)
+    def testEnterpriseUserOnDiscreteUser(self):
+        u = self.g.get_user("ghe-user-3")
+        self.assertIsNone(u.name)
+        self.assertIsNone(u.location)
+        self.assertIsNone(u.email)
+        self.assertIsNone(u.blog)
+        self.assertIsNone(u.hireable)
+
+    @Enterprise.User(1)
+    def testEnterpriseUserOnAdmin(self):
+        u = self.g.get_user("ghe-admin-1")
+        self.assertTrue(u.site_admin)
+
+    @DotCom
+    def testDotComUserOnUser(self):
+        u = self.g.get_user("nvie")
+        self.assertEqual(u.url, "https://api.github.com/users/nvie")
+        self.assertEqual(u.company, "3rd Cloud")
+        self.assertTrue(u.hireable)
+        self.assertIsNone(u.suspended_at)
+
+    @DotCom
+    def testDotComUserOnSelf(self):
+        u = self.g.get_user("jacquev6")
+        self.assertEqual(u.plan.collaborators, 0)
         self.assertEqual(u.plan.name, "micro")
         self.assertEqual(u.plan.private_repos, 5)
         self.assertEqual(u.plan.space, 614400)
-        self.assertEqual(u.private_gists, 6)
-        self.assertEqual(u.public_gists, 5)
-        self.assertEqual(u.public_repos, 19)
-        self.assertEqual(u.received_events_url, "https://api.github.com/users/jacquev6/received_events")
-        self.assertEqual(u.repos_url, "https://api.github.com/users/jacquev6/repos")
-        self.assertEqual(u.site_admin, False)
-        self.assertEqual(u.starred_url, "https://api.github.com/users/jacquev6/starred{/owner}{/repo}")
-        self.assertEqual(u.subscriptions_url, "https://api.github.com/users/jacquev6/subscriptions")
-        self.assertEqual(u.total_private_repos, 3)
-        self.assertEqual(u.type, "User")
-        self.assertEqual(u.updated_at, datetime.datetime(2013, 12, 20, 6, 28, 1))
-        self.assertEqual(u.url, "https://api.github.com/users/jacquev6")
 
-    def testAttributesOfOtherUser(self):
-        u = self.g.get_user("nvie")
-        self.assertEqual(u.avatar_url, "https://gravatar.com/avatar/466ef7561a0b100dc5a1021959962d28?d=https%3A%2F%2Fidenticons.github.com%2Fe6d0513ce49cc06cb956251623cb8fd9.png&r=x")
-        self.assertEqual(u.blog, "http://nvie.com")
-        self.assertEqual(u.collaborators, None)
-        self.assertEqual(u.company, "3rd Cloud")
-        self.assertEqual(u.created_at, datetime.datetime(2009, 5, 12, 21, 19, 38))
-        self.assertEqual(u.disk_usage, None)
-        self.assertEqual(u.email, "vincent@3rdcloud.com")
-        self.assertEqual(u.events_url, "https://api.github.com/users/nvie/events{/privacy}")
-        self.assertEqual(u.followers, 605)
-        self.assertEqual(u.followers_url, "https://api.github.com/users/nvie/followers")
-        self.assertEqual(u.following, 45)
-        self.assertEqual(u.following_url, "https://api.github.com/users/nvie/following{/other_user}")
-        self.assertEqual(u.gists_url, "https://api.github.com/users/nvie/gists{/gist_id}")
-        self.assertEqual(u.gravatar_id, "466ef7561a0b100dc5a1021959962d28")
-        self.assertEqual(u.hireable, True)
-        self.assertEqual(u.html_url, "https://github.com/nvie")
-        self.assertEqual(u.id, 83844)
-        self.assertEqual(u.location, "Netherlands")
-        self.assertEqual(u.login, "nvie")
-        self.assertEqual(u.name, "Vincent Driessen")
-        self.assertEqual(u.organizations_url, "https://api.github.com/users/nvie/orgs")
-        self.assertEqual(u.owned_private_repos, None)
-        self.assertEqual(u.plan, None)
-        self.assertEqual(u.private_gists, None)
-        self.assertEqual(u.public_gists, 39)
-        self.assertEqual(u.public_repos, 92)
-        self.assertEqual(u.received_events_url, "https://api.github.com/users/nvie/received_events")
-        self.assertEqual(u.repos_url, "https://api.github.com/users/nvie/repos")
-        self.assertEqual(u.site_admin, False)
-        self.assertEqual(u.starred_url, "https://api.github.com/users/nvie/starred{/owner}{/repo}")
-        self.assertEqual(u.subscriptions_url, "https://api.github.com/users/nvie/subscriptions")
-        self.assertEqual(u.total_private_repos, None)
-        self.assertEqual(u.type, "User")
-        self.assertEqual(u.updated_at, datetime.datetime(2013, 12, 20, 6, 27, 56))
-        self.assertEqual(u.url, "https://api.github.com/users/nvie")
 
+class UserTestCase(SimpleLoginTestCase):
     def testGetFollowers(self):
         followers = self.g.get_user("nvie").get_followers()
         self.assertEqual(followers[0].login, "vidbina")
