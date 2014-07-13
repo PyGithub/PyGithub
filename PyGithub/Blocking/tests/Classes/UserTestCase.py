@@ -8,6 +8,13 @@ from PyGithub.Blocking.tests.Framework import *
 # @todoAlpha What is happening when a suspended enterprise user tries to do anything?
 
 class UserAttributes(TestCase):
+    """
+    Preconditions on GitHub Enterprise:
+    * ghe-user-2 has set their name/location/blog
+    * ghe-user-3 has not
+    * ghe-suspended-1 is suspended (!)
+    """
+
     @Enterprise.User(1)
     def testEnterpriseUserOnUser(self):
         u = self.g.get_user("ghe-user-2")
@@ -92,83 +99,142 @@ class UserAttributes(TestCase):
         self.assertEqual(u.plan.space, 614400)
 
 
-class UserTestCase(SimpleLoginTestCase):
-    def testGetFollowers(self):
-        followers = self.g.get_user("nvie").get_followers()
-        self.assertEqual(followers[0].login, "vidbina")
-        self.assertEqual(followers[1].login, "nirmalkumarv")
+class UserFollowing(TestCase):
+    """
+    Preconditions on GitHub Enterprise:
+    * ghe-user-1 is following everyone
+    * everyone follows ghe-user-3
+    """
 
-    def testGetFollowers_allParameters(self):
-        followers = self.g.get_user("nvie").get_followers(per_page=3)
-        self.assertEqual(followers[0].login, "vidbina")
-        self.assertEqual(followers[1].login, "nirmalkumarv")
-
+    @Enterprise.User(2)
     def testGetFollowing(self):
-        following = self.g.get_user("nvie").get_following()
-        self.assertEqual(following[0].login, "defunkt")
-        self.assertEqual(following[1].login, "brosner")
+        user = self.g.get_user("ghe-user-1")
+        self.assertEqual(user.following, 4)
+        following = user.get_following()
+        self.assertEqual([f.login for f in following], ["ghe-admin-1", "ghe-user-2", "ghe-user-3", "ghe-admin-2"])
 
+    @Enterprise.User(2)
     def testGetFollowing_allParameters(self):
-        following = self.g.get_user("nvie").get_following(per_page=3)
-        self.assertEqual(following[0].login, "defunkt")
-        self.assertEqual(following[1].login, "brosner")
+        user = self.g.get_user("ghe-user-1")
+        self.assertEqual(user.following, 4)
+        following = user.get_following(per_page=2)
+        self.assertEqual([f.login for f in following], ["ghe-admin-1", "ghe-user-2", "ghe-user-3", "ghe-admin-2"])
 
-    def testGetOrgs(self):
-        orgs = self.g.get_user("defunkt").get_orgs()
-        self.assertEqual(orgs[0].login, "github")
-        self.assertEqual(orgs[1].login, "mustache")
+    @Enterprise.User(2)
+    def testGetFollowers(self):
+        user = self.g.get_user("ghe-user-3")
+        self.assertEqual(user.followers, 4)
+        followers = user.get_followers()
+        self.assertEqual([f.login for f in followers], ["ghe-admin-1", "ghe-user-1", "ghe-user-2", "ghe-admin-2"])
 
-    def testGetOrgs_allParameters(self):
-        orgs = self.g.get_user("defunkt").get_orgs(per_page=3)
-        self.assertEqual(orgs[0].login, "github")
-        self.assertEqual(orgs[1].login, "mustache")
+    @Enterprise.User(2)
+    def testGetFollowers_allParameters(self):
+        user = self.g.get_user("ghe-user-3")
+        self.assertEqual(user.followers, 4)
+        followers = user.get_followers(per_page=2)
+        self.assertEqual([f.login for f in followers], ["ghe-user-1", "ghe-admin-1", "ghe-admin-2", "ghe-user-2"])
 
-    def testGetRepo(self):
-        repo = self.g.get_user("nvie").get_repo("gitflow")
-        self.assertEqual(repo.full_name, "nvie/gitflow")
-
-    def testGetRepos(self):
-        repos = self.g.get_user("nvie").get_repos()
-        self.assertEqual(repos[0].name, "activerecord-fetching-for-core-data")
-        self.assertEqual(repos[1].name, "ADCtheme")
-
-    def testGetRepos_allParameters(self):
-        repos = self.g.get_user("nvie").get_repos(type="forks", sort="created", direction="desc", per_page=3)
-        self.assertEqual(repos[0].name, "pyflakes")
-        self.assertEqual(repos[1].name, "homebrew-autoenv")
-
-    def testGetStarred(self):
-        repos = self.g.get_user("nvie").get_starred()
-        self.assertEqual(repos[0].full_name, "alfredodeza/pytest.vim")
-        self.assertEqual(repos[1].full_name, "AndrewDryga/jQuery.Textarea.Autoresize")
-
-    def testGetStarred_allParameters(self):
-        repos = self.g.get_user("nvie").get_starred(sort="updated", direction="desc", per_page=3)
-        self.assertEqual(repos[0].full_name, "github/hub")
-        self.assertEqual(repos[1].full_name, "holman/spark")
-
-    def testGetSubscriptions(self):
-        repos = self.g.get_user("nvie").get_subscriptions()
-        self.assertEqual(repos[0].full_name, "ask/carrot")
-        self.assertEqual(repos[1].full_name, "nvie/git-it")
-
-    def testGetSubscriptions_allParameters(self):
-        repos = self.g.get_user("nvie").get_subscriptions(per_page=3)
-        self.assertEqual(repos[0].full_name, "ask/carrot")
-        self.assertEqual(repos[1].full_name, "nvie/git-it")
-
+    @Enterprise.User(2)
     def testHasInFollowing(self):
-        nvie = self.g.get_user("nvie")
-        jacquev6 = self.g.get_user("jacquev6")
-        self.assertTrue(jacquev6.has_in_following("nvie"))
-        self.assertFalse(nvie.has_in_following("jacquev6"))
+        user1 = self.g.get_user("ghe-user-1")
+        user3 = self.g.get_user("ghe-user-3")
+        self.assertTrue(user1.has_in_following(user3))
+        self.assertFalse(user3.has_in_following(user1))
 
+
+class UserMisc(TestCase):
+    """
+    Preconditions on GitHub Enterprise:
+    * ghe-user-1 has two keys
+    """
+
+    @DotCom  # To cover updating the 'plan' attribute
+    def testUpdate(self):
+        user = self.g.get_user("jacquev6")
+        authUser = self.g.get_authenticated_user()
+        self.assertEqual(user.name, "Vincent Jacques")
+        authUser.edit(name="Vincent Jacques - edited")
+        self.assertTrue(user.update())
+        self.assertEqual(user.name, "Vincent Jacques - edited")
+        self.assertFalse(user.update())
+        authUser.edit(name="Vincent Jacques")
+
+    @Enterprise.User(2)
     def testGetKeys(self):
-        keys = self.g.get_user("nvie").get_keys()
-        self.assertEqual(len(keys), 5)
-        self.assertEqual(keys[0].id, 112610)
-        self.assertEqual(keys[1].id, 116764)
+        user = self.g.get_user("ghe-user-1")
+        keys = user.get_keys()
+        self.assertEqual([k.id for k in keys], [1, 3])
 
+
+class UserOrganizations(TestCase):
+    """
+    Preconditions on GitHub Enterprise:
+    * ghe-user-1 is a private member of ghe-org-1 and a public member of ghe-org-2
+    """
+
+    @Enterprise.User(2)
+    def testGetOrgs(self):
+        user = self.g.get_user("ghe-user-1")
+        orgs = user.get_orgs()
+        self.assertEqual([o.login for o in orgs], ["ghe-org-2"])
+
+    @Enterprise.User(1)
+    def testGetSelfOrgs_allParameters(self):
+        user = self.g.get_user("ghe-user-1")
+        orgs = user.get_orgs(per_page=1)
+        self.assertEqual([o.login for o in orgs], ["ghe-org-1", "ghe-org-2"])
+
+
+class UserRepositories(TestCase):
+    """
+    Preconditions on GitHub Enterprise:
+    * ghe-user-1 has a two public repos repo-user-1-1 and repo-user-1-2 and one private repo repo-user-1-3
+    * ghe-user-3 has starred repo-user-1-1 and starred and subscribed to repo-user-1-2
+    """
+
+    @Enterprise.User(2)
+    def testGetRepo(self):
+        repo = self.g.get_user("ghe-user-1").get_repo("repo-user-1-1")
+        self.assertEqual(repo.full_name, "ghe-user-1/repo-user-1-1")
+
+    @Enterprise.User(2)
+    def testGetOrgs(self):
+        user = self.g.get_user("ghe-user-1")
+        repos = user.get_repos()
+        self.assertEqual([r.name for r in repos], ["repo-user-1-1", "repo-user-1-2"])
+
+    @Enterprise.User(1)
+    def testGetSelfRepos_allParameters(self):
+        user = self.g.get_user("ghe-user-1")
+        repos = user.get_repos(type="sources", sort="created", direction="desc", per_page=1)
+        self.assertEqual([r.name for r in repos], ["repo-user-1-2", "repo-user-1-1"])
+
+    @Enterprise.User(2)
+    def testGetStarred(self):
+        user = self.g.get_user("ghe-user-3")
+        repos = user.get_starred()
+        self.assertEqual([r.name for r in repos], ["repo-user-1-2", "repo-user-1-1"])
+
+    @Enterprise.User(2)
+    def testGetStarred_allParameters(self):
+        user = self.g.get_user("ghe-user-3")
+        repos = user.get_starred(sort="updated", direction="asc", per_page=3)
+        self.assertEqual([r.name for r in repos], ["repo-user-1-1", "repo-user-1-2"])
+
+    @Enterprise.User(2)
+    def testGetSubscriptions(self):
+        user = self.g.get_user("ghe-user-3")
+        repos = user.get_subscriptions()
+        self.assertEqual([r.name for r in repos], ["repo-user-1-2"])
+
+    @Enterprise.User(2)
+    def testGetSubscriptions_allParameters(self):
+        user = self.g.get_user("ghe-user-3")
+        repos = user.get_subscriptions(per_page=3)
+        self.assertEqual([r.name for r in repos], ["repo-user-1-2"])
+
+
+class UserTestCase(SimpleLoginTestCase):
     def testGetGists(self):
         gists = list(self.g.get_user("nvie").get_gists())
         self.assertEqual(len(gists), 39)
