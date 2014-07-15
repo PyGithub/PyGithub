@@ -87,6 +87,7 @@ class Definition(object):
         assert isinstance(name, str), name
         assert isinstance(base, (type(None), str)), base
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
+        # @todoAlpha Warn if base is updatable but class is not
         if not updatable and any(a["name"] == "url" for a in attributes):
             print("WARNING:", name, "has a url attribute but is not updatable")
         return Class(
