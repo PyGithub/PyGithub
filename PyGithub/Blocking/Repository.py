@@ -888,6 +888,25 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json())
 
+    def create_git_tree(self, tree):
+        """
+        Calls the `POST /repos/:owner/:repo/git/trees <http://developer.github.com/v3/git/trees#create-a-tree>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.GitTree.create_modified_copy`
+
+        :param tree: mandatory :class:`list` of :class:`dict`
+        :rtype: :class:`.GitTree`
+        """
+        import PyGithub.Blocking.GitTree
+
+        tree = snd.normalizeList(snd.normalizeDict, tree)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
+        postArguments = snd.dictionary(tree=tree)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree)(None, r.json(), r.headers.get("ETag"))
+
     def create_key(self, title, key):
         """
         Calls the `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys#create>`__ end point.

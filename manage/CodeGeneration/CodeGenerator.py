@@ -298,6 +298,9 @@ class CodeGenerator:
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
         yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
 
+    def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
+        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+
     def generateCodeToNormalizeParameterSince(self, parameter):
         t = parameter.type.types[0]
         yield "{} = snd.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)

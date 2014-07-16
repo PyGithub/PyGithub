@@ -237,6 +237,23 @@ methods:
         value: parameter encoding
     return_from: json
     return_type: GitBlob
+  - name: create_git_tree
+    end_point: POST /repos/:owner/:repo/git/trees
+    parameters:
+      - name: tree
+        type:
+          container: list
+          content: dict
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: tree
+        value: parameter tree
+    return_type: GitTree
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:
