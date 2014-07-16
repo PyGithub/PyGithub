@@ -9,7 +9,6 @@
 /authorizations: [GET, POST]
 /authorizations/:id: [DELETE, GET, PATCH]
 /authorizations/clients/:client_id: [PUT]
-/feeds: [GET]
 /hooks: [GET]
 /hooks/:name: [GET]
 /hub: [POST]
