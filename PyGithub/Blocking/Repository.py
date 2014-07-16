@@ -888,6 +888,54 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json())
 
+    def create_git_commit(self, tree, message, parents, commiter=None, author=None):
+        """
+        Calls the `POST /repos/:owner/:repo/git/commits <http://developer.github.com/v3/git/commits#create-a-commit>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
+        :param message: mandatory :class:`string`
+        :param parents: mandatory :class:`list` of :class:`.GitCommit`
+        :param commiter: optional :class:`GitAuthor`
+        :param author: optional :class:`GitAuthor`
+        :rtype: :class:`.GitCommit`
+        """
+        import PyGithub.Blocking.GitCommit
+
+        tree = snd.normalizeGitTreeSha(tree)
+        message = snd.normalizeString(message)
+        parents = snd.normalizeList(snd.normalizeGitCommitFullName, parents)
+        if commiter is not None:
+            commiter = snd.normalizeGitAuthor(commiter)
+        if author is not None:
+            author = snd.normalizeGitAuthor(author)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/commits", owner=self.owner.login, repo=self.name)
+        postArguments = snd.dictionary(tree=tree, message=message, commiter=commiter, author=author, parents=parents)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
+
+    def create_git_ref(self, ref, sha):
+        """
+        Calls the `POST /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs#create-a-reference>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param ref: mandatory :class:`string`
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.GitRef`
+        """
+        import PyGithub.Blocking.GitRef
+
+        ref = snd.normalizeString(ref)
+        sha = snd.normalizeString(sha)
+
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/refs", owner=self.owner.login, repo=self.name)
+        postArguments = snd.dictionary(ref=ref, sha=sha)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
+
     def create_git_tree(self, tree):
         """
         Calls the `POST /repos/:owner/:repo/git/trees <http://developer.github.com/v3/git/trees#create-a-tree>`__ end point.

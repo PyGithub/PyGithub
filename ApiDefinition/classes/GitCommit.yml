@@ -26,5 +26,7 @@ attributes:
     type: string
   - name: tree
     type: GitTree
+  - name: type
+    type: string
   - name: url
     type: string

@@ -292,6 +292,10 @@ class Method(Member):
                 unimplementedParameters.remove("bio")
             if self.containerClass.name == "Repository" and self.__name == "edit":
                 unimplementedParameters.remove("has_downloads")
+            if self.containerClass.name == "Repository" and self.__name == "create_git_commit":
+                unimplementedParameters.remove("name")
+                unimplementedParameters.remove("date")
+                unimplementedParameters.remove("email")
             if self.containerClass.name == "Repository" and self.__name == "create_file":
                 unimplementedParameters.remove("sha")
                 unimplementedParameters.remove("name")
@@ -307,6 +311,13 @@ class Method(Member):
                 unimplementedParameters.remove("ref")
             if self.containerClass.name == "Gist" and self.__name in ["edit"]:
                 unimplementedParameters.remove("filename")
+                unimplementedParameters.remove("content")
+            if self.containerClass.name == "Repository" and self.__name == "create_git_tree" or self.containerClass.name == "GitTree" and self.__name == "create_modified_copy":
+                unimplementedParameters.remove("sha")
+                unimplementedParameters.remove("mode")
+                unimplementedParameters.remove("base_tree")
+                unimplementedParameters.remove("path")
+                unimplementedParameters.remove("type")
                 unimplementedParameters.remove("content")
             if len(unimplementedParameters) > 0:
                 print("WARNING:", self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))

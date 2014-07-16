@@ -27,6 +27,8 @@ class GitCommit(bgo.UpdatableGithubObject):
       * :meth:`.File.delete`
       * :meth:`.File.edit`
       * :attr:`.GitCommit.parents`
+      * :attr:`.GitRef.object`
+      * :meth:`.Repository.create_git_commit`
       * :meth:`.Repository.get_git_commit`
     """
 
@@ -64,7 +66,7 @@ class GitCommit(bgo.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
         self.__author = rcv.Attribute("GitCommit.author", rcv.StructureConverter(self.Session, GitCommit.Author), author)
@@ -74,9 +76,10 @@ class GitCommit(bgo.UpdatableGithubObject):
         self.__parents = rcv.Attribute("GitCommit.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, GitCommit)), parents)
         self.__sha = rcv.Attribute("GitCommit.sha", rcv.StringConverter, sha)
         self.__tree = rcv.Attribute("GitCommit.tree", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
+        self.__type = rcv.Attribute("GitCommit.type", rcv.StringConverter, type)
         self.__url = rcv.Attribute("GitCommit.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
         self.__committer.update(committer)
@@ -85,6 +88,7 @@ class GitCommit(bgo.UpdatableGithubObject):
         self.__parents.update(parents)
         self.__sha.update(sha)
         self.__tree.update(tree)
+        self.__type.update(type)
         self.__url.update(url)
 
     @property
@@ -142,6 +146,14 @@ class GitCommit(bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__tree.needsLazyCompletion)
         return self.__tree.value
+
+    @property
+    def type(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__type.needsLazyCompletion)
+        return self.__type.value
 
     @property
     def url(self):

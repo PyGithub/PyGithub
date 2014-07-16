@@ -1,0 +1,26 @@
+updatable: true
+attributes:
+  - name: object
+    type: GitCommit
+  - name: ref
+    type: string
+  - name: sha
+    type: string
+  - name: url
+    type: string
+methods:
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo/git/refs/:ref
+    optional_parameters:
+      - name: sha
+        type: string
+      - name: force
+        type: bool
+    url_template: attribute url
+    post_arguments:
+      - name: sha
+        value: parameter sha
+      - name: force
+        value: parameter force
+    effect: update
+    return_type: none

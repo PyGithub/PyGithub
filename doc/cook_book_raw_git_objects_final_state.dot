@@ -1,0 +1,40 @@
+digraph G {
+    rankdir="LR";
+    node[shape="box"];
+
+    subgraph {
+        node[color="red"];
+        rank="same";
+        new[label="new file"];
+        v1[label="version 1"];
+    };
+
+    subgraph {
+        node[color="blue"];
+        tree_2[label="tree"];
+        tree_1[label="tree"];
+    };
+
+    subgraph {
+        node[color="green"];
+        rank="same";
+        commit_2[label="second commit"];
+        commit_1[label="first commit"];
+    };
+
+    subgraph {
+        node[color="grey"];
+        rank="same";
+        feature[label="refs/heads/feature"];
+    };
+
+    feature -> commit_2;
+    commit_2 -> commit_1;
+
+    commit_1 -> tree_1;
+    tree_1 -> v1[label="test.txt"];
+
+    commit_2 -> tree_2;
+    tree_2 -> v1[label="test.txt"];
+    tree_2 -> new[label="new.txt"];
+}

@@ -237,6 +237,59 @@ methods:
         value: parameter encoding
     return_from: json
     return_type: GitBlob
+  - name: create_git_commit
+    end_point: POST /repos/:owner/:repo/git/commits
+    parameters:
+      - name: tree
+        orig: GitTree.sha
+      - name: message
+        type: string
+      - name: parents
+        type:
+          container: list
+          content: GitCommit
+    optional_parameters:
+      - name: commiter
+        type: GitAuthor
+      - name: author
+        type: GitAuthor
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: tree
+        value: parameter tree
+      - name: message
+        value: parameter message
+      - name: commiter
+        value: parameter commiter
+      - name: author
+        value: parameter author
+      - name: parents
+        value: parameter parents
+    return_type: GitCommit
+  - name: create_git_ref
+    end_point: POST /repos/:owner/:repo/git/refs
+    parameters:
+      - name: ref
+        type: string
+      - name: sha
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: ref
+        value: parameter ref
+      - name: sha
+        value: parameter sha
+    return_type: GitRef
   - name: create_git_tree
     end_point: POST /repos/:owner/:repo/git/trees
     parameters:

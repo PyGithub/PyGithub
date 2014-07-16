@@ -831,7 +831,8 @@ POST /repos/:owner/:repo/git/commits
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/commits#create-a-commit>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_git_commit`
 
 GET /repos/:owner/:repo/git/commits/:sha
 ----------------------------------------
@@ -853,7 +854,8 @@ POST /repos/:owner/:repo/git/refs
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/refs#create-a-reference>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_git_ref`
 
 DELETE /repos/:owner/:repo/git/refs/:ref
 ----------------------------------------
@@ -874,7 +876,8 @@ PATCH /repos/:owner/:repo/git/refs/:ref
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/refs#update-a-reference>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.GitRef.edit`
 
 POST /repos/:owner/:repo/git/tags
 ---------------------------------

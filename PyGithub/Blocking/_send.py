@@ -128,8 +128,10 @@ def normalizeEnum(s, *values):
 
 
 def normalizeList(normalizeElement, l):
-    assert normalizeElement is normalizeRepositoryFullName
-    return ["/".join(normalizeElement(e)) for e in l]
+    if normalizeElement is normalizeRepositoryFullName:
+        return ["/".join(normalizeElement(e)) for e in l]
+    else:
+        return [normalizeElement(e) for e in l]
 
 
 def normalizeGitIgnoreTemplateName(tmpl):
@@ -154,5 +156,29 @@ def normalizeDatetime(d):
     # @todoAlpha Should we parse strings into datetime here?
     if isinstance(d, datetime.datetime):
         return d.isoformat() + "Z"  # @todoAlpha Use utcoffset? https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat
+    else:
+        raise TypeError()
+
+
+def normalizeDict(d):
+    return d
+
+
+def normalizeGitTreeSha(tree):
+    import PyGithub.Blocking.GitTree
+    if isinstance(tree, PyGithub.Blocking.GitTree.GitTree):
+        return tree.sha
+    elif isinstance(tree, str):
+        return tree
+    else:
+        raise TypeError()
+
+
+def normalizeGitCommitFullName(commit):  # @todoAlpha Rename normalizeGitCommitSha
+    import PyGithub.Blocking.GitCommit
+    if isinstance(commit, PyGithub.Blocking.GitCommit.GitCommit):
+        return commit.sha
+    elif isinstance(commit, str):
+        return commit
     else:
         raise TypeError()

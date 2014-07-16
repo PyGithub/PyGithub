@@ -18,7 +18,6 @@ Initialization::
 ..  Authenticate for doctest but don't show it in the doc
     >>> import GithubCredentials
     >>> g = PyGithub.BlockingBuilder().Login(GithubCredentials.login, GithubCredentials.password).Build()
-    >>> u = g.get_authenticated_user()
 
 ::
 
@@ -140,3 +139,77 @@ Delete a file::
     True
     >>> print gist.files.keys()
     [u'baz.txt']
+
+Working with raw Git objects
+============================
+
+This cook book shows you how to manipulate raw `Git objects <https://developer.github.com/v3/git>`__. Do not forget that higher-level functions like :meth:`.File.edit` are available. If you really need to use these low-level functions and are not too familiar with git internals, you may want to read `the "Git Internal Objects" chapter of Pro Git <http://git-scm.com/book/en/Git-Internals-Git-Objects>`__.
+
+In this cook book, we are going to create a new branch with two commits:
+
+.. image:: cook_book_raw_git_objects_final_state.dot.png
+
+Initialization::
+
+    >>> import PyGithub
+    >>> g = PyGithub.BlockingBuilder().Login("your_login", "your_password").Build()
+
+..  Authenticate for doctest but don't show it in the doc
+    >>> import GithubCredentials
+    >>> g = PyGithub.BlockingBuilder().Login(GithubCredentials.login, GithubCredentials.password).Build()
+
+::
+
+    >>> u = g.get_authenticated_user()
+    >>> r = u.create_repo(name="PyGithubCookbookRawGitObjects", auto_init=True)
+
+Create the first blob::
+
+    >>> v1 = r.create_git_blob(content="version 1", encoding="utf-8")
+    >>> print v1.sha
+    e32092a83f837140c08e85a60ef16a6b2a208986
+
+Create the first tree::
+
+    >>> t1 = r.create_git_tree(tree=[{"path": "test.txt", "mode": "100644", "type": "blob", "sha": v1.sha}])
+    >>> print t1.sha
+    ffe9ce5421c3a1cbd84a858f8f5696029574abdc
+
+Create the first commit::
+
+    >>> c1 = r.create_git_commit(tree=t1, message="first commit", parents=[])
+    >>> print c1.sha  # doctest: +SKIP
+    82edca525abba78394bf6494b568fccff00a7117
+
+Finally create the branch::
+
+    >>> ref = r.create_git_ref(ref="refs/heads/feature", sha=c1.sha)
+
+We now have a branch with one commit. You should check on http://github.com/{user}/PyGithubCookbookRawGitObjects/branches:
+
+.. image:: cook_book_raw_git_objects_intermediate_state.dot.png
+
+Create a new tree and a second commit::
+
+    >>> new = r.create_git_blob(content="new file", encoding="utf-8")
+    >>> print new.sha
+    1271944b7e20c7a2cc2708dba5cf8370147d77d4
+    >>> t2 = r.create_git_tree(tree=[{"path": "test.txt", "mode": "100644", "type": "blob", "sha": v1.sha}, {"path": "new.txt", "mode": "100644", "type": "blob", "sha": new.sha}])
+    >>> print t2.sha
+    13697ff08a956c8c2076eaac7a0fb27de17d8fb5
+    >>> c2 = r.create_git_commit(tree=t2, message="second commit", parents=[c1])
+    >>> print c2.sha  # doctest: +SKIP
+    bc6e1205629f3ee927e603e2c657866dbd9396e6
+
+Update the branch::
+
+    >>> ref.edit(sha=c2.sha)
+
+And we're done:
+
+.. image:: cook_book_raw_git_objects_final_state.dot.png
+
+@todoAlpha Demonstrate :meth:`.GitTree.create_modified_copy` and usage of parameter `content` in :meth:`.Repository.create_git_tree`.
+
+.. Clean-up
+    >>> r.delete()

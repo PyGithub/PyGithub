@@ -6,6 +6,7 @@
 import subprocess
 import os
 import shutil
+import glob
 
 
 def main():
@@ -31,6 +32,14 @@ def main():
     ])
 
     os.chdir("gh-pages")
+
+    for f in glob.glob(os.path.join("..", "doc", "*.dot")):
+        subprocess.check_call([
+            "dot",
+            "-Tpng",
+            f,
+            "-O"
+        ])
 
     subprocess.check_call([
         "sphinx-build",
