@@ -24,6 +24,9 @@ class GitRef(bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Repository.create_git_ref`
+      * :meth:`.Repository.create_git_tag`
+      * :meth:`.Repository.get_git_ref`
+      * :meth:`.Repository.get_git_refs`
     """
 
     def _initAttributes(self, object=rcv.Absent, ref=rcv.Absent, sha=rcv.Absent, url=rcv.Absent, **kwds):
@@ -72,6 +75,18 @@ class GitRef(bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
+
+    def delete(self):
+        """
+        Calls the `DELETE /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs#delete-a-reference>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand(self.url)
+        r = self.Session._request("DELETE", url)
 
     def edit(self, sha=None, force=None):
         """

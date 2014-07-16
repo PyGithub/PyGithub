@@ -28,6 +28,7 @@ class GitCommit(bgo.UpdatableGithubObject):
       * :meth:`.File.edit`
       * :attr:`.GitCommit.parents`
       * :attr:`.GitRef.object`
+      * :attr:`.GitTag.object`
       * :meth:`.Repository.create_git_commit`
       * :meth:`.Repository.get_git_commit`
     """

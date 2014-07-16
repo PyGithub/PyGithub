@@ -253,7 +253,7 @@ methods:
         type: GitAuthor
       - name: author
         type: GitAuthor
-    url_template: end_point
+    url_template: attribute git_commits_url
     url_template_arguments:
       - name: owner
         value: attribute owner.login
@@ -278,7 +278,7 @@ methods:
         type: string
       - name: sha
         type: string
-    url_template: end_point
+    url_template: attribute git_refs_url
     url_template_arguments:
       - name: owner
         value: attribute owner.login
@@ -289,6 +289,35 @@ methods:
         value: parameter ref
       - name: sha
         value: parameter sha
+    return_type: GitRef
+  - name: create_git_tag
+    end_point: POST /repos/:owner/:repo/git/tags
+    parameters:
+      - name: tag
+        type: string
+      - name: message
+        type: string
+      - name: object
+        type: string
+      - name: tagger
+        type: GitAuthor
+    url_template: attribute git_tags_url
+    url_template_arguments:
+      - name: owner
+        value: attribute owner.login
+      - name: repo
+        value: attribute name
+    post_arguments:
+      - name: tag
+        value: parameter tag
+      - name: tagger
+        value: parameter tagger
+      - name: message
+        value: parameter message
+      - name: object
+        value: parameter object
+      - name: type
+        value: parameter object.type
     return_type: GitRef
   - name: create_git_tree
     end_point: POST /repos/:owner/:repo/git/trees
@@ -478,6 +507,38 @@ methods:
       - name: sha
         value: parameter sha
     return_type: GitCommit
+  - name: get_git_ref
+    end_point: GET /repos/:owner/:repo/git/refs/:ref
+    parameters:
+      - name: ref
+        type: string
+    url_template: attribute git_refs_url
+    url_template_arguments:
+      - name: ref
+        value: parameter ref
+    return_type: GitRef
+  - name: get_git_refs
+    end_point: GET /repos/:owner/:repo/git/refs
+    optional_parameters:
+      - name: per_page
+        type: int
+    url_template: attribute git_refs_url
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: GitRef
+  - name: get_git_tag
+    end_point: GET /repos/:owner/:repo/git/tags/:sha
+    parameters:
+      - name: sha
+        type: string
+    url_template: attribute git_tags_url
+    url_template_arguments:
+      - name: sha
+        value: parameter sha
+    return_type: GitTag
   - name: get_git_tree
     end_point: GET /repos/:owner/:repo/git/trees/:sha
     parameters:

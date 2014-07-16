@@ -847,7 +847,8 @@ GET /repos/:owner/:repo/git/refs
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/refs#get-all-references>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_git_refs`
 
 POST /repos/:owner/:repo/git/refs
 ---------------------------------
@@ -862,14 +863,16 @@ DELETE /repos/:owner/:repo/git/refs/:ref
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/refs#delete-a-reference>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.GitRef.delete`
 
 GET /repos/:owner/:repo/git/refs/:ref
 -------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/refs#get-a-reference>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_git_ref`
 
 PATCH /repos/:owner/:repo/git/refs/:ref
 ---------------------------------------
@@ -884,14 +887,16 @@ POST /repos/:owner/:repo/git/tags
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/tags#create-a-tag-object>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_git_tag`
 
 GET /repos/:owner/:repo/git/tags/:sha
 -------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/git/tags#get-a-tag>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_git_tag`
 
 POST /repos/:owner/:repo/git/trees
 ----------------------------------

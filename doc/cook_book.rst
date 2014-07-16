@@ -210,6 +210,8 @@ And we're done:
 .. image:: cook_book_raw_git_objects_final_state.dot.png
 
 @todoAlpha Demonstrate :meth:`.GitTree.create_modified_copy` and usage of parameter `content` in :meth:`.Repository.create_git_tree`.
+@todoAlpha Demonstrate lightweight tags (through :class:`.GitRef`) and tag objects (actual :class:`.GitTag`).
+@todoAlpha GitRef.object and GitTag.object should be a union of GitTree GitBlob and GitCommit.
 
 .. Clean-up
     >>> r.delete()

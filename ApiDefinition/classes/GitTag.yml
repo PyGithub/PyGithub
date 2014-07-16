@@ -1,0 +1,14 @@
+updatable: false
+attributes:
+  - name: message
+    type: string
+  - name: object
+    type: GitCommit
+  - name: sha
+    type: string
+  - name: tag
+    type: string
+  - name: tagger
+    type: GitAuthor
+  - name: url
+    type: string

@@ -296,6 +296,11 @@ class Method(Member):
                 unimplementedParameters.remove("name")
                 unimplementedParameters.remove("date")
                 unimplementedParameters.remove("email")
+            if self.containerClass.name == "Repository" and self.__name == "create_git_tag":
+                unimplementedParameters.remove("name")
+                unimplementedParameters.remove("date")
+                unimplementedParameters.remove("email")
+                unimplementedParameters.remove("type")
             if self.containerClass.name == "Repository" and self.__name == "create_file":
                 unimplementedParameters.remove("sha")
                 unimplementedParameters.remove("name")

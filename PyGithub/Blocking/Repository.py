@@ -911,7 +911,7 @@ class Repository(bgo.UpdatableGithubObject):
         if author is not None:
             author = snd.normalizeGitAuthor(author)
 
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/commits", owner=self.owner.login, repo=self.name)
+        url = uritemplate.expand(self.git_commits_url, owner=self.owner.login, repo=self.name)
         postArguments = snd.dictionary(tree=tree, message=message, commiter=commiter, author=author, parents=parents)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
@@ -931,8 +931,32 @@ class Repository(bgo.UpdatableGithubObject):
         ref = snd.normalizeString(ref)
         sha = snd.normalizeString(sha)
 
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/refs", owner=self.owner.login, repo=self.name)
+        url = uritemplate.expand(self.git_refs_url, owner=self.owner.login, repo=self.name)
         postArguments = snd.dictionary(ref=ref, sha=sha)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
+
+    def create_git_tag(self, tag, message, object, tagger):
+        """
+        Calls the `POST /repos/:owner/:repo/git/tags <http://developer.github.com/v3/git/tags#create-a-tag-object>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param tag: mandatory :class:`string`
+        :param message: mandatory :class:`string`
+        :param object: mandatory :class:`string`
+        :param tagger: mandatory :class:`GitAuthor`
+        :rtype: :class:`.GitRef`
+        """
+        import PyGithub.Blocking.GitRef
+
+        tag = snd.normalizeString(tag)
+        message = snd.normalizeString(message)
+        object = snd.normalizeString(object)
+        tagger = snd.normalizeGitAuthor(tagger)
+
+        url = uritemplate.expand(self.git_tags_url, owner=self.owner.login, repo=self.name)
+        postArguments = snd.dictionary(tag=tag, tagger=tagger, message=message, object=object, type=object.type)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
 
@@ -1173,6 +1197,61 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/commits/{sha}", owner=self.owner.login, repo=self.name, sha=sha)
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
+
+    def get_git_ref(self, ref):
+        """
+        Calls the `GET /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs#get-a-reference>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param ref: mandatory :class:`string`
+        :rtype: :class:`.GitRef`
+        """
+        import PyGithub.Blocking.GitRef
+
+        ref = snd.normalizeString(ref)
+
+        url = uritemplate.expand(self.git_refs_url, ref=ref)
+        r = self.Session._request("GET", url)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
+
+    def get_git_refs(self, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/git/refs <http://developer.github.com/v3/git/refs#get-all-references>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.GitRef`
+        """
+        import PyGithub.Blocking.GitRef
+
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.git_refs_url)
+        urlArguments = snd.dictionary(per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef))(None, r)
+
+    def get_git_tag(self, sha):
+        """
+        Calls the `GET /repos/:owner/:repo/git/tags/:sha <http://developer.github.com/v3/git/tags#get-a-tag>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.GitTag`
+        """
+        import PyGithub.Blocking.GitTag
+
+        sha = snd.normalizeString(sha)
+
+        url = uritemplate.expand(self.git_tags_url, sha=sha)
+        r = self.Session._request("GET", url)
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
 
     def get_git_tree(self, sha):
         """
