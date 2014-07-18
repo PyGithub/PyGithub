@@ -2,6 +2,8 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+# @todoAlpha Extract the sha of the commit of the doc, put it in the README and in the doc.
+
 
 class RstGenerator:
     def generateApis(self, endPoints):
