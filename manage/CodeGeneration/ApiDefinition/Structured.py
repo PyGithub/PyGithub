@@ -9,6 +9,7 @@ import glob
 
 
 # Monomorphic structures
+# @todoAlpha separate updatable (for objects with an update method) from completable (for objects with lazy completion)
 Class = collections.namedtuple("Class", "name, updatable, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
