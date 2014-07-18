@@ -403,6 +403,28 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_branch
+    end_point: GET /repos/:owner/:repo/branches/:branch
+    parameters:
+      - name: branch
+        type: string
+    url_template: attribute branches_url
+    url_template_arguments:
+      - name: branch
+        value: parameter branch
+    return_type: Branch
+  - name: get_branches
+    end_point: GET /repos/:owner/:repo/branches
+    optional_parameters:
+      - name: per_page
+        type: int
+    url_template: attribute branches_url
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Branch
   - name: get_collaborators
     end_point: GET /repos/:owner/:repo/collaborators
     optional_parameters:
@@ -415,6 +437,48 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_commit
+    end_point: GET /repos/:owner/:repo/commits/:sha
+    parameters:
+      - name: sha
+        type: string
+    url_template: attribute commits_url
+    url_template_arguments:
+      - name: sha
+        value: parameter sha
+    return_type: Commit
+  - name: get_commits
+    end_point: GET /repos/:owner/:repo/commits
+    optional_parameters:
+      - name: sha
+        type: string
+      - name: path
+        type: string
+      - name: author
+        orig: User.login
+      - name: since
+        type: datetime
+      - name: until
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: attribute commits_url
+    url_arguments:
+      - name: sha
+        value: parameter sha
+      - name: path
+        value: parameter path
+      - name: author
+        value: parameter author
+      - name: since
+        value: parameter since
+      - name: until
+        value: parameter until
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Commit
   - name: get_contents
     end_point: GET /repos/:owner/:repo/contents/:path
     parameters:
@@ -638,6 +702,18 @@ methods:
     return_type:
       container: PaginatedList
       content: User
+  - name: get_tags
+    end_point: GET /repos/:owner/:repo/tags
+    optional_parameters:
+      - name: per_page
+        type: int
+    url_template: attribute tags_url
+    url_arguments:
+      - name: per_page
+        value: parameter per_page
+    return_type:
+      container: PaginatedList
+      content: Tag
   - name: get_teams
     end_point: GET /repos/:owner/:repo/teams
     optional_parameters:

@@ -578,14 +578,16 @@ GET /repos/:owner/:repo/branches
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos#list-branches>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_branches`
 
 GET /repos/:owner/:repo/branches/:branch
 ----------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos#get-branch>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_branch`
 
 GET /repos/:owner/:repo/collaborators
 -------------------------------------
@@ -652,7 +654,8 @@ GET /repos/:owner/:repo/commits
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/commits#list-commits-on-a-repository>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_commits`
 
 GET /repos/:owner/:repo/commits/:ref/comments
 ---------------------------------------------
@@ -680,7 +683,8 @@ GET /repos/:owner/:repo/commits/:sha
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos/commits#get-a-single-commit>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_commit`
 
 POST /repos/:owner/:repo/commits/:sha/comments
 ----------------------------------------------
@@ -1508,7 +1512,8 @@ GET /repos/:owner/:repo/tags
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/repos#list-tags>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_tags`
 
 GET /repos/:owner/:repo/teams
 -----------------------------

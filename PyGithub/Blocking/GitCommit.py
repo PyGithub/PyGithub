@@ -23,6 +23,7 @@ class GitCommit(bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :attr:`.Branch.commit`
       * :attr:`.ContentCommit.commit`
       * :meth:`.File.delete`
       * :meth:`.File.edit`

@@ -1071,6 +1071,44 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
+    def get_branch(self, branch):
+        """
+        Calls the `GET /repos/:owner/:repo/branches/:branch <http://developer.github.com/v3/repos#get-branch>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param branch: mandatory :class:`string`
+        :rtype: :class:`.Branch`
+        """
+        import PyGithub.Blocking.Branch
+
+        branch = snd.normalizeString(branch)
+
+        url = uritemplate.expand(self.branches_url, branch=branch)
+        r = self.Session._request("GET", url)
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Branch.Branch)(None, r.json(), r.headers.get("ETag"))
+
+    def get_branches(self, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/branches <http://developer.github.com/v3/repos#list-branches>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Branch`
+        """
+        import PyGithub.Blocking.Branch
+
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.branches_url)
+        urlArguments = snd.dictionary(per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Branch.Branch))(None, r)
+
     def get_collaborators(self, per_page=None):
         """
         Calls the `GET /repos/:owner/:repo/collaborators <http://developer.github.com/v3/repos/collaborators#list>`__ end point.
@@ -1091,6 +1129,59 @@ class Repository(bgo.UpdatableGithubObject):
         urlArguments = snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
+
+    def get_commit(self, sha):
+        """
+        Calls the `GET /repos/:owner/:repo/commits/:sha <http://developer.github.com/v3/repos/commits#get-a-single-commit>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: mandatory :class:`string`
+        :rtype: :class:`.Commit`
+        """
+        import PyGithub.Blocking.Commit
+
+        sha = snd.normalizeString(sha)
+
+        url = uritemplate.expand(self.commits_url, sha=sha)
+        r = self.Session._request("GET", url)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit)(None, r.json(), r.headers.get("ETag"))
+
+    def get_commits(self, sha=None, path=None, author=None, since=None, until=None, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/commits <http://developer.github.com/v3/repos/commits#list-commits-on-a-repository>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param sha: optional :class:`string`
+        :param path: optional :class:`string`
+        :param author: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param since: optional :class:`datetime`
+        :param until: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Commit`
+        """
+        import PyGithub.Blocking.Commit
+
+        if sha is not None:
+            sha = snd.normalizeString(sha)
+        if path is not None:
+            path = snd.normalizeString(path)
+        if author is not None:
+            author = snd.normalizeUserLogin(author)
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if until is not None:
+            until = snd.normalizeDatetime(until)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.commits_url)
+        urlArguments = snd.dictionary(sha=sha, path=path, author=author, since=since, until=until, per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
 
     def get_contents(self, path, ref=None):
         """
@@ -1412,6 +1503,27 @@ class Repository(bgo.UpdatableGithubObject):
         urlArguments = snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
+
+    def get_tags(self, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/tags <http://developer.github.com/v3/repos#list-tags>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Tag`
+        """
+        import PyGithub.Blocking.Tag
+
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.tags_url)
+        urlArguments = snd.dictionary(per_page=per_page)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Tag.Tag))(None, r)
 
     def get_teams(self, per_page=None):
         """

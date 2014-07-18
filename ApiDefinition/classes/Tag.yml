@@ -1,0 +1,10 @@
+updatable: false
+attributes:
+  - name: commit
+    type: Commit
+  - name: name
+    type: string
+  - name: tarball_url
+    type: string
+  - name: zipball_url
+    type: string

@@ -1,0 +1,16 @@
+updatable: false
+attributes:
+  - name: author
+    type: User
+  - name: commit
+    type: GitCommit
+  - name: commiter
+    type: User
+  - name: name
+    type: string
+  - name: parents
+    type:
+      container: list
+      content: Commit
+  - name: url
+    type: string

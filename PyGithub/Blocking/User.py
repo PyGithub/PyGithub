@@ -29,6 +29,8 @@ class User(PyGithub.Blocking.Entity.Entity):
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.get_followers`
       * :meth:`.AuthenticatedUser.get_following`
+      * :attr:`.Branch.author`
+      * :attr:`.Branch.commiter`
       * :attr:`.Gist.owner`
       * :attr:`.Gist.user`
       * :attr:`.GistCommit.user`

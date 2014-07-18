@@ -1,0 +1,6 @@
+updatable: true
+attributes:
+  - name: sha
+    type: string
+  - name: url
+    type: string
