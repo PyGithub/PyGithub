@@ -23,7 +23,7 @@ class GitCommit(bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
-      * :attr:`.Branch.commit`
+      * :attr:`.Commit.commit`
       * :attr:`.ContentCommit.commit`
       * :meth:`.File.delete`
       * :meth:`.File.edit`
@@ -68,10 +68,11 @@ class GitCommit(bgo.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, author=rcv.Absent, comment_count=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
         self.__author = rcv.Attribute("GitCommit.author", rcv.StructureConverter(self.Session, GitCommit.Author), author)
+        self.__comment_count = rcv.Attribute("GitCommit.comment_count", rcv.IntConverter, comment_count)
         self.__committer = rcv.Attribute("GitCommit.committer", rcv.StructureConverter(self.Session, GitCommit.Author), committer)
         self.__html_url = rcv.Attribute("GitCommit.html_url", rcv.StringConverter, html_url)
         self.__message = rcv.Attribute("GitCommit.message", rcv.StringConverter, message)
@@ -81,9 +82,10 @@ class GitCommit(bgo.UpdatableGithubObject):
         self.__type = rcv.Attribute("GitCommit.type", rcv.StringConverter, type)
         self.__url = rcv.Attribute("GitCommit.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=rcv.Absent, comment_count=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
+        self.__comment_count.update(comment_count)
         self.__committer.update(committer)
         self.__html_url.update(html_url)
         self.__message.update(message)
@@ -100,6 +102,14 @@ class GitCommit(bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__author.needsLazyCompletion)
         return self.__author.value
+
+    @property
+    def comment_count(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__comment_count.needsLazyCompletion)
+        return self.__comment_count.value
 
     @property
     def committer(self):

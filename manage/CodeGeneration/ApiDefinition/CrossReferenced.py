@@ -10,6 +10,8 @@ import CodeGeneration.ApiDefinition.Structured as Structured
 import CodeGeneration.ApiDefinition.Typing as Typing
 
 
+# @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
+
 class EndPoint(object):
     def __init__(self, verb, url, parameters, doc):
         self.__verb = verb

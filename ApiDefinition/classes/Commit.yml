@@ -1,6 +1,59 @@
 updatable: true
+structures:
+  - name: CommitFile
+    updatable: true
+    attributes:
+      - name: additions
+        type: int
+      - name: blob_url
+        type: string
+      - name: changes
+        type: int
+      - name: contents_url
+        type: string
+      - name: deletions
+        type: int
+      - name: filename
+        type: string
+      - name: patch
+        type: string
+      - name: raw_url
+        type: string
+      - name: sha
+        type: string
+      - name: status
+        type: string
+  - name: Stats
+    updatable: true
+    attributes:
+      - name: additions
+        type: int
+      - name: deletions
+        type: int
+      - name: total
+        type: int
 attributes:
+  - name: author
+    type: User
+  - name: comments_url
+    type: string
+  - name: commit
+    type: GitCommit
+  - name: committer
+    type: User
+  - name: files
+    type:
+      container: list
+      content: CommitFile
+  - name: html_url
+    type: string
+  - name: parents
+    type:
+      container: list
+      content: Commit
   - name: sha
     type: string
+  - name: stats
+    type: Stats
   - name: url
     type: string

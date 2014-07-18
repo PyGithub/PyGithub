@@ -10,6 +10,7 @@ import PyGithub.Blocking.File
 import PyGithub.Blocking.User
 
 import PyGithub.Blocking.tests.Framework as Framework
+from PyGithub.Blocking.tests.Framework import *
 
 
 class RepositoryTestCase(Framework.SimpleLoginTestCase):
@@ -471,3 +472,78 @@ class RepositoryTestCase(Framework.SimpleLoginTestCase):
     def testGetMilestone(self):
         milestone = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_milestone(1)
         self.assertEqual(milestone.title, "First milestone")
+
+
+class RepositoryGitStuff(TestCase):
+    @Enterprise.User(1)
+    def testGetBranches(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        branches = r.get_branches()
+        self.assertEqual([b.name for b in branches], ["develop", "master"])
+
+    @Enterprise.User(1)
+    def testGetBranches_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        branches = r.get_branches(per_page=1)
+        self.assertEqual([b.name for b in branches], ["develop", "master"])
+
+    @Enterprise.User(1)
+    def testGetBranch(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        b = r.get_branch("develop")
+        self.assertEqual(b.commit.author.login, "ghe-user-1")
+
+    @Enterprise.User(1)
+    def testGetCommits(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        commits = r.get_commits()
+        self.assertEqual([c.sha for c in commits], ["e078f69fb050b75fe5f3c7aa70adc24d692e75b8"])
+
+    @Enterprise.User(1)
+    def testGetCommits_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        commits = r.get_commits(sha="7820fad", path="README.md", author="ghe-user-1", since=datetime.datetime(2014, 1, 1, 0, 0, 0), until=datetime.datetime(2014, 12, 31, 23, 59, 59), per_page=1)
+        self.assertEqual([c.sha for c in commits], ["7820fadc2429652016611e98fdc21766ba075161", "e078f69fb050b75fe5f3c7aa70adc24d692e75b8"])
+
+    @Enterprise.User(1)
+    def testGetCommit(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        c = r.get_commit("7820fad")
+        self.assertEqual(c.author.login, "ghe-user-1")
+
+    @Enterprise.User(1)
+    def testGetTags(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tags = r.get_tags()
+        self.assertEqual([t.name for t in tags], ["v0.1-beta.2", "v0.1-beta.1"])
+
+    @Enterprise.User(1)
+    def testGetTags_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tags = r.get_tags(per_page=1)
+        self.assertEqual([t.name for t in tags], ["v0.1-beta.2", "v0.1-beta.1"])
+
+    @Enterprise.User(1)
+    def testGetGitTag(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        t = r.get_git_tag("43bafe50b11378c5546dbef02032941bb8a46099")
+        self.assertEqual(t.sha, "43bafe50b11378c5546dbef02032941bb8a46099")
+
+    @Enterprise.User(1)
+    def testGetGitRefs(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        refs = r.get_git_refs()
+        self.assertEqual([r.ref for r in refs], ["refs/heads/develop", "refs/heads/master", "refs/tags/v0.1-beta.1", "refs/tags/v0.1-beta.2"])
+
+    @Enterprise.User(1)
+    def testGetGitRefs_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        refs = r.get_git_refs(per_page=2)
+        self.assertEqual([r.ref for r in refs], ["refs/heads/develop", "refs/heads/master", "refs/tags/v0.1-beta.1", "refs/tags/v0.1-beta.2"])
+
+    @Enterprise.User(1)
+    def testGetGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.get_git_ref("refs/heads/develop")
+        # @todoAlpha Test get_git_ref with a string not starting with "refs/"
+        self.assertEqual(ref.ref, "refs/heads/develop")

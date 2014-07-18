@@ -1,16 +1,8 @@
 updatable: false
 attributes:
-  - name: author
-    type: User
   - name: commit
-    type: GitCommit
-  - name: commiter
-    type: User
+    type: Commit
   - name: name
     type: string
-  - name: parents
-    type:
-      container: list
-      content: Commit
-  - name: url
-    type: string
+deprecated_attributes:
+  - _links

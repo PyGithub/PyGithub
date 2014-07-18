@@ -12,6 +12,8 @@ structures:
 attributes:
   - name: author
     type: Author
+  - name: comment_count
+    type: int
   - name: committer
     type: Author
   - name: html_url

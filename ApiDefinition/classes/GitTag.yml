@@ -1,4 +1,14 @@
 updatable: false
+structures:
+  - name: Tagger
+    updatable: false
+    attributes:
+      - name: date
+        type: datetime
+      - name: email
+        type: string
+      - name: name
+        type: string
 attributes:
   - name: message
     type: string
@@ -9,6 +19,6 @@ attributes:
   - name: tag
     type: string
   - name: tagger
-    type: GitAuthor
+    type: Tagger
   - name: url
     type: string

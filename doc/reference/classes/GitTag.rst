@@ -9,3 +9,7 @@ GitTag
 
 .. autoclass:: PyGithub.Blocking.GitTag::GitTag()
     :members:
+    :exclude-members: Tagger
+
+    .. autoclass:: PyGithub.Blocking.GitTag::GitTag.Tagger()
+        :members:

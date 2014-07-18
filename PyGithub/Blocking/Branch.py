@@ -27,38 +27,18 @@ class Branch(bgo.SessionedGithubObject):
       * :meth:`.Repository.get_branches`
     """
 
-    def _initAttributes(self, author=rcv.Absent, commit=rcv.Absent, commiter=rcv.Absent, name=rcv.Absent, parents=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, commit=rcv.Absent, name=rcv.Absent, _links=None, **kwds):
         import PyGithub.Blocking.Commit
-        import PyGithub.Blocking.GitCommit
-        import PyGithub.Blocking.User
         super(Branch, self)._initAttributes(**kwds)
-        self.__author = rcv.Attribute("Branch.author", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), author)
-        self.__commit = rcv.Attribute("Branch.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
-        self.__commiter = rcv.Attribute("Branch.commiter", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), commiter)
+        self.__commit = rcv.Attribute("Branch.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
         self.__name = rcv.Attribute("Branch.name", rcv.StringConverter, name)
-        self.__parents = rcv.Attribute("Branch.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit)), parents)
-        self.__url = rcv.Attribute("Branch.url", rcv.StringConverter, url)
-
-    @property
-    def author(self):
-        """
-        :type: :class:`.User`
-        """
-        return self.__author.value
 
     @property
     def commit(self):
         """
-        :type: :class:`.GitCommit`
+        :type: :class:`.Commit`
         """
         return self.__commit.value
-
-    @property
-    def commiter(self):
-        """
-        :type: :class:`.User`
-        """
-        return self.__commiter.value
 
     @property
     def name(self):
@@ -66,17 +46,3 @@ class Branch(bgo.SessionedGithubObject):
         :type: :class:`string`
         """
         return self.__name.value
-
-    @property
-    def parents(self):
-        """
-        :type: :class:`list` of :class:`.Commit`
-        """
-        return self.__parents.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        return self.__url.value
