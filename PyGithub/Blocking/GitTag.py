@@ -23,6 +23,7 @@ class GitTag(bgo.SessionedGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.Repository.create_git_tag`
       * :meth:`.Repository.get_git_tag`
     """
 

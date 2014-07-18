@@ -10,6 +10,7 @@ import glob
 
 # Monomorphic structures
 # @todoAlpha separate updatable (for objects with an update method) from completable (for objects with lazy completion)
+# @todoAlpha Test lazy completion and update of all classes in two topic test cases, not in each class test case
 Class = collections.namedtuple("Class", "name, updatable, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")

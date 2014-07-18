@@ -8,6 +8,7 @@ import PyGithub.Blocking.GitBlob
 import PyGithub.Blocking.GitTree
 
 import PyGithub.Blocking.tests.Framework as Framework
+from PyGithub.Blocking.tests.Framework import *
 
 
 class GitTreeTestCase(Framework.SimpleLoginTestCase):
@@ -44,3 +45,12 @@ class GitTreeTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(tree.sha, "6b5ca5c8c64026f92666ae9f36efff478e7117a4")
         self.assertEqual(len(tree.tree), 5)
         self.assertEqual(tree.path, "a")  # Not lost after lazy completion
+
+
+class GitTreeMisc(TestCase):
+    @Enterprise.User(1)
+    def testCreateModifiedCopy(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tree = r.get_git_tree("65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+        modified = tree.create_modified_copy(tree=[{"path": "other_test.txt", "mode": "100644", "type": "blob", "content": "Another blob"}])
+        self.assertEqual(len(modified.tree), 2)

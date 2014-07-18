@@ -510,6 +510,7 @@ class RepositoryGitStuff(TestCase):
         r = self.g.get_repo("ghe-user-1/repo-user-1-1")
         c = r.get_commit("7820fad")
         self.assertEqual(c.author.login, "ghe-user-1")
+        self.assertEqual(c.commit.comment_count, 0)  # @todoAlpha Understand why this attribute is returned here, but not in r.get_git_commit
 
     @Enterprise.User(1)
     def testGetTags(self):
@@ -547,3 +548,110 @@ class RepositoryGitStuff(TestCase):
         ref = r.get_git_ref("refs/heads/develop")
         # @todoAlpha Test get_git_ref with a string not starting with "refs/"
         self.assertEqual(ref.ref, "refs/heads/develop")
+
+    @Enterprise.User(1)
+    def testCreateGitBlob(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        blob = r.create_git_blob("This is some content", "utf8")
+        self.assertEqual(blob.sha, "3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+
+    @Enterprise.User(1)
+    def testCreateGitTree(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tree = r.create_git_tree(tree=[{"path": "test.txt", "mode": "100644", "type": "blob", "sha": "3daf0da6bca38181ab52610dd6af6e92f1a5469d"}])
+        self.assertEqual(tree.sha, "65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+
+    @Enterprise.User(1)
+    def testCreateInitialGitCommit(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        commit = r.create_git_commit(tree="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", message="first commit", parents=[])
+        self.assertEqual(commit.message, "first commit")
+        self.assertEqual(commit.tree.sha, "65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+        self.assertEqual(len(commit.parents), 0)
+
+    @Enterprise.User(1)
+    def testCreateInitialGitCommit_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        commit = r.create_git_commit(tree="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", message="first commit", parents=[], author={"name": "John Doe", "email": "john@doe.com", "date": "1999-12-31T23:59:59Z"}, committer={"name": "Jane Doe", "email": "jane@doe.com", "date": "2000-01-01T00:00:00Z"})
+        self.assertEqual(commit.author.name, "John Doe")
+        self.assertEqual(commit.author.email, "john@doe.com")
+        self.assertEqual(commit.author.date, datetime.datetime(1999, 12, 31, 23, 59, 59))
+        self.assertEqual(commit.committer.name, "Jane Doe")
+        self.assertEqual(commit.committer.email, "jane@doe.com")
+        self.assertEqual(commit.committer.date, datetime.datetime(2000, 1, 1, 0, 0, 0))
+
+    @Enterprise.User(1)
+    def testCreateSubsequentGitCommit(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        commit = r.create_git_commit(tree="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", message="second commit", parents=["7b96628d495239a926958bb5b8b935245668cc6a"])
+        self.assertEqual(commit.parents[0].sha, "7b96628d495239a926958bb5b8b935245668cc6a")
+
+    @Enterprise.User(1)
+    def testCreateCommitGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.create_git_ref(ref="refs/tests/commit_ref", sha="7b96628d495239a926958bb5b8b935245668cc6a")
+        self.assertEqual(ref.ref, "refs/tests/commit_ref")
+        self.assertEqual(ref.object.type, "commit")
+        self.assertIsInstance(ref.object, PyGithub.Blocking.GitCommit.GitCommit)
+        ref.delete()
+
+    @Enterprise.User(1)
+    def testCreateTreeGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.create_git_ref(ref="refs/tests/tree_ref", sha="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+        self.assertEqual(ref.ref, "refs/tests/tree_ref")
+        self.assertEqual(ref.object.type, "tree")
+        # @todoAlpha self.assertIsInstance(ref.object, PyGithub.Blocking.Gittree.Gittree)
+        ref.delete()
+
+    @Enterprise.User(1)
+    def testCreateBlobGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.create_git_ref(ref="refs/tests/blob_ref", sha="3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+        self.assertEqual(ref.ref, "refs/tests/blob_ref")
+        self.assertEqual(ref.object.type, "blob")
+        # @todoAlpha self.assertIsInstance(ref.object, PyGithub.Blocking.Gitblob.Gitblob)
+        ref.delete()
+
+    @Enterprise.User(1)
+    def testCreateExistingGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.create_git_ref(ref="refs/tests/commit_ref", sha="7b96628d495239a926958bb5b8b935245668cc6a")
+        with self.assertRaises(PyGithub.Blocking.UnprocessableEntityException):
+            r.create_git_ref(ref="refs/tests/commit_ref", sha="7b96628d495239a926958bb5b8b935245668cc6a")
+        ref.delete()
+
+    @Enterprise.User(1)
+    def testCreateCommitGitTag(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tag = r.create_git_tag(tag="commit_tag", message="This is a commit tag", object="7b96628d495239a926958bb5b8b935245668cc6a", type="commit")
+        self.assertEqual(tag.object.type, "commit")
+        self.assertIsInstance(tag.object, PyGithub.Blocking.GitCommit.GitCommit)
+
+    @Enterprise.User(1)
+    def testCreateGitTagWithBadType(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        with self.assertRaises(PyGithub.Blocking.UnprocessableEntityException):
+            r.create_git_tag(tag="commit_tag", message="This is a commit tag", object="7b96628d495239a926958bb5b8b935245668cc6a", type="blob")
+
+    @Enterprise.User(1)
+    def testCreateGitTag_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tag = r.create_git_tag(tag="commit_tag", message="This is a commit tag", object="7b96628d495239a926958bb5b8b935245668cc6a", type="commit", tagger={"name": "John Doe", "email": "john@doe.com", "date": "1999-12-31T23:59:59Z"})
+        self.assertEqual(tag.tagger.name, "John Doe")
+        self.assertEqual(tag.tagger.email, "john@doe.com")
+        self.assertEqual(tag.tagger.date, datetime.datetime(1999, 12, 31, 23, 59, 59))
+
+    @Enterprise.User(1)
+    def testCreateTreeGitTag(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tag = r.create_git_tag(tag="tree_tag", message="This is a tree tag", object="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", type="tree")
+        self.assertEqual(tag.object.type, "tree")
+        # @todoAlpha self.assertIsInstance(tag.object, PyGithub.Blocking.GitTree.GitTree)
+
+    @Enterprise.User(1)
+    def testCreateBlobGitTag(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tag = r.create_git_tag(tag="blob_tag", message="This is a blob tag", object="3daf0da6bca38181ab52610dd6af6e92f1a5469d", type="blob")
+        self.assertEqual(tag.object.type, "blob")
+        # @todoAlpha self.assertIsInstance(tag.object, PyGithub.Blocking.GitBlob.GitBlob)

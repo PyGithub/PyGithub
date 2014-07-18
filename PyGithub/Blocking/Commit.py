@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Commit(bgo.UpdatableGithubObject):
+class Commit(bgo.SessionedGithubObject):
     """
-    Base class: :class:`.UpdatableGithubObject`
+    Base class: :class:`.SessionedGithubObject`
 
     Derived classes: none.
 
@@ -48,19 +48,6 @@ class Commit(bgo.UpdatableGithubObject):
             self.__raw_url = rcv.Attribute("Commit.CommitFile.raw_url", rcv.StringConverter, raw_url)
             self.__sha = rcv.Attribute("Commit.CommitFile.sha", rcv.StringConverter, sha)
             self.__status = rcv.Attribute("Commit.CommitFile.status", rcv.StringConverter, status)
-
-        def _updateAttributes(self, additions=None, blob_url=None, changes=None, contents_url=None, deletions=None, filename=None, patch=None, raw_url=None, sha=None, status=None, **kwds):
-            super(Commit.CommitFile, self)._updateAttributes(**kwds)
-            self.__additions.update(additions)
-            self.__blob_url.update(blob_url)
-            self.__changes.update(changes)
-            self.__contents_url.update(contents_url)
-            self.__deletions.update(deletions)
-            self.__filename.update(filename)
-            self.__patch.update(patch)
-            self.__raw_url.update(raw_url)
-            self.__sha.update(sha)
-            self.__status.update(status)
 
         @property
         def additions(self):
@@ -144,12 +131,6 @@ class Commit(bgo.UpdatableGithubObject):
             self.__deletions = rcv.Attribute("Commit.Stats.deletions", rcv.IntConverter, deletions)
             self.__total = rcv.Attribute("Commit.Stats.total", rcv.IntConverter, total)
 
-        def _updateAttributes(self, additions=None, deletions=None, total=None, **kwds):
-            super(Commit.Stats, self)._updateAttributes(**kwds)
-            self.__additions.update(additions)
-            self.__deletions.update(deletions)
-            self.__total.update(total)
-
         @property
         def additions(self):
             """
@@ -181,30 +162,16 @@ class Commit(bgo.UpdatableGithubObject):
         self.__committer = rcv.Attribute("Commit.committer", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), committer)
         self.__files = rcv.Attribute("Commit.files", rcv.ListConverter(rcv.StructureConverter(self.Session, Commit.CommitFile)), files)
         self.__html_url = rcv.Attribute("Commit.html_url", rcv.StringConverter, html_url)
-        self.__parents = rcv.Attribute("Commit.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, Commit)), parents)
+        self.__parents = rcv.Attribute("Commit.parents", rcv.ListConverter(rcv.StructureConverter(self.Session, Commit)), parents)
         self.__sha = rcv.Attribute("Commit.sha", rcv.StringConverter, sha)
         self.__stats = rcv.Attribute("Commit.stats", rcv.StructureConverter(self.Session, Commit.Stats), stats)
         self.__url = rcv.Attribute("Commit.url", rcv.StringConverter, url)
-
-    def _updateAttributes(self, eTag, author=rcv.Absent, comments_url=rcv.Absent, commit=rcv.Absent, committer=rcv.Absent, files=rcv.Absent, html_url=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, stats=rcv.Absent, url=rcv.Absent, **kwds):
-        super(Commit, self)._updateAttributes(eTag, **kwds)
-        self.__author.update(author)
-        self.__comments_url.update(comments_url)
-        self.__commit.update(commit)
-        self.__committer.update(committer)
-        self.__files.update(files)
-        self.__html_url.update(html_url)
-        self.__parents.update(parents)
-        self.__sha.update(sha)
-        self.__stats.update(stats)
-        self.__url.update(url)
 
     @property
     def author(self):
         """
         :type: :class:`.User`
         """
-        self._completeLazily(self.__author.needsLazyCompletion)
         return self.__author.value
 
     @property
@@ -212,7 +179,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__comments_url.needsLazyCompletion)
         return self.__comments_url.value
 
     @property
@@ -220,7 +186,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`.GitCommit`
         """
-        self._completeLazily(self.__commit.needsLazyCompletion)
         return self.__commit.value
 
     @property
@@ -228,7 +193,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`.User`
         """
-        self._completeLazily(self.__committer.needsLazyCompletion)
         return self.__committer.value
 
     @property
@@ -236,7 +200,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`list` of :class:`.CommitFile`
         """
-        self._completeLazily(self.__files.needsLazyCompletion)
         return self.__files.value
 
     @property
@@ -244,7 +207,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__html_url.needsLazyCompletion)
         return self.__html_url.value
 
     @property
@@ -252,7 +214,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`list` of :class:`.Commit`
         """
-        self._completeLazily(self.__parents.needsLazyCompletion)
         return self.__parents.value
 
     @property
@@ -260,7 +221,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__sha.needsLazyCompletion)
         return self.__sha.value
 
     @property
@@ -268,7 +228,6 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`.Stats`
         """
-        self._completeLazily(self.__stats.needsLazyCompletion)
         return self.__stats.value
 
     @property
@@ -276,5 +235,4 @@ class Commit(bgo.UpdatableGithubObject):
         """
         :type: :class:`string`
         """
-        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value

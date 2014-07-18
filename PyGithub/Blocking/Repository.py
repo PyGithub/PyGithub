@@ -888,7 +888,7 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json())
 
-    def create_git_commit(self, tree, message, parents, commiter=None, author=None):
+    def create_git_commit(self, tree, message, parents, committer=None, author=None):
         """
         Calls the `POST /repos/:owner/:repo/git/commits <http://developer.github.com/v3/git/commits#create-a-commit>`__ end point.
 
@@ -897,7 +897,7 @@ class Repository(bgo.UpdatableGithubObject):
         :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
         :param message: mandatory :class:`string`
         :param parents: mandatory :class:`list` of :class:`.GitCommit`
-        :param commiter: optional :class:`GitAuthor`
+        :param committer: optional :class:`GitAuthor`
         :param author: optional :class:`GitAuthor`
         :rtype: :class:`.GitCommit`
         """
@@ -906,13 +906,13 @@ class Repository(bgo.UpdatableGithubObject):
         tree = snd.normalizeGitTreeSha(tree)
         message = snd.normalizeString(message)
         parents = snd.normalizeList(snd.normalizeGitCommitFullName, parents)
-        if commiter is not None:
-            commiter = snd.normalizeGitAuthor(commiter)
+        if committer is not None:
+            committer = snd.normalizeGitAuthor(committer)
         if author is not None:
             author = snd.normalizeGitAuthor(author)
 
         url = uritemplate.expand(self.git_commits_url, owner=self.owner.login, repo=self.name)
-        postArguments = snd.dictionary(tree=tree, message=message, commiter=commiter, author=author, parents=parents)
+        postArguments = snd.dictionary(tree=tree, message=message, committer=committer, author=author, parents=parents)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
 
@@ -936,7 +936,7 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
 
-    def create_git_tag(self, tag, message, object, tagger):
+    def create_git_tag(self, tag, message, object, type, tagger=None):
         """
         Calls the `POST /repos/:owner/:repo/git/tags <http://developer.github.com/v3/git/tags#create-a-tag-object>`__ end point.
 
@@ -945,20 +945,23 @@ class Repository(bgo.UpdatableGithubObject):
         :param tag: mandatory :class:`string`
         :param message: mandatory :class:`string`
         :param object: mandatory :class:`string`
-        :param tagger: mandatory :class:`GitAuthor`
-        :rtype: :class:`.GitRef`
+        :param type: mandatory :class:`string`
+        :param tagger: optional :class:`GitAuthor`
+        :rtype: :class:`.GitTag`
         """
-        import PyGithub.Blocking.GitRef
+        import PyGithub.Blocking.GitTag
 
         tag = snd.normalizeString(tag)
         message = snd.normalizeString(message)
         object = snd.normalizeString(object)
-        tagger = snd.normalizeGitAuthor(tagger)
+        type = snd.normalizeString(type)
+        if tagger is not None:
+            tagger = snd.normalizeGitAuthor(tagger)
 
         url = uritemplate.expand(self.git_tags_url, owner=self.owner.login, repo=self.name)
-        postArguments = snd.dictionary(tag=tag, tagger=tagger, message=message, object=object, type=object.type)
+        postArguments = snd.dictionary(tag=tag, tagger=tagger, message=message, object=object, type=type)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitRef.GitRef)(None, r.json(), r.headers.get("ETag"))
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
 
     def create_git_tree(self, tree):
         """
@@ -1145,7 +1148,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.commits_url, sha=sha)
         r = self.Session._request("GET", url)
-        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit)(None, r.json(), r.headers.get("ETag"))
+        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit)(None, r.json(), r.headers.get("ETag"))
 
     def get_commits(self, sha=None, path=None, author=None, since=None, until=None, per_page=None):
         """
@@ -1181,7 +1184,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.commits_url)
         urlArguments = snd.dictionary(sha=sha, path=path, author=author, since=since, until=until, per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
 
     def get_contents(self, path, ref=None):
         """

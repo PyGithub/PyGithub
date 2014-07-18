@@ -11,6 +11,8 @@ import CodeGeneration.ApiDefinition.Typing as Typing
 
 
 # @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
+# @todoAlpha Detect structures that are not updatable but are attributes of updatable classes
+# @todoAlpha Create an infrastructure for (or just centralize) all those validations of the API definition, running on the CrossReferenced version
 
 class EndPoint(object):
     def __init__(self, verb, url, parameters, doc):
@@ -302,7 +304,6 @@ class Method(Member):
                 unimplementedParameters.remove("name")
                 unimplementedParameters.remove("date")
                 unimplementedParameters.remove("email")
-                unimplementedParameters.remove("type")
             if self.containerClass.name == "Repository" and self.__name == "create_file":
                 unimplementedParameters.remove("sha")
                 unimplementedParameters.remove("name")

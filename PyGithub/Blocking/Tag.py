@@ -29,7 +29,7 @@ class Tag(bgo.SessionedGithubObject):
     def _initAttributes(self, commit=rcv.Absent, name=rcv.Absent, tarball_url=rcv.Absent, zipball_url=rcv.Absent, **kwds):
         import PyGithub.Blocking.Commit
         super(Tag, self)._initAttributes(**kwds)
-        self.__commit = rcv.Attribute("Tag.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+        self.__commit = rcv.Attribute("Tag.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
         self.__name = rcv.Attribute("Tag.name", rcv.StringConverter, name)
         self.__tarball_url = rcv.Attribute("Tag.tarball_url", rcv.StringConverter, tarball_url)
         self.__zipball_url = rcv.Attribute("Tag.zipball_url", rcv.StringConverter, zipball_url)

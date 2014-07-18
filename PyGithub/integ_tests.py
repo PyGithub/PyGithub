@@ -7,12 +7,15 @@ import unittest
 from PyGithub.unit_tests import *
 
 from PyGithub.Blocking.tests.Classes.AuthenticatedUserTestCase import *
+from PyGithub.Blocking.tests.Classes.CommitTestCase import *
 from PyGithub.Blocking.tests.Classes.DirTestCase import *
 from PyGithub.Blocking.tests.Classes.FileTestCase import *
 from PyGithub.Blocking.tests.Classes.GistTestCase import *
 from PyGithub.Blocking.tests.Classes.GitBlobTestCase import *
 from PyGithub.Blocking.tests.Classes.GitCommitTestCase import *
 from PyGithub.Blocking.tests.Classes.GithubTestCase import *
+from PyGithub.Blocking.tests.Classes.GitRefTestCase import *
+from PyGithub.Blocking.tests.Classes.GitTagTestCase import *
 from PyGithub.Blocking.tests.Classes.GitTreeTestCase import *
 from PyGithub.Blocking.tests.Classes.IssueTestCase import *
 from PyGithub.Blocking.tests.Classes.LabelTestCase import *
@@ -23,6 +26,7 @@ from PyGithub.Blocking.tests.Classes.RepositoryTestCase import *
 from PyGithub.Blocking.tests.Classes.SubmoduleTestCase import *
 from PyGithub.Blocking.tests.Classes.SubscriptionTestCase import *
 from PyGithub.Blocking.tests.Classes.SymLinkTestCase import *
+from PyGithub.Blocking.tests.Classes.TagTestCase import *
 from PyGithub.Blocking.tests.Classes.TeamTestCase import *
 from PyGithub.Blocking.tests.Classes.UserTestCase import *
 

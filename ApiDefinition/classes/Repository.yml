@@ -249,7 +249,7 @@ methods:
           container: list
           content: GitCommit
     optional_parameters:
-      - name: commiter
+      - name: committer
         type: GitAuthor
       - name: author
         type: GitAuthor
@@ -264,8 +264,8 @@ methods:
         value: parameter tree
       - name: message
         value: parameter message
-      - name: commiter
-        value: parameter commiter
+      - name: committer
+        value: parameter committer
       - name: author
         value: parameter author
       - name: parents
@@ -299,6 +299,9 @@ methods:
         type: string
       - name: object
         type: string
+      - name: type
+        type: string
+    optional_parameters:
       - name: tagger
         type: GitAuthor
     url_template: attribute git_tags_url
@@ -317,8 +320,8 @@ methods:
       - name: object
         value: parameter object
       - name: type
-        value: parameter object.type
-    return_type: GitRef
+        value: parameter type
+    return_type: GitTag
   - name: create_git_tree
     end_point: POST /repos/:owner/:repo/git/trees
     parameters:

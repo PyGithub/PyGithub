@@ -151,7 +151,7 @@ class GitTree(bgo.UpdatableGithubObject):
 
         tree = snd.normalizeList(snd.normalizeDict, tree)
 
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/git/trees", owner=self.owner.login, repo=self.name)
+        url = self.url[:self.url.rfind(self.sha) - 1]
         postArguments = snd.dictionary(base_tree=self.sha, tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, GitTree)(None, r.json(), r.headers.get("ETag"))

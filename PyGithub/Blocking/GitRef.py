@@ -24,24 +24,21 @@ class GitRef(bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Repository.create_git_ref`
-      * :meth:`.Repository.create_git_tag`
       * :meth:`.Repository.get_git_ref`
       * :meth:`.Repository.get_git_refs`
     """
 
-    def _initAttributes(self, object=rcv.Absent, ref=rcv.Absent, sha=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, object=rcv.Absent, ref=rcv.Absent, url=rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         super(GitRef, self)._initAttributes(**kwds)
         self.__object = rcv.Attribute("GitRef.object", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
         self.__ref = rcv.Attribute("GitRef.ref", rcv.StringConverter, ref)
-        self.__sha = rcv.Attribute("GitRef.sha", rcv.StringConverter, sha)
         self.__url = rcv.Attribute("GitRef.url", rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, object=rcv.Absent, ref=rcv.Absent, sha=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, object=rcv.Absent, ref=rcv.Absent, url=rcv.Absent, **kwds):
         super(GitRef, self)._updateAttributes(eTag, **kwds)
         self.__object.update(object)
         self.__ref.update(ref)
-        self.__sha.update(sha)
         self.__url.update(url)
 
     @property
@@ -59,14 +56,6 @@ class GitRef(bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__ref.needsLazyCompletion)
         return self.__ref.value
-
-    @property
-    def sha(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__sha.needsLazyCompletion)
-        return self.__sha.value
 
     @property
     def url(self):
@@ -88,19 +77,18 @@ class GitRef(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.url)
         r = self.Session._request("DELETE", url)
 
-    def edit(self, sha=None, force=None):
+    def edit(self, sha, force=None):
         """
         Calls the `PATCH /repos/:owner/:repo/git/refs/:ref <http://developer.github.com/v3/git/refs#update-a-reference>`__ end point.
 
         This is the only method calling this end point.
 
-        :param sha: optional :class:`string`
+        :param sha: mandatory :class:`string`
         :param force: optional :class:`bool`
         :rtype: None
         """
 
-        if sha is not None:
-            sha = snd.normalizeString(sha)
+        sha = snd.normalizeString(sha)
         if force is not None:
             force = snd.normalizeBool(force)
 

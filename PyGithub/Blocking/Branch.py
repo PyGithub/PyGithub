@@ -30,7 +30,7 @@ class Branch(bgo.SessionedGithubObject):
     def _initAttributes(self, commit=rcv.Absent, name=rcv.Absent, _links=None, **kwds):
         import PyGithub.Blocking.Commit
         super(Branch, self)._initAttributes(**kwds)
-        self.__commit = rcv.Attribute("Branch.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+        self.__commit = rcv.Attribute("Branch.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
         self.__name = rcv.Attribute("Branch.name", rcv.StringConverter, name)
 
     @property

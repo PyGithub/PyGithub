@@ -1,7 +1,7 @@
-updatable: true
+updatable: false
 structures:
   - name: CommitFile
-    updatable: true
+    updatable: false
     attributes:
       - name: additions
         type: int
@@ -24,7 +24,7 @@ structures:
       - name: status
         type: string
   - name: Stats
-    updatable: true
+    updatable: false
     attributes:
       - name: additions
         type: int
