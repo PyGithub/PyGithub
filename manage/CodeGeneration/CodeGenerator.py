@@ -127,7 +127,7 @@ class CodeGenerator:
         imports = set()
         for type in types:
             for t in type.underlyingTypes:
-                if t.category == "class" and t is not klass and t.module is not None:
+                if t.__class__.__name__ == "Class" and t is not klass and t.module is not None:
                     imports.add(t.module)
         for i in sorted(imports):
             yield "import " + i
@@ -141,7 +141,7 @@ class CodeGenerator:
         )
 
     def generateCodeForConverter(self, module, attribute, type):
-        return module + "." + self.getMethod("generateCodeFor{}Converter", type.category)(module, attribute, type)
+        return module + "." + self.getMethod("generateCodeFor{}Converter", type.__class__.__name__)(module, attribute, type)
 
     def generateCodeForLinearCollectionConverter(self, module, attribute, type):
         return self.getMethod("generateCodeFor{}Converter", type.container.name)(module, attribute, type)
@@ -155,7 +155,7 @@ class CodeGenerator:
     def generateCodeForMappingCollectionConverter(self, module, attribute, type):
         return "DictConverter({}, {})".format(self.generateCodeForConverter(module, attribute, type.key), self.generateCodeForConverter(module, attribute, type.value))
 
-    def generateCodeForBuiltinConverter(self, module, attribute, type):
+    def generateCodeForBuiltinTypeConverter(self, module, attribute, type):
         return "{}Converter".format(toUpperCamel(type.name))
 
     def generateCodeForClassConverter(self, module, attribute, type):
@@ -169,7 +169,7 @@ class CodeGenerator:
             converterName = "StructureConverter"
         return "{}(self.Session, {})".format(converterName, typeName)
 
-    def generateCodeForUnionConverter(self, module, attribute, type):
+    def generateCodeForUnionTypeConverter(self, module, attribute, type):
         if type.key is not None:
             converters = {k: self.generateCodeForConverter(module, attribute, t) for k, t in zip(type.keys, type.types)}
             return 'KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
@@ -184,7 +184,7 @@ class CodeGenerator:
                 ", ".join(self.generateCodeForConverter(module, attribute, t) for t in type.types)
             )
 
-    def generateCodeForStructConverter(self, module, attribute, type):
+    def generateCodeForStructureConverter(self, module, attribute, type):
         return "StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
 
     def generateFullyQualifiedAttributeName(self, attribute):
@@ -275,30 +275,30 @@ class CodeGenerator:
         yield from self.generateCodeForReturnValue(method)
 
     def generateCodeToNormalizeParameter(self, parameter):
-        yield from self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.category)(parameter)
+        yield from self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.__class__.__name__)(parameter)
 
-    def generateCodeToNormalizeEnumParameter(self, parameter):
+    def generateCodeToNormalizeEnumeratedTypeParameter(self, parameter):
         yield "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
-    def generateCodeToNormalizeAttributeParameter(self, parameter):
+    def generateCodeToNormalizeAttributeTypeParameter(self, parameter):
         yield "{} = snd.normalize{}{}({})".format(parameter.name, parameter.type.type.name, toUpperCamel(parameter.type.attribute.name), parameter.name)
 
-    def generateCodeToNormalizeUnionParameter(self, parameter):
+    def generateCodeToNormalizeUnionTypeParameter(self, parameter):
         if parameter.name == "repo":
             yield "repo = snd.normalizeTwoStringsString(repo)"
         else:
-            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.category == "attribute" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
+            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.__class__.__name__ == "AttributeType" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
 
-    def generateCodeToNormalizeBuiltinParameter(self, parameter):
+    def generateCodeToNormalizeBuiltinTypeParameter(self, parameter):
         yield "{} = snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
-        yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
+        yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.__class__.__name__)(parameter)
 
-    def generateCodeToNormalizeListOfAttributeParameter(self, parameter):
+    def generateCodeToNormalizeListOfAttributeTypeParameter(self, parameter):
         yield "{} = snd.normalizeList(snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.name, toUpperCamel(parameter.type.content.attribute.name), parameter.name)
 
-    def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
+    def generateCodeToNormalizeListOfBuiltinTypeParameter(self, parameter):
         yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
 
     def generateCodeForEffects(self, method):
@@ -316,13 +316,13 @@ class CodeGenerator:
             assert False  # pragma no cover
 
     def generateCodeForReturnValue(self, method):
-        if method.returnType.category == "none":
+        if method.returnType.__class__.__name__ == "NoneType_":
             return []
         else:
             if method.returnFrom is None:
-                if method.returnType.category == "class":
+                if method.returnType.__class__.__name__ == "Class":
                     args = 'r.json(), r.headers.get("ETag")'
-                elif method.returnType.category == "linear_collection" and method.returnType.container.name == "PaginatedList":
+                elif method.returnType.__class__.__name__ == "LinearCollection" and method.returnType.container.name == "PaginatedList":
                     args = "r"
                 else:
                     args = "r.json()"
@@ -347,12 +347,12 @@ class CodeGenerator:
         return args
 
     def generateDocForType(self, type):
-        return self.getMethod("generateDocFor{}Type", type.category)(type)
+        return self.getMethod("generateDocFor{}", type.__class__.__name__)(type)
 
     def generateDocForBuiltinType(self, type):
         return ":class:`{}`".format(type.name)
 
-    def generateDocForClassType(self, type):
+    def generateDocForClass(self, type):
         return ":class:`.{}`".format(type.name)
 
     def generateDocForAttributeType(self, type):
@@ -361,19 +361,19 @@ class CodeGenerator:
         else:
             return ":class:`.{}` or :class:`{}` (its :attr:`.{}.{}`)".format(type.type.name, type.attribute.type.name, type.attribute.containerClass.name, type.attribute.name)
 
-    def generateDocForEnumType(self, type):
+    def generateDocForEnumeratedType(self, type):
         return " or ".join('"' + v + '"' for v in type.values)
 
-    def generateDocForLinearCollectionType(self, type):
+    def generateDocForLinearCollection(self, type):
         return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.content)
 
-    def generateDocForMappingCollectionType(self, type):
+    def generateDocForMappingCollection(self, type):
         return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.key) + " to " + self.generateDocForType(type.value)
 
     def generateDocForNoneType(self, type):
         return "None"
 
-    def generateDocForStructType(self, type):
+    def generateDocForStructure(self, type):
         return ":class:`.{}`".format(type.name)
 
     def generateDocForUnionType(self, type):

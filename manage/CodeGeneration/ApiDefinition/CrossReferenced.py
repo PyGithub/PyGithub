@@ -12,17 +12,12 @@ import CodeGeneration.ApiDefinition.Structured as Structured
 
 
 class Type:
-    def __init__(self, name, category):
+    def __init__(self, name):
         self.__name = name
-        self.__category = category
 
     @property
     def name(self):
         return self.__name
-
-    @property
-    def category(self):
-        return self.__category
 
 
 class SimpleType(Type):
@@ -33,18 +28,18 @@ class SimpleType(Type):
 
 class BuiltinType(SimpleType):
     def __init__(self, name):
-        Type.__init__(self, name, "builtin")
+        Type.__init__(self, name)
 
 
 class NoneType_(SimpleType):
     def __init__(self):
-        Type.__init__(self, "NoneType", "none")
+        Type.__init__(self, "NoneType")
 NoneType = NoneType_()
 
 
 class LinearCollection(Type):
     def __init__(self, container, content):
-        Type.__init__(self, container.name + " of " + content.name, "linear_collection")
+        Type.__init__(self, container.name + " of " + content.name)
         self.__container = container
         self.__content = content
 
@@ -63,7 +58,7 @@ class LinearCollection(Type):
 
 class MappingCollection(Type):
     def __init__(self, container, key, value):
-        Type.__init__(self, container.name + " of " + key.name + " to " + value.name, "mapping_collection")
+        Type.__init__(self, container.name + " of " + key.name + " to " + value.name)
         self.__container = container
         self.__key = key
         self.__value = value
@@ -87,7 +82,7 @@ class MappingCollection(Type):
 
 class UnionType(Type):
     def __init__(self, types, key, keys, converter):
-        Type.__init__(self, " or ".join(t.name for t in types), "union")
+        Type.__init__(self, " or ".join(t.name for t in types))
         self.__types = types
         self.key = key
         self.keys = keys
@@ -107,7 +102,7 @@ class UnionType(Type):
 
 class EnumeratedType(SimpleType):
     def __init__(self, *values):
-        Type.__init__(self, " or ".join('"' + v + '"' for v in values), "enum")
+        Type.__init__(self, " or ".join('"' + v + '"' for v in values))
         self.__values = values
 
     @property
@@ -117,7 +112,7 @@ class EnumeratedType(SimpleType):
 
 class AttributeType(Type):
     def __init__(self, type, attribute):
-        Type.__init__(self, "Attribute " + attribute.name + " of " + type.name, "attribute")
+        Type.__init__(self, "Attribute " + attribute.name + " of " + type.name)
         self.__type = type
         self.__attribute = attribute
 
@@ -179,8 +174,8 @@ class EndPoint:
 
 
 class AttributedType(SimpleType):
-    def __init__(self, name, category, updatable, attributes, deprecatedAttributes):
-        super(AttributedType, self).__init__(name, category)
+    def __init__(self, name, updatable, attributes, deprecatedAttributes):
+        super(AttributedType, self).__init__(name)
         self.__updatable = updatable
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
         self.__deprecatedAttributes = sorted(deprecatedAttributes)
@@ -252,7 +247,7 @@ AttributeFactory = collections.namedtuple("AttributeFactory", "object")
 
 class Class(AttributedType):
     def __init__(self, module, name, updatable, completable, base, structures, attributes, methods, deprecatedAttributes):
-        super(Class, self).__init__(name, "class", updatable, attributes, deprecatedAttributes)
+        super(Class, self).__init__(name, updatable, attributes, deprecatedAttributes)
         self.__module = module
         self.__completable = completable
         self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
@@ -306,7 +301,7 @@ class Class(AttributedType):
 
 class Structure(AttributedType):
     def __init__(self, containerClass, name, updatable, attributes, deprecatedAttributes):
-        super(Structure, self).__init__(name, "struct", updatable, attributes, deprecatedAttributes)
+        super(Structure, self).__init__(name, updatable, attributes, deprecatedAttributes)
         self.__containerClass = containerClass
 
     @property
