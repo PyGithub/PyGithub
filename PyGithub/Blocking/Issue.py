@@ -256,7 +256,7 @@ class Issue(bgo.UpdatableGithubObject):
         :param title: optional :class:`string`
         :param body: optional :class:`string`
         :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`) or :class:`Reset`
-        :param state: optional "open" or "closed"
+        :param state: optional "closed" or "open"
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`) or :class:`Reset`
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
         :rtype: None
@@ -269,7 +269,7 @@ class Issue(bgo.UpdatableGithubObject):
         if assignee is not None:
             assignee = snd.normalizeUserLoginReset(assignee)
         if state is not None:
-            state = snd.normalizeEnum(state, "open", "closed")
+            state = snd.normalizeEnum(state, "closed", "open")
         if milestone is not None:
             milestone = snd.normalizeMilestoneNumberReset(milestone)
         if labels is not None:

@@ -1486,12 +1486,12 @@ class Repository(bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
-        :param state: optional "open" or "close"
+        :param state: optional "close" or "open"
         :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :param creator: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
-        :param sort: optional "created" or "updated" or "comments"
+        :param sort: optional "comments" or "created" or "updated"
         :param direction: optional "asc" or "desc"
         :param since: optional :class:`datetime`
         :param per_page: optional :class:`int`
@@ -1502,7 +1502,7 @@ class Repository(bgo.UpdatableGithubObject):
         if milestone is not None:
             milestone = snd.normalizeMilestoneNumber(milestone)
         if state is not None:
-            state = snd.normalizeEnum(state, "open", "close")
+            state = snd.normalizeEnum(state, "close", "open")
         if assignee is not None:
             assignee = snd.normalizeUserLogin(assignee)
         if creator is not None:
@@ -1512,7 +1512,7 @@ class Repository(bgo.UpdatableGithubObject):
         if labels is not None:
             labels = snd.normalizeList(snd.normalizeLabelName, labels)
         if sort is not None:
-            sort = snd.normalizeEnum(sort, "created", "updated", "comments")
+            sort = snd.normalizeEnum(sort, "comments", "created", "updated")
         if direction is not None:
             direction = snd.normalizeEnum(direction, "asc", "desc")
         if since is not None:

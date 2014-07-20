@@ -186,14 +186,14 @@ class Team(bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param name: optional :class:`string`
-        :param permission: optional "push" or "pull" or "admin"
+        :param permission: optional "admin" or "pull" or "push"
         :rtype: None
         """
 
         if name is not None:
             name = snd.normalizeString(name)
         if permission is not None:
-            permission = snd.normalizeEnum(permission, "push", "pull", "admin")
+            permission = snd.normalizeEnum(permission, "admin", "pull", "push")
 
         url = uritemplate.expand(self.url)
         postArguments = snd.dictionary(name=name, permission=permission)

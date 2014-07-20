@@ -59,7 +59,7 @@ methods:
         type: string
       - name: permission
         type:
-          enum: [push, pull, admin]
+          enum: [admin, pull, push]
     url_template: attribute url
     post_arguments:
       - name: name

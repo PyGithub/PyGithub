@@ -148,334 +148,334 @@ class CheckerTestCase(unittest.TestCase):
 
     def testUrlInNotUpdatableNotCompletableClass(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Foo", False, False, None, [], [Structured.Attribute("url", Structured.ScalarType("string"))], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Foo", False, False, None, (), (Structured.Attribute("url", Structured.ScalarType("string")),), (), ()),
+            ),
+            ()
         )
         self.expect(d, "Class 'Foo' has a 'url' attribute but is neither updatable nor completable")
 
     def testNoUrlInUpdatableClass(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Foo", True, False, None, [], [], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Foo", True, False, None, (), (), (), ()),
+            ),
+            ()
         )
         self.expect(d, "Class 'Foo' is updatable or completable but has no 'url' attribute")
 
     def testNoUrlInUpdatableClassWithBase(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Bar", True, False, None, [], [Structured.Attribute("url", Structured.ScalarType("string"))], [], []),
-                Structured.Class("Foo", True, False, Structured.ScalarType("Bar"), [], [], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Bar", True, False, None, (), (Structured.Attribute("url", Structured.ScalarType("string")),), (), ()),
+                Structured.Class("Foo", True, False, Structured.ScalarType("Bar",), (), (), (), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testNoUrlInCompletableClass(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Foo", False, True, None, [], [], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Foo", False, True, None, (), (), (), ()),
+            ),
+            ()
         )
         self.expect(d, "Class 'Foo' is updatable or completable but has no 'url' attribute")
 
     def testNoUrlInCompletableClassWithBase(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Bar", False, True, None, [], [Structured.Attribute("url", Structured.ScalarType("string"))], [], []),
-                Structured.Class("Foo", False, True, Structured.ScalarType("Bar"), [], [], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Bar", False, True, None, (), (Structured.Attribute("url", Structured.ScalarType("string")),), (), ()),
+                Structured.Class("Foo", False, True, Structured.ScalarType("Bar",), (), (), (), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testNotUpdatableStructureIsAttributeOfUpdatableClass(self):
         d = Structured.Definition(
-            [],
-            [
-                Structured.Class("Foo", True, False, None, [Structured.Structure("Stru", False, [], [])], [Structured.Attribute("url", Structured.ScalarType("string")), Structured.Attribute("attr", Structured.ScalarType("Stru"))], [], []),
-            ],
-            {}
+            (),
+            (
+                Structured.Class("Foo", True, False, None, (Structured.Structure("Stru", False, (), ()),), (Structured.Attribute("url", Structured.ScalarType("string")), Structured.Attribute("attr", Structured.ScalarType("Stru"))), (), ()),
+            ),
+            ()
         )
         self.expect(d, "Struct 'Stru' is not updatable but is the type of attribute 'attr' of updatable or completable class 'Foo'")
 
     def testUnimplementedEndPointNotDeclared(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (),
+            ()
         )
         self.expect(d, "End-point 'GET /foo' is not implemented and not declared so")
 
     def testUnimplementedEndPointDeclared(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/bar", [], ""),
-            ],
-            [],
-            {"family": {"/bar": ["GET"]}}
+            (
+                Structured.EndPoint("GET", "/bar", (), ""),
+            ),
+            (),
+            (("family", (("/bar", ("GET",)),)),)
         )
         self.expect(d)
 
     def testImplementedEndPoint(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testImplementedEndPointDeclaredAsUnimplemented(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {"family": {"/foo": ["GET"]}}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            (("family", (("/foo", ("GET",)),)),)
         )
         self.expect(d, "End-point 'GET /foo' is declared as not implemented but is implemented by 'Bar.get_foo'")
 
     def testUnusedParameter(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' doesn't use its 'bar' parameter")
 
     def testParameterUsedAsUrlTemplateArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsUrlArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsPostArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoOwnerInUrlTemplateArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (Structured.Argument("baz", Structured.RepositoryOwnerValue("bar",)),), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoOwnerInUrlArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.RepositoryOwnerValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoOwnerInPostArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (), (Structured.Argument("baz", Structured.RepositoryOwnerValue("bar",)),), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoNameInUrlTemplateArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (Structured.Argument("baz", Structured.RepositoryNameValue("bar",)),), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoNameInUrlArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.RepositoryNameValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testParameterUsedAsRepoNameInPostArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (), (Structured.Argument("baz", Structured.RepositoryNameValue("bar",)),), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testUnimplementedEndPointParameterNotDeclared(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["bar"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("bar",), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' doesn't implement the 'bar' parameter of the 'GET /foo' end-point")
 
     def testUnimplementedEndPointParameterDeclared(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["bar"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], ["bar"], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("bar",), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), ("bar",), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testImplementedEndPointParameterDeclaredAsUnimplemented(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["bar"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], ["bar"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("bar",), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), ("bar",), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "In method 'Bar.get_foo', the 'bar' parameter of the 'GET /foo' end-point is declared as not implemented but is implemented")
 
     def testImplementedEndPointParameter(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["bar"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("bar",), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("bar", Structured.ScalarType("string"), False),), (), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testOderedEndPointParameter(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("c", Structured.ScalarType("string"), False), Structured.Parameter("b", Structured.ScalarType("string"), False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("c", "a", "b"), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("c", Structured.ScalarType("string"), False), Structured.Parameter("b", Structured.ScalarType("string"), False)), ("a"), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d)
 
     def testUnoderedEndPointParameter(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("b", Structured.ScalarType("string"), False), Structured.Parameter("c", Structured.ScalarType("string"), False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", ("c", "a", "b"), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (Structured.Parameter("b", Structured.ScalarType("string"), False), Structured.Parameter("c", Structured.ScalarType("string"), False)), ("a"), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' re-orders the 'GET /foo' parameters ('c', 'a', 'b') to ('b', 'c')")
 
     def testUnexistingParameterUsedAsUrlTemplateArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")
 
     def testUnexistingParameterUsedAsUrlArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")
 
     def testUnexistingParameterUsedAsPostArgument(self):
         d = Structured.Definition(
-            [
-                Structured.EndPoint("GET", "/foo", [], ""),
-            ],
-            [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], None, Structured.NoneType)], [])
-            ],
-            {}
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Bar", False, False, None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (Structured.Argument("baz", Structured.ParameterValue("bar",)),), (), None, Structured.NoneType),), ()),
+            ),
+            ()
         )
         self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")

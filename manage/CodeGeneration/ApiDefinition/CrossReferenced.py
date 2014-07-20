@@ -507,8 +507,8 @@ class Definition:
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
         unimplementedEndPoints = []
-        for endPoints in definition.unimplementedEndPoints.values():
-            for url, verbs in endPoints.items():
+        for family, endPoints in definition.unimplementedEndPoints:
+            for url, verbs in endPoints:
                 for verb in verbs:
                     unimplementedEndPoints.append(endPointsRepo[verb + " " + url])
         self.__unimplementedEndPoints = sorted(unimplementedEndPoints, key=lambda ep: (ep.url, ep.verb))

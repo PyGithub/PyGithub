@@ -380,8 +380,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param type: optional "all" or "owner" or "public" or "private" or "member"
-        :param sort: optional "created" or "updated" or "pushed" or "full_name"
+        :param type: optional "all" or "member" or "owner" or "private" or "public"
+        :param sort: optional "created" or "full_name" or "pushed" or "updated"
         :param direction: optional "asc" or "desc"
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
@@ -389,9 +389,9 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         import PyGithub.Blocking.Repository
 
         if type is not None:
-            type = snd.normalizeEnum(type, "all", "owner", "public", "private", "member")
+            type = snd.normalizeEnum(type, "all", "member", "owner", "private", "public")
         if sort is not None:
-            sort = snd.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
+            sort = snd.normalizeEnum(sort, "created", "full_name", "pushed", "updated")
         if direction is not None:
             direction = snd.normalizeEnum(direction, "asc", "desc")
         if per_page is None:

@@ -117,7 +117,7 @@ methods:
             attribute: full_name
       - name: permission
         type:
-          enum: [pull, push, admin]
+          enum: [admin, pull, push]
     url_template: end_point
     url_template_arguments:
       - name: org
@@ -171,7 +171,7 @@ methods:
     optional_parameters:
       - name: filter
         type:
-          enum: [all, 2fa_disabled]
+          enum: [2fa_disabled, all]
       - name: per_page
         type: int
     url_template: attribute members_url
@@ -212,7 +212,7 @@ methods:
     optional_parameters:
       - name: type
         type:
-          enum: [all, public, private, forks, sources, member]
+          enum: [all, forks, member, private, public, sources]
       - name: per_page
         type: int
     url_template: attribute repos_url

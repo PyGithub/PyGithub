@@ -101,10 +101,10 @@ methods:
     optional_parameters:
       - name: type
         type:
-          enum: [all, owner, forks, sources, member]
+          enum: [all, forks, member, owner, sources]
       - name: sort
         type:
-          enum: [created, updated, pushed, full_name]
+          enum: [created, full_name, pushed, updated]
       - name: direction
         type:
           enum: [asc, desc]

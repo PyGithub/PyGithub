@@ -720,7 +720,7 @@ methods:
           attribute: number
       - name: state
         type:
-          enum: [open, close]
+          enum: [close, open]
       - name: assignee
         type:
           class: User
@@ -741,7 +741,7 @@ methods:
             attribute: name
       - name: sort
         type:
-          enum: [created, updated, comments]
+          enum: [comments, created, updated]
       - name: direction
         type:
           enum: [asc, desc]

@@ -158,7 +158,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         :param name: mandatory :class:`string`
         :param repo_names: optional :class:`list` of :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
-        :param permission: optional "pull" or "push" or "admin"
+        :param permission: optional "admin" or "pull" or "push"
         :rtype: :class:`.Team`
         """
         import PyGithub.Blocking.Team
@@ -167,7 +167,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         if repo_names is not None:
             repo_names = snd.normalizeList(snd.normalizeRepositoryFullName, repo_names)
         if permission is not None:
-            permission = snd.normalizeEnum(permission, "pull", "push", "admin")
+            permission = snd.normalizeEnum(permission, "admin", "pull", "push")
 
         url = uritemplate.expand("https://api.github.com/orgs/{org}/teams", org=self.login)
         postArguments = snd.dictionary(name=name, permission=permission, repo_names=repo_names)
@@ -213,14 +213,14 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param filter: optional "all" or "2fa_disabled"
+        :param filter: optional "2fa_disabled" or "all"
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
         import PyGithub.Blocking.User
 
         if filter is not None:
-            filter = snd.normalizeEnum(filter, "all", "2fa_disabled")
+            filter = snd.normalizeEnum(filter, "2fa_disabled", "all")
         if per_page is None:
             per_page = self.Session.PerPage
         else:
@@ -278,14 +278,14 @@ class Organization(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param type: optional "all" or "public" or "private" or "forks" or "sources" or "member"
+        :param type: optional "all" or "forks" or "member" or "private" or "public" or "sources"
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
         import PyGithub.Blocking.Repository
 
         if type is not None:
-            type = snd.normalizeEnum(type, "all", "public", "private", "forks", "sources", "member")
+            type = snd.normalizeEnum(type, "all", "forks", "member", "private", "public", "sources")
         if per_page is None:
             per_page = self.Session.PerPage
         else:

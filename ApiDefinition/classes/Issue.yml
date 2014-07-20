@@ -59,7 +59,7 @@ methods:
             - Reset
       - name: state
         type:
-          enum: [open, closed]
+          enum: [closed, open]
       - name: milestone
         type:
           union:

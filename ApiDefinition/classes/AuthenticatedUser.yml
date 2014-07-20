@@ -287,10 +287,10 @@ methods:
     optional_parameters:
       - name: type
         type:
-          enum: [all, owner, public, private, member]
+          enum: [all, member, owner, private, public]
       - name: sort
         type:
-          enum: [created, updated, pushed, full_name]
+          enum: [created, full_name, pushed, updated]
       - name: direction
         type:
           enum: [asc, desc]

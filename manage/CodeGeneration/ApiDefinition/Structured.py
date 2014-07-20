@@ -108,28 +108,28 @@ class _DefinitionLoader:
 
     def loadEndPoints(self):
         data = _loadYml(os.path.join(self.dirName, "end_points.yml"))
-        return sorted((self.buildEndPoint(url, **op) for url, ops in data.items() for op in ops), key=lambda ep: (ep.url, ep.verb))
+        return tuple(sorted((self.buildEndPoint(url, **op) for url, ops in data.items() for op in ops), key=lambda ep: (ep.url, ep.verb)))
 
     def buildEndPoint(self, url, verb, doc, parameters=[]):
         assert isinstance(url, str), url
-        assert verb in ["GET", "PUT", "HEAD", "POST", "PATCH", "DELETE"], verb
+        assert verb in ("GET", "PUT", "HEAD", "POST", "PATCH", "DELETE"), verb
         assert isinstance(doc, str), doc
         assert all(isinstance(p, str) for p in parameters), parameters
         return EndPoint(
             verb=verb,
             url=url,
-            parameters=parameters,  # Do not sort
-            doc=doc
+            parameters=tuple(parameters),  # Do not sort
+            doc=doc,
         )
 
     def loadClasses(self):
-        return sorted(
-            [
+        return tuple(sorted(
+            (
                 self.loadClass(fileName)
                 for fileName in glob.glob(os.path.join(self.dirName, "classes", "*.yml"))
-            ],
-            key=lambda c: c.name
-        )
+            ),
+            key=lambda c: c.name,
+        ))
 
     def loadClass(self, fileName):
         name = os.path.basename(fileName)[:-4]
@@ -150,10 +150,10 @@ class _DefinitionLoader:
             updatable=updatable,
             completable=completable,
             base=self.buildType(base),
-            structures=sorted((self.buildStructure(**s) for s in structures), key=lambda s: s.name),
-            attributes=sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name),
-            methods=sorted((self.buildMethod(**m) for m in methods), key=lambda m: m.name),
-            deprecatedAttributes=sorted(deprecated_attributes)
+            structures=tuple(sorted((self.buildStructure(**s) for s in structures), key=lambda s: s.name)),
+            attributes=tuple(sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name)),
+            methods=tuple(sorted((self.buildMethod(**m) for m in methods), key=lambda m: m.name)),
+            deprecatedAttributes=tuple(sorted(deprecated_attributes)),
         )
 
     def buildStructure(self, name, updatable=True, attributes=[], deprecated_attributes=[]):
@@ -164,8 +164,8 @@ class _DefinitionLoader:
         return Structure(
             name=name,
             updatable=updatable,
-            attributes=sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name),
-            deprecatedAttributes=sorted(deprecated_attributes)
+            attributes=tuple(sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name)),
+            deprecatedAttributes=tuple(sorted(deprecated_attributes)),
         )
 
     def buildAttribute(self, name, type):
@@ -173,7 +173,7 @@ class _DefinitionLoader:
         # no assert on type
         return Attribute(
             name=name,
-            type=self.buildType(type)
+            type=self.buildType(type),
         )
 
     def buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[], unimplemented_parameters=[]):
@@ -193,17 +193,19 @@ class _DefinitionLoader:
         assert all(isinstance(p, str) for p in unimplemented_parameters)
         return Method(
             name=name,
-            endPoints=end_points,
-            parameters=[self.buildParameter(optional=False, **p) for p in parameters]  # Do not sort
-            + [self.buildParameter(optional=True, **p) for p in optional_parameters],  # Do not sort
-            unimplementedParameters=sorted(unimplemented_parameters),
+            endPoints=tuple(sorted(end_points)),
+            parameters=tuple(itertools.chain(
+                (self.buildParameter(optional=False, **p) for p in parameters),  # Do not sort
+                (self.buildParameter(optional=True, **p) for p in optional_parameters),  # Do not sort
+            )),
+            unimplementedParameters=tuple(sorted(unimplemented_parameters)),
             urlTemplate=self.buildValue(url_template),
-            urlTemplateArguments=sorted((self.buildArgument(**a) for a in url_template_arguments), key=lambda a: a.name),
-            urlArguments=sorted((self.buildArgument(**a) for a in url_arguments), key=lambda a: a.name),
-            postArguments=sorted((self.buildArgument(**a) for a in post_arguments), key=lambda a: a.name),
-            effects=[self.buildEffect(e) for e in effects],
+            urlTemplateArguments=tuple(sorted((self.buildArgument(**a) for a in url_template_arguments), key=lambda a: a.name)),
+            urlArguments=tuple(sorted((self.buildArgument(**a) for a in url_arguments), key=lambda a: a.name)),
+            postArguments=tuple(sorted((self.buildArgument(**a) for a in post_arguments), key=lambda a: a.name)),
+            effects=tuple(self.buildEffect(e) for e in effects),
             returnFrom=return_from,
-            returnType=self.buildType(return_type)
+            returnType=self.buildType(return_type),
         )
 
     def makeList(self, element, elements):
@@ -267,9 +269,9 @@ class _DefinitionLoader:
             else:
                 assert False, description  # pragma no cover
         elif "union" in description:
-            return UnionType([self.buildType(t) for t in description["union"]], description.get("key"), description.get("keys"), description.get("converter"))
+            return UnionType(tuple(self.buildType(t) for t in description["union"]), description.get("key"), None if description.get("keys") is None else tuple(description.get("keys")), description.get("converter"))
         elif "enum" in description:
-            return EnumType(description["enum"])
+            return EnumType(tuple(sorted(description["enum"])))
         else:
             assert False, description  # pragma no cover
 
@@ -280,8 +282,8 @@ class _DefinitionLoader:
         unimplemented = dict()
         for fileName in glob.glob(os.path.join(self.dirName, "unimplemented.*.yml")):
             family = os.path.basename(fileName)[14:-4]
-            unimplemented[family] = {k: sorted(v) for k, v in _loadYml(fileName).items()}
-        return unimplemented
+            unimplemented[family] = tuple((k, tuple(sorted(v))) for k, v in sorted(_loadYml(fileName).items()))
+        return tuple(sorted(unimplemented.items()))
 
 
 class _DefinitionDumper:
@@ -293,8 +295,8 @@ class _DefinitionDumper:
         _dumpYml(os.path.join(self.dirName, "end_points.yml"), self.createDataForEndPoints(self.definition.endPoints))
         for klass in self.definition.classes:
             _dumpYml(os.path.join(self.dirName, "classes", klass.name + ".yml"), self.createDataForClass(klass))
-        for family, unimplementedEndPoints in self.definition.unimplementedEndPoints.items():
-            _dumpYml(os.path.join(self.dirName, "unimplemented." + family + ".yml"), unimplementedEndPoints)
+        for family, unimplementedEndPoints in self.definition.unimplementedEndPoints:
+            _dumpYml(os.path.join(self.dirName, "unimplemented." + family + ".yml"), self.createDataForUnimplementedEndPoints(unimplementedEndPoints))
 
     def createDataForEndPoints(self, endPoints):
         return {
@@ -344,13 +346,13 @@ class _DefinitionDumper:
         if len(method.endPoints) == 1:
             data["end_point"] = method.endPoints[0]
         else:
-            data["end_points"] = method.endPoints
+            data["end_points"] = list(method.endPoints)
         if not all(p.optional for p in method.parameters):
             data["parameters"] = []
         if any(p.optional for p in method.parameters):
             data["optional_parameters"] = []
         if len(method.unimplementedParameters) != 0:
-            data["unimplemented_parameters"] = method.unimplementedParameters
+            data["unimplemented_parameters"] = list(method.unimplementedParameters)
         for parameter in method.parameters:
             p = self.createDataForParameter(parameter)
             if parameter.optional:
@@ -452,6 +454,9 @@ class _DefinitionDumper:
 
     def createDataForEnumType(self, type):
         return {"enum": tuple(type.values)}
+
+    def createDataForUnimplementedEndPoints(self, endPoints):
+        return {k: list(v) for (k, v) in endPoints}
 
     def getMethod(self, scheme, *names):
         name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.strip("_").split("_")) for name in names))
