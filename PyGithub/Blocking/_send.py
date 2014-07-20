@@ -20,6 +20,33 @@ def dictionary(**args):
     return d
 
 
+def normalizeLabelName(label):
+    import PyGithub.Blocking.Label
+    if isinstance(label, PyGithub.Blocking.Label.Label):
+        return label.name
+    elif isinstance(label, basestring):
+        return label
+    else:
+        raise TypeError()
+
+
+def normalizeMilestoneNumber(milestone):
+    import PyGithub.Blocking.Milestone
+    if isinstance(milestone, PyGithub.Blocking.Milestone.Milestone):
+        return milestone.number
+    elif isinstance(milestone, int):
+        return milestone
+    else:
+        raise TypeError()
+
+
+def normalizeMilestoneNumberReset(milestone):
+    if milestone is Reset:
+        return milestone
+    else:
+        return normalizeMilestoneNumber(milestone)
+
+
 def normalizeUserLogin(user):
     import PyGithub.Blocking.User
     if isinstance(user, PyGithub.Blocking.User.User):
@@ -28,6 +55,13 @@ def normalizeUserLogin(user):
         return user
     else:
         raise TypeError()
+
+
+def normalizeUserLoginReset(user):
+    if user is Reset:
+        return user
+    else:
+        return normalizeUserLogin(user)
 
 
 def normalizeRepositoryFullName(repo):
@@ -174,7 +208,7 @@ def normalizeGitTreeSha(tree):
         raise TypeError()
 
 
-def normalizeGitCommitFullName(commit):  # @todoAlpha Rename normalizeGitCommitSha
+def normalizeGitCommitSha(commit):  # @todoAlpha Rename normalizeGitCommitSha
     import PyGithub.Blocking.GitCommit
     if isinstance(commit, PyGithub.Blocking.GitCommit.GitCommit):
         return commit.sha

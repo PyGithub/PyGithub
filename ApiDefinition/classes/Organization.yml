@@ -112,7 +112,9 @@ methods:
       - name: repo_names
         type:
           container: list
-          content: Repository
+          content:
+            class: Repository
+            attribute: full_name
       - name: permission
         type:
           enum: [pull, push, admin]

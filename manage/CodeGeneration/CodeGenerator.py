@@ -295,8 +295,8 @@ class CodeGenerator:
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
         yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
 
-    def generateCodeToNormalizeListOfClassParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
+    def generateCodeToNormalizeListOfAttributeParameter(self, parameter):
+        yield "{} = snd.normalizeList(snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.name, toUpperCamel(parameter.type.content.attribute.name), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
         yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)

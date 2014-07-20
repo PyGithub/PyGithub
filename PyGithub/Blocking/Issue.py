@@ -23,7 +23,9 @@ class Issue(bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.Repository.create_issue`
       * :meth:`.Repository.get_issue`
+      * :meth:`.Repository.get_issues`
     """
 
     def _initAttributes(self, assignee=rcv.Absent, body=rcv.Absent, body_html=rcv.Absent, body_text=rcv.Absent, closed_at=rcv.Absent, closed_by=rcv.Absent, comments=rcv.Absent, comments_url=rcv.Absent, created_at=rcv.Absent, events_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, labels=rcv.Absent, labels_url=rcv.Absent, milestone=rcv.Absent, number=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, **kwds):
@@ -244,3 +246,36 @@ class Issue(bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__user.needsLazyCompletion)
         return self.__user.value
+
+    def edit(self, title=None, body=None, assignee=None, state=None, milestone=None, labels=None):
+        """
+        Calls the `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues#edit-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: optional :class:`string`
+        :param body: optional :class:`string`
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`) or :class:`Reset`
+        :param state: optional "open" or "closed"
+        :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`) or :class:`Reset`
+        :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :rtype: None
+        """
+
+        if title is not None:
+            title = snd.normalizeString(title)
+        if body is not None:
+            body = snd.normalizeString(body)
+        if assignee is not None:
+            assignee = snd.normalizeUserLoginReset(assignee)
+        if state is not None:
+            state = snd.normalizeEnum(state, "open", "closed")
+        if milestone is not None:
+            milestone = snd.normalizeMilestoneNumberReset(milestone)
+        if labels is not None:
+            labels = snd.normalizeList(snd.normalizeLabelName, labels)
+
+        url = uritemplate.expand(self.url)
+        postArguments = snd.dictionary(assignee=assignee, body=body, labels=labels, milestone=milestone, state=state, title=title)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())

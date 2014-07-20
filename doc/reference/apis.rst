@@ -973,14 +973,16 @@ GET /repos/:owner/:repo/issues
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#list-issues-for-a-repository>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_issues`
 
 POST /repos/:owner/:repo/issues
 -------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#create-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_issue`
 
 GET /repos/:owner/:repo/issues/:issue_number/events
 ---------------------------------------------------
@@ -1002,7 +1004,8 @@ PATCH /repos/:owner/:repo/issues/:number
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#edit-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.edit`
 
 GET /repos/:owner/:repo/issues/:number/comments
 -----------------------------------------------

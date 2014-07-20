@@ -30,11 +30,6 @@
   - POST
 /repos/:owner/:repo/hooks/:id/tests:
   - POST
-/repos/:owner/:repo/issues:
-  - GET
-  - POST
-/repos/:owner/:repo/issues/:number:
-  - PATCH
 /repos/:owner/:repo/issues/:number/labels:
   - DELETE
   - GET

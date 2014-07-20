@@ -157,7 +157,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         This is the only method calling this end point.
 
         :param name: mandatory :class:`string`
-        :param repo_names: optional :class:`list` of :class:`.Repository`
+        :param repo_names: optional :class:`list` of :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :param permission: optional "pull" or "push" or "admin"
         :rtype: :class:`.Team`
         """

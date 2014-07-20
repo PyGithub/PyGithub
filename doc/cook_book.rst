@@ -4,7 +4,7 @@
 Cook book
 =========
 
-#todoAlpha Cookbook about Repository.create_file etc.
+@todoAlpha Cookbook about Repository.create_file etc.
 @todoAlpha Write it "cookbook" everywhere as the internets seem to agree on this spelling
 
 Working with gists

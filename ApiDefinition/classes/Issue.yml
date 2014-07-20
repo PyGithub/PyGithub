@@ -43,3 +43,48 @@ attributes:
     type: string
   - name: user
     type: User
+methods:
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo/issues/:number
+    optional_parameters:
+      - name: title
+        type: string
+      - name: body
+        type: string
+      - name: assignee
+        type:
+          union:
+            - class: User
+              attribute: login
+            - Reset
+      - name: state
+        type:
+          enum: [open, closed]
+      - name: milestone
+        type:
+          union:
+            - class: Milestone
+              attribute: number
+            - Reset
+      - name: labels
+        type:
+          container: list
+          content:
+            class: Label
+            attribute: name
+    url_template: attribute url
+    post_arguments:
+      - name: assignee
+        value: parameter assignee
+      - name: body
+        value: parameter body
+      - name: labels
+        value: parameter labels
+      - name: milestone
+        value: parameter milestone
+      - name: state
+        value: parameter state
+      - name: title
+        value: parameter title
+    effect: update
+    return_type: none

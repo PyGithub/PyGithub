@@ -671,3 +671,37 @@ class RepositoryGitStuff(TestCase):
         tag = r.create_git_tag(tag="blob_tag", message="This is a blob tag", object="3daf0da6bca38181ab52610dd6af6e92f1a5469d", type="blob")
         self.assertEqual(tag.object.type, "blob")
         # @todoAlpha self.assertIsInstance(tag.object, PyGithub.Blocking.GitBlob.GitBlob)
+
+
+class RepositoryIssues(TestCase):
+    @Enterprise.User(2)
+    def testCreateIssue(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        issue = r.create_issue("Created by PyGithub")
+        self.assertEqual(issue.title, "Created by PyGithub")
+        self.assertIsNone(issue.body)
+        self.assertIsNone(issue.assignee)
+        self.assertIsNone(issue.milestone)
+        self.assertEqual(len(issue.labels), 0)
+
+    @Enterprise.User(1)
+    def testCreateIssue_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        issue = r.create_issue("Also created by PyGithub", body="Body", assignee="ghe-user-1", milestone=1, labels=["question"])
+        self.assertEqual(issue.title, "Also created by PyGithub")
+        self.assertEqual(issue.body, "Body")
+        self.assertEqual(issue.assignee.login, "ghe-user-1")
+        self.assertEqual(issue.milestone.number, 1)
+        self.assertEqual(len(issue.labels), 1)
+
+    @Enterprise.User(2)
+    def testGetIssues(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        issues = r.get_issues()
+        self.assertEqual([i.title for i in issues], ["Also created by PyGithub", "Created by PyGithub", "First issue"])
+
+    @Enterprise.User(2)
+    def testGetIssues_allParameters(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        issues = r.get_issues(milestone=1, state="open", assignee="ghe-user-1", creator="ghe-user-1", mentioned="ghe-user-2", labels=["question"], sort="created", direction="asc", since=datetime.datetime(2014, 1, 1, 0, 0, 0), per_page=1)
+        self.assertEqual([i.title for i in issues], ["Also created by PyGithub"])

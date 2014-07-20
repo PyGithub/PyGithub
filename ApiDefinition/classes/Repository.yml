@@ -272,7 +272,9 @@ methods:
       - name: parents
         type:
           container: list
-          content: GitCommit
+          content:
+            class: GitCommit
+            attribute: sha
     optional_parameters:
       - name: committer
         type: GitAuthor
@@ -379,6 +381,41 @@ methods:
       - name: tree
         value: parameter tree
     return_type: GitTree
+  - name: create_issue
+    end_point: POST /repos/:owner/:repo/issues
+    parameters:
+      - name: title
+        type: string
+    optional_parameters:
+      - name: body
+        type: string
+      - name: assignee
+        type:
+          class: User
+          attribute: login
+      - name: milestone
+        type:
+          class: Milestone
+          attribute: number
+      - name: labels
+        type:
+          container: list
+          content:
+            class: Label
+            attribute: name
+    url_template: attribute issues_url
+    post_arguments:
+      - name: assignee
+        value: parameter assignee
+      - name: body
+        value: parameter body
+      - name: labels
+        value: parameter labels
+      - name: milestone
+        value: parameter milestone
+      - name: title
+        value: parameter title
+    return_type: Issue
   - name: create_key
     end_point: POST /repos/:owner/:repo/keys
     parameters:
@@ -674,6 +711,69 @@ methods:
       - name: number
         value: parameter number
     return_type: Issue
+  - name: get_issues
+    end_point: GET /repos/:owner/:repo/issues
+    optional_parameters:
+      - name: milestone
+        type:
+          class: Milestone
+          attribute: number
+      - name: state
+        type:
+          enum: [open, close]
+      - name: assignee
+        type:
+          class: User
+          attribute: login
+      - name: creator
+        type:
+          class: User
+          attribute: login
+      - name: mentioned
+        type:
+          class: User
+          attribute: login
+      - name: labels
+        type:
+          container: list
+          content:
+            class: Label
+            attribute: name
+      - name: sort
+        type:
+          enum: [created, updated, comments]
+      - name: direction
+        type:
+          enum: [asc, desc]
+      - name: since
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: attribute issues_url
+    url_arguments:
+      - name: assignee
+        value: parameter assignee
+      - name: creator
+        value: parameter creator
+      - name: direction
+        value: parameter direction
+      - name: labels
+        value: parameter labels
+      - name: mentioned
+        value: parameter mentioned
+      - name: milestone
+        value: parameter milestone
+      - name: per_page
+        value: parameter per_page
+      - name: since
+        value: parameter since
+      - name: sort
+        value: parameter sort
+      - name: state
+        value: parameter state
+    return_type:
+      container: PaginatedList
+      content: Issue
   - name: get_key
     end_point: GET /repos/:owner/:repo/keys/:id
     parameters:

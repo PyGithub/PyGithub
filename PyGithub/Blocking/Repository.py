@@ -965,7 +965,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         :param message: mandatory :class:`string`
         :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
-        :param parents: mandatory :class:`list` of :class:`.GitCommit`
+        :param parents: mandatory :class:`list` of :class:`.GitCommit` or :class:`string` (its :attr:`.GitCommit.sha`)
         :param committer: optional :class:`GitAuthor`
         :param author: optional :class:`GitAuthor`
         :rtype: :class:`.GitCommit`
@@ -974,7 +974,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         message = snd.normalizeString(message)
         tree = snd.normalizeGitTreeSha(tree)
-        parents = snd.normalizeList(snd.normalizeGitCommitFullName, parents)
+        parents = snd.normalizeList(snd.normalizeGitCommitSha, parents)
         if committer is not None:
             committer = snd.normalizeGitAuthor(committer)
         if author is not None:
@@ -1050,6 +1050,36 @@ class Repository(bgo.UpdatableGithubObject):
         postArguments = snd.dictionary(tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree)(None, r.json(), r.headers.get("ETag"))
+
+    def create_issue(self, title, body=None, assignee=None, milestone=None, labels=None):
+        """
+        Calls the `POST /repos/:owner/:repo/issues <http://developer.github.com/v3/issues#create-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: mandatory :class:`string`
+        :param body: optional :class:`string`
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
+        :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :rtype: :class:`.Issue`
+        """
+        import PyGithub.Blocking.Issue
+
+        title = snd.normalizeString(title)
+        if body is not None:
+            body = snd.normalizeString(body)
+        if assignee is not None:
+            assignee = snd.normalizeUserLogin(assignee)
+        if milestone is not None:
+            milestone = snd.normalizeMilestoneNumber(milestone)
+        if labels is not None:
+            labels = snd.normalizeList(snd.normalizeLabelName, labels)
+
+        url = uritemplate.expand(self.issues_url)
+        postArguments = snd.dictionary(assignee=assignee, body=body, labels=labels, milestone=milestone, title=title)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
 
     def create_key(self, title, key):
         """
@@ -1448,6 +1478,54 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.issues_url, number=str(number))
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
+
+    def get_issues(self, milestone=None, state=None, assignee=None, creator=None, mentioned=None, labels=None, sort=None, direction=None, since=None, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/issues <http://developer.github.com/v3/issues#list-issues-for-a-repository>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
+        :param state: optional "open" or "close"
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param creator: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :param sort: optional "created" or "updated" or "comments"
+        :param direction: optional "asc" or "desc"
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Issue`
+        """
+        import PyGithub.Blocking.Issue
+
+        if milestone is not None:
+            milestone = snd.normalizeMilestoneNumber(milestone)
+        if state is not None:
+            state = snd.normalizeEnum(state, "open", "close")
+        if assignee is not None:
+            assignee = snd.normalizeUserLogin(assignee)
+        if creator is not None:
+            creator = snd.normalizeUserLogin(creator)
+        if mentioned is not None:
+            mentioned = snd.normalizeUserLogin(mentioned)
+        if labels is not None:
+            labels = snd.normalizeList(snd.normalizeLabelName, labels)
+        if sort is not None:
+            sort = snd.normalizeEnum(sort, "created", "updated", "comments")
+        if direction is not None:
+            direction = snd.normalizeEnum(direction, "asc", "desc")
+        if since is not None:
+            since = snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.issues_url)
+        urlArguments = snd.dictionary(assignee=assignee, creator=creator, direction=direction, labels=labels, mentioned=mentioned, milestone=milestone, per_page=per_page, since=since, sort=sort, state=state)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue))(None, r)
 
     def get_key(self, id):
         """
