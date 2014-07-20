@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Dir(bgo.SessionedGithubObject):
+class Dir(bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.SessionedGithubObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -38,11 +38,23 @@ class Dir(bgo.SessionedGithubObject):
         self.__type = rcv.Attribute("Dir.type", rcv.StringConverter, type)
         self.__url = rcv.Attribute("Dir.url", rcv.StringConverter, url)
 
+    def _updateAttributes(self, eTag, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+        super(Dir, self)._updateAttributes(eTag, **kwds)
+        self.__git_url.update(git_url)
+        self.__html_url.update(html_url)
+        self.__name.update(name)
+        self.__path.update(path)
+        self.__sha.update(sha)
+        self.__size.update(size)
+        self.__type.update(type)
+        self.__url.update(url)
+
     @property
     def git_url(self):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__git_url.needsLazyCompletion)
         return self.__git_url.value
 
     @property
@@ -50,6 +62,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__html_url.needsLazyCompletion)
         return self.__html_url.value
 
     @property
@@ -57,6 +70,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__name.needsLazyCompletion)
         return self.__name.value
 
     @property
@@ -64,6 +78,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__path.needsLazyCompletion)
         return self.__path.value
 
     @property
@@ -71,6 +86,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__sha.needsLazyCompletion)
         return self.__sha.value
 
     @property
@@ -78,6 +94,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__size.needsLazyCompletion)
         return self.__size.value
 
     @property
@@ -85,6 +102,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
 
     @property
@@ -92,6 +110,7 @@ class Dir(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
 
     def get_contents(self):
@@ -109,4 +128,4 @@ class Dir(bgo.SessionedGithubObject):
 
         url = uritemplate.expand(self.url)
         r = self.Session._request("GET", url)
-        return rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.StructureConverter(self.Session, Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink)))(None, r.json())
+        return rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.ClassConverter(self.Session, Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink)))(None, r.json())

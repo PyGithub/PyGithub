@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Issue(bgo.SessionedGithubObject):
+class Issue(bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.SessionedGithubObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -43,9 +43,9 @@ class Issue(bgo.SessionedGithubObject):
         self.__events_url = rcv.Attribute("Issue.events_url", rcv.StringConverter, events_url)
         self.__html_url = rcv.Attribute("Issue.html_url", rcv.StringConverter, html_url)
         self.__id = rcv.Attribute("Issue.id", rcv.IntConverter, id)
-        self.__labels = rcv.Attribute("Issue.labels", rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.Label.Label)), labels)
+        self.__labels = rcv.Attribute("Issue.labels", rcv.ListConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)), labels)
         self.__labels_url = rcv.Attribute("Issue.labels_url", rcv.StringConverter, labels_url)
-        self.__milestone = rcv.Attribute("Issue.milestone", rcv.StructureConverter(self.Session, PyGithub.Blocking.Milestone.Milestone), milestone)
+        self.__milestone = rcv.Attribute("Issue.milestone", rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone), milestone)
         self.__number = rcv.Attribute("Issue.number", rcv.IntConverter, number)
         self.__state = rcv.Attribute("Issue.state", rcv.StringConverter, state)
         self.__title = rcv.Attribute("Issue.title", rcv.StringConverter, title)
@@ -53,11 +53,36 @@ class Issue(bgo.SessionedGithubObject):
         self.__url = rcv.Attribute("Issue.url", rcv.StringConverter, url)
         self.__user = rcv.Attribute("Issue.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
+    def _updateAttributes(self, eTag, assignee=rcv.Absent, body=rcv.Absent, body_html=rcv.Absent, body_text=rcv.Absent, closed_at=rcv.Absent, closed_by=rcv.Absent, comments=rcv.Absent, comments_url=rcv.Absent, created_at=rcv.Absent, events_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, labels=rcv.Absent, labels_url=rcv.Absent, milestone=rcv.Absent, number=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, user=rcv.Absent, **kwds):
+        super(Issue, self)._updateAttributes(eTag, **kwds)
+        self.__assignee.update(assignee)
+        self.__body.update(body)
+        self.__body_html.update(body_html)
+        self.__body_text.update(body_text)
+        self.__closed_at.update(closed_at)
+        self.__closed_by.update(closed_by)
+        self.__comments.update(comments)
+        self.__comments_url.update(comments_url)
+        self.__created_at.update(created_at)
+        self.__events_url.update(events_url)
+        self.__html_url.update(html_url)
+        self.__id.update(id)
+        self.__labels.update(labels)
+        self.__labels_url.update(labels_url)
+        self.__milestone.update(milestone)
+        self.__number.update(number)
+        self.__state.update(state)
+        self.__title.update(title)
+        self.__updated_at.update(updated_at)
+        self.__url.update(url)
+        self.__user.update(user)
+
     @property
     def assignee(self):
         """
         :type: :class:`.User`
         """
+        self._completeLazily(self.__assignee.needsLazyCompletion)
         return self.__assignee.value
 
     @property
@@ -65,6 +90,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__body.needsLazyCompletion)
         return self.__body.value
 
     @property
@@ -72,6 +98,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__body_html.needsLazyCompletion)
         return self.__body_html.value
 
     @property
@@ -79,6 +106,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__body_text.needsLazyCompletion)
         return self.__body_text.value
 
     @property
@@ -86,6 +114,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__closed_at.needsLazyCompletion)
         return self.__closed_at.value
 
     @property
@@ -93,6 +122,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`.User`
         """
+        self._completeLazily(self.__closed_by.needsLazyCompletion)
         return self.__closed_by.value
 
     @property
@@ -100,6 +130,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__comments.needsLazyCompletion)
         return self.__comments.value
 
     @property
@@ -107,6 +138,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__comments_url.needsLazyCompletion)
         return self.__comments_url.value
 
     @property
@@ -114,6 +146,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__created_at.needsLazyCompletion)
         return self.__created_at.value
 
     @property
@@ -121,6 +154,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__events_url.needsLazyCompletion)
         return self.__events_url.value
 
     @property
@@ -128,6 +162,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__html_url.needsLazyCompletion)
         return self.__html_url.value
 
     @property
@@ -135,6 +170,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__id.needsLazyCompletion)
         return self.__id.value
 
     @property
@@ -142,6 +178,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`list` of :class:`.Label`
         """
+        self._completeLazily(self.__labels.needsLazyCompletion)
         return self.__labels.value
 
     @property
@@ -149,6 +186,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__labels_url.needsLazyCompletion)
         return self.__labels_url.value
 
     @property
@@ -156,6 +194,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`.Milestone`
         """
+        self._completeLazily(self.__milestone.needsLazyCompletion)
         return self.__milestone.value
 
     @property
@@ -163,6 +202,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__number.needsLazyCompletion)
         return self.__number.value
 
     @property
@@ -170,6 +210,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__state.needsLazyCompletion)
         return self.__state.value
 
     @property
@@ -177,6 +218,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__title.needsLazyCompletion)
         return self.__title.value
 
     @property
@@ -184,6 +226,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
 
     @property
@@ -191,6 +234,7 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
 
     @property
@@ -198,4 +242,5 @@ class Issue(bgo.SessionedGithubObject):
         """
         :type: :class:`.User`
         """
+        self._completeLazily(self.__user.needsLazyCompletion)
         return self.__user.value

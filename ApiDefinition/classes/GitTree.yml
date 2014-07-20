@@ -1,6 +1,5 @@
 structures:
   - name: GitSubmodule
-    updatable: false
     attributes:
       - name: mode
         type: string

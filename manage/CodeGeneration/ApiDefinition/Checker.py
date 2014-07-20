@@ -13,6 +13,7 @@ import CodeGeneration.ApiDefinition.Structured as Structured
 import CodeGeneration.ApiDefinition.Typing as Typing
 
 # @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
+# @todoAlpha Warn if a method has effect "update" in an non-updatable class
 
 
 class Checker(object):

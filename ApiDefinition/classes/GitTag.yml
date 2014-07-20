@@ -1,7 +1,6 @@
 updatable: false
 structures:
   - name: Tagger
-    updatable: false
     attributes:
       - name: date
         type: datetime

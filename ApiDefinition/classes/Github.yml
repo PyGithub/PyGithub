@@ -2,14 +2,12 @@ updatable: false
 completable: false
 structures:
   - name: GitIgnoreTemplate
-    updatable: false
     attributes:
       - name: name
         type: string
       - name: source
         type: string
   - name: Meta
-    updatable: false
     attributes:
       - name: git
         type:
@@ -22,7 +20,6 @@ structures:
       - name: verifiable_password_authentication
         type: bool
   - name: RateLimit
-    updatable: false
     attributes:
       - name: resources
         type: Resources
@@ -36,7 +33,6 @@ structures:
       - name: reset
         type: datetime
   - name: Resources
-    updatable: false
     attributes:
       - name: core
         type: RateLimits

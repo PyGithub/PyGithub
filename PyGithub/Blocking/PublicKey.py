@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class PublicKey(bgo.SessionedGithubObject):
+class PublicKey(bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.SessionedGithubObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -40,11 +40,20 @@ class PublicKey(bgo.SessionedGithubObject):
         self.__url = rcv.Attribute("PublicKey.url", rcv.StringConverter, url)
         self.__verified = rcv.Attribute("PublicKey.verified", rcv.BoolConverter, verified)
 
+    def _updateAttributes(self, eTag, id=rcv.Absent, key=rcv.Absent, title=rcv.Absent, url=rcv.Absent, verified=rcv.Absent, **kwds):
+        super(PublicKey, self)._updateAttributes(eTag, **kwds)
+        self.__id.update(id)
+        self.__key.update(key)
+        self.__title.update(title)
+        self.__url.update(url)
+        self.__verified.update(verified)
+
     @property
     def id(self):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__id.needsLazyCompletion)
         return self.__id.value
 
     @property
@@ -52,6 +61,7 @@ class PublicKey(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__key.needsLazyCompletion)
         return self.__key.value
 
     @property
@@ -59,6 +69,7 @@ class PublicKey(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__title.needsLazyCompletion)
         return self.__title.value
 
     @property
@@ -66,6 +77,7 @@ class PublicKey(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
 
     @property
@@ -73,6 +85,7 @@ class PublicKey(bgo.SessionedGithubObject):
         """
         :type: :class:`bool`
         """
+        self._completeLazily(self.__verified.needsLazyCompletion)
         return self.__verified.value
 
     def delete(self):

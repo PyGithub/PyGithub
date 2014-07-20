@@ -91,6 +91,14 @@ class Gist(bgo.UpdatableGithubObject):
             self.__user = rcv.Attribute("Gist.GistCommit.user", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
             self.__version = rcv.Attribute("Gist.GistCommit.version", rcv.StringConverter, version)
 
+        def _updateAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
+            super(Gist.GistCommit, self)._updateAttributes(**kwds)
+            self.__change_status.update(change_status)
+            self.__committed_at.update(committed_at)
+            self.__url.update(url)
+            self.__user.update(user)
+            self.__version.update(version)
+
         @property
         def change_status(self):
             """

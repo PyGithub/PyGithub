@@ -1,4 +1,3 @@
-updatable: false
 attributes:
   - name: id
     type: int

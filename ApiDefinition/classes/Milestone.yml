@@ -1,4 +1,3 @@
-updatable: false
 attributes:
   - name: closed_issues
     type: int

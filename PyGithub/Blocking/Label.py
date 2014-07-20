@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Label(bgo.SessionedGithubObject):
+class Label(bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.SessionedGithubObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -33,11 +33,18 @@ class Label(bgo.SessionedGithubObject):
         self.__name = rcv.Attribute("Label.name", rcv.StringConverter, name)
         self.__url = rcv.Attribute("Label.url", rcv.StringConverter, url)
 
+    def _updateAttributes(self, eTag, color=rcv.Absent, name=rcv.Absent, url=rcv.Absent, **kwds):
+        super(Label, self)._updateAttributes(eTag, **kwds)
+        self.__color.update(color)
+        self.__name.update(name)
+        self.__url.update(url)
+
     @property
     def color(self):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__color.needsLazyCompletion)
         return self.__color.value
 
     @property
@@ -45,6 +52,7 @@ class Label(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__name.needsLazyCompletion)
         return self.__name.value
 
     @property
@@ -52,4 +60,5 @@ class Label(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value

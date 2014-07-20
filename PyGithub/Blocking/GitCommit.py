@@ -47,6 +47,12 @@ class GitCommit(bgo.UpdatableGithubObject):
             self.__email = rcv.Attribute("GitCommit.Author.email", rcv.StringConverter, email)
             self.__name = rcv.Attribute("GitCommit.Author.name", rcv.StringConverter, name)
 
+        def _updateAttributes(self, date=None, email=None, name=None, **kwds):
+            super(GitCommit.Author, self)._updateAttributes(**kwds)
+            self.__date.update(date)
+            self.__email.update(email)
+            self.__name.update(name)
+
         @property
         def date(self):
             """

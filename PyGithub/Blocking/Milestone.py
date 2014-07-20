@@ -16,9 +16,9 @@ import PyGithub.Blocking._send as snd
 import PyGithub.Blocking._receive as rcv
 
 
-class Milestone(bgo.SessionedGithubObject):
+class Milestone(bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.SessionedGithubObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -44,11 +44,28 @@ class Milestone(bgo.SessionedGithubObject):
         self.__updated_at = rcv.Attribute("Milestone.updated_at", rcv.DatetimeConverter, updated_at)
         self.__url = rcv.Attribute("Milestone.url", rcv.StringConverter, url)
 
+    def _updateAttributes(self, eTag, closed_issues=rcv.Absent, created_at=rcv.Absent, creator=rcv.Absent, description=rcv.Absent, due_on=rcv.Absent, id=rcv.Absent, labels_url=rcv.Absent, number=rcv.Absent, open_issues=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+        super(Milestone, self)._updateAttributes(eTag, **kwds)
+        self.__closed_issues.update(closed_issues)
+        self.__created_at.update(created_at)
+        self.__creator.update(creator)
+        self.__description.update(description)
+        self.__due_on.update(due_on)
+        self.__id.update(id)
+        self.__labels_url.update(labels_url)
+        self.__number.update(number)
+        self.__open_issues.update(open_issues)
+        self.__state.update(state)
+        self.__title.update(title)
+        self.__updated_at.update(updated_at)
+        self.__url.update(url)
+
     @property
     def closed_issues(self):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__closed_issues.needsLazyCompletion)
         return self.__closed_issues.value
 
     @property
@@ -56,6 +73,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__created_at.needsLazyCompletion)
         return self.__created_at.value
 
     @property
@@ -63,6 +81,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`.User`
         """
+        self._completeLazily(self.__creator.needsLazyCompletion)
         return self.__creator.value
 
     @property
@@ -70,6 +89,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__description.needsLazyCompletion)
         return self.__description.value
 
     @property
@@ -77,6 +97,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__due_on.needsLazyCompletion)
         return self.__due_on.value
 
     @property
@@ -84,6 +105,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__id.needsLazyCompletion)
         return self.__id.value
 
     @property
@@ -91,6 +113,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__labels_url.needsLazyCompletion)
         return self.__labels_url.value
 
     @property
@@ -98,6 +121,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__number.needsLazyCompletion)
         return self.__number.value
 
     @property
@@ -105,6 +129,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`int`
         """
+        self._completeLazily(self.__open_issues.needsLazyCompletion)
         return self.__open_issues.value
 
     @property
@@ -112,6 +137,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__state.needsLazyCompletion)
         return self.__state.value
 
     @property
@@ -119,6 +145,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__title.needsLazyCompletion)
         return self.__title.value
 
     @property
@@ -126,6 +153,7 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`datetime`
         """
+        self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
 
     @property
@@ -133,4 +161,5 @@ class Milestone(bgo.SessionedGithubObject):
         """
         :type: :class:`string`
         """
+        self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value

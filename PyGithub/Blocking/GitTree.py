@@ -43,6 +43,13 @@ class GitTree(bgo.UpdatableGithubObject):
             self.__sha = rcv.Attribute("GitTree.GitSubmodule.sha", rcv.StringConverter, sha)
             self.__type = rcv.Attribute("GitTree.GitSubmodule.type", rcv.StringConverter, type)
 
+        def _updateAttributes(self, mode=None, path=None, sha=None, type=None, **kwds):
+            super(GitTree.GitSubmodule, self)._updateAttributes(**kwds)
+            self.__mode.update(mode)
+            self.__path.update(path)
+            self.__sha.update(sha)
+            self.__type.update(type)
+
         @property
         def mode(self):
             """

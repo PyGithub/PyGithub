@@ -235,7 +235,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/users/{username}/keys", username=self.login)
         r = self.Session._request("GET", url)
-        return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
+        return rcv.ListConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_orgs(self, per_page=None):
         """

@@ -39,6 +39,12 @@ class GitTag(bgo.SessionedGithubObject):
             self.__email = rcv.Attribute("GitTag.Tagger.email", rcv.StringConverter, email)
             self.__name = rcv.Attribute("GitTag.Tagger.name", rcv.StringConverter, name)
 
+        def _updateAttributes(self, date=None, email=None, name=None, **kwds):
+            super(GitTag.Tagger, self)._updateAttributes(**kwds)
+            self.__date.update(date)
+            self.__email.update(email)
+            self.__name.update(name)
+
         @property
         def date(self):
             """

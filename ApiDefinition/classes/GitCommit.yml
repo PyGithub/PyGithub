@@ -1,6 +1,5 @@
 structures:
   - name: Author
-    updatable: false
     attributes:
       - name: date
         type: datetime

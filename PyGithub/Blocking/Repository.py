@@ -57,6 +57,12 @@ class Repository(bgo.UpdatableGithubObject):
             self.__name = rcv.Attribute("Repository.AnonymousContributor.name", rcv.StringConverter, name)
             self.__type = rcv.Attribute("Repository.AnonymousContributor.type", rcv.StringConverter, type)
 
+        def _updateAttributes(self, contributions=None, name=None, type=None, **kwds):
+            super(Repository.AnonymousContributor, self)._updateAttributes(**kwds)
+            self.__contributions.update(contributions)
+            self.__name.update(name)
+            self.__type.update(type)
+
         @property
         def contributions(self):
             """
@@ -88,8 +94,13 @@ class Repository(bgo.UpdatableGithubObject):
         def _initAttributes(self, commit=None, name=None, _links=None, **kwds):
             import PyGithub.Blocking.Commit
             super(Repository.Branch, self)._initAttributes(**kwds)
-            self.__commit = rcv.Attribute("Repository.Branch.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+            self.__commit = rcv.Attribute("Repository.Branch.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
             self.__name = rcv.Attribute("Repository.Branch.name", rcv.StringConverter, name)
+
+        def _updateAttributes(self, commit=None, name=None, _links=None, **kwds):
+            super(Repository.Branch, self)._updateAttributes(**kwds)
+            self.__commit.update(commit)
+            self.__name.update(name)
 
         @property
         def commit(self):
@@ -117,6 +128,11 @@ class Repository(bgo.UpdatableGithubObject):
             super(Repository.ContentCommit, self)._initAttributes(**kwds)
             self.__commit = rcv.Attribute("Repository.ContentCommit.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
             self.__content = rcv.Attribute("Repository.ContentCommit.content", rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), content)
+
+        def _updateAttributes(self, commit=None, content=None, **kwds):
+            super(Repository.ContentCommit, self)._updateAttributes(**kwds)
+            self.__commit.update(commit)
+            self.__content.update(content)
 
         @property
         def commit(self):
@@ -180,10 +196,17 @@ class Repository(bgo.UpdatableGithubObject):
         def _initAttributes(self, commit=None, name=None, tarball_url=None, zipball_url=None, **kwds):
             import PyGithub.Blocking.Commit
             super(Repository.Tag, self)._initAttributes(**kwds)
-            self.__commit = rcv.Attribute("Repository.Tag.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+            self.__commit = rcv.Attribute("Repository.Tag.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
             self.__name = rcv.Attribute("Repository.Tag.name", rcv.StringConverter, name)
             self.__tarball_url = rcv.Attribute("Repository.Tag.tarball_url", rcv.StringConverter, tarball_url)
             self.__zipball_url = rcv.Attribute("Repository.Tag.zipball_url", rcv.StringConverter, zipball_url)
+
+        def _updateAttributes(self, commit=None, name=None, tarball_url=None, zipball_url=None, **kwds):
+            super(Repository.Tag, self)._updateAttributes(**kwds)
+            self.__commit.update(commit)
+            self.__name.update(name)
+            self.__tarball_url.update(tarball_url)
+            self.__zipball_url.update(zipball_url)
 
         @property
         def commit(self):
@@ -1069,7 +1092,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.keys_url)
         postArguments = snd.dictionary(key=key, title=title)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def delete(self):
         """
@@ -1215,7 +1238,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.commits_url, sha=sha)
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit)(None, r.json(), r.headers.get("ETag"))
 
     def get_commits(self, sha=None, path=None, author=None, since=None, until=None, per_page=None):
         """
@@ -1251,7 +1274,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.commits_url)
         urlArguments = snd.dictionary(author=author, path=path, per_page=per_page, sha=sha, since=since, until=until)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
+        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
 
     def get_contents(self, path, ref=None):
         """
@@ -1276,7 +1299,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, path=path, repo=self.name)
         urlArguments = snd.dictionary(ref=ref)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.FirstMatchUnionConverter(rcv.KeyedStructureUnionConverter("type", dict(file=rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), submodule=rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), symlink=rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))), rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.StructureConverter(self.Session, PyGithub.Blocking.Dir.Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))))(None, r.json())
+        return rcv.FirstMatchUnionConverter(rcv.KeyedStructureUnionConverter("type", dict(file=rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), submodule=rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), symlink=rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))), rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.ClassConverter(self.Session, PyGithub.Blocking.Dir.Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))))(None, r.json())
 
     def get_contributors(self, anon=None, per_page=None):
         """
@@ -1447,7 +1470,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.issues_url, number=str(number))
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
 
     def get_key(self, id):
         """
@@ -1464,7 +1487,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url, key_id=str(id))
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
     def get_keys(self):
         """
@@ -1478,7 +1501,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.keys_url)
         r = self.Session._request("GET", url)
-        return rcv.ListConverter(rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
+        return rcv.ListConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_label(self, name):
         """
@@ -1495,7 +1518,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.labels_url, name=name)
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Label.Label)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)(None, r.json(), r.headers.get("ETag"))
 
     def get_milestone(self, number):
         """
@@ -1512,7 +1535,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.milestones_url, number=str(number))
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Milestone.Milestone)(None, r.json(), r.headers.get("ETag"))
+        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone)(None, r.json(), r.headers.get("ETag"))
 
     def get_readme(self, ref=None):
         """

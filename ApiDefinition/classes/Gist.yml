@@ -8,7 +8,6 @@ structures:
       - name: total
         type: int
   - name: GistCommit
-    updatable: false
     attributes:
       - name: change_status
         type: ChangeStatus
