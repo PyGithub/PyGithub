@@ -287,7 +287,7 @@ class CodeGenerator:
         if parameter.name == "repo":
             yield "repo = snd.normalizeTwoStringsString(repo)"
         else:
-            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(toUpperCamel(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
+            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.category == "attribute" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
 
     def generateCodeToNormalizeBuiltinParameter(self, parameter):
         yield "{} = snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)

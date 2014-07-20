@@ -10,7 +10,6 @@ import unittest
 
 import CodeGeneration.ApiDefinition.CrossReferenced as CrossReferenced
 import CodeGeneration.ApiDefinition.Structured as Structured
-import CodeGeneration.ApiDefinition.Typing as Typing
 
 # @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
 # @todoAlpha Warn if a method has effect "update" in an non-updatable class
@@ -143,8 +142,8 @@ class Checker(object):
 
 class CheckerTestCase(unittest.TestCase):
     def expect(self, d, *warnings):
-        typesRepo = Typing.Repository()
-        typesRepo.register(Typing.BuiltinType("string"))
+        typesRepo = CrossReferenced.TypesRepository()
+        typesRepo.register(CrossReferenced.BuiltinType("string"))
         self.assertEqual(set(Checker(CrossReferenced.Definition(d, typesRepo, test=True)).warnings()), set(warnings))
 
     def testUrlInNotUpdatableNotCompletableClass(self):
