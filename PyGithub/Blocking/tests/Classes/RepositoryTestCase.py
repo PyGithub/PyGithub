@@ -493,6 +493,22 @@ class RepositoryGitStuff(TestCase):
         b = r.get_branch("develop")
         self.assertEqual(b.commit.author.login, "ghe-user-1")
 
+    # @todoSomeday Consider opening an issue to GitHub to fix inconsistency with Branch:
+    # Branch.update can be tested like this if Branch is modified to take its url attribute from _links["self"]
+    # but _links is returned only by Repository.get_branch, not by Repository.get_branches
+    # so we have no way to make Branch generaly updatable
+    # @Enterprise.User(1)
+    # def testUpdateBranch(self):
+    #     r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+    #     b = r.get_branch("test_update")
+    #     self.assertEqual(b.commit.sha, "e078f69fb050b75fe5f3c7aa70adc24d692e75b8")
+    #     self.assertFalse(b.update())
+    #     self.assertEqual(b.commit.sha, "e078f69fb050b75fe5f3c7aa70adc24d692e75b8")
+    #     r.get_git_ref("refs/heads/test_update").edit(sha="7820fadc2429652016611e98fdc21766ba075161")
+    #     self.assertTrue(b.update())
+    #     self.assertEqual(b.commit.sha, "7820fadc2429652016611e98fdc21766ba075161")
+    #     r.get_git_ref("refs/heads/test_update").edit(sha="e078f69fb050b75fe5f3c7aa70adc24d692e75b8", force=True)
+
     @Enterprise.User(1)
     def testGetCommits(self):
         r = self.g.get_repo("ghe-user-1/repo-user-1-1")

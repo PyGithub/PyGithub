@@ -1,5 +1,6 @@
 structures:
   - name: AnonymousContributor
+    updatable: false
     attributes:
       - name: contributions
         type: int
@@ -8,6 +9,7 @@ structures:
       - name: type
         type: string
   - name: Branch
+    updatable: false
     attributes:
       - name: commit
         type: Commit
@@ -15,6 +17,7 @@ structures:
         type: string
     deprecated_attributes: [_links]
   - name: ContentCommit
+    updatable: false
     attributes:
       - name: commit
         type: GitCommit
@@ -29,6 +32,7 @@ structures:
       - name: push
         type: bool
   - name: Tag
+    updatable: false
     attributes:
       - name: commit
         type: Commit

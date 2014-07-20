@@ -57,12 +57,6 @@ class Repository(bgo.UpdatableGithubObject):
             self.__name = rcv.Attribute("Repository.AnonymousContributor.name", rcv.StringConverter, name)
             self.__type = rcv.Attribute("Repository.AnonymousContributor.type", rcv.StringConverter, type)
 
-        def _updateAttributes(self, contributions=None, name=None, type=None, **kwds):
-            super(Repository.AnonymousContributor, self)._updateAttributes(**kwds)
-            self.__contributions.update(contributions)
-            self.__name.update(name)
-            self.__type.update(type)
-
         @property
         def contributions(self):
             """
@@ -97,11 +91,6 @@ class Repository(bgo.UpdatableGithubObject):
             self.__commit = rcv.Attribute("Repository.Branch.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
             self.__name = rcv.Attribute("Repository.Branch.name", rcv.StringConverter, name)
 
-        def _updateAttributes(self, commit=None, name=None, _links=None, **kwds):
-            super(Repository.Branch, self)._updateAttributes(**kwds)
-            self.__commit.update(commit)
-            self.__name.update(name)
-
         @property
         def commit(self):
             """
@@ -128,11 +117,6 @@ class Repository(bgo.UpdatableGithubObject):
             super(Repository.ContentCommit, self)._initAttributes(**kwds)
             self.__commit = rcv.Attribute("Repository.ContentCommit.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
             self.__content = rcv.Attribute("Repository.ContentCommit.content", rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), content)
-
-        def _updateAttributes(self, commit=None, content=None, **kwds):
-            super(Repository.ContentCommit, self)._updateAttributes(**kwds)
-            self.__commit.update(commit)
-            self.__content.update(content)
 
         @property
         def commit(self):
@@ -200,13 +184,6 @@ class Repository(bgo.UpdatableGithubObject):
             self.__name = rcv.Attribute("Repository.Tag.name", rcv.StringConverter, name)
             self.__tarball_url = rcv.Attribute("Repository.Tag.tarball_url", rcv.StringConverter, tarball_url)
             self.__zipball_url = rcv.Attribute("Repository.Tag.zipball_url", rcv.StringConverter, zipball_url)
-
-        def _updateAttributes(self, commit=None, name=None, tarball_url=None, zipball_url=None, **kwds):
-            super(Repository.Tag, self)._updateAttributes(**kwds)
-            self.__commit.update(commit)
-            self.__name.update(name)
-            self.__tarball_url.update(tarball_url)
-            self.__zipball_url.update(zipball_url)
 
         @property
         def commit(self):
