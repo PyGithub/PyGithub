@@ -1,5 +1,4 @@
 base: Entity
-updatable: true
 attributes:
   - name: followers_url
     type: string
@@ -57,10 +56,10 @@ methods:
         type: int
     url_template: attribute gists_url
     url_arguments:
-      - name: since
-        value: parameter since
       - name: per_page
         value: parameter per_page
+      - name: since
+        value: parameter since
     return_type:
       container: PaginatedList
       content: Gist
@@ -113,14 +112,14 @@ methods:
         type: int
     url_template: attribute repos_url
     url_arguments:
-      - name: sort
-        value: parameter sort
       - name: direction
         value: parameter direction
-      - name: type
-        value: parameter type
       - name: per_page
         value: parameter per_page
+      - name: sort
+        value: parameter sort
+      - name: type
+        value: parameter type
     return_type:
       container: PaginatedList
       content: Repository
@@ -137,12 +136,12 @@ methods:
         type: int
     url_template: attribute starred_url
     url_arguments:
-      - name: sort
-        value: parameter sort
       - name: direction
         value: parameter direction
       - name: per_page
         value: parameter per_page
+      - name: sort
+        value: parameter sort
     return_type:
       container: PaginatedList
       content: Repository

@@ -2,6 +2,9 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import sys
+assert sys.hexversion >= 0x03040000
+
 
 class Call:
     def __init__(self, method):

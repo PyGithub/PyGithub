@@ -1,4 +1,3 @@
-updatable: true
 attributes:
   - name: object
     type: GitCommit
@@ -21,9 +20,9 @@ methods:
         type: bool
     url_template: attribute url
     post_arguments:
-      - name: sha
-        value: parameter sha
       - name: force
         value: parameter force
+      - name: sha
+        value: parameter sha
     effect: update
     return_type: none

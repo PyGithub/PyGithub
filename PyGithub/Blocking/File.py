@@ -155,7 +155,7 @@ class File(bgo.UpdatableGithubObject):
             committer = snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(sha=self.sha, message=message, committer=committer, author=author)
+        postArguments = snd.dictionary(author=author, committer=committer, message=message, sha=self.sha)
         r = self.Session._request("DELETE", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json()["commit"])
 
@@ -182,7 +182,7 @@ class File(bgo.UpdatableGithubObject):
             committer = snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(sha=self.sha, message=message, content=content, committer=committer, author=author)
+        postArguments = snd.dictionary(author=author, committer=committer, content=content, message=message, sha=self.sha)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(None, **(r.json()["content"]))
         self.__content.update(content)

@@ -1,5 +1,4 @@
 base: Entity
-updatable: true
 attributes:
   - name: billing_email
     type: string
@@ -33,6 +32,8 @@ methods:
     parameters:
       - name: repo
         orig: Repository.full_name
+    unimplemented_parameters:
+      - organization
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -71,28 +72,28 @@ methods:
         type: string
     url_template: attribute repos_url
     post_arguments:
-      - name: name
-        value: parameter name
+      - name: auto_init
+        value: parameter auto_init
       - name: description
         value: parameter description
-      - name: homepage
-        value: parameter homepage
-      - name: private
-        value: parameter private
+      - name: gitignore_template
+        value: parameter gitignore_template
       - name: has_downloads
         value: parameter has_downloads
       - name: has_issues
         value: parameter has_issues
       - name: has_wiki
         value: parameter has_wiki
-      - name: team_id
-        value: parameter team_id
-      - name: auto_init
-        value: parameter auto_init
-      - name: gitignore_template
-        value: parameter gitignore_template
+      - name: homepage
+        value: parameter homepage
       - name: license_template
         value: parameter license_template
+      - name: name
+        value: parameter name
+      - name: private
+        value: parameter private
+      - name: team_id
+        value: parameter team_id
     return_type: Repository
   - name: create_team
     end_point: POST /orgs/:org/teams
@@ -206,10 +207,10 @@ methods:
         type: int
     url_template: attribute repos_url
     url_arguments:
-      - name: type
-        value: parameter type
       - name: per_page
         value: parameter per_page
+      - name: type
+        value: parameter type
     return_type:
       container: PaginatedList
       content: Repository

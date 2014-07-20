@@ -121,6 +121,6 @@ class Subscription(bgo.UpdatableGithubObject):
         ignored = snd.normalizeBool(ignored)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(subscribed=subscribed, ignored=ignored)
+        postArguments = snd.dictionary(ignored=ignored, subscribed=subscribed)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())

@@ -78,6 +78,33 @@ class Repository(bgo.UpdatableGithubObject):
             """
             return self.__type.value
 
+    class Branch(bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.Repository.get_branch`
+          * :meth:`.Repository.get_branches`
+        """
+
+        def _initAttributes(self, commit=None, name=None, _links=None, **kwds):
+            import PyGithub.Blocking.Commit
+            super(Repository.Branch, self)._initAttributes(**kwds)
+            self.__commit = rcv.Attribute("Repository.Branch.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+            self.__name = rcv.Attribute("Repository.Branch.name", rcv.StringConverter, name)
+
+        @property
+        def commit(self):
+            """
+            :type: :class:`.Commit`
+            """
+            return self.__commit.value
+
+        @property
+        def name(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__name.value
+
     class ContentCommit(bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
@@ -143,6 +170,48 @@ class Repository(bgo.UpdatableGithubObject):
             :type: :class:`bool`
             """
             return self.__push.value
+
+    class Tag(bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.Repository.get_tags`
+        """
+
+        def _initAttributes(self, commit=None, name=None, tarball_url=None, zipball_url=None, **kwds):
+            import PyGithub.Blocking.Commit
+            super(Repository.Tag, self)._initAttributes(**kwds)
+            self.__commit = rcv.Attribute("Repository.Tag.commit", rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit), commit)
+            self.__name = rcv.Attribute("Repository.Tag.name", rcv.StringConverter, name)
+            self.__tarball_url = rcv.Attribute("Repository.Tag.tarball_url", rcv.StringConverter, tarball_url)
+            self.__zipball_url = rcv.Attribute("Repository.Tag.zipball_url", rcv.StringConverter, zipball_url)
+
+        @property
+        def commit(self):
+            """
+            :type: :class:`.Commit`
+            """
+            return self.__commit.value
+
+        @property
+        def name(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__name.value
+
+        @property
+        def tarball_url(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__tarball_url.value
+
+        @property
+        def zipball_url(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__zipball_url.value
 
     def _initAttributes(self, archive_url=rcv.Absent, assignees_url=rcv.Absent, blobs_url=rcv.Absent, branches_url=rcv.Absent, clone_url=rcv.Absent, collaborators_url=rcv.Absent, comments_url=rcv.Absent, commits_url=rcv.Absent, compare_url=rcv.Absent, contents_url=rcv.Absent, contributors_url=rcv.Absent, created_at=rcv.Absent, default_branch=rcv.Absent, description=rcv.Absent, downloads_url=rcv.Absent, events_url=rcv.Absent, fork=rcv.Absent, forks_count=rcv.Absent, forks_url=rcv.Absent, full_name=rcv.Absent, git_commits_url=rcv.Absent, git_refs_url=rcv.Absent, git_tags_url=rcv.Absent, git_url=rcv.Absent, has_issues=rcv.Absent, has_wiki=rcv.Absent, homepage=rcv.Absent, hooks_url=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, issue_comment_url=rcv.Absent, issue_events_url=rcv.Absent, issues_url=rcv.Absent, keys_url=rcv.Absent, labels_url=rcv.Absent, language=rcv.Absent, languages_url=rcv.Absent, merges_url=rcv.Absent, milestones_url=rcv.Absent, mirror_url=rcv.Absent, name=rcv.Absent, network_count=rcv.Absent, notifications_url=rcv.Absent, open_issues_count=rcv.Absent, owner=rcv.Absent, parent=rcv.Absent, permissions=rcv.Absent, private=rcv.Absent, pulls_url=rcv.Absent, pushed_at=rcv.Absent, releases_url=rcv.Absent, size=rcv.Absent, source=rcv.Absent, ssh_url=rcv.Absent, stargazers_count=rcv.Absent, stargazers_url=rcv.Absent, statuses_url=rcv.Absent, subscribers_count=rcv.Absent, subscribers_url=rcv.Absent, subscription_url=rcv.Absent, svn_url=rcv.Absent, tags_url=rcv.Absent, teams_url=rcv.Absent, trees_url=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, watchers_count=rcv.Absent, forks=None, has_downloads=None, master_branch=None, open_issues=None, organization=None, watchers=None, **kwds):
         import PyGithub.Blocking.Organization
@@ -863,8 +932,8 @@ class Repository(bgo.UpdatableGithubObject):
         if committer is not None:
             committer = snd.normalizeGitAuthor(committer)
 
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
-        postArguments = snd.dictionary(branch=branch, message=message, content=content, committer=committer, author=author)
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, path=path, repo=self.name)
+        postArguments = snd.dictionary(author=author, branch=branch, committer=committer, content=content, message=message)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         return rcv.StructureConverter(self.Session, Repository.ContentCommit)(None, r.json())
 
@@ -912,7 +981,7 @@ class Repository(bgo.UpdatableGithubObject):
             author = snd.normalizeGitAuthor(author)
 
         url = uritemplate.expand(self.git_commits_url, owner=self.owner.login, repo=self.name)
-        postArguments = snd.dictionary(tree=tree, message=message, committer=committer, author=author, parents=parents)
+        postArguments = snd.dictionary(author=author, committer=committer, message=message, parents=parents, tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json(), r.headers.get("ETag"))
 
@@ -959,7 +1028,7 @@ class Repository(bgo.UpdatableGithubObject):
             tagger = snd.normalizeGitAuthor(tagger)
 
         url = uritemplate.expand(self.git_tags_url, owner=self.owner.login, repo=self.name)
-        postArguments = snd.dictionary(tag=tag, tagger=tagger, message=message, object=object, type=type)
+        postArguments = snd.dictionary(message=message, object=object, tag=tag, tagger=tagger, type=type)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.StructureConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
 
@@ -998,7 +1067,7 @@ class Repository(bgo.UpdatableGithubObject):
         key = snd.normalizeString(key)
 
         url = uritemplate.expand(self.keys_url)
-        postArguments = snd.dictionary(title=title, key=key)
+        postArguments = snd.dictionary(key=key, title=title)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
@@ -1049,7 +1118,7 @@ class Repository(bgo.UpdatableGithubObject):
             name = self.name
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_issues=has_issues, has_wiki=has_wiki, default_branch=default_branch)
+        postArguments = snd.dictionary(default_branch=default_branch, description=description, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, name=name, private=private)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
@@ -1083,13 +1152,12 @@ class Repository(bgo.UpdatableGithubObject):
         :param branch: mandatory :class:`string`
         :rtype: :class:`.Branch`
         """
-        import PyGithub.Blocking.Branch
 
         branch = snd.normalizeString(branch)
 
         url = uritemplate.expand(self.branches_url, branch=branch)
         r = self.Session._request("GET", url)
-        return rcv.StructureConverter(self.Session, PyGithub.Blocking.Branch.Branch)(None, r.json(), r.headers.get("ETag"))
+        return rcv.StructureConverter(self.Session, Repository.Branch)(None, r.json())
 
     def get_branches(self, per_page=None):
         """
@@ -1100,7 +1168,6 @@ class Repository(bgo.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Branch`
         """
-        import PyGithub.Blocking.Branch
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -1110,7 +1177,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.branches_url)
         urlArguments = snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Branch.Branch))(None, r)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, Repository.Branch))(None, r)
 
     def get_collaborators(self, per_page=None):
         """
@@ -1182,7 +1249,7 @@ class Repository(bgo.UpdatableGithubObject):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.commits_url)
-        urlArguments = snd.dictionary(sha=sha, path=path, author=author, since=since, until=until, per_page=per_page)
+        urlArguments = snd.dictionary(author=author, path=path, per_page=per_page, sha=sha, since=since, until=until)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Commit.Commit))(None, r)
 
@@ -1206,7 +1273,7 @@ class Repository(bgo.UpdatableGithubObject):
         if ref is not None:
             ref = snd.normalizeString(ref)
 
-        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, repo=self.name, path=path)
+        url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/contents/{path}", owner=self.owner.login, path=path, repo=self.name)
         urlArguments = snd.dictionary(ref=ref)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.FirstMatchUnionConverter(rcv.KeyedStructureUnionConverter("type", dict(file=rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), submodule=rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), symlink=rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))), rcv.ListConverter(rcv.FileDirSubmoduleSymLinkUnionConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.File.File), rcv.StructureConverter(self.Session, PyGithub.Blocking.Dir.Dir), rcv.ClassConverter(self.Session, PyGithub.Blocking.Submodule.Submodule), rcv.ClassConverter(self.Session, PyGithub.Blocking.SymLink.SymLink))))(None, r.json())
@@ -1254,7 +1321,7 @@ class Repository(bgo.UpdatableGithubObject):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.forks_url)
-        urlArguments = snd.dictionary(sort=sort, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, sort=sort)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, Repository))(None, r)
 
@@ -1517,7 +1584,6 @@ class Repository(bgo.UpdatableGithubObject):
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Tag`
         """
-        import PyGithub.Blocking.Tag
 
         if per_page is None:
             per_page = self.Session.PerPage
@@ -1527,7 +1593,7 @@ class Repository(bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.tags_url)
         urlArguments = snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, PyGithub.Blocking.Tag.Tag))(None, r)
+        return rcv.PaginatedListConverter(self.Session, rcv.StructureConverter(self.Session, Repository.Tag))(None, r)
 
     def get_teams(self, per_page=None):
         """

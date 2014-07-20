@@ -1,7 +1,5 @@
-updatable: true
 structures:
   - name: ChangeStatus
-    updatable: true
     attributes:
       - name: additions
         type: int
@@ -23,7 +21,6 @@ structures:
       - name: version
         type: string
   - name: GistFile
-    updatable: true
     attributes:
       - name: content
         type: string
@@ -40,7 +37,6 @@ structures:
       - name: type
         type: string
   - name: HistoryElement
-    updatable: true
     attributes:
       - name: change_status
         type: ChangeStatus
@@ -114,6 +110,9 @@ methods:
         type: string
       - name: files
         type: bool
+    unimplemented_parameters:
+      - content
+      - filename
     url_template: attribute url
     post_arguments:
       - name: description

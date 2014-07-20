@@ -2,6 +2,9 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import sys
+assert sys.hexversion >= 0x03040000
+
 import CodeGeneration.PythonSnippets as PS
 
 
@@ -15,7 +18,7 @@ class CodeGenerator:
         yield "import PyGithub.Blocking._base_github_object as bgo"
         yield "import PyGithub.Blocking._send as snd"
         yield "import PyGithub.Blocking._receive as rcv"
-        if klass.base.module != "PyGithub.Blocking.BaseGithubObject":
+        if klass.base is not None:
             yield ""
             yield "import " + klass.base.module
         yield ""
@@ -23,7 +26,7 @@ class CodeGenerator:
 
         yield from (
             PS.Class(klass.name)
-            .base((klass.base.module if klass.base.module != "PyGithub.Blocking.BaseGithubObject" else "bgo") + "." + klass.base.name)
+            .base(("bgo.UpdatableGithubObject" if klass.isUpdatable else "bgo.SessionedGithubObject") if klass.base is None else (klass.base.module + "." + klass.base.name))
             .docstring(self.generateDocStringForClass(klass))
             .elements(self.createClassStructure(s) for s in klass.structures)
             .elements(p for p in self.createClassPrivateParts(klass))
@@ -32,7 +35,7 @@ class CodeGenerator:
         )
 
     def generateDocStringForClass(self, klass):
-        yield "Base class: :class:`.{}`".format(klass.base.name)
+        yield "Base class: :class:`.{}`".format(("UpdatableGithubObject" if klass.isUpdatable else "SessionedGithubObject") if klass.base is None else klass.base.name)
         yield ""
         if len(klass.derived) == 0:
             yield "Derived classes: none."
@@ -121,7 +124,7 @@ class CodeGenerator:
         imports = set()
         for type in types:
             for t in type.underlyingTypes:
-                if t.category == "class" and t is not klass and t.module != "PyGithub.Blocking.BaseGithubObject":
+                if t.category == "class" and t is not klass and t.module is not None:
                     imports.add(t.module)
         for i in sorted(imports):
             yield "import " + i

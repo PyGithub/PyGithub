@@ -146,7 +146,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
             license_template = snd.normalizeString(license_template)
 
         url = uritemplate.expand(self.repos_url)
-        postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, team_id=team_id, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
+        postArguments = snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private, team_id=team_id)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
@@ -292,7 +292,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
-        urlArguments = snd.dictionary(type=type, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, type=type)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 

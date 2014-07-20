@@ -2,19 +2,31 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
-import yaml
+import sys
+assert sys.hexversion >= 0x03040000
+
 import collections
-import os
 import glob
+import itertools
+import os
+
+import yaml
+
+
+def load(*args, **kwds):
+    return _DefinitionLoader(*args, **kwds).load()
+
+
+def dump(*args, **kwds):
+    _DefinitionDumper(*args, **kwds).dump()
 
 
 # Monomorphic structures
-# @todoAlpha separate updatable (for objects with an update method) from completable (for objects with lazy completion)
-# @todoAlpha Test lazy completion and update of all classes in two topic test cases, not in each class test case
-Class = collections.namedtuple("Class", "name, updatable, base, structures, attributes, methods, deprecatedAttributes")
+Definition = collections.namedtuple("Definition", "endPoints, classes, unimplementedEndPoints")
+Class = collections.namedtuple("Class", "name, updatable, completable, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
-Method = collections.namedtuple("Method", "name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
+Method = collections.namedtuple("Method", "name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
 Parameter = collections.namedtuple("Parameter", "name, type, orig, optional")
 ParameterOrigin = collections.namedtuple("ParameterOrigin", "type, attribute")
@@ -37,116 +49,164 @@ RepositoryOwnerValue = collections.namedtuple("RepositoryOwnerValue", "repositor
 RepositoryNameValue = collections.namedtuple("RepositoryNameValue", "repository")
 
 
-class Definition(object):
+def _loadYml(fileName):
+    with open(fileName) as f:
+        return yaml.load(f.read())
+
+
+def _dumpYml(fileName, data):
+    def rec(value):
+        if isinstance(value, collections.OrderedDict):
+            yield from recDict(value.items())
+        elif isinstance(value, dict):
+            yield from recDict(sorted(value.items()))
+        elif isinstance(value, list):
+            yield from recList(value)
+        elif isinstance(value, tuple):
+            assert all(isinstance(item, str) for item in value), value
+            yield "[" + ", ".join(list(rec(item))[0] for item in value) + "]"
+        elif isinstance(value, str):
+            if "(" in value:
+                yield '"' + value + '"'
+            else:
+                yield value
+        else:
+            assert False, value  # pragma no cover
+
+    def recList(items):
+        for v in items:
+            lines = list(rec(v))
+            yield from ["- " + lines[0]] + ["  " + l for l in lines[1:]]  # pragma no branch
+
+    def recDict(items):
+        for k, v in items:
+            lines = list(rec(v))
+            if len(lines) == 1 and not isinstance(v, (dict, list)):
+                yield k + ": " + lines[0]
+            else:
+                yield from [k + ":"] + ["  " + l for l in lines]  # pragma no branch
+
+    with open(fileName, "w") as f:
+        f.write("\n".join(rec(data)))
+        f.write("\n")
+
+
+class _DefinitionLoader:
     """
     At this level of description of the API, all data is structured (no more parsing needed, not even a .split(" "))
     but not cross-referenced (references are named by strings).
     """
 
     def __init__(self, dirName):
-        self.__loadEndPoints(dirName)
-        self.__loadClasses(dirName)
-        self.__validate(dirName)
+        self.dirName = dirName
 
-    @property
-    def endPoints(self):
-        return self.__endPoints
+    def load(self):
+        endPoints = self.loadEndPoints()
+        classes = self.loadClasses()
+        unimplementedEndPoints = self.loadUnimplementedEndPoints()
+        return Definition(endPoints, classes, unimplementedEndPoints)
 
-    @property
-    def classes(self):
-        return self.__classes
+    def loadEndPoints(self):
+        data = _loadYml(os.path.join(self.dirName, "end_points.yml"))
+        return sorted((self.buildEndPoint(url, **op) for url, ops in data.items() for op in ops), key=lambda ep: (ep.url, ep.verb))
 
-    def __loadEndPoints(self, dirName):
-        with open(os.path.join(dirName, "end_points.yml")) as f:
-            data = yaml.load(f.read())
-        self.__endPoints = [self.__buildEndPoint(url, **op) for url, ops in data.items() for op in ops]
-
-    def __buildEndPoint(self, url, verb, doc, parameters=[]):
+    def buildEndPoint(self, url, verb, doc, parameters=[]):
         assert isinstance(url, str), url
-        assert isinstance(verb, str), verb
+        assert verb in ["GET", "PUT", "HEAD", "POST", "PATCH", "DELETE"], verb
         assert isinstance(doc, str), doc
         assert all(isinstance(p, str) for p in parameters), parameters
         return EndPoint(
             verb=verb,
             url=url,
-            parameters=parameters,
+            parameters=parameters,  # Do not sort
             doc=doc
         )
 
-    def __loadClasses(self, dirName):
-        self.__classes = [
-            self.__loadClass(fileName)
-            for fileName in glob.glob(os.path.join(dirName, "classes", "*.yml"))
-        ]
+    def loadClasses(self):
+        return sorted(
+            [
+                self.loadClass(fileName)
+                for fileName in glob.glob(os.path.join(self.dirName, "classes", "*.yml"))
+            ],
+            key=lambda c: c.name
+        )
 
-    def __loadClass(self, fileName):
+    def loadClass(self, fileName):
         name = os.path.basename(fileName)[:-4]
-        with open(fileName) as f:
-            data = yaml.load(f.read())
-        return self.__buildClass(name, **data)
+        data = _loadYml(fileName)
+        return self.buildClass(name, **data)
 
-    def __buildClass(self, name, updatable, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
+    def buildClass(self, name, updatable=True, completable=True, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
+        assert isinstance(updatable, bool), updatable
+        assert isinstance(completable, bool), completable
         assert isinstance(base, (type(None), str)), base
+        assert all(isinstance(s, dict) for s in structures), structures
+        assert all(isinstance(a, dict) for a in attributes), attributes
+        assert all(isinstance(m, dict) for m in methods), methods
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
-        # @todoAlpha Warn if base is updatable but class is not
-        if not updatable and any(a["name"] == "url" for a in attributes):
-            print("WARNING:", name, "has a url attribute but is not updatable")
         return Class(
             name=name,
             updatable=updatable,
-            base=self.__buildType(base),
-            structures=[self.__buildStructure(name, **s) for s in structures],
-            attributes=[self.__buildAttribute(**a) for a in attributes],
-            methods=[self.__buildMethod(name, **m) for m in methods],
-            deprecatedAttributes=deprecated_attributes
+            completable=completable,
+            base=self.buildType(base),
+            structures=sorted((self.buildStructure(**s) for s in structures), key=lambda s: s.name),
+            attributes=sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name),
+            methods=sorted((self.buildMethod(**m) for m in methods), key=lambda m: m.name),
+            deprecatedAttributes=sorted(deprecated_attributes)
         )
 
-    def __buildStructure(self, className, name, updatable, attributes=[], deprecated_attributes=[]):
+    def buildStructure(self, name, updatable=True, attributes=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
+        assert isinstance(updatable, bool), updatable
+        assert all(isinstance(a, dict) for a in attributes), attributes
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
-        if not updatable and any(a["name"] == "url" for a in attributes):
-            print("WARNING:", className + "." + name, "has a url attribute but is not updatable")
         return Structure(
             name=name,
             updatable=updatable,
-            attributes=[self.__buildAttribute(**a) for a in attributes],
-            deprecatedAttributes=deprecated_attributes
+            attributes=sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name),
+            deprecatedAttributes=sorted(deprecated_attributes)
         )
 
-    def __buildAttribute(self, name, type):
+    def buildAttribute(self, name, type):
         assert isinstance(name, str), name
+        # no assert on type
         return Attribute(
             name=name,
-            type=self.__buildType(type)
+            type=self.buildType(type)
         )
 
-    def __buildMethod(self, className, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[]):
+    def buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[], unimplemented_parameters=[]):
         assert isinstance(name, str), name
-        if (
-            isinstance(return_type, dict)
-            and "container" in return_type
-            and return_type["container"] == "PaginatedList"
-            and all(p["name"] != "per_page" for p in optional_parameters)
-            and className != "Github"
-            and name not in ["get_repos", "get_users"]
-        ):
-            print("WARNING:", className + "." + name, "returns a paginated list but does not have a per_page parameter")  # pragma no cover
+        # no assert on url_template
+        effects = self.makeList(effect, effects)
+        assert all(isinstance(e, str) for e in effects)
+        assert isinstance(return_from, (type(None), str)), return_from
+        # no assert on return_type
+        end_points = self.makeList(end_point, end_points)
+        assert all(isinstance(ep, str) for ep in end_points)
+        assert all(isinstance(a, dict) for a in url_template_arguments), url_template_arguments
+        assert all(isinstance(a, dict) for a in url_arguments), url_arguments
+        assert all(isinstance(a, dict) for a in post_arguments), post_arguments
+        assert all(isinstance(p, dict) for p in parameters), parameters
+        assert all(isinstance(p, dict) for p in optional_parameters), optional_parameters
+        assert all(isinstance(p, str) for p in unimplemented_parameters)
         return Method(
             name=name,
-            endPoints=self.__makeList(end_point, end_points),
-            parameters=[self.__buildParameter(optional=False, **p) for p in parameters]
-            + [self.__buildParameter(optional=True, **p) for p in optional_parameters],
-            urlTemplate=self.__buildValue(url_template),
-            urlTemplateArguments=[self.__buildArgument(**a) for a in url_template_arguments],
-            urlArguments=[self.__buildArgument(**a) for a in url_arguments],
-            postArguments=[self.__buildArgument(**a) for a in post_arguments],
-            effects=[self.__buildEffect(e) for e in self.__makeList(effect, effects)],
+            endPoints=end_points,
+            parameters=[self.buildParameter(optional=False, **p) for p in parameters]  # Do not sort
+            + [self.buildParameter(optional=True, **p) for p in optional_parameters],  # Do not sort
+            unimplementedParameters=sorted(unimplemented_parameters),
+            urlTemplate=self.buildValue(url_template),
+            urlTemplateArguments=sorted((self.buildArgument(**a) for a in url_template_arguments), key=lambda a: a.name),
+            urlArguments=sorted((self.buildArgument(**a) for a in url_arguments), key=lambda a: a.name),
+            postArguments=sorted((self.buildArgument(**a) for a in post_arguments), key=lambda a: a.name),
+            effects=[self.buildEffect(e) for e in effects],
             returnFrom=return_from,
-            returnType=self.__buildType(return_type)
+            returnType=self.buildType(return_type)
         )
 
-    def __makeList(self, element, elements):
+    def makeList(self, element, elements):
         if elements is None:
             if element is None:
                 return []
@@ -156,32 +216,35 @@ class Definition(object):
             assert element is None
             return elements
 
-    def __buildParameter(self, name, optional, type=None, orig=None):
+    def buildParameter(self, name, optional, type=None, orig=None):
         assert isinstance(name, str), name
         assert isinstance(optional, bool), optional
+        # no assert on type
+        # no assert on orig
         return Parameter(
             name=name,
-            type=self.__buildType(type),
-            orig=self.__buildParameterOrigin(orig),
+            type=self.buildType(type),
+            orig=self.buildParameterOrigin(orig),
             optional=optional
         )
 
-    def __buildParameterOrigin(self, orig):
+    def buildParameterOrigin(self, orig):
         if orig is None:
             return None
         else:
             assert isinstance(orig, str), orig
             type, attribute = orig.split(".")
-            return ParameterOrigin(self.__buildType(type), attribute)
+            return ParameterOrigin(self.buildType(type), attribute)
 
-    def __buildArgument(self, name, value):
+    def buildArgument(self, name, value):
         assert isinstance(name, str), name
+        # no assert on value
         return Argument(
             name=name,
-            value=self.__buildValue(value)
+            value=self.buildValue(value)
         )
 
-    def __buildValue(self, value):
+    def buildValue(self, value):
         if value == "end_point":
             return EndPointValue()
         else:
@@ -197,7 +260,7 @@ class Definition(object):
             else:
                 assert False, origin  # pragma no cover
 
-    def __buildType(self, description):
+    def buildType(self, description):
         if description is None:
             return None
         elif description == "none":
@@ -206,39 +269,195 @@ class Definition(object):
             return ScalarType(description)
         elif "container" in description:
             if "content" in description:
-                return LinearCollectionType(self.__buildType(description["container"]), self.__buildType(description["content"]))
+                return LinearCollectionType(self.buildType(description["container"]), self.buildType(description["content"]))
             elif "key" in description and "value" in description:
-                return MappingCollectionType(self.__buildType(description["container"]), self.__buildType(description["key"]), self.__buildType(description["value"]))
+                return MappingCollectionType(self.buildType(description["container"]), self.buildType(description["key"]), self.buildType(description["value"]))
             else:
                 assert False, description  # pragma no cover
         elif "union" in description:
-            return UnionType([self.__buildType(t) for t in description["union"]], description.get("key"), description.get("keys"), description.get("converter"))
+            return UnionType([self.buildType(t) for t in description["union"]], description.get("key"), description.get("keys"), description.get("converter"))
         elif "enum" in description:
             return EnumType(description["enum"])
         else:
             assert False, description  # pragma no cover
 
-    def __buildEffect(self, effect):
+    def buildEffect(self, effect):
         return effect  # @todoGeni Structure
 
-    def __validate(self, dirName):
-        unimplemented = set()
-        for fileName in glob.glob(os.path.join(dirName, "unimplemented.*.yml")):
-            with open(fileName) as f:
-                data = yaml.load(f.read())
-                unimplemented.update(verb + " " + url for url, verbs in data.items() for verb in verbs)
+    def loadUnimplementedEndPoints(self):
+        unimplemented = dict()
+        for fileName in glob.glob(os.path.join(self.dirName, "unimplemented.*.yml")):
+            family = os.path.basename(fileName)[14:-4]
+            unimplemented[family] = {k: sorted(v) for k, v in _loadYml(fileName).items()}
+        return unimplemented
 
-        allEndPoints = set(ep.verb + " " + ep.url for ep in self.endPoints)
-        implemented = set()
-        for c in self.classes:
-            for m in c.methods:
-                implemented.update(m.endPoints)
 
-        print("INFO: Implemented end-points:", len(implemented), " - unimplemented end-points: ", len(unimplemented))
+class _DefinitionDumper:
+    def __init__(self, dirName, definition):
+        self.dirName = dirName
+        self.definition = definition
 
-        inter = implemented & unimplemented
-        assert len(inter) == 0, inter
-        diff = unimplemented - allEndPoints
-        assert len(diff) == 0, diff
-        union = implemented | unimplemented
-        assert union == allEndPoints, allEndPoints - union
+    def dump(self):
+        _dumpYml(os.path.join(self.dirName, "end_points.yml"), self.createDataForEndPoints(self.definition.endPoints))
+        for klass in self.definition.classes:
+            _dumpYml(os.path.join(self.dirName, "classes", klass.name + ".yml"), self.createDataForClass(klass))
+        for family, unimplementedEndPoints in self.definition.unimplementedEndPoints.items():
+            _dumpYml(os.path.join(self.dirName, "unimplemented." + family + ".yml"), unimplementedEndPoints)
+
+    def createDataForEndPoints(self, endPoints):
+        return {
+            url: [self.createDataForEndPoint(endPoint) for endPoint in endPoints]
+            for url, endPoints in itertools.groupby(endPoints, lambda ep: ep.url)
+        }
+
+    def createDataForEndPoint(self, endPoint):
+        data = collections.OrderedDict()
+        data["verb"] = endPoint.verb
+        if len(endPoint.parameters) != 0:
+            data["parameters"] = tuple(endPoint.parameters)
+        data["doc"] = endPoint.doc
+        return data
+
+    def createDataForClass(self, klass):
+        data = collections.OrderedDict()
+        if klass.base is not None:
+            data["base"] = klass.base.name
+        if not klass.updatable:
+            data["updatable"] = "false"
+        if not klass.completable:
+            data["completable"] = "false"
+        if len(klass.structures) != 0:
+            data["structures"] = [self.createDataForStructure(structure) for structure in klass.structures]
+        if len(klass.attributes) != 0:
+            data["attributes"] = [self.createDataForAttribute(attribute) for attribute in klass.attributes]
+        if len(klass.deprecatedAttributes) != 0:
+            data["deprecated_attributes"] = list(klass.deprecatedAttributes)
+        if len(klass.methods) != 0:
+            data["methods"] = [self.createDataForMethod(method) for method in klass.methods]
+        return data
+
+    def createDataForStructure(self, structure):
+        data = collections.OrderedDict()
+        data["name"] = structure.name
+        if not structure.updatable:
+            data["updatable"] = "false"
+        data["attributes"] = [self.createDataForAttribute(attribute) for attribute in structure.attributes]
+        if len(structure.deprecatedAttributes) != 0:
+            data["deprecated_attributes"] = tuple(structure.deprecatedAttributes)
+        return data
+
+    def createDataForMethod(self, method):
+        data = collections.OrderedDict()
+        data["name"] = method.name
+        if len(method.endPoints) == 1:
+            data["end_point"] = method.endPoints[0]
+        else:
+            data["end_points"] = method.endPoints
+        if not all(p.optional for p in method.parameters):
+            data["parameters"] = []
+        if any(p.optional for p in method.parameters):
+            data["optional_parameters"] = []
+        if len(method.unimplementedParameters) != 0:
+            data["unimplemented_parameters"] = method.unimplementedParameters
+        for parameter in method.parameters:
+            p = self.createDataForParameter(parameter)
+            if parameter.optional:
+                data["optional_parameters"].append(p)
+            else:
+                data["parameters"].append(p)
+        data["url_template"] = self.createDataForValue(method.urlTemplate)
+        if len(method.urlTemplateArguments) != 0:
+            data["url_template_arguments"] = [self.createDataForArgument(argument) for argument in method.urlTemplateArguments]
+        if len(method.urlArguments) != 0:
+            data["url_arguments"] = [self.createDataForArgument(argument) for argument in method.urlArguments]
+        if len(method.postArguments) != 0:
+            data["post_arguments"] = [self.createDataForArgument(argument) for argument in method.postArguments]
+        if len(method.effects) == 1:
+            data["effect"] = method.effects[0]
+        elif len(method.effects) > 1:
+            data["effects"] = list(method.effects)
+        if method.returnFrom is not None:
+            data["return_from"] = method.returnFrom
+        data["return_type"] = self.createDataForType(method.returnType)
+        return data
+
+    def createDataForAttribute(self, attribute):
+        data = collections.OrderedDict()
+        data["name"] = attribute.name
+        data["type"] = self.createDataForType(attribute.type)
+        return data
+
+    def createDataForParameter(self, parameter):
+        data = collections.OrderedDict()
+        data["name"] = parameter.name
+        if parameter.orig is None:
+            data["type"] = self.createDataForType(parameter.type)
+        else:
+            data["orig"] = parameter.orig.type.name + "." + parameter.orig.attribute
+        return data
+
+    def createDataForArgument(self, argument):
+        data = collections.OrderedDict()
+        data["name"] = argument.name
+        data["value"] = self.createDataForValue(argument.value)
+        return data
+
+    def createDataForValue(self, value):
+        return self.getMethod("createDataFor{}", value.__class__.__name__)(value)
+
+    def createDataForEndPointValue(self, value):
+        return "end_point"
+
+    def createDataForParameterValue(self, value):
+        return "parameter " + value.parameter
+
+    def createDataForAttributeValue(self, value):
+        return "attribute " + value.attribute
+
+    def createDataForRepositoryNameValue(self, value):
+        return "nameFromRepo " + value.repository
+
+    def createDataForRepositoryOwnerValue(self, value):
+        return "ownerFromRepo " + value.repository
+
+    def createDataForType(self, type):
+        return self.getMethod("createDataFor{}", type.__class__.__name__)(type)
+
+    def createDataForUnionType(self, type):
+        types = [self.createDataForType(t) for t in type.types]
+        if all(isinstance(t, str) for t in types):
+            types = tuple(types)
+        data = collections.OrderedDict(union=types)
+        if type.key is not None:
+            data["key"] = type.key
+        if type.keys is not None:
+            data["keys"] = tuple(type.keys)
+        if type.converter is not None:
+            data["converter"] = type.converter
+        return data
+
+    def createDataForNoneType(self, type):
+        return "none"
+
+    def createDataForScalarType(self, type):
+        return type.name
+
+    def createDataForLinearCollectionType(self, type):
+        data = collections.OrderedDict()
+        data["container"] = self.createDataForType(type.container)
+        data["content"] = self.createDataForType(type.content)
+        return data
+
+    def createDataForMappingCollectionType(self, type):
+        data = collections.OrderedDict()
+        data["container"] = self.createDataForType(type.container)
+        data["key"] = self.createDataForType(type.key)
+        data["value"] = self.createDataForType(type.value)
+        return data
+
+    def createDataForEnumType(self, type):
+        return {"enum": tuple(type.values)}
+
+    def getMethod(self, scheme, *names):
+        name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.strip("_").split("_")) for name in names))
+        return getattr(self, name)

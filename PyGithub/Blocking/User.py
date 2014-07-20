@@ -219,7 +219,7 @@ class User(PyGithub.Blocking.Entity.Entity):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.gists_url)
-        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 
@@ -304,7 +304,7 @@ class User(PyGithub.Blocking.Entity.Entity):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
-        urlArguments = snd.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
+        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort, type=type)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
@@ -331,7 +331,7 @@ class User(PyGithub.Blocking.Entity.Entity):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.starred_url)
-        urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
+        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 

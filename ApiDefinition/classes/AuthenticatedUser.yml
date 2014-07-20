@@ -1,5 +1,4 @@
 base: User
-updatable: true
 methods:
   - name: add_to_following
     end_point: PUT /user/following/:username
@@ -40,6 +39,8 @@ methods:
     parameters:
       - name: repo
         orig: Repository.full_name
+    unimplemented_parameters:
+      - organization
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -59,10 +60,10 @@ methods:
         type: bool
     url_template: end_point
     post_arguments:
-      - name: files
-        value: parameter files
       - name: description
         value: parameter description
+      - name: files
+        value: parameter files
       - name: public
         value: parameter public
     return_type: Gist
@@ -75,10 +76,10 @@ methods:
         type: string
     url_template: end_point
     post_arguments:
-      - name: title
-        value: parameter title
       - name: key
         value: parameter key
+      - name: title
+        value: parameter title
     return_type: PublicKey
   - name: create_repo
     end_point: POST /user/repos
@@ -104,28 +105,30 @@ methods:
         orig: GitIgnoreTemplate.name
       - name: license_template
         type: string
+    unimplemented_parameters:
+      - team_id
     url_template: end_point
     post_arguments:
-      - name: name
-        value: parameter name
+      - name: auto_init
+        value: parameter auto_init
       - name: description
         value: parameter description
-      - name: homepage
-        value: parameter homepage
-      - name: private
-        value: parameter private
+      - name: gitignore_template
+        value: parameter gitignore_template
       - name: has_downloads
         value: parameter has_downloads
       - name: has_issues
         value: parameter has_issues
       - name: has_wiki
         value: parameter has_wiki
-      - name: auto_init
-        value: parameter auto_init
-      - name: gitignore_template
-        value: parameter gitignore_template
+      - name: homepage
+        value: parameter homepage
       - name: license_template
         value: parameter license_template
+      - name: name
+        value: parameter name
+      - name: private
+        value: parameter private
     return_type: Repository
   - name: create_subscription
     end_point: PUT /repos/:owner/:repo/subscription
@@ -143,10 +146,10 @@ methods:
       - name: repo
         value: nameFromRepo repo
     post_arguments:
-      - name: subscribed
-        value: parameter subscribed
       - name: ignored
         value: parameter ignored
+      - name: subscribed
+        value: parameter subscribed
     return_type: Subscription
   - name: edit
     end_point: PATCH /user
@@ -169,6 +172,8 @@ methods:
       - name: hireable
         type:
           union: [bool, Reset]
+    unimplemented_parameters:
+      - bio
     url_template: end_point
     post_arguments:
       - name: blog
@@ -218,10 +223,10 @@ methods:
         type: int
     url_template: end_point
     url_arguments:
-      - name: since
-        value: parameter since
       - name: per_page
         value: parameter per_page
+      - name: since
+        value: parameter since
     return_type:
       container: PaginatedList
       content: Gist
@@ -281,14 +286,14 @@ methods:
         type: int
     url_template: end_point
     url_arguments:
-      - name: sort
-        value: parameter sort
       - name: direction
         value: parameter direction
-      - name: type
-        value: parameter type
       - name: per_page
         value: parameter per_page
+      - name: sort
+        value: parameter sort
+      - name: type
+        value: parameter type
     return_type:
       container: PaginatedList
       content: Repository
@@ -305,12 +310,12 @@ methods:
         type: int
     url_template: end_point
     url_arguments:
-      - name: sort
-        value: parameter sort
       - name: direction
         value: parameter direction
       - name: per_page
         value: parameter per_page
+      - name: sort
+        value: parameter sort
     return_type:
       container: PaginatedList
       content: Repository
@@ -323,10 +328,10 @@ methods:
         type: int
     url_template: end_point
     url_arguments:
-      - name: since
-        value: parameter since
       - name: per_page
         value: parameter per_page
+      - name: since
+        value: parameter since
     return_type:
       container: PaginatedList
       content: Gist

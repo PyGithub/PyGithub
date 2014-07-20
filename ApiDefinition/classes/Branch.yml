@@ -1,8 +1,0 @@
-updatable: false
-attributes:
-  - name: commit
-    type: Commit
-  - name: name
-    type: string
-deprecated_attributes:
-  - _links

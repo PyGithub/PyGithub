@@ -2,6 +2,9 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import sys
+assert sys.hexversion >= 0x03040000
+
 import CodeGeneration.ApiDefinition.Structured as Structured
 
 
@@ -140,4 +143,4 @@ class Repository(object):
             value = self.get(description.value)
             return MappingCollection(container, key, value)
         else:
-            assert False, description  # pragma no cover
+            assert False, (description, self.__simpleTypes)  # pragma no cover

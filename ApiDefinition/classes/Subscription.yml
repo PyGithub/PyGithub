@@ -1,4 +1,3 @@
-updatable: true
 attributes:
   - name: created_at
     type: datetime
@@ -26,9 +25,9 @@ methods:
         type: bool
     url_template: attribute url
     post_arguments:
-      - name: subscribed
-        value: parameter subscribed
       - name: ignored
         value: parameter ignored
+      - name: subscribed
+        value: parameter subscribed
     effect: update
     return_type: none

@@ -93,6 +93,6 @@ class GitRef(bgo.UpdatableGithubObject):
             force = snd.normalizeBool(force)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(sha=sha, force=force)
+        postArguments = snd.dictionary(force=force, sha=sha)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())

@@ -21,6 +21,9 @@ deprecated_attributes:
 methods:
   - name: get_contents
     end_point: GET /repos/:owner/:repo/contents/:path
+    unimplemented_parameters:
+      - path
+      - ref
     url_template: attribute url
     return_type:
       container: list

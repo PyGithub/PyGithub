@@ -4,6 +4,9 @@
 
 # @todoAlpha Extract the sha of the commit of the doc, put it in the README and in the doc.
 
+import sys
+assert sys.hexversion >= 0x03040000
+
 
 class RstGenerator:
     def generateApis(self, endPoints):

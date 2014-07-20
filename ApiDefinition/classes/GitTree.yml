@@ -1,4 +1,3 @@
-updatable: true
 structures:
   - name: GitSubmodule
     updatable: false
@@ -37,6 +36,13 @@ methods:
         type:
           container: list
           content: dict
+    unimplemented_parameters:
+      - base_tree
+      - content
+      - mode
+      - path
+      - sha
+      - type
     url_template: end_point
     url_template_arguments:
       - name: owner

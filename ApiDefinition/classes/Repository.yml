@@ -1,4 +1,3 @@
-updatable: true
 structures:
   - name: AnonymousContributor
     updatable: false
@@ -9,6 +8,14 @@ structures:
         type: string
       - name: type
         type: string
+  - name: Branch
+    updatable: false
+    attributes:
+      - name: commit
+        type: Commit
+      - name: name
+        type: string
+    deprecated_attributes: [_links]
   - name: ContentCommit
     updatable: false
     attributes:
@@ -17,7 +24,6 @@ structures:
       - name: content
         type: File
   - name: Permissions
-    updatable: true
     attributes:
       - name: admin
         type: bool
@@ -25,6 +31,17 @@ structures:
         type: bool
       - name: push
         type: bool
+  - name: Tag
+    updatable: false
+    attributes:
+      - name: commit
+        type: Commit
+      - name: name
+        type: string
+      - name: tarball_url
+        type: string
+      - name: zipball_url
+        type: string
 attributes:
   - name: archive_url
     type: string
@@ -197,25 +214,29 @@ methods:
         type: GitAuthor
       - name: committer
         type: GitAuthor
+    unimplemented_parameters:
+      - email
+      - name
+      - sha
     url_template: end_point
     url_template_arguments:
       - name: owner
         value: attribute owner.login
-      - name: repo
-        value: attribute name
       - name: path
         value: parameter path
+      - name: repo
+        value: attribute name
     post_arguments:
-      - name: branch
-        value: parameter branch
-      - name: message
-        value: parameter message
-      - name: content
-        value: parameter content
-      - name: committer
-        value: parameter committer
       - name: author
         value: parameter author
+      - name: branch
+        value: parameter branch
+      - name: committer
+        value: parameter committer
+      - name: content
+        value: parameter content
+      - name: message
+        value: parameter message
     return_type: ContentCommit
   - name: create_git_blob
     end_point: POST /repos/:owner/:repo/git/blobs
@@ -253,6 +274,10 @@ methods:
         type: GitAuthor
       - name: author
         type: GitAuthor
+    unimplemented_parameters:
+      - date
+      - email
+      - name
     url_template: attribute git_commits_url
     url_template_arguments:
       - name: owner
@@ -260,16 +285,16 @@ methods:
       - name: repo
         value: attribute name
     post_arguments:
-      - name: tree
-        value: parameter tree
-      - name: message
-        value: parameter message
-      - name: committer
-        value: parameter committer
       - name: author
         value: parameter author
+      - name: committer
+        value: parameter committer
+      - name: message
+        value: parameter message
       - name: parents
         value: parameter parents
+      - name: tree
+        value: parameter tree
     return_type: GitCommit
   - name: create_git_ref
     end_point: POST /repos/:owner/:repo/git/refs
@@ -304,6 +329,10 @@ methods:
     optional_parameters:
       - name: tagger
         type: GitAuthor
+    unimplemented_parameters:
+      - date
+      - email
+      - name
     url_template: attribute git_tags_url
     url_template_arguments:
       - name: owner
@@ -311,14 +340,14 @@ methods:
       - name: repo
         value: attribute name
     post_arguments:
-      - name: tag
-        value: parameter tag
-      - name: tagger
-        value: parameter tagger
       - name: message
         value: parameter message
       - name: object
         value: parameter object
+      - name: tag
+        value: parameter tag
+      - name: tagger
+        value: parameter tagger
       - name: type
         value: parameter type
     return_type: GitTag
@@ -329,6 +358,13 @@ methods:
         type:
           container: list
           content: dict
+    unimplemented_parameters:
+      - base_tree
+      - content
+      - mode
+      - path
+      - sha
+      - type
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -348,10 +384,10 @@ methods:
         type: string
     url_template: attribute keys_url
     post_arguments:
-      - name: title
-        value: parameter title
       - name: key
         value: parameter key
+      - name: title
+        value: parameter title
     return_type: PublicKey
   - name: delete
     end_point: DELETE /repos/:owner/:repo
@@ -376,22 +412,24 @@ methods:
         type: bool
       - name: default_branch
         type: string
+    unimplemented_parameters:
+      - has_downloads
     url_template: attribute url
     post_arguments:
-      - name: name
-        value: parameter name
+      - name: default_branch
+        value: parameter default_branch
       - name: description
         value: parameter description
-      - name: homepage
-        value: parameter homepage
-      - name: private
-        value: parameter private
       - name: has_issues
         value: parameter has_issues
       - name: has_wiki
         value: parameter has_wiki
-      - name: default_branch
-        value: parameter default_branch
+      - name: homepage
+        value: parameter homepage
+      - name: name
+        value: parameter name
+      - name: private
+        value: parameter private
     effect: update
     return_type: none
   - name: get_assignees
@@ -467,18 +505,18 @@ methods:
         type: int
     url_template: attribute commits_url
     url_arguments:
-      - name: sha
-        value: parameter sha
-      - name: path
-        value: parameter path
       - name: author
         value: parameter author
+      - name: path
+        value: parameter path
+      - name: per_page
+        value: parameter per_page
+      - name: sha
+        value: parameter sha
       - name: since
         value: parameter since
       - name: until
         value: parameter until
-      - name: per_page
-        value: parameter per_page
     return_type:
       container: PaginatedList
       content: Commit
@@ -494,10 +532,10 @@ methods:
     url_template_arguments:
       - name: owner
         value: attribute owner.login
-      - name: repo
-        value: attribute name
       - name: path
         value: parameter path
+      - name: repo
+        value: attribute name
     url_arguments:
       - name: ref
         value: parameter ref
@@ -539,10 +577,10 @@ methods:
         type: int
     url_template: attribute forks_url
     url_arguments:
-      - name: sort
-        value: parameter sort
       - name: per_page
         value: parameter per_page
+      - name: sort
+        value: parameter sort
     return_type:
       container: PaginatedList
       content: Repository

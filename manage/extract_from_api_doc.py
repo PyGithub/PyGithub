@@ -7,7 +7,6 @@ import fnmatch
 import glob
 import os
 import re
-import sys
 
 
 class EndPoint:

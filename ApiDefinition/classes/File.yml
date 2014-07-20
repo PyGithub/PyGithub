@@ -1,4 +1,3 @@
-updatable: true
 attributes:
   - name: content
     type: string
@@ -33,16 +32,22 @@ methods:
         type: GitAuthor
       - name: committer
         type: GitAuthor
+    unimplemented_parameters:
+      - branch
+      - email
+      - name
+      - path
+      - sha
     url_template: attribute url
     post_arguments:
-      - name: sha
-        value: attribute sha
-      - name: message
-        value: parameter message
-      - name: committer
-        value: parameter committer
       - name: author
         value: parameter author
+      - name: committer
+        value: parameter committer
+      - name: message
+        value: parameter message
+      - name: sha
+        value: attribute sha
     return_from: json.commit
     return_type: GitCommit
   - name: edit
@@ -57,18 +62,24 @@ methods:
         type: GitAuthor
       - name: committer
         type: GitAuthor
+    unimplemented_parameters:
+      - branch
+      - email
+      - name
+      - path
+      - sha
     url_template: attribute url
     post_arguments:
-      - name: sha
-        value: attribute sha
-      - name: message
-        value: parameter message
-      - name: content
-        value: parameter content
-      - name: committer
-        value: parameter committer
       - name: author
         value: parameter author
+      - name: committer
+        value: parameter committer
+      - name: content
+        value: parameter content
+      - name: message
+        value: parameter message
+      - name: sha
+        value: attribute sha
     effects:
       - update from json.content
       - update_attr content from parameter content

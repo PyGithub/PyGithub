@@ -2,7 +2,11 @@
 
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
+import sys
+assert sys.hexversion >= 0x03040000
+
 import collections
+import inspect
 import itertools
 import re
 
@@ -10,11 +14,7 @@ import CodeGeneration.ApiDefinition.Structured as Structured
 import CodeGeneration.ApiDefinition.Typing as Typing
 
 
-# @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
-# @todoAlpha Detect structures that are not updatable but are attributes of updatable classes
-# @todoAlpha Create an infrastructure for (or just centralize) all those validations of the API definition, running on the CrossReferenced version
-
-class EndPoint(object):
+class EndPoint:
     def __init__(self, verb, url, parameters, doc):
         self.__verb = verb
         self.__url = url
@@ -24,17 +24,14 @@ class EndPoint(object):
 
         self.__methods = []
 
-    def _reference(self, typesRepo, endPointsRepo):
-        pass
-
-    def _propagate(self):
-        pass
-
-    def _finalize(self):
-        self.__methods = sorted(self.__methods, key=lambda m: (m.containerClass.name, m.name))
+    def _applyRecursively(self, f):
+        f(self)
 
     def _addMethod(self, method):
         self.__methods.append(method)
+
+    def _sortMethods(self):
+        self.__methods = sorted(self.__methods, key=lambda m: (m.containerClass.name, m.name))
 
     @property
     def verb(self):
@@ -63,28 +60,22 @@ class EndPoint(object):
 
 class AttributedType(Typing.SimpleType):
     def __init__(self, name, category, updatable, attributes, deprecatedAttributes):
-        Typing.Type.__init__(self, name, category)
+        super(AttributedType, self).__init__(name, category)
         self.__updatable = updatable
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
         self.__deprecatedAttributes = sorted(deprecatedAttributes)
         self.__factories = []
 
-    def _reference(self, typesRepo, endPointsRepo):
+    def _applyRecursively(self, f):
+        f(self)
         for a in self.__attributes:
-            a._reference(typesRepo, endPointsRepo)
-
-    def _propagate(self):
-        for a in self.__attributes:
-            a._propagate()
-
-    def _finalize(self):
-        self.__factories = sorted(self.__factories, key=lambda f: (f.object.containerClass.name, f.object.name))
-
-        for a in self.__attributes:
-            a._finalize()
+            a._applyRecursively(f)
 
     def _addFactory(self, f):
         self.__factories.append(f)
+
+    def _sortFactories(self):
+        self.__factories = sorted(self.__factories, key=lambda f: (f.object.containerClass.name, f.object.name))
 
     @property
     def factories(self):
@@ -103,33 +94,28 @@ class AttributedType(Typing.SimpleType):
         return self.__updatable
 
 
-class Member(object):
-    def __init__(self, containerClass):
-        self.__containerClass = containerClass
-
-    @property
-    def containerClass(self):
-        return self.__containerClass
-
-
-class Attribute(Member):
+class Attribute:
     def __init__(self, containerClass, name, type):
-        Member.__init__(self, containerClass)
+        self.__containerClass = containerClass
         self.__name = name
 
         self.__tmp_typeDescription = type
 
-    def _reference(self, typesRepo, endPointsRepo):
+    def _applyRecursively(self, f):
+        f(self)
+
+    def _referenceType(self, typesRepo):
         self.__type = typesRepo.get(self.__tmp_typeDescription)
         del self.__tmp_typeDescription
 
-    def _propagate(self):
+    def _propagateFactories(self):
         for t in self.__type.underlyingTypes:
             if isinstance(t, AttributedType):
                 t._addFactory(Factory("attribute", self))
 
-    def _finalize(self):
-        pass
+    @property
+    def containerClass(self):
+        return self.__containerClass
 
     @property
     def name(self):
@@ -140,7 +126,7 @@ class Attribute(Member):
         return self.__type
 
 
-class Argument(object):
+class Argument:
     def __init__(self, name, value):
         self.__name = name
         self.__value = Value(value)
@@ -168,51 +154,32 @@ Factory = collections.namedtuple("Factory", "category, object")
 
 
 class Class(AttributedType):
-    def __init__(self, module, name, updatable, base, structures, attributes, methods, deprecatedAttributes):
-        AttributedType.__init__(self, name, "class", updatable, attributes, deprecatedAttributes)
+    def __init__(self, module, name, updatable, completable, base, structures, attributes, methods, deprecatedAttributes):
+        super(Class, self).__init__(name, "class", updatable, attributes, deprecatedAttributes)
         self.__module = module
+        self.__completable = completable
         self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
         self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.name)
         self.__derived = []
 
         self.__tmp_baseTypeDescription = base
 
-    def _reference(self, typesRepo, endPointsRepo):
-        AttributedType._reference(self, typesRepo, endPointsRepo)
-
+    def _applyRecursively(self, f):
+        super(Class, self)._applyRecursively(f)
         for s in self.__structures:
-            s._reference(typesRepo, endPointsRepo)
-
+            s._applyRecursively(f)
         for m in self.__methods:
-            m._reference(typesRepo, endPointsRepo)
+            m._applyRecursively(f)
 
+    def _referenceBase(self, typesRepo):
         if self.__tmp_baseTypeDescription is None:
-            if self.isUpdatable:
-                self.__tmp_baseTypeDescription = Structured.ScalarType("UpdatableGithubObject")
-            else:
-                self.__tmp_baseTypeDescription = Structured.ScalarType("SessionedGithubObject")
-        self.__base = typesRepo.get(self.__tmp_baseTypeDescription)
-        self.__base.__derived.append(self)
+            self.__base = None
+        else:
+            self.__base = typesRepo.get(self.__tmp_baseTypeDescription)
+            self.__base.__derived.append(self)
         del self.__tmp_baseTypeDescription
 
-    def _propagate(self):
-        AttributedType._propagate(self)
-
-        for s in self.__structures:
-            s._propagate()
-
-        for m in self.__methods:
-            m._propagate()
-
-    def _finalize(self):
-        AttributedType._finalize(self)
-
-        for s in self.__structures:
-            s._finalize()
-
-        for m in self.__methods:
-            m._finalize()
-
+    def _sortDerived(self):
         self.__derived = sorted(self.__derived, key=lambda d: d.name)
 
     @property
@@ -235,18 +202,27 @@ class Class(AttributedType):
     def methods(self):
         return self.__methods
 
+    @property
+    def isCompletable(self):
+        return self.__completable
 
-class Structure(AttributedType, Member):
+
+class Structure(AttributedType):
     def __init__(self, containerClass, name, updatable, attributes, deprecatedAttributes):
-        AttributedType.__init__(self, name, "struct", updatable, attributes, deprecatedAttributes)
-        Member.__init__(self, containerClass)
+        super(Structure, self).__init__(name, "struct", updatable, attributes, deprecatedAttributes)
+        self.__containerClass = containerClass
+
+    @property
+    def containerClass(self):
+        return self.__containerClass
 
 
-class Method(Member):
-    def __init__(self, containerClass, name, endPoints, parameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType):
-        Member.__init__(self, containerClass)
+class Method:
+    def __init__(self, containerClass, name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType):
+        self.__containerClass = containerClass
         self.__name = name
         self.__parameters = [Parameter(*p) for p in parameters]
+        self.__unimplementedParameters = unimplementedParameters
         self.__urlTemplate = Value(urlTemplate)
         self.__urlTemplateArguments = [Argument(*a) for a in urlTemplateArguments]
         self.__urlArguments = [Argument(*a) for a in urlArguments]
@@ -257,86 +233,31 @@ class Method(Member):
         self.__tmp_endPointDescriptions = endPoints
         self.__tmp_returnTypeDescription = returnType
 
-    def _reference(self, typesRepo, endPointsRepo):
+    def _applyRecursively(self, f):
+        f(self)
         for p in self.__parameters:
-            p._reference(typesRepo, endPointsRepo)
+            p._applyRecursively(f)
 
-        self.__endPoints = sorted((endPointsRepo.get(ep) for ep in self.__tmp_endPointDescriptions), key=lambda ep: (ep.url, ep.verb))
+    def _referenceEndPoints(self, endPointsRepo):
+        self.__endPoints = sorted((endPointsRepo[ep] for ep in self.__tmp_endPointDescriptions), key=lambda ep: (ep.url, ep.verb))
         del self.__tmp_endPointDescriptions
 
+    def _referenceReturnType(self, typesRepo):
         self.__returnType = typesRepo.get(self.__tmp_returnTypeDescription)
         del self.__tmp_returnTypeDescription
 
-    def _propagate(self):
-        for p in self.__parameters:
-            p._propagate()
-
+    def _propagateEndPoints(self):
         for ep in self.__endPoints:
             ep._addMethod(self)
 
+    def _propagateFactories(self):
         for t in self.__returnType.underlyingTypes:
             if isinstance(t, AttributedType):
                 t._addFactory(Factory("method", self))
 
-    def _finalize(self):
-        for p in self.__parameters:
-            p._finalize()
-
-        self.__displayWarnings()
-
-    def __displayWarnings(self):  # pragma no cover
-        for ep in self.__endPoints:
-            unimplementedParameters = set(ep.parameters) - set(p.name for p in self.__parameters)
-            # @todoGeni Put those special cases in .yml definition files
-            if self.containerClass.name == "AuthenticatedUser" and self.__name == "create_repo":
-                unimplementedParameters.remove("team_id")
-            if self.containerClass.name in ["AuthenticatedUser", "User", "Organization"] and self.__name == "create_fork":
-                unimplementedParameters.remove("organization")
-            if self.containerClass.name == "AuthenticatedUser" and self.__name == "edit":
-                unimplementedParameters.remove("bio")
-            if self.containerClass.name == "Repository" and self.__name == "edit":
-                unimplementedParameters.remove("has_downloads")
-            if self.containerClass.name == "Repository" and self.__name == "create_git_commit":
-                unimplementedParameters.remove("name")
-                unimplementedParameters.remove("date")
-                unimplementedParameters.remove("email")
-            if self.containerClass.name == "Repository" and self.__name == "create_git_tag":
-                unimplementedParameters.remove("name")
-                unimplementedParameters.remove("date")
-                unimplementedParameters.remove("email")
-            if self.containerClass.name == "Repository" and self.__name == "create_file":
-                unimplementedParameters.remove("sha")
-                unimplementedParameters.remove("name")
-                unimplementedParameters.remove("email")
-            if self.containerClass.name == "File" and self.__name in ["edit", "delete"]:
-                unimplementedParameters.remove("sha")
-                unimplementedParameters.remove("name")
-                unimplementedParameters.remove("email")
-                unimplementedParameters.remove("path")
-                unimplementedParameters.remove("branch")
-            if self.containerClass.name == "Dir" and self.__name in ["get_contents"]:
-                unimplementedParameters.remove("path")
-                unimplementedParameters.remove("ref")
-            if self.containerClass.name == "Gist" and self.__name in ["edit"]:
-                unimplementedParameters.remove("filename")
-                unimplementedParameters.remove("content")
-            if self.containerClass.name == "Repository" and self.__name == "create_git_tree" or self.containerClass.name == "GitTree" and self.__name == "create_modified_copy":
-                unimplementedParameters.remove("sha")
-                unimplementedParameters.remove("mode")
-                unimplementedParameters.remove("base_tree")
-                unimplementedParameters.remove("path")
-                unimplementedParameters.remove("type")
-                unimplementedParameters.remove("content")
-            if len(unimplementedParameters) > 0:
-                print("WARNING:", self.containerClass.name + "." + self.__name, "does not implement following parameters:", ", ".join(unimplementedParameters))
-
-        unusedParameters = (
-            set(p.name for p in self.__parameters)
-            - set(a.value.parameter for a in itertools.chain(self.__urlTemplateArguments, self.__urlArguments, self.__postArguments) if isinstance(a.value, ParameterValue))
-            - set(a.value.repository for a in itertools.chain(self.__urlTemplateArguments, self.__urlArguments, self.__postArguments) if isinstance(a.value, (RepositoryNameValue, RepositoryOwnerValue)))
-        )
-        if len(unusedParameters) > 0:
-            print("WARNING:", self.containerClass.name + "." + self.__name, "does not use following parameters:", ", ".join(unusedParameters))
+    @property
+    def containerClass(self):
+        return self.__containerClass
 
     @property
     def name(self):
@@ -349,6 +270,10 @@ class Method(Member):
     @property
     def parameters(self):
         return self.__parameters
+
+    @property
+    def unimplementedParameters(self):
+        return self.__unimplementedParameters
 
     @property
     def urlTemplate(self):
@@ -379,7 +304,7 @@ class Method(Member):
         return self.__effects
 
 
-class Parameter(object):
+class Parameter:
     def __init__(self, name, type, orig, optional):
         self.__name = name
         self.__optional = optional
@@ -387,14 +312,22 @@ class Parameter(object):
         self.__tmp_originDescription = orig
         self.__tmp_typeDescription = type
 
-    def _reference(self, typesRepo, endPointsRepo):
+    def _applyRecursively(self, f):
+        f(self)
+
+    def _propagateTypeAndOrig(self, typesRepo):
+        def findAttr(t, n):
+            for a in t.attributes:
+                if a.name == n:
+                    return a
+            return findAttr(t.base, n)
+
         if self.__tmp_typeDescription is None:
-            types = [
-                typesRepo.get(self.__tmp_originDescription.type),
-                Typing.BuiltinType("int") if self.__tmp_originDescription.attribute == "id" else Typing.BuiltinType("string")  # @todoGeni Get the type of the attribute self.__tmp_originDescription.attribute
-            ]
-            if self.__tmp_originDescription.attribute == "full_name":
-                types.append(Typing.BuiltinType("(string, string)"))
+            type = typesRepo.get(self.__tmp_originDescription.type)
+            a = findAttr(type, self.__tmp_originDescription.attribute)
+            types = [type, a.type]
+            if a.name == "full_name":
+                types.append(typesRepo.get(Structured.ScalarType("(string, string)")))
             self.__type = Typing.UnionType(types, None, None, None)
             self.__orig = self.__tmp_originDescription.attribute
         else:
@@ -402,12 +335,6 @@ class Parameter(object):
             self.__orig = None
         del self.__tmp_typeDescription
         del self.__tmp_originDescription
-
-    def _propagate(self):
-        pass
-
-    def _finalize(self):
-        pass
 
     @property
     def name(self):
@@ -426,62 +353,67 @@ class Parameter(object):
         return self.__optional
 
 
-class Definition(object):
+class Definition:
     """
     At this level, all is cross-referenced. Strings are only used for string-ish data.
     Only one object represents each conceptual object.
     """
-    def __init__(self, definition):
+    def __init__(self, definition, typesRepo, test=False):
         self.__endPoints = sorted((EndPoint(*ep) for ep in definition.endPoints), key=lambda ep: (ep.url, ep.verb))
-        self.__classes = sorted((Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes), key=lambda c: c.name)
-
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
-        build = Structured.Method("Build", [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.ScalarType("Github"))
-        self.__builder = Class("Builder", "Builder", False, None, [], [], [build], [])
+        unimplementedEndPoints = []
+        for endPoints in definition.unimplementedEndPoints.values():
+            for url, verbs in endPoints.items():
+                for verb in verbs:
+                    unimplementedEndPoints.append(endPointsRepo[verb + " " + url])
+        self.__unimplementedEndPoints = sorted(unimplementedEndPoints, key=lambda ep: (ep.url, ep.verb))
 
-        typesRepo = Typing.Repository()
-        for t in ["int", "bool", "string", "datetime", "list", "dict"]:
-            typesRepo.register(Typing.BuiltinType(t))
-        for t in ["Reset", "(string, string)", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
-            typesRepo.register(Typing.BuiltinType(t))
-        for t in ["SessionedGithubObject", "UpdatableGithubObject", "PaginatedList"]:
-            typesRepo.register(Class("PyGithub.Blocking.BaseGithubObject", t, False, None, [], [], [], []))
+        self.__classes = sorted((Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes), key=lambda c: c.name)
+        self.__test = test
+
         for c in self.__classes:
             typesRepo.register(c)
             for s in c.structures:
                 typesRepo.register(s)
 
-        self._reference(typesRepo, endPointsRepo)
-        self._propagate()
-        self._finalize()
+        build = Structured.Method("Build", [], [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.ScalarType("Github"))
+        self.__builder = Class("Builder", "Builder", False, False, None, [], [], [build], [])
 
-    def _reference(self, typesRepo, endPointsRepo):
+        self._applyRecursively(Class, Class._referenceBase, typesRepo)
+        self._applyRecursively(Method, Method._referenceEndPoints, endPointsRepo)
+        self._applyRecursively(Method, Method._referenceReturnType, typesRepo)
+        self._applyRecursively(Attribute, Attribute._referenceType, typesRepo)
+        self._applyRecursively(Method, Method._propagateFactories)
+        self._applyRecursively(Method, Method._propagateEndPoints)
+        self._applyRecursively(Attribute, Attribute._propagateFactories)
+        self._applyRecursively(Parameter, Parameter._propagateTypeAndOrig, typesRepo)
+        self._applyRecursively(Class, Class._sortDerived)
+        self._applyRecursively(AttributedType, AttributedType._sortFactories)
+        self._applyRecursively(EndPoint, EndPoint._sortMethods)
+
+    def _applyRecursively(self, typeFilter, f, *args, **kwds):
+        class FilteringFunction:
+            def __init__(self, typeFilter, f, *args, **kwds):
+                self.__typeFilter = typeFilter
+                self.__f = f
+                self.__args = args
+                self.__kwds = kwds
+
+            def __call__(self, o):
+                if isinstance(o, self.__typeFilter):
+                    self.__f(o, *self.__args, **self.__kwds)
+
+        f = FilteringFunction(typeFilter, f, *args, **kwds)
+
         for c in self.__classes:
-            c._reference(typesRepo, endPointsRepo)
+            c._applyRecursively(f)
 
-        self.__builder._reference(typesRepo, endPointsRepo)
+        if not self.__test:
+            self.__builder._applyRecursively(f)
 
         for ep in self.__endPoints:
-            ep._reference(typesRepo, endPointsRepo)
-
-    def _propagate(self):
-        for c in self.__classes:
-            c._propagate()
-
-        self.__builder._propagate()
-
-        for ep in self.__endPoints:
-            ep._propagate()
-
-    def _finalize(self):
-        for c in self.__classes:
-            c._finalize()
-
-        self.__builder._finalize()
-
-        for ep in self.__endPoints:
-            ep._finalize()
+            ep._applyRecursively(f)
 
     @property
     def classes(self):
@@ -490,3 +422,7 @@ class Definition(object):
     @property
     def endPoints(self):
         return self.__endPoints
+
+    @property
+    def unimplementedEndPoints(self):
+        return self.__unimplementedEndPoints

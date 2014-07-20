@@ -1,4 +1,5 @@
 updatable: false
+completable: false
 structures:
   - name: GitIgnoreTemplate
     updatable: false
@@ -27,7 +28,6 @@ structures:
         type: Resources
     deprecated_attributes: [rate]
   - name: RateLimits
-    updatable: true
     attributes:
       - name: limit
         type: int
@@ -55,10 +55,10 @@ methods:
         type: bool
     url_template: end_point
     post_arguments:
-      - name: files
-        value: parameter files
       - name: description
         value: parameter description
+      - name: files
+        value: parameter files
       - name: public
         value: parameter public
     return_type: Gist
@@ -122,10 +122,10 @@ methods:
         type: int
     url_template: end_point
     url_arguments:
-      - name: since
-        value: parameter since
       - name: per_page
         value: parameter per_page
+      - name: since
+        value: parameter since
     return_type:
       container: PaginatedList
       content: Gist

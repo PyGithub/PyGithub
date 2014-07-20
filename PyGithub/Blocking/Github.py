@@ -186,7 +186,7 @@ class Github(bgo.SessionedGithubObject):
             public = snd.normalizeBool(public)
 
         url = uritemplate.expand("https://api.github.com/gists")
-        postArguments = snd.dictionary(files=files, description=description, public=public)
+        postArguments = snd.dictionary(description=description, files=files, public=public)
         r = self.Session._requestAnonymous("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
 
@@ -313,7 +313,7 @@ class Github(bgo.SessionedGithubObject):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/gists/public")
-        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 

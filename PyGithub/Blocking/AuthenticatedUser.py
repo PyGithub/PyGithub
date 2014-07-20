@@ -111,7 +111,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             public = snd.normalizeBool(public)
 
         url = uritemplate.expand("https://api.github.com/gists")
-        postArguments = snd.dictionary(files=files, description=description, public=public)
+        postArguments = snd.dictionary(description=description, files=files, public=public)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
 
@@ -131,7 +131,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         key = snd.normalizeString(key)
 
         url = uritemplate.expand("https://api.github.com/user/keys")
-        postArguments = snd.dictionary(title=title, key=key)
+        postArguments = snd.dictionary(key=key, title=title)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.StructureConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
@@ -176,7 +176,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             license_template = snd.normalizeString(license_template)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
-        postArguments = snd.dictionary(name=name, description=description, homepage=homepage, private=private, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, auto_init=auto_init, gitignore_template=gitignore_template, license_template=license_template)
+        postArguments = snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
@@ -199,7 +199,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         ignored = snd.normalizeBool(ignored)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/subscription", owner=repo[0], repo=repo[1])
-        postArguments = snd.dictionary(subscribed=subscribed, ignored=ignored)
+        postArguments = snd.dictionary(ignored=ignored, subscribed=subscribed)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Subscription.Subscription)(None, r.json(), r.headers.get("ETag"))
 
@@ -298,7 +298,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/gists")
-        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 
@@ -400,7 +400,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
-        urlArguments = snd.dictionary(sort=sort, direction=direction, type=type, per_page=per_page)
+        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort, type=type)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
@@ -427,7 +427,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/user/starred")
-        urlArguments = snd.dictionary(sort=sort, direction=direction, per_page=per_page)
+        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
@@ -451,7 +451,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             per_page = snd.normalizeInt(per_page)
 
         url = uritemplate.expand("https://api.github.com/gists/starred")
-        urlArguments = snd.dictionary(since=since, per_page=per_page)
+        urlArguments = snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 

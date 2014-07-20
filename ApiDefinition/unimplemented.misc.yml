@@ -1,30 +1,71 @@
-/api/last-message.json: [GET]
-/api/messages.json: [GET]
-/api/status.json: [GET]
-/api/v3/enterprise/settings/license: [GET]
-/api/v3/enterprise/stats/:type: [GET]
-/api/v3/staff/indexing_jobs: [POST]
-/applications/:client_id/tokens: [DELETE]
-/applications/:client_id/tokens/:access_token: [DELETE, GET, POST]
-/authorizations: [GET, POST]
-/authorizations/:id: [DELETE, GET, PATCH]
-/authorizations/clients/:client_id: [PUT]
-/hooks: [GET]
-/hooks/:name: [GET]
-/hub: [POST]
-/issues: [GET]
-/markdown: [POST]
-/orgs/:org/issues: [GET]
-/search/code: [GET]
-/search/issues: [GET]
-/search/repositories: [GET]
-/search/users: [GET]
-/setup/api/configcheck: [GET]
-/setup/api/configure: [POST]
-/setup/api/maintenance: [GET, POST]
-/setup/api/settings: [GET, PUT]
-/setup/api/settings/authorized-keys: [DELETE, GET, POST]
-/setup/api/start: [POST]
-/setup/api/upgrade: [POST]
-/user/emails: [DELETE, GET, POST]
-/user/issues: [GET]
+/api/last-message.json:
+  - GET
+/api/messages.json:
+  - GET
+/api/status.json:
+  - GET
+/api/v3/enterprise/settings/license:
+  - GET
+/api/v3/enterprise/stats/:type:
+  - GET
+/api/v3/staff/indexing_jobs:
+  - POST
+/applications/:client_id/tokens:
+  - DELETE
+/applications/:client_id/tokens/:access_token:
+  - DELETE
+  - GET
+  - POST
+/authorizations:
+  - GET
+  - POST
+/authorizations/:id:
+  - DELETE
+  - GET
+  - PATCH
+/authorizations/clients/:client_id:
+  - PUT
+/hooks:
+  - GET
+/hooks/:name:
+  - GET
+/hub:
+  - POST
+/issues:
+  - GET
+/markdown:
+  - POST
+/orgs/:org/issues:
+  - GET
+/search/code:
+  - GET
+/search/issues:
+  - GET
+/search/repositories:
+  - GET
+/search/users:
+  - GET
+/setup/api/configcheck:
+  - GET
+/setup/api/configure:
+  - POST
+/setup/api/maintenance:
+  - GET
+  - POST
+/setup/api/settings:
+  - GET
+  - PUT
+/setup/api/settings/authorized-keys:
+  - DELETE
+  - GET
+  - POST
+/setup/api/start:
+  - POST
+/setup/api/upgrade:
+  - POST
+/user/emails:
+  - DELETE
+  - GET
+  - POST
+/user/issues:
+  - GET

@@ -1,5 +1,4 @@
 base: User
-updatable: true
 attributes:
   - name: contributions
     type: int

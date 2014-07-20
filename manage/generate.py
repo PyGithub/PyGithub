@@ -4,6 +4,7 @@
 # Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
 
 import coverage
+import unittest
 
 
 def main():
@@ -11,8 +12,9 @@ def main():
     cov.start()
     import CodeGeneration
     import check
-    CodeGeneration.main()
-    check.main()
+    if unittest.main(exit=False, module="CodeGeneration.ApiDefinition.Checker", argv=["test"]).result.wasSuccessful():
+        CodeGeneration.main()
+        check.main()
     cov.stop()
     cov.report(include=["manage/CodeGeneration/*"])
     cov.html_report(directory="coverage/code_generation", include=["manage/CodeGeneration/*"])

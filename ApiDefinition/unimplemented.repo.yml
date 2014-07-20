@@ -1,43 +1,109 @@
-/repos/:owner/:repo/:archive_format/:ref: [GET]
-/repos/:owner/:repo/commits/:ref/status: [GET]
-/repos/:owner/:repo/commits/:ref/statuses: [GET]
-/repos/:owner/:repo/compare/:base...:head: [GET]
-/repos/:owner/:repo/compare/user1:branchname...user2:branchname: [GET]
-/repos/:owner/:repo/deployments: [GET, POST]
-/repos/:owner/:repo/deployments/:id/statuses: [GET, POST]
-/repos/:owner/:repo/downloads: [GET]
-/repos/:owner/:repo/downloads/:id: [DELETE, GET]
-/repos/:owner/:repo/hooks: [GET, POST]
-/repos/:owner/:repo/hooks/:id: [DELETE, GET, PATCH]
-/repos/:owner/:repo/hooks/:id/pings: [POST]
-/repos/:owner/:repo/hooks/:id/tests: [POST]
-/repos/:owner/:repo/issues: [GET, POST]
-/repos/:owner/:repo/issues/:number: [PATCH]
-/repos/:owner/:repo/issues/:number/labels: [DELETE, GET, POST, PUT]
-/repos/:owner/:repo/issues/:number/labels/:name: [DELETE]
-/repos/:owner/:repo/labels: [GET, POST]
-/repos/:owner/:repo/labels/:name: [DELETE, PATCH]
-/repos/:owner/:repo/languages: [GET]
-/repos/:owner/:repo/merges: [POST]
-/repos/:owner/:repo/milestones: [GET, POST]
-/repos/:owner/:repo/milestones/:number: [DELETE, PATCH]
-/repos/:owner/:repo/milestones/:number/labels: [GET]
-/repos/:owner/:repo/notifications: [GET, PUT]
-/repos/:owner/:repo/pages: [GET]
-/repos/:owner/:repo/pages/builds: [GET]
-/repos/:owner/:repo/pages/builds/latest: [GET]
-/repos/:owner/:repo/pulls: [GET, POST]
-/repos/:owner/:repo/pulls/:number: [GET, PATCH]
-/repos/:owner/:repo/pulls/:number/commits: [GET]
-/repos/:owner/:repo/pulls/:number/files: [GET]
-/repos/:owner/:repo/pulls/:number/merge: [GET, PUT]
-/repos/:owner/:repo/releases: [GET, POST]
-/repos/:owner/:repo/releases/:id: [DELETE, GET, PATCH]
-/repos/:owner/:repo/releases/:id/assets: [GET]
-/repos/:owner/:repo/releases/assets/:id: [DELETE, GET, PATCH]
-/repos/:owner/:repo/stats/code_frequency: [GET]
-/repos/:owner/:repo/stats/commit_activity: [GET]
-/repos/:owner/:repo/stats/contributors: [GET]
-/repos/:owner/:repo/stats/participation: [GET]
-/repos/:owner/:repo/stats/punch_card: [GET]
-/repos/:owner/:repo/statuses/:sha: [POST]
+/repos/:owner/:repo/:archive_format/:ref:
+  - GET
+/repos/:owner/:repo/commits/:ref/status:
+  - GET
+/repos/:owner/:repo/commits/:ref/statuses:
+  - GET
+/repos/:owner/:repo/compare/:base...:head:
+  - GET
+/repos/:owner/:repo/compare/user1:branchname...user2:branchname:
+  - GET
+/repos/:owner/:repo/deployments:
+  - GET
+  - POST
+/repos/:owner/:repo/deployments/:id/statuses:
+  - GET
+  - POST
+/repos/:owner/:repo/downloads:
+  - GET
+/repos/:owner/:repo/downloads/:id:
+  - DELETE
+  - GET
+/repos/:owner/:repo/hooks:
+  - GET
+  - POST
+/repos/:owner/:repo/hooks/:id:
+  - DELETE
+  - GET
+  - PATCH
+/repos/:owner/:repo/hooks/:id/pings:
+  - POST
+/repos/:owner/:repo/hooks/:id/tests:
+  - POST
+/repos/:owner/:repo/issues:
+  - GET
+  - POST
+/repos/:owner/:repo/issues/:number:
+  - PATCH
+/repos/:owner/:repo/issues/:number/labels:
+  - DELETE
+  - GET
+  - POST
+  - PUT
+/repos/:owner/:repo/issues/:number/labels/:name:
+  - DELETE
+/repos/:owner/:repo/labels:
+  - GET
+  - POST
+/repos/:owner/:repo/labels/:name:
+  - DELETE
+  - PATCH
+/repos/:owner/:repo/languages:
+  - GET
+/repos/:owner/:repo/merges:
+  - POST
+/repos/:owner/:repo/milestones:
+  - GET
+  - POST
+/repos/:owner/:repo/milestones/:number:
+  - DELETE
+  - PATCH
+/repos/:owner/:repo/milestones/:number/labels:
+  - GET
+/repos/:owner/:repo/notifications:
+  - GET
+  - PUT
+/repos/:owner/:repo/pages:
+  - GET
+/repos/:owner/:repo/pages/builds:
+  - GET
+/repos/:owner/:repo/pages/builds/latest:
+  - GET
+/repos/:owner/:repo/pulls:
+  - GET
+  - POST
+/repos/:owner/:repo/pulls/:number:
+  - GET
+  - PATCH
+/repos/:owner/:repo/pulls/:number/commits:
+  - GET
+/repos/:owner/:repo/pulls/:number/files:
+  - GET
+/repos/:owner/:repo/pulls/:number/merge:
+  - GET
+  - PUT
+/repos/:owner/:repo/releases:
+  - GET
+  - POST
+/repos/:owner/:repo/releases/:id:
+  - DELETE
+  - GET
+  - PATCH
+/repos/:owner/:repo/releases/:id/assets:
+  - GET
+/repos/:owner/:repo/releases/assets/:id:
+  - DELETE
+  - GET
+  - PATCH
+/repos/:owner/:repo/stats/code_frequency:
+  - GET
+/repos/:owner/:repo/stats/commit_activity:
+  - GET
+/repos/:owner/:repo/stats/contributors:
+  - GET
+/repos/:owner/:repo/stats/participation:
+  - GET
+/repos/:owner/:repo/stats/punch_card:
+  - GET
+/repos/:owner/:repo/statuses/:sha:
+  - POST

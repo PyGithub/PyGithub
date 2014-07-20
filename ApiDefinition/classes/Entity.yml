@@ -1,7 +1,5 @@
-updatable: true
 structures:
   - name: Plan
-    updatable: true
     attributes:
       - name: collaborators
         type: int
