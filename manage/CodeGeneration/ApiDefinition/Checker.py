@@ -39,6 +39,7 @@ class Checker(object):
         yield from ("Method '{}.{}' doesn't use its '{}' parameter".format(m.containerClass.name, m.name, p.name) for (m, p) in self.unusedParameters())
         yield from ("Method '{}.{}' doesn't implement the '{}' parameter of the '{} {}' end-point".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.unimplementedEndPointParametersNotDeclared())
         yield from ("In method '{}.{}', the '{}' parameter of the '{} {}' end-point is declared as not implemented but is implemented".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.implementedEndPointParametersDeclaredUnimplemented())
+        yield from ("Method '{}.{}' tries to use unexisting parameter '{}'".format(m.containerClass.name, m.name, p) for (m, p) in self.unexistingParameters())
         yield from ("Method '{}.{}' re-orders the '{} {}' parameters ('{}') to ('{}')".format(m.containerClass.name, m.name, ep.verb, ep.url, "', '".join(ep.parameters), "', '".join(p.name for p in m.parameters)) for (m, ep) in self.reorderedParameters())
 
     def updatableOrCompletableClassesWithoutUrl(self):
@@ -118,6 +119,17 @@ class Checker(object):
                     for p in m.parameters:
                         if p.name in unimplemented:
                             yield m, ep, p.name
+
+    def unexistingParameters(self):
+        for c in self.definition.classes:
+            for m in c.methods:
+                for a in itertools.chain(m.urlTemplateArguments, m.urlArguments, m.postArguments):
+                    if isinstance(a.value, CrossReferenced.ParameterValue):
+                        for p in m.parameters:
+                            if p.name == a.value.parameter:
+                                break
+                        else:
+                            yield m, a.value.parameter
 
     def reorderedParameters(self):
         for c in self.definition.classes:
@@ -432,3 +444,39 @@ class CheckerTestCase(unittest.TestCase):
             {}
         )
         self.expect(d, "Method 'Bar.get_foo' re-orders the 'GET /foo' parameters ('c', 'a', 'b') to ('b', 'c')")
+
+    def testUnexistingParameterUsedAsUrlTemplateArgument(self):
+        d = Structured.Definition(
+            [
+                Structured.EndPoint("GET", "/foo", [], ""),
+            ],
+            [
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], [], None, Structured.NoneType)], [])
+            ],
+            {}
+        )
+        self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")
+
+    def testUnexistingParameterUsedAsUrlArgument(self):
+        d = Structured.Definition(
+            [
+                Structured.EndPoint("GET", "/foo", [], ""),
+            ],
+            [
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
+            ],
+            {}
+        )
+        self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")
+
+    def testUnexistingParameterUsedAsPostArgument(self):
+        d = Structured.Definition(
+            [
+                Structured.EndPoint("GET", "/foo", [], ""),
+            ],
+            [
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], None, Structured.NoneType)], [])
+            ],
+            {}
+        )
+        self.expect(d, "Method 'Bar.get_foo' tries to use unexisting parameter 'bar'")
