@@ -31,7 +31,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/oauth_authorizations#list-your-authorizations
   - verb: POST
-    parameters: [client_id, client_secret, note, note_url, scopes]
+    parameters: [scopes, note, note_url, client_id, client_secret]
     doc: http://developer.github.com/v3/oauth_authorizations#create-a-new-authorization
 /authorizations/:id:
   - verb: DELETE
@@ -39,11 +39,11 @@
   - verb: GET
     doc: http://developer.github.com/v3/oauth_authorizations#get-a-single-authorization
   - verb: PATCH
-    parameters: [add_scopes, note, note_url, remove_scopes, scopes]
+    parameters: [scopes, add_scopes, remove_scopes, note, note_url]
     doc: http://developer.github.com/v3/oauth_authorizations#update-an-existing-authorization
 /authorizations/clients/:client_id:
   - verb: PUT
-    parameters: [client_secret, note, note_url, scopes]
+    parameters: [client_secret, scopes, note, note_url]
     doc: http://developer.github.com/v3/oauth_authorizations#get-or-create-an-authorization-for-a-specific-app
 /emojis:
   - verb: GET
@@ -59,7 +59,7 @@
     parameters: [since]
     doc: http://developer.github.com/v3/gists#list-gists
   - verb: POST
-    parameters: [description, files, public]
+    parameters: [files, description, public]
     doc: http://developer.github.com/v3/gists#create-a-gist
 /gists/:gist_id/comments:
   - verb: GET
@@ -81,7 +81,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/gists#get-a-single-gist
   - verb: PATCH
-    parameters: [content, description, filename, files]
+    parameters: [description, files, content, filename]
     doc: http://developer.github.com/v3/gists#edit-a-gist
 /gists/:id/commits:
   - verb: GET
@@ -123,11 +123,11 @@
     doc: http://developer.github.com/v3/repos/hooks#pubsubhubbub
 /issues:
   - verb: GET
-    parameters: [direction, filter, labels, since, sort, state]
+    parameters: [filter, state, labels, sort, direction, since]
     doc: http://developer.github.com/v3/issues#list-issues
 /markdown:
   - verb: POST
-    parameters: [context, mode, text]
+    parameters: [text, mode, context]
     doc: http://developer.github.com/v3/markdown#render-an-arbitrary-markdown-document
 /meta:
   - verb: GET
@@ -153,7 +153,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/activity/notifications#get-a-thread-subscription
   - verb: PUT
-    parameters: [ignored, subscribed]
+    parameters: [subscribed, ignored]
     doc: http://developer.github.com/v3/activity/notifications#set-a-thread-subscription
 /orgs/:org:
   - verb: GET
@@ -166,7 +166,7 @@
     doc: http://developer.github.com/v3/activity/events#list-public-events-for-an-organization
 /orgs/:org/issues:
   - verb: GET
-    parameters: [direction, filter, labels, since, sort, state]
+    parameters: [filter, state, labels, sort, direction, since]
     doc: http://developer.github.com/v3/issues#list-issues
 /orgs/:org/members:
   - verb: GET
@@ -192,13 +192,13 @@
     parameters: [type]
     doc: http://developer.github.com/v3/repos#list-organization-repositories
   - verb: POST
-    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, license_template, name, private, team_id]
+    parameters: [name, description, homepage, private, has_issues, has_wiki, has_downloads, team_id, auto_init, gitignore_template, license_template]
     doc: http://developer.github.com/v3/repos#create
 /orgs/:org/teams:
   - verb: GET
     doc: http://developer.github.com/v3/orgs/teams#list-teams
   - verb: POST
-    parameters: [name, permission, repo_names]
+    parameters: [name, repo_names, permission]
     doc: http://developer.github.com/v3/orgs/teams#create-team
 /rate_limit:
   - verb: GET
@@ -209,7 +209,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos#get
   - verb: PATCH
-    parameters: [default_branch, description, has_downloads, has_issues, has_wiki, homepage, name, private]
+    parameters: [name, description, homepage, private, has_issues, has_wiki, has_downloads, default_branch]
     doc: http://developer.github.com/v3/repos#edit
 /repos/:owner/:repo/:archive_format/:ref:
   - verb: GET
@@ -250,7 +250,7 @@
     doc: http://developer.github.com/v3/repos/comments#update-a-commit-comment
 /repos/:owner/:repo/commits:
   - verb: GET
-    parameters: [author, path, sha, since, until]
+    parameters: [sha, path, author, since, until]
     doc: http://developer.github.com/v3/repos/commits#list-commits-on-a-repository
 /repos/:owner/:repo/commits/:ref/comments:
   - verb: GET
@@ -268,7 +268,7 @@
     doc: http://developer.github.com/v3/repos/commits#get-a-single-commit
 /repos/:owner/:repo/commits/:sha/comments:
   - verb: POST
-    parameters: [body, line, path, position, sha]
+    parameters: [sha, body, path, position, line]
     doc: http://developer.github.com/v3/repos/comments#create-a-commit-comment
 /repos/:owner/:repo/compare/:base...:head:
   - verb: GET
@@ -278,13 +278,13 @@
     doc: http://developer.github.com/v3/repos/commits#compare-two-commits
 /repos/:owner/:repo/contents/:path:
   - verb: DELETE
-    parameters: [branch, email, message, name, path, sha]
+    parameters: [path, message, sha, branch, name, email]
     doc: http://developer.github.com/v3/repos/contents#delete-a-file
   - verb: GET
     parameters: [path, ref]
     doc: http://developer.github.com/v3/repos/contents#get-contents
   - verb: PUT
-    parameters: [branch, content, email, message, name, path, sha]
+    parameters: [path, message, content, sha, branch, name, email]
     doc: http://developer.github.com/v3/repos/contents#update-a-file
 /repos/:owner/:repo/contributors:
   - verb: GET
@@ -294,14 +294,14 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/deployments#list-deployments
   - verb: POST
-    parameters: [auto_merge, description, environment, payload, ref, required_contexts]
+    parameters: [ref, auto_merge, required_contexts, payload, environment, description]
     doc: http://developer.github.com/v3/repos/deployments#create-a-deployment
 /repos/:owner/:repo/deployments/:id/statuses:
   - verb: GET
     parameters: [id]
     doc: http://developer.github.com/v3/repos/deployments#list-deployment-statuses
   - verb: POST
-    parameters: [description, state, target_url]
+    parameters: [state, target_url, description]
     doc: http://developer.github.com/v3/repos/deployments#create-a-deployment-status
 /repos/:owner/:repo/downloads:
   - verb: GET
@@ -329,7 +329,7 @@
     doc: http://developer.github.com/v3/git/blobs#get-a-blob
 /repos/:owner/:repo/git/commits:
   - verb: POST
-    parameters: [date, email, message, name, parents, tree]
+    parameters: [message, tree, parents, name, email, date]
     doc: http://developer.github.com/v3/git/commits#create-a-commit
 /repos/:owner/:repo/git/commits/:sha:
   - verb: GET
@@ -346,18 +346,18 @@
   - verb: GET
     doc: http://developer.github.com/v3/git/refs#get-a-reference
   - verb: PATCH
-    parameters: [force, sha]
+    parameters: [sha, force]
     doc: http://developer.github.com/v3/git/refs#update-a-reference
 /repos/:owner/:repo/git/tags:
   - verb: POST
-    parameters: [date, email, message, name, object, tag, tagger, type]
+    parameters: [tag, message, object, type, tagger, name, email, date]
     doc: http://developer.github.com/v3/git/tags#create-a-tag-object
 /repos/:owner/:repo/git/tags/:sha:
   - verb: GET
     doc: http://developer.github.com/v3/git/tags#get-a-tag
 /repos/:owner/:repo/git/trees:
   - verb: POST
-    parameters: [base_tree, content, mode, path, sha, tree, type]
+    parameters: [tree, base_tree, path, mode, type, sha, content]
     doc: http://developer.github.com/v3/git/trees#create-a-tree
 /repos/:owner/:repo/git/trees/:sha:
   - verb: GET
@@ -366,7 +366,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/hooks#list-hooks
   - verb: POST
-    parameters: [active, config, events, name]
+    parameters: [name, config, events, active]
     doc: http://developer.github.com/v3/repos/hooks#create-a-hook
 /repos/:owner/:repo/hooks/:id:
   - verb: DELETE
@@ -374,7 +374,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/hooks#get-single-hook
   - verb: PATCH
-    parameters: [active, add_events, config, events, remove_events]
+    parameters: [config, events, add_events, remove_events, active]
     doc: http://developer.github.com/v3/repos/hooks#edit-a-hook
 /repos/:owner/:repo/hooks/:id/pings:
   - verb: POST
@@ -384,10 +384,10 @@
     doc: http://developer.github.com/v3/repos/hooks#test-a-push-hook
 /repos/:owner/:repo/issues:
   - verb: GET
-    parameters: [assignee, creator, direction, labels, mentioned, milestone, since, sort, state]
+    parameters: [milestone, state, assignee, creator, mentioned, labels, sort, direction, since]
     doc: http://developer.github.com/v3/issues#list-issues-for-a-repository
   - verb: POST
-    parameters: [assignee, body, labels, milestone, title]
+    parameters: [title, body, assignee, milestone, labels]
     doc: http://developer.github.com/v3/issues#create-an-issue
 /repos/:owner/:repo/issues/:issue_number/events:
   - verb: GET
@@ -396,7 +396,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/issues#get-a-single-issue
   - verb: PATCH
-    parameters: [assignee, body, labels, milestone, state, title]
+    parameters: [title, body, assignee, state, milestone, labels]
     doc: http://developer.github.com/v3/issues#edit-an-issue
 /repos/:owner/:repo/issues/:number/comments:
   - verb: GET
@@ -418,7 +418,7 @@
     doc: http://developer.github.com/v3/issues/labels#remove-a-label-from-an-issue
 /repos/:owner/:repo/issues/comments:
   - verb: GET
-    parameters: [direction, since, sort]
+    parameters: [sort, direction, since]
     doc: http://developer.github.com/v3/issues/comments#list-comments-in-a-repository
 /repos/:owner/:repo/issues/comments/:id:
   - verb: DELETE
@@ -448,7 +448,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/issues/labels#list-all-labels-for-this-repository
   - verb: POST
-    parameters: [color, name]
+    parameters: [name, color]
     doc: http://developer.github.com/v3/issues/labels#create-a-label
 /repos/:owner/:repo/labels/:name:
   - verb: DELETE
@@ -456,21 +456,21 @@
   - verb: GET
     doc: http://developer.github.com/v3/issues/labels#get-a-single-label
   - verb: PATCH
-    parameters: [color, name]
+    parameters: [name, color]
     doc: http://developer.github.com/v3/issues/labels#update-a-label
 /repos/:owner/:repo/languages:
   - verb: GET
     doc: http://developer.github.com/v3/repos#list-languages
 /repos/:owner/:repo/merges:
   - verb: POST
-    parameters: [base, commit_message, head]
+    parameters: [base, head, commit_message]
     doc: http://developer.github.com/v3/repos/merging#perform-a-merge
 /repos/:owner/:repo/milestones:
   - verb: GET
-    parameters: [direction, sort, state]
+    parameters: [state, sort, direction]
     doc: http://developer.github.com/v3/issues/milestones#list-milestones-for-a-repository
   - verb: POST
-    parameters: [description, due_on, state, title]
+    parameters: [title, state, description, due_on]
     doc: http://developer.github.com/v3/issues/milestones#create-a-milestone
 /repos/:owner/:repo/milestones/:number:
   - verb: DELETE
@@ -478,7 +478,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/issues/milestones#get-a-single-milestone
   - verb: PATCH
-    parameters: [description, due_on, state, title]
+    parameters: [title, state, description, due_on]
     doc: http://developer.github.com/v3/issues/milestones#update-a-milestone
 /repos/:owner/:repo/milestones/:number/labels:
   - verb: GET
@@ -501,22 +501,22 @@
     doc: http://developer.github.com/v3/repos/pages#list-latest-pages-build
 /repos/:owner/:repo/pulls:
   - verb: GET
-    parameters: [base, direction, head, sort, state]
+    parameters: [state, head, base, sort, direction]
     doc: http://developer.github.com/v3/pulls#list-pull-requests
   - verb: POST
-    parameters: [base, body, head, issue, title]
+    parameters: [title, head, base, body, issue]
     doc: http://developer.github.com/v3/pulls#create-a-pull-request
 /repos/:owner/:repo/pulls/:number:
   - verb: GET
     doc: http://developer.github.com/v3/pulls#get-a-single-pull-request
   - verb: PATCH
-    parameters: [body, state, title]
+    parameters: [title, body, state]
     doc: http://developer.github.com/v3/pulls#update-a-pull-request
 /repos/:owner/:repo/pulls/:number/comments:
   - verb: GET
     doc: http://developer.github.com/v3/pulls/comments#list-comments-on-a-pull-request
   - verb: POST
-    parameters: [body, body, commit_id, in_reply_to, path, position]
+    parameters: [body, commit_id, path, position, body, in_reply_to]
     doc: http://developer.github.com/v3/pulls/comments#create-a-comment
 /repos/:owner/:repo/pulls/:number/commits:
   - verb: GET
@@ -532,7 +532,7 @@
     doc: http://developer.github.com/v3/pulls#merge-a-pull-request-merge-button
 /repos/:owner/:repo/pulls/comments:
   - verb: GET
-    parameters: [direction, since, sort]
+    parameters: [sort, direction, since]
     doc: http://developer.github.com/v3/pulls/comments#list-comments-in-a-repository
 /repos/:owner/:repo/pulls/comments/:number:
   - verb: DELETE
@@ -550,7 +550,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/releases#list-releases-for-a-repository
   - verb: POST
-    parameters: [body, draft, name, prerelease, tag_name, target_commitish]
+    parameters: [tag_name, target_commitish, name, body, draft, prerelease]
     doc: http://developer.github.com/v3/repos/releases#create-a-release
 /repos/:owner/:repo/releases/:id:
   - verb: DELETE
@@ -558,7 +558,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/releases#get-a-single-release
   - verb: PATCH
-    parameters: [body, draft, name, prerelease, tag_name, target_commitish]
+    parameters: [tag_name, target_commitish, name, body, draft, prerelease]
     doc: http://developer.github.com/v3/repos/releases#edit-a-release
 /repos/:owner/:repo/releases/:id/assets:
   - verb: GET
@@ -569,7 +569,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/repos/releases#get-a-single-release-asset
   - verb: PATCH
-    parameters: [label, name]
+    parameters: [name, label]
     doc: http://developer.github.com/v3/repos/releases#edit-a-release-asset
 /repos/:owner/:repo/stargazers:
   - verb: GET
@@ -591,7 +591,7 @@
     doc: http://developer.github.com/v3/repos/statistics#punch-card
 /repos/:owner/:repo/statuses/:sha:
   - verb: POST
-    parameters: [context, description, state, target_url]
+    parameters: [state, target_url, description, context]
     doc: http://developer.github.com/v3/repos/statuses#create-a-status
 /repos/:owner/:repo/subscribers:
   - verb: GET
@@ -602,7 +602,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/activity/watching#get-a-repository-subscription
   - verb: PUT
-    parameters: [ignored, subscribed]
+    parameters: [subscribed, ignored]
     doc: http://developer.github.com/v3/activity/watching#set-a-repository-subscription
 /repos/:owner/:repo/tags:
   - verb: GET
@@ -616,19 +616,19 @@
     doc: http://developer.github.com/v3/repos#list-all-public-repositories
 /search/code:
   - verb: GET
-    parameters: [order, q, sort]
+    parameters: [q, sort, order]
     doc: http://developer.github.com/v3/search#search-code
 /search/issues:
   - verb: GET
-    parameters: [order, q, sort]
+    parameters: [q, sort, order]
     doc: http://developer.github.com/v3/search#search-issues
 /search/repositories:
   - verb: GET
-    parameters: [order, q, sort]
+    parameters: [q, sort, order]
     doc: http://developer.github.com/v3/search#search-repositories
 /search/users:
   - verb: GET
-    parameters: [order, q, sort]
+    parameters: [q, sort, order]
     doc: http://developer.github.com/v3/search#search-users
 /setup/api/configcheck:
   - verb: GET
@@ -699,7 +699,7 @@
   - verb: GET
     doc: http://developer.github.com/v3/users#get-the-authenticated-user
   - verb: PATCH
-    parameters: [bio, blog, company, email, hireable, location, name]
+    parameters: [name, email, blog, company, location, hireable, bio]
     doc: http://developer.github.com/v3/users#update-the-authenticated-user
 /user/emails:
   - verb: DELETE
@@ -723,7 +723,7 @@
     doc: http://developer.github.com/v3/users/followers#follow-a-user
 /user/issues:
   - verb: GET
-    parameters: [direction, filter, labels, since, sort, state]
+    parameters: [filter, state, labels, sort, direction, since]
     doc: http://developer.github.com/v3/issues#list-issues
 /user/keys:
   - verb: GET
@@ -740,14 +740,14 @@
     doc: http://developer.github.com/v3/orgs#list-user-organizations
 /user/repos:
   - verb: GET
-    parameters: [direction, sort, type]
+    parameters: [type, sort, direction]
     doc: http://developer.github.com/v3/repos#list-your-repositories
   - verb: POST
-    parameters: [auto_init, description, gitignore_template, has_downloads, has_issues, has_wiki, homepage, license_template, name, private, team_id]
+    parameters: [name, description, homepage, private, has_issues, has_wiki, has_downloads, team_id, auto_init, gitignore_template, license_template]
     doc: http://developer.github.com/v3/repos#create
 /user/starred:
   - verb: GET
-    parameters: [direction, sort]
+    parameters: [sort, direction]
     doc: http://developer.github.com/v3/activity/starring#list-repositories-being-starred
 /user/starred/:owner/:repo:
   - verb: DELETE
@@ -812,11 +812,11 @@
     doc: http://developer.github.com/v3/activity/events#list-public-events-that-a-user-has-received
 /users/:username/repos:
   - verb: GET
-    parameters: [direction, sort, type]
+    parameters: [type, sort, direction]
     doc: http://developer.github.com/v3/repos#list-user-repositories
 /users/:username/starred:
   - verb: GET
-    parameters: [direction, sort]
+    parameters: [sort, direction]
     doc: http://developer.github.com/v3/activity/starring#list-repositories-being-starred
 /users/:username/subscriptions:
   - verb: GET

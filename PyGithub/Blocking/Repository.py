@@ -957,14 +957,14 @@ class Repository(bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob)(None, r.json())
 
-    def create_git_commit(self, tree, message, parents, committer=None, author=None):
+    def create_git_commit(self, message, tree, parents, committer=None, author=None):
         """
         Calls the `POST /repos/:owner/:repo/git/commits <http://developer.github.com/v3/git/commits#create-a-commit>`__ end point.
 
         This is the only method calling this end point.
 
-        :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
         :param message: mandatory :class:`string`
+        :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
         :param parents: mandatory :class:`list` of :class:`.GitCommit`
         :param committer: optional :class:`GitAuthor`
         :param author: optional :class:`GitAuthor`
@@ -972,8 +972,8 @@ class Repository(bgo.UpdatableGithubObject):
         """
         import PyGithub.Blocking.GitCommit
 
-        tree = snd.normalizeGitTreeSha(tree)
         message = snd.normalizeString(message)
+        tree = snd.normalizeGitTreeSha(tree)
         parents = snd.normalizeList(snd.normalizeGitCommitFullName, parents)
         if committer is not None:
             committer = snd.normalizeGitAuthor(committer)

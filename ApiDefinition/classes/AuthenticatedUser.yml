@@ -273,15 +273,15 @@ methods:
   - name: get_repos
     end_point: GET /user/repos
     optional_parameters:
+      - name: type
+        type:
+          enum: [all, owner, public, private, member]
       - name: sort
         type:
           enum: [created, updated, pushed, full_name]
       - name: direction
         type:
           enum: [asc, desc]
-      - name: type
-        type:
-          enum: [all, owner, public, private, member]
       - name: per_page
         type: int
     url_template: end_point

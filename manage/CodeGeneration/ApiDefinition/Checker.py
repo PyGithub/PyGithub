@@ -39,6 +39,7 @@ class Checker(object):
         yield from ("Method '{}.{}' doesn't use its '{}' parameter".format(m.containerClass.name, m.name, p.name) for (m, p) in self.unusedParameters())
         yield from ("Method '{}.{}' doesn't implement the '{}' parameter of the '{} {}' end-point".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.unimplementedEndPointParametersNotDeclared())
         yield from ("In method '{}.{}', the '{}' parameter of the '{} {}' end-point is declared as not implemented but is implemented".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.implementedEndPointParametersDeclaredUnimplemented())
+        yield from ("Method '{}.{}' re-orders the '{} {}' parameters ('{}') to ('{}')".format(m.containerClass.name, m.name, ep.verb, ep.url, "', '".join(ep.parameters), "', '".join(p.name for p in m.parameters)) for (m, ep) in self.reorderedParameters())
 
     def updatableOrCompletableClassesWithoutUrl(self):
         for c in self.definition.classes:
@@ -117,6 +118,15 @@ class Checker(object):
                     for p in m.parameters:
                         if p.name in unimplemented:
                             yield m, ep, p.name
+
+    def reorderedParameters(self):
+        for c in self.definition.classes:
+            for m in c.methods:
+                for ep in m.endPoints:
+                    methodParams = [p.name for p in m.parameters if p.name in ep.parameters]
+                    epParams = [p for p in ep.parameters if p in methodParams]
+                    if methodParams != epParams:
+                        yield m, ep
 
 
 class CheckerTestCase(unittest.TestCase):
@@ -398,3 +408,27 @@ class CheckerTestCase(unittest.TestCase):
             {}
         )
         self.expect(d)
+
+    def testOderedEndPointParameter(self):
+        d = Structured.Definition(
+            [
+                Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
+            ],
+            [
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("c", Structured.ScalarType("string"), None, False), Structured.Parameter("b", Structured.ScalarType("string"), None, False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
+            ],
+            {}
+        )
+        self.expect(d)
+
+    def testUnoderedEndPointParameter(self):
+        d = Structured.Definition(
+            [
+                Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
+            ],
+            [
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("b", Structured.ScalarType("string"), None, False), Structured.Parameter("c", Structured.ScalarType("string"), None, False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
+            ],
+            {}
+        )
+        self.expect(d, "Method 'Bar.get_foo' re-orders the 'GET /foo' parameters ('c', 'a', 'b') to ('b', 'c')")

@@ -235,7 +235,7 @@ def main():
             for verb, [params, doc] in sorted(ops.iteritems()):
                 f.write("  - verb: " + verb + "\n")
                 if len(params) != 0:
-                    f.write("    parameters: [" + ", ".join(sorted(params)) + "]\n")
+                    f.write("    parameters: [" + ", ".join(params) + "]\n")
                 f.write("    doc: " + doc + "\n")
 
 

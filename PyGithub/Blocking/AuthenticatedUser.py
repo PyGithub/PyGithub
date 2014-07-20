@@ -374,26 +374,26 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url)
         return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
-    def get_repos(self, sort=None, direction=None, type=None, per_page=None):
+    def get_repos(self, type=None, sort=None, direction=None, per_page=None):
         """
         Calls the `GET /user/repos <http://developer.github.com/v3/repos#list-your-repositories>`__ end point.
 
         This is the only method calling this end point.
 
+        :param type: optional "all" or "owner" or "public" or "private" or "member"
         :param sort: optional "created" or "updated" or "pushed" or "full_name"
         :param direction: optional "asc" or "desc"
-        :param type: optional "all" or "owner" or "public" or "private" or "member"
         :param per_page: optional :class:`int`
         :rtype: :class:`.PaginatedList` of :class:`.Repository`
         """
         import PyGithub.Blocking.Repository
 
+        if type is not None:
+            type = snd.normalizeEnum(type, "all", "owner", "public", "private", "member")
         if sort is not None:
             sort = snd.normalizeEnum(sort, "created", "updated", "pushed", "full_name")
         if direction is not None:
             direction = snd.normalizeEnum(direction, "asc", "desc")
-        if type is not None:
-            type = snd.normalizeEnum(type, "all", "owner", "public", "private", "member")
         if per_page is None:
             per_page = self.Session.PerPage
         else:

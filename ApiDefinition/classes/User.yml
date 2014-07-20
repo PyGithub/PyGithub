@@ -99,15 +99,15 @@ methods:
   - name: get_repos
     end_point: GET /users/:username/repos
     optional_parameters:
+      - name: type
+        type:
+          enum: [all, owner, forks, sources, member]
       - name: sort
         type:
           enum: [created, updated, pushed, full_name]
       - name: direction
         type:
           enum: [asc, desc]
-      - name: type
-        type:
-          enum: [all, owner, forks, sources, member]
       - name: per_page
         type: int
     url_template: attribute repos_url
