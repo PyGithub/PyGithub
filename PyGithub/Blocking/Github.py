@@ -37,11 +37,6 @@ class Github(bgo.SessionedGithubObject):
             self.__name = rcv.Attribute("Github.GitIgnoreTemplate.name", rcv.StringConverter, name)
             self.__source = rcv.Attribute("Github.GitIgnoreTemplate.source", rcv.StringConverter, source)
 
-        def _updateAttributes(self, name=None, source=None, **kwds):
-            super(Github.GitIgnoreTemplate, self)._updateAttributes(**kwds)
-            self.__name.update(name)
-            self.__source.update(source)
-
         @property
         def name(self):
             """
@@ -67,12 +62,6 @@ class Github(bgo.SessionedGithubObject):
             self.__git = rcv.Attribute("Github.Meta.git", rcv.ListConverter(rcv.StringConverter), git)
             self.__hooks = rcv.Attribute("Github.Meta.hooks", rcv.ListConverter(rcv.StringConverter), hooks)
             self.__verifiable_password_authentication = rcv.Attribute("Github.Meta.verifiable_password_authentication", rcv.BoolConverter, verifiable_password_authentication)
-
-        def _updateAttributes(self, git=None, hooks=None, verifiable_password_authentication=None, **kwds):
-            super(Github.Meta, self)._updateAttributes(**kwds)
-            self.__git.update(git)
-            self.__hooks.update(hooks)
-            self.__verifiable_password_authentication.update(verifiable_password_authentication)
 
         @property
         def git(self):
@@ -104,10 +93,6 @@ class Github(bgo.SessionedGithubObject):
         def _initAttributes(self, resources=None, rate=None, **kwds):
             super(Github.RateLimit, self)._initAttributes(**kwds)
             self.__resources = rcv.Attribute("Github.RateLimit.resources", rcv.StructureConverter(self.Session, Github.Resources), resources)
-
-        def _updateAttributes(self, resources=None, rate=None, **kwds):
-            super(Github.RateLimit, self)._updateAttributes(**kwds)
-            self.__resources.update(resources)
 
         @property
         def resources(self):
@@ -166,11 +151,6 @@ class Github(bgo.SessionedGithubObject):
             super(Github.Resources, self)._initAttributes(**kwds)
             self.__core = rcv.Attribute("Github.Resources.core", rcv.StructureConverter(self.Session, Github.RateLimits), core)
             self.__search = rcv.Attribute("Github.Resources.search", rcv.StructureConverter(self.Session, Github.RateLimits), search)
-
-        def _updateAttributes(self, core=None, search=None, **kwds):
-            super(Github.Resources, self)._updateAttributes(**kwds)
-            self.__core.update(core)
-            self.__search.update(search)
 
         @property
         def core(self):

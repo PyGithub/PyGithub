@@ -11,6 +11,7 @@ import PyGithub.Blocking.tests.Framework as Framework
 @Framework.UsesSpecificData
 class RateLimitingTestCase(Framework.SimpleAnonymousTestCase):
     def testConsumeRateLimit(self):
+        # @todoAlpha Make sure Github.RateLimits lists Session.RateLimit as a factory
         self.g.get_user("nvie")
         self.assertEqual(self.g.Session.RateLimit.limit, 60)
         self.assertEqual(self.g.Session.RateLimit.remaining, 18)
@@ -55,6 +56,7 @@ class RateLimitingTestCase(Framework.SimpleAnonymousTestCase):
         self.assertEqual(self.g.Session.RateLimit.reset, datetime.datetime(2013, 12, 22, 20, 45, 26))
 
     def testGetRateLimit(self):
+        # @todoAlpha Consider making RateLimit and Resources updatable, with a constant url "/rate_limits"
         limit = self.g.get_rate_limit()
         self.assertEqual(limit.resources.core.limit, 60)
         self.assertEqual(limit.resources.core.remaining, 60)

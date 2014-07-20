@@ -88,6 +88,7 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(template.source, expectedSource)
 
     def testGetGitIgnoreTemplates(self):
+        # @todoAlpha Consider returning a list of GitIgnoreTemplate, even if the API is inconsistent. In that case, make GitIgnoreTemplate updatable
         templates = self.g.get_gitignore_templates()
         self.assertEqual(len(templates), 81)
         self.assertEqual(
@@ -129,6 +130,7 @@ class GithubTestCase(Framework.SimpleLoginTestCase):
             self.assertEqual(emojis[k], v)
 
     def testGetMeta(self):
+        # @todoAlpha Consider making Meta updatable, with a constant url "/meta"
         meta = self.g.get_meta()
         self.assertEqual(meta.git, ["192.30.252.0/22"])
         self.assertEqual(meta.hooks, ["192.30.252.0/22"])
