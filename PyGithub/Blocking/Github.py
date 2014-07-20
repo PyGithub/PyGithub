@@ -106,6 +106,7 @@ class Github(bgo.SessionedGithubObject):
         Methods and attributes returning instances of this class:
           * :attr:`.Resources.core`
           * :attr:`.Resources.search`
+          * :attr:`.Session.RateLimit`
         """
 
         def _initAttributes(self, limit=None, remaining=None, reset=None, **kwds):

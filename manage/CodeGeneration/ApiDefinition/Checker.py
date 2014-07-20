@@ -144,7 +144,7 @@ class CheckerTestCase(unittest.TestCase):
     def expect(self, d, *warnings):
         typesRepo = CrossReferenced.TypesRepository()
         typesRepo.register(CrossReferenced.BuiltinType("string"))
-        self.assertEqual(set(Checker(CrossReferenced.Definition(d, typesRepo, test=True)).warnings()), set(warnings))
+        self.assertEqual(set(Checker(CrossReferenced.Definition(d, typesRepo)).warnings()), set(warnings))
 
     def testUrlInNotUpdatableNotCompletableClass(self):
         d = Structured.Definition(

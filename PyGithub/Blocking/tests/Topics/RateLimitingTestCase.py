@@ -11,7 +11,6 @@ import PyGithub.Blocking.tests.Framework as Framework
 @Framework.UsesSpecificData
 class RateLimitingTestCase(Framework.SimpleAnonymousTestCase):
     def testConsumeRateLimit(self):
-        # @todoAlpha Make sure Github.RateLimits lists Session.RateLimit as a factory
         self.g.get_user("nvie")
         self.assertEqual(self.g.Session.RateLimit.limit, 60)
         self.assertEqual(self.g.Session.RateLimit.remaining, 18)

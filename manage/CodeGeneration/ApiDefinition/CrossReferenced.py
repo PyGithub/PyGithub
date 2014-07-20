@@ -6,12 +6,9 @@ import sys
 assert sys.hexversion >= 0x03040000
 
 import collections
-import inspect
-import itertools
 import re
 
 import CodeGeneration.ApiDefinition.Structured as Structured
-from CodeGeneration.CaseUtils import toUpperCamel
 
 
 class Type:
@@ -502,7 +499,7 @@ class Definition:
     At this level, all is cross-referenced. Strings are only used for string-ish data.
     Only one object represents each conceptual object.
     """
-    def __init__(self, definition, typesRepo, test=False):
+    def __init__(self, definition, typesRepo):
         self.__endPoints = sorted((EndPoint(*ep) for ep in definition.endPoints), key=lambda ep: (ep.url, ep.verb))
         endPointsRepo = {ep.verb + " " + ep.url: ep for ep in self.__endPoints}
 
@@ -514,15 +511,11 @@ class Definition:
         self.__unimplementedEndPoints = sorted(unimplementedEndPoints, key=lambda ep: (ep.url, ep.verb))
 
         self.__classes = sorted((Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes), key=lambda c: c.name)
-        self.__test = test
 
         for c in self.__classes:
             typesRepo.register(c)
             for s in c.structures:
                 typesRepo.register(s)
-
-        build = Structured.Method("Build", [], [], [], Structured.EndPointValue(), [], [], [], [], None, Structured.ScalarType("Github"))
-        self.__builder = Class("Builder", "Builder", False, False, None, [], [], [build], [])
 
         self._applyRecursively(Class, Class._referenceBase, typesRepo)
         self._applyRecursively(Method, Method._referenceEndPoints, endPointsRepo)
@@ -552,9 +545,6 @@ class Definition:
 
         for c in self.__classes:
             c._applyRecursively(f)
-
-        if not self.__test:
-            self.__builder._applyRecursively(f)
 
         for ep in self.__endPoints:
             ep._applyRecursively(f)
