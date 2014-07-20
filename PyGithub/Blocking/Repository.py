@@ -897,7 +897,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 
@@ -1225,7 +1225,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         :param sha: optional :class:`string`
         :param path: optional :class:`string`
-        :param author: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param author: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :param since: optional :class:`datetime`
         :param until: optional :class:`datetime`
         :param per_page: optional :class:`int`
@@ -1622,7 +1622,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: :class:`bool`
         """
 
@@ -1638,7 +1638,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: :class:`bool`
         """
 
@@ -1654,7 +1654,7 @@ class Repository(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 

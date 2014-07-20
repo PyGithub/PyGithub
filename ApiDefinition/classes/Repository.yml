@@ -192,7 +192,9 @@ methods:
     end_point: PUT /repos/:owner/:repo/collaborators/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
@@ -264,7 +266,9 @@ methods:
       - name: message
         type: string
       - name: tree
-        orig: GitTree.sha
+        type:
+          class: GitTree
+          attribute: sha
       - name: parents
         type:
           container: list
@@ -496,7 +500,9 @@ methods:
       - name: path
         type: string
       - name: author
-        orig: User.login
+        type:
+          class: User
+          attribute: login
       - name: since
         type: datetime
       - name: until
@@ -771,7 +777,9 @@ methods:
     end_point: GET /repos/:owner/:repo/assignees/:assignee
     parameters:
       - name: assignee
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute assignees_url
     url_template_arguments:
       - name: user
@@ -782,7 +790,9 @@ methods:
     end_point: GET /repos/:owner/:repo/collaborators/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
@@ -793,7 +803,9 @@ methods:
     end_point: DELETE /repos/:owner/:repo/collaborators/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator

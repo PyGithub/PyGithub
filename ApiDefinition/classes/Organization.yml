@@ -21,7 +21,9 @@ methods:
     end_point: PUT /orgs/:org/public_members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
@@ -31,7 +33,9 @@ methods:
     end_point: POST /repos/:owner/:repo/forks
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     unimplemented_parameters:
       - organization
     url_template: end_point
@@ -63,11 +67,15 @@ methods:
       - name: has_downloads
         type: bool
       - name: team_id
-        orig: Team.id
+        type:
+          class: Team
+          attribute: id
       - name: auto_init
         type: bool
       - name: gitignore_template
-        orig: GitIgnoreTemplate.name
+        type:
+          class: GitIgnoreTemplate
+          attribute: name
       - name: license_template
         type: string
     url_template: attribute repos_url
@@ -233,7 +241,9 @@ methods:
     end_point: GET /orgs/:org/members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -244,7 +254,9 @@ methods:
     end_point: GET /orgs/:org/public_members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
@@ -255,7 +267,9 @@ methods:
     end_point: DELETE /orgs/:org/members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -265,7 +279,9 @@ methods:
     end_point: DELETE /orgs/:org/public_members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member

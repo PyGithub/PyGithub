@@ -6,6 +6,7 @@ import sys
 assert sys.hexversion >= 0x03040000
 
 import CodeGeneration.PythonSnippets as PS
+from CodeGeneration.CaseUtils import toUpperCamel
 
 
 class CodeGenerator:
@@ -45,6 +46,7 @@ class CodeGenerator:
                 yield "  * :class:`.{}`".format(d.name)
         yield ""
         yield from self.generateDocForFactories(klass)
+        # @todoAlpha Document methods accepting this class as parameter
 
     def generateDocForFactories(self, klass):
         if len(klass.factories) == 0:
@@ -68,6 +70,7 @@ class CodeGenerator:
             PS.Class(structure.name)
             .base("bgo.SessionedGithubObject")
             .docstring(self.generateDocForFactories(structure))
+            # @todoAlpha Document methods accepting this struct as parameter
             .element(
                 PS.Method("_initAttributes")
                 .parameters((a.name, "None") for a in structure.attributes)
@@ -153,7 +156,7 @@ class CodeGenerator:
         return "DictConverter({}, {})".format(self.generateCodeForConverter(module, attribute, type.key), self.generateCodeForConverter(module, attribute, type.value))
 
     def generateCodeForBuiltinConverter(self, module, attribute, type):
-        return "{}Converter".format(type.name.capitalize())
+        return "{}Converter".format(toUpperCamel(type.name))
 
     def generateCodeForClassConverter(self, module, attribute, type):
         if type.name == attribute.containerClass.name:
@@ -226,8 +229,7 @@ class CodeGenerator:
             yield ":param {}: {} {}".format(
                 parameter.name,
                 "optional" if parameter.optional else "mandatory",
-                # @todoGeni Fix the "its User.id" case: User inherits id from Entity and the doc has no link
-                self.generateDocForType(parameter.type) + ("" if parameter.orig is None else " (its :attr:`.{}.{}`)".format(parameter.type.types[0].name, parameter.orig))
+                self.generateDocForType(parameter.type)
             )
         yield ":rtype: " + self.generateDocForType(method.returnType)
 
@@ -245,10 +247,10 @@ class CodeGenerator:
                     yield "    per_page = snd.normalizeInt(per_page)"
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
-                    if p.name == "since" and method.name in ["get_users", "get_repos"]:
-                        yield from PS.indent(self.generateCodeToNormalizeParameterSince(p))
-                    else:
-                        yield from PS.indent(self.generateCodeToNormalizeParameter(p))
+                    # if p.name == "since" and method.name in ["get_users", "get_repos"]:
+                    #     yield from PS.indent(self.generateCodeToNormalizeParameterSince(p))
+                    # else:
+                    yield from PS.indent(self.generateCodeToNormalizeParameter(p))
                 else:
                     yield from self.generateCodeToNormalizeParameter(p)
             yield ""
@@ -278,35 +280,26 @@ class CodeGenerator:
     def generateCodeToNormalizeEnumParameter(self, parameter):
         yield "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
+    def generateCodeToNormalizeAttributeParameter(self, parameter):
+        yield "{} = snd.normalize{}{}({})".format(parameter.name, parameter.type.type.name, toUpperCamel(parameter.type.attribute.name), parameter.name)
+
     def generateCodeToNormalizeUnionParameter(self, parameter):
-        if parameter.orig is None:
-            # if parameter.type.types[0].category == "class":
-            #     t = parameter.type.types[0]
-            #     yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(t.name), parameter.name)
-            # else:
-                if parameter.name == "repo":
-                    yield "repo = snd.normalizeTwoStringsString(repo)"
-                else:
-                    yield "{} = snd.normalize{}({})".format(parameter.name, "".join(self.capfirst(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
+        if parameter.name == "repo":
+            yield "repo = snd.normalizeTwoStringsString(repo)"
         else:
-            t = parameter.type.types[0]
-            yield "{} = snd.normalize{}{}({})".format(parameter.name, self.capfirst(t.name), "".join(p.capitalize() for p in parameter.orig.split("_")), parameter.name)
+            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(toUpperCamel(t.name) for t in parameter.type.types), parameter.name)  # pragma no branch
 
     def generateCodeToNormalizeBuiltinParameter(self, parameter):
-        yield "{} = snd.normalize{}({})".format(parameter.name, self.capfirst(parameter.type.name), parameter.name)
+        yield "{} = snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
         yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.category)(parameter)
 
     def generateCodeToNormalizeListOfClassParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
+        yield "{} = snd.normalizeList(snd.normalize{}FullName, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, self.capfirst(parameter.type.content.name), parameter.name)
-
-    def generateCodeToNormalizeParameterSince(self, parameter):
-        t = parameter.type.types[0]
-        yield "{} = snd.normalize{}Id({})".format(parameter.name, self.capfirst(t.name), parameter.name)
+        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
 
     def generateCodeForEffects(self, method):
         for effect in method.effects:
@@ -353,9 +346,6 @@ class CodeGenerator:
             args += ", postArguments=postArguments"
         return args
 
-    def capfirst(self, s):
-        return s[0].capitalize() + s[1:]
-
     def generateDocForType(self, type):
         return self.getMethod("generateDocFor{}Type", type.category)(type)
 
@@ -364,6 +354,12 @@ class CodeGenerator:
 
     def generateDocForClassType(self, type):
         return ":class:`.{}`".format(type.name)
+
+    def generateDocForAttributeType(self, type):
+        if type.type.name == "Repository" and type.attribute.name == "full_name":
+            return ":class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)"
+        else:
+            return ":class:`.{}` or :class:`{}` (its :attr:`.{}.{}`)".format(type.type.name, type.attribute.type.name, type.attribute.containerClass.name, type.attribute.name)
 
     def generateDocForEnumType(self, type):
         return " or ".join('"' + v + '"' for v in type.values)
@@ -410,5 +406,5 @@ class CodeGenerator:
         return format.format(self.generateCodeForValue(method, value))
 
     def getMethod(self, scheme, *names):
-        name = scheme.format(*("".join(part[0].capitalize() + part[1:] for part in name.split("_")) for name in names))
+        name = scheme.format(*(toUpperCamel(name) for name in names))
         return getattr(self, name)

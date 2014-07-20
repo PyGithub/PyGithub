@@ -24,7 +24,9 @@ methods:
     end_point: PUT /teams/:id/members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -34,7 +36,9 @@ methods:
     end_point: PUT /teams/:id/repos/:org/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: id
@@ -92,7 +96,9 @@ methods:
     end_point: GET /teams/:id/members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -103,7 +109,9 @@ methods:
     end_point: GET /teams/:id/repos/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: id
@@ -118,7 +126,9 @@ methods:
     end_point: DELETE /teams/:id/members/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -128,7 +138,9 @@ methods:
     end_point: DELETE /teams/:id/repos/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: id

@@ -6,6 +6,7 @@ import sys
 assert sys.hexversion >= 0x03040000
 
 import CodeGeneration.ApiDefinition.Structured as Structured
+from CodeGeneration.CaseUtils import toUpperCamel
 
 
 class Type(object):
@@ -112,6 +113,25 @@ class EnumeratedType(SimpleType):
         return self.__values
 
 
+class AttributeType(Type):
+    def __init__(self, type, attribute):
+        Type.__init__(self, type.name + toUpperCamel(attribute.name), "attribute")
+        self.__type = type
+        self.__attribute = attribute
+
+    @property
+    def type(self):
+        return self.__type
+
+    @property
+    def attribute(self):
+        return self.__attribute
+
+    # @property
+    # def underlyingTypes(self):
+    #     return set([self.type, self.attribute.type])
+
+
 class Repository(object):
     def __init__(self):
         self.__simpleTypes = {}
@@ -129,6 +149,14 @@ class Repository(object):
             return NoneType
         elif isinstance(description, Structured.ScalarType):
             return self.__simpleTypes[description.name]
+        elif isinstance(description, Structured.AttributeType):
+            def findAttr(t, a):
+                for attribute in t.attributes:
+                    if attribute.name == a:
+                        return attribute
+                return findAttr(t.base, a)
+            type = self.get(description.type)
+            return AttributeType(type, findAttr(type, description.attribute))
         elif isinstance(description, Structured.UnionType):
             return UnionType([self.get(t) for t in description.types], description.key, description.keys, description.converter)
         elif isinstance(description, Structured.EnumType):

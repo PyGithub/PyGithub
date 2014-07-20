@@ -362,7 +362,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :param target_user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param target_user: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: :class:`bool`
         """
 

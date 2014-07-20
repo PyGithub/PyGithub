@@ -30,6 +30,8 @@ class TeamTestCase(Framework.SimpleLoginTestCase):
             team.edit(name="Owners FTW")
 
     def testEditName(self):
+        # @todoAlpha Can it be Reset? Globaly we need to review all .edit parameters for Reset
+        # @todoAlpha Review all string parameters that should be enums
         team = self.g.get_team(141496)
         self.assertEqual(team.name, "Members")
         team.edit(name="Members FTW")

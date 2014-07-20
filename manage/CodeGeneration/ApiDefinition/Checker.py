@@ -259,7 +259,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -271,7 +271,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -283,7 +283,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -295,7 +295,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -307,7 +307,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -319,7 +319,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -331,7 +331,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryOwnerValue("bar"))], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -343,7 +343,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -355,7 +355,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -367,7 +367,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", [], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [], [Structured.Argument("baz", Structured.RepositoryNameValue("bar"))], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -403,7 +403,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", ["bar"], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], ["bar"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], ["bar"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -415,7 +415,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", ["bar"], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), None, False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("bar", Structured.ScalarType("string"), False)], [], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("bar"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -427,7 +427,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("c", Structured.ScalarType("string"), None, False), Structured.Parameter("b", Structured.ScalarType("string"), None, False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("c", Structured.ScalarType("string"), False), Structured.Parameter("b", Structured.ScalarType("string"), False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )
@@ -439,7 +439,7 @@ class CheckerTestCase(unittest.TestCase):
                 Structured.EndPoint("GET", "/foo", ["c", "a", "b"], ""),
             ],
             [
-                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("b", Structured.ScalarType("string"), None, False), Structured.Parameter("c", Structured.ScalarType("string"), None, False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
+                Structured.Class("Bar", False, False, None, [], [], [Structured.Method("get_foo", ["GET /foo"], [Structured.Parameter("b", Structured.ScalarType("string"), False), Structured.Parameter("c", Structured.ScalarType("string"), False)], ["a"], Structured.EndPointValue(), [], [Structured.Argument("baz", Structured.ParameterValue("b")), Structured.Argument("foo", Structured.ParameterValue("c"))], [], [], None, Structured.NoneType)], [])
             ],
             {}
         )

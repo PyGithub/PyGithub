@@ -161,7 +161,9 @@ methods:
     end_point: GET /users/:username/following/:target_user
     parameters:
       - name: target_user
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: attribute following_url
     url_template_arguments:
       - name: other_user

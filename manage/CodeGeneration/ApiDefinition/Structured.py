@@ -28,8 +28,7 @@ Structure = collections.namedtuple("Structure", "name, updatable, attributes, de
 Attribute = collections.namedtuple("Attribute", "name, type")
 Method = collections.namedtuple("Method", "name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
-Parameter = collections.namedtuple("Parameter", "name, type, orig, optional")
-ParameterOrigin = collections.namedtuple("ParameterOrigin", "type, attribute")
+Parameter = collections.namedtuple("Parameter", "name, type, optional")
 Argument = collections.namedtuple("Argument", "name, value")
 
 # Polymorphic structures: types
@@ -40,6 +39,7 @@ LinearCollectionType = collections.namedtuple("LinearCollectionType", "container
 MappingCollectionType = collections.namedtuple("MappingCollectionType", "container, key, value")
 UnionType = collections.namedtuple("UnionType", "types, key, keys, converter")
 EnumType = collections.namedtuple("EnumType", "values")
+AttributeType = collections.namedtuple("AttributeType", "type, attribute")
 
 # Polymorphic structures: values
 AttributeValue = collections.namedtuple("AttributeValue", "attribute")
@@ -216,25 +216,15 @@ class _DefinitionLoader:
             assert element is None
             return elements
 
-    def buildParameter(self, name, optional, type=None, orig=None):
+    def buildParameter(self, name, optional, type=None):
         assert isinstance(name, str), name
         assert isinstance(optional, bool), optional
         # no assert on type
-        # no assert on orig
         return Parameter(
             name=name,
             type=self.buildType(type),
-            orig=self.buildParameterOrigin(orig),
             optional=optional
         )
-
-    def buildParameterOrigin(self, orig):
-        if orig is None:
-            return None
-        else:
-            assert isinstance(orig, str), orig
-            type, attribute = orig.split(".")
-            return ParameterOrigin(self.buildType(type), attribute)
 
     def buildArgument(self, name, value):
         assert isinstance(name, str), name
@@ -267,6 +257,8 @@ class _DefinitionLoader:
             return NoneType
         elif isinstance(description, str):
             return ScalarType(description)
+        elif "class" in description:
+            return AttributeType(self.buildType(description["class"]), description["attribute"])
         elif "container" in description:
             if "content" in description:
                 return LinearCollectionType(self.buildType(description["container"]), self.buildType(description["content"]))
@@ -390,10 +382,7 @@ class _DefinitionDumper:
     def createDataForParameter(self, parameter):
         data = collections.OrderedDict()
         data["name"] = parameter.name
-        if parameter.orig is None:
-            data["type"] = self.createDataForType(parameter.type)
-        else:
-            data["orig"] = parameter.orig.type.name + "." + parameter.orig.attribute
+        data["type"] = self.createDataForType(parameter.type)
         return data
 
     def createDataForArgument(self, argument):
@@ -434,6 +423,12 @@ class _DefinitionDumper:
             data["keys"] = tuple(type.keys)
         if type.converter is not None:
             data["converter"] = type.converter
+        return data
+
+    def createDataForAttributeType(self, type):
+        data = collections.OrderedDict()
+        data["class"] = type.type.name
+        data["attribute"] = type.attribute
         return data
 
     def createDataForNoneType(self, type):

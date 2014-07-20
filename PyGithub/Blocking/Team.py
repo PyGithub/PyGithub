@@ -143,7 +143,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 
@@ -158,7 +158,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 
@@ -248,7 +248,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: :class:`bool`
         """
 
@@ -264,7 +264,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: :class:`bool`
         """
 
@@ -280,7 +280,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 
@@ -295,7 +295,7 @@ class Team(bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 

@@ -305,36 +305,18 @@ class Method:
 
 
 class Parameter:
-    def __init__(self, name, type, orig, optional):
+    def __init__(self, name, type, optional):
         self.__name = name
         self.__optional = optional
         # @todoGeni Couldn't we do something to factorize all this "descrition -> type" logic? Maybe with a metaclass?
-        self.__tmp_originDescription = orig
         self.__tmp_typeDescription = type
 
     def _applyRecursively(self, f):
         f(self)
 
-    def _propagateTypeAndOrig(self, typesRepo):
-        def findAttr(t, n):
-            for a in t.attributes:
-                if a.name == n:
-                    return a
-            return findAttr(t.base, n)
-
-        if self.__tmp_typeDescription is None:
-            type = typesRepo.get(self.__tmp_originDescription.type)
-            a = findAttr(type, self.__tmp_originDescription.attribute)
-            types = [type, a.type]
-            if a.name == "full_name":
-                types.append(typesRepo.get(Structured.ScalarType("(string, string)")))
-            self.__type = Typing.UnionType(types, None, None, None)
-            self.__orig = self.__tmp_originDescription.attribute
-        else:
-            self.__type = typesRepo.get(self.__tmp_typeDescription)
-            self.__orig = None
+    def _propagateType(self, typesRepo):
+        self.__type = typesRepo.get(self.__tmp_typeDescription)
         del self.__tmp_typeDescription
-        del self.__tmp_originDescription
 
     @property
     def name(self):
@@ -343,10 +325,6 @@ class Parameter:
     @property
     def type(self):
         return self.__type
-
-    @property
-    def orig(self):
-        return self.__orig
 
     @property
     def optional(self):
@@ -387,7 +365,7 @@ class Definition:
         self._applyRecursively(Method, Method._propagateFactories)
         self._applyRecursively(Method, Method._propagateEndPoints)
         self._applyRecursively(Attribute, Attribute._propagateFactories)
-        self._applyRecursively(Parameter, Parameter._propagateTypeAndOrig, typesRepo)
+        self._applyRecursively(Parameter, Parameter._propagateType, typesRepo)
         self._applyRecursively(Class, Class._sortDerived)
         self._applyRecursively(AttributedType, AttributedType._sortFactories)
         self._applyRecursively(EndPoint, EndPoint._sortMethods)

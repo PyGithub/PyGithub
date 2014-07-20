@@ -4,7 +4,9 @@ methods:
     end_point: PUT /user/following/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: end_point
     url_template_arguments:
       - name: username
@@ -14,7 +16,9 @@ methods:
     end_point: PUT /user/starred/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -26,7 +30,9 @@ methods:
     end_point: PUT /user/subscriptions/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -38,7 +44,9 @@ methods:
     end_point: POST /repos/:owner/:repo/forks
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     unimplemented_parameters:
       - organization
     url_template: end_point
@@ -102,7 +110,9 @@ methods:
       - name: auto_init
         type: bool
       - name: gitignore_template
-        orig: GitIgnoreTemplate.name
+        type:
+          class: GitIgnoreTemplate
+          attribute: name
       - name: license_template
         type: string
     unimplemented_parameters:
@@ -134,7 +144,9 @@ methods:
     end_point: PUT /repos/:owner/:repo/subscription
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
       - name: subscribed
         type: bool
       - name: ignored
@@ -339,7 +351,9 @@ methods:
     end_point: GET /repos/:owner/:repo/subscription
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -375,7 +389,9 @@ methods:
     end_point: GET /user/following/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: end_point
     url_template_arguments:
       - name: username
@@ -386,7 +402,9 @@ methods:
     end_point: GET /user/starred/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -399,7 +417,9 @@ methods:
     end_point: GET /user/subscriptions/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -412,7 +432,9 @@ methods:
     end_point: DELETE /user/following/:username
     parameters:
       - name: username
-        orig: User.login
+        type:
+          class: User
+          attribute: login
     url_template: end_point
     url_template_arguments:
       - name: username
@@ -422,7 +444,9 @@ methods:
     end_point: DELETE /user/starred/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -434,7 +458,9 @@ methods:
     end_point: DELETE /user/subscriptions/:owner/:repo
     parameters:
       - name: repo
-        orig: Repository.full_name
+        type:
+          class: Repository
+          attribute: full_name
     url_template: end_point
     url_template_arguments:
       - name: owner

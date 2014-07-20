@@ -12,7 +12,7 @@ def main():
     cov.start()
     import CodeGeneration
     import check
-    if unittest.main(exit=False, module="CodeGeneration.ApiDefinition.Checker", argv=["test"]).result.wasSuccessful():
+    if all(unittest.main(exit=False, module=module, argv=["test"]).result.wasSuccessful() for module in ["CodeGeneration.ApiDefinition.Checker", "CodeGeneration.CaseUtils"]):
         CodeGeneration.main()
         check.main()
     cov.stop()

@@ -150,7 +150,9 @@ methods:
     end_point: GET /repositories
     optional_parameters:
       - name: since
-        orig: Repository.id
+        type:
+          class: Repository
+          attribute: id
     url_template: end_point
     url_arguments:
       - name: since
@@ -182,7 +184,9 @@ methods:
     end_point: GET /users
     optional_parameters:
       - name: since
-        orig: User.id
+        type:
+          class: User
+          attribute: id
     url_template: end_point
     url_arguments:
       - name: since

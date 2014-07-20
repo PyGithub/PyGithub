@@ -34,7 +34,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 
@@ -49,7 +49,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 
@@ -64,7 +64,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 
@@ -80,7 +80,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         The following methods also call this end point:
           * :meth:`.Organization.create_fork`
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: :class:`.Repository`
         """
         import PyGithub.Blocking.Repository
@@ -187,7 +187,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         The following methods also call this end point:
           * :meth:`.Subscription.edit`
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :param subscribed: mandatory :class:`bool`
         :param ignored: mandatory :class:`bool`
         :rtype: :class:`.Subscription`
@@ -461,7 +461,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: :class:`.Subscription`
         """
         import PyGithub.Blocking.Subscription
@@ -520,7 +520,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: :class:`bool`
         """
 
@@ -536,7 +536,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: :class:`bool`
         """
 
@@ -552,7 +552,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: :class:`bool`
         """
 
@@ -568,7 +568,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
         :rtype: None
         """
 
@@ -583,7 +583,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 
@@ -598,7 +598,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param repo: mandatory :class:`.Repository` or :class:`string` or :class:`(string, string)` (its :attr:`.Repository.full_name`)
+        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
         :rtype: None
         """
 
