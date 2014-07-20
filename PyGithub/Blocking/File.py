@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class File(bgo.UpdatableGithubObject):
+class File(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -29,20 +26,20 @@ class File(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_readme`
     """
 
-    def _initAttributes(self, content=rcv.Absent, encoding=rcv.Absent, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(File, self)._initAttributes(**kwds)
-        self.__content = rcv.Attribute("File.content", rcv.StringConverter, content)
-        self.__encoding = rcv.Attribute("File.encoding", rcv.StringConverter, encoding)
-        self.__git_url = rcv.Attribute("File.git_url", rcv.StringConverter, git_url)
-        self.__html_url = rcv.Attribute("File.html_url", rcv.StringConverter, html_url)
-        self.__name = rcv.Attribute("File.name", rcv.StringConverter, name)
-        self.__path = rcv.Attribute("File.path", rcv.StringConverter, path)
-        self.__sha = rcv.Attribute("File.sha", rcv.StringConverter, sha)
-        self.__size = rcv.Attribute("File.size", rcv.IntConverter, size)
-        self.__type = rcv.Attribute("File.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("File.url", rcv.StringConverter, url)
+        self.__content = _rcv.Attribute("File.content", _rcv.StringConverter, content)
+        self.__encoding = _rcv.Attribute("File.encoding", _rcv.StringConverter, encoding)
+        self.__git_url = _rcv.Attribute("File.git_url", _rcv.StringConverter, git_url)
+        self.__html_url = _rcv.Attribute("File.html_url", _rcv.StringConverter, html_url)
+        self.__name = _rcv.Attribute("File.name", _rcv.StringConverter, name)
+        self.__path = _rcv.Attribute("File.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("File.sha", _rcv.StringConverter, sha)
+        self.__size = _rcv.Attribute("File.size", _rcv.IntConverter, size)
+        self.__type = _rcv.Attribute("File.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("File.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=rcv.Absent, encoding=rcv.Absent, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(File, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)
@@ -148,16 +145,16 @@ class File(bgo.UpdatableGithubObject):
         """
         import PyGithub.Blocking.GitCommit
 
-        message = snd.normalizeString(message)
+        message = _snd.normalizeString(message)
         if author is not None:
-            author = snd.normalizeGitAuthor(author)
+            author = _snd.normalizeGitAuthor(author)
         if committer is not None:
-            committer = snd.normalizeGitAuthor(committer)
+            committer = _snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(author=author, committer=committer, message=message, sha=self.sha)
+        postArguments = _snd.dictionary(author=author, committer=committer, message=message, sha=self.sha)
         r = self.Session._request("DELETE", url, postArguments=postArguments)
-        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json()["commit"])
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json()["commit"])
 
     def edit(self, message, content, author=None, committer=None):
         """
@@ -174,16 +171,16 @@ class File(bgo.UpdatableGithubObject):
         """
         import PyGithub.Blocking.GitCommit
 
-        message = snd.normalizeString(message)
-        content = snd.normalizeString(content)
+        message = _snd.normalizeString(message)
+        content = _snd.normalizeString(content)
         if author is not None:
-            author = snd.normalizeGitAuthor(author)
+            author = _snd.normalizeGitAuthor(author)
         if committer is not None:
-            committer = snd.normalizeGitAuthor(committer)
+            committer = _snd.normalizeGitAuthor(committer)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(author=author, committer=committer, content=content, message=message, sha=self.sha)
+        postArguments = _snd.dictionary(author=author, committer=committer, content=content, message=message, sha=self.sha)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(None, **(r.json()["content"]))
         self.__content.update(content)
-        return rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json()["commit"])
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit)(None, r.json()["commit"])

@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Team(bgo.UpdatableGithubObject):
+class Team(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -30,21 +27,21 @@ class Team(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_teams`
     """
 
-    def _initAttributes(self, id=rcv.Absent, members_count=rcv.Absent, members_url=rcv.Absent, name=rcv.Absent, organization=rcv.Absent, permission=rcv.Absent, repos_count=rcv.Absent, repositories_url=rcv.Absent, slug=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.Organization
         super(Team, self)._initAttributes(**kwds)
-        self.__id = rcv.Attribute("Team.id", rcv.IntConverter, id)
-        self.__members_count = rcv.Attribute("Team.members_count", rcv.IntConverter, members_count)
-        self.__members_url = rcv.Attribute("Team.members_url", rcv.StringConverter, members_url)
-        self.__name = rcv.Attribute("Team.name", rcv.StringConverter, name)
-        self.__organization = rcv.Attribute("Team.organization", rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization), organization)
-        self.__permission = rcv.Attribute("Team.permission", rcv.StringConverter, permission)
-        self.__repos_count = rcv.Attribute("Team.repos_count", rcv.IntConverter, repos_count)
-        self.__repositories_url = rcv.Attribute("Team.repositories_url", rcv.StringConverter, repositories_url)
-        self.__slug = rcv.Attribute("Team.slug", rcv.StringConverter, slug)
-        self.__url = rcv.Attribute("Team.url", rcv.StringConverter, url)
+        self.__id = _rcv.Attribute("Team.id", _rcv.IntConverter, id)
+        self.__members_count = _rcv.Attribute("Team.members_count", _rcv.IntConverter, members_count)
+        self.__members_url = _rcv.Attribute("Team.members_url", _rcv.StringConverter, members_url)
+        self.__name = _rcv.Attribute("Team.name", _rcv.StringConverter, name)
+        self.__organization = _rcv.Attribute("Team.organization", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization), organization)
+        self.__permission = _rcv.Attribute("Team.permission", _rcv.StringConverter, permission)
+        self.__repos_count = _rcv.Attribute("Team.repos_count", _rcv.IntConverter, repos_count)
+        self.__repositories_url = _rcv.Attribute("Team.repositories_url", _rcv.StringConverter, repositories_url)
+        self.__slug = _rcv.Attribute("Team.slug", _rcv.StringConverter, slug)
+        self.__url = _rcv.Attribute("Team.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, id=rcv.Absent, members_count=rcv.Absent, members_url=rcv.Absent, name=rcv.Absent, organization=rcv.Absent, permission=rcv.Absent, repos_count=rcv.Absent, repositories_url=rcv.Absent, slug=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Team, self)._updateAttributes(eTag, **kwds)
         self.__id.update(id)
         self.__members_count.update(members_count)
@@ -147,7 +144,7 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        username = snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("PUT", url)
@@ -162,7 +159,7 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        repo = snd.normalizeRepositoryFullName(repo)
+        repo = _snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{org}/{repo}", id=str(self.id), org=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
@@ -191,12 +188,12 @@ class Team(bgo.UpdatableGithubObject):
         """
 
         if name is not None:
-            name = snd.normalizeString(name)
+            name = _snd.normalizeString(name)
         if permission is not None:
-            permission = snd.normalizeEnum(permission, "admin", "pull", "push")
+            permission = _snd.normalizeEnum(permission, "admin", "pull", "push")
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(name=name, permission=permission)
+        postArguments = _snd.dictionary(name=name, permission=permission)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
@@ -214,12 +211,12 @@ class Team(bgo.UpdatableGithubObject):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.members_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User))(None, r)
 
     def get_repos(self, per_page=None):
         """
@@ -235,12 +232,12 @@ class Team(bgo.UpdatableGithubObject):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repositories_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def has_in_members(self, username):
         """
@@ -252,11 +249,11 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: :class:`bool`
         """
 
-        username = snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("GET", url, accept404=True)
-        return rcv.BoolConverter(None, r.status_code == 204)
+        return _rcv.BoolConverter(None, r.status_code == 204)
 
     def has_in_repos(self, repo):
         """
@@ -268,11 +265,11 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: :class:`bool`
         """
 
-        repo = snd.normalizeRepositoryFullName(repo)
+        repo = _snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("GET", url, accept404=True)
-        return rcv.BoolConverter(None, r.status_code == 204)
+        return _rcv.BoolConverter(None, r.status_code == 204)
 
     def remove_from_members(self, username):
         """
@@ -284,7 +281,7 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        username = snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("DELETE", url)
@@ -299,7 +296,7 @@ class Team(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        repo = snd.normalizeRepositoryFullName(repo)
+        repo = _snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/teams/{id}/repos/{owner}/{repo}", id=str(self.id), owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)

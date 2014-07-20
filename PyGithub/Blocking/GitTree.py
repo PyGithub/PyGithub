@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class GitTree(bgo.UpdatableGithubObject):
+class GitTree(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -30,7 +27,7 @@ class GitTree(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_tree`
     """
 
-    class GitSubmodule(bgo.SessionedGithubObject):
+    class GitSubmodule(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitTree.tree`
@@ -38,10 +35,10 @@ class GitTree(bgo.UpdatableGithubObject):
 
         def _initAttributes(self, mode=None, path=None, sha=None, type=None, **kwds):
             super(GitTree.GitSubmodule, self)._initAttributes(**kwds)
-            self.__mode = rcv.Attribute("GitTree.GitSubmodule.mode", rcv.StringConverter, mode)
-            self.__path = rcv.Attribute("GitTree.GitSubmodule.path", rcv.StringConverter, path)
-            self.__sha = rcv.Attribute("GitTree.GitSubmodule.sha", rcv.StringConverter, sha)
-            self.__type = rcv.Attribute("GitTree.GitSubmodule.type", rcv.StringConverter, type)
+            self.__mode = _rcv.Attribute("GitTree.GitSubmodule.mode", _rcv.StringConverter, mode)
+            self.__path = _rcv.Attribute("GitTree.GitSubmodule.path", _rcv.StringConverter, path)
+            self.__sha = _rcv.Attribute("GitTree.GitSubmodule.sha", _rcv.StringConverter, sha)
+            self.__type = _rcv.Attribute("GitTree.GitSubmodule.type", _rcv.StringConverter, type)
 
         def _updateAttributes(self, mode=None, path=None, sha=None, type=None, **kwds):
             super(GitTree.GitSubmodule, self)._updateAttributes(**kwds)
@@ -78,17 +75,17 @@ class GitTree(bgo.UpdatableGithubObject):
             """
             return self.__type.value
 
-    def _initAttributes(self, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitBlob
         super(GitTree, self)._initAttributes(**kwds)
-        self.__mode = rcv.Attribute("GitTree.mode", rcv.StringConverter, mode)
-        self.__path = rcv.Attribute("GitTree.path", rcv.StringConverter, path)
-        self.__sha = rcv.Attribute("GitTree.sha", rcv.StringConverter, sha)
-        self.__tree = rcv.Attribute("GitTree.tree", rcv.ListConverter(rcv.KeyedStructureUnionConverter("type", dict(blob=rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=rcv.StructureConverter(self.Session, GitTree.GitSubmodule), tree=rcv.ClassConverter(self.Session, GitTree)))), tree)
-        self.__type = rcv.Attribute("GitTree.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("GitTree.url", rcv.StringConverter, url)
+        self.__mode = _rcv.Attribute("GitTree.mode", _rcv.StringConverter, mode)
+        self.__path = _rcv.Attribute("GitTree.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("GitTree.sha", _rcv.StringConverter, sha)
+        self.__tree = _rcv.Attribute("GitTree.tree", _rcv.ListConverter(_rcv.KeyedStructureUnionConverter("type", dict(blob=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=_rcv.StructureConverter(self.Session, GitTree.GitSubmodule), tree=_rcv.ClassConverter(self.Session, GitTree)))), tree)
+        self.__type = _rcv.Attribute("GitTree.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("GitTree.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(GitTree, self)._updateAttributes(eTag, **kwds)
         self.__mode.update(mode)
         self.__path.update(path)
@@ -156,9 +153,9 @@ class GitTree(bgo.UpdatableGithubObject):
         :rtype: :class:`.GitTree`
         """
 
-        tree = snd.normalizeList(snd.normalizeDict, tree)
+        tree = _snd.normalizeList(_snd.normalizeDict, tree)
 
         url = self.url[:self.url.rfind(self.sha) - 1]
-        postArguments = snd.dictionary(base_tree=self.sha, tree=tree)
+        postArguments = _snd.dictionary(base_tree=self.sha, tree=tree)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return rcv.ClassConverter(self.Session, GitTree)(None, r.json(), r.headers.get("ETag"))
+        return _rcv.ClassConverter(self.Session, GitTree)(None, r.json(), r.headers.get("ETag"))

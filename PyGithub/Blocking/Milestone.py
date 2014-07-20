@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Milestone(bgo.UpdatableGithubObject):
+class Milestone(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,24 +24,24 @@ class Milestone(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_milestone`
     """
 
-    def _initAttributes(self, closed_issues=rcv.Absent, created_at=rcv.Absent, creator=rcv.Absent, description=rcv.Absent, due_on=rcv.Absent, id=rcv.Absent, labels_url=rcv.Absent, number=rcv.Absent, open_issues=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.User
         super(Milestone, self)._initAttributes(**kwds)
-        self.__closed_issues = rcv.Attribute("Milestone.closed_issues", rcv.IntConverter, closed_issues)
-        self.__created_at = rcv.Attribute("Milestone.created_at", rcv.DatetimeConverter, created_at)
-        self.__creator = rcv.Attribute("Milestone.creator", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), creator)
-        self.__description = rcv.Attribute("Milestone.description", rcv.StringConverter, description)
-        self.__due_on = rcv.Attribute("Milestone.due_on", rcv.DatetimeConverter, due_on)
-        self.__id = rcv.Attribute("Milestone.id", rcv.IntConverter, id)
-        self.__labels_url = rcv.Attribute("Milestone.labels_url", rcv.StringConverter, labels_url)
-        self.__number = rcv.Attribute("Milestone.number", rcv.IntConverter, number)
-        self.__open_issues = rcv.Attribute("Milestone.open_issues", rcv.IntConverter, open_issues)
-        self.__state = rcv.Attribute("Milestone.state", rcv.StringConverter, state)
-        self.__title = rcv.Attribute("Milestone.title", rcv.StringConverter, title)
-        self.__updated_at = rcv.Attribute("Milestone.updated_at", rcv.DatetimeConverter, updated_at)
-        self.__url = rcv.Attribute("Milestone.url", rcv.StringConverter, url)
+        self.__closed_issues = _rcv.Attribute("Milestone.closed_issues", _rcv.IntConverter, closed_issues)
+        self.__created_at = _rcv.Attribute("Milestone.created_at", _rcv.DatetimeConverter, created_at)
+        self.__creator = _rcv.Attribute("Milestone.creator", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), creator)
+        self.__description = _rcv.Attribute("Milestone.description", _rcv.StringConverter, description)
+        self.__due_on = _rcv.Attribute("Milestone.due_on", _rcv.DatetimeConverter, due_on)
+        self.__id = _rcv.Attribute("Milestone.id", _rcv.IntConverter, id)
+        self.__labels_url = _rcv.Attribute("Milestone.labels_url", _rcv.StringConverter, labels_url)
+        self.__number = _rcv.Attribute("Milestone.number", _rcv.IntConverter, number)
+        self.__open_issues = _rcv.Attribute("Milestone.open_issues", _rcv.IntConverter, open_issues)
+        self.__state = _rcv.Attribute("Milestone.state", _rcv.StringConverter, state)
+        self.__title = _rcv.Attribute("Milestone.title", _rcv.StringConverter, title)
+        self.__updated_at = _rcv.Attribute("Milestone.updated_at", _rcv.DatetimeConverter, updated_at)
+        self.__url = _rcv.Attribute("Milestone.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, closed_issues=rcv.Absent, created_at=rcv.Absent, creator=rcv.Absent, description=rcv.Absent, due_on=rcv.Absent, id=rcv.Absent, labels_url=rcv.Absent, number=rcv.Absent, open_issues=rcv.Absent, state=rcv.Absent, title=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Milestone, self)._updateAttributes(eTag, **kwds)
         self.__closed_issues.update(closed_issues)
         self.__created_at.update(created_at)

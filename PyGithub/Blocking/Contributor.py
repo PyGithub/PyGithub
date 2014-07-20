@@ -6,14 +6,11 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 import PyGithub.Blocking.User
 
@@ -28,11 +25,11 @@ class Contributor(PyGithub.Blocking.User.User):
       * :meth:`.Repository.get_contributors`
     """
 
-    def _initAttributes(self, contributions=rcv.Absent, **kwds):
+    def _initAttributes(self, contributions=_rcv.Absent, **kwds):
         super(Contributor, self)._initAttributes(**kwds)
-        self.__contributions = rcv.Attribute("Contributor.contributions", rcv.IntConverter, contributions)
+        self.__contributions = _rcv.Attribute("Contributor.contributions", _rcv.IntConverter, contributions)
 
-    def _updateAttributes(self, eTag, contributions=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, contributions=_rcv.Absent, **kwds):
         super(Contributor, self)._updateAttributes(eTag, **kwds)
         self.__contributions.update(contributions)
 

@@ -11,32 +11,37 @@ from CodeGeneration.CaseUtils import toUpperCamel
 
 class CodeGenerator:
     def generateClass(self, klass):
-        yield "import logging"
-        yield "log = logging.getLogger(__name__)"
-        yield ""
         yield "import uritemplate"
         yield ""
-        yield "import PyGithub.Blocking._base_github_object as bgo"
-        yield "import PyGithub.Blocking._send as snd"
-        yield "import PyGithub.Blocking._receive as rcv"
+        yield "import PyGithub.Blocking._base_github_object as _bgo"
+        yield "import PyGithub.Blocking._send as _snd"
+        yield "import PyGithub.Blocking._receive as _rcv"
         if klass.base is not None:
             yield ""
             yield "import " + klass.base.module
         yield ""
         yield ""
 
+        if klass.base is None:
+            if klass.isUpdatable:
+                baseName = "_bgo.UpdatableGithubObject"
+            else:
+                baseName = "_bgo.SessionedGithubObject"
+        else:
+            baseName = klass.base.module + "." + klass.base.name
+
         yield from (
             PS.Class(klass.name)
-            .base(("bgo.UpdatableGithubObject" if klass.isUpdatable else "bgo.SessionedGithubObject") if klass.base is None else (klass.base.module + "." + klass.base.name))
-            .docstring(self.generateDocStringForClass(klass))
+            .base(baseName)
+            .docstring(self.generateDocStringForClass(klass, baseName))
             .elements(self.createClassStructure(s) for s in klass.structures)
-            .elements(p for p in self.createClassPrivateParts(klass))
+            .elements(self.createClassPrivateParts(klass))
             .elements(self.createClassProperty(a) for a in klass.attributes)
             .elements(self.createClassMethod(m) for m in klass.methods)
         )
 
-    def generateDocStringForClass(self, klass):
-        yield "Base class: :class:`.{}`".format(("UpdatableGithubObject" if klass.isUpdatable else "SessionedGithubObject") if klass.base is None else klass.base.name)
+    def generateDocStringForClass(self, klass, baseName):
+        yield "Base class: :class:`.{}`".format(baseName.split(".")[-1])
         yield ""
         if len(klass.derived) == 0:
             yield "Derived classes: none."
@@ -46,9 +51,9 @@ class CodeGenerator:
                 yield "  * :class:`.{}`".format(d.name)
         yield ""
         yield from self.generateDocForFactories(klass)
-        # @todoAlpha Document methods accepting this class as parameter
 
     def generateDocForFactories(self, klass):
+        # @todoAlpha Document methods accepting this class as parameter (Sinks). Rename Factories to Sources. Rename this method generateDocForSourcesAndSinks.
         if len(klass.factories) == 0:
             yield "Methods and attributes returning instances of this class: none."
         else:
@@ -66,23 +71,26 @@ class CodeGenerator:
         return ":attr:`.{}.{}`".format(factory.object.containerClass.name, factory.object.name)
 
     def createClassStructure(self, structure):
-        pyClass = (
+        return (
             PS.Class(structure.name)
-            .base("bgo.SessionedGithubObject")
+            .base("_bgo.SessionedGithubObject")
             .docstring(self.generateDocForFactories(structure))
-            # @todoAlpha Document methods accepting this struct as parameter
-            .element(
-                PS.Method("_initAttributes")
-                .parameters((a.name, "None") for a in structure.attributes)
-                .parameters((a, "None") for a in structure.deprecatedAttributes)
-                .parameter("**kwds")
-                .body(self.generateImportsForAllUnderlyingTypes(structure.containerClass.name, [a.type for a in structure.attributes]))
-                .body("super({}.{}, self)._initAttributes(**kwds)".format(structure.containerClass.name, structure.name))
-                .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in structure.attributes)
-            )
+            .elements(self.createStructPrivateParts(structure))
+            .elements(self.createStructProperty(a) for a in structure.attributes)
+        )
+
+    def createStructPrivateParts(self, structure):
+        yield (  # pragma no cover
+            PS.Method("_initAttributes")
+            .parameters((a.name, "None") for a in structure.attributes)
+            .parameters((a, "None") for a in structure.deprecatedAttributes)
+            .parameter("**kwds")
+            .body(self.generateImportsForAllUnderlyingTypes(structure.containerClass.name, [a.type for a in structure.attributes]))
+            .body("super({}.{}, self)._initAttributes(**kwds)".format(structure.containerClass.name, structure.name))
+            .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in structure.attributes)
         )
         if structure.isUpdatable:
-            pyClass.element(
+            yield(
                 PS.Method("_updateAttributes")
                 .parameters((a.name, "None") for a in structure.attributes)
                 .parameters((a, "None") for a in structure.deprecatedAttributes)
@@ -90,25 +98,22 @@ class CodeGenerator:
                 .body("super({}.{}, self)._updateAttributes(**kwds)".format(structure.containerClass.name, structure.name))
                 .body("self.__{0}.update({0})".format(a.name) for a in structure.attributes)
             )
-        pyClass.elements(
-            PS.Property(a.name)
-            .docstring(":type: {}".format(self.generateDocForType(a.type)))
-            .body("return self.__{}.value".format(a.name))
-            for a in structure.attributes
+
+    def createStructProperty(self, attribute):
+        return (
+            PS.Property(attribute.name)
+            .docstring(":type: {}".format(self.generateDocForType(attribute.type)))
+            .body("return self.__{}.value".format(attribute.name))
         )
-        return pyClass
 
     def createClassPrivateParts(self, klass):
         if len(klass.attributes) != 0:
-            init = (
+            yield (  # pragma no cover
                 PS.Method("_initAttributes")
-                .parameters((a.name, "rcv.Absent") for a in klass.attributes)
+                .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
                 .parameters((a, "None") for a in klass.deprecatedAttributes)
                 .parameter("**kwds")
-            )
-            init.body(self.generateImportsForAllUnderlyingTypes(klass, [a.type for a in klass.attributes]))
-            yield (  # pragma no branch
-                init
+                .body(self.generateImportsForAllUnderlyingTypes(klass, [a.type for a in klass.attributes]))
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
             )
@@ -116,7 +121,7 @@ class CodeGenerator:
                 yield (
                     PS.Method("_updateAttributes")
                     .parameter("eTag")
-                    .parameters((a.name, "rcv.Absent") for a in klass.attributes)
+                    .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
                     .parameters((a, "None") for a in klass.deprecatedAttributes)
                     .parameter("**kwds")
                     .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
@@ -134,9 +139,9 @@ class CodeGenerator:
 
     def createCallForAttributeInitializer(self, attribute):
         return (
-            PS.Call("rcv.Attribute")
+            PS.Call("_rcv.Attribute")
             .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg(self.generateCodeForConverter("rcv", attribute, attribute.type))
+            .arg(self.generateCodeForConverter("_rcv", attribute, attribute.type))
             .arg(attribute.name)
         )
 
@@ -244,12 +249,11 @@ class CodeGenerator:
                     yield "if per_page is None:"
                     yield "    per_page = self.Session.PerPage"
                     yield "else:"
-                    yield "    per_page = snd.normalizeInt(per_page)"
+                    yield "    per_page = _snd.normalizeInt(per_page)"
+                elif method.containerClass.name == "Github" and method.name == "get_repo" and p.name == "repo":
+                    yield "repo = _snd.normalizeTwoStringsString(repo)"
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
-                    # if p.name == "since" and method.name in ["get_users", "get_repos"]:
-                    #     yield from PS.indent(self.generateCodeToNormalizeParameterSince(p))
-                    # else:
                     yield from PS.indent(self.generateCodeToNormalizeParameter(p))
                 else:
                     yield from self.generateCodeToNormalizeParameter(p)
@@ -261,14 +265,19 @@ class CodeGenerator:
             yield "    name = self.name"
             yield ""
 
-        if len(method.urlTemplateArguments) == 0:
+        if method.name == "get_git_ref":
+            yield "assert ref.startswith(\"refs/\")"
+            yield "url = uritemplate.expand(self.git_refs_url) + ref[4:]"
+        elif method.name == "create_modified_copy":
+            yield "url = self.url[:self.url.rfind(self.sha) - 1]"
+        elif len(method.urlTemplateArguments) == 0:
             yield "url = uritemplate.expand({})".format(self.generateCodeForValue(method, method.urlTemplate))
         else:
             yield "url = uritemplate.expand({}, {})".format(self.generateCodeForValue(method, method.urlTemplate), ", ".join("{}={}".format(a.name, self.generateCodeForStringValue(method, a.value)) for a in method.urlTemplateArguments))  # pragma no branch
         if len(method.urlArguments) != 0:
-            yield "urlArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
+            yield "urlArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
         if len(method.postArguments) != 0:
-            yield "postArguments = snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
+            yield "postArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
         yield "r = self.Session._request{}({})".format("Anonymous" if method.name == "create_anonymous_gist" else "", self.generateCallArguments(method))  # @todoSomeday Remove hard-coded method name
         yield from self.generateCodeForEffects(method)
@@ -278,28 +287,25 @@ class CodeGenerator:
         yield from self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.__class__.__name__)(parameter)
 
     def generateCodeToNormalizeEnumeratedTypeParameter(self, parameter):
-        yield "{} = snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
+        yield "{} = _snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
     def generateCodeToNormalizeAttributeTypeParameter(self, parameter):
-        yield "{} = snd.normalize{}{}({})".format(parameter.name, parameter.type.type.name, toUpperCamel(parameter.type.attribute.name), parameter.name)
+        yield "{} = _snd.normalize{}{}({})".format(parameter.name, parameter.type.type.name, toUpperCamel(parameter.type.attribute.name), parameter.name)
 
     def generateCodeToNormalizeUnionTypeParameter(self, parameter):
-        if parameter.name == "repo":
-            yield "repo = snd.normalizeTwoStringsString(repo)"
-        else:
-            yield "{} = snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.__class__.__name__ == "AttributeType" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
+        yield "{} = _snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.__class__.__name__ == "AttributeType" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
 
     def generateCodeToNormalizeBuiltinTypeParameter(self, parameter):
-        yield "{} = snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)
+        yield "{} = _snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
         yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.__class__.__name__)(parameter)
 
     def generateCodeToNormalizeListOfAttributeTypeParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.name, toUpperCamel(parameter.type.content.attribute.name), parameter.name)
+        yield "{} = _snd.normalizeList(_snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.name, toUpperCamel(parameter.type.content.attribute.name), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinTypeParameter(self, parameter):
-        yield "{} = snd.normalizeList(snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
+        yield "{} = _snd.normalizeList(_snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
 
     def generateCodeForEffects(self, method):
         for effect in method.effects:
@@ -334,7 +340,7 @@ class CodeGenerator:
                 args = 'r.json()["commit"]'
             else:
                 assert False  # pragma no cover
-            yield "return {}(None, {})".format(self.generateCodeForConverter("rcv", method, method.returnType), args)
+            yield "return {}(None, {})".format(self.generateCodeForConverter("_rcv", method, method.returnType), args)
 
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)
@@ -399,12 +405,24 @@ class CodeGenerator:
 
     def generateCodeForStringValue(self, method, value):
         format = "{}"
-        if value.__class__.__name__[:-5] == "Parameter" and value.parameter in ["id", "number"]:  # @todoGeni Test against the type instead of the name
-            format = "str({})"
-        if value.__class__.__name__[:-5] == "Attribute" and value.attribute == "id":  # @todoGeni Test against the type instead of the name
-            format = "str({})"
+        if value.__class__.__name__[:-5] == "Parameter":
+            p = [p for p in method.parameters if p.name == value.parameter][0]
+            if p.type.name in ["int"]:
+                format = "str({})"
+        if value.__class__.__name__[:-5] == "Attribute":
+            print(method.containerClass.name, value.attribute)
+            a = self.findAttribute(method.containerClass, value.attribute)
+            if a is not None and a.type.name in ["int"]:
+                format = "str({})"
         return format.format(self.generateCodeForValue(method, value))
 
     def getMethod(self, scheme, *names):
         name = scheme.format(*(toUpperCamel(name) for name in names))
         return getattr(self, name)
+
+    def findAttribute(self, t, n):
+        for a in t.attributes:
+            if a.name == n:
+                return a
+        if t.base is not None:
+            return self.findAttribute(t.base, n)

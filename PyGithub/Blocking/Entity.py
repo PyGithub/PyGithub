@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Entity(bgo.UpdatableGithubObject):
+class Entity(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,7 +24,7 @@ class Entity(bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class: none.
     """
 
-    class Plan(bgo.SessionedGithubObject):
+    class Plan(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Entity.plan`
@@ -35,10 +32,10 @@ class Entity(bgo.UpdatableGithubObject):
 
         def _initAttributes(self, collaborators=None, name=None, private_repos=None, space=None, **kwds):
             super(Entity.Plan, self)._initAttributes(**kwds)
-            self.__collaborators = rcv.Attribute("Entity.Plan.collaborators", rcv.IntConverter, collaborators)
-            self.__name = rcv.Attribute("Entity.Plan.name", rcv.StringConverter, name)
-            self.__private_repos = rcv.Attribute("Entity.Plan.private_repos", rcv.IntConverter, private_repos)
-            self.__space = rcv.Attribute("Entity.Plan.space", rcv.IntConverter, space)
+            self.__collaborators = _rcv.Attribute("Entity.Plan.collaborators", _rcv.IntConverter, collaborators)
+            self.__name = _rcv.Attribute("Entity.Plan.name", _rcv.StringConverter, name)
+            self.__private_repos = _rcv.Attribute("Entity.Plan.private_repos", _rcv.IntConverter, private_repos)
+            self.__space = _rcv.Attribute("Entity.Plan.space", _rcv.IntConverter, space)
 
         def _updateAttributes(self, collaborators=None, name=None, private_repos=None, space=None, **kwds):
             super(Entity.Plan, self)._updateAttributes(**kwds)
@@ -75,36 +72,36 @@ class Entity(bgo.UpdatableGithubObject):
             """
             return self.__space.value
 
-    def _initAttributes(self, avatar_url=rcv.Absent, blog=rcv.Absent, collaborators=rcv.Absent, company=rcv.Absent, created_at=rcv.Absent, disk_usage=rcv.Absent, email=rcv.Absent, events_url=rcv.Absent, followers=rcv.Absent, following=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, location=rcv.Absent, login=rcv.Absent, name=rcv.Absent, owned_private_repos=rcv.Absent, plan=rcv.Absent, private_gists=rcv.Absent, public_gists=rcv.Absent, public_repos=rcv.Absent, repos_url=rcv.Absent, suspended_at=rcv.Absent, total_private_repos=rcv.Absent, type=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Entity, self)._initAttributes(**kwds)
-        self.__avatar_url = rcv.Attribute("Entity.avatar_url", rcv.StringConverter, avatar_url)
-        self.__blog = rcv.Attribute("Entity.blog", rcv.StringConverter, blog)
-        self.__collaborators = rcv.Attribute("Entity.collaborators", rcv.IntConverter, collaborators)
-        self.__company = rcv.Attribute("Entity.company", rcv.StringConverter, company)
-        self.__created_at = rcv.Attribute("Entity.created_at", rcv.DatetimeConverter, created_at)
-        self.__disk_usage = rcv.Attribute("Entity.disk_usage", rcv.IntConverter, disk_usage)
-        self.__email = rcv.Attribute("Entity.email", rcv.StringConverter, email)
-        self.__events_url = rcv.Attribute("Entity.events_url", rcv.StringConverter, events_url)
-        self.__followers = rcv.Attribute("Entity.followers", rcv.IntConverter, followers)
-        self.__following = rcv.Attribute("Entity.following", rcv.IntConverter, following)
-        self.__html_url = rcv.Attribute("Entity.html_url", rcv.StringConverter, html_url)
-        self.__id = rcv.Attribute("Entity.id", rcv.IntConverter, id)
-        self.__location = rcv.Attribute("Entity.location", rcv.StringConverter, location)
-        self.__login = rcv.Attribute("Entity.login", rcv.StringConverter, login)
-        self.__name = rcv.Attribute("Entity.name", rcv.StringConverter, name)
-        self.__owned_private_repos = rcv.Attribute("Entity.owned_private_repos", rcv.IntConverter, owned_private_repos)
-        self.__plan = rcv.Attribute("Entity.plan", rcv.StructureConverter(self.Session, Entity.Plan), plan)
-        self.__private_gists = rcv.Attribute("Entity.private_gists", rcv.IntConverter, private_gists)
-        self.__public_gists = rcv.Attribute("Entity.public_gists", rcv.IntConverter, public_gists)
-        self.__public_repos = rcv.Attribute("Entity.public_repos", rcv.IntConverter, public_repos)
-        self.__repos_url = rcv.Attribute("Entity.repos_url", rcv.StringConverter, repos_url)
-        self.__suspended_at = rcv.Attribute("Entity.suspended_at", rcv.DatetimeConverter, suspended_at)
-        self.__total_private_repos = rcv.Attribute("Entity.total_private_repos", rcv.IntConverter, total_private_repos)
-        self.__type = rcv.Attribute("Entity.type", rcv.StringConverter, type)
-        self.__updated_at = rcv.Attribute("Entity.updated_at", rcv.DatetimeConverter, updated_at)
-        self.__url = rcv.Attribute("Entity.url", rcv.StringConverter, url)
+        self.__avatar_url = _rcv.Attribute("Entity.avatar_url", _rcv.StringConverter, avatar_url)
+        self.__blog = _rcv.Attribute("Entity.blog", _rcv.StringConverter, blog)
+        self.__collaborators = _rcv.Attribute("Entity.collaborators", _rcv.IntConverter, collaborators)
+        self.__company = _rcv.Attribute("Entity.company", _rcv.StringConverter, company)
+        self.__created_at = _rcv.Attribute("Entity.created_at", _rcv.DatetimeConverter, created_at)
+        self.__disk_usage = _rcv.Attribute("Entity.disk_usage", _rcv.IntConverter, disk_usage)
+        self.__email = _rcv.Attribute("Entity.email", _rcv.StringConverter, email)
+        self.__events_url = _rcv.Attribute("Entity.events_url", _rcv.StringConverter, events_url)
+        self.__followers = _rcv.Attribute("Entity.followers", _rcv.IntConverter, followers)
+        self.__following = _rcv.Attribute("Entity.following", _rcv.IntConverter, following)
+        self.__html_url = _rcv.Attribute("Entity.html_url", _rcv.StringConverter, html_url)
+        self.__id = _rcv.Attribute("Entity.id", _rcv.IntConverter, id)
+        self.__location = _rcv.Attribute("Entity.location", _rcv.StringConverter, location)
+        self.__login = _rcv.Attribute("Entity.login", _rcv.StringConverter, login)
+        self.__name = _rcv.Attribute("Entity.name", _rcv.StringConverter, name)
+        self.__owned_private_repos = _rcv.Attribute("Entity.owned_private_repos", _rcv.IntConverter, owned_private_repos)
+        self.__plan = _rcv.Attribute("Entity.plan", _rcv.StructureConverter(self.Session, Entity.Plan), plan)
+        self.__private_gists = _rcv.Attribute("Entity.private_gists", _rcv.IntConverter, private_gists)
+        self.__public_gists = _rcv.Attribute("Entity.public_gists", _rcv.IntConverter, public_gists)
+        self.__public_repos = _rcv.Attribute("Entity.public_repos", _rcv.IntConverter, public_repos)
+        self.__repos_url = _rcv.Attribute("Entity.repos_url", _rcv.StringConverter, repos_url)
+        self.__suspended_at = _rcv.Attribute("Entity.suspended_at", _rcv.DatetimeConverter, suspended_at)
+        self.__total_private_repos = _rcv.Attribute("Entity.total_private_repos", _rcv.IntConverter, total_private_repos)
+        self.__type = _rcv.Attribute("Entity.type", _rcv.StringConverter, type)
+        self.__updated_at = _rcv.Attribute("Entity.updated_at", _rcv.DatetimeConverter, updated_at)
+        self.__url = _rcv.Attribute("Entity.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, avatar_url=rcv.Absent, blog=rcv.Absent, collaborators=rcv.Absent, company=rcv.Absent, created_at=rcv.Absent, disk_usage=rcv.Absent, email=rcv.Absent, events_url=rcv.Absent, followers=rcv.Absent, following=rcv.Absent, html_url=rcv.Absent, id=rcv.Absent, location=rcv.Absent, login=rcv.Absent, name=rcv.Absent, owned_private_repos=rcv.Absent, plan=rcv.Absent, private_gists=rcv.Absent, public_gists=rcv.Absent, public_repos=rcv.Absent, repos_url=rcv.Absent, suspended_at=rcv.Absent, total_private_repos=rcv.Absent, type=rcv.Absent, updated_at=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Entity, self)._updateAttributes(eTag, **kwds)
         self.__avatar_url.update(avatar_url)
         self.__blog.update(blog)

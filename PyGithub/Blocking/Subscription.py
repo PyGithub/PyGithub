@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Subscription(bgo.UpdatableGithubObject):
+class Subscription(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,16 +24,16 @@ class Subscription(bgo.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.get_subscription`
     """
 
-    def _initAttributes(self, created_at=rcv.Absent, ignored=rcv.Absent, reason=rcv.Absent, repository_url=rcv.Absent, subscribed=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Subscription, self)._initAttributes(**kwds)
-        self.__created_at = rcv.Attribute("Subscription.created_at", rcv.DatetimeConverter, created_at)
-        self.__ignored = rcv.Attribute("Subscription.ignored", rcv.BoolConverter, ignored)
-        self.__reason = rcv.Attribute("Subscription.reason", rcv.StringConverter, reason)
-        self.__repository_url = rcv.Attribute("Subscription.repository_url", rcv.StringConverter, repository_url)
-        self.__subscribed = rcv.Attribute("Subscription.subscribed", rcv.BoolConverter, subscribed)
-        self.__url = rcv.Attribute("Subscription.url", rcv.StringConverter, url)
+        self.__created_at = _rcv.Attribute("Subscription.created_at", _rcv.DatetimeConverter, created_at)
+        self.__ignored = _rcv.Attribute("Subscription.ignored", _rcv.BoolConverter, ignored)
+        self.__reason = _rcv.Attribute("Subscription.reason", _rcv.StringConverter, reason)
+        self.__repository_url = _rcv.Attribute("Subscription.repository_url", _rcv.StringConverter, repository_url)
+        self.__subscribed = _rcv.Attribute("Subscription.subscribed", _rcv.BoolConverter, subscribed)
+        self.__url = _rcv.Attribute("Subscription.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, created_at=rcv.Absent, ignored=rcv.Absent, reason=rcv.Absent, repository_url=rcv.Absent, subscribed=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Subscription, self)._updateAttributes(eTag, **kwds)
         self.__created_at.update(created_at)
         self.__ignored.update(ignored)
@@ -117,10 +114,10 @@ class Subscription(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        subscribed = snd.normalizeBool(subscribed)
-        ignored = snd.normalizeBool(ignored)
+        subscribed = _snd.normalizeBool(subscribed)
+        ignored = _snd.normalizeBool(ignored)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(ignored=ignored, subscribed=subscribed)
+        postArguments = _snd.dictionary(ignored=ignored, subscribed=subscribed)
         r = self.Session._request("PUT", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())

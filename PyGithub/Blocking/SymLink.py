@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class SymLink(bgo.UpdatableGithubObject):
+class SymLink(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,19 +24,19 @@ class SymLink(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, target=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, target=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(SymLink, self)._initAttributes(**kwds)
-        self.__git_url = rcv.Attribute("SymLink.git_url", rcv.StringConverter, git_url)
-        self.__html_url = rcv.Attribute("SymLink.html_url", rcv.StringConverter, html_url)
-        self.__name = rcv.Attribute("SymLink.name", rcv.StringConverter, name)
-        self.__path = rcv.Attribute("SymLink.path", rcv.StringConverter, path)
-        self.__sha = rcv.Attribute("SymLink.sha", rcv.StringConverter, sha)
-        self.__size = rcv.Attribute("SymLink.size", rcv.IntConverter, size)
-        self.__target = rcv.Attribute("SymLink.target", rcv.StringConverter, target)
-        self.__type = rcv.Attribute("SymLink.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("SymLink.url", rcv.StringConverter, url)
+        self.__git_url = _rcv.Attribute("SymLink.git_url", _rcv.StringConverter, git_url)
+        self.__html_url = _rcv.Attribute("SymLink.html_url", _rcv.StringConverter, html_url)
+        self.__name = _rcv.Attribute("SymLink.name", _rcv.StringConverter, name)
+        self.__path = _rcv.Attribute("SymLink.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("SymLink.sha", _rcv.StringConverter, sha)
+        self.__size = _rcv.Attribute("SymLink.size", _rcv.IntConverter, size)
+        self.__target = _rcv.Attribute("SymLink.target", _rcv.StringConverter, target)
+        self.__type = _rcv.Attribute("SymLink.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("SymLink.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, target=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, target=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(SymLink, self)._updateAttributes(eTag, **kwds)
         self.__git_url.update(git_url)
         self.__html_url.update(html_url)

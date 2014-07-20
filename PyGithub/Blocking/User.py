@@ -6,14 +6,11 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 import PyGithub.Blocking.Entity
 
@@ -53,20 +50,20 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :meth:`.User.get_following`
     """
 
-    def _initAttributes(self, followers_url=rcv.Absent, following_url=rcv.Absent, gists_url=rcv.Absent, gravatar_id=rcv.Absent, hireable=rcv.Absent, organizations_url=rcv.Absent, received_events_url=rcv.Absent, site_admin=rcv.Absent, starred_url=rcv.Absent, subscriptions_url=rcv.Absent, bio=None, **kwds):
+    def _initAttributes(self, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, bio=None, **kwds):
         super(User, self)._initAttributes(**kwds)
-        self.__followers_url = rcv.Attribute("User.followers_url", rcv.StringConverter, followers_url)
-        self.__following_url = rcv.Attribute("User.following_url", rcv.StringConverter, following_url)
-        self.__gists_url = rcv.Attribute("User.gists_url", rcv.StringConverter, gists_url)
-        self.__gravatar_id = rcv.Attribute("User.gravatar_id", rcv.StringConverter, gravatar_id)
-        self.__hireable = rcv.Attribute("User.hireable", rcv.BoolConverter, hireable)
-        self.__organizations_url = rcv.Attribute("User.organizations_url", rcv.StringConverter, organizations_url)
-        self.__received_events_url = rcv.Attribute("User.received_events_url", rcv.StringConverter, received_events_url)
-        self.__site_admin = rcv.Attribute("User.site_admin", rcv.BoolConverter, site_admin)
-        self.__starred_url = rcv.Attribute("User.starred_url", rcv.StringConverter, starred_url)
-        self.__subscriptions_url = rcv.Attribute("User.subscriptions_url", rcv.StringConverter, subscriptions_url)
+        self.__followers_url = _rcv.Attribute("User.followers_url", _rcv.StringConverter, followers_url)
+        self.__following_url = _rcv.Attribute("User.following_url", _rcv.StringConverter, following_url)
+        self.__gists_url = _rcv.Attribute("User.gists_url", _rcv.StringConverter, gists_url)
+        self.__gravatar_id = _rcv.Attribute("User.gravatar_id", _rcv.StringConverter, gravatar_id)
+        self.__hireable = _rcv.Attribute("User.hireable", _rcv.BoolConverter, hireable)
+        self.__organizations_url = _rcv.Attribute("User.organizations_url", _rcv.StringConverter, organizations_url)
+        self.__received_events_url = _rcv.Attribute("User.received_events_url", _rcv.StringConverter, received_events_url)
+        self.__site_admin = _rcv.Attribute("User.site_admin", _rcv.BoolConverter, site_admin)
+        self.__starred_url = _rcv.Attribute("User.starred_url", _rcv.StringConverter, starred_url)
+        self.__subscriptions_url = _rcv.Attribute("User.subscriptions_url", _rcv.StringConverter, subscriptions_url)
 
-    def _updateAttributes(self, eTag, followers_url=rcv.Absent, following_url=rcv.Absent, gists_url=rcv.Absent, gravatar_id=rcv.Absent, hireable=rcv.Absent, organizations_url=rcv.Absent, received_events_url=rcv.Absent, site_admin=rcv.Absent, starred_url=rcv.Absent, subscriptions_url=rcv.Absent, bio=None, **kwds):
+    def _updateAttributes(self, eTag, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, bio=None, **kwds):
         super(User, self)._updateAttributes(eTag, **kwds)
         self.__followers_url.update(followers_url)
         self.__following_url.update(following_url)
@@ -172,12 +169,12 @@ class User(PyGithub.Blocking.Entity.Entity):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.followers_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, User))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, User))(None, r)
 
     def get_following(self, per_page=None):
         """
@@ -192,12 +189,12 @@ class User(PyGithub.Blocking.Entity.Entity):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.following_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, User))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, User))(None, r)
 
     def get_gists(self, since=None, per_page=None):
         """
@@ -212,16 +209,16 @@ class User(PyGithub.Blocking.Entity.Entity):
         import PyGithub.Blocking.Gist
 
         if since is not None:
-            since = snd.normalizeDatetime(since)
+            since = _snd.normalizeDatetime(since)
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.gists_url)
-        urlArguments = snd.dictionary(per_page=per_page, since=since)
+        urlArguments = _snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
 
     def get_keys(self):
         """
@@ -235,7 +232,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         url = uritemplate.expand("https://api.github.com/users/{username}/keys", username=self.login)
         r = self.Session._request("GET", url)
-        return rcv.ListConverter(rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
+        return _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
 
     def get_orgs(self, per_page=None):
         """
@@ -251,12 +248,12 @@ class User(PyGithub.Blocking.Entity.Entity):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.organizations_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Organization.Organization))(None, r)
 
     def get_repo(self, repo):
         """
@@ -272,11 +269,11 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
         import PyGithub.Blocking.Repository
 
-        repo = snd.normalizeString(repo)
+        repo = _snd.normalizeString(repo)
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}", owner=self.login, repo=repo)
         r = self.Session._request("GET", url)
-        return rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
     def get_repos(self, type=None, sort=None, direction=None, per_page=None):
         """
@@ -293,20 +290,20 @@ class User(PyGithub.Blocking.Entity.Entity):
         import PyGithub.Blocking.Repository
 
         if type is not None:
-            type = snd.normalizeEnum(type, "all", "forks", "member", "owner", "sources")
+            type = _snd.normalizeEnum(type, "all", "forks", "member", "owner", "sources")
         if sort is not None:
-            sort = snd.normalizeEnum(sort, "created", "full_name", "pushed", "updated")
+            sort = _snd.normalizeEnum(sort, "created", "full_name", "pushed", "updated")
         if direction is not None:
-            direction = snd.normalizeEnum(direction, "asc", "desc")
+            direction = _snd.normalizeEnum(direction, "asc", "desc")
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.repos_url)
-        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort, type=type)
+        urlArguments = _snd.dictionary(direction=direction, per_page=per_page, sort=sort, type=type)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_starred(self, sort=None, direction=None, per_page=None):
         """
@@ -322,18 +319,18 @@ class User(PyGithub.Blocking.Entity.Entity):
         import PyGithub.Blocking.Repository
 
         if sort is not None:
-            sort = snd.normalizeEnum(sort, "created", "updated")
+            sort = _snd.normalizeEnum(sort, "created", "updated")
         if direction is not None:
-            direction = snd.normalizeEnum(direction, "asc", "desc")
+            direction = _snd.normalizeEnum(direction, "asc", "desc")
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.starred_url)
-        urlArguments = snd.dictionary(direction=direction, per_page=per_page, sort=sort)
+        urlArguments = _snd.dictionary(direction=direction, per_page=per_page, sort=sort)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def get_subscriptions(self, per_page=None):
         """
@@ -349,12 +346,12 @@ class User(PyGithub.Blocking.Entity.Entity):
         if per_page is None:
             per_page = self.Session.PerPage
         else:
-            per_page = snd.normalizeInt(per_page)
+            per_page = _snd.normalizeInt(per_page)
 
         url = uritemplate.expand(self.subscriptions_url)
-        urlArguments = snd.dictionary(per_page=per_page)
+        urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return rcv.PaginatedListConverter(self.Session, rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository))(None, r)
 
     def has_in_following(self, target_user):
         """
@@ -366,8 +363,8 @@ class User(PyGithub.Blocking.Entity.Entity):
         :rtype: :class:`bool`
         """
 
-        target_user = snd.normalizeUserLogin(target_user)
+        target_user = _snd.normalizeUserLogin(target_user)
 
         url = uritemplate.expand(self.following_url, other_user=target_user)
         r = self.Session._request("GET", url, accept404=True)
-        return rcv.BoolConverter(None, r.status_code == 204)
+        return _rcv.BoolConverter(None, r.status_code == 204)

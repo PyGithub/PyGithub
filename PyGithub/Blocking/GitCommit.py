@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class GitCommit(bgo.UpdatableGithubObject):
+class GitCommit(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -34,7 +31,7 @@ class GitCommit(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_commit`
     """
 
-    class Author(bgo.SessionedGithubObject):
+    class Author(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitCommit.author`
@@ -43,9 +40,9 @@ class GitCommit(bgo.UpdatableGithubObject):
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitCommit.Author, self)._initAttributes(**kwds)
-            self.__date = rcv.Attribute("GitCommit.Author.date", rcv.DatetimeConverter, date)
-            self.__email = rcv.Attribute("GitCommit.Author.email", rcv.StringConverter, email)
-            self.__name = rcv.Attribute("GitCommit.Author.name", rcv.StringConverter, name)
+            self.__date = _rcv.Attribute("GitCommit.Author.date", _rcv.DatetimeConverter, date)
+            self.__email = _rcv.Attribute("GitCommit.Author.email", _rcv.StringConverter, email)
+            self.__name = _rcv.Attribute("GitCommit.Author.name", _rcv.StringConverter, name)
 
         def _updateAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitCommit.Author, self)._updateAttributes(**kwds)
@@ -74,21 +71,21 @@ class GitCommit(bgo.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, author=rcv.Absent, comment_count=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
-        self.__author = rcv.Attribute("GitCommit.author", rcv.StructureConverter(self.Session, GitCommit.Author), author)
-        self.__comment_count = rcv.Attribute("GitCommit.comment_count", rcv.IntConverter, comment_count)
-        self.__committer = rcv.Attribute("GitCommit.committer", rcv.StructureConverter(self.Session, GitCommit.Author), committer)
-        self.__html_url = rcv.Attribute("GitCommit.html_url", rcv.StringConverter, html_url)
-        self.__message = rcv.Attribute("GitCommit.message", rcv.StringConverter, message)
-        self.__parents = rcv.Attribute("GitCommit.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, GitCommit)), parents)
-        self.__sha = rcv.Attribute("GitCommit.sha", rcv.StringConverter, sha)
-        self.__tree = rcv.Attribute("GitCommit.tree", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
-        self.__type = rcv.Attribute("GitCommit.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("GitCommit.url", rcv.StringConverter, url)
+        self.__author = _rcv.Attribute("GitCommit.author", _rcv.StructureConverter(self.Session, GitCommit.Author), author)
+        self.__comment_count = _rcv.Attribute("GitCommit.comment_count", _rcv.IntConverter, comment_count)
+        self.__committer = _rcv.Attribute("GitCommit.committer", _rcv.StructureConverter(self.Session, GitCommit.Author), committer)
+        self.__html_url = _rcv.Attribute("GitCommit.html_url", _rcv.StringConverter, html_url)
+        self.__message = _rcv.Attribute("GitCommit.message", _rcv.StringConverter, message)
+        self.__parents = _rcv.Attribute("GitCommit.parents", _rcv.ListConverter(_rcv.ClassConverter(self.Session, GitCommit)), parents)
+        self.__sha = _rcv.Attribute("GitCommit.sha", _rcv.StringConverter, sha)
+        self.__tree = _rcv.Attribute("GitCommit.tree", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
+        self.__type = _rcv.Attribute("GitCommit.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("GitCommit.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=rcv.Absent, comment_count=rcv.Absent, committer=rcv.Absent, html_url=rcv.Absent, message=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, tree=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
         self.__comment_count.update(comment_count)

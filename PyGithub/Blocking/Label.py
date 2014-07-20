@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Label(bgo.UpdatableGithubObject):
+class Label(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,13 +24,13 @@ class Label(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_label`
     """
 
-    def _initAttributes(self, color=rcv.Absent, name=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, color=_rcv.Absent, name=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Label, self)._initAttributes(**kwds)
-        self.__color = rcv.Attribute("Label.color", rcv.StringConverter, color)
-        self.__name = rcv.Attribute("Label.name", rcv.StringConverter, name)
-        self.__url = rcv.Attribute("Label.url", rcv.StringConverter, url)
+        self.__color = _rcv.Attribute("Label.color", _rcv.StringConverter, color)
+        self.__name = _rcv.Attribute("Label.name", _rcv.StringConverter, name)
+        self.__url = _rcv.Attribute("Label.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, color=rcv.Absent, name=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, color=_rcv.Absent, name=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Label, self)._updateAttributes(eTag, **kwds)
         self.__color.update(color)
         self.__name.update(name)

@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class GitRef(bgo.UpdatableGithubObject):
+class GitRef(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -28,14 +25,14 @@ class GitRef(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_refs`
     """
 
-    def _initAttributes(self, object=rcv.Absent, ref=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, object=_rcv.Absent, ref=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         super(GitRef, self)._initAttributes(**kwds)
-        self.__object = rcv.Attribute("GitRef.object", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
-        self.__ref = rcv.Attribute("GitRef.ref", rcv.StringConverter, ref)
-        self.__url = rcv.Attribute("GitRef.url", rcv.StringConverter, url)
+        self.__object = _rcv.Attribute("GitRef.object", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
+        self.__ref = _rcv.Attribute("GitRef.ref", _rcv.StringConverter, ref)
+        self.__url = _rcv.Attribute("GitRef.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, object=rcv.Absent, ref=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, object=_rcv.Absent, ref=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(GitRef, self)._updateAttributes(eTag, **kwds)
         self.__object.update(object)
         self.__ref.update(ref)
@@ -88,11 +85,11 @@ class GitRef(bgo.UpdatableGithubObject):
         :rtype: None
         """
 
-        sha = snd.normalizeString(sha)
+        sha = _snd.normalizeString(sha)
         if force is not None:
-            force = snd.normalizeBool(force)
+            force = _snd.normalizeBool(force)
 
         url = uritemplate.expand(self.url)
-        postArguments = snd.dictionary(force=force, sha=sha)
+        postArguments = _snd.dictionary(force=force, sha=sha)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())

@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class GitTag(bgo.SessionedGithubObject):
+class GitTag(_bgo.SessionedGithubObject):
     """
     Base class: :class:`.SessionedGithubObject`
 
@@ -27,7 +24,7 @@ class GitTag(bgo.SessionedGithubObject):
       * :meth:`.Repository.get_git_tag`
     """
 
-    class Tagger(bgo.SessionedGithubObject):
+    class Tagger(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitTag.tagger`
@@ -35,9 +32,9 @@ class GitTag(bgo.SessionedGithubObject):
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitTag.Tagger, self)._initAttributes(**kwds)
-            self.__date = rcv.Attribute("GitTag.Tagger.date", rcv.DatetimeConverter, date)
-            self.__email = rcv.Attribute("GitTag.Tagger.email", rcv.StringConverter, email)
-            self.__name = rcv.Attribute("GitTag.Tagger.name", rcv.StringConverter, name)
+            self.__date = _rcv.Attribute("GitTag.Tagger.date", _rcv.DatetimeConverter, date)
+            self.__email = _rcv.Attribute("GitTag.Tagger.email", _rcv.StringConverter, email)
+            self.__name = _rcv.Attribute("GitTag.Tagger.name", _rcv.StringConverter, name)
 
         def _updateAttributes(self, date=None, email=None, name=None, **kwds):
             super(GitTag.Tagger, self)._updateAttributes(**kwds)
@@ -66,15 +63,15 @@ class GitTag(bgo.SessionedGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, message=rcv.Absent, object=rcv.Absent, sha=rcv.Absent, tag=rcv.Absent, tagger=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, message=_rcv.Absent, object=_rcv.Absent, sha=_rcv.Absent, tag=_rcv.Absent, tagger=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         super(GitTag, self)._initAttributes(**kwds)
-        self.__message = rcv.Attribute("GitTag.message", rcv.StringConverter, message)
-        self.__object = rcv.Attribute("GitTag.object", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
-        self.__sha = rcv.Attribute("GitTag.sha", rcv.StringConverter, sha)
-        self.__tag = rcv.Attribute("GitTag.tag", rcv.StringConverter, tag)
-        self.__tagger = rcv.Attribute("GitTag.tagger", rcv.StructureConverter(self.Session, GitTag.Tagger), tagger)
-        self.__url = rcv.Attribute("GitTag.url", rcv.StringConverter, url)
+        self.__message = _rcv.Attribute("GitTag.message", _rcv.StringConverter, message)
+        self.__object = _rcv.Attribute("GitTag.object", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
+        self.__sha = _rcv.Attribute("GitTag.sha", _rcv.StringConverter, sha)
+        self.__tag = _rcv.Attribute("GitTag.tag", _rcv.StringConverter, tag)
+        self.__tagger = _rcv.Attribute("GitTag.tagger", _rcv.StructureConverter(self.Session, GitTag.Tagger), tagger)
+        self.__url = _rcv.Attribute("GitTag.url", _rcv.StringConverter, url)
 
     @property
     def message(self):

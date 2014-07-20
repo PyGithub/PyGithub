@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Commit(bgo.UpdatableGithubObject):
+class Commit(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -30,7 +27,7 @@ class Commit(bgo.UpdatableGithubObject):
       * :attr:`.Tag.commit`
     """
 
-    class CommitFile(bgo.SessionedGithubObject):
+    class CommitFile(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Commit.files`
@@ -38,16 +35,16 @@ class Commit(bgo.UpdatableGithubObject):
 
         def _initAttributes(self, additions=None, blob_url=None, changes=None, contents_url=None, deletions=None, filename=None, patch=None, raw_url=None, sha=None, status=None, **kwds):
             super(Commit.CommitFile, self)._initAttributes(**kwds)
-            self.__additions = rcv.Attribute("Commit.CommitFile.additions", rcv.IntConverter, additions)
-            self.__blob_url = rcv.Attribute("Commit.CommitFile.blob_url", rcv.StringConverter, blob_url)
-            self.__changes = rcv.Attribute("Commit.CommitFile.changes", rcv.IntConverter, changes)
-            self.__contents_url = rcv.Attribute("Commit.CommitFile.contents_url", rcv.StringConverter, contents_url)
-            self.__deletions = rcv.Attribute("Commit.CommitFile.deletions", rcv.IntConverter, deletions)
-            self.__filename = rcv.Attribute("Commit.CommitFile.filename", rcv.StringConverter, filename)
-            self.__patch = rcv.Attribute("Commit.CommitFile.patch", rcv.StringConverter, patch)
-            self.__raw_url = rcv.Attribute("Commit.CommitFile.raw_url", rcv.StringConverter, raw_url)
-            self.__sha = rcv.Attribute("Commit.CommitFile.sha", rcv.StringConverter, sha)
-            self.__status = rcv.Attribute("Commit.CommitFile.status", rcv.StringConverter, status)
+            self.__additions = _rcv.Attribute("Commit.CommitFile.additions", _rcv.IntConverter, additions)
+            self.__blob_url = _rcv.Attribute("Commit.CommitFile.blob_url", _rcv.StringConverter, blob_url)
+            self.__changes = _rcv.Attribute("Commit.CommitFile.changes", _rcv.IntConverter, changes)
+            self.__contents_url = _rcv.Attribute("Commit.CommitFile.contents_url", _rcv.StringConverter, contents_url)
+            self.__deletions = _rcv.Attribute("Commit.CommitFile.deletions", _rcv.IntConverter, deletions)
+            self.__filename = _rcv.Attribute("Commit.CommitFile.filename", _rcv.StringConverter, filename)
+            self.__patch = _rcv.Attribute("Commit.CommitFile.patch", _rcv.StringConverter, patch)
+            self.__raw_url = _rcv.Attribute("Commit.CommitFile.raw_url", _rcv.StringConverter, raw_url)
+            self.__sha = _rcv.Attribute("Commit.CommitFile.sha", _rcv.StringConverter, sha)
+            self.__status = _rcv.Attribute("Commit.CommitFile.status", _rcv.StringConverter, status)
 
         def _updateAttributes(self, additions=None, blob_url=None, changes=None, contents_url=None, deletions=None, filename=None, patch=None, raw_url=None, sha=None, status=None, **kwds):
             super(Commit.CommitFile, self)._updateAttributes(**kwds)
@@ -132,7 +129,7 @@ class Commit(bgo.UpdatableGithubObject):
             """
             return self.__status.value
 
-    class Stats(bgo.SessionedGithubObject):
+    class Stats(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Commit.stats`
@@ -140,9 +137,9 @@ class Commit(bgo.UpdatableGithubObject):
 
         def _initAttributes(self, additions=None, deletions=None, total=None, **kwds):
             super(Commit.Stats, self)._initAttributes(**kwds)
-            self.__additions = rcv.Attribute("Commit.Stats.additions", rcv.IntConverter, additions)
-            self.__deletions = rcv.Attribute("Commit.Stats.deletions", rcv.IntConverter, deletions)
-            self.__total = rcv.Attribute("Commit.Stats.total", rcv.IntConverter, total)
+            self.__additions = _rcv.Attribute("Commit.Stats.additions", _rcv.IntConverter, additions)
+            self.__deletions = _rcv.Attribute("Commit.Stats.deletions", _rcv.IntConverter, deletions)
+            self.__total = _rcv.Attribute("Commit.Stats.total", _rcv.IntConverter, total)
 
         def _updateAttributes(self, additions=None, deletions=None, total=None, **kwds):
             super(Commit.Stats, self)._updateAttributes(**kwds)
@@ -171,22 +168,22 @@ class Commit(bgo.UpdatableGithubObject):
             """
             return self.__total.value
 
-    def _initAttributes(self, author=rcv.Absent, comments_url=rcv.Absent, commit=rcv.Absent, committer=rcv.Absent, files=rcv.Absent, html_url=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, stats=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, author=_rcv.Absent, comments_url=_rcv.Absent, commit=_rcv.Absent, committer=_rcv.Absent, files=_rcv.Absent, html_url=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, stats=_rcv.Absent, url=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         import PyGithub.Blocking.User
         super(Commit, self)._initAttributes(**kwds)
-        self.__author = rcv.Attribute("Commit.author", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), author)
-        self.__comments_url = rcv.Attribute("Commit.comments_url", rcv.StringConverter, comments_url)
-        self.__commit = rcv.Attribute("Commit.commit", rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
-        self.__committer = rcv.Attribute("Commit.committer", rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), committer)
-        self.__files = rcv.Attribute("Commit.files", rcv.ListConverter(rcv.StructureConverter(self.Session, Commit.CommitFile)), files)
-        self.__html_url = rcv.Attribute("Commit.html_url", rcv.StringConverter, html_url)
-        self.__parents = rcv.Attribute("Commit.parents", rcv.ListConverter(rcv.ClassConverter(self.Session, Commit)), parents)
-        self.__sha = rcv.Attribute("Commit.sha", rcv.StringConverter, sha)
-        self.__stats = rcv.Attribute("Commit.stats", rcv.StructureConverter(self.Session, Commit.Stats), stats)
-        self.__url = rcv.Attribute("Commit.url", rcv.StringConverter, url)
+        self.__author = _rcv.Attribute("Commit.author", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), author)
+        self.__comments_url = _rcv.Attribute("Commit.comments_url", _rcv.StringConverter, comments_url)
+        self.__commit = _rcv.Attribute("Commit.commit", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), commit)
+        self.__committer = _rcv.Attribute("Commit.committer", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), committer)
+        self.__files = _rcv.Attribute("Commit.files", _rcv.ListConverter(_rcv.StructureConverter(self.Session, Commit.CommitFile)), files)
+        self.__html_url = _rcv.Attribute("Commit.html_url", _rcv.StringConverter, html_url)
+        self.__parents = _rcv.Attribute("Commit.parents", _rcv.ListConverter(_rcv.ClassConverter(self.Session, Commit)), parents)
+        self.__sha = _rcv.Attribute("Commit.sha", _rcv.StringConverter, sha)
+        self.__stats = _rcv.Attribute("Commit.stats", _rcv.StructureConverter(self.Session, Commit.Stats), stats)
+        self.__url = _rcv.Attribute("Commit.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=rcv.Absent, comments_url=rcv.Absent, commit=rcv.Absent, committer=rcv.Absent, files=rcv.Absent, html_url=rcv.Absent, parents=rcv.Absent, sha=rcv.Absent, stats=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=_rcv.Absent, comments_url=_rcv.Absent, commit=_rcv.Absent, committer=_rcv.Absent, files=_rcv.Absent, html_url=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, stats=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(Commit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
         self.__comments_url.update(comments_url)

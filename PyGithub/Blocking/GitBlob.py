@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class GitBlob(bgo.UpdatableGithubObject):
+class GitBlob(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -28,18 +25,18 @@ class GitBlob(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_blob`
     """
 
-    def _initAttributes(self, content=rcv.Absent, encoding=rcv.Absent, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(GitBlob, self)._initAttributes(**kwds)
-        self.__content = rcv.Attribute("GitBlob.content", rcv.StringConverter, content)
-        self.__encoding = rcv.Attribute("GitBlob.encoding", rcv.StringConverter, encoding)
-        self.__mode = rcv.Attribute("GitBlob.mode", rcv.StringConverter, mode)
-        self.__path = rcv.Attribute("GitBlob.path", rcv.StringConverter, path)
-        self.__sha = rcv.Attribute("GitBlob.sha", rcv.StringConverter, sha)
-        self.__size = rcv.Attribute("GitBlob.size", rcv.IntConverter, size)
-        self.__type = rcv.Attribute("GitBlob.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("GitBlob.url", rcv.StringConverter, url)
+        self.__content = _rcv.Attribute("GitBlob.content", _rcv.StringConverter, content)
+        self.__encoding = _rcv.Attribute("GitBlob.encoding", _rcv.StringConverter, encoding)
+        self.__mode = _rcv.Attribute("GitBlob.mode", _rcv.StringConverter, mode)
+        self.__path = _rcv.Attribute("GitBlob.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("GitBlob.sha", _rcv.StringConverter, sha)
+        self.__size = _rcv.Attribute("GitBlob.size", _rcv.IntConverter, size)
+        self.__type = _rcv.Attribute("GitBlob.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("GitBlob.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=rcv.Absent, encoding=rcv.Absent, mode=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, type=rcv.Absent, url=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
         super(GitBlob, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)

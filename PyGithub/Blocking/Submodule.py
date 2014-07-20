@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class Submodule(bgo.UpdatableGithubObject):
+class Submodule(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -27,19 +24,19 @@ class Submodule(bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, submodule_git_url=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._initAttributes(**kwds)
-        self.__git_url = rcv.Attribute("Submodule.git_url", rcv.StringConverter, git_url)
-        self.__html_url = rcv.Attribute("Submodule.html_url", rcv.StringConverter, html_url)
-        self.__name = rcv.Attribute("Submodule.name", rcv.StringConverter, name)
-        self.__path = rcv.Attribute("Submodule.path", rcv.StringConverter, path)
-        self.__sha = rcv.Attribute("Submodule.sha", rcv.StringConverter, sha)
-        self.__size = rcv.Attribute("Submodule.size", rcv.IntConverter, size)
-        self.__submodule_git_url = rcv.Attribute("Submodule.submodule_git_url", rcv.StringConverter, submodule_git_url)
-        self.__type = rcv.Attribute("Submodule.type", rcv.StringConverter, type)
-        self.__url = rcv.Attribute("Submodule.url", rcv.StringConverter, url)
+        self.__git_url = _rcv.Attribute("Submodule.git_url", _rcv.StringConverter, git_url)
+        self.__html_url = _rcv.Attribute("Submodule.html_url", _rcv.StringConverter, html_url)
+        self.__name = _rcv.Attribute("Submodule.name", _rcv.StringConverter, name)
+        self.__path = _rcv.Attribute("Submodule.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("Submodule.sha", _rcv.StringConverter, sha)
+        self.__size = _rcv.Attribute("Submodule.size", _rcv.IntConverter, size)
+        self.__submodule_git_url = _rcv.Attribute("Submodule.submodule_git_url", _rcv.StringConverter, submodule_git_url)
+        self.__type = _rcv.Attribute("Submodule.type", _rcv.StringConverter, type)
+        self.__url = _rcv.Attribute("Submodule.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, git_url=rcv.Absent, html_url=rcv.Absent, name=rcv.Absent, path=rcv.Absent, sha=rcv.Absent, size=rcv.Absent, submodule_git_url=rcv.Absent, type=rcv.Absent, url=rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._updateAttributes(eTag, **kwds)
         self.__git_url.update(git_url)
         self.__html_url.update(html_url)

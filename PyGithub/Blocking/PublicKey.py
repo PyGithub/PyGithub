@@ -6,17 +6,14 @@
 # #### This file is generated. Manual changes will likely be lost. #####
 # ######################################################################
 
-import logging
-log = logging.getLogger(__name__)
-
 import uritemplate
 
-import PyGithub.Blocking._base_github_object as bgo
-import PyGithub.Blocking._send as snd
-import PyGithub.Blocking._receive as rcv
+import PyGithub.Blocking._base_github_object as _bgo
+import PyGithub.Blocking._send as _snd
+import PyGithub.Blocking._receive as _rcv
 
 
-class PublicKey(bgo.UpdatableGithubObject):
+class PublicKey(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
@@ -32,15 +29,15 @@ class PublicKey(bgo.UpdatableGithubObject):
       * :meth:`.User.get_keys`
     """
 
-    def _initAttributes(self, id=rcv.Absent, key=rcv.Absent, title=rcv.Absent, url=rcv.Absent, verified=rcv.Absent, **kwds):
+    def _initAttributes(self, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):
         super(PublicKey, self)._initAttributes(**kwds)
-        self.__id = rcv.Attribute("PublicKey.id", rcv.IntConverter, id)
-        self.__key = rcv.Attribute("PublicKey.key", rcv.StringConverter, key)
-        self.__title = rcv.Attribute("PublicKey.title", rcv.StringConverter, title)
-        self.__url = rcv.Attribute("PublicKey.url", rcv.StringConverter, url)
-        self.__verified = rcv.Attribute("PublicKey.verified", rcv.BoolConverter, verified)
+        self.__id = _rcv.Attribute("PublicKey.id", _rcv.IntConverter, id)
+        self.__key = _rcv.Attribute("PublicKey.key", _rcv.StringConverter, key)
+        self.__title = _rcv.Attribute("PublicKey.title", _rcv.StringConverter, title)
+        self.__url = _rcv.Attribute("PublicKey.url", _rcv.StringConverter, url)
+        self.__verified = _rcv.Attribute("PublicKey.verified", _rcv.BoolConverter, verified)
 
-    def _updateAttributes(self, eTag, id=rcv.Absent, key=rcv.Absent, title=rcv.Absent, url=rcv.Absent, verified=rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):
         super(PublicKey, self)._updateAttributes(eTag, **kwds)
         self.__id.update(id)
         self.__key.update(key)

@@ -73,9 +73,9 @@ class Class(DocstringContainer):
         self.__base = name
         return self
 
-    def element(self, e):
-        self.__elements.append(e)
-        return self
+    # def element(self, e):
+    #     self.__elements.append(e)
+    #     return self
 
     def elements(self, es):
         self.__elements += list(es)
