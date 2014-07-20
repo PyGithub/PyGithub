@@ -57,7 +57,7 @@ class CodeGenerator:
                 yield "  * " + self.generateDocForFactory(factory)
 
     def generateDocForFactory(self, factory):
-        return self.getMethod("generateDocFor{}Factory", factory.category)(factory)
+        return self.getMethod("generateDocFor{}", factory.__class__.__name__)(factory)
 
     def generateDocForMethodFactory(self, factory):
         return ":meth:`.{}.{}`".format(factory.object.containerClass.name, factory.object.name)

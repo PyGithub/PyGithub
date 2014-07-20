@@ -27,12 +27,12 @@ def main():
 
     builder = CrossReferenced.Class(None, "Builder", False, False, None, (), (), (Structured.Method("Build", (), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.ScalarType("Github")),), ())
     github = [c for c in crossReferenced.classes if c.name == "Github"][0]
-    github._addFactory(CrossReferenced.Factory("method", builder.methods[0]))
+    github._addFactory(CrossReferenced.MethodFactory(builder.methods[0]))
     github._sortFactories()
 
     session = CrossReferenced.Class(None, "Session", False, False, None, (), (Structured.Attribute("RateLimit", Structured.ScalarType("RateLimits")),), (), ())
     rateLimits = [s for s in github.structures if s.name == "RateLimits"][0]
-    rateLimits._addFactory(CrossReferenced.Factory("attribute", session.attributes[0]))
+    rateLimits._addFactory(CrossReferenced.AttributeFactory(session.attributes[0]))
     rateLimits._sortFactories()
 
     Checker(crossReferenced).check()

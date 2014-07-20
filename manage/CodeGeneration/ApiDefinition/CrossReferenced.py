@@ -231,7 +231,7 @@ class Attribute:
     def _propagateFactories(self):
         for t in self.__type.underlyingTypes:
             if isinstance(t, AttributedType):
-                t._addFactory(Factory("attribute", self))
+                t._addFactory(AttributeFactory(self))
 
     @property
     def containerClass(self):
@@ -246,7 +246,8 @@ class Attribute:
         return self.__type
 
 
-Factory = collections.namedtuple("Factory", "category, object")
+MethodFactory = collections.namedtuple("MethodFactory", "object")
+AttributeFactory = collections.namedtuple("AttributeFactory", "object")
 
 
 class Class(AttributedType):
@@ -349,7 +350,7 @@ class Method:
     def _propagateFactories(self):
         for t in self.__returnType.underlyingTypes:
             if isinstance(t, AttributedType):
-                t._addFactory(Factory("method", self))
+                t._addFactory(MethodFactory(self))
 
     @property
     def containerClass(self):
