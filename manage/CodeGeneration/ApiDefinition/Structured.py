@@ -23,7 +23,7 @@ def dump(*args, **kwds):
 
 # Monomorphic structures
 Definition = collections.namedtuple("Definition", "endPoints, classes, unimplementedEndPoints")
-Class = collections.namedtuple("Class", "name, updatable, completable, base, structures, attributes, methods, deprecatedAttributes")
+Class = collections.namedtuple("Class", "name, base, structures, attributes, methods, deprecatedAttributes")
 Structure = collections.namedtuple("Structure", "name, updatable, attributes, deprecatedAttributes")
 Attribute = collections.namedtuple("Attribute", "name, type")
 Method = collections.namedtuple("Method", "name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
@@ -136,10 +136,8 @@ class _DefinitionLoader:
         data = _loadYml(fileName)
         return self.buildClass(name, **data)
 
-    def buildClass(self, name, updatable=True, completable=True, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
+    def buildClass(self, name, base=None, structures=[], attributes=[], methods=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
-        assert isinstance(updatable, bool), updatable
-        assert isinstance(completable, bool), completable
         assert isinstance(base, (type(None), str)), base
         assert all(isinstance(s, dict) for s in structures), structures
         assert all(isinstance(a, dict) for a in attributes), attributes
@@ -147,8 +145,6 @@ class _DefinitionLoader:
         assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
         return Class(
             name=name,
-            updatable=updatable,
-            completable=completable,
             base=self.buildType(base),
             structures=tuple(sorted((self.buildStructure(**s) for s in structures), key=lambda s: s.name)),
             attributes=tuple(sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name)),
@@ -316,10 +312,6 @@ class _DefinitionDumper:
         data = collections.OrderedDict()
         if klass.base is not None:
             data["base"] = klass.base.name
-        if not klass.updatable:
-            data["updatable"] = "false"
-        if not klass.completable:
-            data["completable"] = "false"
         if len(klass.structures) != 0:
             data["structures"] = [self.createDataForStructure(structure) for structure in klass.structures]
         if len(klass.attributes) != 0:

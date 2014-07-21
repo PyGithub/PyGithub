@@ -9,6 +9,44 @@ import CodeGeneration.PythonSnippets as PS
 from CodeGeneration.CaseUtils import toUpperCamel
 
 
+# @todoAlpha Implement the following, rephrase it and put it in the "rationales" doc
+# About Completability and Updatability
+#  - this does not apply to the Github class
+#  - all classes have a 'url' attribute (things that don't are structures)
+#  - all classes are lazilly completable, even if there is no use case for this now (like AuthenticatedUser which is always returned fully) to be future-proof
+#  - all classes are updatable (have a .update method), even if they represent immutable objects (like GitTag), and in that case, .update always returns False, but this keeps the interface consistent
+#  - structures are updatable (have a ._updateAttributes method) iif they are (recursively) an attribute of a class. (This is currently not enforced, and instead specified manually in the .yml file)
+# Examples of classes:
+#   mutable     returned partially      examples
+#   True        True                    User
+#   True        False                   AuthenticatedUser
+#   False       True                    GitCommit
+#   False       False                   GitTag
+# Examples of structures:
+#   updatable   examples
+#   True        AuthenticatedUser.Plan
+#   False       Github.GitIgnoreTemplate
+
+# @todoAlpha Create an inheritance for git objects (GitTag, GitBlob, etc.)
+
+# CodeGeneration.ApiDefinition.Structured
+# @todoAlpha go back to the PaginatedListWithoutPerPage model; remove the warning "returns paginated list but has no per_page"
+
+# CodeGeneration.ApiDefinition.CrossReferenced
+# @todoAlpha for methods returning a PaginatedList (with per_page), add parameter per_page. Or at least reimplement the warning
+
+# CodeGeneration.CodeGenerator
+# @todoAlpha remove special cases :-/
+
+# CodeGeneration.RstGenerator
+# @todoAlpha document the sha from developer.github.com
+# @todoAlpha document how many end-points are implemented and unimplemented
+
+# Global
+# @todoAlpha hide UpdatableGithubObject.update and generate an update method for each class
+# @todoAlpha assert url is not none in any updatable instance
+# @todoAlpha test lazy completion and update of all classes in two topic test cases, not in each class test case? Maybe?
+
 class CodeGenerator:
     def generateClass(self, klass):
         yield "import uritemplate"
@@ -23,10 +61,10 @@ class CodeGenerator:
         yield ""
 
         if klass.base is None:
-            if klass.isUpdatable:
-                baseName = "_bgo.UpdatableGithubObject"
-            else:
+            if klass.name == "Github":
                 baseName = "_bgo.SessionedGithubObject"
+            else:
+                baseName = "_bgo.UpdatableGithubObject"
         else:
             baseName = klass.base.module + "." + klass.base.name
 
@@ -117,16 +155,15 @@ class CodeGenerator:
                 .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
                 .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
             )
-            if klass.isUpdatable:
-                yield (
-                    PS.Method("_updateAttributes")
-                    .parameter("eTag")
-                    .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
-                    .parameters((a, "None") for a in klass.deprecatedAttributes)
-                    .parameter("**kwds")
-                    .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
-                    .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
-                )
+            yield (
+                PS.Method("_updateAttributes")
+                .parameter("eTag")
+                .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
+                .parameters((a, "None") for a in klass.deprecatedAttributes)
+                .parameter("**kwds")
+                .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
+                .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
+            )
 
     def generateImportsForAllUnderlyingTypes(self, klass, types):
         imports = set()
@@ -168,11 +205,7 @@ class CodeGenerator:
             typeName = type.name
         else:
             typeName = "{}.{}".format(type.module, type.name)
-        if type.isUpdatable:
-            converterName = "ClassConverter"
-        else:
-            converterName = "StructureConverter"
-        return "{}(self.Session, {})".format(converterName, typeName)
+        return "ClassConverter(self.Session, {})".format(typeName)
 
     def generateCodeForUnionTypeConverter(self, module, attribute, type):
         if type.key is not None:
@@ -202,12 +235,12 @@ class CodeGenerator:
         return '"{}"'.format(".".join(name))
 
     def createClassProperty(self, attribute):
-        p = PS.Property(attribute.name)
-        p.docstring(":type: {}".format(self.generateDocForType(attribute.type)))
-        if attribute.containerClass.isUpdatable:
-            p.body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.name))
-        p.body("return self.__{}.value".format(attribute.name))
-        return p
+        return (
+            PS.Property(attribute.name)
+            .docstring(":type: {}".format(self.generateDocForType(attribute.type)))
+            .body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.name))
+            .body("return self.__{}.value".format(attribute.name))
+        )
 
     def createClassMethod(self, method):
         return (
@@ -410,7 +443,6 @@ class CodeGenerator:
             if p.type.name in ["int"]:
                 format = "str({})"
         if value.__class__.__name__[:-5] == "Attribute":
-            print(method.containerClass.name, value.attribute)
             a = self.findAttribute(method.containerClass, value.attribute)
             if a is not None and a.type.name in ["int"]:
                 format = "str({})"

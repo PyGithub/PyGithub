@@ -1027,7 +1027,7 @@ class Repository(_bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.git_tags_url, owner=self.owner.login, repo=self.name)
         postArguments = _snd.dictionary(message=message, object=object, tag=tag, tagger=tagger, type=type)
         r = self.Session._request("POST", url, postArguments=postArguments)
-        return _rcv.StructureConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
 
     def create_git_tree(self, tree):
         """
@@ -1440,7 +1440,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         url = uritemplate.expand(self.git_tags_url, sha=sha)
         r = self.Session._request("GET", url)
-        return _rcv.StructureConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTag.GitTag)(None, r.json(), r.headers.get("ETag"))
 
     def get_git_tree(self, sha):
         """

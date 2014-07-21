@@ -174,9 +174,8 @@ class EndPoint:
 
 
 class AttributedType(SimpleType):
-    def __init__(self, name, updatable, attributes, deprecatedAttributes):
+    def __init__(self, name, attributes, deprecatedAttributes):
         super(AttributedType, self).__init__(name)
-        self.__updatable = updatable
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
         self.__deprecatedAttributes = sorted(deprecatedAttributes)
         self.__factories = []
@@ -203,10 +202,6 @@ class AttributedType(SimpleType):
     @property
     def attributes(self):
         return self.__attributes
-
-    @property
-    def isUpdatable(self):
-        return self.__updatable
 
 
 class Attribute:
@@ -246,10 +241,9 @@ AttributeFactory = collections.namedtuple("AttributeFactory", "object")
 
 
 class Class(AttributedType):
-    def __init__(self, module, name, updatable, completable, base, structures, attributes, methods, deprecatedAttributes):
-        super(Class, self).__init__(name, updatable, attributes, deprecatedAttributes)
+    def __init__(self, module, name, base, structures, attributes, methods, deprecatedAttributes):
+        super(Class, self).__init__(name, attributes, deprecatedAttributes)
         self.__module = module
-        self.__completable = completable
         self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
         self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.name)
         self.__derived = []
@@ -294,19 +288,20 @@ class Class(AttributedType):
     def methods(self):
         return self.__methods
 
-    @property
-    def isCompletable(self):
-        return self.__completable
-
 
 class Structure(AttributedType):
     def __init__(self, containerClass, name, updatable, attributes, deprecatedAttributes):
-        super(Structure, self).__init__(name, updatable, attributes, deprecatedAttributes)
+        super(Structure, self).__init__(name, attributes, deprecatedAttributes)
+        self.__updatable = updatable
         self.__containerClass = containerClass
 
     @property
     def containerClass(self):
         return self.__containerClass
+
+    @property
+    def isUpdatable(self):
+        return self.__updatable
 
 
 class Method:
