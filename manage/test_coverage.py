@@ -5,111 +5,109 @@
 
 from __future__ import print_function
 
-import sys
 import coverage
+import glob
 import os
+import shutil
+import sys
 import types
 import unittest
 sys.path.append(".")
 
 
-baseDirectory = "PyGithub"
-
-
 class TestFamily(object):
-    def __init__(self, cov, module, description, include):
-        self.cov = cov
+    def __init__(self, module, description, include, omit=None):
         self.module = module
         self.description = description
         self.include = include
+        self.omit = omit
 
     def run(self):
         print("==== Runing", self.description, "====")
-        self.cov.start()
-        self.isResultOk = unittest.main(exit=False, module="PyGithub.Blocking.tests." + self.module, argv=["test"]).result.wasSuccessful()
-        self.cov.stop()
-        self.cov.html_report(directory=os.path.join("coverage", self.module), include=self.include)
-        self.isCoverageOk = self.cov.report(include=self.include) == 100.
-        print()
+        shutil.copy("coverage/data.imports", "coverage/data." + self.module)
+        cov = coverage.coverage(branch=True, data_file="coverage/data." + self.module)
+        cov.load()
+        try:
+            cov.start()
+            return unittest.main(exit=False, module=self.module, argv=["test"]).result.wasSuccessful()
+        finally:
+            print()
+            cov.stop()
+            cov.save()
 
     def report(self):
-        print("= {}: {}".format(self.description, "OK" if self.isResultOk else "FAIL"))
-        print("= {} coverage: {}".format(self.description, "OK" if self.isCoverageOk else "FAIL"))
+        if self.include is not None:
+            print("==== Coverage of", self.description, "====")
+            cov = coverage.coverage(branch=True, data_file="coverage/data." + self.module)
+            cov.load()
+            self.isCoverageOk = cov.report(include=self.include, omit=self.omit) == 100.
+            cov.html_report(directory=os.path.join("coverage", self.module), include=self.include, omit=self.omit)
+            print()
 
 
 def main():
-    cov = coverage.coverage(
-        branch=True,
-        omit=[os.path.join(baseDirectory, "Blocking", "tests", "*"), os.path.join(baseDirectory, "*_tests.py")]
-    )
+    cov = coverage.coverage(branch=True, data_file="coverage/data.imports")
     cov.start()
+    import PyGithub.Blocking.AuthenticatedUser
+    import PyGithub.Blocking.Commit
+    import PyGithub.Blocking.Contributor
+    import PyGithub.Blocking.Dir
+    import PyGithub.Blocking.Entity
+    import PyGithub.Blocking.File
+    import PyGithub.Blocking.Gist
+    import PyGithub.Blocking.GitBlob
+    import PyGithub.Blocking.GitCommit
+    import PyGithub.Blocking.Github
+    import PyGithub.Blocking.GitRef
+    import PyGithub.Blocking.GitTag
+    import PyGithub.Blocking.GitTree
+    import PyGithub.Blocking.Issue
+    import PyGithub.Blocking.Label
+    import PyGithub.Blocking.Milestone
+    import PyGithub.Blocking.Organization
+    import PyGithub.Blocking.PublicKey
+    import PyGithub.Blocking.Repository
+    import PyGithub.Blocking.Submodule
+    import PyGithub.Blocking.Subscription
+    import PyGithub.Blocking.SymLink
+    import PyGithub.Blocking.Team
+    import PyGithub.Blocking.User
+    cov.stop()
+    cov.save()
 
     families = []
+
     if len(sys.argv) == 1 or "--unit" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "unit.all", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
+        families.append(TestFamily("PyGithub.Blocking.tests.unit.all", "Unit tests", ["PyGithub/Blocking/_*.py", "PyGithub/Blocking/tests/unit/*.py"]))
+
     if len(sys.argv) == 1 or "--topics" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "topics.all", "Topics tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily("PyGithub.Blocking.tests.topics.all", "Topics tests", None))
+
     if len(sys.argv) == 1 or "--old-classes" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "old_classes.all", "Old classes tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily("PyGithub.Blocking.tests.old_classes.all", "Old classes tests", ["PyGithub/Blocking/*.py", "PyGithub/Blocking/tests/old_classes/*.py"], ["PyGithub/Blocking/tests/Framework.py", "PyGithub/Blocking/tests/__init__.py", "PyGithub/Blocking/_*.py"]))
+
     if len(sys.argv) == 1 or "--classes" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "classes.all", "Classes tests", [os.path.join(baseDirectory, "*")]))
+        for f in glob.glob("PyGithub/Blocking/tests/classes/*TestCases.py"):
+            n = f[32:-12]
+            families.append(TestFamily("PyGithub.Blocking.tests.classes.{}TestCases".format(n), "{} test cases".format(n), ["PyGithub/Blocking/{}.py".format(n), "PyGithub/Blocking/tests/classes/{}TestCases.py".format(n)]))
+
     if "--doc" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "doc", "Doc tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily("PyGithub.Blocking.tests.doc", "Doc tests", None))
 
     for f in families:
-        f.run()
+        if not f.run():
+            exit(1)
 
-    print("====================================")
     for f in families:
+        # @todoAlpha Once we reach 100% coverage on all families, detect coverage < 100%. Maybe report only if coverage < 100% ?
         f.report()
-    print("====================================")
+
+    if len([f for f in families if f.include is not None]) > 1:
+        print()
+        print("==== Global coverage ====")
+        cov = coverage.coverage(branch=True, data_file="coverage/data")
+        cov.combine()
+        cov.report(show_missing=False, include="PyGithub/Blocking/*", omit="PyGithub/Blocking/tests/*")
+
 
 main()
-
-
-# -*- coding: utf-8 -*-
-
-# Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
-
-# from __future__ import print_function
-
-# import unittest
-# import os
-# import shutil
-
-# import coverage
-
-# importsCoverage = coverage.coverage(branch=True, data_file="coverage.imports")
-# importsCoverage.start()
-# import PyGithub.Blocking.new_tests.All
-# importsCoverage.stop()
-# importsCoverage.save()
-
-# isGlobalTestOk = True
-# for module in PyGithub.Blocking.new_tests.All.all:
-#     shutil.copy("coverage.imports", "coverage." + module)
-#     cov = coverage.coverage(branch=True, data_file="coverage." + module)
-#     cov.load()
-#     cov.start()
-#     isTestOk = unittest.main(exit=False, module="PyGithub.Blocking.new_tests." + module + "TestCases", argv=["test"]).result.wasSuccessful()
-#     cov.stop()
-#     cov.save()
-#     isGlobalTestOk = isGlobalTestOk and isTestOk
-
-# if not isGlobalTestOk:
-#     exit(1)
-
-# globalInclude = []
-# for module in PyGithub.Blocking.new_tests.All.all:
-#     cov = coverage.coverage(branch=True, data_file="coverage." + module)
-#     cov.load()
-#     include = ["PyGithub/Blocking/" + module + ".py", "PyGithub/Blocking/new_tests/" + module + "TestCases.py"]
-#     isCoverageOk = cov.report(include=include) == 100.
-#     globalInclude += include
-
-# globalCoverage = coverage.coverage(branch=True, data_file="coverage")
-# globalCoverage.combine()
-# isGlobalCoverageOk = globalCoverage.report(include=globalInclude) == 100.
-
-# if not isGlobalCoverageOk:
-#     exit(1)

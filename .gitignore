@@ -5,6 +5,4 @@
 /build/
 /MANIFEST
 /PyGithub.egg-info/
-/.coverage
-/coverage/
 /gh-pages/
