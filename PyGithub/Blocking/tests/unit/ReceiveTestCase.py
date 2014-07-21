@@ -35,14 +35,14 @@ class AttributeTestCase(unittest.TestCase):
             if logRecord.levelno == level and str(logRecord.msg) in messages:
                 return True
             else:
-                print()
-                print("checkLogRecord received")
-                print(logRecord.levelno)
-                print(logRecord.msg)
-                print("instead of")
-                print(level)
-                print("\n".join(messages))
-                print()
+                print()  # pragma no cover
+                print("checkLogRecord received")  # pragma no cover
+                print(logRecord.levelno)  # pragma no cover
+                print(logRecord.msg)  # pragma no cover
+                print("instead of")  # pragma no cover
+                print(level)  # pragma no cover
+                print("\n".join(messages))  # pragma no cover
+                print()  # pragma no cover
         self.logHandler.expect.level.andReturn(logging.DEBUG)
         self.logHandler.expect.handle.withArguments(checkLogRecord)
 

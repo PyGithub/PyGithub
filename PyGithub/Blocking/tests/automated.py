@@ -10,4 +10,4 @@ from PyGithub.Blocking.tests.classes.all import *
 from PyGithub.Blocking.tests.topics.all import *
 
 if __name__ == "__main__":
-	unittest.main()
+	unittest.main()  # pragma no cover
