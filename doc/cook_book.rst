@@ -81,6 +81,7 @@ Here are the gists modified by `Vincent Driessen <https://github.com/nvie>`__ si
     ...
     Really useful helper that I use constantly to force myself to write more efficient Django queries. (2013-11-29 08:59:02, 2014-04-22 10:02:20)
     Which API is the nicest for the new RQ with concurrency? (2013-02-04 15:58:06, 2014-06-25 19:09:55)
+    Initial experiment with a possible new worker structure for RQ (2012-08-30 21:22:56, 2014-07-16 08:54:35)
     Get Mountain Lion and Homebrew to Be Happy (2012-07-26 07:46:47, 2014-04-08 18:19:17)
     A WSGI middleware wrapper to add gzip to your WSGI app (2012-05-22 15:11:17, 2014-01-29 14:12:19)
 

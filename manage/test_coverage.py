@@ -26,7 +26,7 @@ class TestFamily(object):
     def run(self):
         print("==== Runing", self.description, "====")
         self.cov.start()
-        self.isResultOk = unittest.main(exit=False, module="PyGithub." + self.module, argv=["test"]).result.wasSuccessful()
+        self.isResultOk = unittest.main(exit=False, module="PyGithub.Blocking.tests." + self.module, argv=["test"]).result.wasSuccessful()
         self.cov.stop()
         self.cov.html_report(directory=os.path.join("coverage", self.module), include=self.include)
         self.isCoverageOk = self.cov.report(include=self.include) == 100.
@@ -46,11 +46,15 @@ def main():
 
     families = []
     if len(sys.argv) == 1 or "--unit" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "unit_tests", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
-    if len(sys.argv) == 1 or "--integ" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "integ_tests", "Integration tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily(cov, "unit.all", "Unit tests", [os.path.join(baseDirectory, "*", "_*")]))
+    if len(sys.argv) == 1 or "--topics" in sys.argv or "--all" in sys.argv:
+        families.append(TestFamily(cov, "topics.all", "Topics tests", [os.path.join(baseDirectory, "*")]))
+    if len(sys.argv) == 1 or "--old-classes" in sys.argv or "--all" in sys.argv:
+        families.append(TestFamily(cov, "old_classes.all", "Old classes tests", [os.path.join(baseDirectory, "*")]))
+    if len(sys.argv) == 1 or "--classes" in sys.argv or "--all" in sys.argv:
+        families.append(TestFamily(cov, "classes.all", "Classes tests", [os.path.join(baseDirectory, "*")]))
     if "--doc" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily(cov, "doc_tests", "Doc tests", [os.path.join(baseDirectory, "*")]))
+        families.append(TestFamily(cov, "doc", "Doc tests", [os.path.join(baseDirectory, "*")]))
 
     for f in families:
         f.run()
@@ -61,3 +65,51 @@ def main():
     print("====================================")
 
 main()
+
+
+# -*- coding: utf-8 -*-
+
+# Copyright 2013-2014 Vincent Jacques <vincent@vincent-jacques.net>
+
+# from __future__ import print_function
+
+# import unittest
+# import os
+# import shutil
+
+# import coverage
+
+# importsCoverage = coverage.coverage(branch=True, data_file="coverage.imports")
+# importsCoverage.start()
+# import PyGithub.Blocking.new_tests.All
+# importsCoverage.stop()
+# importsCoverage.save()
+
+# isGlobalTestOk = True
+# for module in PyGithub.Blocking.new_tests.All.all:
+#     shutil.copy("coverage.imports", "coverage." + module)
+#     cov = coverage.coverage(branch=True, data_file="coverage." + module)
+#     cov.load()
+#     cov.start()
+#     isTestOk = unittest.main(exit=False, module="PyGithub.Blocking.new_tests." + module + "TestCases", argv=["test"]).result.wasSuccessful()
+#     cov.stop()
+#     cov.save()
+#     isGlobalTestOk = isGlobalTestOk and isTestOk
+
+# if not isGlobalTestOk:
+#     exit(1)
+
+# globalInclude = []
+# for module in PyGithub.Blocking.new_tests.All.all:
+#     cov = coverage.coverage(branch=True, data_file="coverage." + module)
+#     cov.load()
+#     include = ["PyGithub/Blocking/" + module + ".py", "PyGithub/Blocking/new_tests/" + module + "TestCases.py"]
+#     isCoverageOk = cov.report(include=include) == 100.
+#     globalInclude += include
+
+# globalCoverage = coverage.coverage(branch=True, data_file="coverage")
+# globalCoverage.combine()
+# isGlobalCoverageOk = globalCoverage.report(include=globalInclude) == 100.
+
+# if not isGlobalCoverageOk:
+#     exit(1)
