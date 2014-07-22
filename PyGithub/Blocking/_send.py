@@ -80,13 +80,8 @@ def normalizeRepositoryFullName(repo):
     import PyGithub.Blocking.Repository
     if isinstance(repo, PyGithub.Blocking.Repository.Repository):
         return (repo.owner.login, repo.name)
-    elif isinstance(repo, basestring):
-        # @todoAlpha Verify that this split returns a 2-tuple (else, raise TypeError)
-        return repo.split("/")
-    elif isinstance(repo, tuple):
-        return repo
     else:
-        raise TypeError()
+        return normalizeTwoStringsString(repo)
 
 
 def normalizeUserId(user):
@@ -158,11 +153,16 @@ def normalizeBoolReset(b):
         raise TypeError()
 
 
-def normalizeTwoStringsString(s):
-    if isinstance(s, basestring):
-        return s.split("/")
-    elif isinstance(s, tuple):
-        return s
+def normalizeTwoStringsString(repo):
+    if isinstance(repo, basestring):
+        s = repo.split("/")
+        if len(s) == 2:
+            l, n = s
+            return (l, n)
+        else:
+            raise TypeError()
+    elif isinstance(repo, tuple) and len(repo) == 2 and isinstance(repo[0], basestring) and isinstance(repo[0], basestring) and "/" not in repo[0] and "/" not in repo[1]:
+        return repo
     else:
         raise TypeError()
 
@@ -175,6 +175,8 @@ def normalizeEnum(s, *values):
 
 
 def normalizeList(normalizeElement, l):
+    if not isinstance(l, list):
+        raise TypeError()
     if normalizeElement is normalizeRepositoryFullName:
         return ["/".join(normalizeElement(e)) for e in l]
     else:
@@ -192,16 +194,13 @@ def normalizeGitIgnoreTemplateName(tmpl):
 
 
 def normalizeGitAuthor(a):
-    # @todoAlpha Devise a strategy for structured input data
-    if isinstance(a, dict):
-        return a
-    else:
-        raise TypeError()
+    return a
 
 
 def normalizeDatetime(d):
-    # @todoAlpha Should we parse strings into datetime here?
-    if isinstance(d, datetime.datetime):
+    if isinstance(d, basestring):
+        return d
+    elif isinstance(d, datetime.datetime):
         return d.isoformat() + "Z"  # @todoAlpha Use utcoffset? https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat
     else:
         raise TypeError()
@@ -221,7 +220,7 @@ def normalizeGitTreeSha(tree):
         raise TypeError()
 
 
-def normalizeGitCommitSha(commit):  # @todoAlpha Rename normalizeGitCommitSha
+def normalizeGitCommitSha(commit):
     import PyGithub.Blocking.GitCommit
     if isinstance(commit, PyGithub.Blocking.GitCommit.GitCommit):
         return commit.sha
