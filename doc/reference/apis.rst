@@ -240,7 +240,7 @@ POST /gists/:id/forks
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#fork-a-gist>`__)
 
 Implemented in PyGithub by:
-  * :meth:`.Gist.create_fork`
+  * :meth:`.AuthenticatedUser.create_gist_fork`
 
 DELETE /gists/:id/star
 ----------------------
@@ -248,7 +248,7 @@ DELETE /gists/:id/star
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#unstar-a-gist>`__)
 
 Implemented in PyGithub by:
-  * :meth:`.Gist.reset_starred`
+  * :meth:`.AuthenticatedUser.remove_from_starred_gists`
 
 GET /gists/:id/star
 -------------------
@@ -256,7 +256,7 @@ GET /gists/:id/star
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#check-if-a-gist-is-starred>`__)
 
 Implemented in PyGithub by:
-  * :meth:`.Gist.is_starred`
+  * :meth:`.AuthenticatedUser.has_in_starred_gists`
 
 PUT /gists/:id/star
 -------------------
@@ -264,7 +264,7 @@ PUT /gists/:id/star
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/gists#star-a-gist>`__)
 
 Implemented in PyGithub by:
-  * :meth:`.Gist.set_starred`
+  * :meth:`.AuthenticatedUser.add_to_starred_gists`
 
 GET /gists/public
 -----------------

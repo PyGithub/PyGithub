@@ -1,0 +1,200 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMzpwYXNzd29yZC11c2VyLTM=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/user",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "http://github.home.jacquev6.net/identicons/1679091c5a880faf6fb5e6087eb1b2dc.png",
+                "collaborators": 0,
+                "created_at": "2014-07-13T01:50:22Z",
+                "disk_usage": 0,
+                "events_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/events{/privacy}",
+                "followers": 4,
+                "followers_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/followers",
+                "following": 0,
+                "following_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/following{/other_user}",
+                "gists_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/gists{/gist_id}",
+                "gravatar_id": "c82172087168b2884c36f49649b05c8a",
+                "html_url": "http://github.home.jacquev6.net/ghe-user-3",
+                "id": 6,
+                "login": "ghe-user-3",
+                "organizations_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/orgs",
+                "owned_private_repos": 0,
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_repos": 0,
+                "received_events_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/received_events",
+                "repos_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/repos",
+                "site_admin": false,
+                "starred_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/starred{/owner}{/repo}",
+                "subscriptions_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/subscriptions",
+                "suspended_at": null,
+                "total_private_repos": 0,
+                "type": "User",
+                "updated_at": "2014-07-22T04:27:56Z",
+                "url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "1376",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Tue, 22 Jul 2014 04:59:19 GMT",
+                "etag": "\"020d6dca26960d0ec7e4749cb57a3eb9\"",
+                "last-modified": "Tue, 22 Jul 2014 04:27:56 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "acad6f3e-bdc0-436c-8594-ac4531987afc",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMzpwYXNzd29yZC11c2VyLTM=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/gists/e7f47a1723963f11cc01/forks",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "comments": 0,
+                "comments_url": "http://github.home.jacquev6.net/api/v3/gists/434bd3b15d571a1684a1/comments",
+                "commits_url": "http://github.home.jacquev6.net/api/v3/gists/434bd3b15d571a1684a1/commits",
+                "created_at": "2014-07-22T04:59:19Z",
+                "description": "gist-user-1-2",
+                "files": {
+                    "Bar.txt": {
+                        "filename": "Bar.txt",
+                        "language": null,
+                        "raw_url": "http://github.home.jacquev6.net/gist/ghe-user-3/434bd3b15d571a1684a1/raw/f5d2dc12b53122901445789e01e5e7e3e40c2b73/Bar.txt",
+                        "size": 4,
+                        "type": "text/plain"
+                    }
+                },
+                "forks_url": "http://github.home.jacquev6.net/api/v3/gists/434bd3b15d571a1684a1/forks",
+                "git_pull_url": "http://github.home.jacquev6.net/gist/434bd3b15d571a1684a1.git",
+                "git_push_url": "http://github.home.jacquev6.net/gist/434bd3b15d571a1684a1.git",
+                "html_url": "http://github.home.jacquev6.net/gist/434bd3b15d571a1684a1",
+                "id": "434bd3b15d571a1684a1",
+                "owner": {
+                    "avatar_url": "http://github.home.jacquev6.net/identicons/1679091c5a880faf6fb5e6087eb1b2dc.png",
+                    "events_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/events{/privacy}",
+                    "followers_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/followers",
+                    "following_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/following{/other_user}",
+                    "gists_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/gists{/gist_id}",
+                    "gravatar_id": "c82172087168b2884c36f49649b05c8a",
+                    "html_url": "http://github.home.jacquev6.net/ghe-user-3",
+                    "id": 6,
+                    "login": "ghe-user-3",
+                    "organizations_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/orgs",
+                    "received_events_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/received_events",
+                    "repos_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/repos",
+                    "site_admin": false,
+                    "starred_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/starred{/owner}{/repo}",
+                    "subscriptions_url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3/subscriptions",
+                    "type": "User",
+                    "url": "http://github.home.jacquev6.net/api/v3/users/ghe-user-3"
+                },
+                "public": true,
+                "updated_at": "2014-07-22T04:59:19Z",
+                "url": "http://github.home.jacquev6.net/api/v3/gists/434bd3b15d571a1684a1",
+                "user": null
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "2095",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Tue, 22 Jul 2014 04:59:20 GMT",
+                "etag": "\"b427b354a44b3b4c74c8d0d59e57beaf\"",
+                "location": "http://github.home.jacquev6.net/api/v3/gists/434bd3b15d571a1684a1",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "f54e915b-2301-4128-a153-d7b5c94f68ed",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMzpwYXNzd29yZC11c2VyLTM=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/gists/434bd3b15d571a1684a1",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "connection": "keep-alive",
+                "content-security-policy": "default-src 'none'",
+                "date": "Tue, 22 Jul 2014 04:59:20 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "b6864779-181e-4507-8a63-25c5c8ad83c4",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 204
+        }
+    }
+]

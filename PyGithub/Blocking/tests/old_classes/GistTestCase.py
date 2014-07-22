@@ -46,14 +46,6 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         g = self.g.get_gist("6296732")
         self.assertEqual(g.fork_of.owner.login, "HyroVitalyProtago")
 
-    def testStarring(self):
-        g = self.g.get_gist("1942384")
-        self.assertTrue(g.is_starred())
-        g.reset_starred()
-        self.assertFalse(g.is_starred())
-        g.set_starred()
-        self.assertTrue(g.is_starred())
-
     def testGetForks(self):
         g = self.g.get_gist("6296553")
         # Inline forks, not very consistent with...
@@ -68,13 +60,6 @@ class GistTestCase(Framework.SimpleLoginTestCase):
         g = self.g.get_gist("6296553")
         forks = list(g.get_forks(per_page=1))
         self.assertEqual(forks[0].owner.login, "jacquev6")
-
-    def testCreateFork(self):
-        g = self.g.get_gist("4059305")
-        self.assertEqual(g.owner.login, "jsvnm")
-        f = g.create_fork()
-        self.assertEqual(f.owner.login, "jacquev6")
-        f.delete()
 
     def testEditAndUpdate(self):
         g1 = self.g.get_gist("5339374")

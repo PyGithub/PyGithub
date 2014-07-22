@@ -55,6 +55,21 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("PUT", url)
 
+    def add_to_starred_gists(self, gist):
+        """
+        Calls the `PUT /gists/:id/star <http://developer.github.com/v3/gists#star-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param gist: mandatory :class:`.Gist` or :class:`string` (its :attr:`.Gist.id`)
+        :rtype: None
+        """
+
+        gist = _snd.normalizeGistId(gist)
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
+        r = self.Session._request("PUT", url)
+
     def add_to_subscriptions(self, repo):
         """
         Calls the `PUT /user/subscriptions/:owner/:repo <http://developer.github.com/v3/activity/watching#watch-a-repository-legacy>`__ end point.
@@ -112,6 +127,23 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
 
+    def create_gist_fork(self, gist):
+        """
+        Calls the `POST /gists/:id/forks <http://developer.github.com/v3/gists#fork-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param gist: mandatory :class:`.Gist` or :class:`string` (its :attr:`.Gist.id`)
+        :rtype: :class:`.Gist`
+        """
+        import PyGithub.Blocking.Gist
+
+        gist = _snd.normalizeGistId(gist)
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/forks", id=gist)
+        r = self.Session._request("POST", url)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist)(None, r.json(), r.headers.get("ETag"))
+
     def create_key(self, title, key):
         """
         Calls the `POST /user/keys <http://developer.github.com/v3/users/keys#create-a-public-key>`__ end point.
@@ -132,7 +164,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
-    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, auto_init=None, gitignore_template=None, license_template=None):
+    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, auto_init=None, gitignore_template=None, license_template=None):
         """
         Calls the `POST /user/repos <http://developer.github.com/v3/repos#create>`__ end point.
 
@@ -144,7 +176,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param private: optional :class:`bool`
         :param has_issues: optional :class:`bool`
         :param has_wiki: optional :class:`bool`
-        :param has_downloads: optional :class:`bool`
         :param auto_init: optional :class:`bool`
         :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
         :param license_template: optional :class:`string`
@@ -163,8 +194,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             has_issues = _snd.normalizeBool(has_issues)
         if has_wiki is not None:
             has_wiki = _snd.normalizeBool(has_wiki)
-        if has_downloads is not None:
-            has_downloads = _snd.normalizeBool(has_downloads)
         if auto_init is not None:
             auto_init = _snd.normalizeBool(auto_init)
         if gitignore_template is not None:
@@ -173,7 +202,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             license_template = _snd.normalizeString(license_template)
 
         url = uritemplate.expand("https://api.github.com/user/repos")
-        postArguments = _snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private)
+        postArguments = _snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
@@ -543,6 +572,22 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url, accept404=True)
         return _rcv.BoolConverter(None, r.status_code == 204)
 
+    def has_in_starred_gists(self, gist):
+        """
+        Calls the `GET /gists/:id/star <http://developer.github.com/v3/gists#check-if-a-gist-is-starred>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param gist: mandatory :class:`.Gist` or :class:`string` (its :attr:`.Gist.id`)
+        :rtype: :class:`bool`
+        """
+
+        gist = _snd.normalizeGistId(gist)
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
+        r = self.Session._request("GET", url, accept404=True)
+        return _rcv.BoolConverter(None, r.status_code == 204)
+
     def has_in_subscriptions(self, repo):
         """
         Calls the `GET /user/subscriptions/:owner/:repo <http://developer.github.com/v3/activity/watching#check-if-you-are-watching-a-repository-legacy>`__ end point.
@@ -587,6 +632,21 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         repo = _snd.normalizeRepositoryFullName(repo)
 
         url = uritemplate.expand("https://api.github.com/user/starred/{owner}/{repo}", owner=repo[0], repo=repo[1])
+        r = self.Session._request("DELETE", url)
+
+    def remove_from_starred_gists(self, gist):
+        """
+        Calls the `DELETE /gists/:id/star <http://developer.github.com/v3/gists#unstar-a-gist>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param gist: mandatory :class:`.Gist` or :class:`string` (its :attr:`.Gist.id`)
+        :rtype: None
+        """
+
+        gist = _snd.normalizeGistId(gist)
+
+        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
         r = self.Session._request("DELETE", url)
 
     def remove_from_subscriptions(self, repo):

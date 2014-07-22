@@ -26,6 +26,18 @@ methods:
       - name: repo
         value: nameFromRepo repo
     return_type: none
+  - name: add_to_starred_gists
+    end_point: PUT /gists/:id/star
+    parameters:
+      - name: gist
+        type:
+          class: Gist
+          attribute: id
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter gist
+    return_type: none
   - name: add_to_subscriptions
     end_point: PUT /user/subscriptions/:owner/:repo
     parameters:
@@ -75,6 +87,18 @@ methods:
       - name: public
         value: parameter public
     return_type: Gist
+  - name: create_gist_fork
+    end_point: POST /gists/:id/forks
+    parameters:
+      - name: gist
+        type:
+          class: Gist
+          attribute: id
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter gist
+    return_type: Gist
   - name: create_key
     end_point: POST /user/keys
     parameters:
@@ -105,8 +129,6 @@ methods:
         type: bool
       - name: has_wiki
         type: bool
-      - name: has_downloads
-        type: bool
       - name: auto_init
         type: bool
       - name: gitignore_template
@@ -116,6 +138,7 @@ methods:
       - name: license_template
         type: string
     unimplemented_parameters:
+      - has_downloads
       - team_id
     url_template: end_point
     post_arguments:
@@ -125,8 +148,6 @@ methods:
         value: parameter description
       - name: gitignore_template
         value: parameter gitignore_template
-      - name: has_downloads
-        value: parameter has_downloads
       - name: has_issues
         value: parameter has_issues
       - name: has_wiki
@@ -413,6 +434,19 @@ methods:
         value: nameFromRepo repo
     return_from: status
     return_type: bool
+  - name: has_in_starred_gists
+    end_point: GET /gists/:id/star
+    parameters:
+      - name: gist
+        type:
+          class: Gist
+          attribute: id
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter gist
+    return_from: status
+    return_type: bool
   - name: has_in_subscriptions
     end_point: GET /user/subscriptions/:owner/:repo
     parameters:
@@ -453,6 +487,18 @@ methods:
         value: ownerFromRepo repo
       - name: repo
         value: nameFromRepo repo
+    return_type: none
+  - name: remove_from_starred_gists
+    end_point: DELETE /gists/:id/star
+    parameters:
+      - name: gist
+        type:
+          class: Gist
+          attribute: id
+    url_template: end_point
+    url_template_arguments:
+      - name: id
+        value: parameter gist
     return_type: none
   - name: remove_from_subscriptions
     end_point: DELETE /user/subscriptions/:owner/:repo

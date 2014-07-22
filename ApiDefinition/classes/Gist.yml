@@ -94,10 +94,6 @@ attributes:
   - name: user
     type: User
 methods:
-  - name: create_fork
-    end_point: POST /gists/:id/forks
-    url_template: attribute forks_url
-    return_type: Gist
   - name: delete
     end_point: DELETE /gists/:id
     url_template: attribute url
@@ -144,25 +140,3 @@ methods:
     return_type:
       container: PaginatedList
       content: Gist
-  - name: is_starred
-    end_point: GET /gists/:id/star
-    url_template: end_point
-    url_template_arguments:
-      - name: id
-        value: attribute id
-    return_from: status
-    return_type: bool
-  - name: reset_starred
-    end_point: DELETE /gists/:id/star
-    url_template: end_point
-    url_template_arguments:
-      - name: id
-        value: attribute id
-    return_type: none
-  - name: set_starred
-    end_point: PUT /gists/:id/star
-    url_template: end_point
-    url_template_arguments:
-      - name: id
-        value: attribute id
-    return_type: none

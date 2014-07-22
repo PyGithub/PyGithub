@@ -7,4 +7,4 @@ import unittest
 from PyGithub.Blocking.tests.automated import *
 
 if __name__ == "__main__":
-	unittest.main()  # pragma no cover
+    unittest.main()  # pragma no cover

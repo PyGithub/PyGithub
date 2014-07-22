@@ -5,6 +5,7 @@
 import collections
 import datetime
 import logging
+import numbers
 log = logging.getLogger(__name__)
 
 import PyGithub.Blocking._exceptions as exn
@@ -103,7 +104,7 @@ class _BuiltinConverter(object):
         return self.__type.__name__
 
 
-IntConverter = _BuiltinConverter(int)
+IntConverter = _BuiltinConverter(numbers.Integral)
 StringConverter = _BuiltinConverter(basestring)
 BoolConverter = _BuiltinConverter(bool)
 

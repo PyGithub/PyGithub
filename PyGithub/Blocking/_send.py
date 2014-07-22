@@ -4,6 +4,8 @@
 
 import datetime
 
+# @todoAlpha Put some information in the TypeErrors
+
 
 class _Reset:
     pass
@@ -18,6 +20,16 @@ def dictionary(**args):
         elif v is not None:
             d[k] = v
     return d
+
+
+def normalizeGistId(gist):
+    import PyGithub.Blocking.Gist
+    if isinstance(gist, PyGithub.Blocking.Gist.Gist):
+        return gist.id
+    elif isinstance(gist, basestring):
+        return gist
+    else:
+        raise TypeError()
 
 
 def normalizeLabelName(label):
@@ -69,6 +81,7 @@ def normalizeRepositoryFullName(repo):
     if isinstance(repo, PyGithub.Blocking.Repository.Repository):
         return (repo.owner.login, repo.name)
     elif isinstance(repo, basestring):
+        # @todoAlpha Verify that this split returns a 2-tuple (else, raise TypeError)
         return repo.split("/")
     elif isinstance(repo, tuple):
         return repo

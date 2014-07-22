@@ -99,7 +99,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 
-    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, has_downloads=None, team_id=None, auto_init=None, gitignore_template=None, license_template=None):
+    def create_repo(self, name, description=None, homepage=None, private=None, has_issues=None, has_wiki=None, team_id=None, auto_init=None, gitignore_template=None, license_template=None):
         """
         Calls the `POST /orgs/:org/repos <http://developer.github.com/v3/repos#create>`__ end point.
 
@@ -111,7 +111,6 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param private: optional :class:`bool`
         :param has_issues: optional :class:`bool`
         :param has_wiki: optional :class:`bool`
-        :param has_downloads: optional :class:`bool`
         :param team_id: optional :class:`.Team` or :class:`int` (its :attr:`.Team.id`)
         :param auto_init: optional :class:`bool`
         :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
@@ -131,8 +130,6 @@ class Organization(PyGithub.Blocking.Entity.Entity):
             has_issues = _snd.normalizeBool(has_issues)
         if has_wiki is not None:
             has_wiki = _snd.normalizeBool(has_wiki)
-        if has_downloads is not None:
-            has_downloads = _snd.normalizeBool(has_downloads)
         if team_id is not None:
             team_id = _snd.normalizeTeamId(team_id)
         if auto_init is not None:
@@ -143,7 +140,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
             license_template = _snd.normalizeString(license_template)
 
         url = uritemplate.expand(self.repos_url)
-        postArguments = _snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_downloads=has_downloads, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private, team_id=team_id)
+        postArguments = _snd.dictionary(auto_init=auto_init, description=description, gitignore_template=gitignore_template, has_issues=has_issues, has_wiki=has_wiki, homepage=homepage, license_template=license_template, name=name, private=private, team_id=team_id)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository)(None, r.json(), r.headers.get("ETag"))
 

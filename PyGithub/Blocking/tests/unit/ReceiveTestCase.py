@@ -138,7 +138,7 @@ class AttributeTestCase(unittest.TestCase):
 
 class BuiltinConverterTestCase(unittest.TestCase):
     def testIntegerConverterDescription(self):
-        self.assertEqual(rcv.IntConverter.desc, "int")
+        self.assertEqual(rcv.IntConverter.desc, "Integral")
 
     def testIntegerConversion(self):
         self.assertEqual(rcv.IntConverter(None, 42), 42)

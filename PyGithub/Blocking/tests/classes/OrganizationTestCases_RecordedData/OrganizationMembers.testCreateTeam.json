@@ -1,0 +1,195 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMTpwYXNzd29yZC11c2VyLTE=",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/orgs/ghe-org-1",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "http://github.home.jacquev6.net/identicons/d3d9446802a44259755d38e6d163e820.png",
+                "billing_email": "ghe-org-1@jacquev6.net",
+                "blog": null,
+                "collaborators": 0,
+                "company": null,
+                "created_at": "2014-07-13T17:46:46Z",
+                "disk_usage": 0,
+                "email": null,
+                "events_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/events",
+                "followers": 0,
+                "following": 0,
+                "html_url": "http://github.home.jacquev6.net/ghe-org-1",
+                "id": 10,
+                "location": null,
+                "login": "ghe-org-1",
+                "members_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/members{/member}",
+                "name": null,
+                "owned_private_repos": 0,
+                "plan": {
+                    "name": "enterprise",
+                    "private_repos": 999999999999,
+                    "space": 976562499
+                },
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_members_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/public_members{/member}",
+                "public_repos": 0,
+                "repos_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/repos",
+                "total_private_repos": 0,
+                "type": "Organization",
+                "updated_at": "2014-07-22T03:21:20Z",
+                "url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "1019",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Tue, 22 Jul 2014 03:24:38 GMT",
+                "etag": "\"d937700f1b6b89e6c996ab2eaa68fb9c\"",
+                "last-modified": "Tue, 22 Jul 2014 03:21:20 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "d76984ba-2fd4-4ad7-b4b5-2461623ac822",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    },
+    {
+        "request": {
+            "body": {
+                "name": "Jamaica Bobsleigh Team"
+            },
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMTpwYXNzd29yZC11c2VyLTE=",
+                "Content-Length": "34",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/orgs/ghe-org-1/teams",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "POST"
+        },
+        "response": {
+            "body": {
+                "id": 6,
+                "members_count": 0,
+                "members_url": "http://github.home.jacquev6.net/api/v3/teams/6/members{/member}",
+                "name": "Jamaica Bobsleigh Team",
+                "organization": {
+                    "avatar_url": "http://github.home.jacquev6.net/identicons/d3d9446802a44259755d38e6d163e820.png",
+                    "blog": null,
+                    "company": null,
+                    "created_at": "2014-07-13T17:46:46Z",
+                    "email": null,
+                    "events_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/events",
+                    "followers": 0,
+                    "following": 0,
+                    "html_url": "http://github.home.jacquev6.net/ghe-org-1",
+                    "id": 10,
+                    "location": null,
+                    "login": "ghe-org-1",
+                    "members_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/members{/member}",
+                    "name": null,
+                    "public_gists": 0,
+                    "public_members_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/public_members{/member}",
+                    "public_repos": 0,
+                    "repos_url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/repos",
+                    "type": "Organization",
+                    "updated_at": "2014-07-22T03:21:20Z",
+                    "url": "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1"
+                },
+                "permission": "pull",
+                "repos_count": 0,
+                "repositories_url": "http://github.home.jacquev6.net/api/v3/teams/6/repos",
+                "slug": "jamaica-bobsleigh-team",
+                "url": "http://github.home.jacquev6.net/api/v3/teams/6"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "1154",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Tue, 22 Jul 2014 03:24:39 GMT",
+                "etag": "\"1f87dd0c5e141f700f9201206630c0e0\"",
+                "location": "http://github.home.jacquev6.net/api/v3/teams/6",
+                "server": "GitHub.com",
+                "status": "201 Created",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "999981d9-b910-411d-8d03-688bd53c3ba6",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 201
+        }
+    },
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic Z2hlLXVzZXItMTpwYXNzd29yZC11c2VyLTE=",
+                "Content-Length": "0",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/teams/6",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "DELETE"
+        },
+        "response": {
+            "body": "",
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "connection": "keep-alive",
+                "content-security-policy": "default-src 'none'",
+                "date": "Tue, 22 Jul 2014 03:24:39 GMT",
+                "server": "GitHub.com",
+                "status": "204 No Content",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "0728a4af-3659-4e2a-8ed3-cb1ee8aa0e27",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 204
+        }
+    }
+]

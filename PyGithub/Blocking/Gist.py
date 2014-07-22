@@ -21,9 +21,9 @@ class Gist(_bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.create_gist`
+      * :meth:`.AuthenticatedUser.create_gist_fork`
       * :meth:`.AuthenticatedUser.get_gists`
       * :meth:`.AuthenticatedUser.get_starred_gists`
-      * :meth:`.Gist.create_fork`
       * :attr:`.Gist.fork_of`
       * :attr:`.Gist.forks`
       * :meth:`.Gist.get_forks`
@@ -461,19 +461,6 @@ class Gist(_bgo.UpdatableGithubObject):
         self._completeLazily(self.__user.needsLazyCompletion)
         return self.__user.value
 
-    def create_fork(self):
-        """
-        Calls the `POST /gists/:id/forks <http://developer.github.com/v3/gists#fork-a-gist>`__ end point.
-
-        This is the only method calling this end point.
-
-        :rtype: :class:`.Gist`
-        """
-
-        url = uritemplate.expand(self.forks_url)
-        r = self.Session._request("POST", url)
-        return _rcv.ClassConverter(self.Session, Gist)(None, r.json(), r.headers.get("ETag"))
-
     def delete(self):
         """
         Calls the `DELETE /gists/:id <http://developer.github.com/v3/gists#delete-a-gist>`__ end point.
@@ -544,40 +531,3 @@ class Gist(_bgo.UpdatableGithubObject):
         urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, Gist))(None, r)
-
-    def is_starred(self):
-        """
-        Calls the `GET /gists/:id/star <http://developer.github.com/v3/gists#check-if-a-gist-is-starred>`__ end point.
-
-        This is the only method calling this end point.
-
-        :rtype: :class:`bool`
-        """
-
-        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=self.id)
-        r = self.Session._request("GET", url, accept404=True)
-        return _rcv.BoolConverter(None, r.status_code == 204)
-
-    def reset_starred(self):
-        """
-        Calls the `DELETE /gists/:id/star <http://developer.github.com/v3/gists#unstar-a-gist>`__ end point.
-
-        This is the only method calling this end point.
-
-        :rtype: None
-        """
-
-        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=self.id)
-        r = self.Session._request("DELETE", url)
-
-    def set_starred(self):
-        """
-        Calls the `PUT /gists/:id/star <http://developer.github.com/v3/gists#star-a-gist>`__ end point.
-
-        This is the only method calling this end point.
-
-        :rtype: None
-        """
-
-        url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=self.id)
-        r = self.Session._request("PUT", url)

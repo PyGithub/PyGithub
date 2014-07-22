@@ -46,6 +46,8 @@ from CodeGeneration.CaseUtils import toUpperCamel
 # @todoAlpha hide UpdatableGithubObject.update and generate an update method for each class
 # @todoAlpha assert url is not none in any updatable instance
 # @todoAlpha test lazy completion and update of all classes in two topic test cases, not in each class test case? Maybe?
+# @todoAlpha What happens when a suspended enterprise user tries to do anything?
+
 
 class CodeGenerator:
     def generateClass(self, klass):

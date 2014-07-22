@@ -108,6 +108,6 @@ def main():
         cov = coverage.coverage(branch=True, data_file="coverage/data")
         cov.combine()
         cov.report(show_missing=False, include="PyGithub/Blocking/*", omit="PyGithub/Blocking/tests/*")
-
+        cov.html_report(directory=os.path.join("coverage", "global"), include="PyGithub/Blocking/*", omit="PyGithub/Blocking/tests/*")
 
 main()
