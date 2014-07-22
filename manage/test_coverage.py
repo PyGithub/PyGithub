@@ -86,9 +86,9 @@ def main():
     if len(sys.argv) == 1 or "--old-classes" in sys.argv or "--all" in sys.argv:
         families.append(TestFamily("PyGithub.Blocking.tests.old_classes.all", "Old classes tests", ["PyGithub/Blocking/*.py", "PyGithub/Blocking/tests/old_classes/*.py"], ["PyGithub/Blocking/tests/Framework.py", "PyGithub/Blocking/tests/__init__.py", "PyGithub/Blocking/_*.py"]))
 
-    if len(sys.argv) == 1 or "--classes" in sys.argv or "--all" in sys.argv:
-        for f in glob.glob("PyGithub/Blocking/tests/classes/*TestCases.py"):
-            n = f[32:-12]
+    for f in glob.glob("PyGithub/Blocking/tests/classes/*TestCases.py"):
+        n = f[32:-12]
+        if len(sys.argv) == 1 or "--classes" in sys.argv or "--all" in sys.argv or "--class={}".format(n) in sys.argv:
             families.append(TestFamily("PyGithub.Blocking.tests.classes.{}TestCases".format(n), "{} test cases".format(n), ["PyGithub/Blocking/{}.py".format(n), "PyGithub/Blocking/tests/classes/{}TestCases.py".format(n)]))
 
     if "--doc" in sys.argv or "--all" in sys.argv:
