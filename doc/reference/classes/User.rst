@@ -9,3 +9,7 @@ User
 
 .. autoclass:: PyGithub.Blocking.User::User()
     :members:
+    :exclude-members: Key
+
+    .. autoclass:: PyGithub.Blocking.User::User.Key()
+        :members:

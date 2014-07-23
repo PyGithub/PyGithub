@@ -50,6 +50,31 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :meth:`.User.get_following`
     """
 
+    class Key(_bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.User.get_keys`
+        """
+
+        def _initAttributes(self, id=None, key=None, **kwds):
+            super(User.Key, self)._initAttributes(**kwds)
+            self.__id = _rcv.Attribute("User.Key.id", _rcv.IntConverter, id)
+            self.__key = _rcv.Attribute("User.Key.key", _rcv.StringConverter, key)
+
+        @property
+        def id(self):
+            """
+            :type: :class:`int`
+            """
+            return self.__id.value
+
+        @property
+        def key(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__key.value
+
     def _initAttributes(self, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, bio=None, **kwds):
         super(User, self)._initAttributes(**kwds)
         self.__followers_url = _rcv.Attribute("User.followers_url", _rcv.StringConverter, followers_url)
@@ -226,13 +251,12 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`list` of :class:`.PublicKey`
+        :rtype: :class:`list` of :class:`.Key`
         """
-        import PyGithub.Blocking.PublicKey
 
         url = uritemplate.expand("https://api.github.com/users/{username}/keys", username=self.login)
         r = self.Session._request("GET", url)
-        return _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey))(None, r.json())
+        return _rcv.ListConverter(_rcv.StructureConverter(self.Session, User.Key))(None, r.json())
 
     def get_orgs(self, per_page=None):
         """

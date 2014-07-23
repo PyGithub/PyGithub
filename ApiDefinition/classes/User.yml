@@ -1,4 +1,12 @@
 base: Entity
+structures:
+  - name: Key
+    updatable: false
+    attributes:
+      - name: id
+        type: int
+      - name: key
+        type: string
 attributes:
   - name: followers_url
     type: string
@@ -71,7 +79,7 @@ methods:
         value: attribute login
     return_type:
       container: list
-      content: PublicKey
+      content: Key
   - name: get_orgs
     end_point: GET /users/:username/orgs
     optional_parameters:

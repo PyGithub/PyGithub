@@ -72,6 +72,7 @@ class UserKeys(TestCase):
         u = self.g.get_user("ghe-user-1")
         keys = u.get_keys()
         self.assertEqual([k.id for k in keys], [1, 3])
+        self.assertEqual(keys[0].key, "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCiJEA/bsVMx3SfCH6F8/mh+EtP6/g+G5L862NqdbaAIC0kZr3ZFcmOYIWyed2KAFH4ZT7/7yFyMH1UWQ4s7Z3EHH7jwszk9QRSa7cGz1aLVL2xyPVjeur98nQnNxV6fRZjVA6ujL8hJqPfDbybLBrwgX3p424VGfQjXAugVoKNjtn4BAE4mmpRybNgeFWhMEP5i043n4b4nVz5n+K2iCJ83hvMIO4O7JIakfwZcg0MyXrsVGj30aMboZ3OjmE9rmIFZkUAsb9BCVorql2yx4VeMxzxvTUQnkLNGC5HDb+nceSVUQ5wew+6bS2uOa3so1dQIpIW8FXktPF6mWJfqiJB")
 
 
 class UserOrganizations(TestCase):
