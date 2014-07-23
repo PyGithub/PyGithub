@@ -147,7 +147,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeGitIgnoreTemplateName(self):
         self.assertEqual(snd.normalizeGitIgnoreTemplateName("foo"), "foo")
-        self.assertEqual(snd.normalizeGitIgnoreTemplateName(PyGithub.Blocking.Github.Github.GitIgnoreTemplate(None, dict(url="url", name="foo"))), "foo")
+        self.assertEqual(snd.normalizeGitIgnoreTemplateName(PyGithub.Blocking.Github.Github.GitIgnoreTemplate(None, dict(name="foo"))), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeGitIgnoreTemplateName(42)
         with self.assertRaises(TypeError):
