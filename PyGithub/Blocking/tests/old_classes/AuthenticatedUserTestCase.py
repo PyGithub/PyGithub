@@ -20,14 +20,6 @@ class AuthenticatedUserTestCase(Framework.SimpleLoginTestCase):
         self.assertEqual(repos[0].full_name, "jacquev6/ViDE")
         self.assertEqual(repos[1].full_name, "jacquev6/Boost.HierarchicalEnum")
 
-    def testAddRemoveSubscriptions(self):
-        u = self.g.get_authenticated_user()
-        self.assertTrue(u.has_in_subscriptions("abersager/PyGithub"))
-        u.remove_from_subscriptions("abersager/PyGithub")
-        self.assertFalse(u.has_in_subscriptions("abersager/PyGithub"))
-        u.add_to_subscriptions("abersager/PyGithub")
-        self.assertTrue(u.has_in_subscriptions("abersager/PyGithub"))
-
     def testGetSubscription(self):
         u = self.g.get_authenticated_user()
         s = u.get_subscription("abersager/PyGithub")

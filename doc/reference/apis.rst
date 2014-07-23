@@ -1907,30 +1907,6 @@ GET /user/subscriptions
 Implemented in PyGithub by:
   * :meth:`.AuthenticatedUser.get_subscriptions`
 
-DELETE /user/subscriptions/:owner/:repo
----------------------------------------
-
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/watching#stop-watching-a-repository-legacy>`__)
-
-Implemented in PyGithub by:
-  * :meth:`.AuthenticatedUser.remove_from_subscriptions`
-
-GET /user/subscriptions/:owner/:repo
-------------------------------------
-
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/watching#check-if-you-are-watching-a-repository-legacy>`__)
-
-Implemented in PyGithub by:
-  * :meth:`.AuthenticatedUser.has_in_subscriptions`
-
-PUT /user/subscriptions/:owner/:repo
-------------------------------------
-
-(`Reference documentation of Github API v3 <http://developer.github.com/v3/activity/watching#watch-a-repository-legacy>`__)
-
-Implemented in PyGithub by:
-  * :meth:`.AuthenticatedUser.add_to_subscriptions`
-
 GET /user/teams
 ---------------
 

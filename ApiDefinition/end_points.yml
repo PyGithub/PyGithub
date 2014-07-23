@@ -759,13 +759,6 @@
 /user/subscriptions:
   - verb: GET
     doc: http://developer.github.com/v3/activity/watching#list-repositories-being-watched
-/user/subscriptions/:owner/:repo:
-  - verb: DELETE
-    doc: http://developer.github.com/v3/activity/watching#stop-watching-a-repository-legacy
-  - verb: GET
-    doc: http://developer.github.com/v3/activity/watching#check-if-you-are-watching-a-repository-legacy
-  - verb: PUT
-    doc: http://developer.github.com/v3/activity/watching#watch-a-repository-legacy
 /user/teams:
   - verb: GET
     doc: http://developer.github.com/v3/orgs/teams#list-user-teams

@@ -38,20 +38,6 @@ methods:
       - name: id
         value: parameter gist
     return_type: none
-  - name: add_to_subscriptions
-    end_point: PUT /user/subscriptions/:owner/:repo
-    parameters:
-      - name: repo
-        type:
-          class: Repository
-          attribute: full_name
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: ownerFromRepo repo
-      - name: repo
-        value: nameFromRepo repo
-    return_type: none
   - name: create_fork
     end_point: POST /repos/:owner/:repo/forks
     parameters:
@@ -447,21 +433,6 @@ methods:
         value: parameter gist
     return_from: status
     return_type: bool
-  - name: has_in_subscriptions
-    end_point: GET /user/subscriptions/:owner/:repo
-    parameters:
-      - name: repo
-        type:
-          class: Repository
-          attribute: full_name
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: ownerFromRepo repo
-      - name: repo
-        value: nameFromRepo repo
-    return_from: status
-    return_type: bool
   - name: remove_from_following
     end_point: DELETE /user/following/:username
     parameters:
@@ -499,18 +470,4 @@ methods:
     url_template_arguments:
       - name: id
         value: parameter gist
-    return_type: none
-  - name: remove_from_subscriptions
-    end_point: DELETE /user/subscriptions/:owner/:repo
-    parameters:
-      - name: repo
-        type:
-          class: Repository
-          attribute: full_name
-    url_template: end_point
-    url_template_arguments:
-      - name: owner
-        value: ownerFromRepo repo
-      - name: repo
-        value: nameFromRepo repo
     return_type: none

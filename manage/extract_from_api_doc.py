@@ -70,10 +70,7 @@ class ReferenceDocumentation:
         "/repos/:owner/:repo/git/refs/tags",  # Example of GET /repos/:owner/:repo/git/refs
         "/repos/octokit/octokit.rb",  # Example
         "/orgs/octokit/repos",  # Example
-        "/users/:user/watched",  # Legacy
-        "/user/watched",  # Legacy
-        "/user/watched/:owner/:repo",  # Legacy
-        "/repos/:owner/:repo/watchers",  # Legacy
+        "/user/subscriptions/:owner/:repo",  # Legacy
         "/legacy/issues/search/:owner/:repository/:state/:keyword",  # Legacy
         "/legacy/repos/search/:keyword",  # Legacy
         "/legacy/user/email/:email",  # Legacy

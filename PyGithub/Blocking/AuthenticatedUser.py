@@ -70,21 +70,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
         r = self.Session._request("PUT", url)
 
-    def add_to_subscriptions(self, repo):
-        """
-        Calls the `PUT /user/subscriptions/:owner/:repo <http://developer.github.com/v3/activity/watching#watch-a-repository-legacy>`__ end point.
-
-        This is the only method calling this end point.
-
-        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
-        :rtype: None
-        """
-
-        repo = _snd.normalizeRepositoryFullName(repo)
-
-        url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        r = self.Session._request("PUT", url)
-
     def create_fork(self, repo):
         """
         Calls the `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks#create-a-fork>`__ end point.
@@ -588,22 +573,6 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("GET", url, accept404=True)
         return _rcv.BoolConverter(None, r.status_code == 204)
 
-    def has_in_subscriptions(self, repo):
-        """
-        Calls the `GET /user/subscriptions/:owner/:repo <http://developer.github.com/v3/activity/watching#check-if-you-are-watching-a-repository-legacy>`__ end point.
-
-        This is the only method calling this end point.
-
-        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
-        :rtype: :class:`bool`
-        """
-
-        repo = _snd.normalizeRepositoryFullName(repo)
-
-        url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
-        r = self.Session._request("GET", url, accept404=True)
-        return _rcv.BoolConverter(None, r.status_code == 204)
-
     def remove_from_following(self, username):
         """
         Calls the `DELETE /user/following/:username <http://developer.github.com/v3/users/followers#unfollow-a-user>`__ end point.
@@ -647,19 +616,4 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         gist = _snd.normalizeGistId(gist)
 
         url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
-        r = self.Session._request("DELETE", url)
-
-    def remove_from_subscriptions(self, repo):
-        """
-        Calls the `DELETE /user/subscriptions/:owner/:repo <http://developer.github.com/v3/activity/watching#stop-watching-a-repository-legacy>`__ end point.
-
-        This is the only method calling this end point.
-
-        :param repo: mandatory :class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)
-        :rtype: None
-        """
-
-        repo = _snd.normalizeRepositoryFullName(repo)
-
-        url = uritemplate.expand("https://api.github.com/user/subscriptions/{owner}/{repo}", owner=repo[0], repo=repo[1])
         r = self.Session._request("DELETE", url)
