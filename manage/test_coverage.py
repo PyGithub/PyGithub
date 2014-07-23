@@ -37,12 +37,12 @@ class TestFamily(object):
 
     def report(self):
         if self.include is not None:
-            print("==== Coverage of", self.description, "====")
             cov = coverage.coverage(branch=True, data_file="coverage/data." + self.module)
             cov.load()
-            self.isCoverageOk = cov.report(include=self.include, omit=self.omit) == 100.
-            cov.html_report(directory=os.path.join("coverage", self.module), include=self.include, omit=self.omit)
-            print()
+            if cov.html_report(directory=os.path.join("coverage", self.module), include=self.include, omit=self.omit) != 100.:
+                print("==== Partial coverage of", self.description, "====")
+                cov.report(include=self.include, omit=self.omit) == 100.
+                print()
 
 
 def main():
