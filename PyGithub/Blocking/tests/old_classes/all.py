@@ -13,7 +13,6 @@ from PyGithub.Blocking.tests.old_classes.GitRefTestCase import *
 from PyGithub.Blocking.tests.old_classes.GitTagTestCase import *
 from PyGithub.Blocking.tests.old_classes.GitTreeTestCase import *
 from PyGithub.Blocking.tests.old_classes.IssueTestCase import *
-from PyGithub.Blocking.tests.old_classes.LabelTestCase import *
 from PyGithub.Blocking.tests.old_classes.MilestoneTestCase import *
 from PyGithub.Blocking.tests.old_classes.PublicKeyTestCase import *
 from PyGithub.Blocking.tests.old_classes.RepositoryTestCase import *

@@ -1164,7 +1164,8 @@ PATCH /repos/:owner/:repo/labels/:name
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#update-a-label>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Label.edit`
 
 GET /repos/:owner/:repo/languages
 ---------------------------------

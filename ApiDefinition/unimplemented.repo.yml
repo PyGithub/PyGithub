@@ -42,7 +42,6 @@
   - POST
 /repos/:owner/:repo/labels/:name:
   - DELETE
-  - PATCH
 /repos/:owner/:repo/languages:
   - GET
 /repos/:owner/:repo/merges:

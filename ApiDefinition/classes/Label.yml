@@ -5,3 +5,19 @@ attributes:
     type: string
   - name: url
     type: string
+methods:
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo/labels/:name
+    optional_parameters:
+      - name: name
+        type: string
+      - name: color
+        type: string
+    url_template: attribute url
+    post_arguments:
+      - name: color
+        value: parameter color
+      - name: name
+        value: parameter name
+    effect: update
+    return_type: none

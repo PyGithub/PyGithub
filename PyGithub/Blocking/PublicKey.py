@@ -37,7 +37,7 @@ class PublicKey(_bgo.UpdatableGithubObject):
         self.__url = _rcv.Attribute("PublicKey.url", _rcv.StringConverter, url)
         self.__verified = _rcv.Attribute("PublicKey.verified", _rcv.BoolConverter, verified)
 
-    def _updateAttributes(self, eTag, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):  # pragma no cover (PublicKey are always returned fully)
         super(PublicKey, self)._updateAttributes(eTag, **kwds)
         self.__id.update(id)
         self.__key.update(key)

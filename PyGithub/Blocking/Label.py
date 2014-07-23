@@ -59,3 +59,24 @@ class Label(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__url.needsLazyCompletion)
         return self.__url.value
+
+    def edit(self, name=None, color=None):
+        """
+        Calls the `PATCH /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels#update-a-label>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param name: optional :class:`string`
+        :param color: optional :class:`string`
+        :rtype: None
+        """
+
+        if name is not None:
+            name = _snd.normalizeString(name)
+        if color is not None:
+            color = _snd.normalizeString(color)
+
+        url = uritemplate.expand(self.url)
+        postArguments = _snd.dictionary(color=color, name=name)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
