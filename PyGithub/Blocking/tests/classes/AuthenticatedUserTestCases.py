@@ -273,3 +273,33 @@ class AuthenticatedUserRepositories(TestCase):
         r = u.create_fork(("ghe-org-1", "repo-org-1-2"))
         self.assertEqual(r.full_name, "ghe-user-1/repo-org-1-2")
         r.delete()
+
+
+class AuthenticatedUserSubscriptions(TestCase):
+    @Enterprise.User(2)
+    def testGetSubscriptions(self):
+        u = self.g.get_authenticated_user()
+        subs = u.get_subscriptions()
+        self.assertEqual([r.name for r in subs], ["repo-user-1-1", "repo-user-1-2"])
+
+    @Enterprise.User(2)
+    def testGetSubscriptions_allParameters(self):
+        u = self.g.get_authenticated_user()
+        subs = u.get_subscriptions(per_page=1)
+        self.assertEqual([r.name for r in subs], ["repo-user-1-1", "repo-user-1-2"])
+
+    @Enterprise.User(2)
+    def testGetSubscription(self):
+        u = self.g.get_authenticated_user()
+        s = u.get_subscription(("ghe-user-1", "repo-user-1-1"))
+        self.assertEqual(s.repository_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1")
+
+    @Enterprise.User(2)
+    def testCreateSubscription(self):
+        u = self.g.get_authenticated_user()
+        s = u.create_subscription(("ghe-user-1", "repo-user-1-1"), subscribed=False, ignored=True)
+        self.assertEqual(s.subscribed, False)
+        self.assertEqual(s.ignored, True)
+        s = u.create_subscription(("ghe-user-1", "repo-user-1-1"), subscribed=False, ignored=False)
+        self.assertEqual(s.subscribed, True)
+        self.assertEqual(s.ignored, False)
