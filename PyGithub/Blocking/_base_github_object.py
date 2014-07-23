@@ -91,7 +91,7 @@ class UpdatableGithubObject(SessionedGithubObject):
         Returns True if the the update was needed.
         """
         if self.url is None:
-            raise _exn.BadAttributeException("UpdatableGithubObject.url", "basestring", None)
+            raise _exn.BadAttributeException("UpdatableGithubObject.url", basestring.__name__, None)
         r = self.Session._request("GET", self.url, headers={"If-None-Match": self.__eTag})
         if r.status_code == 304:
             return False

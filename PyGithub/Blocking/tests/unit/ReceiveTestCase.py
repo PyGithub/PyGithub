@@ -17,6 +17,9 @@ import PyGithub.Blocking._receive as rcv
 import PyGithub.Blocking._base_github_object as bgo
 
 
+stringName = "str" if sys.hexversion >= 0x03000000 else "basestring"
+
+
 class AttributeTestCase(unittest.TestCase):
     def setUp(self):
         self.mocks = MockMockMock.Engine()
@@ -149,7 +152,7 @@ class BuiltinConverterTestCase(unittest.TestCase):
             rcv.IntConverter(None, "42")
 
     def testStringConverterDescription(self):
-        self.assertEqual(rcv.StringConverter.desc, "str" if sys.hexversion >= 0x03000000 else "basestring")
+        self.assertEqual(rcv.StringConverter.desc, stringName)
 
     def testStringConversion(self):
         self.assertEqual(rcv.StringConverter(None, "42"), "42")
@@ -604,14 +607,14 @@ class BaseGithubObjectTestCase(unittest.TestCase):
         self.assertIsNone(o.url)
         with self.assertRaises(PyGithub.Blocking.BadAttributeException) as cm:
             o.update()
-        self.assertEqual(cm.exception.args, ("UpdatableGithubObject.url", "basestring", None))
+        self.assertEqual(cm.exception.args, ("UpdatableGithubObject.url", stringName, None))
 
     def testUrlAttributeBadlyTyped(self):
-        self.expectLog(logging.WARN, "Attribute UpdatableGithubObject.url is expected to be a basestring but GitHub API v3 returned 42")
+        self.expectLog(logging.WARN, "Attribute UpdatableGithubObject.url is expected to be a " + stringName + " but GitHub API v3 returned 42")
         o = bgo.UpdatableGithubObject(self.session.object, dict(url=42), "etag")
         with self.assertRaises(PyGithub.Blocking.BadAttributeException) as cm:
             o.url
-        self.assertEqual(cm.exception.args[:3], ("UpdatableGithubObject.url", "basestring", 42))
+        self.assertEqual(cm.exception.args[:3], ("UpdatableGithubObject.url", stringName, 42))
 
     def testUpdateNothing(self):
         o = bgo.UpdatableGithubObject(self.session.object, dict(url="url"), "etag")
