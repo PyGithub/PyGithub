@@ -34,7 +34,7 @@ First use
 
     >>> r = u.get_repo("PyGithub")
     >>> print r.stargazers_count
-    420
+    424
 
 Identification
 --------------

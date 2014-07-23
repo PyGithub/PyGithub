@@ -109,13 +109,13 @@ Change description::
 
 Star and unstar::
 
-    >>> print gist.is_starred()
+    >>> print u.has_in_starred_gists(gist)
     False
-    >>> gist.set_starred()
-    >>> print gist.is_starred()
+    >>> u.add_to_starred_gists(gist)
+    >>> print u.has_in_starred_gists(gist)
     True
-    >>> gist.reset_starred()
-    >>> print gist.is_starred()
+    >>> u.remove_from_starred_gists(gist)
+    >>> print u.has_in_starred_gists(gist)
     False
 
 Add a file (files not listed are kept unchanged)::
@@ -123,13 +123,16 @@ Add a file (files not listed are kept unchanged)::
     >>> print gist.files.keys()
     [u'baz.txt']
     >>> gist.edit(files={"new.txt": {"content": "toto"}})
+    >>> # For some reason, from time to time, the response to the PATCH request still contains new.txt. :meth:`.update` fixes that.
+    >>> gist.update() or True
+    True
     >>> print sorted(gist.files.keys())
     [u'baz.txt', u'new.txt']
 
 Move a file::
 
     >>> gist.edit(files={"new.txt": {"content": "toto", "filename": "moved.txt"}})
-    >>> # For some reason, from time to time, the response to the PATCH request still contains new.txt. :meth:`.update` fixes that.
+    >>> # Idem
     >>> gist.update() or True
     True
     >>> print sorted(gist.files.keys())
