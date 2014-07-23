@@ -26,7 +26,7 @@ class File(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_readme`
     """
 
-    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):
         super(File, self)._initAttributes(**kwds)
         self.__content = _rcv.Attribute("File.content", _rcv.StringConverter, content)
         self.__encoding = _rcv.Attribute("File.encoding", _rcv.StringConverter, encoding)
@@ -37,9 +37,8 @@ class File(_bgo.UpdatableGithubObject):
         self.__sha = _rcv.Attribute("File.sha", _rcv.StringConverter, sha)
         self.__size = _rcv.Attribute("File.size", _rcv.IntConverter, size)
         self.__type = _rcv.Attribute("File.type", _rcv.StringConverter, type)
-        self.__url = _rcv.Attribute("File.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):
         super(File, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)
@@ -50,7 +49,6 @@ class File(_bgo.UpdatableGithubObject):
         self.__sha.update(sha)
         self.__size.update(size)
         self.__type.update(type)
-        self.__url.update(url)
 
     @property
     def content(self):
@@ -123,14 +121,6 @@ class File(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def delete(self, message, author=None, committer=None):
         """

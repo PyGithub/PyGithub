@@ -11,7 +11,6 @@ class LabelAttributes(TestCase):
         l = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).get_label("bug")
         self.assertEqual(l.color, "fc2929")
         self.assertEqual(l.name, "bug")
-        self.assertEqual(l.url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/labels/bug")
 
 
 class LabelEdit(TestCase):

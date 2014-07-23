@@ -5,8 +5,6 @@ attributes:
     type: string
   - name: title
     type: string
-  - name: url
-    type: string
   - name: verified
     type: bool
 methods:

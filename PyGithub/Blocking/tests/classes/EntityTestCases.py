@@ -34,7 +34,6 @@ class EntityAttributes(TestCase):
         self.assertEqual(u.total_private_repos, 1)
         self.assertEqual(u.type, "User")
         self.assertEqual(u.updated_at, datetime.datetime(2014, 7, 22, 3, 1, 15))
-        self.assertEqual(u.url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1")
 
     @Enterprise.Admin(1)
     def testEnterpriseSuspendedUser(self):

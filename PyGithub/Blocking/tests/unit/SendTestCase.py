@@ -20,7 +20,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeGistId(self):
         self.assertEqual(snd.normalizeGistId("foo"), "foo")
-        self.assertEqual(snd.normalizeGistId(PyGithub.Blocking.Gist.Gist(None, dict(id="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeGistId(PyGithub.Blocking.Gist.Gist(None, dict(url="url", id="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeGistId(42)
         with self.assertRaises(TypeError):
@@ -28,7 +28,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeLabelName(self):
         self.assertEqual(snd.normalizeLabelName("foo"), "foo")
-        self.assertEqual(snd.normalizeLabelName(PyGithub.Blocking.Label.Label(None, dict(name="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeLabelName(PyGithub.Blocking.Label.Label(None, dict(url="url", name="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeLabelName(42)
         with self.assertRaises(TypeError):
@@ -36,7 +36,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeUserLogin(self):
         self.assertEqual(snd.normalizeUserLogin("foo"), "foo")
-        self.assertEqual(snd.normalizeUserLogin(PyGithub.Blocking.User.User(None, dict(login="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeUserLogin(PyGithub.Blocking.User.User(None, dict(url="url", login="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeUserLogin(42)
         with self.assertRaises(TypeError):
@@ -45,13 +45,13 @@ class NormalizationTestCase(unittest.TestCase):
     def testNormalizeUserLoginReset(self):
         self.assertEqual(snd.normalizeUserLoginReset("foo"), "foo")
         self.assertEqual(snd.normalizeUserLoginReset(PyGithub.Blocking.Reset), PyGithub.Blocking.Reset)
-        self.assertEqual(snd.normalizeUserLoginReset(PyGithub.Blocking.User.User(None, dict(login="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeUserLoginReset(PyGithub.Blocking.User.User(None, dict(url="url", login="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeUserLoginReset(42)
 
     def testNormalizeUserId(self):
         self.assertEqual(snd.normalizeUserId(42), 42)
-        self.assertEqual(snd.normalizeUserId(PyGithub.Blocking.User.User(None, dict(id=42), None)), 42)
+        self.assertEqual(snd.normalizeUserId(PyGithub.Blocking.User.User(None, dict(url="url", id=42), None)), 42)
         with self.assertRaises(TypeError):
             snd.normalizeUserId("foo")
         with self.assertRaises(TypeError):
@@ -59,7 +59,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeTeamId(self):
         self.assertEqual(snd.normalizeTeamId(42), 42)
-        self.assertEqual(snd.normalizeTeamId(PyGithub.Blocking.Team.Team(None, dict(id=42), None)), 42)
+        self.assertEqual(snd.normalizeTeamId(PyGithub.Blocking.Team.Team(None, dict(url="url", id=42), None)), 42)
         with self.assertRaises(TypeError):
             snd.normalizeTeamId("foo")
         with self.assertRaises(TypeError):
@@ -67,7 +67,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeRepositoryId(self):
         self.assertEqual(snd.normalizeRepositoryId(42), 42)
-        self.assertEqual(snd.normalizeRepositoryId(PyGithub.Blocking.Repository.Repository(None, dict(id=42), None)), 42)
+        self.assertEqual(snd.normalizeRepositoryId(PyGithub.Blocking.Repository.Repository(None, dict(url="url", id=42), None)), 42)
         with self.assertRaises(TypeError):
             snd.normalizeRepositoryId("foo")
         with self.assertRaises(TypeError):
@@ -76,7 +76,7 @@ class NormalizationTestCase(unittest.TestCase):
     def testNormalizeRepositoryFullName(self):
         self.assertEqual(snd.normalizeRepositoryFullName(("foo", "bar")), ("foo", "bar"))
         self.assertEqual(snd.normalizeRepositoryFullName("foo/bar"), ("foo", "bar"))
-        self.assertEqual(snd.normalizeRepositoryFullName(PyGithub.Blocking.Repository.Repository(None, dict(owner=dict(login="foo", type="User"), name="bar"), None)), ("foo", "bar"))
+        self.assertEqual(snd.normalizeRepositoryFullName(PyGithub.Blocking.Repository.Repository(None, dict(url="url", owner=dict(url="url", login="foo", type="User"), name="bar"), None)), ("foo", "bar"))
         with self.assertRaises(TypeError):
             snd.normalizeRepositoryFullName("foo")
         with self.assertRaises(TypeError):
@@ -116,7 +116,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeMilestoneNumber(self):
         self.assertEqual(snd.normalizeMilestoneNumber(42), 42)
-        self.assertEqual(snd.normalizeMilestoneNumber(PyGithub.Blocking.Milestone.Milestone(None, dict(number=42), None)), 42)
+        self.assertEqual(snd.normalizeMilestoneNumber(PyGithub.Blocking.Milestone.Milestone(None, dict(url="url", number=42), None)), 42)
         with self.assertRaises(TypeError):
             snd.normalizeMilestoneNumber("foo")
         with self.assertRaises(TypeError):
@@ -125,13 +125,13 @@ class NormalizationTestCase(unittest.TestCase):
     def testNormalizeMilestoneNumberReset(self):
         self.assertEqual(snd.normalizeMilestoneNumberReset(42), 42)
         self.assertEqual(snd.normalizeMilestoneNumberReset(PyGithub.Blocking.Reset), PyGithub.Blocking.Reset)
-        self.assertEqual(snd.normalizeMilestoneNumberReset(PyGithub.Blocking.Milestone.Milestone(None, dict(number=42), None)), 42)
+        self.assertEqual(snd.normalizeMilestoneNumberReset(PyGithub.Blocking.Milestone.Milestone(None, dict(url="url", number=42), None)), 42)
         with self.assertRaises(TypeError):
             snd.normalizeMilestoneNumberReset("foo")
 
     def testNormalizeGitTreeSha(self):
         self.assertEqual(snd.normalizeGitTreeSha("foo"), "foo")
-        self.assertEqual(snd.normalizeGitTreeSha(PyGithub.Blocking.GitTree.GitTree(None, dict(sha="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeGitTreeSha(PyGithub.Blocking.GitTree.GitTree(None, dict(url="url", sha="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeGitTreeSha(42)
         with self.assertRaises(TypeError):
@@ -139,7 +139,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeGitCommitSha(self):
         self.assertEqual(snd.normalizeGitCommitSha("foo"), "foo")
-        self.assertEqual(snd.normalizeGitCommitSha(PyGithub.Blocking.GitCommit.GitCommit(None, dict(sha="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeGitCommitSha(PyGithub.Blocking.GitCommit.GitCommit(None, dict(url="url", sha="foo"), None)), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeGitCommitSha(42)
         with self.assertRaises(TypeError):
@@ -147,7 +147,7 @@ class NormalizationTestCase(unittest.TestCase):
 
     def testNormalizeGitIgnoreTemplateName(self):
         self.assertEqual(snd.normalizeGitIgnoreTemplateName("foo"), "foo")
-        self.assertEqual(snd.normalizeGitIgnoreTemplateName(PyGithub.Blocking.Github.Github.GitIgnoreTemplate(None, dict(name="foo"))), "foo")
+        self.assertEqual(snd.normalizeGitIgnoreTemplateName(PyGithub.Blocking.Github.Github.GitIgnoreTemplate(None, dict(url="url", name="foo"))), "foo")
         with self.assertRaises(TypeError):
             snd.normalizeGitIgnoreTemplateName(42)
         with self.assertRaises(TypeError):

@@ -29,7 +29,6 @@ class Checker(object):
             print("WARNING: \"", w, "\" was acknowledged but doesn't exist anymore")
 
     def warnings(self):
-        yield from ("Class '{}' has no 'url' attribute".format(c.name) for c in self.classesWithoutUrl())
         yield from ("Struct '{}' is not updatable but is the type of attribute '{}' of class '{}'".format(s.name, a.name, c.name) for (c, s, a) in self.notUpdatableStructuresAttributeOfClass())
         yield from ("End-point '{} {}' is not implemented and not declared so".format(ep.verb, ep.url) for ep in self.unimplementedEndPointsNotDeclared())
         yield from ("End-point '{} {}' is declared as not implemented but is implemented by '{}.{}'".format(ep.verb, ep.url, m.containerClass.name, m.name) for (ep, m) in self.implementedEndPointsDeclaredUnimplemented())
@@ -39,11 +38,6 @@ class Checker(object):
         yield from ("Method '{}.{}' tries to use unexisting parameter '{}'".format(m.containerClass.name, m.name, p) for (m, p) in self.unexistingParameters())
         yield from ("Method '{}.{}' re-orders the '{} {}' parameters ('{}') to ('{}')".format(m.containerClass.name, m.name, ep.verb, ep.url, "', '".join(ep.parameters), "', '".join(p.name for p in m.parameters)) for (m, ep) in self.reorderedParameters())
 
-    def classesWithoutUrl(self):
-        for c in self.definition.classes:
-            if not self.classHasAttribute(c, "url"):
-                yield c
-
     def notUpdatableStructuresAttributeOfClass(self):
         for c1 in self.definition.classes:
             for s in c1.structures:
@@ -52,12 +46,6 @@ class Checker(object):
                         for a in c2.attributes:
                             if a.type.name == s.name:
                                 yield c2, s, a
-
-    def classHasAttribute(self, c, name):
-        if hasattr(c.base, "attributes") and self.classHasAttribute(c.base, name):
-            return True
-        else:
-            return any(a.name == name for a in c.attributes)
 
     def unimplementedEndPointsNotDeclared(self):
         unimplemented = set(self.definition.endPoints) - set(self.definition.unimplementedEndPoints)
@@ -134,16 +122,6 @@ class CheckerTestCase(unittest.TestCase):
         typesRepo = CrossReferenced.TypesRepository()
         typesRepo.register(CrossReferenced.BuiltinType("string"))
         self.assertEqual(set(Checker(CrossReferenced.Definition(d, typesRepo)).warnings()), set(warnings))
-
-    def testNoUrlInClass(self):
-        d = Structured.Definition(
-            (),
-            (
-                Structured.Class("Foo", None, (), (), (), ()),
-            ),
-            ()
-        )
-        self.expect(d, "Class 'Foo' has no 'url' attribute")
 
     def testNoUrlInClassWithBase(self):
         d = Structured.Definition(

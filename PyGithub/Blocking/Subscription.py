@@ -24,23 +24,21 @@ class Subscription(_bgo.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.get_subscription`
     """
 
-    def _initAttributes(self, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, **kwds):
         super(Subscription, self)._initAttributes(**kwds)
         self.__created_at = _rcv.Attribute("Subscription.created_at", _rcv.DatetimeConverter, created_at)
         self.__ignored = _rcv.Attribute("Subscription.ignored", _rcv.BoolConverter, ignored)
         self.__reason = _rcv.Attribute("Subscription.reason", _rcv.StringConverter, reason)
         self.__repository_url = _rcv.Attribute("Subscription.repository_url", _rcv.StringConverter, repository_url)
         self.__subscribed = _rcv.Attribute("Subscription.subscribed", _rcv.BoolConverter, subscribed)
-        self.__url = _rcv.Attribute("Subscription.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, **kwds):
         super(Subscription, self)._updateAttributes(eTag, **kwds)
         self.__created_at.update(created_at)
         self.__ignored.update(ignored)
         self.__reason.update(reason)
         self.__repository_url.update(repository_url)
         self.__subscribed.update(subscribed)
-        self.__url.update(url)
 
     @property
     def created_at(self):
@@ -81,14 +79,6 @@ class Subscription(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__subscribed.needsLazyCompletion)
         return self.__subscribed.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def delete(self):
         """

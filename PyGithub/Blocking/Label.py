@@ -24,17 +24,15 @@ class Label(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_label`
     """
 
-    def _initAttributes(self, color=_rcv.Absent, name=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, color=_rcv.Absent, name=_rcv.Absent, **kwds):
         super(Label, self)._initAttributes(**kwds)
         self.__color = _rcv.Attribute("Label.color", _rcv.StringConverter, color)
         self.__name = _rcv.Attribute("Label.name", _rcv.StringConverter, name)
-        self.__url = _rcv.Attribute("Label.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, color=_rcv.Absent, name=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, color=_rcv.Absent, name=_rcv.Absent, **kwds):
         super(Label, self)._updateAttributes(eTag, **kwds)
         self.__color.update(color)
         self.__name.update(name)
-        self.__url.update(url)
 
     @property
     def color(self):
@@ -51,14 +49,6 @@ class Label(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__name.needsLazyCompletion)
         return self.__name.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def edit(self, name=None, color=None):
         """

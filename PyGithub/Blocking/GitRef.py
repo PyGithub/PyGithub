@@ -25,18 +25,16 @@ class GitRef(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_refs`
     """
 
-    def _initAttributes(self, object=_rcv.Absent, ref=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, object=_rcv.Absent, ref=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         super(GitRef, self)._initAttributes(**kwds)
         self.__object = _rcv.Attribute("GitRef.object", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
         self.__ref = _rcv.Attribute("GitRef.ref", _rcv.StringConverter, ref)
-        self.__url = _rcv.Attribute("GitRef.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, object=_rcv.Absent, ref=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, object=_rcv.Absent, ref=_rcv.Absent, **kwds):
         super(GitRef, self)._updateAttributes(eTag, **kwds)
         self.__object.update(object)
         self.__ref.update(ref)
-        self.__url.update(url)
 
     @property
     def object(self):
@@ -53,14 +51,6 @@ class GitRef(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__ref.needsLazyCompletion)
         return self.__ref.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def delete(self):
         """

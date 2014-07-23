@@ -9,8 +9,6 @@ attributes:
     type: string
   - name: subscribed
     type: bool
-  - name: url
-    type: string
 methods:
   - name: delete
     end_point: DELETE /repos/:owner/:repo/subscription

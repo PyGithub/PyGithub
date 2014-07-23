@@ -28,5 +28,3 @@ attributes:
     type: GitTree
   - name: type
     type: string
-  - name: url
-    type: string

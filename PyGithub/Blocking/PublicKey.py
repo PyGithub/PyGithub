@@ -29,20 +29,18 @@ class PublicKey(_bgo.UpdatableGithubObject):
       * :meth:`.User.get_keys`
     """
 
-    def _initAttributes(self, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):
+    def _initAttributes(self, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, verified=_rcv.Absent, **kwds):
         super(PublicKey, self)._initAttributes(**kwds)
         self.__id = _rcv.Attribute("PublicKey.id", _rcv.IntConverter, id)
         self.__key = _rcv.Attribute("PublicKey.key", _rcv.StringConverter, key)
         self.__title = _rcv.Attribute("PublicKey.title", _rcv.StringConverter, title)
-        self.__url = _rcv.Attribute("PublicKey.url", _rcv.StringConverter, url)
         self.__verified = _rcv.Attribute("PublicKey.verified", _rcv.BoolConverter, verified)
 
-    def _updateAttributes(self, eTag, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, url=_rcv.Absent, verified=_rcv.Absent, **kwds):  # pragma no cover (PublicKey are always returned fully)
+    def _updateAttributes(self, eTag, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, verified=_rcv.Absent, **kwds):  # pragma no cover (PublicKey are always returned fully)
         super(PublicKey, self)._updateAttributes(eTag, **kwds)
         self.__id.update(id)
         self.__key.update(key)
         self.__title.update(title)
-        self.__url.update(url)
         self.__verified.update(verified)
 
     @property
@@ -68,14 +66,6 @@ class PublicKey(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__title.needsLazyCompletion)
         return self.__title.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     @property
     def verified(self):

@@ -18,5 +18,3 @@ attributes:
     type: string
   - name: tagger
     type: Tagger
-  - name: url
-    type: string

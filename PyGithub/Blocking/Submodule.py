@@ -24,7 +24,7 @@ class Submodule(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_contents`
     """
 
-    def _initAttributes(self, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._initAttributes(**kwds)
         self.__git_url = _rcv.Attribute("Submodule.git_url", _rcv.StringConverter, git_url)
         self.__html_url = _rcv.Attribute("Submodule.html_url", _rcv.StringConverter, html_url)
@@ -34,9 +34,8 @@ class Submodule(_bgo.UpdatableGithubObject):
         self.__size = _rcv.Attribute("Submodule.size", _rcv.IntConverter, size)
         self.__submodule_git_url = _rcv.Attribute("Submodule.submodule_git_url", _rcv.StringConverter, submodule_git_url)
         self.__type = _rcv.Attribute("Submodule.type", _rcv.StringConverter, type)
-        self.__url = _rcv.Attribute("Submodule.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, submodule_git_url=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):
         super(Submodule, self)._updateAttributes(eTag, **kwds)
         self.__git_url.update(git_url)
         self.__html_url.update(html_url)
@@ -46,7 +45,6 @@ class Submodule(_bgo.UpdatableGithubObject):
         self.__size.update(size)
         self.__submodule_git_url.update(submodule_git_url)
         self.__type.update(type)
-        self.__url.update(url)
 
     @property
     def git_url(self):
@@ -111,11 +109,3 @@ class Submodule(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value

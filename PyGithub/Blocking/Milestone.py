@@ -24,7 +24,7 @@ class Milestone(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_milestone`
     """
 
-    def _initAttributes(self, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         import PyGithub.Blocking.User
         super(Milestone, self)._initAttributes(**kwds)
         self.__closed_issues = _rcv.Attribute("Milestone.closed_issues", _rcv.IntConverter, closed_issues)
@@ -39,9 +39,8 @@ class Milestone(_bgo.UpdatableGithubObject):
         self.__state = _rcv.Attribute("Milestone.state", _rcv.StringConverter, state)
         self.__title = _rcv.Attribute("Milestone.title", _rcv.StringConverter, title)
         self.__updated_at = _rcv.Attribute("Milestone.updated_at", _rcv.DatetimeConverter, updated_at)
-        self.__url = _rcv.Attribute("Milestone.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         super(Milestone, self)._updateAttributes(eTag, **kwds)
         self.__closed_issues.update(closed_issues)
         self.__created_at.update(created_at)
@@ -55,7 +54,6 @@ class Milestone(_bgo.UpdatableGithubObject):
         self.__state.update(state)
         self.__title.update(title)
         self.__updated_at.update(updated_at)
-        self.__url.update(url)
 
     @property
     def closed_issues(self):
@@ -152,11 +150,3 @@ class Milestone(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value

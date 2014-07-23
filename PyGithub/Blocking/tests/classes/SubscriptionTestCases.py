@@ -14,7 +14,6 @@ class SubscriptionAttributes(TestCase):
         self.assertIsNone(s.reason)
         self.assertEqual(s.repository_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1")
         self.assertEqual(s.subscribed, True)
-        self.assertEqual(s.url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/subscription")
 
 
 class SubscriptionEdit(TestCase):

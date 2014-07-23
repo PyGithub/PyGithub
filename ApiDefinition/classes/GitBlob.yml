@@ -13,5 +13,3 @@ attributes:
     type: int
   - name: type
     type: string
-  - name: url
-    type: string

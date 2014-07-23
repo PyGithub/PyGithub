@@ -72,7 +72,7 @@ class Entity(_bgo.UpdatableGithubObject):
             """
             return self.__space.value
 
-    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         super(Entity, self)._initAttributes(**kwds)
         self.__avatar_url = _rcv.Attribute("Entity.avatar_url", _rcv.StringConverter, avatar_url)
         self.__blog = _rcv.Attribute("Entity.blog", _rcv.StringConverter, blog)
@@ -99,9 +99,8 @@ class Entity(_bgo.UpdatableGithubObject):
         self.__total_private_repos = _rcv.Attribute("Entity.total_private_repos", _rcv.IntConverter, total_private_repos)
         self.__type = _rcv.Attribute("Entity.type", _rcv.StringConverter, type)
         self.__updated_at = _rcv.Attribute("Entity.updated_at", _rcv.DatetimeConverter, updated_at)
-        self.__url = _rcv.Attribute("Entity.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         super(Entity, self)._updateAttributes(eTag, **kwds)
         self.__avatar_url.update(avatar_url)
         self.__blog.update(blog)
@@ -128,7 +127,6 @@ class Entity(_bgo.UpdatableGithubObject):
         self.__total_private_repos.update(total_private_repos)
         self.__type.update(type)
         self.__updated_at.update(updated_at)
-        self.__url.update(url)
 
     @property
     def avatar_url(self):
@@ -329,11 +327,3 @@ class Entity(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value

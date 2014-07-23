@@ -17,8 +17,6 @@ attributes:
     type: string
   - name: slug
     type: string
-  - name: url
-    type: string
 methods:
   - name: add_to_members
     end_point: PUT /teams/:id/members/:username

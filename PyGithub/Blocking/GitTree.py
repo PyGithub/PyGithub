@@ -75,7 +75,7 @@ class GitTree(_bgo.UpdatableGithubObject):
             """
             return self.__type.value
 
-    def _initAttributes(self, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitBlob
         super(GitTree, self)._initAttributes(**kwds)
         self.__mode = _rcv.Attribute("GitTree.mode", _rcv.StringConverter, mode)
@@ -83,16 +83,14 @@ class GitTree(_bgo.UpdatableGithubObject):
         self.__sha = _rcv.Attribute("GitTree.sha", _rcv.StringConverter, sha)
         self.__tree = _rcv.Attribute("GitTree.tree", _rcv.ListConverter(_rcv.KeyedStructureUnionConverter("type", dict(blob=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=_rcv.StructureConverter(self.Session, GitTree.GitSubmodule), tree=_rcv.ClassConverter(self.Session, GitTree)))), tree)
         self.__type = _rcv.Attribute("GitTree.type", _rcv.StringConverter, type)
-        self.__url = _rcv.Attribute("GitTree.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitTree, self)._updateAttributes(eTag, **kwds)
         self.__mode.update(mode)
         self.__path.update(path)
         self.__sha.update(sha)
         self.__tree.update(tree)
         self.__type.update(type)
-        self.__url.update(url)
 
     @property
     def mode(self):
@@ -133,14 +131,6 @@ class GitTree(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def create_modified_copy(self, tree):
         """

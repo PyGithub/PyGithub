@@ -52,5 +52,3 @@ attributes:
     type: string
   - name: stats
     type: Stats
-  - name: url
-    type: string

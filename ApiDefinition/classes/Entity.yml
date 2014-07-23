@@ -60,5 +60,3 @@ attributes:
     type: string
   - name: updated_at
     type: datetime
-  - name: url
-    type: string

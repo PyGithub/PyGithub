@@ -22,6 +22,9 @@ was created or last updated.
 import logging
 log = logging.getLogger(__name__)
 
+import PyGithub.Blocking._exceptions as _exn
+import PyGithub.Blocking._receive as _rcv
+
 
 class SessionedGithubObject(object):
     """
@@ -62,7 +65,20 @@ class UpdatableGithubObject(SessionedGithubObject):
 
     def __init__(self, session, attributes, eTag):
         self.__eTag = eTag
-        SessionedGithubObject.__init__(self, session, attributes)
+        super(UpdatableGithubObject, self).__init__(session, attributes)
+
+    def _initAttributes(self, url=None, **kwds):
+        super(UpdatableGithubObject, self)._initAttributes(**kwds)
+        if url is None:
+            log.warn("GitHub API v3 did not return a url")
+        self.__url = _rcv.Attribute("UpdatableGithubObject.url", _rcv.StringConverter, url)
+
+    def _updateAttributes(self, eTag, url=None, **kwds):
+        super(UpdatableGithubObject, self)._updateAttributes(**kwds)
+        if url is None:
+            log.warn("GitHub API v3 did not return a url")
+        self.__eTag = eTag
+        self.__url.update(url)
 
     def _completeLazily(self, attributeNeedsCompletion):
         if self.__eTag is None and attributeNeedsCompletion:
@@ -74,6 +90,8 @@ class UpdatableGithubObject(SessionedGithubObject):
 
         Returns True if the the update was needed.
         """
+        if self.url is None:
+            raise _exn.BadAttributeException("UpdatableGithubObject.url", "basestring", None)
         r = self.Session._request("GET", self.url, headers={"If-None-Match": self.__eTag})
         if r.status_code == 304:
             return False
@@ -81,6 +99,9 @@ class UpdatableGithubObject(SessionedGithubObject):
             self._updateAttributes(r.headers.get("ETag"), **r.json())
             return True
 
-    def _updateAttributes(self, eTag, **kwds):
-        self.__eTag = eTag
-        super(UpdatableGithubObject, self)._updateAttributes(**kwds)
+    @property
+    def url(self):
+        """
+        :type: :class:`string`
+        """
+        return self.__url.value

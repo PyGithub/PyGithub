@@ -3,8 +3,6 @@ attributes:
     type: GitCommit
   - name: ref
     type: string
-  - name: url
-    type: string
 methods:
   - name: delete
     end_point: DELETE /repos/:owner/:repo/git/refs/:ref

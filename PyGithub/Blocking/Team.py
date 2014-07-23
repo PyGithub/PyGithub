@@ -27,7 +27,7 @@ class Team(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_teams`
     """
 
-    def _initAttributes(self, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, **kwds):
         import PyGithub.Blocking.Organization
         super(Team, self)._initAttributes(**kwds)
         self.__id = _rcv.Attribute("Team.id", _rcv.IntConverter, id)
@@ -39,9 +39,8 @@ class Team(_bgo.UpdatableGithubObject):
         self.__repos_count = _rcv.Attribute("Team.repos_count", _rcv.IntConverter, repos_count)
         self.__repositories_url = _rcv.Attribute("Team.repositories_url", _rcv.StringConverter, repositories_url)
         self.__slug = _rcv.Attribute("Team.slug", _rcv.StringConverter, slug)
-        self.__url = _rcv.Attribute("Team.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, **kwds):
         super(Team, self)._updateAttributes(eTag, **kwds)
         self.__id.update(id)
         self.__members_count.update(members_count)
@@ -52,7 +51,6 @@ class Team(_bgo.UpdatableGithubObject):
         self.__repos_count.update(repos_count)
         self.__repositories_url.update(repositories_url)
         self.__slug.update(slug)
-        self.__url.update(url)
 
     @property
     def id(self):
@@ -125,14 +123,6 @@ class Team(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__slug.needsLazyCompletion)
         return self.__slug.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     def add_to_members(self, username):
         """

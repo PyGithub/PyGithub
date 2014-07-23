@@ -63,7 +63,7 @@ class GitTag(_bgo.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, message=_rcv.Absent, object=_rcv.Absent, sha=_rcv.Absent, tag=_rcv.Absent, tagger=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, message=_rcv.Absent, object=_rcv.Absent, sha=_rcv.Absent, tag=_rcv.Absent, tagger=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitCommit
         super(GitTag, self)._initAttributes(**kwds)
         self.__message = _rcv.Attribute("GitTag.message", _rcv.StringConverter, message)
@@ -71,16 +71,14 @@ class GitTag(_bgo.UpdatableGithubObject):
         self.__sha = _rcv.Attribute("GitTag.sha", _rcv.StringConverter, sha)
         self.__tag = _rcv.Attribute("GitTag.tag", _rcv.StringConverter, tag)
         self.__tagger = _rcv.Attribute("GitTag.tagger", _rcv.StructureConverter(self.Session, GitTag.Tagger), tagger)
-        self.__url = _rcv.Attribute("GitTag.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, message=_rcv.Absent, object=_rcv.Absent, sha=_rcv.Absent, tag=_rcv.Absent, tagger=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, message=_rcv.Absent, object=_rcv.Absent, sha=_rcv.Absent, tag=_rcv.Absent, tagger=_rcv.Absent, **kwds):
         super(GitTag, self)._updateAttributes(eTag, **kwds)
         self.__message.update(message)
         self.__object.update(object)
         self.__sha.update(sha)
         self.__tag.update(tag)
         self.__tagger.update(tagger)
-        self.__url.update(url)
 
     @property
     def message(self):
@@ -121,11 +119,3 @@ class GitTag(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__tagger.needsLazyCompletion)
         return self.__tagger.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value

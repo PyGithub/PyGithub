@@ -25,7 +25,7 @@ class Issue(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_issues`
     """
 
-    def _initAttributes(self, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, user=_rcv.Absent, **kwds):
+    def _initAttributes(self, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
         import PyGithub.Blocking.Label
         import PyGithub.Blocking.Milestone
         import PyGithub.Blocking.User
@@ -49,10 +49,9 @@ class Issue(_bgo.UpdatableGithubObject):
         self.__state = _rcv.Attribute("Issue.state", _rcv.StringConverter, state)
         self.__title = _rcv.Attribute("Issue.title", _rcv.StringConverter, title)
         self.__updated_at = _rcv.Attribute("Issue.updated_at", _rcv.DatetimeConverter, updated_at)
-        self.__url = _rcv.Attribute("Issue.url", _rcv.StringConverter, url)
         self.__user = _rcv.Attribute("Issue.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, url=_rcv.Absent, user=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
         super(Issue, self)._updateAttributes(eTag, **kwds)
         self.__assignee.update(assignee)
         self.__body.update(body)
@@ -73,7 +72,6 @@ class Issue(_bgo.UpdatableGithubObject):
         self.__state.update(state)
         self.__title.update(title)
         self.__updated_at.update(updated_at)
-        self.__url.update(url)
         self.__user.update(user)
 
     @property
@@ -227,14 +225,6 @@ class Issue(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
 
     @property
     def user(self):

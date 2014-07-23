@@ -25,7 +25,7 @@ class GitBlob(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_git_blob`
     """
 
-    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitBlob, self)._initAttributes(**kwds)
         self.__content = _rcv.Attribute("GitBlob.content", _rcv.StringConverter, content)
         self.__encoding = _rcv.Attribute("GitBlob.encoding", _rcv.StringConverter, encoding)
@@ -34,9 +34,8 @@ class GitBlob(_bgo.UpdatableGithubObject):
         self.__sha = _rcv.Attribute("GitBlob.sha", _rcv.StringConverter, sha)
         self.__size = _rcv.Attribute("GitBlob.size", _rcv.IntConverter, size)
         self.__type = _rcv.Attribute("GitBlob.type", _rcv.StringConverter, type)
-        self.__url = _rcv.Attribute("GitBlob.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitBlob, self)._updateAttributes(eTag, **kwds)
         self.__content.update(content)
         self.__encoding.update(encoding)
@@ -45,7 +44,6 @@ class GitBlob(_bgo.UpdatableGithubObject):
         self.__sha.update(sha)
         self.__size.update(size)
         self.__type.update(type)
-        self.__url.update(url)
 
     @property
     def content(self):
@@ -102,11 +100,3 @@ class GitBlob(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value

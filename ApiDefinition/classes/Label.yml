@@ -3,8 +3,6 @@ attributes:
     type: string
   - name: name
     type: string
-  - name: url
-    type: string
 methods:
   - name: edit
     end_point: PATCH /repos/:owner/:repo/labels/:name

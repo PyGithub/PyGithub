@@ -71,7 +71,7 @@ class GitCommit(_bgo.UpdatableGithubObject):
             """
             return self.__name.value
 
-    def _initAttributes(self, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _initAttributes(self, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
         self.__author = _rcv.Attribute("GitCommit.author", _rcv.StructureConverter(self.Session, GitCommit.Author), author)
@@ -83,9 +83,8 @@ class GitCommit(_bgo.UpdatableGithubObject):
         self.__sha = _rcv.Attribute("GitCommit.sha", _rcv.StringConverter, sha)
         self.__tree = _rcv.Attribute("GitCommit.tree", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree), tree)
         self.__type = _rcv.Attribute("GitCommit.type", _rcv.StringConverter, type)
-        self.__url = _rcv.Attribute("GitCommit.url", _rcv.StringConverter, url)
 
-    def _updateAttributes(self, eTag, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, url=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitCommit, self)._updateAttributes(eTag, **kwds)
         self.__author.update(author)
         self.__comment_count.update(comment_count)
@@ -96,7 +95,6 @@ class GitCommit(_bgo.UpdatableGithubObject):
         self.__sha.update(sha)
         self.__tree.update(tree)
         self.__type.update(type)
-        self.__url.update(url)
 
     @property
     def author(self):
@@ -169,11 +167,3 @@ class GitCommit(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__type.needsLazyCompletion)
         return self.__type.value
-
-    @property
-    def url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__url.needsLazyCompletion)
-        return self.__url.value
