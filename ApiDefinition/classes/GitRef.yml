@@ -1,6 +1,9 @@
 attributes:
   - name: object
-    type: GitCommit
+    type:
+      union: [GitBlob, GitTree, GitCommit, GitTag]
+      key: type
+      keys: [blob, tree, commit, tag]
   - name: ref
     type: string
 methods:

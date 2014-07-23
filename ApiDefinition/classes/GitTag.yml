@@ -1,3 +1,4 @@
+base: GitObject
 structures:
   - name: Tagger
     attributes:
@@ -11,9 +12,10 @@ attributes:
   - name: message
     type: string
   - name: object
-    type: GitCommit
-  - name: sha
-    type: string
+    type:
+      union: [GitBlob, GitTree, GitCommit, GitTag]
+      key: type
+      keys: [blob, tree, commit, tag]
   - name: tag
     type: string
   - name: tagger

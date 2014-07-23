@@ -26,9 +26,12 @@ class GitRef(_bgo.UpdatableGithubObject):
     """
 
     def _initAttributes(self, object=_rcv.Absent, ref=_rcv.Absent, **kwds):
+        import PyGithub.Blocking.GitBlob
         import PyGithub.Blocking.GitCommit
+        import PyGithub.Blocking.GitTag
+        import PyGithub.Blocking.GitTree
         super(GitRef, self)._initAttributes(**kwds)
-        self.__object = _rcv.Attribute("GitRef.object", _rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), object)
+        self.__object = _rcv.Attribute("GitRef.object", _rcv.KeyedStructureUnionConverter("type", dict(blob=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitCommit.GitCommit), tag=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTag.GitTag), tree=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitTree.GitTree))), object)
         self.__ref = _rcv.Attribute("GitRef.ref", _rcv.StringConverter, ref)
 
     def _updateAttributes(self, eTag, object=_rcv.Absent, ref=_rcv.Absent, **kwds):
@@ -39,7 +42,7 @@ class GitRef(_bgo.UpdatableGithubObject):
     @property
     def object(self):
         """
-        :type: :class:`.GitCommit`
+        :type: :class:`.GitBlob` or :class:`.GitTree` or :class:`.GitCommit` or :class:`.GitTag`
         """
         self._completeLazily(self.__object.needsLazyCompletion)
         return self.__object.value

@@ -617,7 +617,7 @@ class RepositoryGitStuff(TestCase):
         ref = r.create_git_ref(ref="refs/tests/tree_ref", sha="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
         self.assertEqual(ref.ref, "refs/tests/tree_ref")
         self.assertEqual(ref.object.type, "tree")
-        # @todoAlpha self.assertIsInstance(ref.object, PyGithub.Blocking.Gittree.Gittree)
+        self.assertIsInstance(ref.object, PyGithub.Blocking.GitTree.GitTree)
         ref.delete()
 
     @Enterprise.User(1)
@@ -626,7 +626,16 @@ class RepositoryGitStuff(TestCase):
         ref = r.create_git_ref(ref="refs/tests/blob_ref", sha="3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(ref.ref, "refs/tests/blob_ref")
         self.assertEqual(ref.object.type, "blob")
-        # @todoAlpha self.assertIsInstance(ref.object, PyGithub.Blocking.Gitblob.Gitblob)
+        self.assertIsInstance(ref.object, PyGithub.Blocking.GitBlob.GitBlob)
+        ref.delete()
+
+    @Enterprise.User(1)
+    def testCreateTagGitRef(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        ref = r.create_git_ref(ref="refs/tests/tag_ref", sha="43bafe50b11378c5546dbef02032941bb8a46099")
+        self.assertEqual(ref.ref, "refs/tests/tag_ref")
+        self.assertEqual(ref.object.type, "tag")
+        self.assertIsInstance(ref.object, PyGithub.Blocking.GitTag.GitTag)
         ref.delete()
 
     @Enterprise.User(1)
@@ -663,14 +672,21 @@ class RepositoryGitStuff(TestCase):
         r = self.g.get_repo("ghe-user-1/repo-user-1-1")
         tag = r.create_git_tag(tag="tree_tag", message="This is a tree tag", object="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", type="tree")
         self.assertEqual(tag.object.type, "tree")
-        # @todoAlpha self.assertIsInstance(tag.object, PyGithub.Blocking.GitTree.GitTree)
+        self.assertIsInstance(tag.object, PyGithub.Blocking.GitTree.GitTree)
 
     @Enterprise.User(1)
     def testCreateBlobGitTag(self):
         r = self.g.get_repo("ghe-user-1/repo-user-1-1")
         tag = r.create_git_tag(tag="blob_tag", message="This is a blob tag", object="3daf0da6bca38181ab52610dd6af6e92f1a5469d", type="blob")
         self.assertEqual(tag.object.type, "blob")
-        # @todoAlpha self.assertIsInstance(tag.object, PyGithub.Blocking.GitBlob.GitBlob)
+        self.assertIsInstance(tag.object, PyGithub.Blocking.GitBlob.GitBlob)
+
+    @Enterprise.User(1)
+    def testCreateTagGitTag(self):
+        r = self.g.get_repo("ghe-user-1/repo-user-1-1")
+        tag = r.create_git_tag(tag="tag_tag", message="This is a tag tag", object="43bafe50b11378c5546dbef02032941bb8a46099", type="tag")
+        self.assertEqual(tag.object.type, "tag")
+        self.assertIsInstance(tag.object, PyGithub.Blocking.GitTag.GitTag)
 
 
 class RepositoryIssues(TestCase):

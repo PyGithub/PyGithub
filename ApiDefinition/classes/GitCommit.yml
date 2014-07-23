@@ -1,3 +1,4 @@
+base: GitObject
 structures:
   - name: Author
     attributes:
@@ -22,9 +23,5 @@ attributes:
     type:
       container: list
       content: GitCommit
-  - name: sha
-    type: string
   - name: tree
     type: GitTree
-  - name: type
-    type: string
