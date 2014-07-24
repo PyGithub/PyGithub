@@ -1749,21 +1749,24 @@ DELETE /user/emails
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/emails#delete-email-addresses>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.remove_from_emails`
 
 GET /user/emails
 ----------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/emails#list-email-addresses-for-a-user>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_emails`
 
 POST /user/emails
 -----------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/users/emails#add-email-addresses>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.add_to_emails`
 
 GET /user/followers
 -------------------
@@ -1810,7 +1813,8 @@ GET /user/issues
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#list-issues>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.AuthenticatedUser.get_issues`
 
 GET /user/keys
 --------------

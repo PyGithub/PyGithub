@@ -27,6 +27,57 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
     Methods accepting instances of this class as parameter: none.
     """
 
+    class Email(_bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.AuthenticatedUser.get_emails`
+
+        Methods accepting instances of this class as parameter: none.
+        """
+
+        def _initAttributes(self, email=None, primary=None, verified=None, **kwds):
+            super(AuthenticatedUser.Email, self)._initAttributes(**kwds)
+            self.__email = _rcv.Attribute("AuthenticatedUser.Email.email", _rcv.StringConverter, email)
+            self.__primary = _rcv.Attribute("AuthenticatedUser.Email.primary", _rcv.BoolConverter, primary)
+            self.__verified = _rcv.Attribute("AuthenticatedUser.Email.verified", _rcv.BoolConverter, verified)
+
+        @property
+        def email(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__email.value
+
+        @property
+        def primary(self):
+            """
+            :type: :class:`bool`
+            """
+            return self.__primary.value
+
+        @property
+        def verified(self):
+            """
+            :type: :class:`bool`
+            """
+            return self.__verified.value
+
+    def add_to_emails(self, *email):
+        """
+        Calls the `POST /user/emails <http://developer.github.com/v3/users/emails#add-email-addresses>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param email: mandatory :class:`string`
+        :rtype: None
+        """
+
+        email = _snd.normalizeList(_snd.normalizeString, email)
+
+        url = uritemplate.expand("https://api.github.com/user/emails")
+        postArguments = email
+        r = self.Session._request("POST", url, postArguments=postArguments)
+
     def add_to_following(self, username):
         """
         Calls the `PUT /user/following/:username <http://developer.github.com/v3/users/followers#follow-a-user>`__ end point.
@@ -249,6 +300,19 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
 
+    def get_emails(self):
+        """
+        Calls the `GET /user/emails <http://developer.github.com/v3/users/emails#list-email-addresses-for-a-user>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.Email`
+        """
+
+        url = uritemplate.expand("https://api.github.com/user/emails")
+        r = self.Session._request("GET", url)
+        return _rcv.ListConverter(_rcv.StructureConverter(self.Session, AuthenticatedUser.Email))(None, r.json())
+
     def get_followers(self, per_page=None):
         """
         Calls the `GET /user/followers <http://developer.github.com/v3/users/followers#list-followers-of-a-user>`__ end point.
@@ -314,6 +378,45 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         urlArguments = _snd.dictionary(per_page=per_page, since=since)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
         return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Gist.Gist))(None, r)
+
+    def get_issues(self, filter=None, state=None, labels=None, sort=None, direction=None, since=None, per_page=None):
+        """
+        Calls the `GET /user/issues <http://developer.github.com/v3/issues#list-issues>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param filter: optional "all" or "assigned" or "created" or "mentioned" or "subscribed"
+        :param state: optional "all" or "closed" or "open"
+        :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :param sort: optional "comments" or "created" or "updated"
+        :param direction: optional "asc" or "desc"
+        :param since: optional :class:`datetime`
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Issue`
+        """
+        import PyGithub.Blocking.Issue
+
+        if filter is not None:
+            filter = _snd.normalizeEnum(filter, "all", "assigned", "created", "mentioned", "subscribed")
+        if state is not None:
+            state = _snd.normalizeEnum(state, "all", "closed", "open")
+        if labels is not None:
+            labels = _snd.normalizeList(_snd.normalizeLabelName, labels)
+        if sort is not None:
+            sort = _snd.normalizeEnum(sort, "comments", "created", "updated")
+        if direction is not None:
+            direction = _snd.normalizeEnum(direction, "asc", "desc")
+        if since is not None:
+            since = _snd.normalizeDatetime(since)
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = _snd.normalizeInt(per_page)
+
+        url = uritemplate.expand("https://api.github.com/user/issues")
+        urlArguments = _snd.dictionary(direction=direction, filter=filter, labels=labels, per_page=per_page, since=since, sort=sort, state=state)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue))(None, r)
 
     def get_key(self, id):
         """
@@ -574,6 +677,22 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         url = uritemplate.expand("https://api.github.com/gists/{id}/star", id=gist)
         r = self.Session._request("GET", url, accept404=True)
         return _rcv.BoolConverter(None, r.status_code == 204)
+
+    def remove_from_emails(self, *email):
+        """
+        Calls the `DELETE /user/emails <http://developer.github.com/v3/users/emails#delete-email-addresses>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param email: mandatory :class:`string`
+        :rtype: None
+        """
+
+        email = _snd.normalizeList(_snd.normalizeString, email)
+
+        url = uritemplate.expand("https://api.github.com/user/emails")
+        postArguments = email
+        r = self.Session._request("DELETE", url, postArguments=postArguments)
 
     def remove_from_following(self, username):
         """

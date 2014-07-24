@@ -9,3 +9,7 @@ AuthenticatedUser
 
 .. autoclass:: PyGithub.Blocking.AuthenticatedUser::AuthenticatedUser()
     :members:
+    :exclude-members: Email
+
+    .. autoclass:: PyGithub.Blocking.AuthenticatedUser::AuthenticatedUser.Email()
+        :members:

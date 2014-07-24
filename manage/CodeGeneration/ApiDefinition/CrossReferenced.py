@@ -410,9 +410,10 @@ class Method:
 
 
 class Parameter:
-    def __init__(self, name, type, optional):
+    def __init__(self, name, type, optional, variable):
         self.__name = name
         self.__optional = optional
+        self.__variable = variable
         # @todoGeni Couldn't we do something to factorize all this "descrition -> type" logic? Maybe with a metaclass?
         self.__tmp_typeDescription = type
 
@@ -434,6 +435,10 @@ class Parameter:
     @property
     def optional(self):
         return self.__optional
+
+    @property
+    def variable(self):
+        return self.__variable
 
 
 class Argument:

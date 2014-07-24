@@ -175,7 +175,7 @@ def normalizeEnum(s, *values):
 
 
 def normalizeList(normalizeElement, l):
-    if not isinstance(l, list):
+    if not isinstance(l, (list, tuple)):
         raise TypeError()
     if normalizeElement is normalizeRepositoryFullName:
         return ["/".join(normalizeElement(e)) for e in l]

@@ -1,5 +1,25 @@
 base: User
+structures:
+  - name: Email
+    updatable: false
+    attributes:
+      - name: email
+        type: string
+      - name: primary
+        type: bool
+      - name: verified
+        type: bool
 methods:
+  - name: add_to_emails
+    end_point: POST /user/emails
+    variable_parameter:
+      name: email
+      type: string
+    url_template: end_point
+    post_arguments:
+      - name: email
+        value: parameter email
+    return_type: none
   - name: add_to_following
     end_point: PUT /user/following/:username
     parameters:
@@ -209,6 +229,12 @@ methods:
         value: parameter name
     effect: update
     return_type: none
+  - name: get_emails
+    end_point: GET /user/emails
+    url_template: end_point
+    return_type:
+      container: list
+      content: Email
   - name: get_followers
     end_point: GET /user/followers
     optional_parameters:
@@ -249,6 +275,50 @@ methods:
     return_type:
       container: PaginatedList
       content: Gist
+  - name: get_issues
+    end_point: GET /user/issues
+    optional_parameters:
+      - name: filter
+        type:
+          enum: [all, assigned, created, mentioned, subscribed]
+      - name: state
+        type:
+          enum: [all, closed, open]
+      - name: labels
+        type:
+          container: list
+          content:
+            class: Label
+            attribute: name
+      - name: sort
+        type:
+          enum: [comments, created, updated]
+      - name: direction
+        type:
+          enum: [asc, desc]
+      - name: since
+        type: datetime
+      - name: per_page
+        type: int
+    url_template: end_point
+    url_arguments:
+      - name: direction
+        value: parameter direction
+      - name: filter
+        value: parameter filter
+      - name: labels
+        value: parameter labels
+      - name: per_page
+        value: parameter per_page
+      - name: since
+        value: parameter since
+      - name: sort
+        value: parameter sort
+      - name: state
+        value: parameter state
+    return_type:
+      container: PaginatedList
+      content: Issue
   - name: get_key
     end_point: GET /user/keys/:id
     parameters:
@@ -433,6 +503,16 @@ methods:
         value: parameter gist
     return_from: status
     return_type: bool
+  - name: remove_from_emails
+    end_point: DELETE /user/emails
+    variable_parameter:
+      name: email
+      type: string
+    url_template: end_point
+    post_arguments:
+      - name: email
+        value: parameter email
+    return_type: none
   - name: remove_from_following
     end_point: DELETE /user/following/:username
     parameters:

@@ -20,6 +20,7 @@ class Issue(_bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.AuthenticatedUser.get_issues`
       * :meth:`.Repository.create_issue`
       * :meth:`.Repository.get_issue`
       * :meth:`.Repository.get_issues`
@@ -27,9 +28,10 @@ class Issue(_bgo.UpdatableGithubObject):
     Methods accepting instances of this class as parameter: none.
     """
 
-    def _initAttributes(self, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
+    def _initAttributes(self, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, repository=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
         import PyGithub.Blocking.Label
         import PyGithub.Blocking.Milestone
+        import PyGithub.Blocking.Repository
         import PyGithub.Blocking.User
         super(Issue, self)._initAttributes(**kwds)
         self.__assignee = _rcv.Attribute("Issue.assignee", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), assignee)
@@ -48,12 +50,13 @@ class Issue(_bgo.UpdatableGithubObject):
         self.__labels_url = _rcv.Attribute("Issue.labels_url", _rcv.StringConverter, labels_url)
         self.__milestone = _rcv.Attribute("Issue.milestone", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone), milestone)
         self.__number = _rcv.Attribute("Issue.number", _rcv.IntConverter, number)
+        self.__repository = _rcv.Attribute("Issue.repository", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository), repository)
         self.__state = _rcv.Attribute("Issue.state", _rcv.StringConverter, state)
         self.__title = _rcv.Attribute("Issue.title", _rcv.StringConverter, title)
         self.__updated_at = _rcv.Attribute("Issue.updated_at", _rcv.DatetimeConverter, updated_at)
         self.__user = _rcv.Attribute("Issue.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, repository=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):
         super(Issue, self)._updateAttributes(eTag, **kwds)
         self.__assignee.update(assignee)
         self.__body.update(body)
@@ -71,6 +74,7 @@ class Issue(_bgo.UpdatableGithubObject):
         self.__labels_url.update(labels_url)
         self.__milestone.update(milestone)
         self.__number.update(number)
+        self.__repository.update(repository)
         self.__state.update(state)
         self.__title.update(title)
         self.__updated_at.update(updated_at)
@@ -203,6 +207,14 @@ class Issue(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__number.needsLazyCompletion)
         return self.__number.value
+
+    @property
+    def repository(self):
+        """
+        :type: :class:`.Repository`
+        """
+        self._completeLazily(self.__repository.needsLazyCompletion)
+        return self.__repository.value
 
     @property
     def state(self):

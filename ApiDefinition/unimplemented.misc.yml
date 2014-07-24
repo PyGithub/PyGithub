@@ -63,9 +63,3 @@
   - POST
 /setup/api/upgrade:
   - POST
-/user/emails:
-  - DELETE
-  - GET
-  - POST
-/user/issues:
-  - GET

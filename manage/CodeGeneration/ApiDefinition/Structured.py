@@ -28,7 +28,7 @@ Structure = collections.namedtuple("Structure", "name, updatable, attributes, de
 Attribute = collections.namedtuple("Attribute", "name, type")
 Method = collections.namedtuple("Method", "name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType")
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
-Parameter = collections.namedtuple("Parameter", "name, type, optional")
+Parameter = collections.namedtuple("Parameter", "name, type, optional, variable")
 Argument = collections.namedtuple("Argument", "name, value")
 
 # Polymorphic structures: types
@@ -172,7 +172,7 @@ class _DefinitionLoader:
             type=self.buildType(type),
         )
 
-    def buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[], unimplemented_parameters=[]):
+    def buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[], variable_parameter=None, unimplemented_parameters=[]):
         assert isinstance(name, str), name
         # no assert on url_template
         effects = self.makeList(effect, effects)
@@ -186,19 +186,21 @@ class _DefinitionLoader:
         assert all(isinstance(a, dict) for a in post_arguments), post_arguments
         assert all(isinstance(p, dict) for p in parameters), parameters
         assert all(isinstance(p, dict) for p in optional_parameters), optional_parameters
+        assert isinstance(variable_parameter, (type(None), dict)), variable_parameter
         assert all(isinstance(p, str) for p in unimplemented_parameters)
         return Method(
             name=name,
             endPoints=tuple(sorted(end_points)),
             parameters=tuple(itertools.chain(
-                (self.buildParameter(optional=False, **p) for p in parameters),  # Do not sort
-                (self.buildParameter(optional=True, **p) for p in optional_parameters),  # Do not sort
+                (self.buildParameter(optional=False, variable=False, **p) for p in parameters),  # Do not sort
+                (self.buildParameter(optional=True, variable=False, **p) for p in optional_parameters),  # Do not sort
+                () if variable_parameter is None else (self.buildParameter(optional=False, variable=True, **variable_parameter),)
             )),
             unimplementedParameters=tuple(sorted(unimplemented_parameters)),
             urlTemplate=self.buildValue(url_template),
-            urlTemplateArguments=tuple(sorted((self.buildArgument(**a) for a in url_template_arguments), key=lambda a: a.name)),
-            urlArguments=tuple(sorted((self.buildArgument(**a) for a in url_arguments), key=lambda a: a.name)),
-            postArguments=tuple(sorted((self.buildArgument(**a) for a in post_arguments), key=lambda a: a.name)),
+            urlTemplateArguments=self.buildArguments(url_template_arguments),
+            urlArguments=self.buildArguments(url_arguments),
+            postArguments=self.buildArguments(post_arguments),
             effects=tuple(self.buildEffect(e) for e in effects),
             returnFrom=return_from,
             returnType=self.buildType(return_type),
@@ -214,15 +216,20 @@ class _DefinitionLoader:
             assert element is None
             return elements
 
-    def buildParameter(self, name, optional, type=None):
+    def buildParameter(self, name, optional, variable, type=None):
         assert isinstance(name, str), name
         assert isinstance(optional, bool), optional
+        assert isinstance(variable, bool), variable
         # no assert on type
         return Parameter(
             name=name,
             type=self.buildType(type),
-            optional=optional
+            optional=optional,
+            variable=variable,
         )
+
+    def buildArguments(self, arguments):
+        return tuple(sorted((self.buildArgument(**a) for a in arguments), key=lambda a: a.name))
 
     def buildArgument(self, name, value):
         assert isinstance(name, str), name
@@ -339,7 +346,7 @@ class _DefinitionDumper:
             data["end_point"] = method.endPoints[0]
         else:
             data["end_points"] = list(method.endPoints)
-        if not all(p.optional for p in method.parameters):
+        if not all(p.optional or p.variable for p in method.parameters):
             data["parameters"] = []
         if any(p.optional for p in method.parameters):
             data["optional_parameters"] = []
@@ -349,15 +356,17 @@ class _DefinitionDumper:
             p = self.createDataForParameter(parameter)
             if parameter.optional:
                 data["optional_parameters"].append(p)
+            elif parameter.variable:
+                data["variable_parameter"] = p
             else:
                 data["parameters"].append(p)
         data["url_template"] = self.createDataForValue(method.urlTemplate)
         if len(method.urlTemplateArguments) != 0:
-            data["url_template_arguments"] = [self.createDataForArgument(argument) for argument in method.urlTemplateArguments]
+            data["url_template_arguments"] = self.createDataForArguments(method.urlTemplateArguments)
         if len(method.urlArguments) != 0:
-            data["url_arguments"] = [self.createDataForArgument(argument) for argument in method.urlArguments]
+            data["url_arguments"] = self.createDataForArguments(method.urlArguments)
         if len(method.postArguments) != 0:
-            data["post_arguments"] = [self.createDataForArgument(argument) for argument in method.postArguments]
+            data["post_arguments"] = self.createDataForArguments(method.postArguments)
         if len(method.effects) == 1:
             data["effect"] = method.effects[0]
         elif len(method.effects) > 1:
@@ -378,6 +387,9 @@ class _DefinitionDumper:
         data["name"] = parameter.name
         data["type"] = self.createDataForType(parameter.type)
         return data
+
+    def createDataForArguments(self, arguments):
+        return [self.createDataForArgument(argument) for argument in arguments]
 
     def createDataForArgument(self, argument):
         data = collections.OrderedDict()

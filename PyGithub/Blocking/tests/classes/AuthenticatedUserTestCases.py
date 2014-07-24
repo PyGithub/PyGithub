@@ -61,6 +61,35 @@ class AuthenticatedUserEdit(TestCase):
         self.assertEqual(u.hireable, False)
 
 
+class AuthenticatedUserEmails(TestCase):
+    @Enterprise.User(1)
+    def testGetEmails(self):
+        u = self.g.get_authenticated_user()
+        emails = u.get_emails()
+        self.assertEqual(len(emails), 1)
+        self.assertEqual(emails[0].email, "ghe-user-1@jacquev6.net")
+        self.assertEqual(emails[0].primary, True)
+        self.assertEqual(emails[0].verified, False)
+
+    @Enterprise.User(1)
+    def testAddOneToAndRemoveOneFromEmails(self):
+        u = self.g.get_authenticated_user()
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        u.add_to_emails("foo@bar.com")
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net", "foo@bar.com"])
+        u.remove_from_emails("foo@bar.com")
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+
+    @Enterprise.User(1)
+    def testAddSeveralToAndRemoveSeveralFromEmails(self):
+        u = self.g.get_authenticated_user()
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        u.add_to_emails("foo@bar.com", "baz@42.com")
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net", "foo@bar.com", "baz@42.com"])
+        u.remove_from_emails("foo@bar.com", "baz@42.com")
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+
+
 class AuthenticatedUserFollowing(TestCase):
     @Enterprise.User(1)
     def testGetFollowing(self):
@@ -273,6 +302,18 @@ class AuthenticatedUserRepositories(TestCase):
         r = u.create_fork(("ghe-org-1", "repo-org-1-2"))
         self.assertEqual(r.full_name, "ghe-user-1/repo-org-1-2")
         r.delete()
+
+    @Enterprise.User(1)
+    def testGetIssues(self):
+        u = self.g.get_authenticated_user()
+        issues = u.get_issues()
+        self.assertEqual([i.title for i in issues[-3:]], ["Also created by PyGithub", "Also created by PyGithub", "First issue"])
+
+    @Enterprise.User(1)
+    def testGetIssues_allParameters(self):
+        u = self.g.get_authenticated_user()
+        issues = u.get_issues(filter="all", state="all", labels=["question"], sort="created", direction="desc", since=datetime.datetime(2014, 1, 1, 0, 0, 0), per_page=1)
+        self.assertEqual([i.title for i in issues[-3:]], ["Also created by PyGithub", "Also created by PyGithub", "First issue"])
 
 
 class AuthenticatedUserSubscriptions(TestCase):

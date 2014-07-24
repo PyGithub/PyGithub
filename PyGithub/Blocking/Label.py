@@ -24,6 +24,7 @@ class Label(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_label`
 
     Methods accepting instances of this class as parameter:
+      * :meth:`.AuthenticatedUser.get_issues`
       * :meth:`.Issue.edit`
       * :meth:`.Repository.create_issue`
       * :meth:`.Repository.get_issues`

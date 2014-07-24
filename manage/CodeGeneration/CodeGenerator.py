@@ -256,7 +256,7 @@ class CodeGenerator:
     def createClassMethod(self, method):
         return (
             PS.Method(method.name)
-            .parameters((p.name, "None") if p.optional else p.name for p in method.parameters)
+            .parameters((p.name, "None") if p.optional else "*" + p.name if p.variable else p.name for p in method.parameters)
             .docstring(self.generateDocStringForMethod(method))
             .body(self.generateMethodBody(method))
         )
@@ -299,6 +299,8 @@ class CodeGenerator:
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
                     yield from PS.indent(self.generateCodeToNormalizeParameter(p))
+                elif p.variable:
+                    yield "email = _snd.normalizeList(_snd.normalizeString, email)"
                 else:
                     yield from self.generateCodeToNormalizeParameter(p)
             yield ""
@@ -321,13 +323,18 @@ class CodeGenerator:
         if len(method.urlArguments) != 0:
             yield "urlArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
         if len(method.postArguments) != 0:
-            yield "postArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
+            if method.containerClass.name == "AuthenticatedUser" and method.name in ["add_to_emails", "remove_from_emails"]:
+                # @todoAlpha solve this special case by changing Method.postArguments to Method.postPaylod, polymorphic, with DictionaryPayload and DirectPayload. Also change Session._request's parameter.
+                yield "postArguments = email"
+            else:
+                yield "postArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
         yield "r = self.Session._request{}({})".format("Anonymous" if method.name == "create_anonymous_gist" else "", self.generateCallArguments(method))  # @todoSomeday Remove hard-coded method name
         yield from self.generateCodeForEffects(method)
         yield from self.generateCodeForReturnValue(method)
 
     def generateCodeToNormalizeParameter(self, parameter):
+        # @todoAlpha To solve the "variable parameter needs to be normalized as list" case, don't pass the parameter but its type, and return a format string where the caller will substitute the param name
         yield from self.getMethod("generateCodeToNormalize{}Parameter", parameter.type.__class__.__name__)(parameter)
 
     def generateCodeToNormalizeEnumeratedTypeParameter(self, parameter):

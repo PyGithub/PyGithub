@@ -28,6 +28,7 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.get_subscriptions`
       * :meth:`.Github.get_repo`
       * :meth:`.Github.get_repos`
+      * :attr:`.Issue.repository`
       * :meth:`.Organization.create_fork`
       * :meth:`.Organization.create_repo`
       * :meth:`.Organization.get_repo`

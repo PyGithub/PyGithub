@@ -33,6 +33,8 @@ attributes:
     type: Milestone
   - name: number
     type: int
+  - name: repository
+    type: Repository
   - name: state
     type: string
   - name: title
