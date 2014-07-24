@@ -25,12 +25,16 @@ class Commit(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.get_commit`
       * :meth:`.Repository.get_commits`
       * :attr:`.Tag.commit`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     class CommitFile(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Commit.files`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, additions=None, blob_url=None, changes=None, contents_url=None, deletions=None, filename=None, patch=None, raw_url=None, sha=None, status=None, **kwds):
@@ -133,6 +137,8 @@ class Commit(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Commit.stats`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, additions=None, deletions=None, total=None, **kwds):

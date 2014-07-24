@@ -24,6 +24,8 @@ class GitObject(_bgo.UpdatableGithubObject):
       * :class:`.GitTree`
 
     Methods and attributes returning instances of this class: none.
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, sha=_rcv.Absent, type=_rcv.Absent, **kwds):

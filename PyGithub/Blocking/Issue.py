@@ -23,6 +23,8 @@ class Issue(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.create_issue`
       * :meth:`.Repository.get_issue`
       * :meth:`.Repository.get_issues`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, assignee=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, created_at=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, **kwds):

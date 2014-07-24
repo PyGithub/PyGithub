@@ -48,12 +48,37 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :meth:`.Team.get_members`
       * :meth:`.User.get_followers`
       * :meth:`.User.get_following`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.AuthenticatedUser.add_to_following`
+      * :meth:`.AuthenticatedUser.has_in_following`
+      * :meth:`.AuthenticatedUser.remove_from_following`
+      * :meth:`.Github.get_users`
+      * :meth:`.Issue.edit`
+      * :meth:`.Organization.add_to_public_members`
+      * :meth:`.Organization.has_in_members`
+      * :meth:`.Organization.has_in_public_members`
+      * :meth:`.Organization.remove_from_members`
+      * :meth:`.Organization.remove_from_public_members`
+      * :meth:`.Repository.add_to_collaborators`
+      * :meth:`.Repository.create_issue`
+      * :meth:`.Repository.get_commits`
+      * :meth:`.Repository.get_issues`
+      * :meth:`.Repository.has_in_assignees`
+      * :meth:`.Repository.has_in_collaborators`
+      * :meth:`.Repository.remove_from_collaborators`
+      * :meth:`.Team.add_to_members`
+      * :meth:`.Team.has_in_members`
+      * :meth:`.Team.remove_from_members`
+      * :meth:`.User.has_in_following`
     """
 
     class Key(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.User.get_keys`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, id=None, key=None, **kwds):

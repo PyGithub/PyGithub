@@ -90,31 +90,40 @@ class CodeGenerator:
             for d in klass.derived:
                 yield "  * :class:`.{}`".format(d.name)
         yield ""
-        yield from self.generateDocForFactories(klass)
+        yield from self.generateDocForSourcesAndSinks(klass)
 
-    def generateDocForFactories(self, klass):
-        # @todoAlpha Document methods accepting this class as parameter (Sinks). Rename Factories to Sources. Rename this method generateDocForSourcesAndSinks.
-        if len(klass.factories) == 0:
+    def generateDocForSourcesAndSinks(self, klass):
+        if len(klass.sources) == 0:
             yield "Methods and attributes returning instances of this class: none."
         else:
             yield "Methods and attributes returning instances of this class:"
-            for factory in klass.factories:
-                yield "  * " + self.generateDocForFactory(factory)
+            for source in klass.sources:
+                yield "  * " + self.generateDocForSource(source)
+        yield ""
+        if len(klass.sinks) == 0:
+            yield "Methods accepting instances of this class as parameter: none."
+        else:
+            yield "Methods accepting instances of this class as parameter:"
+            for sink in klass.sinks:
+                yield "  * " + self.generateDocForSink(sink)
 
-    def generateDocForFactory(self, factory):
-        return self.getMethod("generateDocFor{}", factory.__class__.__name__)(factory)
+    def generateDocForSource(self, source):
+        return self.getMethod("generateDocFor{}", source.__class__.__name__)(source)
 
-    def generateDocForMethodFactory(self, factory):
-        return ":meth:`.{}.{}`".format(factory.object.containerClass.name, factory.object.name)
+    def generateDocForMethodSource(self, source):
+        return ":meth:`.{}.{}`".format(source.object.containerClass.name, source.object.name)
 
-    def generateDocForAttributeFactory(self, factory):
-        return ":attr:`.{}.{}`".format(factory.object.containerClass.name, factory.object.name)
+    def generateDocForAttributeSource(self, source):
+        return ":attr:`.{}.{}`".format(source.object.containerClass.name, source.object.name)
+
+    def generateDocForSink(self, sink):
+        return ":meth:`.{}.{}`".format(sink.object.containerClass.name, sink.object.name)
 
     def createClassStructure(self, structure):
         return (
             PS.Class(structure.name)
             .base("_bgo.SessionedGithubObject")
-            .docstring(self.generateDocForFactories(structure))
+            .docstring(self.generateDocForSourcesAndSinks(structure))
             .elements(self.createStructPrivateParts(structure))
             .elements(self.createStructProperty(a) for a in structure.attributes)
         )

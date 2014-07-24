@@ -26,12 +26,16 @@ class GitTag(PyGithub.Blocking.GitObject.GitObject):
       * :attr:`.GitTag.object`
       * :meth:`.Repository.create_git_tag`
       * :meth:`.Repository.get_git_tag`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     class Tagger(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitTag.tagger`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):

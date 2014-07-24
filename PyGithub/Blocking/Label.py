@@ -22,6 +22,11 @@ class Label(_bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class:
       * :attr:`.Issue.labels`
       * :meth:`.Repository.get_label`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Issue.edit`
+      * :meth:`.Repository.create_issue`
+      * :meth:`.Repository.get_issues`
     """
 
     def _initAttributes(self, color=_rcv.Absent, name=_rcv.Absent, **kwds):

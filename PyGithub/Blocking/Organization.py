@@ -27,6 +27,8 @@ class Organization(PyGithub.Blocking.Entity.Entity):
       * :attr:`.Repository.owner`
       * :attr:`.Team.organization`
       * :meth:`.User.get_orgs`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, billing_email=_rcv.Absent, members_url=_rcv.Absent, public_members_url=_rcv.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):

@@ -22,12 +22,16 @@ class Entity(_bgo.UpdatableGithubObject):
       * :class:`.User`
 
     Methods and attributes returning instances of this class: none.
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     class Plan(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Entity.plan`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, collaborators=None, name=None, private_repos=None, space=None, **kwds):

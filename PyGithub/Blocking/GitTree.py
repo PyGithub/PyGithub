@@ -29,12 +29,17 @@ class GitTree(PyGithub.Blocking.GitObject.GitObject):
       * :attr:`.GitTree.tree`
       * :meth:`.Repository.create_git_tree`
       * :meth:`.Repository.get_git_tree`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Repository.create_git_commit`
     """
 
     class GitSubmodule(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.GitTree.tree`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, mode=None, path=None, sha=None, type=None, **kwds):

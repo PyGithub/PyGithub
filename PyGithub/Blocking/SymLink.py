@@ -22,6 +22,8 @@ class SymLink(_bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class:
       * :meth:`.Dir.get_contents`
       * :meth:`.Repository.get_contents`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, target=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):

@@ -31,6 +31,9 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
       * :attr:`.GitTag.object`
       * :meth:`.Repository.create_git_commit`
       * :meth:`.Repository.get_git_commit`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Repository.create_git_commit`
     """
 
     class Author(_bgo.SessionedGithubObject):
@@ -38,6 +41,8 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
         Methods and attributes returning instances of this class:
           * :attr:`.GitCommit.author`
           * :attr:`.GitCommit.committer`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, date=None, email=None, name=None, **kwds):

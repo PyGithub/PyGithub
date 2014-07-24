@@ -31,6 +31,12 @@ class Gist(_bgo.UpdatableGithubObject):
       * :meth:`.Github.get_gist`
       * :meth:`.Github.get_public_gists`
       * :meth:`.User.get_gists`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.AuthenticatedUser.add_to_starred_gists`
+      * :meth:`.AuthenticatedUser.create_gist_fork`
+      * :meth:`.AuthenticatedUser.has_in_starred_gists`
+      * :meth:`.AuthenticatedUser.remove_from_starred_gists`
     """
 
     class ChangeStatus(_bgo.SessionedGithubObject):
@@ -38,6 +44,8 @@ class Gist(_bgo.UpdatableGithubObject):
         Methods and attributes returning instances of this class:
           * :attr:`.GistCommit.change_status`
           * :attr:`.HistoryElement.change_status`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, additions=None, deletions=None, total=None, **kwds):
@@ -77,6 +85,8 @@ class Gist(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Gist.get_commits`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
@@ -135,6 +145,8 @@ class Gist(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Gist.files`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, content=None, filename=None, language=None, raw_url=None, size=None, truncated=None, type=None, **kwds):
@@ -210,6 +222,8 @@ class Gist(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Gist.history`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):

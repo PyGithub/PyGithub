@@ -22,6 +22,8 @@ class Subscription(_bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.create_subscription`
       * :meth:`.AuthenticatedUser.get_subscription`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, created_at=_rcv.Absent, ignored=_rcv.Absent, reason=_rcv.Absent, repository_url=_rcv.Absent, subscribed=_rcv.Absent, **kwds):

@@ -23,6 +23,8 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Github.get_authenticated_user`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def add_to_following(self, username):

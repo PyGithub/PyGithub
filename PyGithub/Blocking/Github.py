@@ -21,12 +21,18 @@ class Github(_bgo.SessionedGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Builder.Build`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     class GitIgnoreTemplate(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_gitignore_template`
+
+        Methods accepting instances of this class as parameter:
+          * :meth:`.AuthenticatedUser.create_repo`
+          * :meth:`.Organization.create_repo`
         """
 
         def _initAttributes(self, name=None, source=None, **kwds):
@@ -52,6 +58,8 @@ class Github(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_meta`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, git=None, hooks=None, verifiable_password_authentication=None, **kwds):
@@ -85,6 +93,8 @@ class Github(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Github.get_rate_limit`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, resources=None, rate=None, **kwds):
@@ -104,6 +114,8 @@ class Github(_bgo.SessionedGithubObject):
           * :attr:`.Resources.core`
           * :attr:`.Resources.search`
           * :attr:`.Session.RateLimit`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, limit=None, remaining=None, reset=None, **kwds):
@@ -143,6 +155,8 @@ class Github(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.RateLimit.resources`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, core=None, search=None, **kwds):

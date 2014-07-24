@@ -22,6 +22,11 @@ class Milestone(_bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class:
       * :attr:`.Issue.milestone`
       * :meth:`.Repository.get_milestone`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Issue.edit`
+      * :meth:`.Repository.create_issue`
+      * :meth:`.Repository.get_issues`
     """
 
     def _initAttributes(self, closed_issues=_rcv.Absent, created_at=_rcv.Absent, creator=_rcv.Absent, description=_rcv.Absent, due_on=_rcv.Absent, id=_rcv.Absent, labels_url=_rcv.Absent, number=_rcv.Absent, open_issues=_rcv.Absent, state=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, **kwds):

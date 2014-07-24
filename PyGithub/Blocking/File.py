@@ -24,6 +24,8 @@ class File(_bgo.UpdatableGithubObject):
       * :meth:`.Dir.get_contents`
       * :meth:`.Repository.get_contents`
       * :meth:`.Repository.get_readme`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, git_url=_rcv.Absent, html_url=_rcv.Absent, name=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, size=_rcv.Absent, type=_rcv.Absent, _links=None, **kwds):

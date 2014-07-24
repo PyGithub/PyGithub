@@ -23,6 +23,8 @@ class GitRef(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.create_git_ref`
       * :meth:`.Repository.get_git_ref`
       * :meth:`.Repository.get_git_refs`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, object=_rcv.Absent, ref=_rcv.Absent, **kwds):

@@ -124,9 +124,9 @@ class AttributeType(Type):
     def attribute(self):
         return self.__attribute
 
-    # @property
-    # def underlyingTypes(self):
-    #     return set([self.type, self.attribute.type])
+    @property
+    def underlyingTypes(self):
+        return set([self.type, self.attribute.type])
 
 
 class EndPoint:
@@ -178,22 +178,33 @@ class AttributedType(SimpleType):
         super(AttributedType, self).__init__(name)
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
         self.__deprecatedAttributes = sorted(deprecatedAttributes)
-        self.__factories = []
+        self.__sources = []
+        self.__sinks = []
 
     def _applyRecursively(self, f):
         f(self)
         for a in self.__attributes:
             a._applyRecursively(f)
 
-    def _addFactory(self, f):
-        self.__factories.append(f)
+    def _addSource(self, s):
+        self.__sources.append(s)
 
-    def _sortFactories(self):
-        self.__factories = sorted(self.__factories, key=lambda f: (f.object.containerClass.name, f.object.name))
+    def _addSink(self, s):
+        self.__sinks.append(s)
+
+    def _sortSources(self):
+        self.__sources = sorted(set(self.__sources), key=lambda s: (s.object.containerClass.name, s.object.name))
+
+    def _sortSinks(self):
+        self.__sinks = sorted(set(self.__sinks), key=lambda s: (s.object.containerClass.name, s.object.name))
 
     @property
-    def factories(self):
-        return self.__factories
+    def sources(self):
+        return self.__sources
+
+    @property
+    def sinks(self):
+        return self.__sinks
 
     @property
     def deprecatedAttributes(self):
@@ -218,10 +229,10 @@ class Attribute:
         self.__type = typesRepo.get(self.__tmp_typeDescription)
         del self.__tmp_typeDescription
 
-    def _propagateFactories(self):
+    def _propagateSources(self):
         for t in self.__type.underlyingTypes:
             if isinstance(t, AttributedType):
-                t._addFactory(AttributeFactory(self))
+                t._addSource(AttributeSource(self))
 
     @property
     def containerClass(self):
@@ -236,8 +247,9 @@ class Attribute:
         return self.__type
 
 
-MethodFactory = collections.namedtuple("MethodFactory", "object")
-AttributeFactory = collections.namedtuple("AttributeFactory", "object")
+MethodSource = collections.namedtuple("MethodSource", "object")
+AttributeSource = collections.namedtuple("AttributeSource", "object")
+MethodSink = collections.namedtuple("MethodSink", "object")
 
 
 class Class(AttributedType):
@@ -337,10 +349,16 @@ class Method:
         for ep in self.__endPoints:
             ep._addMethod(self)
 
-    def _propagateFactories(self):
+    def _propagateSources(self):
         for t in self.__returnType.underlyingTypes:
             if isinstance(t, AttributedType):
-                t._addFactory(MethodFactory(self))
+                t._addSource(MethodSource(self))
+
+    def _propagateSinks(self):
+        for p in self.__parameters:
+            for t in p.type.underlyingTypes:
+                if isinstance(t, AttributedType):
+                    t._addSink(MethodSink(self))
 
     @property
     def containerClass(self):
@@ -512,13 +530,16 @@ class Definition:
         self._applyRecursively(Method, Method._referenceEndPoints, endPointsRepo)
         self._applyRecursively(Method, Method._referenceReturnType, typesRepo)
         self._applyRecursively(Attribute, Attribute._referenceType, typesRepo)
-        self._applyRecursively(Method, Method._propagateFactories)
+        self._applyRecursively(Method, Method._propagateSources)
         self._applyRecursively(Method, Method._propagateEndPoints)
-        self._applyRecursively(Attribute, Attribute._propagateFactories)
+        self._applyRecursively(Attribute, Attribute._propagateSources)
         self._applyRecursively(Parameter, Parameter._propagateType, typesRepo)
         self._applyRecursively(Class, Class._sortDerived)
-        self._applyRecursively(AttributedType, AttributedType._sortFactories)
+        self._applyRecursively(AttributedType, AttributedType._sortSources)
         self._applyRecursively(EndPoint, EndPoint._sortMethods)
+
+        self._applyRecursively(Method, Method._propagateSinks)
+        self._applyRecursively(AttributedType, AttributedType._sortSinks)
 
     def _applyRecursively(self, typeFilter, f, *args, **kwds):
         class FilteringFunction:

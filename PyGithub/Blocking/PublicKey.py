@@ -26,6 +26,8 @@ class PublicKey(_bgo.UpdatableGithubObject):
       * :meth:`.Repository.create_key`
       * :meth:`.Repository.get_key`
       * :meth:`.Repository.get_keys`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, id=_rcv.Absent, key=_rcv.Absent, title=_rcv.Absent, verified=_rcv.Absent, **kwds):

@@ -25,6 +25,9 @@ class Team(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.create_team`
       * :meth:`.Organization.get_teams`
       * :meth:`.Repository.get_teams`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Organization.create_repo`
     """
 
     def _initAttributes(self, id=_rcv.Absent, members_count=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, organization=_rcv.Absent, permission=_rcv.Absent, repos_count=_rcv.Absent, repositories_url=_rcv.Absent, slug=_rcv.Absent, **kwds):

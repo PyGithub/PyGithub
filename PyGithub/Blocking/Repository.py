@@ -40,12 +40,28 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.User.get_repos`
       * :meth:`.User.get_starred`
       * :meth:`.User.get_subscriptions`
+
+    Methods accepting instances of this class as parameter:
+      * :meth:`.AuthenticatedUser.add_to_starred`
+      * :meth:`.AuthenticatedUser.create_fork`
+      * :meth:`.AuthenticatedUser.create_subscription`
+      * :meth:`.AuthenticatedUser.get_subscription`
+      * :meth:`.AuthenticatedUser.has_in_starred`
+      * :meth:`.AuthenticatedUser.remove_from_starred`
+      * :meth:`.Github.get_repos`
+      * :meth:`.Organization.create_fork`
+      * :meth:`.Organization.create_team`
+      * :meth:`.Team.add_to_repos`
+      * :meth:`.Team.has_in_repos`
+      * :meth:`.Team.remove_from_repos`
     """
 
     class AnonymousContributor(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.get_contributors`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, contributions=None, name=None, type=None, **kwds):
@@ -80,6 +96,8 @@ class Repository(_bgo.UpdatableGithubObject):
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.get_branch`
           * :meth:`.Repository.get_branches`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, commit=None, name=None, _links=None, **kwds):
@@ -106,6 +124,8 @@ class Repository(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.create_file`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, commit=None, content=None, **kwds):
@@ -133,6 +153,8 @@ class Repository(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Repository.permissions`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, admin=None, pull=None, push=None, **kwds):
@@ -172,6 +194,8 @@ class Repository(_bgo.UpdatableGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Repository.get_tags`
+
+        Methods accepting instances of this class as parameter: none.
         """
 
         def _initAttributes(self, commit=None, name=None, tarball_url=None, zipball_url=None, **kwds):

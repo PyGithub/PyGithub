@@ -23,6 +23,8 @@ class Contributor(PyGithub.Blocking.User.User):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Repository.get_contributors`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, contributions=_rcv.Absent, **kwds):

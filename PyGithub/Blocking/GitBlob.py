@@ -27,6 +27,8 @@ class GitBlob(PyGithub.Blocking.GitObject.GitObject):
       * :attr:`.GitTree.tree`
       * :meth:`.Repository.create_git_blob`
       * :meth:`.Repository.get_git_blob`
+
+    Methods accepting instances of this class as parameter: none.
     """
 
     def _initAttributes(self, content=_rcv.Absent, encoding=_rcv.Absent, mode=_rcv.Absent, path=_rcv.Absent, size=_rcv.Absent, **kwds):
