@@ -299,8 +299,10 @@ class CodeGenerator:
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
                     yield from PS.indent(self.generateCodeToNormalizeParameter(p))
-                elif p.variable:
+                elif p.variable and p.name == "email":
                     yield "email = _snd.normalizeList(_snd.normalizeString, email)"
+                elif p.variable and p.name == "label":
+                    yield "label = _snd.normalizeList(_snd.normalizeLabelName, label)"
                 else:
                     yield from self.generateCodeToNormalizeParameter(p)
             yield ""
@@ -326,6 +328,9 @@ class CodeGenerator:
             if method.containerClass.name == "AuthenticatedUser" and method.name in ["add_to_emails", "remove_from_emails"]:
                 # @todoAlpha solve this special case by changing Method.postArguments to Method.postPaylod, polymorphic, with DictionaryPayload and DirectPayload. Also change Session._request's parameter.
                 yield "postArguments = email"
+            elif method.containerClass.name == "Issue" and method.name in ["add_to_labels", "set_labels"]:
+                # @todoAlpha solve this special case by changing Method.postArguments to Method.postPaylod, polymorphic, with DictionaryPayload and DirectPayload. Also change Session._request's parameter.
+                yield "postArguments = label"
             else:
                 yield "postArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 

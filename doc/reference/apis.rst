@@ -1026,35 +1026,40 @@ DELETE /repos/:owner/:repo/issues/:number/labels
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#remove-all-labels-from-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.remove_all_labels`
 
 GET /repos/:owner/:repo/issues/:number/labels
 ---------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#list-labels-on-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.get_labels`
 
 POST /repos/:owner/:repo/issues/:number/labels
 ----------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#add-labels-to-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.add_to_labels`
 
 PUT /repos/:owner/:repo/issues/:number/labels
 ---------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#replace-all-labels-for-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.set_labels`
 
 DELETE /repos/:owner/:repo/issues/:number/labels/:name
 ------------------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#remove-a-label-from-an-issue>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.remove_from_labels`
 
 GET /repos/:owner/:repo/issues/comments
 ---------------------------------------
@@ -1135,21 +1140,24 @@ GET /repos/:owner/:repo/labels
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#list-all-labels-for-this-repository>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_labels`
 
 POST /repos/:owner/:repo/labels
 -------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#create-a-label>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_label`
 
 DELETE /repos/:owner/:repo/labels/:name
 ---------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#delete-a-label>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Label.delete`
 
 GET /repos/:owner/:repo/labels/:name
 ------------------------------------
@@ -1186,21 +1194,24 @@ GET /repos/:owner/:repo/milestones
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/milestones#list-milestones-for-a-repository>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_milestones`
 
 POST /repos/:owner/:repo/milestones
 -----------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/milestones#create-a-milestone>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.create_milestone`
 
 DELETE /repos/:owner/:repo/milestones/:number
 ---------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/milestones#delete-a-milestone>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Milestone.delete`
 
 GET /repos/:owner/:repo/milestones/:number
 ------------------------------------------
@@ -1215,14 +1226,16 @@ PATCH /repos/:owner/:repo/milestones/:number
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/milestones#update-a-milestone>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Milestone.edit`
 
 GET /repos/:owner/:repo/milestones/:number/labels
 -------------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues/labels#get-labels-for-every-issue-in-a-milestone>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Milestone.get_labels`
 
 GET /repos/:owner/:repo/notifications
 -------------------------------------
@@ -1264,28 +1277,33 @@ GET /repos/:owner/:repo/pulls
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#list-pull-requests>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_pulls`
 
 POST /repos/:owner/:repo/pulls
 ------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#create-a-pull-request>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Issue.create_pull`
+  * :meth:`.Repository.create_pull`
 
 GET /repos/:owner/:repo/pulls/:number
 -------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#get-a-single-pull-request>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.Repository.get_pull`
 
 PATCH /repos/:owner/:repo/pulls/:number
 ---------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#update-a-pull-request>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PullRequest.edit`
 
 GET /repos/:owner/:repo/pulls/:number/comments
 ----------------------------------------------
@@ -1306,28 +1324,32 @@ GET /repos/:owner/:repo/pulls/:number/commits
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#list-commits-on-a-pull-request>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PullRequest.get_commits`
 
 GET /repos/:owner/:repo/pulls/:number/files
 -------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#list-pull-requests-files>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PullRequest.get_files`
 
 GET /repos/:owner/:repo/pulls/:number/merge
 -------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#get-if-a-pull-request-has-been-merged>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PullRequest.get_is_merged`
 
 PUT /repos/:owner/:repo/pulls/:number/merge
 -------------------------------------------
 
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/pulls#merge-a-pull-request-merge-button>`__)
 
-Not yet implemented in PyGithub.
+Implemented in PyGithub by:
+  * :meth:`.PullRequest.merge`
 
 GET /repos/:owner/:repo/pulls/comments
 --------------------------------------

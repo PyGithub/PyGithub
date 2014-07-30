@@ -23,3 +23,40 @@ attributes:
     type: string
   - name: updated_at
     type: datetime
+methods:
+  - name: delete
+    end_point: DELETE /repos/:owner/:repo/milestones/:number
+    url_template: attribute url
+    return_type: none
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo/milestones/:number
+    optional_parameters:
+      - name: title
+        type: string
+      - name: state
+        type:
+          enum: [closed, open]
+      - name: description
+        type:
+          union: [string, Reset]
+      - name: due_on
+        type:
+          union: [datetime, Reset]
+    url_template: attribute url
+    post_arguments:
+      - name: description
+        value: parameter description
+      - name: due_on
+        value: parameter due_on
+      - name: state
+        value: parameter state
+      - name: title
+        value: parameter title
+    effect: update
+    return_type: none
+  - name: get_labels
+    end_point: GET /repos/:owner/:repo/milestones/:number/labels
+    url_template: attribute labels_url
+    return_type:
+      container: list
+      content: Label

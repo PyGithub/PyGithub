@@ -20,12 +20,19 @@ class Label(_bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
+      * :meth:`.Issue.get_labels`
       * :attr:`.Issue.labels`
+      * :meth:`.Milestone.get_labels`
+      * :meth:`.Repository.create_label`
       * :meth:`.Repository.get_label`
+      * :meth:`.Repository.get_labels`
 
     Methods accepting instances of this class as parameter:
       * :meth:`.AuthenticatedUser.get_issues`
+      * :meth:`.Issue.add_to_labels`
       * :meth:`.Issue.edit`
+      * :meth:`.Issue.remove_from_labels`
+      * :meth:`.Issue.set_labels`
       * :meth:`.Repository.create_issue`
       * :meth:`.Repository.get_issues`
     """
@@ -55,6 +62,18 @@ class Label(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__name.needsLazyCompletion)
         return self.__name.value
+
+    def delete(self):
+        """
+        Calls the `DELETE /repos/:owner/:repo/labels/:name <http://developer.github.com/v3/issues/labels#delete-a-label>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand(self.url)
+        r = self.Session._request("DELETE", url)
 
     def edit(self, name=None, color=None):
         """

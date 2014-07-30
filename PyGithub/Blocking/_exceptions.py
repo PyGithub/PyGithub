@@ -34,6 +34,12 @@ class ObjectNotFoundException(ClientErrorException):
     """
 
 
+class MethodNotAllowedException(ClientErrorException):
+    """
+    Raised by PyGithub when GitHub API v3 returns an unexpected 405 HTTP status code.
+    """
+
+
 class UnauthorizedException(ClientErrorException):
     """
     Raised by PyGithub when GitHub API v3 returns a 401 HTTP status code.

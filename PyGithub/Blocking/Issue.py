@@ -17,7 +17,8 @@ class Issue(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
-    Derived classes: none.
+    Derived classes:
+      * :class:`.PullRequest`
 
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.get_issues`
@@ -248,6 +249,43 @@ class Issue(_bgo.UpdatableGithubObject):
         self._completeLazily(self.__user.needsLazyCompletion)
         return self.__user.value
 
+    def add_to_labels(self, *label):
+        """
+        Calls the `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels#add-labels-to-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param label: mandatory :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :rtype: None
+        """
+
+        label = _snd.normalizeList(_snd.normalizeLabelName, label)
+
+        url = uritemplate.expand(self.labels_url)
+        postArguments = label
+        r = self.Session._request("POST", url, postArguments=postArguments)
+
+    def create_pull(self, head, base):
+        """
+        Calls the `POST /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls#create-a-pull-request>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.create_pull`
+
+        :param head: mandatory :class:`string`
+        :param base: mandatory :class:`string`
+        :rtype: :class:`.PullRequest`
+        """
+        import PyGithub.Blocking.PullRequest
+
+        head = _snd.normalizeString(head)
+        base = _snd.normalizeString(base)
+
+        url = uritemplate.expand(self.pulls_url)
+        postArguments = _snd.dictionary(base=base, head=head, issue=self.number)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PullRequest.PullRequest)(None, r.json(), r.headers.get("ETag"))
+
     def edit(self, title=None, body=None, assignee=None, state=None, milestone=None, labels=None):
         """
         Calls the `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues#edit-an-issue>`__ end point.
@@ -255,7 +293,7 @@ class Issue(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param title: optional :class:`string`
-        :param body: optional :class:`string`
+        :param body: optional :class:`string` or :class:`Reset`
         :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`) or :class:`Reset`
         :param state: optional "closed" or "open"
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`) or :class:`Reset`
@@ -266,7 +304,7 @@ class Issue(_bgo.UpdatableGithubObject):
         if title is not None:
             title = _snd.normalizeString(title)
         if body is not None:
-            body = _snd.normalizeString(body)
+            body = _snd.normalizeStringReset(body)
         if assignee is not None:
             assignee = _snd.normalizeUserLoginReset(assignee)
         if state is not None:
@@ -280,3 +318,60 @@ class Issue(_bgo.UpdatableGithubObject):
         postArguments = _snd.dictionary(assignee=assignee, body=body, labels=labels, milestone=milestone, state=state, title=title)
         r = self.Session._request("PATCH", url, postArguments=postArguments)
         self._updateAttributes(r.headers.get("ETag"), **r.json())
+
+    def get_labels(self):
+        """
+        Calls the `GET /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels#list-labels-on-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.Label`
+        """
+        import PyGithub.Blocking.Label
+
+        url = uritemplate.expand(self.labels_url)
+        r = self.Session._request("GET", url)
+        return _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label))(None, r.json())
+
+    def remove_all_labels(self):
+        """
+        Calls the `DELETE /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels#remove-all-labels-from-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand(self.labels_url)
+        r = self.Session._request("DELETE", url)
+
+    def remove_from_labels(self, label):
+        """
+        Calls the `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels#remove-a-label-from-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param label: mandatory :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :rtype: None
+        """
+
+        label = _snd.normalizeLabelName(label)
+
+        url = uritemplate.expand(self.labels_url, name=label)
+        r = self.Session._request("DELETE", url)
+
+    def set_labels(self, *label):
+        """
+        Calls the `PUT /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels#replace-all-labels-for-an-issue>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param label: mandatory :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
+        :rtype: None
+        """
+
+        label = _snd.normalizeList(_snd.normalizeLabelName, label)
+
+        url = uritemplate.expand(self.labels_url)
+        postArguments = label
+        r = self.Session._request("PUT", url, postArguments=postArguments)

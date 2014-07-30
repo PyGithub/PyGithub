@@ -4,6 +4,10 @@ attributes:
   - name: name
     type: string
 methods:
+  - name: delete
+    end_point: DELETE /repos/:owner/:repo/labels/:name
+    url_template: attribute url
+    return_type: none
   - name: edit
     end_point: PATCH /repos/:owner/:repo/labels/:name
     optional_parameters:

@@ -21,7 +21,9 @@ class Milestone(_bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :attr:`.Issue.milestone`
+      * :meth:`.Repository.create_milestone`
       * :meth:`.Repository.get_milestone`
+      * :meth:`.Repository.get_milestones`
 
     Methods accepting instances of this class as parameter:
       * :meth:`.Issue.edit`
@@ -155,3 +157,56 @@ class Milestone(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__updated_at.needsLazyCompletion)
         return self.__updated_at.value
+
+    def delete(self):
+        """
+        Calls the `DELETE /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones#delete-a-milestone>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: None
+        """
+
+        url = uritemplate.expand(self.url)
+        r = self.Session._request("DELETE", url)
+
+    def edit(self, title=None, state=None, description=None, due_on=None):
+        """
+        Calls the `PATCH /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones#update-a-milestone>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: optional :class:`string`
+        :param state: optional "closed" or "open"
+        :param description: optional :class:`string` or :class:`Reset`
+        :param due_on: optional :class:`datetime` or :class:`Reset`
+        :rtype: None
+        """
+
+        if title is not None:
+            title = _snd.normalizeString(title)
+        if state is not None:
+            state = _snd.normalizeEnum(state, "closed", "open")
+        if description is not None:
+            description = _snd.normalizeStringReset(description)
+        if due_on is not None:
+            due_on = _snd.normalizeDatetimeReset(due_on)
+
+        url = uritemplate.expand(self.url)
+        postArguments = _snd.dictionary(description=description, due_on=due_on, state=state, title=title)
+        r = self.Session._request("PATCH", url, postArguments=postArguments)
+        self._updateAttributes(r.headers.get("ETag"), **r.json())
+
+    def get_labels(self):
+        """
+        Calls the `GET /repos/:owner/:repo/milestones/:number/labels <http://developer.github.com/v3/issues/labels#get-labels-for-every-issue-in-a-milestone>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.Label`
+        """
+        import PyGithub.Blocking.Label
+
+        url = uritemplate.expand(self.labels_url)
+        r = self.Session._request("GET", url)
+        return _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label))(None, r.json())

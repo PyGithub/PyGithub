@@ -66,6 +66,7 @@ def main():
     import PyGithub.Blocking.Milestone
     import PyGithub.Blocking.Organization
     import PyGithub.Blocking.PublicKey
+    import PyGithub.Blocking.PullRequest
     import PyGithub.Blocking.Repository
     import PyGithub.Blocking.Submodule
     import PyGithub.Blocking.Subscription

@@ -428,6 +428,69 @@ methods:
       - name: title
         value: parameter title
     return_type: PublicKey
+  - name: create_label
+    end_point: POST /repos/:owner/:repo/labels
+    parameters:
+      - name: name
+        type: string
+      - name: color
+        type: string
+    url_template: attribute labels_url
+    post_arguments:
+      - name: color
+        value: parameter color
+      - name: name
+        value: parameter name
+    return_type: Label
+  - name: create_milestone
+    end_point: POST /repos/:owner/:repo/milestones
+    parameters:
+      - name: title
+        type: string
+    optional_parameters:
+      - name: state
+        type:
+          enum: [closed, open]
+      - name: description
+        type: string
+      - name: due_on
+        type: datetime
+    url_template: attribute milestones_url
+    post_arguments:
+      - name: description
+        value: parameter description
+      - name: due_on
+        value: parameter due_on
+      - name: state
+        value: parameter state
+      - name: title
+        value: parameter title
+    return_type: Milestone
+  - name: create_pull
+    end_point: POST /repos/:owner/:repo/pulls
+    parameters:
+      - name: title
+        type: string
+      - name: head
+        type: string
+      - name: base
+        type: string
+    optional_parameters:
+      - name: body
+        type: string
+    unimplemented_parameters:
+      - issue
+    url_template: attribute pulls_url
+    post_arguments:
+      - name: base
+        value: parameter base
+      - name: body
+        value: parameter body
+      - name: head
+        value: parameter head
+      - name: title
+        value: parameter title
+    return_type: PullRequest
   - name: delete
     end_point: DELETE /repos/:owner/:repo
     url_template: attribute url
@@ -798,6 +861,12 @@ methods:
       - name: name
         value: parameter name
     return_type: Label
+  - name: get_labels
+    end_point: GET /repos/:owner/:repo/labels
+    url_template: attribute labels_url
+    return_type:
+      container: list
+      content: Label
   - name: get_milestone
     end_point: GET /repos/:owner/:repo/milestones/:number
     parameters:
@@ -808,6 +877,78 @@ methods:
       - name: number
         value: parameter number
     return_type: Milestone
+  - name: get_milestones
+    end_point: GET /repos/:owner/:repo/milestones
+    optional_parameters:
+      - name: state
+        type:
+          enum: [all, closed, open]
+      - name: sort
+        type:
+          enum: [completion, due_date]
+      - name: direction
+        type:
+          enum: [asc, desc]
+      - name: per_page
+        type: int
+    url_template: attribute milestones_url
+    url_arguments:
+      - name: direction
+        value: parameter direction
+      - name: per_page
+        value: parameter per_page
+      - name: sort
+        value: parameter sort
+      - name: state
+        value: parameter state
+    return_type:
+      container: PaginatedList
+      content: Milestone
+  - name: get_pull
+    end_point: GET /repos/:owner/:repo/pulls/:number
+    parameters:
+      - name: number
+        type: int
+    url_template: attribute pulls_url
+    url_template_arguments:
+      - name: number
+        value: parameter number
+    return_type: PullRequest
+  - name: get_pulls
+    end_point: GET /repos/:owner/:repo/pulls
+    optional_parameters:
+      - name: state
+        type:
+          enum: [all, closed, open]
+      - name: head
+        type: string
+      - name: base
+        type: string
+      - name: sort
+        type:
+          enum: [created, long-running, popularity, updated]
+      - name: direction
+        type:
+          enum: [asc, desc]
+      - name: per_page
+        type: int
+    url_template: attribute pulls_url
+    url_arguments:
+      - name: base
+        value: parameter base
+      - name: direction
+        value: parameter direction
+      - name: head
+        value: parameter head
+      - name: per_page
+        value: parameter per_page
+      - name: sort
+        value: parameter sort
+      - name: state
+        value: parameter state
+    return_type:
+      container: PaginatedList
+      content: PullRequest
   - name: get_readme
     end_point: GET /repos/:owner/:repo/readme
     optional_parameters:

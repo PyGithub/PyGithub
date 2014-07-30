@@ -206,6 +206,13 @@ def normalizeDatetime(d):
         raise TypeError()
 
 
+def normalizeDatetimeReset(d):
+    if d is Reset:
+        return d
+    else:
+        return normalizeDatetime(d)
+
+
 def normalizeDict(d):
     return d
 

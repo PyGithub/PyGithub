@@ -31,3 +31,11 @@ class LabelEdit(TestCase):
         self.assertEqual(l.color, "aabbcc")
         l.edit(color="fc2929")
         self.assertEqual(l.color, "fc2929")
+
+
+class LabelDelete(TestCase):
+    @Enterprise.User(1)
+    def test(self):
+        l = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).create_label("to_be_deleted", "FF0000")
+        self.assertEqual(l.color, "FF0000")
+        l.delete()

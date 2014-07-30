@@ -1,0 +1,161 @@
+base: Issue
+structures:
+  - name: MergeResult
+    updatable: false
+    attributes:
+      - name: documentation_url
+        type: string
+      - name: merged
+        type: bool
+      - name: message
+        type: string
+      - name: sha
+        type: string
+  - name: PullEnd
+    attributes:
+      - name: label
+        type: string
+      - name: ref
+        type: string
+      - name: repo
+        type: Repository
+      - name: sha
+        type: string
+      - name: user
+        type: User
+  - name: PullFile
+    updatable: false
+    attributes:
+      - name: additions
+        type: int
+      - name: blob_url
+        type: string
+      - name: changes
+        type: int
+      - name: contents_url
+        type: string
+      - name: deletions
+        type: int
+      - name: filename
+        type: string
+      - name: patch
+        type: string
+      - name: raw_url
+        type: string
+      - name: sha
+        type: string
+      - name: status
+        type: string
+attributes:
+  - name: additions
+    type: int
+  - name: base
+    type: PullEnd
+  - name: changed_files
+    type: int
+  - name: commits
+    type: int
+  - name: commits_url
+    type: string
+  - name: deletions
+    type: int
+  - name: diff_url
+    type: string
+  - name: head
+    type: PullEnd
+  - name: issue_url
+    type: string
+  - name: merge_commit_sha
+    type: string
+  - name: mergeable
+    type: bool
+  - name: mergeable_state
+    type: string
+  - name: merged
+    type: bool
+  - name: merged_at
+    type: datetime
+  - name: merged_by
+    type: User
+  - name: patch_url
+    type: string
+  - name: review_comment_url
+    type: string
+  - name: review_comments
+    type: int
+  - name: review_comments_url
+    type: string
+  - name: statuses_url
+    type: string
+deprecated_attributes:
+  - _links
+methods:
+  - name: edit
+    end_point: PATCH /repos/:owner/:repo/pulls/:number
+    optional_parameters:
+      - name: title
+        type: string
+      - name: body
+        type:
+          union: [string, Reset]
+      - name: state
+        type:
+          enum: [closed, open]
+    url_template: attribute url
+    post_arguments:
+      - name: body
+        value: parameter body
+      - name: state
+        value: parameter state
+      - name: title
+        value: parameter title
+    effect: update
+    return_type: none
+  - name: get_commits
+    end_point: GET /repos/:owner/:repo/pulls/:number/commits
+    url_template: attribute commits_url
+    return_type:
+      container: list
+      content: Commit
+  - name: get_files
+    end_point: GET /repos/:owner/:repo/pulls/:number/files
+    url_template: end_point
+    url_template_arguments:
+      - name: number
+        value: attribute number
+      - name: owner
+        value: attribute base.repo.owner.login
+      - name: repo
+        value: attribute base.repo.name
+    return_type:
+      container: list
+      content: PullFile
+  - name: get_is_merged
+    end_point: GET /repos/:owner/:repo/pulls/:number/merge
+    url_template: end_point
+    url_template_arguments:
+      - name: number
+        value: attribute number
+      - name: owner
+        value: attribute base.repo.owner.login
+      - name: repo
+        value: attribute base.repo.name
+    return_from: status
+    return_type: bool
+  - name: merge
+    end_point: PUT /repos/:owner/:repo/pulls/:number/merge
+    optional_parameters:
+      - name: commit_message
+        type: string
+    url_template: end_point
+    url_template_arguments:
+      - name: number
+        value: attribute number
+      - name: owner
+        value: attribute base.repo.owner.login
+      - name: repo
+        value: attribute base.repo.name
+    post_arguments:
+      - name: commit_message
+        value: parameter commit_message
+    return_type: MergeResult

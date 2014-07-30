@@ -22,11 +22,11 @@ class RepositoryAttributes(TestCase):
         self.assertEqual(r.contributors_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/contributors")
         self.assertEqual(r.created_at, datetime.datetime(2014, 7, 13, 18, 19, 21))
         self.assertEqual(r.default_branch, "master")
-        self.assertEqual(r.description, "")
+        self.assertEqual(r.description, "First repository")
         self.assertEqual(r.downloads_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/downloads")
         self.assertEqual(r.events_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/events")
         self.assertEqual(r.fork, False)
-        self.assertEqual(r.forks_count, 0)
+        self.assertEqual(r.forks_count, 1)
         self.assertEqual(r.forks_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/forks")
         self.assertEqual(r.full_name, "ghe-user-1/repo-user-1-1")
         self.assertEqual(r.git_commits_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/git/commits{/sha}")
@@ -35,7 +35,7 @@ class RepositoryAttributes(TestCase):
         self.assertEqual(r.git_url, "git://github.home.jacquev6.net/ghe-user-1/repo-user-1-1.git")
         self.assertEqual(r.has_issues, True)
         self.assertEqual(r.has_wiki, True)
-        self.assertIsNone(r.homepage)
+        self.assertEqual(r.homepage, "http://jacquev6.net/repo-user-1-1")
         self.assertEqual(r.hooks_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/hooks")
         self.assertEqual(r.html_url, "http://github.home.jacquev6.net/ghe-user-1/repo-user-1-1")
         self.assertEqual(r.id, 1)
@@ -50,7 +50,7 @@ class RepositoryAttributes(TestCase):
         self.assertEqual(r.milestones_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/milestones{/number}")
         self.assertIsNone(r.mirror_url)
         self.assertEqual(r.name, "repo-user-1-1")
-        self.assertEqual(r.network_count, 0)
+        self.assertEqual(r.network_count, 1)
         self.assertEqual(r.notifications_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/notifications{?since,all,participating}")
         self.assertEqual(r.open_issues_count, 5)
         self.assertIsInstance(r.owner, PyGithub.Blocking.User.User)
@@ -76,7 +76,7 @@ class RepositoryAttributes(TestCase):
         self.assertEqual(r.tags_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/tags")
         self.assertEqual(r.teams_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/teams")
         self.assertEqual(r.trees_url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1/git/trees{/sha}")
-        self.assertEqual(r.updated_at, datetime.datetime(2014, 7, 23, 4, 52, 2))
+        self.assertEqual(r.updated_at, datetime.datetime(2014, 7, 30, 3, 32, 6))
         self.assertEqual(r.url, "http://github.home.jacquev6.net/api/v3/repos/ghe-user-1/repo-user-1-1")
         self.assertEqual(r.watchers_count, 1)
 
@@ -103,6 +103,124 @@ class RepositoryAttributes(TestCase):
         self.assertEqual(r.parent.owner.login, "ghe-org-1")
         self.assertIsInstance(r.source.owner, PyGithub.Blocking.Organization.Organization)
         self.assertEqual(r.source.owner.login, "ghe-org-1")
+
+
+class RepositoryCollaborators(TestCase):
+    @Enterprise.User(1)
+    def testGetCollaborators(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        collaborators = r.get_collaborators()
+        self.assertEqual([c.login for c in collaborators], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+
+    @Enterprise.User(1)
+    def testGetCollaborators_allParameters(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        collaborators = r.get_collaborators(per_page=1)
+        self.assertEqual([c.login for c in collaborators], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+
+    @Enterprise.User(1)
+    def testAddToAndRemoveFromCollaborators(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertTrue(r.has_in_collaborators("ghe-user-2"))
+        r.remove_from_collaborators("ghe-user-2")
+        self.assertFalse(r.has_in_collaborators("ghe-user-2"))
+        r.add_to_collaborators("ghe-user-2")
+        self.assertTrue(r.has_in_collaborators("ghe-user-2"))
+
+
+class RepositoryContributors(TestCase):
+    @DotCom  # @todoAlpha Rewrite as @Enterprise
+    def testGetContributors(self):
+        r = self.g.get_repo("jacquev6/PyGithub")
+        contributors = r.get_contributors()
+        self.assertEqual(len(list(contributors)), 31)
+        self.assertEqual(contributors[0].login, "jacquev6")
+        self.assertEqual(contributors[0].contributions, 1069)
+        self.assertIsInstance(contributors[0], PyGithub.Blocking.Contributor.Contributor)
+        self.assertEqual(contributors[1].login, "akfish")
+        self.assertEqual(contributors[1].type, "User")
+
+    @DotCom  # @todoAlpha Rewrite as @Enterprise
+    def testGetContributors_allParameters(self):
+        contributors = self.g.get_repo("jacquev6/PyGithub").get_contributors(anon=True, per_page=3)
+        self.assertEqual(len(list(contributors)), 34)
+        self.assertEqual(contributors[17].type, "Anonymous")
+        self.assertEqual(contributors[17].name, "Adrian Petrescu")
+        self.assertEqual(contributors[17].contributions, 1)
+        self.assertIsInstance(contributors[17], PyGithub.Blocking.Repository.Repository.AnonymousContributor)
+
+
+class RepositoryDelete(TestCase):
+    @Enterprise.User(1)
+    def test(self):
+        r = self.g.get_authenticated_user().create_repo("repo-user-1-ephemeral")
+        r.delete()
+
+
+class RepositoryEdit(TestCase):
+    @Enterprise.User(1)
+    def testName(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertEqual(r.name, "repo-user-1-1")
+        r.edit(name="repo-user-1-1-bis")
+        self.assertEqual(r.name, "repo-user-1-1-bis")
+        r.edit(name="repo-user-1-1")
+        self.assertEqual(r.name, "repo-user-1-1")
+
+    @Enterprise.User(1)
+    def testDescription(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertEqual(r.description, "First repository")
+        r.edit(description=PyGithub.Blocking.Reset)
+        self.assertIsNone(r.description)
+        r.edit(description="First repository")
+        self.assertEqual(r.description, "First repository")
+
+    @Enterprise.User(1)
+    def testHomepage(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertEqual(r.homepage, "http://jacquev6.net/repo-user-1-1")
+        r.edit(homepage=PyGithub.Blocking.Reset)
+        self.assertIsNone(r.homepage)
+        r.edit(homepage="http://jacquev6.net/repo-user-1-1")
+        self.assertEqual(r.homepage, "http://jacquev6.net/repo-user-1-1")
+
+    @Enterprise.User(1)
+    def testPrivate(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-3"))
+        self.assertEqual(r.private, True)
+        r.edit(private=False)
+        self.assertEqual(r.private, False)
+        r.edit(private=True)
+        self.assertEqual(r.private, True)
+
+    @Enterprise.User(1)
+    def testHasIssues(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-3"))
+        self.assertEqual(r.has_issues, True)
+        r.edit(has_issues=False)
+        self.assertEqual(r.has_issues, False)
+        r.edit(has_issues=True)
+        self.assertEqual(r.has_issues, True)
+
+    @Enterprise.User(1)
+    def testHasWiki(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-3"))
+        self.assertEqual(r.has_wiki, True)
+        r.edit(has_wiki=False)
+        self.assertEqual(r.has_wiki, False)
+        r.edit(has_wiki=True)
+        self.assertEqual(r.has_wiki, True)
+
+    @Enterprise.User(1)
+    def testDefaultBranch(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertEqual(r.default_branch, "master")
+        # @todoAlpha test with a Branch instance
+        r.edit(default_branch="develop")
+        self.assertEqual(r.default_branch, "develop")
+        r.edit(default_branch="master")
+        self.assertEqual(r.default_branch, "master")
 
 
 class RepositoryGitStuff(TestCase):
@@ -204,10 +322,28 @@ class RepositoryGitStuff(TestCase):
         self.assertEqual(blob.sha, "3daf0da6bca38181ab52610dd6af6e92f1a5469d")
 
     @Enterprise.User(1)
+    def testGetGitBlob(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        blob = r.get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+        self.assertEqual(blob.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
+
+    @Enterprise.User(1)
     def testCreateGitTree(self):
         r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
         tree = r.create_git_tree(tree=[{"path": "test.txt", "mode": "100644", "type": "blob", "sha": "3daf0da6bca38181ab52610dd6af6e92f1a5469d"}])
         self.assertEqual(tree.sha, "65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+
+    @Enterprise.User(1)
+    def testGetGitTree(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        tree = r.get_git_tree("65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
+        self.assertEqual(len(tree.tree), 1)
+
+    @Enterprise.User(1)
+    def testGetGitCommit(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        commit = r.get_git_commit("094fbbb7cae0a23bc651f26924686522cf88d84b")
+        self.assertEqual(commit.message, "first commit")
 
     @Enterprise.User(1)
     def testCreateInitialGitCommit(self):
@@ -343,6 +479,12 @@ class RepositoryIssues(TestCase):
         self.assertEqual(len(issue.labels), 1)
 
     @Enterprise.User(2)
+    def testGetIssue(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        issue = r.get_issue(1)
+        self.assertEqual(issue.title, "First issue")
+
+    @Enterprise.User(2)
     def testGetIssues(self):
         r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
         issues = r.get_issues()
@@ -353,3 +495,112 @@ class RepositoryIssues(TestCase):
         r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
         issues = r.get_issues(milestone=1, state="open", assignee="ghe-user-1", creator="ghe-user-1", mentioned="ghe-user-2", labels=["question"], sort="created", direction="asc", since=datetime.datetime(2014, 1, 1, 0, 0, 0), per_page=1)
         self.assertEqual([i.title for i in issues], ["Also created by PyGithub"])
+
+    @Enterprise.User(1)
+    def testHasInAssignees(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        self.assertTrue(r.has_in_assignees("ghe-user-2"))
+        self.assertFalse(r.has_in_assignees("ghe-admin-1"))
+
+    @Enterprise.User(1)
+    def testGetAssignees(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        assignees = r.get_assignees()
+        self.assertEqual([a.login for a in assignees], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+
+    @Enterprise.User(1)
+    def testGetAssignees_allParameters(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        assignees = r.get_assignees(per_page=1)
+        self.assertEqual([a.login for a in assignees], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+
+    @Enterprise.User(1)
+    def testGetLabels(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        labels = r.get_labels()
+        self.assertEqual([l.name for l in labels], ["bug", "duplicate", "enhancement", "help wanted", "invalid", "question", "wontfix"])
+
+    @Enterprise.User(1)
+    def testCreateLabel(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        label = r.create_label("to_be_deleted", "FF0000")
+        self.assertEqual(label.color, "FF0000")
+        label.delete()
+
+    @Enterprise.User(1)
+    def testGetLabel(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        label = r.get_label("bug")
+        self.assertEqual(label.color, "fc2929")
+
+    # @todoAlpha follow-up with issue opened to github for labels with % sign
+    # def testGetLabelWithWeirdName(self):
+    #     label = self.g.get_repo("jacquev6/PyGithubIntegrationTests").get_label("space é % space")
+    #     self.assertEqual(label.name, "space é % space".decode("utf-8"))
+
+    @Enterprise.User(1)
+    def testCreateMilestone(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        milestone = r.create_milestone("Created by PyGithub")
+        self.assertEqual(milestone.title, "Created by PyGithub")
+        self.assertEqual(milestone.state, "open")
+        self.assertIsNone(milestone.description)
+        self.assertIsNone(milestone.due_on)
+        milestone.delete()
+
+    @Enterprise.User(1)
+    def testCreateMilestone_allParameters(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        milestone = r.create_milestone("Created by PyGithub", state="closed", description="Body", due_on="2014-08-01T00:00:00Z")
+        self.assertEqual(milestone.title, "Created by PyGithub")
+        self.assertEqual(milestone.state, "closed")
+        self.assertEqual(milestone.description, "Body")
+        self.assertEqual(milestone.due_on, datetime.datetime(2014, 8, 1, 0, 0, 0))
+        milestone.delete()
+
+    @Enterprise.User(1)
+    def testGetMilestone(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        milestone = r.get_milestone(2)
+        self.assertEqual(milestone.number, 2)
+        self.assertEqual(milestone.id, 3)
+
+    @Enterprise.User(1)
+    def testGetMilestones(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        milestones = r.get_milestones()
+        self.assertEqual([m.id for m in milestones], [3, 1])
+
+    @Enterprise.User(1)
+    def testGetMilestones_allParameters(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        milestones = r.get_milestones(state="open", sort="due_date", direction="asc", per_page=1)
+        self.assertEqual([m.id for m in milestones], [3, 1])
+
+    @Enterprise.User(1)
+    def testGetPulls(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        pulls = r.get_pulls()
+        self.assertEqual([p.number for p in pulls], [7, 6])
+
+    @Enterprise.User(1)
+    def testGetPulls_almostAllParameters(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        pulls = r.get_pulls(state="open", head="ghe-org-1:feature1", sort="updated", direction="asc", per_page=1)
+        self.assertEqual([p.number for p in pulls], [6, 7])
+
+    @Enterprise.User(1)
+    def testGetPulls_base(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        pulls = r.get_pulls(base="master")
+        self.assertEqual([p.number for p in pulls], [7])
+        pulls = r.get_pulls(base="develop")
+        self.assertEqual([p.number for p in pulls], [6])
+
+    @Enterprise.User(1)
+    def testGetPull(self):
+        r = self.g.get_repo(("ghe-user-1", "repo-user-1-1"))
+        pull = r.get_pull(6)
+        self.assertEqual(pull.mergeable, False)
+        pull = r.get_pull(7)
+        self.assertEqual(pull.mergeable, True)

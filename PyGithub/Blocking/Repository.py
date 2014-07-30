@@ -33,6 +33,7 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.create_repo`
       * :meth:`.Organization.get_repo`
       * :meth:`.Organization.get_repos`
+      * :attr:`.PullEnd.repo`
       * :meth:`.Repository.get_forks`
       * :attr:`.Repository.parent`
       * :attr:`.Repository.source`
@@ -1113,6 +1114,79 @@ class Repository(_bgo.UpdatableGithubObject):
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PublicKey.PublicKey)(None, r.json(), r.headers.get("ETag"))
 
+    def create_label(self, name, color):
+        """
+        Calls the `POST /repos/:owner/:repo/labels <http://developer.github.com/v3/issues/labels#create-a-label>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param name: mandatory :class:`string`
+        :param color: mandatory :class:`string`
+        :rtype: :class:`.Label`
+        """
+        import PyGithub.Blocking.Label
+
+        name = _snd.normalizeString(name)
+        color = _snd.normalizeString(color)
+
+        url = uritemplate.expand(self.labels_url)
+        postArguments = _snd.dictionary(color=color, name=name)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)(None, r.json(), r.headers.get("ETag"))
+
+    def create_milestone(self, title, state=None, description=None, due_on=None):
+        """
+        Calls the `POST /repos/:owner/:repo/milestones <http://developer.github.com/v3/issues/milestones#create-a-milestone>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param title: mandatory :class:`string`
+        :param state: optional "closed" or "open"
+        :param description: optional :class:`string`
+        :param due_on: optional :class:`datetime`
+        :rtype: :class:`.Milestone`
+        """
+        import PyGithub.Blocking.Milestone
+
+        title = _snd.normalizeString(title)
+        if state is not None:
+            state = _snd.normalizeEnum(state, "closed", "open")
+        if description is not None:
+            description = _snd.normalizeString(description)
+        if due_on is not None:
+            due_on = _snd.normalizeDatetime(due_on)
+
+        url = uritemplate.expand(self.milestones_url)
+        postArguments = _snd.dictionary(description=description, due_on=due_on, state=state, title=title)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone)(None, r.json(), r.headers.get("ETag"))
+
+    def create_pull(self, title, head, base, body=None):
+        """
+        Calls the `POST /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls#create-a-pull-request>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Issue.create_pull`
+
+        :param title: mandatory :class:`string`
+        :param head: mandatory :class:`string`
+        :param base: mandatory :class:`string`
+        :param body: optional :class:`string`
+        :rtype: :class:`.PullRequest`
+        """
+        import PyGithub.Blocking.PullRequest
+
+        title = _snd.normalizeString(title)
+        head = _snd.normalizeString(head)
+        base = _snd.normalizeString(base)
+        if body is not None:
+            body = _snd.normalizeString(body)
+
+        url = uritemplate.expand(self.pulls_url)
+        postArguments = _snd.dictionary(base=base, body=body, head=head, title=title)
+        r = self.Session._request("POST", url, postArguments=postArguments)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PullRequest.PullRequest)(None, r.json(), r.headers.get("ETag"))
+
     def delete(self):
         """
         Calls the `DELETE /repos/:owner/:repo <http://developer.github.com/v3/repos#delete-a-repository>`__ end point.
@@ -1587,6 +1661,20 @@ class Repository(_bgo.UpdatableGithubObject):
         r = self.Session._request("GET", url)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)(None, r.json(), r.headers.get("ETag"))
 
+    def get_labels(self):
+        """
+        Calls the `GET /repos/:owner/:repo/labels <http://developer.github.com/v3/issues/labels#list-all-labels-for-this-repository>`__ end point.
+
+        This is the only method calling this end point.
+
+        :rtype: :class:`list` of :class:`.Label`
+        """
+        import PyGithub.Blocking.Label
+
+        url = uritemplate.expand(self.labels_url)
+        r = self.Session._request("GET", url)
+        return _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label))(None, r.json())
+
     def get_milestone(self, number):
         """
         Calls the `GET /repos/:owner/:repo/milestones/:number <http://developer.github.com/v3/issues/milestones#get-a-single-milestone>`__ end point.
@@ -1603,6 +1691,89 @@ class Repository(_bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.milestones_url, number=str(number))
         r = self.Session._request("GET", url)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone)(None, r.json(), r.headers.get("ETag"))
+
+    def get_milestones(self, state=None, sort=None, direction=None, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/milestones <http://developer.github.com/v3/issues/milestones#list-milestones-for-a-repository>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param state: optional "all" or "closed" or "open"
+        :param sort: optional "completion" or "due_date"
+        :param direction: optional "asc" or "desc"
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.Milestone`
+        """
+        import PyGithub.Blocking.Milestone
+
+        if state is not None:
+            state = _snd.normalizeEnum(state, "all", "closed", "open")
+        if sort is not None:
+            sort = _snd.normalizeEnum(sort, "completion", "due_date")
+        if direction is not None:
+            direction = _snd.normalizeEnum(direction, "asc", "desc")
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = _snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.milestones_url)
+        urlArguments = _snd.dictionary(direction=direction, per_page=per_page, sort=sort, state=state)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone))(None, r)
+
+    def get_pull(self, number):
+        """
+        Calls the `GET /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls#get-a-single-pull-request>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param number: mandatory :class:`int`
+        :rtype: :class:`.PullRequest`
+        """
+        import PyGithub.Blocking.PullRequest
+
+        number = _snd.normalizeInt(number)
+
+        url = uritemplate.expand(self.pulls_url, number=str(number))
+        r = self.Session._request("GET", url)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PullRequest.PullRequest)(None, r.json(), r.headers.get("ETag"))
+
+    def get_pulls(self, state=None, head=None, base=None, sort=None, direction=None, per_page=None):
+        """
+        Calls the `GET /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls#list-pull-requests>`__ end point.
+
+        This is the only method calling this end point.
+
+        :param state: optional "all" or "closed" or "open"
+        :param head: optional :class:`string`
+        :param base: optional :class:`string`
+        :param sort: optional "created" or "long-running" or "popularity" or "updated"
+        :param direction: optional "asc" or "desc"
+        :param per_page: optional :class:`int`
+        :rtype: :class:`.PaginatedList` of :class:`.PullRequest`
+        """
+        import PyGithub.Blocking.PullRequest
+
+        if state is not None:
+            state = _snd.normalizeEnum(state, "all", "closed", "open")
+        if head is not None:
+            head = _snd.normalizeString(head)
+        if base is not None:
+            base = _snd.normalizeString(base)
+        if sort is not None:
+            sort = _snd.normalizeEnum(sort, "created", "long-running", "popularity", "updated")
+        if direction is not None:
+            direction = _snd.normalizeEnum(direction, "asc", "desc")
+        if per_page is None:
+            per_page = self.Session.PerPage
+        else:
+            per_page = _snd.normalizeInt(per_page)
+
+        url = uritemplate.expand(self.pulls_url)
+        urlArguments = _snd.dictionary(base=base, direction=direction, head=head, per_page=per_page, sort=sort, state=state)
+        r = self.Session._request("GET", url, urlArguments=urlArguments)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.ClassConverter(self.Session, PyGithub.Blocking.PullRequest.PullRequest))(None, r)
 
     def get_readme(self, ref=None):
         """

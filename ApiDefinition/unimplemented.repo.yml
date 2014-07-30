@@ -30,30 +30,10 @@
   - POST
 /repos/:owner/:repo/hooks/:id/tests:
   - POST
-/repos/:owner/:repo/issues/:number/labels:
-  - DELETE
-  - GET
-  - POST
-  - PUT
-/repos/:owner/:repo/issues/:number/labels/:name:
-  - DELETE
-/repos/:owner/:repo/labels:
-  - GET
-  - POST
-/repos/:owner/:repo/labels/:name:
-  - DELETE
 /repos/:owner/:repo/languages:
   - GET
 /repos/:owner/:repo/merges:
   - POST
-/repos/:owner/:repo/milestones:
-  - GET
-  - POST
-/repos/:owner/:repo/milestones/:number:
-  - DELETE
-  - PATCH
-/repos/:owner/:repo/milestones/:number/labels:
-  - GET
 /repos/:owner/:repo/notifications:
   - GET
   - PUT
@@ -63,19 +43,6 @@
   - GET
 /repos/:owner/:repo/pages/builds/latest:
   - GET
-/repos/:owner/:repo/pulls:
-  - GET
-  - POST
-/repos/:owner/:repo/pulls/:number:
-  - GET
-  - PATCH
-/repos/:owner/:repo/pulls/:number/commits:
-  - GET
-/repos/:owner/:repo/pulls/:number/files:
-  - GET
-/repos/:owner/:repo/pulls/:number/merge:
-  - GET
-  - PUT
 /repos/:owner/:repo/releases:
   - GET
   - POST

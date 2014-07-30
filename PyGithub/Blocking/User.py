@@ -40,6 +40,8 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :attr:`.Milestone.creator`
       * :meth:`.Organization.get_members`
       * :meth:`.Organization.get_public_members`
+      * :attr:`.PullEnd.user`
+      * :attr:`.PullRequest.merged_by`
       * :meth:`.Repository.get_assignees`
       * :meth:`.Repository.get_collaborators`
       * :meth:`.Repository.get_stargazers`

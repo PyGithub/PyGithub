@@ -226,3 +226,10 @@ class NormalizationTestCase(unittest.TestCase):
         self.assertEqual(snd.normalizeDatetime(datetime.datetime(2014, 6, 18, 12, 12, 15)), "2014-06-18T12:12:15Z")
         with self.assertRaises(TypeError):
             snd.normalizeDatetime(PyGithub.Blocking.Reset)
+
+    def testNormalizeDatetimeReset(self):
+        self.assertEqual(snd.normalizeDatetimeReset("foo"), "foo")
+        self.assertEqual(snd.normalizeDatetimeReset(datetime.datetime(2014, 6, 18, 12, 12, 15)), "2014-06-18T12:12:15Z")
+        self.assertEqual(snd.normalizeDatetimeReset(PyGithub.Blocking.Reset), PyGithub.Blocking.Reset)
+        with self.assertRaises(TypeError):
+            snd.normalizeDatetimeReset(42)

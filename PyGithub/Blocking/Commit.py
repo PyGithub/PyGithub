@@ -22,6 +22,7 @@ class Commit(_bgo.UpdatableGithubObject):
     Methods and attributes returning instances of this class:
       * :attr:`.Branch.commit`
       * :attr:`.Commit.parents`
+      * :meth:`.PullRequest.get_commits`
       * :meth:`.Repository.get_commit`
       * :meth:`.Repository.get_commits`
       * :attr:`.Tag.commit`

@@ -25,6 +25,7 @@ from PyGithub.Blocking.tests.classes.LabelTestCases import *
 from PyGithub.Blocking.tests.classes.MilestoneTestCases import *
 from PyGithub.Blocking.tests.classes.OrganizationTestCases import *
 from PyGithub.Blocking.tests.classes.PublicKeyTestCases import *
+from PyGithub.Blocking.tests.classes.PullRequestTestCases import *
 from PyGithub.Blocking.tests.classes.RepositoryTestCases import *
 from PyGithub.Blocking.tests.classes.SubmoduleTestCases import *
 from PyGithub.Blocking.tests.classes.SubscriptionTestCases import *
