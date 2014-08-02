@@ -76,7 +76,7 @@ class Entity(_bgo.UpdatableGithubObject):
             """
             return self.__space.value
 
-    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
+    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         super(Entity, self)._initAttributes(**kwds)
         self.__avatar_url = _rcv.Attribute("Entity.avatar_url", _rcv.StringConverter, avatar_url)
         self.__blog = _rcv.Attribute("Entity.blog", _rcv.StringConverter, blog)
@@ -99,12 +99,11 @@ class Entity(_bgo.UpdatableGithubObject):
         self.__public_gists = _rcv.Attribute("Entity.public_gists", _rcv.IntConverter, public_gists)
         self.__public_repos = _rcv.Attribute("Entity.public_repos", _rcv.IntConverter, public_repos)
         self.__repos_url = _rcv.Attribute("Entity.repos_url", _rcv.StringConverter, repos_url)
-        self.__suspended_at = _rcv.Attribute("Entity.suspended_at", _rcv.DatetimeConverter, suspended_at)
         self.__total_private_repos = _rcv.Attribute("Entity.total_private_repos", _rcv.IntConverter, total_private_repos)
         self.__type = _rcv.Attribute("Entity.type", _rcv.StringConverter, type)
         self.__updated_at = _rcv.Attribute("Entity.updated_at", _rcv.DatetimeConverter, updated_at)
 
-    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, **kwds):
         super(Entity, self)._updateAttributes(eTag, **kwds)
         self.__avatar_url.update(avatar_url)
         self.__blog.update(blog)
@@ -127,7 +126,6 @@ class Entity(_bgo.UpdatableGithubObject):
         self.__public_gists.update(public_gists)
         self.__public_repos.update(public_repos)
         self.__repos_url.update(repos_url)
-        self.__suspended_at.update(suspended_at)
         self.__total_private_repos.update(total_private_repos)
         self.__type.update(type)
         self.__updated_at.update(updated_at)
@@ -299,14 +297,6 @@ class Entity(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__repos_url.needsLazyCompletion)
         return self.__repos_url.value
-
-    @property
-    def suspended_at(self):
-        """
-        :type: :class:`datetime`
-        """
-        self._completeLazily(self.__suspended_at.needsLazyCompletion)
-        return self.__suspended_at.value
 
     @property
     def total_private_repos(self):

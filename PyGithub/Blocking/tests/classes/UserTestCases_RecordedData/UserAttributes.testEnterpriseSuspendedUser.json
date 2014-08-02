@@ -1,0 +1,75 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic emV1czpwYXNzd29yZDEtemV1cw==",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/users/morpheus",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "http://github.home.jacquev6.net/identicons/aab3238922bcc25a6f606eb525ffdc56.png",
+                "collaborators": 0,
+                "created_at": "2014-08-02T16:48:34Z",
+                "disk_usage": 0,
+                "events_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/events{/privacy}",
+                "followers": 0,
+                "followers_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/followers",
+                "following": 0,
+                "following_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/following{/other_user}",
+                "gists_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/gists{/gist_id}",
+                "gravatar_id": "eb7f57258486f473526a2b54513a6e85",
+                "html_url": "http://github.home.jacquev6.net/morpheus",
+                "id": 14,
+                "login": "morpheus",
+                "organizations_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/orgs",
+                "owned_private_repos": 0,
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_repos": 0,
+                "received_events_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/received_events",
+                "repos_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/repos",
+                "site_admin": false,
+                "starred_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/starred{/owner}{/repo}",
+                "subscriptions_url": "http://github.home.jacquev6.net/api/v3/users/morpheus/subscriptions",
+                "suspended_at": "2014-08-02T16:49:10+00:00",
+                "total_private_repos": 0,
+                "type": "User",
+                "updated_at": "2014-08-02T16:49:10Z",
+                "url": "http://github.home.jacquev6.net/api/v3/users/morpheus"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "1376",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sat, 02 Aug 2014 18:07:22 GMT",
+                "etag": "\"33b5f86e31db0a0b07b3ea38bf792809\"",
+                "last-modified": "Sat, 02 Aug 2014 16:49:10 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "1d4eda90-5d3b-44a5-9b4c-2c3df26f669a",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]

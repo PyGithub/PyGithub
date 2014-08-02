@@ -473,19 +473,22 @@ class BasicSanitizer(object):
 class Enterprise(object):
     @staticmethod
     def Admin(n):
-        return Enterprise("admin", n)
+        return Enterprise("ghe-admin-{}".format(n), "password-admin-{}".format(n))
 
     @staticmethod
     def User(n):
-        return Enterprise("user", n)
+        return Enterprise("ghe-user-{}".format(n), "password-user-{}".format(n))
 
-    def __init__(self, radix, n):
-        self.__radix = radix
-        self.__n = n
+    def __init__(self, login, password=None):
+        self.__login = login
+        if password is None:
+            self.__password = "password1-{}".format(login)
+        else:
+            self.__password = password
 
     def __call__(self, method):
         method.builder = PyGithub.BlockingBuilder().Enterprise("github.home.jacquev6.net")
-        method.builder.Login("ghe-{}-{}".format(self.__radix, self.__n), "password-{}-{}".format(self.__radix, self.__n))
+        method.builder.Login(self.__login, self.__password)
         method.sanitizer = NullSanitizer()
         return method
 

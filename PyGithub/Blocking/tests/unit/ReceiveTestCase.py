@@ -147,6 +147,9 @@ class BuiltinConverterTestCase(unittest.TestCase):
     def testIntegerConversion(self):
         self.assertEqual(rcv.IntConverter(None, 42), 42)
 
+    def testLongConversion(self):
+        self.assertEqual(rcv.IntConverter(None, 999999999999), 999999999999)
+
     def testBadIntegerConversion(self):
         with self.assertRaises(rcv._ConversionException):
             rcv.IntConverter(None, "42")

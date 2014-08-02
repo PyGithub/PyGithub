@@ -102,7 +102,7 @@ class User(PyGithub.Blocking.Entity.Entity):
             """
             return self.__key.value
 
-    def _initAttributes(self, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, bio=None, **kwds):
+    def _initAttributes(self, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, suspended_at=_rcv.Absent, bio=None, **kwds):
         super(User, self)._initAttributes(**kwds)
         self.__followers_url = _rcv.Attribute("User.followers_url", _rcv.StringConverter, followers_url)
         self.__following_url = _rcv.Attribute("User.following_url", _rcv.StringConverter, following_url)
@@ -114,8 +114,9 @@ class User(PyGithub.Blocking.Entity.Entity):
         self.__site_admin = _rcv.Attribute("User.site_admin", _rcv.BoolConverter, site_admin)
         self.__starred_url = _rcv.Attribute("User.starred_url", _rcv.StringConverter, starred_url)
         self.__subscriptions_url = _rcv.Attribute("User.subscriptions_url", _rcv.StringConverter, subscriptions_url)
+        self.__suspended_at = _rcv.Attribute("User.suspended_at", _rcv.DatetimeConverter, suspended_at)
 
-    def _updateAttributes(self, eTag, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, bio=None, **kwds):
+    def _updateAttributes(self, eTag, followers_url=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, organizations_url=_rcv.Absent, received_events_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, suspended_at=_rcv.Absent, bio=None, **kwds):
         super(User, self)._updateAttributes(eTag, **kwds)
         self.__followers_url.update(followers_url)
         self.__following_url.update(following_url)
@@ -127,6 +128,7 @@ class User(PyGithub.Blocking.Entity.Entity):
         self.__site_admin.update(site_admin)
         self.__starred_url.update(starred_url)
         self.__subscriptions_url.update(subscriptions_url)
+        self.__suspended_at.update(suspended_at)
 
     @property
     def followers_url(self):
@@ -207,6 +209,14 @@ class User(PyGithub.Blocking.Entity.Entity):
         """
         self._completeLazily(self.__subscriptions_url.needsLazyCompletion)
         return self.__subscriptions_url.value
+
+    @property
+    def suspended_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__suspended_at.needsLazyCompletion)
+        return self.__suspended_at.value
 
     def get_followers(self, per_page=None):
         """

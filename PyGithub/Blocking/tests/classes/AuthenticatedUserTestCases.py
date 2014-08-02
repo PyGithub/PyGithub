@@ -6,52 +6,52 @@ from PyGithub.Blocking.tests.Framework import *
 
 
 class AuthenticatedUserEdit(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testName(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual(u.name, "One Ghe")
+        self.assertEqual(u.name, None)
+        u.edit(name="Penelope")
+        self.assertEqual(u.name, "Penelope")
         u.edit(name=PyGithub.Blocking.Reset)
-        self.assertIsNone(u.name)
-        u.edit(name="One Ghe")
-        self.assertEqual(u.name, "One Ghe")
+        self.assertEqual(u.name, None)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testEmail(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual(u.email, "ghe-user-1@jacquev6.net")
+        self.assertEqual(u.email, None)
+        u.edit(email="ghe-penelope@jacquev6.net")
+        self.assertEqual(u.email, "ghe-penelope@jacquev6.net")
         u.edit(email=PyGithub.Blocking.Reset)
-        self.assertIsNone(u.email)
-        u.edit(email="ghe-user-1@jacquev6.net")
-        self.assertEqual(u.email, "ghe-user-1@jacquev6.net")
+        self.assertEqual(u.email, None)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testBlog(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual(u.blog, "http://jacquev6.net/ghe-user-1")
+        self.assertEqual(u.blog, None)
+        u.edit(blog="http://jacquev6.net/penelope")
+        self.assertEqual(u.blog, "http://jacquev6.net/penelope")
         u.edit(blog=PyGithub.Blocking.Reset)
-        self.assertIsNone(u.blog)
-        u.edit(blog="http://jacquev6.net/ghe-user-1")
-        self.assertEqual(u.blog, "http://jacquev6.net/ghe-user-1")
+        self.assertEqual(u.blog, None)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testCompany(self):
         u = self.g.get_authenticated_user()
-        self.assertIsNone(u.company)
-        u.edit(company="FooBar Software")
-        self.assertEqual(u.company, "FooBar Software")
+        self.assertEqual(u.company, None)
+        u.edit(company="Penelope Software")
+        self.assertEqual(u.company, "Penelope Software")
         u.edit(company=PyGithub.Blocking.Reset)
         self.assertIsNone(u.company)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testLocation(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual(u.location, "Venus")
+        self.assertEqual(u.location, None)
+        u.edit(location="Greece")
+        self.assertEqual(u.location, "Greece")
         u.edit(location=PyGithub.Blocking.Reset)
-        self.assertIsNone(u.location)
-        u.edit(location="Venus")
-        self.assertEqual(u.location, "Venus")
+        self.assertEqual(u.location, None)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testHireable(self):
         u = self.g.get_authenticated_user()
         self.assertEqual(u.hireable, False)

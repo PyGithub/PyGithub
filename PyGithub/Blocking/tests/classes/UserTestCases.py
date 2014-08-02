@@ -6,19 +6,30 @@ from PyGithub.Blocking.tests.Framework import *
 
 
 class UserAttributes(TestCase):
-    @Enterprise.User(1)
-    def testEnterprise(self):
-        u = self.g.get_user("ghe-user-1")
-        self.assertEqual(u.followers_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/followers")
-        self.assertEqual(u.following_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/following{/other_user}")
-        self.assertEqual(u.gists_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/gists{/gist_id}")
-        self.assertEqual(u.gravatar_id, "620566d878a106fffe892cd29825b406")
+    @Enterprise("zeus")
+    def testEnterpriseUser(self):
+        u = self.g.get_user("antigone")
+        self.assertEqual(u.followers_url, "http://github.home.jacquev6.net/api/v3/users/antigone/followers")
+        self.assertEqual(u.following_url, "http://github.home.jacquev6.net/api/v3/users/antigone/following{/other_user}")
+        self.assertEqual(u.gists_url, "http://github.home.jacquev6.net/api/v3/users/antigone/gists{/gist_id}")
+        self.assertEqual(u.gravatar_id, "22204000fcc2173ab585271509092a31")
         self.assertEqual(u.hireable, False)
-        self.assertEqual(u.organizations_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/orgs")
-        self.assertEqual(u.received_events_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/received_events")
+        self.assertEqual(u.organizations_url, "http://github.home.jacquev6.net/api/v3/users/antigone/orgs")
+        self.assertEqual(u.received_events_url, "http://github.home.jacquev6.net/api/v3/users/antigone/received_events")
         self.assertEqual(u.site_admin, False)
-        self.assertEqual(u.starred_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/starred{/owner}{/repo}")
-        self.assertEqual(u.subscriptions_url, "http://github.home.jacquev6.net/api/v3/users/ghe-user-1/subscriptions")
+        self.assertEqual(u.starred_url, "http://github.home.jacquev6.net/api/v3/users/antigone/starred{/owner}{/repo}")
+        self.assertEqual(u.subscriptions_url, "http://github.home.jacquev6.net/api/v3/users/antigone/subscriptions")
+        self.assertEqual(u.suspended_at, None)
+
+    @Enterprise("zeus")
+    def testEnterpriseAdmin(self):
+        u = self.g.get_user("poseidon")
+        self.assertEqual(u.site_admin, True)
+
+    @Enterprise("zeus")
+    def testEnterpriseSuspendedUser(self):
+        u = self.g.get_user("morpheus")
+        self.assertEqual(u.suspended_at, datetime.datetime(2014, 8, 2, 16, 49, 10))
 
 
 class UserFollowing(TestCase):

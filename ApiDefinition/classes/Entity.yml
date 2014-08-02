@@ -52,8 +52,6 @@ attributes:
     type: int
   - name: repos_url
     type: string
-  - name: suspended_at
-    type: datetime
   - name: total_private_repos
     type: int
   - name: type

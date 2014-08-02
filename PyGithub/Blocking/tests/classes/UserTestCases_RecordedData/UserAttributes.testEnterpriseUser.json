@@ -64,7 +64,7 @@
                 "content-length": "1523",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 02 Aug 2014 18:06:53 GMT",
+                "date": "Sat, 02 Aug 2014 18:07:22 GMT",
                 "etag": "\"29cde56a5f7767f8fc9e7a3dc03a7b7e\"",
                 "last-modified": "Sat, 02 Aug 2014 18:06:00 GMT",
                 "server": "GitHub.com",
@@ -73,7 +73,7 @@
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "77126b6e-52a7-44c5-977d-dbcc466e6c62",
+                "x-github-request-id": "7943ff84-59af-4be4-8c95-81dc61e78d3a",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200

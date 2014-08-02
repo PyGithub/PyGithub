@@ -28,6 +28,8 @@ attributes:
     type: string
   - name: subscriptions_url
     type: string
+  - name: suspended_at
+    type: datetime
 deprecated_attributes:
   - bio
 methods:
