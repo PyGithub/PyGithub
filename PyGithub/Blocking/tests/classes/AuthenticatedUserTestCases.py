@@ -91,38 +91,38 @@ class AuthenticatedUserEmails(TestCase):
 
 
 class AuthenticatedUserFollowing(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def testGetFollowing(self):
         u = self.g.get_authenticated_user()
         following = u.get_following()
-        self.assertEqual([f.login for f in following], ["ghe-admin-1", "ghe-user-2", "ghe-user-3", "ghe-admin-2"])
+        self.assertEqual([f.login for f in following], ["zeus", "poseidon"])
 
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def testGetFollowing_allParameters(self):
         u = self.g.get_authenticated_user()
-        following = u.get_following(per_page=2)
-        self.assertEqual([f.login for f in following], ["ghe-admin-1", "ghe-user-2", "ghe-user-3", "ghe-admin-2"])
+        following = u.get_following(per_page=1)
+        self.assertEqual([f.login for f in following], ["zeus", "poseidon"])
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testAddToAndRemoveFromFollowing(self):
         u = self.g.get_authenticated_user()
-        self.assertTrue(u.has_in_following("ghe-user-2"))
-        u.remove_from_following("ghe-user-2")
-        self.assertFalse(u.has_in_following("ghe-user-2"))
-        u.add_to_following("ghe-user-2")
-        self.assertTrue(u.has_in_following("ghe-user-2"))
+        self.assertFalse(u.has_in_following("zeus"))
+        u.add_to_following("zeus")
+        self.assertTrue(u.has_in_following("zeus"))
+        u.remove_from_following("zeus")
+        self.assertFalse(u.has_in_following("zeus"))
 
-    @Enterprise.User(3)
+    @Enterprise("zeus")
     def testGetFollowers(self):
         u = self.g.get_authenticated_user()
         followers = u.get_followers()
-        self.assertEqual([f.login for f in followers], ["ghe-user-1", "ghe-admin-1", "ghe-admin-2", "ghe-user-2"])
+        self.assertEqual([f.login for f in followers], ["electra", "poseidon"])
 
-    @Enterprise.User(3)
+    @Enterprise("zeus")
     def testGetFollowers_allParameters(self):
         u = self.g.get_authenticated_user()
-        followers = u.get_followers(per_page=2)
-        self.assertEqual([f.login for f in followers], ["ghe-user-1", "ghe-admin-1", "ghe-admin-2", "ghe-user-2"])
+        followers = u.get_followers(per_page=1)
+        self.assertEqual([f.login for f in followers], ["electra", "poseidon"])
 
 
 class AuthenticatedUserGists(TestCase):
@@ -207,29 +207,29 @@ class AuthenticatedUserKeys(TestCase):
 
 
 class AuthenticatedUserOrganizations(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetOrgs(self):
         u = self.g.get_authenticated_user()
         orgs = u.get_orgs()
-        self.assertEqual([o.login for o in orgs], ["ghe-org-1", "ghe-org-2"])
+        self.assertEqual([o.login for o in orgs], ["olympus", "underground"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetOrgs_allParameters(self):
         u = self.g.get_authenticated_user()
         orgs = u.get_orgs(per_page=1)
-        self.assertEqual([o.login for o in orgs], ["ghe-org-1", "ghe-org-2"])
+        self.assertEqual([o.login for o in orgs], ["olympus", "underground"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetTeams(self):
         u = self.g.get_authenticated_user()
         teams = u.get_teams()
-        self.assertEqual([t.name for t in teams], ["Owners", "A-team", "German Soccer Team"])
+        self.assertEqual([t.name for t in teams], ["Owners", "Owners", "Gods"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetTeams_allParameters(self):
         u = self.g.get_authenticated_user()
         teams = u.get_teams(per_page=1)
-        self.assertEqual([t.name for t in teams], ["Owners", "A-team", "German Soccer Team"])
+        self.assertEqual([t.name for t in teams], ["Owners", "Owners", "Gods"])
 
 
 class AuthenticatedUserRepositories(TestCase):

@@ -52,7 +52,7 @@
                 "suspended_at": null,
                 "total_private_repos": 0,
                 "type": "User",
-                "updated_at": "2014-08-02T20:08:36Z",
+                "updated_at": "2014-08-02T20:22:14Z",
                 "url": "http://github.home.jacquev6.net/api/v3/users/penelope"
             },
             "headers": {
@@ -64,16 +64,16 @@
                 "content-length": "1449",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 02 Aug 2014 20:08:37 GMT",
-                "etag": "\"47c72dd52598bfc223cf58eb3fed6f09\"",
-                "last-modified": "Sat, 02 Aug 2014 20:08:36 GMT",
+                "date": "Sat, 02 Aug 2014 20:22:15 GMT",
+                "etag": "\"7365133f5623c99b0027dacbee2a8af1\"",
+                "last-modified": "Sat, 02 Aug 2014 20:22:14 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "4b5eb4b8-7b4c-4943-82a0-16d86aa87487",
+                "x-github-request-id": "b705267c-49a7-4df5-a23e-570f2e769a0a",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200
@@ -113,7 +113,7 @@
                 "content-length": "71",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 02 Aug 2014 20:08:37 GMT",
+                "date": "Sat, 02 Aug 2014 20:22:16 GMT",
                 "etag": "\"c56cc81bc28e84aca9c9aea1a8ccbe56\"",
                 "server": "GitHub.com",
                 "status": "200 OK",
@@ -121,7 +121,7 @@
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "22dc18e2-d691-4c6e-a46f-3c043c83c728",
+                "x-github-request-id": "cccd3aec-8d2f-4bfd-a360-184125fea5ee",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200

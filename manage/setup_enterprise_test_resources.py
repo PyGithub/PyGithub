@@ -52,6 +52,9 @@ verify(penelope, site_admin=False, suspended_at=None)
 ensure(penelope, name=None, email=None, location=None, blog=None, hireable=False, company=None)
 
 
+underground = gZeus.get_org("underground")
+ensure(underground, billing_email="ghe-underground@jacquev6.net", blog=None, company=None, email=None, location=None, name=None)
+
 olympus = gZeus.get_org("olympus")
 ensure(olympus, billing_email="ghe-olympus@jacquev6.net", blog=None, company=None, email=None, location=None, name=None)
 
@@ -63,9 +66,15 @@ for t in olympus.get_teams():
         t.delete()
 gods = olympus.create_team("Gods", permission="admin")
 gods.add_to_members("poseidon")
+gods.add_to_members("zeus")
 humans = olympus.create_team("Humans", permission="admin")
 humans.add_to_members("antigone")
 humans.add_to_members("electra")
 gZeus.get_org("olympus").add_to_public_members("zeus")
 gPoseidon.get_org("olympus").add_to_public_members("poseidon")
 gAntigone.get_org("olympus").add_to_public_members("antigone")
+
+
+electra.add_to_following("zeus")
+electra.add_to_following("poseidon")
+poseidon.add_to_following("zeus")
