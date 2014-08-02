@@ -62,32 +62,32 @@ class AuthenticatedUserEdit(TestCase):
 
 
 class AuthenticatedUserEmails(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testGetEmails(self):
         u = self.g.get_authenticated_user()
         emails = u.get_emails()
         self.assertEqual(len(emails), 1)
-        self.assertEqual(emails[0].email, "ghe-user-1@jacquev6.net")
+        self.assertEqual(emails[0].email, "ghe-penelope@jacquev6.net")
         self.assertEqual(emails[0].primary, True)
         self.assertEqual(emails[0].verified, False)
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testAddOneToAndRemoveOneFromEmails(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net"])
         u.add_to_emails("foo@bar.com")
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net", "foo@bar.com"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net", "foo@bar.com"])
         u.remove_from_emails("foo@bar.com")
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net"])
 
-    @Enterprise.User(1)
+    @Enterprise("penelope")
     def testAddSeveralToAndRemoveSeveralFromEmails(self):
         u = self.g.get_authenticated_user()
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net"])
         u.add_to_emails("foo@bar.com", "baz@42.com")
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net", "foo@bar.com", "baz@42.com"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net", "foo@bar.com", "baz@42.com"])
         u.remove_from_emails("foo@bar.com", "baz@42.com")
-        self.assertEqual([e.email for e in u.get_emails()], ["ghe-user-1@jacquev6.net"])
+        self.assertEqual([e.email for e in u.get_emails()], ["ghe-penelope@jacquev6.net"])
 
 
 class AuthenticatedUserFollowing(TestCase):
