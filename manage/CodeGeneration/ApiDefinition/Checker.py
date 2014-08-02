@@ -12,6 +12,8 @@ import CodeGeneration.ApiDefinition.CrossReferenced as CrossReferenced
 import CodeGeneration.ApiDefinition.Structured as Structured
 
 # @todoAlpha Detect classes/structures with the same attributes (GitCommit.Author and GitTag.Tagger)
+# @todoAlpha Detect is a member of a derived class hides a member of base
+# @todoAlpha Detect attributes ending with "url" not used as end_point in any method
 
 
 class Checker(object):
