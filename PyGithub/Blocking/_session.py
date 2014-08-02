@@ -83,7 +83,7 @@ class Session(object):
     def _requestAnonymous(self, *args, **kwds):
         return self.__request(self.__anonymousRequestsSession, *args, **kwds)
 
-    def __request(self, requestsSession, verb, url, urlArguments=None, postArguments=None, headers=None, accept404=False, accept405=False):
+    def __request(self, requestsSession, verb, url, urlArguments=None, postArguments=None, headers=None, accept404=False):
         # @todoAlpha Remove this hack, let classes know only about the path, and let Session decide about protocol and netloc
         if self.__netloc is not None and url.startswith("https://api.github.com/"):
             url = "http://" + self.__netloc + "/api/v3/" + url[23:]
@@ -135,8 +135,8 @@ class Session(object):
                     exceptionClass = None
             if status == 405:
                 exceptionClass = exn.MethodNotAllowedException
-                if accept405:
-                    exceptionClass = None
+            if status == 409:
+                exceptionClass = exn.ConflictException
             if status == 422:
                 exceptionClass = exn.UnprocessableEntityException
         if status >= 500:

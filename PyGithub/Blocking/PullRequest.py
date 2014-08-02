@@ -512,5 +512,5 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/pulls/{number}/merge", number=str(self.number), owner=self.base.repo.owner.login, repo=self.base.repo.name)
         postArguments = _snd.dictionary(commit_message=commit_message)
-        r = self.Session._request("PUT", url, postArguments=postArguments, accept405=True)
+        r = self.Session._request("PUT", url, postArguments=postArguments)
         return _rcv.StructureConverter(self.Session, PullRequest.MergeResult)(None, r.json())

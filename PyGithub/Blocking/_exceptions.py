@@ -36,7 +36,13 @@ class ObjectNotFoundException(ClientErrorException):
 
 class MethodNotAllowedException(ClientErrorException):
     """
-    Raised by PyGithub when GitHub API v3 returns an unexpected 405 HTTP status code.
+    Raised by PyGithub when GitHub API v3 returns a 405 HTTP status code. For example when :meth:`.PullRequest.merge` is called and :attr:`.PullRequest.meargeable` was false.
+    """
+
+
+class ConflictException(ClientErrorException):
+    """
+    Raised by PyGithub when GitHub API v3 returns a 409 HTTP status code. For example when there is a conflict in :meth:`.Repository.merge`.
     """
 
 

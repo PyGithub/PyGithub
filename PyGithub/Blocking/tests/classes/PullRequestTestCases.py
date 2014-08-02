@@ -122,11 +122,10 @@ class PullRequestMerge(TestCase):
     def testMergeUnmergeable(self):
         p = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).get_pull(6)
         self.assertEqual(p.mergeable, False)
-        r = p.merge()
-        self.assertEqual(r.documentation_url, "https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button")
-        self.assertIsNone(r.merged)
-        self.assertEqual(r.message, "Pull Request is not mergeable")
-        self.assertIsNone(r.sha)
+        with self.assertRaises(PyGithub.Blocking.MethodNotAllowedException) as cm:
+            p.merge()
+        self.assertEqual(cm.exception.args[2]["documentation_url"], "https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button")
+        self.assertEqual(cm.exception.args[2]["message"], "Pull Request is not mergeable")
 
     # @todoAlpha testMergeMergeable
     # @todoAlpha testMergeMergeable_allParameters
