@@ -32,7 +32,7 @@ class EntityAttributes(TestCase):
         self.assertEqual(u.repos_url, "http://github.home.jacquev6.net/api/v3/users/antigone/repos")
         self.assertEqual(u.total_private_repos, 0)
         self.assertEqual(u.type, "User")
-        self.assertEqual(u.updated_at, datetime.datetime(2014, 8, 2, 18, 6))
+        self.assertEqual(u.updated_at, datetime.datetime(2014, 8, 2, 18, 21, 7))
 
     @DotCom
     def testDotComUser(self):
@@ -45,7 +45,7 @@ class EntityAttributes(TestCase):
 
 
 class EntityUpdate(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testThroughEdit(self):
-        o = self.g.get_org("ghe-org-1")
+        o = self.g.get_org("olympus")
         o.edit()

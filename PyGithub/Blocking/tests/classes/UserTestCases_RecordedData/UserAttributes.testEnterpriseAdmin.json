@@ -52,7 +52,7 @@
                 "suspended_at": null,
                 "total_private_repos": 0,
                 "type": "User",
-                "updated_at": "2014-08-02T18:06:00Z",
+                "updated_at": "2014-08-02T19:01:08Z",
                 "url": "http://github.home.jacquev6.net/api/v3/users/poseidon"
             },
             "headers": {
@@ -64,16 +64,16 @@
                 "content-length": "1547",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 02 Aug 2014 18:07:22 GMT",
-                "etag": "\"29cde56a5f7767f8fc9e7a3dc03a7b7e\"",
-                "last-modified": "Sat, 02 Aug 2014 18:06:00 GMT",
+                "date": "Sat, 02 Aug 2014 20:01:07 GMT",
+                "etag": "\"7082ed7ff03ff4cf90d26edffce5744a\"",
+                "last-modified": "Sat, 02 Aug 2014 19:01:08 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "e520c3b6-c1bb-4383-8ab5-9fab06c20d48",
+                "x-github-request-id": "cc2bdb71-fb3c-4074-986f-0aa4410e55a1",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200

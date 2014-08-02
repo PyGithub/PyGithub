@@ -298,7 +298,7 @@ class TestCase(unittest.TestCase):
         pythonFileName = inspect.getfile(self.__class__)
         directory = os.path.join(os.path.dirname(pythonFileName), os.path.splitext(os.path.basename(pythonFileName))[0] + "_" + self.dataSuffix)
         self.fileName = os.path.join(directory, self.__class__.__name__ + "." + methodForData.__name__ + ".json")
-        self.recordMode = not os.path.exists(self.fileName)
+        self.recordMode = method.alwaysRecord or not os.path.exists(self.fileName)
 
     def __setUpLogging(self):
         self.__log = logging.getLogger("PyGithub")
@@ -490,6 +490,8 @@ class Enterprise(object):
         method.builder = PyGithub.BlockingBuilder().Enterprise("github.home.jacquev6.net")
         method.builder.Login(self.__login, self.__password)
         method.sanitizer = NullSanitizer()
+        method.alwaysRecord = not self.__login.startswith("ghe-")
+        method.alwaysRecord = False
         return method
 
 
@@ -497,4 +499,5 @@ def DotCom(method):
     method.builder = PyGithub.BlockingBuilder()
     method.builder.Login(login, password)
     method.sanitizer = BasicSanitizer()
+    method.alwaysRecord = False
     return method

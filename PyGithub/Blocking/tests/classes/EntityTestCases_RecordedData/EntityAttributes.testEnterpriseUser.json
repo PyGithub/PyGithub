@@ -52,7 +52,7 @@
                 "suspended_at": null,
                 "total_private_repos": 0,
                 "type": "User",
-                "updated_at": "2014-08-02T18:06:00Z",
+                "updated_at": "2014-08-02T18:21:07Z",
                 "url": "http://github.home.jacquev6.net/api/v3/users/antigone"
             },
             "headers": {
@@ -64,16 +64,16 @@
                 "content-length": "1523",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Sat, 02 Aug 2014 18:06:53 GMT",
-                "etag": "\"29cde56a5f7767f8fc9e7a3dc03a7b7e\"",
-                "last-modified": "Sat, 02 Aug 2014 18:06:00 GMT",
+                "date": "Sat, 02 Aug 2014 20:00:57 GMT",
+                "etag": "\"a717032fab425f1e174e614abaee2a09\"",
+                "last-modified": "Sat, 02 Aug 2014 18:21:07 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "77126b6e-52a7-44c5-977d-dbcc466e6c62",
+                "x-github-request-id": "2b71ee8b-75ab-4587-bedf-29f753c0895a",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200

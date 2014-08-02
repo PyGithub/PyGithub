@@ -6,161 +6,191 @@ from PyGithub.Blocking.tests.Framework import *
 
 
 class OrganizationAttributes(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testOwnedOrganization(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertEqual(o.billing_email, "ghe-org-1@jacquev6.net")
-        self.assertEqual(o.members_url, "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/members{/member}")
-        self.assertEqual(o.public_members_url, "http://github.home.jacquev6.net/api/v3/orgs/ghe-org-1/public_members{/member}")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.billing_email, "ghe-olympus@jacquev6.net")
+        self.assertEqual(o.members_url, "http://github.home.jacquev6.net/api/v3/orgs/olympus/members{/member}")
+        self.assertEqual(o.public_members_url, "http://github.home.jacquev6.net/api/v3/orgs/olympus/public_members{/member}")
 
 
 class OrganizationEdit(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testBillingEmail(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertEqual(o.billing_email, "ghe-org-1@jacquev6.net")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.billing_email, "ghe-olympus@jacquev6.net")
         o.edit(billing_email="foo@bar.com")
         self.assertEqual(o.billing_email, "foo@bar.com")
-        o.edit(billing_email="ghe-org-1@jacquev6.net")
-        self.assertEqual(o.billing_email, "ghe-org-1@jacquev6.net")
+        o.edit(billing_email="ghe-olympus@jacquev6.net")
+        self.assertEqual(o.billing_email, "ghe-olympus@jacquev6.net")
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testBlog(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertIsNone(o.blog)
-        o.edit(blog="http://jacquev6.net/ghe-org-1")
-        self.assertEqual(o.blog, "http://jacquev6.net/ghe-org-1")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.blog, None)
+        o.edit(blog="http://jacquev6.net/olympus")
+        self.assertEqual(o.blog, "http://jacquev6.net/olympus")
         o.edit(blog=PyGithub.Blocking.Reset)
-        self.assertIsNone(o.blog)
+        self.assertEqual(o.blog, None)
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testCompany(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertIsNone(o.company)
-        o.edit(company="Amazon")
-        self.assertEqual(o.company, "Amazon")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.company, None)
+        o.edit(company="Olympus Software Inc.")
+        self.assertEqual(o.company, "Olympus Software Inc.")
         o.edit(company=PyGithub.Blocking.Reset)
-        self.assertIsNone(o.company)
+        self.assertEqual(o.company, None)
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testEmail(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertIsNone(o.email)
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.email, None)
         o.edit(email="foo@bar.com")
         self.assertEqual(o.email, "foo@bar.com")
         o.edit(email=PyGithub.Blocking.Reset)
-        self.assertIsNone(o.email)
+        self.assertEqual(o.email, None)
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testLocation(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertIsNone(o.location)
-        o.edit(location="Jupiter")
-        self.assertEqual(o.location, "Jupiter")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.location, None)
+        o.edit(location="Mount Olympus")
+        self.assertEqual(o.location, "Mount Olympus")
         o.edit(location=PyGithub.Blocking.Reset)
-        self.assertIsNone(o.location)
+        self.assertEqual(o.location, None)
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testName(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertIsNone(o.name)
-        o.edit(name="FooBar Software")
-        self.assertEqual(o.name, "FooBar Software")
+        o = self.g.get_org("olympus")
+        self.assertEqual(o.name, None)
+        o.edit(name="Olympus Software")
+        self.assertEqual(o.name, "Olympus Software")
         o.edit(name=PyGithub.Blocking.Reset)
-        self.assertIsNone(o.name)
+        self.assertEqual(o.name, None)
 
 
 class OrganizationMembers(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetPublicMembers(self):
-        o = self.g.get_org("ghe-org-2")
+        o = self.g.get_org("olympus")
         public_members = o.get_public_members()
-        self.assertEqual([m.login for m in public_members], ["ghe-user-1", "ghe-user-3"])
+        self.assertEqual([m.login for m in public_members], ["antigone", "poseidon", "zeus"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetPublicMembers_allParameters(self):
-        o = self.g.get_org("ghe-org-2")
+        o = self.g.get_org("olympus")
         public_members = o.get_public_members(per_page=1)
-        self.assertEqual([m.login for m in public_members], ["ghe-user-1", "ghe-user-3"])
+        self.assertEqual([m.login for m in public_members], ["antigone", "poseidon", "zeus"])
 
-    @Enterprise.User(1)
-    def testHasInPublicMembers(self):
-        self.assertFalse(self.g.get_org("ghe-org-1").has_in_public_members("ghe-user-1"))
-        self.assertTrue(self.g.get_org("ghe-org-2").has_in_public_members("ghe-user-1"))
+    @Enterprise("zeus")
+    def testHasInMembersAndPublicMembersFromOwner(self):
+        o = self.g.get_org("olympus")
+        # Not member
+        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_members("penelope"))
+        # Private member
+        self.assertFalse(o.has_in_public_members("electra"))
+        self.assertTrue(o.has_in_members("electra"))
+        # Public member
+        self.assertTrue(o.has_in_public_members("antigone"))
+        self.assertTrue(o.has_in_members("antigone"))
 
-    @Enterprise.User(1)
+    @Enterprise("antigone")
+    def testHasInMembersAndPublicMembersFromMember(self):
+        o = self.g.get_org("olympus")
+        # Not member
+        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_members("penelope"))
+        # Private member
+        self.assertFalse(o.has_in_public_members("electra"))
+        self.assertTrue(o.has_in_members("electra"))
+        # Public member
+        self.assertTrue(o.has_in_public_members("antigone"))
+        self.assertTrue(o.has_in_members("antigone"))
+
+    @Enterprise("penelope")
+    def testHasInMembersAndPublicMembersFromExternal(self):
+        o = self.g.get_org("olympus")
+        # Not member
+        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_members("penelope"))
+        # Private member
+        self.assertFalse(o.has_in_public_members("electra"))
+        self.assertFalse(o.has_in_members("electra"))
+        # Public member
+        self.assertTrue(o.has_in_public_members("antigone"))
+        # @todoAlpha Change to assertTrue once GitHub fixes
+        # Request #13733 "Bug in API redirect"
+        # The redirection points to
+        # http://github.home.jacquev6.net/organizations/18/public_members/antigone
+        # instead of
+        # http://github.home.jacquev6.net/api/v3/organizations/18/public_members/antigone
+        # so we get a 404 and return False
+        self.assertFalse(o.has_in_members("antigone"))
+
+    @Enterprise("zeus")
     def testGetMembers(self):
-        o = self.g.get_org("ghe-org-2")
+        o = self.g.get_org("olympus")
         members = o.get_members()
-        self.assertEqual([m.login for m in members], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+        self.assertEqual([m.login for m in members], ["antigone", "electra", "poseidon", "zeus"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetMembers_allParameters(self):
-        o = self.g.get_org("ghe-org-2")
+        o = self.g.get_org("olympus")
         members = o.get_members(filter="all", per_page=1)
-        self.assertEqual([m.login for m in members], ["ghe-user-1", "ghe-user-2", "ghe-user-3"])
+        self.assertEqual([m.login for m in members], ["antigone", "electra", "poseidon", "zeus"])
 
-    @Enterprise.User(1)
-    def testHasInMembersFromOwner(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertTrue(o.has_in_members("ghe-user-1"))
-        self.assertFalse(o.has_in_members("ghe-user-2"))
+    @Enterprise("electra")
+    def testAddToAndRemoveSelfFromPublicMembers(self):
+        o = self.g.get_org("olympus")
+        self.assertFalse(o.has_in_public_members("electra"))
+        o.add_to_public_members("electra")
+        self.assertTrue(o.has_in_public_members("electra"))
+        o.remove_from_public_members("electra")
+        self.assertFalse(o.has_in_public_members("electra"))
+        # @todoAlpha Test if owners can remove_from_public_members someone else (They can in the GUI.)
 
-    @Enterprise.User(1)
-    def testHasInMembersFromMember(self):
-        self.assertTrue(self.g.get_org("ghe-org-2").has_in_members("ghe-user-2"))
-
-    @Enterprise.User(3)
-    def testHasInMembersFromExternal(self):
-        self.assertFalse(self.g.get_org("ghe-org-1").has_in_members("ghe-user-1"))
-
-    @Enterprise.User(2)
-    def testAddToAndRemoveFromPublicMembers(self):
-        o = self.g.get_org("ghe-org-2")
-        self.assertFalse(o.has_in_public_members("ghe-user-2"))
-        o.add_to_public_members("ghe-user-2")
-        self.assertTrue(o.has_in_public_members("ghe-user-2"))
-        o.remove_from_public_members("ghe-user-2")
-        self.assertFalse(o.has_in_public_members("ghe-user-2"))
-
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testRemoveFromMembers(self):
-        o = self.g.get_org("ghe-org-1")
-        self.assertFalse(o.has_in_members("ghe-user-2"))
-        o.get_teams()[0].add_to_members("ghe-user-2")
-        self.assertTrue(o.has_in_members("ghe-user-2"))
-        o.remove_from_members("ghe-user-2")
-        self.assertFalse(o.has_in_members("ghe-user-2"))
+        o = self.g.get_org("olympus")
+        self.assertFalse(o.has_in_members("penelope"))
+        o.get_teams()[0].add_to_members("penelope")
+        self.assertTrue(o.has_in_members("penelope"))
+        o.remove_from_members("penelope")
+        self.assertFalse(o.has_in_members("penelope"))
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetTeams(self):
-        o = self.g.get_org("ghe-org-1")
+        o = self.g.get_org("olympus")
         teams = o.get_teams()
-        self.assertEqual([t.name for t in teams], ["Owners", "A-team"])
+        self.assertEqual([t.name for t in teams], ["Owners", "Gods", "Humans"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testGetTeams_allParameters(self):
-        o = self.g.get_org("ghe-org-1")
+        o = self.g.get_org("olympus")
         teams = o.get_teams(per_page=1)
-        self.assertEqual([t.name for t in teams], ["Owners", "A-team"])
+        self.assertEqual([t.name for t in teams], ["Owners", "Gods", "Humans"])
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testCreateTeam(self):
-        o = self.g.get_org("ghe-org-1")
-        t = o.create_team("Jamaica Bobsleigh Team")
-        self.assertEqual(t.name, "Jamaica Bobsleigh Team")
+        o = self.g.get_org("olympus")
+        t = o.create_team("Titans")
+        self.assertEqual(t.name, "Titans")
         self.assertEqual(t.permission, "pull")
         self.assertEqual(t.repos_count, 0)
         t.delete()
 
-    @Enterprise.User(1)
+    @Enterprise("zeus")
     def testCreateTeam_allParameters(self):
-        o = self.g.get_org("ghe-org-1")
-        t = o.create_team("Jamaica Bobsleigh Team", repo_names=[("ghe-org-1", "repo-org-1-1")], permission="push")
-        self.assertEqual(t.name, "Jamaica Bobsleigh Team")
+        o = self.g.get_org("olympus")
+        repo = o.create_repo("trojan-war")
+        t = o.create_team("Titans", repo_names=[repo], permission="push")
+        self.assertEqual(t.name, "Titans")
         self.assertEqual(t.permission, "push")
         self.assertEqual(t.repos_count, 1)
         t.delete()
+        repo.delete()
 
 
 class OrganizationRepositories(TestCase):
