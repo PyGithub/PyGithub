@@ -151,8 +151,8 @@ class Session(object):
             requestHeaders = dict(request.headers)
             if 'Authorization' in requestHeaders:
                 auth = request.headers["Authorization"]
-                if auth.startswith("Basic ") and auth.endswith("="):
-                    requestHeaders["Authorization"] = "Basic not_logged="
+                if auth.startswith("Basic "):
+                    requestHeaders["Authorization"] = "Basic not_logged"
                 elif auth.startswith("token "):
                     requestHeaders["Authorization"] = "token not_logged"
                 else:
