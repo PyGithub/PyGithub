@@ -104,15 +104,15 @@ class Github(_bgo.SessionedGithubObject):
         @property
         def resources(self):
             """
-            :type: :class:`.Resources`
+            :type: :class:`.Github.Resources`
             """
             return self.__resources.value
 
     class RateLimits(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
-          * :attr:`.Resources.core`
-          * :attr:`.Resources.search`
+          * :attr:`.Github.Resources.core`
+          * :attr:`.Github.Resources.search`
           * :attr:`.Session.RateLimit`
 
         Methods accepting instances of this class as parameter: none.
@@ -154,7 +154,7 @@ class Github(_bgo.SessionedGithubObject):
     class Resources(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
-          * :attr:`.RateLimit.resources`
+          * :attr:`.Github.RateLimit.resources`
 
         Methods accepting instances of this class as parameter: none.
         """
@@ -167,14 +167,14 @@ class Github(_bgo.SessionedGithubObject):
         @property
         def core(self):
             """
-            :type: :class:`.RateLimits`
+            :type: :class:`.Github.RateLimits`
             """
             return self.__core.value
 
         @property
         def search(self):
             """
-            :type: :class:`.RateLimits`
+            :type: :class:`.Github.RateLimits`
             """
             return self.__search.value
 
@@ -253,7 +253,7 @@ class Github(_bgo.SessionedGithubObject):
         This is the only method calling this end point.
 
         :param name: mandatory :class:`string`
-        :rtype: :class:`.GitIgnoreTemplate`
+        :rtype: :class:`.Github.GitIgnoreTemplate`
         """
 
         name = _snd.normalizeString(name)
@@ -281,7 +281,7 @@ class Github(_bgo.SessionedGithubObject):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`.Meta`
+        :rtype: :class:`.Github.Meta`
         """
 
         url = uritemplate.expand("https://api.github.com/meta")
@@ -335,7 +335,7 @@ class Github(_bgo.SessionedGithubObject):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`.RateLimit`
+        :rtype: :class:`.Github.RateLimit`
         """
 
         url = uritemplate.expand("https://api.github.com/rate_limit")

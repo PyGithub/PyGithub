@@ -27,8 +27,6 @@ from CodeGeneration.CaseUtils import toUpperCamel
 #   True        AuthenticatedUser.Plan
 #   False       Github.GitIgnoreTemplate
 
-# @todoAlpha Create an inheritance for git objects (GitTag, GitBlob, etc.)
-
 # CodeGeneration.ApiDefinition.Structured
 # @todoAlpha go back to the PaginatedListWithoutPerPage model; remove the warning "returns paginated list but has no per_page"
 
@@ -58,20 +56,20 @@ class CodeGenerator:
         yield "import PyGithub.Blocking._receive as _rcv"
         if klass.base is not None:
             yield ""
-            yield "import " + klass.base.module
+            yield "import {}".format(self.computeModuleNameFor(klass.base))
         yield ""
         yield ""
 
         if klass.base is None:
-            if klass.name == "Github":
+            if klass.qualifiedName == "Github":
                 baseName = "_bgo.SessionedGithubObject"
             else:
                 baseName = "_bgo.UpdatableGithubObject"
         else:
-            baseName = klass.base.module + "." + klass.base.name
+            baseName = self.computeFullyQualifiedName(klass.base)
 
         yield from (
-            PS.Class(klass.name)
+            PS.Class(klass.simpleName)
             .base(baseName)
             .docstring(self.generateDocStringForClass(klass, baseName))
             .elements(self.createClassStructure(s) for s in klass.structures)
@@ -88,7 +86,7 @@ class CodeGenerator:
         else:
             yield "Derived classes:"
             for d in klass.derived:
-                yield "  * :class:`.{}`".format(d.name)
+                yield "  * :class:`.{}`".format(d.qualifiedName)
         yield ""
         yield from self.generateDocForSourcesAndSinks(klass)
 
@@ -98,30 +96,30 @@ class CodeGenerator:
         else:
             yield "Methods and attributes returning instances of this class:"
             for source in klass.sources:
-                yield "  * " + self.generateDocForSource(source)
+                yield "  * {}".format(self.generateDocForSource(source))
         yield ""
         if len(klass.sinks) == 0:
             yield "Methods accepting instances of this class as parameter: none."
         else:
             yield "Methods accepting instances of this class as parameter:"
             for sink in klass.sinks:
-                yield "  * " + self.generateDocForSink(sink)
+                yield "  * {}".format(self.generateDocForSink(sink))
 
     def generateDocForSource(self, source):
         return self.getMethod("generateDocFor{}", source.__class__.__name__)(source)
 
     def generateDocForMethodSource(self, source):
-        return ":meth:`.{}.{}`".format(source.object.containerClass.name, source.object.name)
+        return ":meth:`.{}`".format(source.object.qualifiedName)
 
     def generateDocForAttributeSource(self, source):
-        return ":attr:`.{}.{}`".format(source.object.containerClass.name, source.object.name)
+        return ":attr:`.{}`".format(source.object.qualifiedName)
 
     def generateDocForSink(self, sink):
-        return ":meth:`.{}.{}`".format(sink.object.containerClass.name, sink.object.name)
+        return ":meth:`.{}`".format(sink.object.qualifiedName)
 
     def createClassStructure(self, structure):
         return (
-            PS.Class(structure.name)
+            PS.Class(structure.simpleName)
             .base("_bgo.SessionedGithubObject")
             .docstring(self.generateDocForSourcesAndSinks(structure))
             .elements(self.createStructPrivateParts(structure))
@@ -131,132 +129,129 @@ class CodeGenerator:
     def createStructPrivateParts(self, structure):
         yield (  # pragma no cover
             PS.Method("_initAttributes")
-            .parameters((a.name, "None") for a in structure.attributes)
+            .parameters((a.simpleName, "None") for a in structure.attributes)
             .parameters((a, "None") for a in structure.deprecatedAttributes)
             .parameter("**kwds")
-            .body(self.generateImportsForAllUnderlyingTypes(structure.containerClass.name, [a.type for a in structure.attributes]))
-            .body("super({}.{}, self)._initAttributes(**kwds)".format(structure.containerClass.name, structure.name))
-            .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in structure.attributes)
+            .body(self.generateImportsForAllUnderlyingTypes(structure, [a.type for a in structure.attributes]))
+            .body("super({}, self)._initAttributes(**kwds)".format(structure.qualifiedName))
+            .body("self.__{} = {}".format(a.simpleName, self.createCallForAttributeInitializer(a)) for a in structure.attributes)
         )
         if structure.isUpdatable:
             yield(
                 PS.Method("_updateAttributes")
-                .parameters((a.name, "None") for a in structure.attributes)
+                .parameters((a.simpleName, "None") for a in structure.attributes)
                 .parameters((a, "None") for a in structure.deprecatedAttributes)
                 .parameter("**kwds")
-                .body("super({}.{}, self)._updateAttributes(**kwds)".format(structure.containerClass.name, structure.name))
-                .body("self.__{0}.update({0})".format(a.name) for a in structure.attributes)
+                .body("super({}, self)._updateAttributes(**kwds)".format(structure.qualifiedName))
+                .body("self.__{0}.update({0})".format(a.simpleName) for a in structure.attributes)
             )
 
     def createStructProperty(self, attribute):
         return (
-            PS.Property(attribute.name)
+            PS.Property(attribute.simpleName)
             .docstring(":type: {}".format(self.generateDocForType(attribute.type)))
-            .body("return self.__{}.value".format(attribute.name))
+            .body("return self.__{}.value".format(attribute.simpleName))
         )
 
     def createClassPrivateParts(self, klass):
         if len(klass.attributes) != 0:
             yield (  # pragma no cover
                 PS.Method("_initAttributes")
-                .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
+                .parameters((a.simpleName, "_rcv.Absent") for a in klass.attributes)
                 .parameters((a, "None") for a in klass.deprecatedAttributes)
                 .parameter("**kwds")
                 .body(self.generateImportsForAllUnderlyingTypes(klass, [a.type for a in klass.attributes]))
-                .body("super({}, self)._initAttributes(**kwds)".format(klass.name))
-                .body("self.__{} = {}".format(a.name, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
+                .body("super({}, self)._initAttributes(**kwds)".format(klass.qualifiedName))
+                .body("self.__{} = {}".format(a.simpleName, self.createCallForAttributeInitializer(a)) for a in klass.attributes)
             )
             yield (
                 PS.Method("_updateAttributes")
                 .parameter("eTag")
-                .parameters((a.name, "_rcv.Absent") for a in klass.attributes)
+                .parameters((a.simpleName, "_rcv.Absent") for a in klass.attributes)
                 .parameters((a, "None") for a in klass.deprecatedAttributes)
                 .parameter("**kwds")
-                .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.name))
-                .body("self.__{0}.update({0})".format(a.name) for a in klass.attributes)
+                .body("super({}, self)._updateAttributes(eTag, **kwds)".format(klass.qualifiedName))
+                .body("self.__{0}.update({0})".format(a.simpleName) for a in klass.attributes)
             )
 
     def generateImportsForAllUnderlyingTypes(self, klass, types):
         imports = set()
         for type in types:
             for t in type.underlyingTypes:
-                if t.__class__.__name__ == "Class" and t is not klass and t.module is not None:
-                    imports.add(t.module)
+                if t.__class__.__name__ == "Class" and t is not klass and t.qualifiedName != "PaginatedList":
+                    imports.add(self.computeModuleNameFor(t))
         for i in sorted(imports):
-            yield "import " + i
+            yield "import {}".format(i)
 
     def createCallForAttributeInitializer(self, attribute):
         return (
             PS.Call("_rcv.Attribute")
-            .arg(self.generateFullyQualifiedAttributeName(attribute))
-            .arg(self.generateCodeForConverter("_rcv", attribute, attribute.type))
-            .arg(attribute.name)
+            .arg('"{}"'.format(attribute.qualifiedName))
+            .arg(self.generateCodeForConverter(attribute, attribute.type))
+            .arg(attribute.simpleName)
         )
 
-    def generateCodeForConverter(self, module, attribute, type):
-        return module + "." + self.getMethod("generateCodeFor{}Converter", type.__class__.__name__)(module, attribute, type)
+    def generateCodeForConverter(self, attribute, type):
+        return "_rcv.{}".format(self.getMethod("generateCodeFor{}Converter", type.__class__.__name__)(attribute, type))
 
-    def generateCodeForLinearCollectionConverter(self, module, attribute, type):
-        return self.getMethod("generateCodeFor{}Converter", type.container.name)(module, attribute, type)
+    def generateCodeForLinearCollectionConverter(self, attribute, type):
+        return self.getMethod("generateCodeFor{}Converter", type.container.simpleName)(attribute, type)
 
-    def generateCodeForListConverter(self, module, attribute, type):
-        return "ListConverter({})".format(self.generateCodeForConverter(module, attribute, type.content))
+    def generateCodeForListConverter(self, attribute, type):
+        return "ListConverter({})".format(self.generateCodeForConverter(attribute, type.content))
 
-    def generateCodeForPaginatedListConverter(self, module, attribute, type):
-        return "PaginatedListConverter(self.Session, {})".format(self.generateCodeForConverter(module, attribute, type.content))
+    def generateCodeForPaginatedListConverter(self, attribute, type):
+        return "PaginatedListConverter(self.Session, {})".format(self.generateCodeForConverter(attribute, type.content))
 
-    def generateCodeForMappingCollectionConverter(self, module, attribute, type):
-        return "DictConverter({}, {})".format(self.generateCodeForConverter(module, attribute, type.key), self.generateCodeForConverter(module, attribute, type.value))
+    def generateCodeForMappingCollectionConverter(self, attribute, type):
+        return "DictConverter({}, {})".format(self.generateCodeForConverter(attribute, type.key), self.generateCodeForConverter(attribute, type.value))
 
-    def generateCodeForBuiltinTypeConverter(self, module, attribute, type):
-        return "{}Converter".format(toUpperCamel(type.name))
+    def generateCodeForBuiltinTypeConverter(self, attribute, type):
+        return "{}Converter".format(toUpperCamel(type.simpleName))
 
-    def generateCodeForClassConverter(self, module, attribute, type):
-        if type.name == attribute.containerClass.name:
-            typeName = type.name
+    def generateCodeForClassConverter(self, attribute, type):
+        # @todoAlpha computeContextualName(attribute.qualifiedName, type.qualifiedName) ?
+        if self.computeModuleNameFor(type) == self.computeModuleNameFor(attribute.containerClass):
+            typeName = type.qualifiedName
         else:
-            typeName = "{}.{}".format(type.module, type.name)
+            typeName = self.computeFullyQualifiedName(type)
         return "ClassConverter(self.Session, {})".format(typeName)
 
-    def generateCodeForUnionTypeConverter(self, module, attribute, type):
+    def generateCodeForUnionTypeConverter(self, attribute, type):
         if type.key is not None:
-            converters = {k: self.generateCodeForConverter(module, attribute, t) for k, t in zip(type.keys, type.types)}
+            converters = {k: self.generateCodeForConverter(attribute, t) for k, t in zip(type.keys, type.types)}
             return 'KeyedStructureUnionConverter("{}", dict({}))'.format(type.key, ", ".join("{}={}".format(k, v) for k, v in sorted(converters.items())))
         elif type.converter is not None:
             return '{}UnionConverter({})'.format(
                 type.converter,
-                ", ".join(self.generateCodeForConverter(module, attribute, t) for t in type.types)
+                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
             )
         else:
             return '{}UnionConverter({})'.format(
-                "".join(t.name for t in type.types),
-                ", ".join(self.generateCodeForConverter(module, attribute, t) for t in type.types)
+                "".join(t.simpleName for t in type.types),
+                ", ".join(self.generateCodeForConverter(attribute, t) for t in type.types)
             )
 
-    def generateCodeForStructureConverter(self, module, attribute, type):
-        return "StructureConverter(self.Session, {}.{})".format(type.containerClass.name, type.name)
-
-    def generateFullyQualifiedAttributeName(self, attribute):
-        name = [attribute.name]
-        current = attribute
-        while hasattr(current, "containerClass"):
-            current = current.containerClass
-            name.append(current.name)
-        name.reverse()
-        return '"{}"'.format(".".join(name))
+    def generateCodeForStructureConverter(self, attribute, type):
+        # @todoAlpha computeContextualName(attribute.qualifiedName, type.qualifiedName) ?
+        if self.computeModuleNameFor(type.containerClass) == self.computeModuleNameFor(attribute.containerClass):
+            typeName = type.qualifiedName
+        else:
+            typeName = self.computeFullyQualifiedName(type)
+        return "StructureConverter(self.Session, {})".format(typeName)
 
     def createClassProperty(self, attribute):
         return (
-            PS.Property(attribute.name)
+            PS.Property(attribute.simpleName)
             .docstring(":type: {}".format(self.generateDocForType(attribute.type)))
-            .body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.name))
-            .body("return self.__{}.value".format(attribute.name))
+            .body("self._completeLazily(self.__{}.needsLazyCompletion)".format(attribute.simpleName))
+            .body("return self.__{}.value".format(attribute.simpleName))
         )
 
     def createClassMethod(self, method):
         return (
-            PS.Method(method.name)
-            .parameters((p.name, "None") if p.optional else "*" + p.name if p.variable else p.name for p in method.parameters)
+            PS.Method(method.simpleName)
+            .parameters((p.name, "None") if p.optional else "*{}".format(p.name) if p.variable else p.name for p in method.parameters)
             .docstring(self.generateDocStringForMethod(method))
             .body(self.generateMethodBody(method))
         )
@@ -270,7 +265,7 @@ class CodeGenerator:
                 yield "The following methods also call this end point:"
                 for otherMethod in endPoint.methods:
                     if otherMethod is not method:
-                        yield "  * :meth:`.{}.{}`".format(otherMethod.containerClass.name, otherMethod.name)
+                        yield "  * :meth:`.{}`".format(otherMethod.qualifiedName)
             else:
                 yield "This is the only method calling this end point."
             yield ""
@@ -280,7 +275,7 @@ class CodeGenerator:
                 "optional" if parameter.optional else "mandatory",
                 self.generateDocForType(parameter.type)
             )
-        yield ":rtype: " + self.generateDocForType(method.returnType)
+        yield ":rtype: {}".format(self.generateDocForType(method.returnType))
 
     def generateMethodBody(self, method):
         yield from self.generateImportsForAllUnderlyingTypes(method.containerClass, [method.returnType])
@@ -294,7 +289,7 @@ class CodeGenerator:
                     yield "    per_page = self.Session.PerPage"
                     yield "else:"
                     yield "    per_page = _snd.normalizeInt(per_page)"
-                elif method.containerClass.name == "Github" and method.name == "get_repo" and p.name == "repo":
+                elif method.qualifiedName == "Github.get_repo" and p.name == "repo":
                     yield "repo = _snd.normalizeTwoStringsString(repo)"
                 elif p.optional:
                     yield "if {} is not None:".format(p.name)
@@ -308,15 +303,15 @@ class CodeGenerator:
             yield ""
 
         # @todoSomeday Open an issue to Github to make name optional in PATCH /repository
-        if method.containerClass.name == "Repository" and method.name == "edit":
+        if method.qualifiedName == "Repository.edit":
             yield "if name is None:"
             yield "    name = self.name"
             yield ""
 
-        if method.name == "get_git_ref":
+        if method.qualifiedName == "Repository.get_git_ref":
             yield "assert ref.startswith(\"refs/\")"
             yield "url = uritemplate.expand(self.git_refs_url) + ref[4:]"
-        elif method.name == "create_modified_copy":
+        elif method.qualifiedName == "GitTree.create_modified_copy":
             yield "url = self.url[:self.url.rfind(self.sha) - 1]"
         elif len(method.urlTemplateArguments) == 0:
             yield "url = uritemplate.expand({})".format(self.generateCodeForValue(method, method.urlTemplate))
@@ -325,16 +320,16 @@ class CodeGenerator:
         if len(method.urlArguments) != 0:
             yield "urlArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.urlArguments))  # pragma no branch
         if len(method.postArguments) != 0:
-            if method.containerClass.name == "AuthenticatedUser" and method.name in ["add_to_emails", "remove_from_emails"]:
+            if method.qualifiedName in ["AuthenticatedUser.add_to_emails", "AuthenticatedUser.remove_from_emails"]:
                 # @todoAlpha solve this special case by changing Method.postArguments to Method.postPaylod, polymorphic, with DictionaryPayload and DirectPayload. Also change Session._request's parameter.
                 yield "postArguments = email"
-            elif method.containerClass.name == "Issue" and method.name in ["add_to_labels", "set_labels"]:
+            elif method.qualifiedName in ["Issue.add_to_labels", "Issue.set_labels"]:
                 # @todoAlpha solve this special case by changing Method.postArguments to Method.postPaylod, polymorphic, with DictionaryPayload and DirectPayload. Also change Session._request's parameter.
                 yield "postArguments = label"
             else:
                 yield "postArguments = _snd.dictionary({})".format(", ".join("{}={}".format(a.name, self.generateCodeForValue(method, a.value)) for a in method.postArguments))  # pragma no branch
 
-        yield "r = self.Session._request{}({})".format("Anonymous" if method.name == "create_anonymous_gist" else "", self.generateCallArguments(method))  # @todoSomeday Remove hard-coded method name
+        yield "r = self.Session._request{}({})".format("Anonymous" if method.qualifiedName == "Github.create_anonymous_gist" else "", self.generateCallArguments(method))  # @todoSomeday Remove hard-coded method name
         yield from self.generateCodeForEffects(method)
         yield from self.generateCodeForReturnValue(method)
 
@@ -346,22 +341,22 @@ class CodeGenerator:
         yield "{} = _snd.normalizeEnum({}, {})".format(parameter.name, parameter.name, ", ".join('"' + v + '"' for v in parameter.type.values))  # pragma no branch
 
     def generateCodeToNormalizeAttributeTypeParameter(self, parameter):
-        yield "{} = _snd.normalize{}{}({})".format(parameter.name, parameter.type.type.name, toUpperCamel(parameter.type.attribute.name), parameter.name)
+        yield "{} = _snd.normalize{}{}({})".format(parameter.name, parameter.type.type.simpleName, toUpperCamel(parameter.type.attribute.simpleName), parameter.name)
 
     def generateCodeToNormalizeUnionTypeParameter(self, parameter):
-        yield "{} = _snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.name) + toUpperCamel(t.attribute.name)) if t.__class__.__name__ == "AttributeType" else toUpperCamel(t.name)) for t in parameter.type.types), parameter.name)  # pragma no branch
+        yield "{} = _snd.normalize{}({})".format(parameter.name, "".join(((toUpperCamel(t.type.simpleName) + toUpperCamel(t.attribute.simpleName)) if t.__class__.__name__ == "AttributeType" else toUpperCamel(t.simpleName)) for t in parameter.type.types), parameter.name)  # pragma no branch
 
     def generateCodeToNormalizeBuiltinTypeParameter(self, parameter):
-        yield "{} = _snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.name), parameter.name)
+        yield "{} = _snd.normalize{}({})".format(parameter.name, toUpperCamel(parameter.type.qualifiedName), parameter.name)
 
     def generateCodeToNormalizeLinearCollectionParameter(self, parameter):
-        yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.name, parameter.type.content.__class__.__name__)(parameter)
+        yield from self.getMethod("generateCodeToNormalize{}Of{}Parameter", parameter.type.container.simpleName, parameter.type.content.__class__.__name__)(parameter)
 
     def generateCodeToNormalizeListOfAttributeTypeParameter(self, parameter):
-        yield "{} = _snd.normalizeList(_snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.name, toUpperCamel(parameter.type.content.attribute.name), parameter.name)
+        yield "{} = _snd.normalizeList(_snd.normalize{}{}, {})".format(parameter.name, parameter.type.content.type.simpleName, toUpperCamel(parameter.type.content.attribute.simpleName), parameter.name)
 
     def generateCodeToNormalizeListOfBuiltinTypeParameter(self, parameter):
-        yield "{} = _snd.normalizeList(_snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.name), parameter.name)
+        yield "{} = _snd.normalizeList(_snd.normalize{}, {})".format(parameter.name, toUpperCamel(parameter.type.content.simpleName), parameter.name)
 
     def generateCodeForEffects(self, method):
         for effect in method.effects:
@@ -384,7 +379,7 @@ class CodeGenerator:
             if method.returnFrom is None:
                 if method.returnType.__class__.__name__ == "Class":
                     args = 'r.json(), r.headers.get("ETag")'
-                elif method.returnType.__class__.__name__ == "LinearCollection" and method.returnType.container.name == "PaginatedList":
+                elif method.returnType.__class__.__name__ == "LinearCollection" and method.returnType.container.qualifiedName == "PaginatedList":
                     args = "r"
                 else:
                     args = "r.json()"
@@ -396,11 +391,11 @@ class CodeGenerator:
                 args = 'r.json()["commit"]'
             else:
                 assert False  # pragma no cover
-            yield "return {}(None, {})".format(self.generateCodeForConverter("_rcv", method, method.returnType), args)
+            yield "return {}(None, {})".format(self.generateCodeForConverter(method, method.returnType), args)
 
     def generateCallArguments(self, m):
         args = '"{}", url'.format(m.endPoints[0].verb)
-        if m.returnType.name == "bool":
+        if m.returnType.qualifiedName == "bool":
             args += ", accept404=True"
         if len(m.urlArguments) != 0:
             args += ", urlArguments=urlArguments"
@@ -412,31 +407,31 @@ class CodeGenerator:
         return self.getMethod("generateDocFor{}", type.__class__.__name__)(type)
 
     def generateDocForBuiltinType(self, type):
-        return ":class:`{}`".format(type.name)
+        return ":class:`{}`".format(type.qualifiedName)
 
     def generateDocForClass(self, type):
-        return ":class:`.{}`".format(type.name)
+        return ":class:`.{}`".format(type.qualifiedName)
 
     def generateDocForAttributeType(self, type):
-        if type.type.name == "Repository" and type.attribute.name == "full_name":
+        if type.attribute.qualifiedName == "Repository.full_name":
             return ":class:`.Repository` or :class:`string` (its :attr:`.Repository.full_name`) or :class:`(string, string)` (its owner's :attr:`.Entity.login` and :attr:`.Repository.name`)"
         else:
-            return ":class:`.{}` or :class:`{}` (its :attr:`.{}.{}`)".format(type.type.name, type.attribute.type.name, type.attribute.containerClass.name, type.attribute.name)
+            return ":class:`.{}` or :class:`{}` (its :attr:`.{}`)".format(type.type.qualifiedName, type.attribute.type.qualifiedName, type.attribute.qualifiedName)
 
     def generateDocForEnumeratedType(self, type):
         return " or ".join('"' + v + '"' for v in type.values)
 
     def generateDocForLinearCollection(self, type):
-        return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.content)
+        return "{} of {}".format(self.generateDocForType(type.container), self.generateDocForType(type.content))
 
     def generateDocForMappingCollection(self, type):
-        return self.generateDocForType(type.container) + " of " + self.generateDocForType(type.key) + " to " + self.generateDocForType(type.value)
+        return "{} of {} to {}".format(self.generateDocForType(type.container), self.generateDocForType(type.key), self.generateDocForType(type.value))
 
     def generateDocForNoneType(self, type):
         return "None"
 
     def generateDocForStructure(self, type):
-        return ":class:`.{}`".format(type.name)
+        return ":class:`.{}`".format(type.qualifiedName)
 
     def generateDocForUnionType(self, type):
         return " or ".join(self.generateDocForType(st) for st in type.types)
@@ -463,11 +458,11 @@ class CodeGenerator:
         format = "{}"
         if value.__class__.__name__[:-5] == "Parameter":
             p = [p for p in method.parameters if p.name == value.parameter][0]
-            if p.type.name in ["int"]:
+            if p.type.qualifiedName in ["int"]:
                 format = "str({})"
         if value.__class__.__name__[:-5] == "Attribute":
             a = self.findAttribute(method.containerClass, value.attribute)
-            if a is not None and a.type.name in ["int"]:
+            if a is not None and a.type.qualifiedName in ["int"]:
                 format = "str({})"
         return format.format(self.generateCodeForValue(method, value))
 
@@ -477,7 +472,19 @@ class CodeGenerator:
 
     def findAttribute(self, t, n):
         for a in t.attributes:
-            if a.name == n:
+            if a.simpleName == n:
                 return a
         if t.base is not None:
             return self.findAttribute(t.base, n)
+
+    def computeModuleNameFor(self, t):
+        return self.getMethod("computeModuleNameFor{}", t.__class__.__name__)(t)
+
+    def computeModuleNameForClass(self, t):
+        return "PyGithub.Blocking.{}".format(t.simpleName)
+
+    def computeModuleNameForStructure(self, t):
+        return self.computeModuleNameFor(t.containerClass)
+
+    def computeFullyQualifiedName(self, t):
+        return "{}.{}".format(self.computeModuleNameFor(t), t.qualifiedName)

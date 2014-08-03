@@ -33,7 +33,7 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.create_repo`
       * :meth:`.Organization.get_repo`
       * :meth:`.Organization.get_repos`
-      * :attr:`.PullEnd.repo`
+      * :attr:`.PullRequest.End.repo`
       * :meth:`.Repository.get_forks`
       * :attr:`.Repository.parent`
       * :attr:`.Repository.source`
@@ -747,7 +747,7 @@ class Repository(_bgo.UpdatableGithubObject):
     @property
     def permissions(self):
         """
-        :type: :class:`.Permissions`
+        :type: :class:`.Repository.Permissions`
         """
         self._completeLazily(self.__permissions.needsLazyCompletion)
         return self.__permissions.value
@@ -932,7 +932,7 @@ class Repository(_bgo.UpdatableGithubObject):
         :param branch: optional :class:`string`
         :param author: optional :class:`GitAuthor`
         :param committer: optional :class:`GitAuthor`
-        :rtype: :class:`.ContentCommit`
+        :rtype: :class:`.Repository.ContentCommit`
         """
 
         path = _snd.normalizeString(path)
@@ -1266,7 +1266,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param branch: mandatory :class:`string`
-        :rtype: :class:`.Branch`
+        :rtype: :class:`.Repository.Branch`
         """
 
         branch = _snd.normalizeString(branch)
@@ -1282,7 +1282,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param per_page: optional :class:`int`
-        :rtype: :class:`.PaginatedList` of :class:`.Branch`
+        :rtype: :class:`.PaginatedList` of :class:`.Repository.Branch`
         """
 
         if per_page is None:
@@ -1402,7 +1402,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param anon: optional :class:`bool`
         :param per_page: optional :class:`int`
-        :rtype: :class:`.PaginatedList` of :class:`.Contributor` or :class:`.AnonymousContributor`
+        :rtype: :class:`.PaginatedList` of :class:`.Contributor` or :class:`.Repository.AnonymousContributor`
         """
         import PyGithub.Blocking.Contributor
 
@@ -1843,7 +1843,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param per_page: optional :class:`int`
-        :rtype: :class:`.PaginatedList` of :class:`.Tag`
+        :rtype: :class:`.PaginatedList` of :class:`.Repository.Tag`
         """
 
         if per_page is None:

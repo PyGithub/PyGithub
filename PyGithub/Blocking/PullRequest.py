@@ -30,50 +30,7 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
     Methods accepting instances of this class as parameter: none.
     """
 
-    class MergeResult(_bgo.SessionedGithubObject):
-        """
-        Methods and attributes returning instances of this class:
-          * :meth:`.PullRequest.merge`
-
-        Methods accepting instances of this class as parameter: none.
-        """
-
-        def _initAttributes(self, documentation_url=None, merged=None, message=None, sha=None, **kwds):
-            super(PullRequest.MergeResult, self)._initAttributes(**kwds)
-            self.__documentation_url = _rcv.Attribute("PullRequest.MergeResult.documentation_url", _rcv.StringConverter, documentation_url)
-            self.__merged = _rcv.Attribute("PullRequest.MergeResult.merged", _rcv.BoolConverter, merged)
-            self.__message = _rcv.Attribute("PullRequest.MergeResult.message", _rcv.StringConverter, message)
-            self.__sha = _rcv.Attribute("PullRequest.MergeResult.sha", _rcv.StringConverter, sha)
-
-        @property
-        def documentation_url(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__documentation_url.value
-
-        @property
-        def merged(self):
-            """
-            :type: :class:`bool`
-            """
-            return self.__merged.value
-
-        @property
-        def message(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__message.value
-
-        @property
-        def sha(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__sha.value
-
-    class PullEnd(_bgo.SessionedGithubObject):
+    class End(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.PullRequest.base`
@@ -85,15 +42,15 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         def _initAttributes(self, label=None, ref=None, repo=None, sha=None, user=None, **kwds):
             import PyGithub.Blocking.Repository
             import PyGithub.Blocking.User
-            super(PullRequest.PullEnd, self)._initAttributes(**kwds)
-            self.__label = _rcv.Attribute("PullRequest.PullEnd.label", _rcv.StringConverter, label)
-            self.__ref = _rcv.Attribute("PullRequest.PullEnd.ref", _rcv.StringConverter, ref)
-            self.__repo = _rcv.Attribute("PullRequest.PullEnd.repo", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository), repo)
-            self.__sha = _rcv.Attribute("PullRequest.PullEnd.sha", _rcv.StringConverter, sha)
-            self.__user = _rcv.Attribute("PullRequest.PullEnd.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
+            super(PullRequest.End, self)._initAttributes(**kwds)
+            self.__label = _rcv.Attribute("PullRequest.End.label", _rcv.StringConverter, label)
+            self.__ref = _rcv.Attribute("PullRequest.End.ref", _rcv.StringConverter, ref)
+            self.__repo = _rcv.Attribute("PullRequest.End.repo", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository), repo)
+            self.__sha = _rcv.Attribute("PullRequest.End.sha", _rcv.StringConverter, sha)
+            self.__user = _rcv.Attribute("PullRequest.End.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
         def _updateAttributes(self, label=None, ref=None, repo=None, sha=None, user=None, **kwds):
-            super(PullRequest.PullEnd, self)._updateAttributes(**kwds)
+            super(PullRequest.End, self)._updateAttributes(**kwds)
             self.__label.update(label)
             self.__ref.update(ref)
             self.__repo.update(repo)
@@ -135,7 +92,7 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
             """
             return self.__user.value
 
-    class PullFile(_bgo.SessionedGithubObject):
+    class File(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.PullRequest.get_files`
@@ -144,17 +101,17 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         """
 
         def _initAttributes(self, additions=None, blob_url=None, changes=None, contents_url=None, deletions=None, filename=None, patch=None, raw_url=None, sha=None, status=None, **kwds):
-            super(PullRequest.PullFile, self)._initAttributes(**kwds)
-            self.__additions = _rcv.Attribute("PullRequest.PullFile.additions", _rcv.IntConverter, additions)
-            self.__blob_url = _rcv.Attribute("PullRequest.PullFile.blob_url", _rcv.StringConverter, blob_url)
-            self.__changes = _rcv.Attribute("PullRequest.PullFile.changes", _rcv.IntConverter, changes)
-            self.__contents_url = _rcv.Attribute("PullRequest.PullFile.contents_url", _rcv.StringConverter, contents_url)
-            self.__deletions = _rcv.Attribute("PullRequest.PullFile.deletions", _rcv.IntConverter, deletions)
-            self.__filename = _rcv.Attribute("PullRequest.PullFile.filename", _rcv.StringConverter, filename)
-            self.__patch = _rcv.Attribute("PullRequest.PullFile.patch", _rcv.StringConverter, patch)
-            self.__raw_url = _rcv.Attribute("PullRequest.PullFile.raw_url", _rcv.StringConverter, raw_url)
-            self.__sha = _rcv.Attribute("PullRequest.PullFile.sha", _rcv.StringConverter, sha)
-            self.__status = _rcv.Attribute("PullRequest.PullFile.status", _rcv.StringConverter, status)
+            super(PullRequest.File, self)._initAttributes(**kwds)
+            self.__additions = _rcv.Attribute("PullRequest.File.additions", _rcv.IntConverter, additions)
+            self.__blob_url = _rcv.Attribute("PullRequest.File.blob_url", _rcv.StringConverter, blob_url)
+            self.__changes = _rcv.Attribute("PullRequest.File.changes", _rcv.IntConverter, changes)
+            self.__contents_url = _rcv.Attribute("PullRequest.File.contents_url", _rcv.StringConverter, contents_url)
+            self.__deletions = _rcv.Attribute("PullRequest.File.deletions", _rcv.IntConverter, deletions)
+            self.__filename = _rcv.Attribute("PullRequest.File.filename", _rcv.StringConverter, filename)
+            self.__patch = _rcv.Attribute("PullRequest.File.patch", _rcv.StringConverter, patch)
+            self.__raw_url = _rcv.Attribute("PullRequest.File.raw_url", _rcv.StringConverter, raw_url)
+            self.__sha = _rcv.Attribute("PullRequest.File.sha", _rcv.StringConverter, sha)
+            self.__status = _rcv.Attribute("PullRequest.File.status", _rcv.StringConverter, status)
 
         @property
         def additions(self):
@@ -226,17 +183,60 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
             """
             return self.__status.value
 
+    class MergeResult(_bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :meth:`.PullRequest.merge`
+
+        Methods accepting instances of this class as parameter: none.
+        """
+
+        def _initAttributes(self, documentation_url=None, merged=None, message=None, sha=None, **kwds):
+            super(PullRequest.MergeResult, self)._initAttributes(**kwds)
+            self.__documentation_url = _rcv.Attribute("PullRequest.MergeResult.documentation_url", _rcv.StringConverter, documentation_url)
+            self.__merged = _rcv.Attribute("PullRequest.MergeResult.merged", _rcv.BoolConverter, merged)
+            self.__message = _rcv.Attribute("PullRequest.MergeResult.message", _rcv.StringConverter, message)
+            self.__sha = _rcv.Attribute("PullRequest.MergeResult.sha", _rcv.StringConverter, sha)
+
+        @property
+        def documentation_url(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__documentation_url.value
+
+        @property
+        def merged(self):
+            """
+            :type: :class:`bool`
+            """
+            return self.__merged.value
+
+        @property
+        def message(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__message.value
+
+        @property
+        def sha(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__sha.value
+
     def _initAttributes(self, additions=_rcv.Absent, base=_rcv.Absent, changed_files=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, head=_rcv.Absent, issue_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, patch_url=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, statuses_url=_rcv.Absent, _links=None, **kwds):
         import PyGithub.Blocking.User
         super(PullRequest, self)._initAttributes(**kwds)
         self.__additions = _rcv.Attribute("PullRequest.additions", _rcv.IntConverter, additions)
-        self.__base = _rcv.Attribute("PullRequest.base", _rcv.StructureConverter(self.Session, PullRequest.PullEnd), base)
+        self.__base = _rcv.Attribute("PullRequest.base", _rcv.StructureConverter(self.Session, PullRequest.End), base)
         self.__changed_files = _rcv.Attribute("PullRequest.changed_files", _rcv.IntConverter, changed_files)
         self.__commits = _rcv.Attribute("PullRequest.commits", _rcv.IntConverter, commits)
         self.__commits_url = _rcv.Attribute("PullRequest.commits_url", _rcv.StringConverter, commits_url)
         self.__deletions = _rcv.Attribute("PullRequest.deletions", _rcv.IntConverter, deletions)
         self.__diff_url = _rcv.Attribute("PullRequest.diff_url", _rcv.StringConverter, diff_url)
-        self.__head = _rcv.Attribute("PullRequest.head", _rcv.StructureConverter(self.Session, PullRequest.PullEnd), head)
+        self.__head = _rcv.Attribute("PullRequest.head", _rcv.StructureConverter(self.Session, PullRequest.End), head)
         self.__issue_url = _rcv.Attribute("PullRequest.issue_url", _rcv.StringConverter, issue_url)
         self.__merge_commit_sha = _rcv.Attribute("PullRequest.merge_commit_sha", _rcv.StringConverter, merge_commit_sha)
         self.__mergeable = _rcv.Attribute("PullRequest.mergeable", _rcv.BoolConverter, mergeable)
@@ -284,7 +284,7 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
     @property
     def base(self):
         """
-        :type: :class:`.PullEnd`
+        :type: :class:`.PullRequest.End`
         """
         self._completeLazily(self.__base.needsLazyCompletion)
         return self.__base.value
@@ -332,7 +332,7 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
     @property
     def head(self):
         """
-        :type: :class:`.PullEnd`
+        :type: :class:`.PullRequest.End`
         """
         self._completeLazily(self.__head.needsLazyCompletion)
         return self.__head.value
@@ -477,12 +477,12 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`list` of :class:`.PullFile`
+        :rtype: :class:`list` of :class:`.PullRequest.File`
         """
 
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/pulls/{number}/files", number=str(self.number), owner=self.base.repo.owner.login, repo=self.base.repo.name)
         r = self.Session._request("GET", url)
-        return _rcv.ListConverter(_rcv.StructureConverter(self.Session, PullRequest.PullFile))(None, r.json())
+        return _rcv.ListConverter(_rcv.StructureConverter(self.Session, PullRequest.File))(None, r.json())
 
     def get_is_merged(self):
         """
@@ -504,7 +504,7 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         This is the only method calling this end point.
 
         :param commit_message: optional :class:`string`
-        :rtype: :class:`.MergeResult`
+        :rtype: :class:`.PullRequest.MergeResult`
         """
 
         if commit_message is not None:

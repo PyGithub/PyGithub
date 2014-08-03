@@ -82,7 +82,7 @@ methods:
         value: attribute login
     return_type:
       container: list
-      content: Key
+      content: User.Key
   - name: get_orgs
     end_point: GET /users/:username/orgs
     optional_parameters:

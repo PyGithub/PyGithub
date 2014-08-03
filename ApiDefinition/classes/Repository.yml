@@ -141,7 +141,7 @@ attributes:
   - name: parent
     type: Repository
   - name: permissions
-    type: Permissions
+    type: Repository.Permissions
   - name: private
     type: bool
   - name: pulls_url
@@ -246,7 +246,7 @@ methods:
         value: parameter content
       - name: message
         value: parameter message
-    return_type: ContentCommit
+    return_type: Repository.ContentCommit
   - name: create_git_blob
     end_point: POST /repos/:owner/:repo/git/blobs
     parameters:
@@ -578,7 +578,7 @@ methods:
     url_template_arguments:
       - name: branch
         value: parameter branch
-    return_type: Branch
+    return_type: Repository.Branch
   - name: get_branches
     end_point: GET /repos/:owner/:repo/branches
     optional_parameters:
@@ -590,7 +590,7 @@ methods:
         value: parameter per_page
     return_type:
       container: PaginatedList
-      content: Branch
+      content: Repository.Branch
   - name: get_collaborators
     end_point: GET /repos/:owner/:repo/collaborators
     optional_parameters:
@@ -691,7 +691,7 @@ methods:
     return_type:
       container: PaginatedList
       content:
-        union: [Contributor, AnonymousContributor]
+        union: [Contributor, Repository.AnonymousContributor]
         key: type
         keys: [User, Anonymous]
   - name: get_forks
@@ -1022,7 +1022,7 @@ methods:
         value: parameter per_page
     return_type:
       container: PaginatedList
-      content: Tag
+      content: Repository.Tag
   - name: get_teams
     end_point: GET /repos/:owner/:repo/teams
     optional_parameters:

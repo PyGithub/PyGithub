@@ -19,7 +19,7 @@ attributes:
     type:
       container: list
       content:
-        union: [GitTree, GitBlob, GitSubmodule]
+        union: [GitTree, GitBlob, GitTree.GitSubmodule]
         key: type
         keys: [tree, blob, commit]
 methods:

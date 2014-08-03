@@ -215,7 +215,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
         :param has_issues: optional :class:`bool`
         :param has_wiki: optional :class:`bool`
         :param auto_init: optional :class:`bool`
-        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
+        :param gitignore_template: optional :class:`.Github.GitIgnoreTemplate` or :class:`string` (its :attr:`.Github.GitIgnoreTemplate.name`)
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """
@@ -306,7 +306,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`list` of :class:`.Email`
+        :rtype: :class:`list` of :class:`.AuthenticatedUser.Email`
         """
 
         url = uritemplate.expand("https://api.github.com/user/emails")

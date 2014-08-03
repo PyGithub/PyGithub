@@ -25,9 +25,9 @@ class Generator(object):
         self.__writeFileEvenIfExists(self.testGenerator.generateAll(self.__definition.classes), os.path.join("PyGithub", "Blocking", "tests", "classes", "all.py"))
 
         for klass in self.__definition.classes:
-            self.__writeFileEvenIfExists(self.rstGenerator.generateClass(klass), os.path.join("doc", "reference", "classes", klass.name + ".rst"))
-            self.__writeFileEvenIfExists(self.codeGenerator.generateClass(klass), os.path.join("PyGithub", "Blocking", klass.name + ".py"))
-            self.__writeFileUnlessExists(self.testGenerator.generateClass(klass), os.path.join("PyGithub", "Blocking", "tests", "classes", klass.name + "TestCases.py"))
+            self.__writeFileEvenIfExists(self.rstGenerator.generateClass(klass), os.path.join("doc", "reference", "classes", klass.simpleName + ".rst"))
+            self.__writeFileEvenIfExists(self.codeGenerator.generateClass(klass), os.path.join("PyGithub", "Blocking", klass.simpleName + ".py"))
+            self.__writeFileUnlessExists(self.testGenerator.generateClass(klass), os.path.join("PyGithub", "Blocking", "tests", "classes", klass.simpleName + "TestCases.py"))
 
     def __writeFileUnlessExists(self, content, output):
         if not os.path.exists(output):

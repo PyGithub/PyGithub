@@ -21,17 +21,17 @@ def main():
     for t in ["Reset", "(string, string)", "GitAuthor"]:  # @todoAlpha Fix this: those are not builtins
         typesRepo.register(CrossReferenced.BuiltinType(t))
     for t in ["SessionedGithubObject", "UpdatableGithubObject", "PaginatedList"]:
-        typesRepo.register(CrossReferenced.Class(None, t, None, (), (), (), ()))
+        typesRepo.register(CrossReferenced.Class(t, None, (), (), (), ()))
 
     crossReferenced = CrossReferenced.Definition(structured, typesRepo)
 
-    builder = CrossReferenced.Class(None, "Builder", None, (), (), (Structured.Method("Build", (), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.ScalarType("Github")),), ())
-    github = [c for c in crossReferenced.classes if c.name == "Github"][0]
+    builder = CrossReferenced.Class("Builder", None, (), (), (Structured.Method("Build", (), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.ScalarType("Github")),), ())
+    github = [c for c in crossReferenced.classes if c.simpleName == "Github"][0]
     github._addSource(CrossReferenced.MethodSource(builder.methods[0]))
     github._sortSources()
 
-    session = CrossReferenced.Class(None, "Session", None, (), (Structured.Attribute("RateLimit", Structured.ScalarType("RateLimits")),), (), ())
-    rateLimits = [s for s in github.structures if s.name == "RateLimits"][0]
+    session = CrossReferenced.Class("Session", None, (), (Structured.Attribute("RateLimit", Structured.ScalarType("RateLimits")),), (), ())
+    rateLimits = [s for s in github.structures if s.qualifiedName == "Github.RateLimits"][0]
     rateLimits._addSource(CrossReferenced.AttributeSource(session.attributes[0]))
     rateLimits._sortSources()
 

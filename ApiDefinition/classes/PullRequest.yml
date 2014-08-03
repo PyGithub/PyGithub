@@ -1,17 +1,6 @@
 base: Issue
 structures:
-  - name: MergeResult
-    updatable: false
-    attributes:
-      - name: documentation_url
-        type: string
-      - name: merged
-        type: bool
-      - name: message
-        type: string
-      - name: sha
-        type: string
-  - name: PullEnd
+  - name: End
     attributes:
       - name: label
         type: string
@@ -23,7 +12,7 @@ structures:
         type: string
       - name: user
         type: User
-  - name: PullFile
+  - name: File
     updatable: false
     attributes:
       - name: additions
@@ -46,11 +35,22 @@ structures:
         type: string
       - name: status
         type: string
+  - name: MergeResult
+    updatable: false
+    attributes:
+      - name: documentation_url
+        type: string
+      - name: merged
+        type: bool
+      - name: message
+        type: string
+      - name: sha
+        type: string
 attributes:
   - name: additions
     type: int
   - name: base
-    type: PullEnd
+    type: PullRequest.End
   - name: changed_files
     type: int
   - name: commits
@@ -62,7 +62,7 @@ attributes:
   - name: diff_url
     type: string
   - name: head
-    type: PullEnd
+    type: PullRequest.End
   - name: issue_url
     type: string
   - name: merge_commit_sha
@@ -130,7 +130,7 @@ methods:
         value: attribute base.repo.name
     return_type:
       container: list
-      content: PullFile
+      content: PullRequest.File
   - name: get_is_merged
     end_point: GET /repos/:owner/:repo/pulls/:number/merge
     url_template: end_point
@@ -159,4 +159,4 @@ methods:
     post_arguments:
       - name: commit_message
         value: parameter commit_message
-    return_type: MergeResult
+    return_type: PullRequest.MergeResult

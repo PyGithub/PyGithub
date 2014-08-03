@@ -26,22 +26,22 @@ class RstGenerator:
             if len(endPoint.methods) != 0:
                 yield "Implemented in PyGithub by:"
                 for method in endPoint.methods:
-                    yield "  * :meth:`.{}.{}`".format(method.containerClass.name, method.name)
+                    yield "  * :meth:`.{}`".format(method.qualifiedName)
             else:
                 yield "Not yet implemented in PyGithub."
             yield ""
 
     def generateClass(self, klass):
-        yield klass.name
-        yield "=" * len(klass.name)
+        yield klass.simpleName
+        yield "=" * len(klass.simpleName)
         yield ""
-        yield ".. automodule:: PyGithub.Blocking.{}".format(klass.name)
+        yield ".. automodule:: PyGithub.Blocking.{}".format(klass.simpleName)
         yield ""
-        yield ".. autoclass:: PyGithub.Blocking.{0}::{0}()".format(klass.name)
+        yield ".. autoclass:: PyGithub.Blocking.{0}::{0}()".format(klass.simpleName)
         yield "    :members:"
         if len(klass.structures) != 0:
-            yield "    :exclude-members: {}".format(", ".join(struct.name for struct in klass.structures))  # pragma no branch
+            yield "    :exclude-members: {}".format(", ".join(struct.simpleName for struct in klass.structures))  # pragma no branch
             yield ""
             for struct in klass.structures:
-                yield "    .. autoclass:: PyGithub.Blocking.{0}::{0}.{1}()".format(klass.name, struct.name)
+                yield "    .. autoclass:: PyGithub.Blocking.{}::{}()".format(klass.simpleName, struct.qualifiedName)
                 yield "        :members:"

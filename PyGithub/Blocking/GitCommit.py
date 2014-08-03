@@ -23,12 +23,12 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
 
     Methods and attributes returning instances of this class:
       * :attr:`.Commit.commit`
-      * :attr:`.ContentCommit.commit`
       * :meth:`.File.delete`
       * :meth:`.File.edit`
       * :attr:`.GitCommit.parents`
       * :attr:`.GitRef.object`
       * :attr:`.GitTag.object`
+      * :attr:`.Repository.ContentCommit.commit`
       * :meth:`.Repository.create_git_commit`
       * :meth:`.Repository.get_git_commit`
 
@@ -36,54 +36,12 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
       * :meth:`.Repository.create_git_commit`
     """
 
-    class Author(_bgo.SessionedGithubObject):
-        """
-        Methods and attributes returning instances of this class:
-          * :attr:`.GitCommit.author`
-          * :attr:`.GitCommit.committer`
-
-        Methods accepting instances of this class as parameter: none.
-        """
-
-        def _initAttributes(self, date=None, email=None, name=None, **kwds):
-            super(GitCommit.Author, self)._initAttributes(**kwds)
-            self.__date = _rcv.Attribute("GitCommit.Author.date", _rcv.DatetimeConverter, date)
-            self.__email = _rcv.Attribute("GitCommit.Author.email", _rcv.StringConverter, email)
-            self.__name = _rcv.Attribute("GitCommit.Author.name", _rcv.StringConverter, name)
-
-        def _updateAttributes(self, date=None, email=None, name=None, **kwds):
-            super(GitCommit.Author, self)._updateAttributes(**kwds)
-            self.__date.update(date)
-            self.__email.update(email)
-            self.__name.update(name)
-
-        @property
-        def date(self):
-            """
-            :type: :class:`datetime`
-            """
-            return self.__date.value
-
-        @property
-        def email(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__email.value
-
-        @property
-        def name(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__name.value
-
     def _initAttributes(self, author=_rcv.Absent, comment_count=_rcv.Absent, committer=_rcv.Absent, html_url=_rcv.Absent, message=_rcv.Absent, parents=_rcv.Absent, tree=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitTree
         super(GitCommit, self)._initAttributes(**kwds)
-        self.__author = _rcv.Attribute("GitCommit.author", _rcv.StructureConverter(self.Session, GitCommit.Author), author)
+        self.__author = _rcv.Attribute("GitCommit.author", _rcv.StructureConverter(self.Session, PyGithub.Blocking.GitObject.GitObject.Author), author)
         self.__comment_count = _rcv.Attribute("GitCommit.comment_count", _rcv.IntConverter, comment_count)
-        self.__committer = _rcv.Attribute("GitCommit.committer", _rcv.StructureConverter(self.Session, GitCommit.Author), committer)
+        self.__committer = _rcv.Attribute("GitCommit.committer", _rcv.StructureConverter(self.Session, PyGithub.Blocking.GitObject.GitObject.Author), committer)
         self.__html_url = _rcv.Attribute("GitCommit.html_url", _rcv.StringConverter, html_url)
         self.__message = _rcv.Attribute("GitCommit.message", _rcv.StringConverter, message)
         self.__parents = _rcv.Attribute("GitCommit.parents", _rcv.ListConverter(_rcv.ClassConverter(self.Session, GitCommit)), parents)
@@ -102,7 +60,7 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
     @property
     def author(self):
         """
-        :type: :class:`.Author`
+        :type: :class:`.GitObject.Author`
         """
         self._completeLazily(self.__author.needsLazyCompletion)
         return self.__author.value
@@ -118,7 +76,7 @@ class GitCommit(PyGithub.Blocking.GitObject.GitObject):
     @property
     def committer(self):
         """
-        :type: :class:`.Author`
+        :type: :class:`.GitObject.Author`
         """
         self._completeLazily(self.__committer.needsLazyCompletion)
         return self.__committer.value

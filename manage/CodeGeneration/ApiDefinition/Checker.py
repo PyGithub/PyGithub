@@ -29,17 +29,18 @@ class Checker(object):
             print("WARNING: \"", w, "\" was acknowledged but doesn't exist anymore")
 
     def warnings(self):
-        yield from ("Struct '{}' is not updatable but is the type of attribute '{}' of class '{}'".format(s.name, a.name, c.name) for (c, s, a) in self.notUpdatableStructuresAttributeOfClass())
+        yield from ("Struct '{}' is not updatable but is the type of attribute '{}'".format(s.qualifiedName, a.qualifiedName) for (c, s, a) in self.notUpdatableStructuresAttributeOfClass())
         yield from ("End-point '{} {}' is not implemented and not declared so".format(ep.verb, ep.url) for ep in self.unimplementedEndPointsNotDeclared())
-        yield from ("End-point '{} {}' is declared as not implemented but is implemented by '{}.{}'".format(ep.verb, ep.url, m.containerClass.name, m.name) for (ep, m) in self.implementedEndPointsDeclaredUnimplemented())
-        yield from ("Method '{}.{}' doesn't use its '{}' parameter".format(m.containerClass.name, m.name, p.name) for (m, p) in self.unusedParameters())
-        yield from ("Method '{}.{}' doesn't implement the '{}' parameter of the '{} {}' end-point".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.unimplementedEndPointParametersNotDeclared())
-        yield from ("In method '{}.{}', the '{}' parameter of the '{} {}' end-point is declared as not implemented but is implemented".format(m.containerClass.name, m.name, p, ep.verb, ep.url) for (m, ep, p) in self.implementedEndPointParametersDeclaredUnimplemented())
-        yield from ("Method '{}.{}' tries to use unexisting parameter '{}'".format(m.containerClass.name, m.name, p) for (m, p) in self.unexistingParameters())
-        yield from ("Method '{}.{}' re-orders the '{} {}' parameters ('{}') to ('{}')".format(m.containerClass.name, m.name, ep.verb, ep.url, "', '".join(ep.parameters), "', '".join(p.name for p in m.parameters)) for (m, ep) in self.reorderedParameters())
-        yield from ("Attribute '{}.{}' hides attribute '{}.{}'".format(v.containerClass.name, v.name, h.containerClass.name, h.name) for (v, h) in self.hiddenAttributes())
-        yield from ("Method '{}.{}' hides method '{}.{}'".format(v.containerClass.name, v.name, h.containerClass.name, h.name) for (v, h) in self.hiddenMethods())
-        yield from ("Attribute '{}.{}' is not used as an end point".format(a.containerClass.name, a.name) for a in self.unusedUrlAttributes())
+        yield from ("End-point '{} {}' is declared as not implemented but is implemented by '{}'".format(ep.verb, ep.url, m.qualifiedName) for (ep, m) in self.implementedEndPointsDeclaredUnimplemented())
+        yield from ("Method '{}' doesn't use its '{}' parameter".format(m.qualifiedName, p.name) for (m, p) in self.unusedParameters())  # @todoAlpha Add a method attribute to Parameter
+        yield from ("Method '{}' doesn't implement the '{}' parameter of the '{} {}' end-point".format(m.qualifiedName, p, ep.verb, ep.url) for (m, ep, p) in self.unimplementedEndPointParametersNotDeclared())
+        yield from ("In method '{}', the '{}' parameter of the '{} {}' end-point is declared as not implemented but is implemented".format(m.qualifiedName, p, ep.verb, ep.url) for (m, ep, p) in self.implementedEndPointParametersDeclaredUnimplemented())
+        yield from ("Method '{}' tries to use unexisting parameter '{}'".format(m.qualifiedName, p) for (m, p) in self.unexistingParameters())
+        yield from ("Method '{}' re-orders the '{} {}' parameters ('{}') to ('{}')".format(m.qualifiedName, ep.verb, ep.url, "', '".join(ep.parameters), "', '".join(p.name for p in m.parameters)) for (m, ep) in self.reorderedParameters())
+        yield from ("Attribute '{}' hides attribute '{}'".format(v.qualifiedName, h.qualifiedName) for (v, h) in self.hiddenAttributes())
+        yield from ("Method '{}' hides method '{}'".format(v.qualifiedName, h.qualifiedName) for (v, h) in self.hiddenMethods())
+        yield from ("Class '{}' inherits method '{}' and has methods".format(c.qualifiedName, m.qualifiedName) for (c, m) in self.inheritedMethods())
+        yield from ("Attribute '{}' is not used as an end point".format(a.qualifiedName) for a in self.unusedUrlAttributes())
 
     def notUpdatableStructuresAttributeOfClass(self):
         for c1 in self.definition.classes:
@@ -47,7 +48,7 @@ class Checker(object):
                 if not s.isUpdatable:
                     for c2 in self.definition.classes:
                         for a in c2.attributes:
-                            if a.type.name == s.name:
+                            if a.type.qualifiedName == s.qualifiedName:
                                 yield c2, s, a
 
     def unimplementedEndPointsNotDeclared(self):
@@ -125,14 +126,14 @@ class Checker(object):
                 return dict()
             else:
                 attributes = gatherAttributes(c.base)
-                attributes.update({a.name: a for a in c.attributes})
+                attributes.update({a.simpleName: a for a in c.attributes})
                 return attributes
 
         for c in self.definition.classes:
             baseAttributes = gatherAttributes(c.base)
             for a in c.attributes:
-                if a.name in baseAttributes:
-                    yield a, baseAttributes[a.name]
+                if a.simpleName in baseAttributes:
+                    yield a, baseAttributes[a.simpleName]
 
     def hiddenMethods(self):
         def gatherMethods(c):
@@ -140,14 +141,14 @@ class Checker(object):
                 return dict()
             else:
                 methods = gatherMethods(c.base)
-                methods.update({m.name: m for m in c.methods})
+                methods.update({m.simpleName: m for m in c.methods})
                 return methods
 
         for c in self.definition.classes:
             baseMethods = gatherMethods(c.base)
             for m in c.methods:
-                if m.name in baseMethods:
-                    yield m, baseMethods[m.name]
+                if m.simpleName in baseMethods:
+                    yield m, baseMethods[m.simpleName]
 
     def unusedUrlAttributes(self):
         for c in self.definition.classes:
@@ -156,8 +157,21 @@ class Checker(object):
                 if isinstance(m.urlTemplate, CrossReferenced.AttributeValue):
                     usedAsEndpoints.add(m.urlTemplate.attribute)
             for a in c.attributes:
-                if a.name.endswith("_url") and a.name not in usedAsEndpoints:
+                if a.simpleName.endswith("_url") and a.simpleName not in usedAsEndpoints:
                     yield a
+
+    def inheritedMethods(self):
+        def gatherMethods(c):
+            if c is None:
+                return []
+            else:
+                yield from gatherMethods(c.base)
+                yield from c.methods
+
+        for c in self.definition.classes:
+            if len(c.methods) != 0:
+                for m in gatherMethods(c.base):
+                    yield c, m
 
 
 class CheckerTestCase(unittest.TestCase):
@@ -170,11 +184,11 @@ class CheckerTestCase(unittest.TestCase):
         d = Structured.Definition(
             (),
             (
-                Structured.Class("Foo", None, (Structured.Structure("Stru", False, (), ()),), (Structured.Attribute("url", Structured.ScalarType("string")), Structured.Attribute("attr", Structured.ScalarType("Stru"))), (), ()),
+                Structured.Class("Foo", None, (Structured.Structure("Stru", False, (), ()),), (Structured.Attribute("url", Structured.ScalarType("string")), Structured.Attribute("attr", Structured.ScalarType("Foo.Stru"))), (), ()),
             ),
             ()
         )
-        self.expect(d, "Struct 'Stru' is not updatable but is the type of attribute 'attr' of class 'Foo'")
+        self.expect(d, "Struct 'Foo.Stru' is not updatable but is the type of attribute 'Foo.attr'")
 
     def testUnimplementedEndPointNotDeclared(self):
         d = Structured.Definition(
@@ -482,7 +496,7 @@ class CheckerTestCase(unittest.TestCase):
             ),
             ()
         )
-        self.expect(d, "Method 'Bar.get_foo' hides method 'Foo.get_foo'")
+        self.expect(d, "Method 'Bar.get_foo' hides method 'Foo.get_foo'", "Class 'Bar' inherits method 'Foo.get_foo' and has methods")
 
     def testMethodHidesMethodOfIndirectBase(self):
         d = Structured.Definition(
@@ -496,7 +510,7 @@ class CheckerTestCase(unittest.TestCase):
             ),
             ()
         )
-        self.expect(d, "Method 'Baz.get_foo' hides method 'Foo.get_foo'")
+        self.expect(d, "Method 'Baz.get_foo' hides method 'Foo.get_foo'", "Class 'Baz' inherits method 'Foo.get_foo' and has methods")
 
     def testUrlAttributeNotUsed(self):
         d = Structured.Definition(
@@ -515,6 +529,32 @@ class CheckerTestCase(unittest.TestCase):
             ),
             (
                 Structured.Class("Foo", None, (), (Structured.Attribute("slug_url", Structured.ScalarType("string")),), (Structured.Method("get_slug", ("GET /slug",), (), (), Structured.AttributeValue("slug_url"), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
+        )
+        self.expect(d)
+
+    def testClassWithMethodsInheritsMethod(self):
+        d = Structured.Definition(
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Foo", None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+                Structured.Class("Bar", Structured.ScalarType("Foo"), (), (), (Structured.Method("get_bar", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+            ),
+            ()
+        )
+        self.expect(d, "Class 'Bar' inherits method 'Foo.get_foo' and has methods")
+
+    def testClassWithoutMethodsInheritsMethod(self):
+        d = Structured.Definition(
+            (
+                Structured.EndPoint("GET", "/foo", (), ""),
+            ),
+            (
+                Structured.Class("Foo", None, (), (), (Structured.Method("get_foo", ("GET /foo",), (), (), Structured.EndPointValue(), (), (), (), (), None, Structured.NoneType),), ()),
+                Structured.Class("Bar", Structured.ScalarType("Foo"), (), (), (), ()),
             ),
             ()
         )

@@ -115,7 +115,7 @@ class Organization(PyGithub.Blocking.Entity.Entity):
         :param has_wiki: optional :class:`bool`
         :param team_id: optional :class:`.Team` or :class:`int` (its :attr:`.Team.id`)
         :param auto_init: optional :class:`bool`
-        :param gitignore_template: optional :class:`.GitIgnoreTemplate` or :class:`string` (its :attr:`.GitIgnoreTemplate.name`)
+        :param gitignore_template: optional :class:`.Github.GitIgnoreTemplate` or :class:`string` (its :attr:`.Github.GitIgnoreTemplate.name`)
         :param license_template: optional :class:`string`
         :rtype: :class:`.Repository`
         """

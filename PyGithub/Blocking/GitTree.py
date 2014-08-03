@@ -116,7 +116,7 @@ class GitTree(PyGithub.Blocking.GitObject.GitObject):
     @property
     def tree(self):
         """
-        :type: :class:`list` of :class:`.GitTree` or :class:`.GitBlob` or :class:`.GitSubmodule`
+        :type: :class:`list` of :class:`.GitTree` or :class:`.GitBlob` or :class:`.GitTree.GitSubmodule`
         """
         self._completeLazily(self.__tree.needsLazyCompletion)
         return self.__tree.value

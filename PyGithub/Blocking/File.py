@@ -20,8 +20,8 @@ class File(_bgo.UpdatableGithubObject):
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
-      * :attr:`.ContentCommit.content`
       * :meth:`.Dir.get_contents`
+      * :attr:`.Repository.ContentCommit.content`
       * :meth:`.Repository.get_contents`
       * :meth:`.Repository.get_readme`
 

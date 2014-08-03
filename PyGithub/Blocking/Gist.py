@@ -42,8 +42,8 @@ class Gist(_bgo.UpdatableGithubObject):
     class ChangeStatus(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
-          * :attr:`.GistCommit.change_status`
-          * :attr:`.HistoryElement.change_status`
+          * :attr:`.Gist.Commit.change_status`
+          * :attr:`.Gist.HistoryElement.change_status`
 
         Methods accepting instances of this class as parameter: none.
         """
@@ -81,7 +81,7 @@ class Gist(_bgo.UpdatableGithubObject):
             """
             return self.__total.value
 
-    class GistCommit(_bgo.SessionedGithubObject):
+    class Commit(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :meth:`.Gist.get_commits`
@@ -91,15 +91,15 @@ class Gist(_bgo.UpdatableGithubObject):
 
         def _initAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
             import PyGithub.Blocking.User
-            super(Gist.GistCommit, self)._initAttributes(**kwds)
-            self.__change_status = _rcv.Attribute("Gist.GistCommit.change_status", _rcv.StructureConverter(self.Session, Gist.ChangeStatus), change_status)
-            self.__committed_at = _rcv.Attribute("Gist.GistCommit.committed_at", _rcv.DatetimeConverter, committed_at)
-            self.__url = _rcv.Attribute("Gist.GistCommit.url", _rcv.StringConverter, url)
-            self.__user = _rcv.Attribute("Gist.GistCommit.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
-            self.__version = _rcv.Attribute("Gist.GistCommit.version", _rcv.StringConverter, version)
+            super(Gist.Commit, self)._initAttributes(**kwds)
+            self.__change_status = _rcv.Attribute("Gist.Commit.change_status", _rcv.StructureConverter(self.Session, Gist.ChangeStatus), change_status)
+            self.__committed_at = _rcv.Attribute("Gist.Commit.committed_at", _rcv.DatetimeConverter, committed_at)
+            self.__url = _rcv.Attribute("Gist.Commit.url", _rcv.StringConverter, url)
+            self.__user = _rcv.Attribute("Gist.Commit.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
+            self.__version = _rcv.Attribute("Gist.Commit.version", _rcv.StringConverter, version)
 
         def _updateAttributes(self, change_status=None, committed_at=None, url=None, user=None, version=None, **kwds):
-            super(Gist.GistCommit, self)._updateAttributes(**kwds)
+            super(Gist.Commit, self)._updateAttributes(**kwds)
             self.__change_status.update(change_status)
             self.__committed_at.update(committed_at)
             self.__url.update(url)
@@ -109,7 +109,7 @@ class Gist(_bgo.UpdatableGithubObject):
         @property
         def change_status(self):
             """
-            :type: :class:`.ChangeStatus`
+            :type: :class:`.Gist.ChangeStatus`
             """
             return self.__change_status.value
 
@@ -141,7 +141,7 @@ class Gist(_bgo.UpdatableGithubObject):
             """
             return self.__version.value
 
-    class GistFile(_bgo.SessionedGithubObject):
+    class File(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
           * :attr:`.Gist.files`
@@ -150,17 +150,17 @@ class Gist(_bgo.UpdatableGithubObject):
         """
 
         def _initAttributes(self, content=None, filename=None, language=None, raw_url=None, size=None, truncated=None, type=None, **kwds):
-            super(Gist.GistFile, self)._initAttributes(**kwds)
-            self.__content = _rcv.Attribute("Gist.GistFile.content", _rcv.StringConverter, content)
-            self.__filename = _rcv.Attribute("Gist.GistFile.filename", _rcv.StringConverter, filename)
-            self.__language = _rcv.Attribute("Gist.GistFile.language", _rcv.StringConverter, language)
-            self.__raw_url = _rcv.Attribute("Gist.GistFile.raw_url", _rcv.StringConverter, raw_url)
-            self.__size = _rcv.Attribute("Gist.GistFile.size", _rcv.IntConverter, size)
-            self.__truncated = _rcv.Attribute("Gist.GistFile.truncated", _rcv.BoolConverter, truncated)
-            self.__type = _rcv.Attribute("Gist.GistFile.type", _rcv.StringConverter, type)
+            super(Gist.File, self)._initAttributes(**kwds)
+            self.__content = _rcv.Attribute("Gist.File.content", _rcv.StringConverter, content)
+            self.__filename = _rcv.Attribute("Gist.File.filename", _rcv.StringConverter, filename)
+            self.__language = _rcv.Attribute("Gist.File.language", _rcv.StringConverter, language)
+            self.__raw_url = _rcv.Attribute("Gist.File.raw_url", _rcv.StringConverter, raw_url)
+            self.__size = _rcv.Attribute("Gist.File.size", _rcv.IntConverter, size)
+            self.__truncated = _rcv.Attribute("Gist.File.truncated", _rcv.BoolConverter, truncated)
+            self.__type = _rcv.Attribute("Gist.File.type", _rcv.StringConverter, type)
 
         def _updateAttributes(self, content=None, filename=None, language=None, raw_url=None, size=None, truncated=None, type=None, **kwds):
-            super(Gist.GistFile, self)._updateAttributes(**kwds)
+            super(Gist.File, self)._updateAttributes(**kwds)
             self.__content.update(content)
             self.__filename.update(filename)
             self.__language.update(language)
@@ -246,7 +246,7 @@ class Gist(_bgo.UpdatableGithubObject):
         @property
         def change_status(self):
             """
-            :type: :class:`.ChangeStatus`
+            :type: :class:`.Gist.ChangeStatus`
             """
             return self.__change_status.value
 
@@ -286,7 +286,7 @@ class Gist(_bgo.UpdatableGithubObject):
         self.__commits_url = _rcv.Attribute("Gist.commits_url", _rcv.StringConverter, commits_url)
         self.__created_at = _rcv.Attribute("Gist.created_at", _rcv.DatetimeConverter, created_at)
         self.__description = _rcv.Attribute("Gist.description", _rcv.StringConverter, description)
-        self.__files = _rcv.Attribute("Gist.files", _rcv.DictConverter(_rcv.StringConverter, _rcv.StructureConverter(self.Session, Gist.GistFile)), files)
+        self.__files = _rcv.Attribute("Gist.files", _rcv.DictConverter(_rcv.StringConverter, _rcv.StructureConverter(self.Session, Gist.File)), files)
         self.__fork_of = _rcv.Attribute("Gist.fork_of", _rcv.ClassConverter(self.Session, Gist), fork_of)
         self.__forks = _rcv.Attribute("Gist.forks", _rcv.ListConverter(_rcv.ClassConverter(self.Session, Gist)), forks)
         self.__forks_url = _rcv.Attribute("Gist.forks_url", _rcv.StringConverter, forks_url)
@@ -364,7 +364,7 @@ class Gist(_bgo.UpdatableGithubObject):
     @property
     def files(self):
         """
-        :type: :class:`dict` of :class:`string` to :class:`.GistFile`
+        :type: :class:`dict` of :class:`string` to :class:`.Gist.File`
         """
         self._completeLazily(self.__files.needsLazyCompletion)
         return self.__files.value
@@ -412,7 +412,7 @@ class Gist(_bgo.UpdatableGithubObject):
     @property
     def history(self):
         """
-        :type: :class:`list` of :class:`.HistoryElement`
+        :type: :class:`list` of :class:`.Gist.HistoryElement`
         """
         self._completeLazily(self.__history.needsLazyCompletion)
         return self.__history.value
@@ -503,7 +503,7 @@ class Gist(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param per_page: optional :class:`int`
-        :rtype: :class:`.PaginatedList` of :class:`.GistCommit`
+        :rtype: :class:`.PaginatedList` of :class:`.Gist.Commit`
         """
 
         if per_page is None:
@@ -514,7 +514,7 @@ class Gist(_bgo.UpdatableGithubObject):
         url = uritemplate.expand(self.commits_url)
         urlArguments = _snd.dictionary(per_page=per_page)
         r = self.Session._request("GET", url, urlArguments=urlArguments)
-        return _rcv.PaginatedListConverter(self.Session, _rcv.StructureConverter(self.Session, Gist.GistCommit))(None, r)
+        return _rcv.PaginatedListConverter(self.Session, _rcv.StructureConverter(self.Session, Gist.Commit))(None, r)
 
     def get_forks(self, per_page=None):
         """

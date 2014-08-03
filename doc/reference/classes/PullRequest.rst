@@ -9,11 +9,11 @@ PullRequest
 
 .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest()
     :members:
-    :exclude-members: MergeResult, PullEnd, PullFile
+    :exclude-members: End, File, MergeResult
 
+    .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest.End()
+        :members:
+    .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest.File()
+        :members:
     .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest.MergeResult()
-        :members:
-    .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest.PullEnd()
-        :members:
-    .. autoclass:: PyGithub.Blocking.PullRequest::PullRequest.PullFile()
         :members:

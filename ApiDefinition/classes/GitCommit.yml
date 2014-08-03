@@ -1,20 +1,11 @@
 base: GitObject
-structures:
-  - name: Author
-    attributes:
-      - name: date
-        type: datetime
-      - name: email
-        type: string
-      - name: name
-        type: string
 attributes:
   - name: author
-    type: Author
+    type: GitObject.Author
   - name: comment_count
     type: int
   - name: committer
-    type: Author
+    type: GitObject.Author
   - name: html_url
     type: string
   - name: message

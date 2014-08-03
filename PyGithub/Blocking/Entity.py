@@ -261,7 +261,7 @@ class Entity(_bgo.UpdatableGithubObject):
     @property
     def plan(self):
         """
-        :type: :class:`.Plan`
+        :type: :class:`.Entity.Plan`
         """
         self._completeLazily(self.__plan.needsLazyCompletion)
         return self.__plan.value

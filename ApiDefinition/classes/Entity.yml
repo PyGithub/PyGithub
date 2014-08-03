@@ -43,7 +43,7 @@ attributes:
   - name: owned_private_repos
     type: int
   - name: plan
-    type: Plan
+    type: Entity.Plan
   - name: private_gists
     type: int
   - name: public_gists

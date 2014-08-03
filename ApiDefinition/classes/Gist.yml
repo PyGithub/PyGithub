@@ -7,10 +7,10 @@ structures:
         type: int
       - name: total
         type: int
-  - name: GistCommit
+  - name: Commit
     attributes:
       - name: change_status
-        type: ChangeStatus
+        type: Gist.ChangeStatus
       - name: committed_at
         type: datetime
       - name: url
@@ -19,7 +19,7 @@ structures:
         type: User
       - name: version
         type: string
-  - name: GistFile
+  - name: File
     attributes:
       - name: content
         type: string
@@ -38,7 +38,7 @@ structures:
   - name: HistoryElement
     attributes:
       - name: change_status
-        type: ChangeStatus
+        type: Gist.ChangeStatus
       - name: committed_at
         type: datetime
       - name: url
@@ -62,7 +62,7 @@ attributes:
     type:
       container: dict
       key: string
-      value: GistFile
+      value: Gist.File
   - name: fork_of
     type: Gist
   - name: forks
@@ -78,7 +78,7 @@ attributes:
   - name: history
     type:
       container: list
-      content: HistoryElement
+      content: Gist.HistoryElement
   - name: html_url
     type: string
   - name: id
@@ -127,7 +127,7 @@ methods:
         value: parameter per_page
     return_type:
       container: PaginatedList
-      content: GistCommit
+      content: Gist.Commit
   - name: get_forks
     end_point: GET /gists/:id/forks
     optional_parameters:

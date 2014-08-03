@@ -28,19 +28,19 @@ class User(PyGithub.Blocking.Entity.Entity):
       * :meth:`.AuthenticatedUser.get_following`
       * :attr:`.Commit.author`
       * :attr:`.Commit.committer`
+      * :attr:`.Gist.Commit.user`
+      * :attr:`.Gist.HistoryElement.user`
       * :attr:`.Gist.owner`
       * :attr:`.Gist.user`
-      * :attr:`.GistCommit.user`
       * :meth:`.Github.get_user`
       * :meth:`.Github.get_users`
-      * :attr:`.HistoryElement.user`
       * :attr:`.Issue.assignee`
       * :attr:`.Issue.closed_by`
       * :attr:`.Issue.user`
       * :attr:`.Milestone.creator`
       * :meth:`.Organization.get_members`
       * :meth:`.Organization.get_public_members`
-      * :attr:`.PullEnd.user`
+      * :attr:`.PullRequest.End.user`
       * :attr:`.PullRequest.merged_by`
       * :meth:`.Repository.get_assignees`
       * :meth:`.Repository.get_collaborators`
@@ -288,7 +288,7 @@ class User(PyGithub.Blocking.Entity.Entity):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`list` of :class:`.Key`
+        :rtype: :class:`list` of :class:`.User.Key`
         """
 
         url = uritemplate.expand("https://api.github.com/users/{username}/keys", username=self.login)

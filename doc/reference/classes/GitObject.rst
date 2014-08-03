@@ -9,3 +9,7 @@ GitObject
 
 .. autoclass:: PyGithub.Blocking.GitObject::GitObject()
     :members:
+    :exclude-members: Author
+
+    .. autoclass:: PyGithub.Blocking.GitObject::GitObject.Author()
+        :members:

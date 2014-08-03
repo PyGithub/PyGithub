@@ -28,6 +28,49 @@ class GitObject(_bgo.UpdatableGithubObject):
     Methods accepting instances of this class as parameter: none.
     """
 
+    class Author(_bgo.SessionedGithubObject):
+        """
+        Methods and attributes returning instances of this class:
+          * :attr:`.GitCommit.author`
+          * :attr:`.GitCommit.committer`
+          * :attr:`.GitTag.tagger`
+
+        Methods accepting instances of this class as parameter: none.
+        """
+
+        def _initAttributes(self, date=None, email=None, name=None, **kwds):
+            super(GitObject.Author, self)._initAttributes(**kwds)
+            self.__date = _rcv.Attribute("GitObject.Author.date", _rcv.DatetimeConverter, date)
+            self.__email = _rcv.Attribute("GitObject.Author.email", _rcv.StringConverter, email)
+            self.__name = _rcv.Attribute("GitObject.Author.name", _rcv.StringConverter, name)
+
+        def _updateAttributes(self, date=None, email=None, name=None, **kwds):
+            super(GitObject.Author, self)._updateAttributes(**kwds)
+            self.__date.update(date)
+            self.__email.update(email)
+            self.__name.update(name)
+
+        @property
+        def date(self):
+            """
+            :type: :class:`datetime`
+            """
+            return self.__date.value
+
+        @property
+        def email(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__email.value
+
+        @property
+        def name(self):
+            """
+            :type: :class:`string`
+            """
+            return self.__name.value
+
     def _initAttributes(self, sha=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitObject, self)._initAttributes(**kwds)
         self.__sha = _rcv.Attribute("GitObject.sha", _rcv.StringConverter, sha)

@@ -1,5 +1,5 @@
 structures:
-  - name: CommitFile
+  - name: File
     attributes:
       - name: additions
         type: int
@@ -41,7 +41,7 @@ attributes:
   - name: files
     type:
       container: list
-      content: CommitFile
+      content: Commit.File
   - name: html_url
     type: string
   - name: parents
@@ -51,4 +51,4 @@ attributes:
   - name: sha
     type: string
   - name: stats
-    type: Stats
+    type: Commit.Stats

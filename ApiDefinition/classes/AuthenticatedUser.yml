@@ -140,7 +140,7 @@ methods:
         type: bool
       - name: gitignore_template
         type:
-          class: GitIgnoreTemplate
+          class: Github.GitIgnoreTemplate
           attribute: name
       - name: license_template
         type: string
@@ -238,7 +238,7 @@ methods:
     url_template: end_point
     return_type:
       container: list
-      content: Email
+      content: AuthenticatedUser.Email
   - name: get_followers
     end_point: GET /user/followers
     optional_parameters:

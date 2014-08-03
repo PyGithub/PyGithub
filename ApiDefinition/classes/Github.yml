@@ -23,7 +23,7 @@ structures:
     updatable: false
     attributes:
       - name: resources
-        type: Resources
+        type: Github.Resources
     deprecated_attributes:
       - name: rate
         reason: https://developer.github.com/v3/rate_limit/#deprecation-notice
@@ -39,9 +39,9 @@ structures:
     updatable: false
     attributes:
       - name: core
-        type: RateLimits
+        type: Github.RateLimits
       - name: search
-        type: RateLimits
+        type: Github.RateLimits
 methods:
   - name: create_anonymous_gist
     end_point: POST /gists
@@ -92,7 +92,7 @@ methods:
     url_template_arguments:
       - name: name
         value: parameter name
-    return_type: GitIgnoreTemplate
+    return_type: Github.GitIgnoreTemplate
   - name: get_gitignore_templates
     end_point: GET /gitignore/templates
     url_template: end_point
@@ -102,7 +102,7 @@ methods:
   - name: get_meta
     end_point: GET /meta
     url_template: end_point
-    return_type: Meta
+    return_type: Github.Meta
   - name: get_org
     end_point: GET /orgs/:org
     parameters:
@@ -132,7 +132,7 @@ methods:
   - name: get_rate_limit
     end_point: GET /rate_limit
     url_template: end_point
-    return_type: RateLimit
+    return_type: Github.RateLimit
   - name: get_repo
     end_point: GET /repos/:owner/:repo
     parameters:

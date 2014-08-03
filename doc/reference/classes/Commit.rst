@@ -9,9 +9,9 @@ Commit
 
 .. autoclass:: PyGithub.Blocking.Commit::Commit()
     :members:
-    :exclude-members: CommitFile, Stats
+    :exclude-members: File, Stats
 
-    .. autoclass:: PyGithub.Blocking.Commit::Commit.CommitFile()
+    .. autoclass:: PyGithub.Blocking.Commit::Commit.File()
         :members:
     .. autoclass:: PyGithub.Blocking.Commit::Commit.Stats()
         :members:

@@ -82,7 +82,7 @@ methods:
         type: bool
       - name: gitignore_template
         type:
-          class: GitIgnoreTemplate
+          class: Github.GitIgnoreTemplate
           attribute: name
       - name: license_template
         type: string

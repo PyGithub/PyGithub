@@ -12,12 +12,22 @@ import CodeGeneration.ApiDefinition.Structured as Structured
 
 
 class Type:
-    def __init__(self, name):
-        self.__name = name
+    def __init__(self, simpleName, qualifiedName, description):
+        self.__simpleName = simpleName
+        self.__qualifiedName = qualifiedName
+        self.__description = description
 
     @property
-    def name(self):
-        return self.__name
+    def simpleName(self):
+        return self.__simpleName
+
+    @property
+    def qualifiedName(self):
+        return self.__qualifiedName
+
+    @property
+    def description(self):
+        return self.__description
 
 
 class SimpleType(Type):
@@ -27,19 +37,19 @@ class SimpleType(Type):
 
 
 class BuiltinType(SimpleType):
-    def __init__(self, name):
-        Type.__init__(self, name)
+    def __init__(self, simpleName):
+        super(BuiltinType, self).__init__(simpleName, simpleName, simpleName)
 
 
-class NoneType_(SimpleType):
+class NoneType_(BuiltinType):
     def __init__(self):
-        Type.__init__(self, "NoneType")
+        super(NoneType_, self).__init__("NoneType")
 NoneType = NoneType_()
 
 
 class LinearCollection(Type):
     def __init__(self, container, content):
-        Type.__init__(self, container.name + " of " + content.name)
+        super(LinearCollection, self).__init__(container.simpleName, container.qualifiedName, container.description + " of " + content.description)
         self.__container = container
         self.__content = content
 
@@ -58,7 +68,7 @@ class LinearCollection(Type):
 
 class MappingCollection(Type):
     def __init__(self, container, key, value):
-        Type.__init__(self, container.name + " of " + key.name + " to " + value.name)
+        super(MappingCollection, self).__init__(container.simpleName, container.qualifiedName, container.description + " of " + key.description + " to " + value.description)
         self.__container = container
         self.__key = key
         self.__value = value
@@ -82,7 +92,7 @@ class MappingCollection(Type):
 
 class UnionType(Type):
     def __init__(self, types, key, keys, converter):
-        Type.__init__(self, " or ".join(t.name for t in types))
+        super(UnionType, self).__init__("union", "union", " or ".join(t.description for t in types))
         self.__types = types
         self.key = key
         self.keys = keys
@@ -102,7 +112,7 @@ class UnionType(Type):
 
 class EnumeratedType(SimpleType):
     def __init__(self, *values):
-        Type.__init__(self, " or ".join('"' + v + '"' for v in values))
+        super(EnumeratedType, self).__init__("enum", "enum", " or ".join('"' + v + '"' for v in values))
         self.__values = values
 
     @property
@@ -112,7 +122,7 @@ class EnumeratedType(SimpleType):
 
 class AttributeType(Type):
     def __init__(self, type, attribute):
-        Type.__init__(self, "Attribute " + attribute.name + " of " + type.name)
+        super(AttributeType, self).__init__("attribute", "attribute", "Attribute " + attribute.qualifiedName)
         self.__type = type
         self.__attribute = attribute
 
@@ -146,7 +156,7 @@ class EndPoint:
         self.__methods.append(method)
 
     def _sortMethods(self):
-        self.__methods = sorted(self.__methods, key=lambda m: (m.containerClass.name, m.name))
+        self.__methods = sorted(self.__methods, key=lambda m: m.qualifiedName)
 
     @property
     def verb(self):
@@ -174,9 +184,9 @@ class EndPoint:
 
 
 class AttributedType(SimpleType):
-    def __init__(self, name, attributes, deprecatedAttributes):
-        super(AttributedType, self).__init__(name)
-        self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
+    def __init__(self, simpleName, qualifiedName, attributes, deprecatedAttributes):
+        super(AttributedType, self).__init__(simpleName, qualifiedName, qualifiedName)
+        self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.simpleName)
         self.__deprecatedAttributes = sorted(a.name for a in deprecatedAttributes)
         self.__sources = []
         self.__sinks = []
@@ -193,10 +203,10 @@ class AttributedType(SimpleType):
         self.__sinks.append(s)
 
     def _sortSources(self):
-        self.__sources = sorted(set(self.__sources), key=lambda s: (s.object.containerClass.name, s.object.name))
+        self.__sources = sorted(set(self.__sources), key=lambda s: s.object.qualifiedName)
 
     def _sortSinks(self):
-        self.__sinks = sorted(set(self.__sinks), key=lambda s: (s.object.containerClass.name, s.object.name))
+        self.__sinks = sorted(set(self.__sinks), key=lambda s: s.object.qualifiedName)
 
     @property
     def sources(self):
@@ -216,9 +226,10 @@ class AttributedType(SimpleType):
 
 
 class Attribute:
-    def __init__(self, containerClass, name, type):
+    def __init__(self, containerClass, simpleName, type):
         self.__containerClass = containerClass
-        self.__name = name
+        self.__qualifiedName = containerClass.qualifiedName + "." + simpleName
+        self.__simpleName = simpleName
 
         self.__tmp_typeDescription = type
 
@@ -239,8 +250,12 @@ class Attribute:
         return self.__containerClass
 
     @property
-    def name(self):
-        return self.__name
+    def simpleName(self):
+        return self.__simpleName
+
+    @property
+    def qualifiedName(self):
+        return self.__qualifiedName
 
     @property
     def type(self):
@@ -253,11 +268,10 @@ MethodSink = collections.namedtuple("MethodSink", "object")
 
 
 class Class(AttributedType):
-    def __init__(self, module, name, base, structures, attributes, methods, deprecatedAttributes):
-        super(Class, self).__init__(name, attributes, deprecatedAttributes)
-        self.__module = module
-        self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.name)
-        self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.name)
+    def __init__(self, simpleName, base, structures, attributes, methods, deprecatedAttributes):
+        super(Class, self).__init__(simpleName, simpleName, attributes, deprecatedAttributes)
+        self.__structures = sorted((Structure(self, *s) for s in structures), key=lambda s: s.simpleName)
+        self.__methods = sorted((Method(self, *m) for m in methods), key=lambda m: m.simpleName)
         self.__derived = []
 
         self.__tmp_baseTypeDescription = base
@@ -278,11 +292,7 @@ class Class(AttributedType):
         del self.__tmp_baseTypeDescription
 
     def _sortDerived(self):
-        self.__derived = sorted(self.__derived, key=lambda d: d.name)
-
-    @property
-    def module(self):
-        return self.__module
+        self.__derived = sorted(self.__derived, key=lambda d: d.qualifiedName)
 
     @property
     def base(self):
@@ -302,8 +312,8 @@ class Class(AttributedType):
 
 
 class Structure(AttributedType):
-    def __init__(self, containerClass, name, updatable, attributes, deprecatedAttributes):
-        super(Structure, self).__init__(name, attributes, deprecatedAttributes)
+    def __init__(self, containerClass, simpleName, updatable, attributes, deprecatedAttributes):
+        super(Structure, self).__init__(simpleName, containerClass.qualifiedName + "." + simpleName, attributes, deprecatedAttributes)
         self.__updatable = updatable
         self.__containerClass = containerClass
 
@@ -317,9 +327,10 @@ class Structure(AttributedType):
 
 
 class Method:
-    def __init__(self, containerClass, name, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType):
+    def __init__(self, containerClass, simpleName, endPoints, parameters, unimplementedParameters, urlTemplate, urlTemplateArguments, urlArguments, postArguments, effects, returnFrom, returnType):
         self.__containerClass = containerClass
-        self.__name = name
+        self.__simpleName = simpleName
+        self.__qualifiedName = containerClass.qualifiedName + "." + simpleName
         self.__parameters = [Parameter(*p) for p in parameters]
         self.__unimplementedParameters = [p.name for p in unimplementedParameters]
         self.__urlTemplate = Value(urlTemplate)
@@ -365,8 +376,12 @@ class Method:
         return self.__containerClass
 
     @property
-    def name(self):
-        return self.__name
+    def simpleName(self):
+        return self.__simpleName
+
+    @property
+    def qualifiedName(self):
+        return self.__qualifiedName
 
     @property
     def endPoints(self):
@@ -472,8 +487,8 @@ class TypesRepository:
 
     def register(self, t):
         if isinstance(t, SimpleType):
-            assert t.name not in self.__simpleTypes
-            self.__simpleTypes[t.name] = t
+            assert t.qualifiedName not in self.__simpleTypes
+            self.__simpleTypes[t.qualifiedName] = t
         else:
             assert False, t  # pragma no cover
 
@@ -486,7 +501,7 @@ class TypesRepository:
         elif isinstance(description, Structured.AttributeType):
             def findAttr(t, a):
                 for attribute in t.attributes:
-                    if attribute.name == a:
+                    if attribute.simpleName == a:
                         return attribute
                 return findAttr(t.base, a)
             type = self.get(description.type)
@@ -524,7 +539,7 @@ class Definition:
                     unimplementedEndPoints.append(endPointsRepo[verb + " " + url])
         self.__unimplementedEndPoints = sorted(unimplementedEndPoints, key=lambda ep: (ep.url, ep.verb))
 
-        self.__classes = sorted((Class("PyGithub.Blocking." + c.name, *c) for c in definition.classes), key=lambda c: c.name)
+        self.__classes = sorted((Class(*c) for c in definition.classes), key=lambda c: c.qualifiedName)
 
         for c in self.__classes:
             typesRepo.register(c)
