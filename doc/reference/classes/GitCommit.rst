@@ -9,3 +9,7 @@ GitCommit
 
 .. autoclass:: PyGithub.Blocking.GitCommit::GitCommit()
     :members:
+    :exclude-members: Author
+
+    .. autoclass:: PyGithub.Blocking.GitCommit::GitCommit.Author()
+        :members:

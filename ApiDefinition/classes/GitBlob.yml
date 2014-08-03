@@ -1,4 +1,3 @@
-base: GitObject
 attributes:
   - name: content
     type: string
@@ -8,5 +7,9 @@ attributes:
     type: string
   - name: path
     type: string
+  - name: sha
+    type: string
   - name: size
     type: int
+  - name: type
+    type: string

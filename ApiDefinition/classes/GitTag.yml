@@ -1,4 +1,3 @@
-base: GitObject
 attributes:
   - name: message
     type: string
@@ -7,7 +6,11 @@ attributes:
       union: [GitBlob, GitTree, GitCommit, GitTag]
       key: type
       keys: [blob, tree, commit, tag]
+  - name: sha
+    type: string
   - name: tag
     type: string
   - name: tagger
-    type: GitObject.Author
+    type: GitCommit.Author
+  - name: type
+    type: string

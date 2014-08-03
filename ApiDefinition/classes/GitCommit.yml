@@ -1,11 +1,19 @@
-base: GitObject
+structures:
+  - name: Author
+    attributes:
+      - name: date
+        type: datetime
+      - name: email
+        type: string
+      - name: name
+        type: string
 attributes:
   - name: author
-    type: GitObject.Author
+    type: GitCommit.Author
   - name: comment_count
     type: int
   - name: committer
-    type: GitObject.Author
+    type: GitCommit.Author
   - name: html_url
     type: string
   - name: message
@@ -14,5 +22,9 @@ attributes:
     type:
       container: list
       content: GitCommit
+  - name: sha
+    type: string
   - name: tree
     type: GitTree
+  - name: type
+    type: string

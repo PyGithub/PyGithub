@@ -977,8 +977,8 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param message: mandatory :class:`string`
-        :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitObject.sha`)
-        :param parents: mandatory :class:`list` of :class:`.GitCommit` or :class:`string` (its :attr:`.GitObject.sha`)
+        :param tree: mandatory :class:`.GitTree` or :class:`string` (its :attr:`.GitTree.sha`)
+        :param parents: mandatory :class:`list` of :class:`.GitCommit` or :class:`string` (its :attr:`.GitCommit.sha`)
         :param committer: optional :class:`GitAuthor`
         :param author: optional :class:`GitAuthor`
         :rtype: :class:`.GitCommit`

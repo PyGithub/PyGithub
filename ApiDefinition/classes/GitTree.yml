@@ -1,4 +1,3 @@
-base: GitObject
 structures:
   - name: GitSubmodule
     attributes:
@@ -15,6 +14,8 @@ attributes:
     type: string
   - name: path
     type: string
+  - name: sha
+    type: string
   - name: tree
     type:
       container: list
@@ -22,6 +23,8 @@ attributes:
         union: [GitTree, GitBlob, GitTree.GitSubmodule]
         key: type
         keys: [tree, blob, commit]
+  - name: type
+    type: string
 methods:
   - name: create_modified_copy
     end_point: POST /repos/:owner/:repo/git/trees
