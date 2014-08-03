@@ -17,8 +17,7 @@ class Issue(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
-    Derived classes:
-      * :class:`.PullRequest`
+    Derived classes: none.
 
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.get_issues`

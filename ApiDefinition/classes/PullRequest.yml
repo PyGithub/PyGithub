@@ -1,4 +1,3 @@
-base: Issue
 structures:
   - name: End
     attributes:
@@ -49,21 +48,51 @@ structures:
 attributes:
   - name: additions
     type: int
+  - name: assignee
+    type: User
   - name: base
     type: PullRequest.End
+  - name: body
+    type: string
+  - name: body_html
+    type: string
+  - name: body_text
+    type: string
   - name: changed_files
     type: int
+  - name: closed_at
+    type: datetime
+  - name: closed_by
+    type: User
+  - name: comments
+    type: int
+  - name: comments_url
+    type: string
   - name: commits
     type: int
   - name: commits_url
     type: string
+  - name: created_at
+    type: datetime
   - name: deletions
     type: int
   - name: diff_url
     type: string
+  - name: events_url
+    type: string
   - name: head
     type: PullRequest.End
+  - name: html_url
+    type: string
+  - name: id
+    type: int
   - name: issue_url
+    type: string
+  - name: labels
+    type:
+      container: list
+      content: Label
+  - name: labels_url
     type: string
   - name: merge_commit_sha
     type: string
@@ -77,16 +106,30 @@ attributes:
     type: datetime
   - name: merged_by
     type: User
+  - name: milestone
+    type: Milestone
+  - name: number
+    type: int
   - name: patch_url
     type: string
+  - name: repository
+    type: Repository
   - name: review_comment_url
     type: string
   - name: review_comments
     type: int
   - name: review_comments_url
     type: string
+  - name: state
+    type: string
   - name: statuses_url
     type: string
+  - name: title
+    type: string
+  - name: updated_at
+    type: datetime
+  - name: user
+    type: User
 deprecated_attributes:
   - name: _links
     reason: todoAlpha What should we do with _links?

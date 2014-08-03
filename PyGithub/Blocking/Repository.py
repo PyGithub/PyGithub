@@ -34,6 +34,7 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.get_repo`
       * :meth:`.Organization.get_repos`
       * :attr:`.PullRequest.End.repo`
+      * :attr:`.PullRequest.repository`
       * :meth:`.Repository.get_forks`
       * :attr:`.Repository.parent`
       * :attr:`.Repository.source`

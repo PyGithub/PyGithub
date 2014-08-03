@@ -12,12 +12,10 @@ import PyGithub.Blocking._base_github_object as _bgo
 import PyGithub.Blocking._send as _snd
 import PyGithub.Blocking._receive as _rcv
 
-import PyGithub.Blocking.Issue
 
-
-class PullRequest(PyGithub.Blocking.Issue.Issue):
+class PullRequest(_bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.Issue`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -226,52 +224,97 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
             """
             return self.__sha.value
 
-    def _initAttributes(self, additions=_rcv.Absent, base=_rcv.Absent, changed_files=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, head=_rcv.Absent, issue_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, patch_url=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, statuses_url=_rcv.Absent, _links=None, **kwds):
+    def _initAttributes(self, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, events_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, repository=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
+        import PyGithub.Blocking.Label
+        import PyGithub.Blocking.Milestone
+        import PyGithub.Blocking.Repository
         import PyGithub.Blocking.User
         super(PullRequest, self)._initAttributes(**kwds)
         self.__additions = _rcv.Attribute("PullRequest.additions", _rcv.IntConverter, additions)
+        self.__assignee = _rcv.Attribute("PullRequest.assignee", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), assignee)
         self.__base = _rcv.Attribute("PullRequest.base", _rcv.StructureConverter(self.Session, PullRequest.End), base)
+        self.__body = _rcv.Attribute("PullRequest.body", _rcv.StringConverter, body)
+        self.__body_html = _rcv.Attribute("PullRequest.body_html", _rcv.StringConverter, body_html)
+        self.__body_text = _rcv.Attribute("PullRequest.body_text", _rcv.StringConverter, body_text)
         self.__changed_files = _rcv.Attribute("PullRequest.changed_files", _rcv.IntConverter, changed_files)
+        self.__closed_at = _rcv.Attribute("PullRequest.closed_at", _rcv.DatetimeConverter, closed_at)
+        self.__closed_by = _rcv.Attribute("PullRequest.closed_by", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), closed_by)
+        self.__comments = _rcv.Attribute("PullRequest.comments", _rcv.IntConverter, comments)
+        self.__comments_url = _rcv.Attribute("PullRequest.comments_url", _rcv.StringConverter, comments_url)
         self.__commits = _rcv.Attribute("PullRequest.commits", _rcv.IntConverter, commits)
         self.__commits_url = _rcv.Attribute("PullRequest.commits_url", _rcv.StringConverter, commits_url)
+        self.__created_at = _rcv.Attribute("PullRequest.created_at", _rcv.DatetimeConverter, created_at)
         self.__deletions = _rcv.Attribute("PullRequest.deletions", _rcv.IntConverter, deletions)
         self.__diff_url = _rcv.Attribute("PullRequest.diff_url", _rcv.StringConverter, diff_url)
+        self.__events_url = _rcv.Attribute("PullRequest.events_url", _rcv.StringConverter, events_url)
         self.__head = _rcv.Attribute("PullRequest.head", _rcv.StructureConverter(self.Session, PullRequest.End), head)
+        self.__html_url = _rcv.Attribute("PullRequest.html_url", _rcv.StringConverter, html_url)
+        self.__id = _rcv.Attribute("PullRequest.id", _rcv.IntConverter, id)
         self.__issue_url = _rcv.Attribute("PullRequest.issue_url", _rcv.StringConverter, issue_url)
+        self.__labels = _rcv.Attribute("PullRequest.labels", _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)), labels)
+        self.__labels_url = _rcv.Attribute("PullRequest.labels_url", _rcv.StringConverter, labels_url)
         self.__merge_commit_sha = _rcv.Attribute("PullRequest.merge_commit_sha", _rcv.StringConverter, merge_commit_sha)
         self.__mergeable = _rcv.Attribute("PullRequest.mergeable", _rcv.BoolConverter, mergeable)
         self.__mergeable_state = _rcv.Attribute("PullRequest.mergeable_state", _rcv.StringConverter, mergeable_state)
         self.__merged = _rcv.Attribute("PullRequest.merged", _rcv.BoolConverter, merged)
         self.__merged_at = _rcv.Attribute("PullRequest.merged_at", _rcv.DatetimeConverter, merged_at)
         self.__merged_by = _rcv.Attribute("PullRequest.merged_by", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), merged_by)
+        self.__milestone = _rcv.Attribute("PullRequest.milestone", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone), milestone)
+        self.__number = _rcv.Attribute("PullRequest.number", _rcv.IntConverter, number)
         self.__patch_url = _rcv.Attribute("PullRequest.patch_url", _rcv.StringConverter, patch_url)
+        self.__repository = _rcv.Attribute("PullRequest.repository", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository), repository)
         self.__review_comment_url = _rcv.Attribute("PullRequest.review_comment_url", _rcv.StringConverter, review_comment_url)
         self.__review_comments = _rcv.Attribute("PullRequest.review_comments", _rcv.IntConverter, review_comments)
         self.__review_comments_url = _rcv.Attribute("PullRequest.review_comments_url", _rcv.StringConverter, review_comments_url)
+        self.__state = _rcv.Attribute("PullRequest.state", _rcv.StringConverter, state)
         self.__statuses_url = _rcv.Attribute("PullRequest.statuses_url", _rcv.StringConverter, statuses_url)
+        self.__title = _rcv.Attribute("PullRequest.title", _rcv.StringConverter, title)
+        self.__updated_at = _rcv.Attribute("PullRequest.updated_at", _rcv.DatetimeConverter, updated_at)
+        self.__user = _rcv.Attribute("PullRequest.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, additions=_rcv.Absent, base=_rcv.Absent, changed_files=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, head=_rcv.Absent, issue_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, patch_url=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, statuses_url=_rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, events_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, repository=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
         super(PullRequest, self)._updateAttributes(eTag, **kwds)
         self.__additions.update(additions)
+        self.__assignee.update(assignee)
         self.__base.update(base)
+        self.__body.update(body)
+        self.__body_html.update(body_html)
+        self.__body_text.update(body_text)
         self.__changed_files.update(changed_files)
+        self.__closed_at.update(closed_at)
+        self.__closed_by.update(closed_by)
+        self.__comments.update(comments)
+        self.__comments_url.update(comments_url)
         self.__commits.update(commits)
         self.__commits_url.update(commits_url)
+        self.__created_at.update(created_at)
         self.__deletions.update(deletions)
         self.__diff_url.update(diff_url)
+        self.__events_url.update(events_url)
         self.__head.update(head)
+        self.__html_url.update(html_url)
+        self.__id.update(id)
         self.__issue_url.update(issue_url)
+        self.__labels.update(labels)
+        self.__labels_url.update(labels_url)
         self.__merge_commit_sha.update(merge_commit_sha)
         self.__mergeable.update(mergeable)
         self.__mergeable_state.update(mergeable_state)
         self.__merged.update(merged)
         self.__merged_at.update(merged_at)
         self.__merged_by.update(merged_by)
+        self.__milestone.update(milestone)
+        self.__number.update(number)
         self.__patch_url.update(patch_url)
+        self.__repository.update(repository)
         self.__review_comment_url.update(review_comment_url)
         self.__review_comments.update(review_comments)
         self.__review_comments_url.update(review_comments_url)
+        self.__state.update(state)
         self.__statuses_url.update(statuses_url)
+        self.__title.update(title)
+        self.__updated_at.update(updated_at)
+        self.__user.update(user)
 
     @property
     def additions(self):
@@ -282,6 +325,14 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__additions.value
 
     @property
+    def assignee(self):
+        """
+        :type: :class:`.User`
+        """
+        self._completeLazily(self.__assignee.needsLazyCompletion)
+        return self.__assignee.value
+
+    @property
     def base(self):
         """
         :type: :class:`.PullRequest.End`
@@ -290,12 +341,68 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__base.value
 
     @property
+    def body(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__body.needsLazyCompletion)
+        return self.__body.value
+
+    @property
+    def body_html(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__body_html.needsLazyCompletion)
+        return self.__body_html.value
+
+    @property
+    def body_text(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__body_text.needsLazyCompletion)
+        return self.__body_text.value
+
+    @property
     def changed_files(self):
         """
         :type: :class:`int`
         """
         self._completeLazily(self.__changed_files.needsLazyCompletion)
         return self.__changed_files.value
+
+    @property
+    def closed_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__closed_at.needsLazyCompletion)
+        return self.__closed_at.value
+
+    @property
+    def closed_by(self):
+        """
+        :type: :class:`.User`
+        """
+        self._completeLazily(self.__closed_by.needsLazyCompletion)
+        return self.__closed_by.value
+
+    @property
+    def comments(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__comments.needsLazyCompletion)
+        return self.__comments.value
+
+    @property
+    def comments_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__comments_url.needsLazyCompletion)
+        return self.__comments_url.value
 
     @property
     def commits(self):
@@ -314,6 +421,14 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__commits_url.value
 
     @property
+    def created_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__created_at.needsLazyCompletion)
+        return self.__created_at.value
+
+    @property
     def deletions(self):
         """
         :type: :class:`int`
@@ -330,6 +445,14 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__diff_url.value
 
     @property
+    def events_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__events_url.needsLazyCompletion)
+        return self.__events_url.value
+
+    @property
     def head(self):
         """
         :type: :class:`.PullRequest.End`
@@ -338,12 +461,44 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__head.value
 
     @property
+    def html_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__html_url.needsLazyCompletion)
+        return self.__html_url.value
+
+    @property
+    def id(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__id.needsLazyCompletion)
+        return self.__id.value
+
+    @property
     def issue_url(self):
         """
         :type: :class:`string`
         """
         self._completeLazily(self.__issue_url.needsLazyCompletion)
         return self.__issue_url.value
+
+    @property
+    def labels(self):
+        """
+        :type: :class:`list` of :class:`.Label`
+        """
+        self._completeLazily(self.__labels.needsLazyCompletion)
+        return self.__labels.value
+
+    @property
+    def labels_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__labels_url.needsLazyCompletion)
+        return self.__labels_url.value
 
     @property
     def merge_commit_sha(self):
@@ -394,12 +549,36 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__merged_by.value
 
     @property
+    def milestone(self):
+        """
+        :type: :class:`.Milestone`
+        """
+        self._completeLazily(self.__milestone.needsLazyCompletion)
+        return self.__milestone.value
+
+    @property
+    def number(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__number.needsLazyCompletion)
+        return self.__number.value
+
+    @property
     def patch_url(self):
         """
         :type: :class:`string`
         """
         self._completeLazily(self.__patch_url.needsLazyCompletion)
         return self.__patch_url.value
+
+    @property
+    def repository(self):
+        """
+        :type: :class:`.Repository`
+        """
+        self._completeLazily(self.__repository.needsLazyCompletion)
+        return self.__repository.value
 
     @property
     def review_comment_url(self):
@@ -426,12 +605,44 @@ class PullRequest(PyGithub.Blocking.Issue.Issue):
         return self.__review_comments_url.value
 
     @property
+    def state(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__state.needsLazyCompletion)
+        return self.__state.value
+
+    @property
     def statuses_url(self):
         """
         :type: :class:`string`
         """
         self._completeLazily(self.__statuses_url.needsLazyCompletion)
         return self.__statuses_url.value
+
+    @property
+    def title(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__title.needsLazyCompletion)
+        return self.__title.value
+
+    @property
+    def updated_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__updated_at.needsLazyCompletion)
+        return self.__updated_at.value
+
+    @property
+    def user(self):
+        """
+        :type: :class:`.User`
+        """
+        self._completeLazily(self.__user.needsLazyCompletion)
+        return self.__user.value
 
     def edit(self, title=None, body=None, state=None):
         """

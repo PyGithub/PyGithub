@@ -21,6 +21,7 @@ class Milestone(_bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :attr:`.Issue.milestone`
+      * :attr:`.PullRequest.milestone`
       * :meth:`.Repository.create_milestone`
       * :meth:`.Repository.get_milestone`
       * :meth:`.Repository.get_milestones`
