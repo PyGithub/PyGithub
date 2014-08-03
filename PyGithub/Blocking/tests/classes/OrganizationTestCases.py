@@ -87,7 +87,7 @@ class OrganizationMembers(TestCase):
     def testHasInMembersAndPublicMembersFromOwner(self):
         o = self.g.get_org("olympus")
         # Not member
-        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_public_members("penelope"))
         self.assertFalse(o.has_in_members("penelope"))
         # Private member
         self.assertFalse(o.has_in_public_members("electra"))
@@ -100,7 +100,7 @@ class OrganizationMembers(TestCase):
     def testHasInMembersAndPublicMembersFromMember(self):
         o = self.g.get_org("olympus")
         # Not member
-        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_public_members("penelope"))
         self.assertFalse(o.has_in_members("penelope"))
         # Private member
         self.assertFalse(o.has_in_public_members("electra"))
@@ -113,7 +113,7 @@ class OrganizationMembers(TestCase):
     def testHasInMembersAndPublicMembersFromExternal(self):
         o = self.g.get_org("olympus")
         # Not member
-        self.assertFalse(o.has_in_public_members("penelope")) 
+        self.assertFalse(o.has_in_public_members("penelope"))
         self.assertFalse(o.has_in_members("penelope"))
         # Private member
         self.assertFalse(o.has_in_public_members("electra"))

@@ -31,12 +31,18 @@ methods:
           container: list
           content: dict
     unimplemented_parameters:
-      - base_tree
-      - content
-      - mode
-      - path
-      - sha
-      - type
+      - name: base_tree
+        reason: Taken from attribute sha
+      - name: content
+        reason: In tree
+      - name: mode
+        reason: In tree
+      - name: path
+        reason: In tree
+      - name: sha
+        reason: In tree
+      - name: type
+        reason: In tree
     url_template: end_point
     url_template_arguments:
       - name: owner

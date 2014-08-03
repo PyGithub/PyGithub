@@ -7,15 +7,24 @@ attributes:
   - name: public_members_url
     type: string
 deprecated_attributes:
-  - followers_url
-  - following_url
-  - gists_url
-  - gravatar_id
-  - organizations_url
-  - received_events_url
-  - site_admin
-  - starred_url
-  - subscriptions_url
+  - name: followers_url
+    reason: todoAlpha Remove? No following for orgs https://github.com/isaacs/github/issues/50
+  - name: following_url
+    reason: todoAlpha Remove? No following for orgs https://github.com/isaacs/github/issues/50
+  - name: gists_url
+    reason: todoAlpha Remove?
+  - name: gravatar_id
+    reason: todoAlpha Remove?
+  - name: organizations_url
+    reason: todoAlpha Remove?
+  - name: received_events_url
+    reason: todoAlpha Remove?
+  - name: site_admin
+    reason: todoAlpha Remove?
+  - name: starred_url
+    reason: todoAlpha Remove?
+  - name: subscriptions_url
+    reason: todoAlpha Remove?
 methods:
   - name: add_to_public_members
     end_point: PUT /orgs/:org/public_members/:username
@@ -37,7 +46,8 @@ methods:
           class: Repository
           attribute: full_name
     unimplemented_parameters:
-      - organization
+      - name: organization
+        reason: Taken from attribute login
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -77,7 +87,8 @@ methods:
       - name: license_template
         type: string
     unimplemented_parameters:
-      - has_downloads
+      - name: has_downloads
+        reason: https://github.com/blog/1302-goodbye-uploads
     url_template: attribute repos_url
     post_arguments:
       - name: auto_init

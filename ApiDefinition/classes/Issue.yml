@@ -64,9 +64,12 @@ methods:
       - name: base
         type: string
     unimplemented_parameters:
-      - body
-      - issue
-      - title
+      - name: body
+        reason: Implemented in Repository.create_pull
+      - name: issue
+        reason: Taken from attribute number
+      - name: title
+        reason: Implemented in Repository.create_pull
     url_template: attribute pulls_url
     post_arguments:
       - name: base

@@ -66,7 +66,8 @@ methods:
           class: Repository
           attribute: full_name
     unimplemented_parameters:
-      - organization
+      - name: organization
+        reason: Implemented in Organization.create_fork
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -144,8 +145,10 @@ methods:
       - name: license_template
         type: string
     unimplemented_parameters:
-      - has_downloads
-      - team_id
+      - name: has_downloads
+        reason: https://github.com/blog/1302-goodbye-uploads
+      - name: team_id
+        reason: Implemented in Organization.create_repo
     url_template: end_point
     post_arguments:
       - name: auto_init
@@ -212,7 +215,8 @@ methods:
         type:
           union: [bool, Reset]
     unimplemented_parameters:
-      - bio
+      - name: bio
+        reason: No more bio in https://github.com/settings/profile
     url_template: end_point
     post_arguments:
       - name: blog

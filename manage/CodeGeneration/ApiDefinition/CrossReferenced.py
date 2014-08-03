@@ -177,7 +177,7 @@ class AttributedType(SimpleType):
     def __init__(self, name, attributes, deprecatedAttributes):
         super(AttributedType, self).__init__(name)
         self.__attributes = sorted((Attribute(self, *a) for a in attributes), key=lambda a: a.name)
-        self.__deprecatedAttributes = sorted(deprecatedAttributes)
+        self.__deprecatedAttributes = sorted(a.name for a in deprecatedAttributes)
         self.__sources = []
         self.__sinks = []
 
@@ -321,7 +321,7 @@ class Method:
         self.__containerClass = containerClass
         self.__name = name
         self.__parameters = [Parameter(*p) for p in parameters]
-        self.__unimplementedParameters = unimplementedParameters
+        self.__unimplementedParameters = [p.name for p in unimplementedParameters]
         self.__urlTemplate = Value(urlTemplate)
         self.__urlTemplateArguments = [Argument(*a) for a in urlTemplateArguments]
         self.__urlArguments = [Argument(*a) for a in urlArguments]

@@ -88,7 +88,8 @@ attributes:
   - name: statuses_url
     type: string
 deprecated_attributes:
-  - _links
+  - name: _links
+    reason: todoAlpha What should we do with _links?
 methods:
   - name: edit
     end_point: PATCH /repos/:owner/:repo/pulls/:number

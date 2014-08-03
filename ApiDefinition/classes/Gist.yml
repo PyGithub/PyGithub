@@ -104,8 +104,10 @@ methods:
       - name: files
         type: bool
     unimplemented_parameters:
-      - content
-      - filename
+      - name: content
+        reason: In files
+      - name: filename
+        reason: In files
     url_template: attribute url
     post_arguments:
       - name: description

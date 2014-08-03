@@ -30,6 +30,7 @@ Method = collections.namedtuple("Method", "name, endPoints, parameters, unimplem
 EndPoint = collections.namedtuple("EndPoint", "verb, url, parameters, doc")
 Parameter = collections.namedtuple("Parameter", "name, type, optional, variable")
 Argument = collections.namedtuple("Argument", "name, value")
+UnimplementedStuff = collections.namedtuple("UnimplementedStuff", "name, reason")
 
 # Polymorphic structures: types
 NoneType_ = collections.namedtuple("NoneType_", "")
@@ -142,26 +143,26 @@ class _DefinitionLoader:
         assert all(isinstance(s, dict) for s in structures), structures
         assert all(isinstance(a, dict) for a in attributes), attributes
         assert all(isinstance(m, dict) for m in methods), methods
-        assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
+        assert all(isinstance(a, dict) for a in deprecated_attributes), deprecated_attributes
         return Class(
             name=name,
             base=self.buildType(base),
             structures=tuple(sorted((self.buildStructure(**s) for s in structures), key=lambda s: s.name)),
             attributes=tuple(sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name)),
             methods=tuple(sorted((self.buildMethod(**m) for m in methods), key=lambda m: m.name)),
-            deprecatedAttributes=tuple(sorted(deprecated_attributes)),
+            deprecatedAttributes=tuple(sorted((self.buildUnimplementedStuff(**a) for a in deprecated_attributes), key=lambda a: a.name)),
         )
 
     def buildStructure(self, name, updatable=True, attributes=[], deprecated_attributes=[]):
         assert isinstance(name, str), name
         assert isinstance(updatable, bool), updatable
         assert all(isinstance(a, dict) for a in attributes), attributes
-        assert all(isinstance(a, str) for a in deprecated_attributes), deprecated_attributes
+        assert all(isinstance(a, dict) for a in deprecated_attributes), deprecated_attributes
         return Structure(
             name=name,
             updatable=updatable,
             attributes=tuple(sorted((self.buildAttribute(**a) for a in attributes), key=lambda a: a.name)),
-            deprecatedAttributes=tuple(sorted(deprecated_attributes)),
+            deprecatedAttributes=tuple(sorted((self.buildUnimplementedStuff(**a) for a in deprecated_attributes), key=lambda a: a.name)),
         )
 
     def buildAttribute(self, name, type):
@@ -170,6 +171,14 @@ class _DefinitionLoader:
         return Attribute(
             name=name,
             type=self.buildType(type),
+        )
+
+    def buildUnimplementedStuff(self, name, reason):
+        assert isinstance(name, str), name
+        assert isinstance(reason, str), reason
+        return UnimplementedStuff(
+            name=name,
+            reason=reason,
         )
 
     def buildMethod(self, name, url_template, effect=None, effects=None, return_from=None, return_type=None, end_point=None, end_points=None, url_template_arguments=[], url_arguments=[], post_arguments=[], parameters=[], optional_parameters=[], variable_parameter=None, unimplemented_parameters=[]):
@@ -187,7 +196,7 @@ class _DefinitionLoader:
         assert all(isinstance(p, dict) for p in parameters), parameters
         assert all(isinstance(p, dict) for p in optional_parameters), optional_parameters
         assert isinstance(variable_parameter, (type(None), dict)), variable_parameter
-        assert all(isinstance(p, str) for p in unimplemented_parameters)
+        assert all(isinstance(p, dict) for p in unimplemented_parameters)
         return Method(
             name=name,
             endPoints=tuple(sorted(end_points)),
@@ -196,7 +205,7 @@ class _DefinitionLoader:
                 (self.buildParameter(optional=True, variable=False, **p) for p in optional_parameters),  # Do not sort
                 () if variable_parameter is None else (self.buildParameter(optional=False, variable=True, **variable_parameter),)
             )),
-            unimplementedParameters=tuple(sorted(unimplemented_parameters)),
+            unimplementedParameters=tuple(sorted((self.buildUnimplementedStuff(**a) for a in unimplemented_parameters), key=lambda a: a.name)),
             urlTemplate=self.buildValue(url_template),
             urlTemplateArguments=self.buildArguments(url_template_arguments),
             urlArguments=self.buildArguments(url_arguments),
@@ -320,13 +329,13 @@ class _DefinitionDumper:
         if klass.base is not None:
             data["base"] = klass.base.name
         if len(klass.structures) != 0:
-            data["structures"] = [self.createDataForStructure(structure) for structure in klass.structures]
+            data["structures"] = [self.createDataForStructure(s) for s in klass.structures]
         if len(klass.attributes) != 0:
-            data["attributes"] = [self.createDataForAttribute(attribute) for attribute in klass.attributes]
+            data["attributes"] = [self.createDataForAttribute(a) for a in klass.attributes]
         if len(klass.deprecatedAttributes) != 0:
-            data["deprecated_attributes"] = list(klass.deprecatedAttributes)
+            data["deprecated_attributes"] = [self.createDataForUnimplementedStuff(a) for a in klass.deprecatedAttributes]
         if len(klass.methods) != 0:
-            data["methods"] = [self.createDataForMethod(method) for method in klass.methods]
+            data["methods"] = [self.createDataForMethod(m) for m in klass.methods]
         return data
 
     def createDataForStructure(self, structure):
@@ -334,9 +343,9 @@ class _DefinitionDumper:
         data["name"] = structure.name
         if not structure.updatable:
             data["updatable"] = "false"
-        data["attributes"] = [self.createDataForAttribute(attribute) for attribute in structure.attributes]
+        data["attributes"] = [self.createDataForAttribute(a) for a in structure.attributes]
         if len(structure.deprecatedAttributes) != 0:
-            data["deprecated_attributes"] = tuple(structure.deprecatedAttributes)
+            data["deprecated_attributes"] = [self.createDataForUnimplementedStuff(a) for a in structure.deprecatedAttributes]
         return data
 
     def createDataForMethod(self, method):
@@ -351,7 +360,7 @@ class _DefinitionDumper:
         if any(p.optional for p in method.parameters):
             data["optional_parameters"] = []
         if len(method.unimplementedParameters) != 0:
-            data["unimplemented_parameters"] = list(method.unimplementedParameters)
+            data["unimplemented_parameters"] = [self.createDataForUnimplementedStuff(a) for a in method.unimplementedParameters]
         for parameter in method.parameters:
             p = self.createDataForParameter(parameter)
             if parameter.optional:
@@ -380,6 +389,12 @@ class _DefinitionDumper:
         data = collections.OrderedDict()
         data["name"] = attribute.name
         data["type"] = self.createDataForType(attribute.type)
+        return data
+
+    def createDataForUnimplementedStuff(self, attribute):
+        data = collections.OrderedDict()
+        data["name"] = attribute.name
+        data["reason"] = attribute.reason
         return data
 
     def createDataForParameter(self, parameter):

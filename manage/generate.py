@@ -15,9 +15,9 @@ def main():
     if all(unittest.main(exit=False, module=module, argv=["test"]).result.wasSuccessful() for module in ["CodeGeneration.ApiDefinition.Checker", "CodeGeneration.CaseUtils"]):
         CodeGeneration.main()
         check.main()
-    cov.stop()
-    cov.report(include=["manage/CodeGeneration/*"])
-    cov.html_report(directory="coverage/code_generation", include=["manage/CodeGeneration/*"])
+        cov.stop()
+        cov.report(include=["manage/CodeGeneration/*"])
+        cov.html_report(directory="coverage/code_generation", include=["manage/CodeGeneration/*"])
 
 
 if __name__ == "__main__":

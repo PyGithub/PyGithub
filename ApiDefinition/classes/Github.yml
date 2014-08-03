@@ -24,7 +24,9 @@ structures:
     attributes:
       - name: resources
         type: Resources
-    deprecated_attributes: [rate]
+    deprecated_attributes:
+      - name: rate
+        reason: https://developer.github.com/v3/rate_limit/#deprecation-notice
   - name: RateLimits
     attributes:
       - name: limit

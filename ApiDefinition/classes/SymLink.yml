@@ -16,4 +16,5 @@ attributes:
   - name: type
     type: string
 deprecated_attributes:
-  - _links
+  - name: _links
+    reason: todoAlpha What should we do with _links?

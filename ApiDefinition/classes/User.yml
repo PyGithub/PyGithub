@@ -31,7 +31,8 @@ attributes:
   - name: suspended_at
     type: datetime
 deprecated_attributes:
-  - bio
+  - name: bio
+    reason: No more bio in https://github.com/settings/profile
 methods:
   - name: get_followers
     end_point: GET /users/:username/followers

@@ -15,7 +15,9 @@ structures:
         type: Commit
       - name: name
         type: string
-    deprecated_attributes: [_links]
+    deprecated_attributes:
+      - name: _links
+        reason: todoAlpha What should we do with _links?
   - name: ContentCommit
     updatable: false
     attributes:
@@ -179,12 +181,18 @@ attributes:
   - name: watchers_count
     type: int
 deprecated_attributes:
-  - forks
-  - has_downloads
-  - master_branch
-  - open_issues
-  - organization
-  - watchers
+  - name: forks
+    reason: Replaced by forks_count
+  - name: has_downloads
+    reason: https://github.com/blog/1302-goodbye-uploads
+  - name: master_branch
+    reason: Replaced by default_branch
+  - name: open_issues
+    reason: Replaced by open_issues_count
+  - name: organization
+    reason: todoAlpha Remove? Or remember where we received this:)
+  - name: watchers
+    reason: Replaced by watchers_count
 methods:
   - name: add_to_collaborators
     end_point: PUT /repos/:owner/:repo/collaborators/:username
@@ -215,9 +223,10 @@ methods:
       - name: committer
         type: GitAuthor
     unimplemented_parameters:
-      - email
-      - name
-      - sha
+      - name: email
+        reason: In author and committer
+      - name: name
+        reason: In author and committer
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -279,9 +288,12 @@ methods:
       - name: author
         type: GitAuthor
     unimplemented_parameters:
-      - date
-      - email
-      - name
+      - name: date
+        reason: In author and committer
+      - name: email
+        reason: In author and committer
+      - name: name
+        reason: In author and committer
     url_template: attribute git_commits_url
     url_template_arguments:
       - name: owner
@@ -334,9 +346,12 @@ methods:
       - name: tagger
         type: GitAuthor
     unimplemented_parameters:
-      - date
-      - email
-      - name
+      - name: date
+        reason: In author and committer
+      - name: email
+        reason: In author and committer
+      - name: name
+        reason: In author and committer
     url_template: attribute git_tags_url
     url_template_arguments:
       - name: owner
@@ -363,12 +378,18 @@ methods:
           container: list
           content: dict
     unimplemented_parameters:
-      - base_tree
-      - content
-      - mode
-      - path
-      - sha
-      - type
+      - name: base_tree
+        reason: Implemented in GitTree.create_modified_copy
+      - name: content
+        reason: In tree
+      - name: mode
+        reason: In tree
+      - name: path
+        reason: In tree
+      - name: sha
+        reason: In tree
+      - name: type
+        reason: In tree
     url_template: end_point
     url_template_arguments:
       - name: owner
@@ -479,7 +500,8 @@ methods:
       - name: body
         type: string
     unimplemented_parameters:
-      - issue
+      - name: issue
+        reason: Implemented in Issue.create_pull
     url_template: attribute pulls_url
     post_arguments:
       - name: base
@@ -515,7 +537,8 @@ methods:
       - name: default_branch
         type: string
     unimplemented_parameters:
-      - has_downloads
+      - name: has_downloads
+        reason: https://github.com/blog/1302-goodbye-uploads
     url_template: attribute url
     post_arguments:
       - name: default_branch

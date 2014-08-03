@@ -18,7 +18,8 @@ attributes:
   - name: type
     type: string
 deprecated_attributes:
-  - _links
+  - name: _links
+    reason: todoAlpha What should we do with _links?
 methods:
   - name: delete
     end_point: DELETE /repos/:owner/:repo/contents/:path
@@ -31,11 +32,14 @@ methods:
       - name: committer
         type: GitAuthor
     unimplemented_parameters:
-      - branch
-      - email
-      - name
-      - path
-      - sha
+      - name: email
+        reason: In author and committer
+      - name: name
+        reason: In author and committer
+      - name: path
+        reason: Taken from url_template
+      - name: sha
+        reason: Taken from attribute sha
     url_template: attribute url
     post_arguments:
       - name: author
@@ -61,11 +65,14 @@ methods:
       - name: committer
         type: GitAuthor
     unimplemented_parameters:
-      - branch
-      - email
-      - name
-      - path
-      - sha
+      - name: email
+        reason: In author and committer
+      - name: name
+        reason: In author and committer
+      - name: path
+        reason: Taken from url_template
+      - name: sha
+        reason: Taken from attribute sha
     url_template: attribute url
     post_arguments:
       - name: author

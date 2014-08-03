@@ -14,13 +14,11 @@ attributes:
   - name: type
     type: string
 deprecated_attributes:
-  - _links
+  - name: _links
+    reason: todoAlpha What should we do with _links?
 methods:
   - name: get_contents
     end_point: GET /repos/:owner/:repo/contents/:path
-    unimplemented_parameters:
-      - path
-      - ref
     url_template: attribute url
     return_type:
       container: list
