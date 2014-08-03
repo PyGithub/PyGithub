@@ -29,7 +29,7 @@ class Organization(_bgo.UpdatableGithubObject):
     Methods accepting instances of this class as parameter: none.
     """
 
-    def _initAttributes(self, avatar_url=_rcv.Absent, billing_email=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_members_url=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
+    def _initAttributes(self, avatar_url=_rcv.Absent, billing_email=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_members_url=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, followers=None, followers_url=None, following=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         import PyGithub.Blocking.User
         super(Organization, self)._initAttributes(**kwds)
         self.__avatar_url = _rcv.Attribute("Organization.avatar_url", _rcv.StringConverter, avatar_url)
@@ -41,8 +41,6 @@ class Organization(_bgo.UpdatableGithubObject):
         self.__disk_usage = _rcv.Attribute("Organization.disk_usage", _rcv.IntConverter, disk_usage)
         self.__email = _rcv.Attribute("Organization.email", _rcv.StringConverter, email)
         self.__events_url = _rcv.Attribute("Organization.events_url", _rcv.StringConverter, events_url)
-        self.__followers = _rcv.Attribute("Organization.followers", _rcv.IntConverter, followers)
-        self.__following = _rcv.Attribute("Organization.following", _rcv.IntConverter, following)
         self.__html_url = _rcv.Attribute("Organization.html_url", _rcv.StringConverter, html_url)
         self.__id = _rcv.Attribute("Organization.id", _rcv.IntConverter, id)
         self.__location = _rcv.Attribute("Organization.location", _rcv.StringConverter, location)
@@ -60,7 +58,7 @@ class Organization(_bgo.UpdatableGithubObject):
         self.__type = _rcv.Attribute("Organization.type", _rcv.StringConverter, type)
         self.__updated_at = _rcv.Attribute("Organization.updated_at", _rcv.DatetimeConverter, updated_at)
 
-    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, billing_email=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, following=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_members_url=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, followers_url=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
+    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, billing_email=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, members_url=_rcv.Absent, name=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_members_url=_rcv.Absent, public_repos=_rcv.Absent, repos_url=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, followers=None, followers_url=None, following=None, following_url=None, gists_url=None, gravatar_id=None, organizations_url=None, received_events_url=None, site_admin=None, starred_url=None, subscriptions_url=None, **kwds):
         super(Organization, self)._updateAttributes(eTag, **kwds)
         self.__avatar_url.update(avatar_url)
         self.__billing_email.update(billing_email)
@@ -71,8 +69,6 @@ class Organization(_bgo.UpdatableGithubObject):
         self.__disk_usage.update(disk_usage)
         self.__email.update(email)
         self.__events_url.update(events_url)
-        self.__followers.update(followers)
-        self.__following.update(following)
         self.__html_url.update(html_url)
         self.__id.update(id)
         self.__location.update(location)
@@ -161,22 +157,6 @@ class Organization(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__events_url.needsLazyCompletion)
         return self.__events_url.value
-
-    @property
-    def followers(self):
-        """
-        :type: :class:`int`
-        """
-        self._completeLazily(self.__followers.needsLazyCompletion)
-        return self.__followers.value
-
-    @property
-    def following(self):
-        """
-        :type: :class:`int`
-        """
-        self._completeLazily(self.__following.needsLazyCompletion)
-        return self.__following.value
 
     @property
     def html_url(self):

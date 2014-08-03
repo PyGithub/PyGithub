@@ -1,0 +1,82 @@
+[
+    {
+        "request": {
+            "body": null,
+            "headers": {
+                "Accept": "application/vnd.github.v3.full+json",
+                "Accept-Encoding": "gzip, deflate, compress",
+                "Authorization": "Basic YW50aWdvbmU6cGFzc3dvcmQxLWFudGlnb25l",
+                "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
+            },
+            "url": {
+                "netloc": "github.home.jacquev6.net",
+                "path": "/api/v3/user",
+                "query": {},
+                "scheme": "http"
+            },
+            "verb": "GET"
+        },
+        "response": {
+            "body": {
+                "avatar_url": "http://github.home.jacquev6.net/identicons/9bf31c7ff062936a96d3c8bd1f8f2ff3.png",
+                "bio": null,
+                "blog": "http://jacquev6.net/antigone",
+                "collaborators": 0,
+                "company": "Antigone Software",
+                "created_at": "2014-08-02T16:54:38Z",
+                "disk_usage": 0,
+                "email": "ghe-antigone@jacquev6.net",
+                "events_url": "http://github.home.jacquev6.net/api/v3/users/antigone/events{/privacy}",
+                "followers": 0,
+                "followers_url": "http://github.home.jacquev6.net/api/v3/users/antigone/followers",
+                "following": 0,
+                "following_url": "http://github.home.jacquev6.net/api/v3/users/antigone/following{/other_user}",
+                "gists_url": "http://github.home.jacquev6.net/api/v3/users/antigone/gists{/gist_id}",
+                "gravatar_id": "22204000fcc2173ab585271509092a31",
+                "hireable": false,
+                "html_url": "http://github.home.jacquev6.net/antigone",
+                "id": 15,
+                "location": "Greece",
+                "login": "antigone",
+                "name": "Antigone",
+                "organizations_url": "http://github.home.jacquev6.net/api/v3/users/antigone/orgs",
+                "owned_private_repos": 0,
+                "private_gists": 0,
+                "public_gists": 0,
+                "public_repos": 0,
+                "received_events_url": "http://github.home.jacquev6.net/api/v3/users/antigone/received_events",
+                "repos_url": "http://github.home.jacquev6.net/api/v3/users/antigone/repos",
+                "site_admin": false,
+                "starred_url": "http://github.home.jacquev6.net/api/v3/users/antigone/starred{/owner}{/repo}",
+                "subscriptions_url": "http://github.home.jacquev6.net/api/v3/users/antigone/subscriptions",
+                "suspended_at": null,
+                "total_private_repos": 0,
+                "type": "User",
+                "updated_at": "2014-08-02T18:21:07Z",
+                "url": "http://github.home.jacquev6.net/api/v3/users/antigone"
+            },
+            "headers": {
+                "access-control-allow-credentials": "true",
+                "access-control-allow-origin": "*",
+                "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
+                "cache-control": "private, max-age=60, s-maxage=60",
+                "connection": "keep-alive",
+                "content-length": "1523",
+                "content-security-policy": "default-src 'none'",
+                "content-type": "application/json; charset=utf-8",
+                "date": "Sun, 03 Aug 2014 22:43:00 GMT",
+                "etag": "\"c8cf24920ad73731b2874a32e819487b\"",
+                "last-modified": "Sat, 02 Aug 2014 18:21:07 GMT",
+                "server": "GitHub.com",
+                "status": "200 OK",
+                "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
+                "x-content-type-options": "nosniff",
+                "x-frame-options": "deny",
+                "x-github-media-type": "github.v3; param=full; format=json",
+                "x-github-request-id": "94ed3101-b121-421b-a202-c64ab73e6cf9",
+                "x-xss-protection": "1; mode=block"
+            },
+            "status": 200
+        }
+    }
+]

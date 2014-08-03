@@ -17,10 +17,6 @@ attributes:
     type: string
   - name: events_url
     type: string
-  - name: followers
-    type: int
-  - name: following
-    type: int
   - name: html_url
     type: string
   - name: id
@@ -54,24 +50,28 @@ attributes:
   - name: updated_at
     type: datetime
 deprecated_attributes:
+  - name: followers
+    reason: No following for orgs https://github.com/isaacs/github/issues/50
   - name: followers_url
-    reason: todoAlpha Remove? No following for orgs https://github.com/isaacs/github/issues/50
+    reason: No following for orgs
+  - name: following
+    reason: No following for orgs
   - name: following_url
-    reason: todoAlpha Remove? No following for orgs https://github.com/isaacs/github/issues/50
+    reason: No following for orgs
   - name: gists_url
-    reason: todoAlpha Remove?
+    reason: No gists for orgs
   - name: gravatar_id
     reason: todoAlpha Remove?
   - name: organizations_url
-    reason: todoAlpha Remove?
+    reason: Doesn't make sense
   - name: received_events_url
-    reason: todoAlpha Remove?
+    reason: Doesn't make sense
   - name: site_admin
-    reason: todoAlpha Remove?
+    reason: Doesn't make sense
   - name: starred_url
-    reason: todoAlpha Remove?
+    reason: No starring for orgs
   - name: subscriptions_url
-    reason: todoAlpha Remove?
+    reason: No subscriptions for orgs
 methods:
   - name: add_to_public_members
     end_point: PUT /orgs/:org/public_members/:username
