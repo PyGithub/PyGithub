@@ -294,7 +294,7 @@ class Issue(_bgo.UpdatableGithubObject):
 
         :param title: optional :class:`string`
         :param body: optional :class:`string` or :class:`Reset`
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`) or :class:`Reset`
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`Reset`
         :param state: optional "closed" or "open"
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`) or :class:`Reset`
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)

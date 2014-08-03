@@ -9,7 +9,9 @@ User
 
 .. autoclass:: PyGithub.Blocking.User::User()
     :members:
-    :exclude-members: Key
+    :exclude-members: Key, Plan
 
     .. autoclass:: PyGithub.Blocking.User::User.Key()
+        :members:
+    .. autoclass:: PyGithub.Blocking.User::User.Plan()
         :members:

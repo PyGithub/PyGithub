@@ -10,7 +10,6 @@ from PyGithub.Blocking.tests.classes.AuthenticatedUserTestCases import *
 from PyGithub.Blocking.tests.classes.CommitTestCases import *
 from PyGithub.Blocking.tests.classes.ContributorTestCases import *
 from PyGithub.Blocking.tests.classes.DirTestCases import *
-from PyGithub.Blocking.tests.classes.EntityTestCases import *
 from PyGithub.Blocking.tests.classes.FileTestCases import *
 from PyGithub.Blocking.tests.classes.GistTestCases import *
 from PyGithub.Blocking.tests.classes.GitBlobTestCases import *

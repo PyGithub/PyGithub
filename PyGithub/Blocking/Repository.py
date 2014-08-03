@@ -910,7 +910,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
@@ -1072,7 +1072,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param title: mandatory :class:`string`
         :param body: optional :class:`string`
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
         :rtype: :class:`.Issue`
@@ -1341,7 +1341,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param sha: optional :class:`string`
         :param path: optional :class:`string`
-        :param author: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param author: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :param since: optional :class:`datetime`
         :param until: optional :class:`datetime`
         :param per_page: optional :class:`int`
@@ -1573,9 +1573,9 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
         :param state: optional "close" or "open"
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
-        :param creator: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
-        :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param creator: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
         :param sort: optional "comments" or "created" or "updated"
         :param direction: optional "asc" or "desc"
@@ -1883,7 +1883,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
@@ -1899,7 +1899,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
@@ -1915,7 +1915,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 

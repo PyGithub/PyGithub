@@ -421,7 +421,7 @@ class Github(_bgo.SessionedGithubObject):
 
         This is the only method calling this end point.
 
-        :param since: optional :class:`.User` or :class:`int` (its :attr:`.Entity.id`)
+        :param since: optional :class:`.User` or :class:`int` (its :attr:`.User.id`)
         :rtype: :class:`.PaginatedList` of :class:`.User`
         """
         import PyGithub.Blocking.User
