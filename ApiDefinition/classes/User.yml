@@ -1,4 +1,3 @@
-base: Entity
 structures:
   - name: Key
     updatable: false
@@ -7,9 +6,39 @@ structures:
         type: int
       - name: key
         type: string
+  - name: Plan
+    attributes:
+      - name: collaborators
+        type: int
+      - name: name
+        type: string
+      - name: private_repos
+        type: int
+      - name: space
+        type: int
 attributes:
+  - name: avatar_url
+    type: string
+  - name: blog
+    type: string
+  - name: collaborators
+    type: int
+  - name: company
+    type: string
+  - name: created_at
+    type: datetime
+  - name: disk_usage
+    type: int
+  - name: email
+    type: string
+  - name: events_url
+    type: string
+  - name: followers
+    type: int
   - name: followers_url
     type: string
+  - name: following
+    type: int
   - name: following_url
     type: string
   - name: gists_url
@@ -18,9 +47,31 @@ attributes:
     type: string
   - name: hireable
     type: bool
+  - name: html_url
+    type: string
+  - name: id
+    type: int
+  - name: location
+    type: string
+  - name: login
+    type: string
+  - name: name
+    type: string
   - name: organizations_url
     type: string
+  - name: owned_private_repos
+    type: int
+  - name: plan
+    type: User.Plan
+  - name: private_gists
+    type: int
+  - name: public_gists
+    type: int
+  - name: public_repos
+    type: int
   - name: received_events_url
+    type: string
+  - name: repos_url
     type: string
   - name: site_admin
     type: bool
@@ -29,6 +80,12 @@ attributes:
   - name: subscriptions_url
     type: string
   - name: suspended_at
+    type: datetime
+  - name: total_private_repos
+    type: int
+  - name: type
+    type: string
+  - name: updated_at
     type: datetime
 deprecated_attributes:
   - name: bio
@@ -173,8 +230,11 @@ methods:
     parameters:
       - name: target_user
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute following_url
     url_template_arguments:
       - name: other_user

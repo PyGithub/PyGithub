@@ -12,12 +12,10 @@ import PyGithub.Blocking._base_github_object as _bgo
 import PyGithub.Blocking._send as _snd
 import PyGithub.Blocking._receive as _rcv
 
-import PyGithub.Blocking.GitObject
 
-
-class GitTree(PyGithub.Blocking.GitObject.GitObject):
+class GitTree(_bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.GitObject`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
@@ -84,18 +82,22 @@ class GitTree(PyGithub.Blocking.GitObject.GitObject):
             """
             return self.__type.value
 
-    def _initAttributes(self, mode=_rcv.Absent, path=_rcv.Absent, tree=_rcv.Absent, **kwds):
+    def _initAttributes(self, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         import PyGithub.Blocking.GitBlob
         super(GitTree, self)._initAttributes(**kwds)
         self.__mode = _rcv.Attribute("GitTree.mode", _rcv.StringConverter, mode)
         self.__path = _rcv.Attribute("GitTree.path", _rcv.StringConverter, path)
+        self.__sha = _rcv.Attribute("GitTree.sha", _rcv.StringConverter, sha)
         self.__tree = _rcv.Attribute("GitTree.tree", _rcv.ListConverter(_rcv.KeyedStructureUnionConverter("type", dict(blob=_rcv.ClassConverter(self.Session, PyGithub.Blocking.GitBlob.GitBlob), commit=_rcv.StructureConverter(self.Session, GitTree.GitSubmodule), tree=_rcv.ClassConverter(self.Session, GitTree)))), tree)
+        self.__type = _rcv.Attribute("GitTree.type", _rcv.StringConverter, type)
 
-    def _updateAttributes(self, eTag, mode=_rcv.Absent, path=_rcv.Absent, tree=_rcv.Absent, **kwds):
+    def _updateAttributes(self, eTag, mode=_rcv.Absent, path=_rcv.Absent, sha=_rcv.Absent, tree=_rcv.Absent, type=_rcv.Absent, **kwds):
         super(GitTree, self)._updateAttributes(eTag, **kwds)
         self.__mode.update(mode)
         self.__path.update(path)
+        self.__sha.update(sha)
         self.__tree.update(tree)
+        self.__type.update(type)
 
     @property
     def mode(self):
@@ -114,12 +116,28 @@ class GitTree(PyGithub.Blocking.GitObject.GitObject):
         return self.__path.value
 
     @property
+    def sha(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__sha.needsLazyCompletion)
+        return self.__sha.value
+
+    @property
     def tree(self):
         """
         :type: :class:`list` of :class:`.GitTree` or :class:`.GitBlob` or :class:`.GitTree.GitSubmodule`
         """
         self._completeLazily(self.__tree.needsLazyCompletion)
         return self.__tree.value
+
+    @property
+    def type(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__type.needsLazyCompletion)
+        return self.__type.value
 
     def create_modified_copy(self, tree):
         """

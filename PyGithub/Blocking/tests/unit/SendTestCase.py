@@ -49,6 +49,38 @@ class NormalizationTestCase(unittest.TestCase):
         with self.assertRaises(TypeError):
             snd.normalizeUserLoginReset(42)
 
+    def testNormalizeAuthenticatedUserLogin(self):
+        self.assertEqual(snd.normalizeAuthenticatedUserLogin("foo"), "foo")
+        self.assertEqual(snd.normalizeAuthenticatedUserLogin(PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(None, dict(url="url", login="foo"), None)), "foo")
+        with self.assertRaises(TypeError):
+            snd.normalizeAuthenticatedUserLogin(42)
+        with self.assertRaises(TypeError):
+            snd.normalizeAuthenticatedUserLogin(PyGithub.Blocking.Reset)
+
+    def testNormalizeAuthenticatedUserLoginReset(self):
+        self.assertEqual(snd.normalizeAuthenticatedUserLoginReset("foo"), "foo")
+        self.assertEqual(snd.normalizeAuthenticatedUserLoginReset(PyGithub.Blocking.Reset), PyGithub.Blocking.Reset)
+        self.assertEqual(snd.normalizeAuthenticatedUserLoginReset(PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(None, dict(url="url", login="foo"), None)), "foo")
+        with self.assertRaises(TypeError):
+            snd.normalizeAuthenticatedUserLoginReset(42)
+
+    def testNormalizeUserLoginAuthenticatedUserLogin(self):
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLogin("foo"), "foo")
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLogin(PyGithub.Blocking.User.User(None, dict(url="url", login="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLogin(PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(None, dict(url="url", login="foo"), None)), "foo")
+        with self.assertRaises(TypeError):
+            snd.normalizeUserLoginAuthenticatedUserLogin(42)
+        with self.assertRaises(TypeError):
+            snd.normalizeUserLoginAuthenticatedUserLogin(PyGithub.Blocking.Reset)
+
+    def testNormalizeUserLoginAuthenticatedUserLoginReset(self):
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLoginReset("foo"), "foo")
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLoginReset(PyGithub.Blocking.Reset), PyGithub.Blocking.Reset)
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLoginReset(PyGithub.Blocking.User.User(None, dict(url="url", login="foo"), None)), "foo")
+        self.assertEqual(snd.normalizeUserLoginAuthenticatedUserLoginReset(PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser(None, dict(url="url", login="foo"), None)), "foo")
+        with self.assertRaises(TypeError):
+            snd.normalizeUserLoginAuthenticatedUserLoginReset(42)
+
     def testNormalizeUserId(self):
         self.assertEqual(snd.normalizeUserId(42), 42)
         self.assertEqual(snd.normalizeUserId(PyGithub.Blocking.User.User(None, dict(url="url", id=42), None)), 42)

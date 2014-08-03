@@ -91,12 +91,10 @@ class CodeGenerator:
         yield from self.generateDocForSourcesAndSinks(klass)
 
     def generateDocForSourcesAndSinks(self, klass):
-        if len(klass.sources) == 0:
-            yield "Methods and attributes returning instances of this class: none."
-        else:
-            yield "Methods and attributes returning instances of this class:"
-            for source in klass.sources:
-                yield "  * {}".format(self.generateDocForSource(source))
+        assert len(klass.sources) != 0
+        yield "Methods and attributes returning instances of this class:"
+        for source in klass.sources:
+            yield "  * {}".format(self.generateDocForSource(source))
         yield ""
         if len(klass.sinks) == 0:
             yield "Methods accepting instances of this class as parameter: none."
@@ -179,6 +177,8 @@ class CodeGenerator:
         for type in types:
             for t in type.underlyingTypes:
                 if t.__class__.__name__ == "Class" and t is not klass and t.qualifiedName != "PaginatedList":
+                    imports.add(self.computeModuleNameFor(t))
+                if t.__class__.__name__ == "Structure" and klass.__class__.__name__ == "Class" and t.containerClass is not klass:
                     imports.add(self.computeModuleNameFor(t))
         for i in sorted(imports):
             yield "import {}".format(i)

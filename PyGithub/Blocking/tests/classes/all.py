@@ -10,12 +10,10 @@ from PyGithub.Blocking.tests.classes.AuthenticatedUserTestCases import *
 from PyGithub.Blocking.tests.classes.CommitTestCases import *
 from PyGithub.Blocking.tests.classes.ContributorTestCases import *
 from PyGithub.Blocking.tests.classes.DirTestCases import *
-from PyGithub.Blocking.tests.classes.EntityTestCases import *
 from PyGithub.Blocking.tests.classes.FileTestCases import *
 from PyGithub.Blocking.tests.classes.GistTestCases import *
 from PyGithub.Blocking.tests.classes.GitBlobTestCases import *
 from PyGithub.Blocking.tests.classes.GitCommitTestCases import *
-from PyGithub.Blocking.tests.classes.GitObjectTestCases import *
 from PyGithub.Blocking.tests.classes.GitRefTestCases import *
 from PyGithub.Blocking.tests.classes.GitTagTestCases import *
 from PyGithub.Blocking.tests.classes.GitTreeTestCases import *

@@ -17,8 +17,7 @@ class Issue(_bgo.UpdatableGithubObject):
     """
     Base class: :class:`.UpdatableGithubObject`
 
-    Derived classes:
-      * :class:`.PullRequest`
+    Derived classes: none.
 
     Methods and attributes returning instances of this class:
       * :meth:`.AuthenticatedUser.get_issues`
@@ -294,7 +293,7 @@ class Issue(_bgo.UpdatableGithubObject):
 
         :param title: optional :class:`string`
         :param body: optional :class:`string` or :class:`Reset`
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.Entity.login`) or :class:`Reset`
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`) or :class:`Reset`
         :param state: optional "closed" or "open"
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`) or :class:`Reset`
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
@@ -306,7 +305,7 @@ class Issue(_bgo.UpdatableGithubObject):
         if body is not None:
             body = _snd.normalizeStringReset(body)
         if assignee is not None:
-            assignee = _snd.normalizeUserLoginReset(assignee)
+            assignee = _snd.normalizeUserLoginAuthenticatedUserLoginReset(assignee)
         if state is not None:
             state = _snd.normalizeEnum(state, "closed", "open")
         if milestone is not None:

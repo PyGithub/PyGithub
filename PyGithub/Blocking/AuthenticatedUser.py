@@ -12,19 +12,33 @@ import PyGithub.Blocking._base_github_object as _bgo
 import PyGithub.Blocking._send as _snd
 import PyGithub.Blocking._receive as _rcv
 
-import PyGithub.Blocking.User
 
-
-class AuthenticatedUser(PyGithub.Blocking.User.User):
+class AuthenticatedUser(_bgo.UpdatableGithubObject):
     """
-    Base class: :class:`.User`
+    Base class: :class:`.UpdatableGithubObject`
 
     Derived classes: none.
 
     Methods and attributes returning instances of this class:
       * :meth:`.Github.get_authenticated_user`
 
-    Methods accepting instances of this class as parameter: none.
+    Methods accepting instances of this class as parameter:
+      * :meth:`.Issue.edit`
+      * :meth:`.Organization.add_to_public_members`
+      * :meth:`.Organization.has_in_members`
+      * :meth:`.Organization.has_in_public_members`
+      * :meth:`.Organization.remove_from_members`
+      * :meth:`.Organization.remove_from_public_members`
+      * :meth:`.Repository.create_issue`
+      * :meth:`.Repository.get_commits`
+      * :meth:`.Repository.get_issues`
+      * :meth:`.Repository.has_in_assignees`
+      * :meth:`.Repository.has_in_collaborators`
+      * :meth:`.Repository.remove_from_collaborators`
+      * :meth:`.Team.add_to_members`
+      * :meth:`.Team.has_in_members`
+      * :meth:`.Team.remove_from_members`
+      * :meth:`.User.has_in_following`
     """
 
     class Email(_bgo.SessionedGithubObject):
@@ -62,6 +76,363 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
             """
             return self.__verified.value
 
+    def _initAttributes(self, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, followers_url=_rcv.Absent, following=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, organizations_url=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, received_events_url=_rcv.Absent, repos_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, bio=None, **kwds):
+        import PyGithub.Blocking.User
+        super(AuthenticatedUser, self)._initAttributes(**kwds)
+        self.__avatar_url = _rcv.Attribute("AuthenticatedUser.avatar_url", _rcv.StringConverter, avatar_url)
+        self.__blog = _rcv.Attribute("AuthenticatedUser.blog", _rcv.StringConverter, blog)
+        self.__collaborators = _rcv.Attribute("AuthenticatedUser.collaborators", _rcv.IntConverter, collaborators)
+        self.__company = _rcv.Attribute("AuthenticatedUser.company", _rcv.StringConverter, company)
+        self.__created_at = _rcv.Attribute("AuthenticatedUser.created_at", _rcv.DatetimeConverter, created_at)
+        self.__disk_usage = _rcv.Attribute("AuthenticatedUser.disk_usage", _rcv.IntConverter, disk_usage)
+        self.__email = _rcv.Attribute("AuthenticatedUser.email", _rcv.StringConverter, email)
+        self.__events_url = _rcv.Attribute("AuthenticatedUser.events_url", _rcv.StringConverter, events_url)
+        self.__followers = _rcv.Attribute("AuthenticatedUser.followers", _rcv.IntConverter, followers)
+        self.__followers_url = _rcv.Attribute("AuthenticatedUser.followers_url", _rcv.StringConverter, followers_url)
+        self.__following = _rcv.Attribute("AuthenticatedUser.following", _rcv.IntConverter, following)
+        self.__following_url = _rcv.Attribute("AuthenticatedUser.following_url", _rcv.StringConverter, following_url)
+        self.__gists_url = _rcv.Attribute("AuthenticatedUser.gists_url", _rcv.StringConverter, gists_url)
+        self.__gravatar_id = _rcv.Attribute("AuthenticatedUser.gravatar_id", _rcv.StringConverter, gravatar_id)
+        self.__hireable = _rcv.Attribute("AuthenticatedUser.hireable", _rcv.BoolConverter, hireable)
+        self.__html_url = _rcv.Attribute("AuthenticatedUser.html_url", _rcv.StringConverter, html_url)
+        self.__id = _rcv.Attribute("AuthenticatedUser.id", _rcv.IntConverter, id)
+        self.__location = _rcv.Attribute("AuthenticatedUser.location", _rcv.StringConverter, location)
+        self.__login = _rcv.Attribute("AuthenticatedUser.login", _rcv.StringConverter, login)
+        self.__name = _rcv.Attribute("AuthenticatedUser.name", _rcv.StringConverter, name)
+        self.__organizations_url = _rcv.Attribute("AuthenticatedUser.organizations_url", _rcv.StringConverter, organizations_url)
+        self.__owned_private_repos = _rcv.Attribute("AuthenticatedUser.owned_private_repos", _rcv.IntConverter, owned_private_repos)
+        self.__plan = _rcv.Attribute("AuthenticatedUser.plan", _rcv.StructureConverter(self.Session, PyGithub.Blocking.User.User.Plan), plan)
+        self.__private_gists = _rcv.Attribute("AuthenticatedUser.private_gists", _rcv.IntConverter, private_gists)
+        self.__public_gists = _rcv.Attribute("AuthenticatedUser.public_gists", _rcv.IntConverter, public_gists)
+        self.__public_repos = _rcv.Attribute("AuthenticatedUser.public_repos", _rcv.IntConverter, public_repos)
+        self.__received_events_url = _rcv.Attribute("AuthenticatedUser.received_events_url", _rcv.StringConverter, received_events_url)
+        self.__repos_url = _rcv.Attribute("AuthenticatedUser.repos_url", _rcv.StringConverter, repos_url)
+        self.__site_admin = _rcv.Attribute("AuthenticatedUser.site_admin", _rcv.BoolConverter, site_admin)
+        self.__starred_url = _rcv.Attribute("AuthenticatedUser.starred_url", _rcv.StringConverter, starred_url)
+        self.__subscriptions_url = _rcv.Attribute("AuthenticatedUser.subscriptions_url", _rcv.StringConverter, subscriptions_url)
+        self.__suspended_at = _rcv.Attribute("AuthenticatedUser.suspended_at", _rcv.DatetimeConverter, suspended_at)
+        self.__total_private_repos = _rcv.Attribute("AuthenticatedUser.total_private_repos", _rcv.IntConverter, total_private_repos)
+        self.__type = _rcv.Attribute("AuthenticatedUser.type", _rcv.StringConverter, type)
+        self.__updated_at = _rcv.Attribute("AuthenticatedUser.updated_at", _rcv.DatetimeConverter, updated_at)
+
+    def _updateAttributes(self, eTag, avatar_url=_rcv.Absent, blog=_rcv.Absent, collaborators=_rcv.Absent, company=_rcv.Absent, created_at=_rcv.Absent, disk_usage=_rcv.Absent, email=_rcv.Absent, events_url=_rcv.Absent, followers=_rcv.Absent, followers_url=_rcv.Absent, following=_rcv.Absent, following_url=_rcv.Absent, gists_url=_rcv.Absent, gravatar_id=_rcv.Absent, hireable=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, location=_rcv.Absent, login=_rcv.Absent, name=_rcv.Absent, organizations_url=_rcv.Absent, owned_private_repos=_rcv.Absent, plan=_rcv.Absent, private_gists=_rcv.Absent, public_gists=_rcv.Absent, public_repos=_rcv.Absent, received_events_url=_rcv.Absent, repos_url=_rcv.Absent, site_admin=_rcv.Absent, starred_url=_rcv.Absent, subscriptions_url=_rcv.Absent, suspended_at=_rcv.Absent, total_private_repos=_rcv.Absent, type=_rcv.Absent, updated_at=_rcv.Absent, bio=None, **kwds):
+        super(AuthenticatedUser, self)._updateAttributes(eTag, **kwds)
+        self.__avatar_url.update(avatar_url)
+        self.__blog.update(blog)
+        self.__collaborators.update(collaborators)
+        self.__company.update(company)
+        self.__created_at.update(created_at)
+        self.__disk_usage.update(disk_usage)
+        self.__email.update(email)
+        self.__events_url.update(events_url)
+        self.__followers.update(followers)
+        self.__followers_url.update(followers_url)
+        self.__following.update(following)
+        self.__following_url.update(following_url)
+        self.__gists_url.update(gists_url)
+        self.__gravatar_id.update(gravatar_id)
+        self.__hireable.update(hireable)
+        self.__html_url.update(html_url)
+        self.__id.update(id)
+        self.__location.update(location)
+        self.__login.update(login)
+        self.__name.update(name)
+        self.__organizations_url.update(organizations_url)
+        self.__owned_private_repos.update(owned_private_repos)
+        self.__plan.update(plan)
+        self.__private_gists.update(private_gists)
+        self.__public_gists.update(public_gists)
+        self.__public_repos.update(public_repos)
+        self.__received_events_url.update(received_events_url)
+        self.__repos_url.update(repos_url)
+        self.__site_admin.update(site_admin)
+        self.__starred_url.update(starred_url)
+        self.__subscriptions_url.update(subscriptions_url)
+        self.__suspended_at.update(suspended_at)
+        self.__total_private_repos.update(total_private_repos)
+        self.__type.update(type)
+        self.__updated_at.update(updated_at)
+
+    @property
+    def avatar_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__avatar_url.needsLazyCompletion)
+        return self.__avatar_url.value
+
+    @property
+    def blog(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__blog.needsLazyCompletion)
+        return self.__blog.value
+
+    @property
+    def collaborators(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__collaborators.needsLazyCompletion)
+        return self.__collaborators.value
+
+    @property
+    def company(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__company.needsLazyCompletion)
+        return self.__company.value
+
+    @property
+    def created_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__created_at.needsLazyCompletion)
+        return self.__created_at.value
+
+    @property
+    def disk_usage(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__disk_usage.needsLazyCompletion)
+        return self.__disk_usage.value
+
+    @property
+    def email(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__email.needsLazyCompletion)
+        return self.__email.value
+
+    @property
+    def events_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__events_url.needsLazyCompletion)
+        return self.__events_url.value
+
+    @property
+    def followers(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__followers.needsLazyCompletion)
+        return self.__followers.value
+
+    @property
+    def followers_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__followers_url.needsLazyCompletion)
+        return self.__followers_url.value
+
+    @property
+    def following(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__following.needsLazyCompletion)
+        return self.__following.value
+
+    @property
+    def following_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__following_url.needsLazyCompletion)
+        return self.__following_url.value
+
+    @property
+    def gists_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__gists_url.needsLazyCompletion)
+        return self.__gists_url.value
+
+    @property
+    def gravatar_id(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__gravatar_id.needsLazyCompletion)
+        return self.__gravatar_id.value
+
+    @property
+    def hireable(self):
+        """
+        :type: :class:`bool`
+        """
+        self._completeLazily(self.__hireable.needsLazyCompletion)
+        return self.__hireable.value
+
+    @property
+    def html_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__html_url.needsLazyCompletion)
+        return self.__html_url.value
+
+    @property
+    def id(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__id.needsLazyCompletion)
+        return self.__id.value
+
+    @property
+    def location(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__location.needsLazyCompletion)
+        return self.__location.value
+
+    @property
+    def login(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__login.needsLazyCompletion)
+        return self.__login.value
+
+    @property
+    def name(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__name.needsLazyCompletion)
+        return self.__name.value
+
+    @property
+    def organizations_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__organizations_url.needsLazyCompletion)
+        return self.__organizations_url.value
+
+    @property
+    def owned_private_repos(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__owned_private_repos.needsLazyCompletion)
+        return self.__owned_private_repos.value
+
+    @property
+    def plan(self):
+        """
+        :type: :class:`.User.Plan`
+        """
+        self._completeLazily(self.__plan.needsLazyCompletion)
+        return self.__plan.value
+
+    @property
+    def private_gists(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__private_gists.needsLazyCompletion)
+        return self.__private_gists.value
+
+    @property
+    def public_gists(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__public_gists.needsLazyCompletion)
+        return self.__public_gists.value
+
+    @property
+    def public_repos(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__public_repos.needsLazyCompletion)
+        return self.__public_repos.value
+
+    @property
+    def received_events_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__received_events_url.needsLazyCompletion)
+        return self.__received_events_url.value
+
+    @property
+    def repos_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__repos_url.needsLazyCompletion)
+        return self.__repos_url.value
+
+    @property
+    def site_admin(self):
+        """
+        :type: :class:`bool`
+        """
+        self._completeLazily(self.__site_admin.needsLazyCompletion)
+        return self.__site_admin.value
+
+    @property
+    def starred_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__starred_url.needsLazyCompletion)
+        return self.__starred_url.value
+
+    @property
+    def subscriptions_url(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__subscriptions_url.needsLazyCompletion)
+        return self.__subscriptions_url.value
+
+    @property
+    def suspended_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__suspended_at.needsLazyCompletion)
+        return self.__suspended_at.value
+
+    @property
+    def total_private_repos(self):
+        """
+        :type: :class:`int`
+        """
+        self._completeLazily(self.__total_private_repos.needsLazyCompletion)
+        return self.__total_private_repos.value
+
+    @property
+    def type(self):
+        """
+        :type: :class:`string`
+        """
+        self._completeLazily(self.__type.needsLazyCompletion)
+        return self.__type.value
+
+    @property
+    def updated_at(self):
+        """
+        :type: :class:`datetime`
+        """
+        self._completeLazily(self.__updated_at.needsLazyCompletion)
+        return self.__updated_at.value
+
     def add_to_emails(self, *email):
         """
         Calls the `POST /user/emails <http://developer.github.com/v3/users/emails#add-email-addresses>`__ end point.
@@ -84,7 +455,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 
@@ -636,7 +1007,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: :class:`bool`
         """
 
@@ -700,7 +1071,7 @@ class AuthenticatedUser(PyGithub.Blocking.User.User):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
         :rtype: None
         """
 

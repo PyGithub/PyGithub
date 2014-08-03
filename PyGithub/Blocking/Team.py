@@ -133,11 +133,11 @@ class Team(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: None
         """
 
-        username = _snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLoginAuthenticatedUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("PUT", url)
@@ -238,11 +238,11 @@ class Team(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: :class:`bool`
         """
 
-        username = _snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLoginAuthenticatedUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("GET", url, accept404=True)
@@ -270,11 +270,11 @@ class Team(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.Entity.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: None
         """
 
-        username = _snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLoginAuthenticatedUserLogin(username)
 
         url = uritemplate.expand(self.members_url, member=username)
         r = self.Session._request("DELETE", url)

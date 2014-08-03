@@ -1,11 +1,58 @@
-base: Entity
 attributes:
+  - name: avatar_url
+    type: string
   - name: billing_email
+    type: string
+  - name: blog
+    type: string
+  - name: collaborators
+    type: int
+  - name: company
+    type: string
+  - name: created_at
+    type: datetime
+  - name: disk_usage
+    type: int
+  - name: email
+    type: string
+  - name: events_url
+    type: string
+  - name: followers
+    type: int
+  - name: following
+    type: int
+  - name: html_url
+    type: string
+  - name: id
+    type: int
+  - name: location
+    type: string
+  - name: login
     type: string
   - name: members_url
     type: string
+  - name: name
+    type: string
+  - name: owned_private_repos
+    type: int
+  - name: plan
+    type: User.Plan
+  - name: private_gists
+    type: int
+  - name: public_gists
+    type: int
   - name: public_members_url
     type: string
+  - name: public_repos
+    type: int
+  - name: repos_url
+    type: string
+  - name: total_private_repos
+    type: int
+  - name: type
+    type: string
+  - name: updated_at
+    type: datetime
 deprecated_attributes:
   - name: followers_url
     reason: todoAlpha Remove? No following for orgs https://github.com/isaacs/github/issues/50
@@ -31,7 +78,7 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
+          class: AuthenticatedUser
           attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
@@ -253,8 +300,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -266,8 +316,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member
@@ -279,8 +332,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -291,8 +347,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute public_members_url
     url_template_arguments:
       - name: member

@@ -410,8 +410,11 @@ methods:
         type: string
       - name: assignee
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
       - name: milestone
         type:
           class: Milestone
@@ -622,8 +625,11 @@ methods:
         type: string
       - name: author
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
       - name: since
         type: datetime
       - name: until
@@ -807,16 +813,25 @@ methods:
           enum: [close, open]
       - name: assignee
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
       - name: creator
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
       - name: mentioned
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
       - name: labels
         type:
           container: list
@@ -1040,8 +1055,11 @@ methods:
     parameters:
       - name: assignee
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute assignees_url
     url_template_arguments:
       - name: user
@@ -1053,8 +1071,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
@@ -1066,8 +1087,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute collaborators_url
     url_template_arguments:
       - name: collaborator
