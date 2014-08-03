@@ -23,8 +23,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -95,8 +98,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member
@@ -125,8 +131,11 @@ methods:
     parameters:
       - name: username
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute members_url
     url_template_arguments:
       - name: member

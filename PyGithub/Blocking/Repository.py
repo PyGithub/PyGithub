@@ -1073,7 +1073,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param title: mandatory :class:`string`
         :param body: optional :class:`string`
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
         :rtype: :class:`.Issue`
@@ -1084,7 +1084,7 @@ class Repository(_bgo.UpdatableGithubObject):
         if body is not None:
             body = _snd.normalizeString(body)
         if assignee is not None:
-            assignee = _snd.normalizeUserLogin(assignee)
+            assignee = _snd.normalizeUserLoginAuthenticatedUserLogin(assignee)
         if milestone is not None:
             milestone = _snd.normalizeMilestoneNumber(milestone)
         if labels is not None:
@@ -1342,7 +1342,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param sha: optional :class:`string`
         :param path: optional :class:`string`
-        :param author: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param author: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :param since: optional :class:`datetime`
         :param until: optional :class:`datetime`
         :param per_page: optional :class:`int`
@@ -1355,7 +1355,7 @@ class Repository(_bgo.UpdatableGithubObject):
         if path is not None:
             path = _snd.normalizeString(path)
         if author is not None:
-            author = _snd.normalizeUserLogin(author)
+            author = _snd.normalizeUserLoginAuthenticatedUserLogin(author)
         if since is not None:
             since = _snd.normalizeDatetime(since)
         if until is not None:
@@ -1574,9 +1574,9 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
         :param state: optional "close" or "open"
-        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
-        :param creator: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
-        :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
+        :param creator: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
+        :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :param labels: optional :class:`list` of :class:`.Label` or :class:`string` (its :attr:`.Label.name`)
         :param sort: optional "comments" or "created" or "updated"
         :param direction: optional "asc" or "desc"
@@ -1591,11 +1591,11 @@ class Repository(_bgo.UpdatableGithubObject):
         if state is not None:
             state = _snd.normalizeEnum(state, "close", "open")
         if assignee is not None:
-            assignee = _snd.normalizeUserLogin(assignee)
+            assignee = _snd.normalizeUserLoginAuthenticatedUserLogin(assignee)
         if creator is not None:
-            creator = _snd.normalizeUserLogin(creator)
+            creator = _snd.normalizeUserLoginAuthenticatedUserLogin(creator)
         if mentioned is not None:
-            mentioned = _snd.normalizeUserLogin(mentioned)
+            mentioned = _snd.normalizeUserLoginAuthenticatedUserLogin(mentioned)
         if labels is not None:
             labels = _snd.normalizeList(_snd.normalizeLabelName, labels)
         if sort is not None:
@@ -1884,11 +1884,11 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param assignee: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: :class:`bool`
         """
 
-        assignee = _snd.normalizeUserLogin(assignee)
+        assignee = _snd.normalizeUserLoginAuthenticatedUserLogin(assignee)
 
         url = uritemplate.expand(self.assignees_url, user=assignee)
         r = self.Session._request("GET", url, accept404=True)
@@ -1900,11 +1900,11 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: :class:`bool`
         """
 
-        username = _snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLoginAuthenticatedUserLogin(username)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=username)
         r = self.Session._request("GET", url, accept404=True)
@@ -1916,11 +1916,11 @@ class Repository(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param username: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: None
         """
 
-        username = _snd.normalizeUserLogin(username)
+        username = _snd.normalizeUserLoginAuthenticatedUserLogin(username)
 
         url = uritemplate.expand(self.collaborators_url, collaborator=username)
         r = self.Session._request("DELETE", url)

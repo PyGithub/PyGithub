@@ -18,7 +18,6 @@ class User(_bgo.UpdatableGithubObject):
     Base class: :class:`.UpdatableGithubObject`
 
     Derived classes:
-      * :class:`.AuthenticatedUser`
       * :class:`.Contributor`
 
     Methods and attributes returning instances of this class:
@@ -58,7 +57,6 @@ class User(_bgo.UpdatableGithubObject):
       * :meth:`.AuthenticatedUser.remove_from_following`
       * :meth:`.Github.get_users`
       * :meth:`.Issue.edit`
-      * :meth:`.Organization.add_to_public_members`
       * :meth:`.Organization.has_in_members`
       * :meth:`.Organization.has_in_public_members`
       * :meth:`.Organization.remove_from_members`
@@ -106,6 +104,7 @@ class User(_bgo.UpdatableGithubObject):
     class Plan(_bgo.SessionedGithubObject):
         """
         Methods and attributes returning instances of this class:
+          * :attr:`.AuthenticatedUser.plan`
           * :attr:`.Organization.plan`
           * :attr:`.User.plan`
 
@@ -712,11 +711,11 @@ class User(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :param target_user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`)
+        :param target_user: mandatory :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :rtype: :class:`bool`
         """
 
-        target_user = _snd.normalizeUserLogin(target_user)
+        target_user = _snd.normalizeUserLoginAuthenticatedUserLogin(target_user)
 
         url = uritemplate.expand(self.following_url, other_user=target_user)
         r = self.Session._request("GET", url, accept404=True)

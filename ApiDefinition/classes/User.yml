@@ -230,8 +230,11 @@ methods:
     parameters:
       - name: target_user
         type:
-          class: User
-          attribute: login
+          union:
+            - class: User
+              attribute: login
+            - class: AuthenticatedUser
+              attribute: login
     url_template: attribute following_url
     url_template_arguments:
       - name: other_user

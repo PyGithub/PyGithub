@@ -76,6 +76,41 @@ def normalizeUserLoginReset(user):
         return normalizeUserLogin(user)
 
 
+def normalizeAuthenticatedUserLogin(user):
+    import PyGithub.Blocking.AuthenticatedUser
+    if isinstance(user, PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser):
+        return user.login
+    elif isinstance(user, basestring):
+        return user
+    else:
+        raise TypeError()
+
+
+def normalizeAuthenticatedUserLoginReset(user):
+    if user is Reset:
+        return user
+    else:
+        return normalizeAuthenticatedUserLogin(user)
+
+
+def normalizeUserLoginAuthenticatedUserLogin(user):
+    import PyGithub.Blocking.User
+    import PyGithub.Blocking.AuthenticatedUser
+    if isinstance(user, (PyGithub.Blocking.User.User, PyGithub.Blocking.AuthenticatedUser.AuthenticatedUser)):
+        return user.login
+    elif isinstance(user, basestring):
+        return user
+    else:
+        raise TypeError()
+
+
+def normalizeUserLoginAuthenticatedUserLoginReset(user):
+    if user is Reset:
+        return user
+    else:
+        return normalizeUserLoginAuthenticatedUserLogin(user)
+
+
 def normalizeRepositoryFullName(repo):
     import PyGithub.Blocking.Repository
     if isinstance(repo, PyGithub.Blocking.Repository.Repository):

@@ -92,6 +92,8 @@ methods:
           union:
             - class: User
               attribute: login
+            - class: AuthenticatedUser
+              attribute: login
             - Reset
       - name: state
         type:
