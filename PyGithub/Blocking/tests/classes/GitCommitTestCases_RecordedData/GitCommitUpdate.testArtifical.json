@@ -5,7 +5,7 @@
             "headers": {
                 "Accept": "application/vnd.github.v3.full+json",
                 "Accept-Encoding": "gzip, deflate, compress",
-                "Authorization": "Basic Z2hlLXVzZXItMTpwYXNzd29yZC11c2VyLTE=",
+                "Authorization": "Basic ZWxlY3RyYTpwYXNzd29yZDEtZWxlY3RyYQ==",
                 "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
             },
             "url": {
@@ -85,15 +85,15 @@
                     "url": "http://github.home.jacquev6.net/api/v3/users/electra"
                 },
                 "permissions": {
-                    "admin": false,
+                    "admin": true,
                     "pull": true,
-                    "push": false
+                    "push": true
                 },
                 "private": false,
                 "pulls_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/pulls{/number}",
-                "pushed_at": "2014-08-04T04:58:06Z",
+                "pushed_at": "2014-08-04T05:35:44Z",
                 "releases_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/releases{/id}",
-                "size": 244,
+                "size": 264,
                 "ssh_url": "git@github.home.jacquev6.net:electra/git-objects.git",
                 "stargazers_count": 0,
                 "stargazers_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/stargazers",
@@ -105,7 +105,7 @@
                 "tags_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/tags",
                 "teams_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/teams",
                 "trees_url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/git/trees{/sha}",
-                "updated_at": "2014-08-04T04:58:07Z",
+                "updated_at": "2014-08-04T05:35:44Z",
                 "url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects",
                 "watchers": 0,
                 "watchers_count": 0
@@ -116,19 +116,19 @@
                 "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
                 "cache-control": "private, max-age=60, s-maxage=60",
                 "connection": "keep-alive",
-                "content-length": "5489",
+                "content-length": "5487",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Mon, 04 Aug 2014 05:02:19 GMT",
-                "etag": "\"0ef67ff0671c27f05921deea2a0a0e74\"",
-                "last-modified": "Mon, 04 Aug 2014 04:58:07 GMT",
+                "date": "Mon, 04 Aug 2014 05:37:14 GMT",
+                "etag": "\"a6d721ebdc2edbdb379db9bdaba97094\"",
+                "last-modified": "Mon, 04 Aug 2014 05:35:44 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "cb47c9d9-4ebc-4e9d-acf2-0864b32d2e41",
+                "x-github-request-id": "79831550-262d-4710-b1c9-a952e5dfe6e8",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200
@@ -140,7 +140,7 @@
             "headers": {
                 "Accept": "application/vnd.github.v3.full+json",
                 "Accept-Encoding": "gzip, deflate, compress",
-                "Authorization": "Basic Z2hlLXVzZXItMTpwYXNzd29yZC11c2VyLTE=",
+                "Authorization": "Basic ZWxlY3RyYTpwYXNzd29yZDEtZWxlY3RyYQ==",
                 "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
             },
             "url": {
@@ -188,8 +188,8 @@
                 "content-length": "966",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Mon, 04 Aug 2014 05:02:19 GMT",
-                "etag": "\"db56c45f2339c578d330cd5fdbb14719\"",
+                "date": "Mon, 04 Aug 2014 05:37:14 GMT",
+                "etag": "\"4b1f4c04fcfcb2e2738eb1af609d8cb0\"",
                 "last-modified": "Mon, 01 Jan 2001 00:00:00 GMT",
                 "server": "GitHub.com",
                 "status": "200 OK",
@@ -197,7 +197,7 @@
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "a76ff4cb-e311-4b5d-8545-269673f063fb",
+                "x-github-request-id": "9a60b85b-38ee-4d0a-909f-0eb65edd8bb6",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200

@@ -32,7 +32,7 @@ class GitCommitUpdate(TestCase):
         self.assertEqual(c.sha, "f739e7ae2fd0e7b2bce99c073bcc7b57d713877e")
         self.assertEqual(c.tree.sha, "65208a85edf4a0d2c2f757ab655fb3ba2cd63bad")
 
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def testArtifical(self):
         # Author are always returned completely so there is no other way to cover _updateAttributes
         c = self.g.get_repo(("electra", "git-objects")).get_git_commit("dd641d6c97b24778945a43a768b36c997610a8b6")

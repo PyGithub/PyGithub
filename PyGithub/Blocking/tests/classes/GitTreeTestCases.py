@@ -52,7 +52,7 @@ class GitTreeUpdate(TestCase):
         self.assertEqual(len(t.tree), 1)
         self.assertEqual(t.path, "tree")  # Not lost after lazy completion
 
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def testArtifical(self):
         # GitSubmodule are always returned completely so there is no other way to cover _updateAttributes
         t = self.g.get_repo(("electra", "git-objects")).get_git_tree("634dab7d85ae09ce816910b45ed19cd362148c21")
