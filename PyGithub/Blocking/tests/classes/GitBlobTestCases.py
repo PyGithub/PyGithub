@@ -6,9 +6,9 @@ from PyGithub.Blocking.tests.Framework import *
 
 
 class GitBlobAttributes(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def test(self):
-        b = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
+        b = self.g.get_repo(("electra", "git-objects")).get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(b.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
         self.assertEqual(b.encoding, "base64")
         self.assertEqual(b.mode, None)  # @todoAlpha Find a test case where mode, path and type are not None
@@ -18,8 +18,8 @@ class GitBlobAttributes(TestCase):
 
 
 class GitBlobUpdate(TestCase):
-    @Enterprise.User(1)
+    @Enterprise("electra")
     def testThroughLazyCompletion(self):
-        b = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).create_git_blob("This is some content", "utf8")
+        b = self.g.get_repo(("electra", "git-objects")).create_git_blob("This is some content", "utf8")
         self.assertEqual(b.sha, "3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(b.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
