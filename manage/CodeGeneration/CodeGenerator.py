@@ -311,6 +311,8 @@ class CodeGenerator:
         if method.qualifiedName == "Repository.get_git_ref":
             yield "assert ref.startswith(\"refs/\")"
             yield "url = uritemplate.expand(self.git_refs_url) + ref[4:]"
+        elif method.qualifiedName == "Issue.create_pull":
+            yield 'url = "/".join(self.url.split("/")[:-2]) + "/pulls"'
         elif method.qualifiedName == "GitTree.create_modified_copy":
             yield "url = self.url[:self.url.rfind(self.sha) - 1]"
         elif len(method.urlTemplateArguments) == 0:

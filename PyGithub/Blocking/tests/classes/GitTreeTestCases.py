@@ -4,7 +4,6 @@
 
 from PyGithub.Blocking.tests.Framework import *
 
-# 634dab7d85ae09ce816910b45ed19cd362148c21
 
 class GitTreeAttributes(TestCase):
     @Enterprise("electra")

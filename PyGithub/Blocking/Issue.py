@@ -292,7 +292,7 @@ class Issue(_bgo.UpdatableGithubObject):
         head = _snd.normalizeString(head)
         base = _snd.normalizeString(base)
 
-        url = uritemplate.expand("/".join(self.url.split("/")[:-2]) + "/pulls")
+        url = "/".join(self.url.split("/")[:-2]) + "/pulls"
         postArguments = _snd.dictionary(base=base, head=head, issue=self.number)
         r = self.Session._request("POST", url, postArguments=postArguments)
         return _rcv.ClassConverter(self.Session, PyGithub.Blocking.PullRequest.PullRequest)(None, r.json(), r.headers.get("ETag"))
