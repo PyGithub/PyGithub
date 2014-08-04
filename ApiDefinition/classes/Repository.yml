@@ -810,7 +810,7 @@ methods:
           attribute: number
       - name: state
         type:
-          enum: [close, open]
+          enum: [all, closed, open]
       - name: assignee
         type:
           union:

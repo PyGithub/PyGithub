@@ -87,16 +87,19 @@ try:
     gElectra.get_repo(("electra", "issues"))
 except PyGithub.Blocking.ObjectNotFoundException:
     time.sleep(5)
-    gElectra.get_authenticated_user().create_repo("issues", auto_init=True)
+    r = gElectra.get_authenticated_user().create_repo("issues", auto_init=True)
     time.sleep(5)
-    gElectra.get_repo(("electra", "issues")).create_milestone("Immutable milestone")
-    gElectra.get_repo(("electra", "issues")).create_milestone("Closed milestone", state="closed")
-    gElectra.get_repo(("electra", "issues")).create_milestone("Mutable milestone")
+    r.create_milestone("Immutable milestone")
+    r.create_milestone("Closed milestone", state="closed")
+    r.create_milestone("Mutable milestone")
     gPenelope.get_repo(("electra", "issues")).create_issue("Immutable issue")
-    gPenelope.get_repo(("electra", "issues")).create_issue("Closed issue")
+    gPenelope.get_repo(("electra", "issues")).create_issue("Closed issue 1", body="@electra")
+    gPenelope.get_repo(("electra", "issues")).create_issue("Closed issue 2", body="@electra")
     gPenelope.get_repo(("electra", "issues")).create_issue("Mutable issue")
-    gElectra.get_repo(("electra", "issues")).get_issue(1).edit(assignee="electra", labels=["enhancement", "question"])
-    gElectra.get_repo(("electra", "issues")).get_issue(2).edit(assignee="electra", labels=["enhancement", "question"], state="closed", milestone=1)
+    r.get_issue(1).edit(assignee="electra", labels=["enhancement", "question"])
+    r.get_issue(2).edit(assignee="electra", labels=["enhancement", "question"], state="closed", milestone=1)
+    r.get_issue(3).edit(assignee="electra", labels=["enhancement", "question"], state="closed", milestone=1)
+    r.add_to_collaborators("penelope")
 
 try:
     # gElectra.get_repo(("electra", "pulls")).delete()
@@ -128,3 +131,62 @@ except PyGithub.Blocking.ObjectNotFoundException:
     sourceForPenelope.create_pull("Conflict pull", "penelope:conflict", "master")
     sourceForPenelope.create_pull("Mutable pull", "penelope:mutable", "master")
     source.get_pull(1).merge()
+
+
+try:
+    # gElectra.get_repo(("electra", "immutable")).delete()
+    gElectra.get_repo(("electra", "immutable"))
+except PyGithub.Blocking.ObjectNotFoundException:
+    time.sleep(5)
+    gElectra.get_authenticated_user().create_repo("immutable", auto_init=True)
+    time.sleep(5)
+    gZeus.get_org("olympus").create_fork(("electra", "immutable"))
+    time.sleep(5)
+    gPenelope.get_authenticated_user().create_fork(("olympus", "immutable"))
+    time.sleep(5)
+
+try:
+    # gElectra.get_repo(("electra", "mutable")).delete()
+    gElectra.get_repo(("electra", "mutable"))
+except PyGithub.Blocking.ObjectNotFoundException:
+    time.sleep(5)
+    r = gElectra.get_authenticated_user().create_repo("mutable", auto_init=True)
+    time.sleep(5)
+    r.add_to_collaborators("penelope")
+    r.add_to_collaborators("zeus")
+    r.create_git_ref("refs/heads/develop", r.get_git_ref("refs/heads/master").object.sha)
+    r.create_milestone("First milestone")
+
+try:
+    # gElectra.get_repo(("electra", "contributors")).delete()
+    gElectra.get_repo(("electra", "contributors"))
+except PyGithub.Blocking.ObjectNotFoundException:
+    time.sleep(5)
+    r = gElectra.get_authenticated_user().create_repo("contributors", auto_init=True)
+    time.sleep(5)
+    r.create_file("zeus.md", "Create zeus.md", "YmFy", author=dict(name="Zeus", email="ghe-zeus@jacquev6.net"))
+    r.create_file("penelope.md", "Create penelope.md", "YmFy", author=dict(name="Penelope", email="ghe-penelope@jacquev6.net"))
+    r.create_file("oedipus.md", "Create oedipus.md", "YmFy", author=dict(name="Oedipus", email="ghe-oedipus@jacquev6.net"))
+
+try:
+    gElectra.get_repo(("electra", "git-objects")).delete()
+    gElectra.get_repo(("electra", "git-objects"))
+except PyGithub.Blocking.ObjectNotFoundException:
+    time.sleep(5)
+    r = gElectra.get_authenticated_user().create_repo("git-objects", auto_init=True)
+    time.sleep(5)
+    r.create_file("foo.md", "Create foo.md", "bWVyZ2U=")
+    r.get_readme().edit("Modify README.md", "TmV3IHJlYWRtZQ0K")
+    r.create_git_ref("refs/heads/develop", r.get_git_ref("refs/heads/master").object.sha)
+    r.create_git_ref("refs/tags/light-tag-1", r.get_git_ref("refs/heads/master").object.sha)
+    r.create_file("bar.md", "Create bar.md", "bWVyZ2U=", branch="develop")
+    r.create_git_ref("refs/tags/light-tag-2", r.get_git_ref("refs/heads/develop").object.sha)
+
+    r.create_git_blob("This is some content", "utf8")
+    # blob: 3daf0da6bca38181ab52610dd6af6e92f1a5469d
+    r.create_git_tree(tree=[{"path": "test.txt", "mode": "100644", "type": "blob", "sha": "3daf0da6bca38181ab52610dd6af6e92f1a5469d"}])
+    # tree: 65208a85edf4a0d2c2f757ab655fb3ba2cd63bad
+    r.create_git_commit(tree="65208a85edf4a0d2c2f757ab655fb3ba2cd63bad", message="first commit", parents=[], author={"name": "John Doe", "email": "john@doe.com", "date": "1999-12-31T23:59:59Z"}, committer={"name": "Jane Doe", "email": "jane@doe.com", "date": "2000-01-01T00:00:00Z"})
+    # commit: f739e7ae2fd0e7b2bce99c073bcc7b57d713877e
+    r.create_git_tag(tag="heavy-tag", message="This is a tag", object="f739e7ae2fd0e7b2bce99c073bcc7b57d713877e", type="commit", tagger={"name": "John Doe", "email": "john@doe.com", "date": "1999-12-31T23:59:59Z"})
+    # tag: b55a47efb4f8c891b6719a3d85a80c7f875e33ec

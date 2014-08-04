@@ -1573,7 +1573,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param milestone: optional :class:`.Milestone` or :class:`int` (its :attr:`.Milestone.number`)
-        :param state: optional "close" or "open"
+        :param state: optional "all" or "closed" or "open"
         :param assignee: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :param creator: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
         :param mentioned: optional :class:`.User` or :class:`string` (its :attr:`.User.login`) or :class:`.AuthenticatedUser` or :class:`string` (its :attr:`.AuthenticatedUser.login`)
@@ -1589,7 +1589,7 @@ class Repository(_bgo.UpdatableGithubObject):
         if milestone is not None:
             milestone = _snd.normalizeMilestoneNumber(milestone)
         if state is not None:
-            state = _snd.normalizeEnum(state, "close", "open")
+            state = _snd.normalizeEnum(state, "all", "closed", "open")
         if assignee is not None:
             assignee = _snd.normalizeUserLoginAuthenticatedUserLogin(assignee)
         if creator is not None:

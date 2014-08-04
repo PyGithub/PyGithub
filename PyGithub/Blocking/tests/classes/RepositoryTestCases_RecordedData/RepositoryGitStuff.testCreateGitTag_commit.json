@@ -119,7 +119,7 @@
                 "content-length": "5487",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Mon, 04 Aug 2014 04:12:02 GMT",
+                "date": "Mon, 04 Aug 2014 04:12:00 GMT",
                 "etag": "\"8b82bd146294bdadef4d9bf5af454209\"",
                 "last-modified": "Mon, 04 Aug 2014 04:11:59 GMT",
                 "server": "GitHub.com",
@@ -128,7 +128,7 @@
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "b70ed0fd-a211-489d-8f47-59a2869bc2eb",
+                "x-github-request-id": "be6ccdb2-91dd-47dd-bcac-863d03e95720",
                 "x-xss-protection": "1; mode=block"
             },
             "status": 200
@@ -136,37 +136,43 @@
     },
     {
         "request": {
-            "body": null,
+            "body": {
+                "message": "This is a commit tag",
+                "object": "f739e7ae2fd0e7b2bce99c073bcc7b57d713877e",
+                "tag": "commit_tag",
+                "type": "commit"
+            },
             "headers": {
                 "Accept": "application/vnd.github.v3.full+json",
                 "Accept-Encoding": "gzip, deflate, compress",
                 "Authorization": "Basic ZWxlY3RyYTpwYXNzd29yZDEtZWxlY3RyYQ==",
+                "Content-Length": "128",
                 "User-Agent": "jacquev6/PyGithub/2; UnitTests recorder"
             },
             "url": {
                 "netloc": "github.home.jacquev6.net",
-                "path": "/api/v3/repos/electra/git-objects/git/tags/b55a47efb4f8c891b6719a3d85a80c7f875e33ec",
+                "path": "/api/v3/repos/electra/git-objects/git/tags",
                 "query": {},
                 "scheme": "http"
             },
-            "verb": "GET"
+            "verb": "POST"
         },
         "response": {
             "body": {
-                "message": "This is a tag",
+                "message": "This is a commit tag",
                 "object": {
                     "sha": "f739e7ae2fd0e7b2bce99c073bcc7b57d713877e",
                     "type": "commit",
                     "url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/git/commits/f739e7ae2fd0e7b2bce99c073bcc7b57d713877e"
                 },
-                "sha": "b55a47efb4f8c891b6719a3d85a80c7f875e33ec",
-                "tag": "heavy-tag",
+                "sha": "5b201c16865ab67df0f7af62510b01f164f72acb",
+                "tag": "commit_tag",
                 "tagger": {
-                    "date": "1999-12-31T23:59:59Z",
-                    "email": "john@doe.com",
-                    "name": "John Doe"
+                    "date": "2014-08-04T04:12:00Z",
+                    "email": "ghe-electra@jacquev6.net",
+                    "name": "Electra"
                 },
-                "url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/git/tags/b55a47efb4f8c891b6719a3d85a80c7f875e33ec"
+                "url": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/git/tags/5b201c16865ab67df0f7af62510b01f164f72acb"
             },
             "headers": {
                 "access-control-allow-credentials": "true",
@@ -174,22 +180,22 @@
                 "access-control-expose-headers": "ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval",
                 "cache-control": "private, max-age=60, s-maxage=60",
                 "connection": "keep-alive",
-                "content-length": "501",
+                "content-length": "520",
                 "content-security-policy": "default-src 'none'",
                 "content-type": "application/json; charset=utf-8",
-                "date": "Mon, 04 Aug 2014 04:12:02 GMT",
-                "etag": "\"8b82bd146294bdadef4d9bf5af454209\"",
-                "last-modified": "Mon, 04 Aug 2014 04:11:59 GMT",
+                "date": "Mon, 04 Aug 2014 04:12:00 GMT",
+                "etag": "\"1bc510b90a1d72d27e2b31b717711610\"",
+                "location": "http://github.home.jacquev6.net/api/v3/repos/electra/git-objects/git/tags/5b201c16865ab67df0f7af62510b01f164f72acb",
                 "server": "GitHub.com",
-                "status": "200 OK",
+                "status": "201 Created",
                 "vary": "Accept, Authorization, Cookie, X-GitHub-OTP",
                 "x-content-type-options": "nosniff",
                 "x-frame-options": "deny",
                 "x-github-media-type": "github.v3; param=full; format=json",
-                "x-github-request-id": "eb97b6d1-759f-4d1b-9ebb-bf34954dda88",
+                "x-github-request-id": "5916998f-af34-4027-aa06-24d1daf21766",
                 "x-xss-protection": "1; mode=block"
             },
-            "status": 200
+            "status": 201
         }
     }
 ]
