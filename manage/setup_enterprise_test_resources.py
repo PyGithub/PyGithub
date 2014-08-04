@@ -190,3 +190,12 @@ except PyGithub.Blocking.ObjectNotFoundException:
     # commit: f739e7ae2fd0e7b2bce99c073bcc7b57d713877e
     r.create_git_tag(tag="heavy-tag", message="This is a tag", object="f739e7ae2fd0e7b2bce99c073bcc7b57d713877e", type="commit", tagger={"name": "John Doe", "email": "john@doe.com", "date": "1999-12-31T23:59:59Z"})
     # tag: b55a47efb4f8c891b6719a3d85a80c7f875e33ec
+    r.create_git_tree(tree=[
+        {"path": "blob", "mode": "100644", "type": "blob", "sha": "3daf0da6bca38181ab52610dd6af6e92f1a5469d"},
+        {"path": "tree", "mode": "040000", "type": "tree", "sha": "65208a85edf4a0d2c2f757ab655fb3ba2cd63bad"},
+        {"path": "submodule", "mode": "160000", "type": "commit", "sha": "5e7d45a2f8c09757a0ce6d0bf37a8eec31791578"},
+        {"path": "symlink", "mode": "120000", "type": "blob", "content": "blob"},
+    ])
+    # tree: 634dab7d85ae09ce816910b45ed19cd362148c21
+    r.get_repo("git-objects").create_git_commit(tree="634dab7d85ae09ce816910b45ed19cd362148c21", message="second commit", parents=["f739e7ae2fd0e7b2bce99c073bcc7b57d713877e"], author={"name": "John Doe", "email": "john@doe.com", "date": "2000-12-31T23:59:59Z"}, committer={"name": "Jane Doe", "email": "jane@doe.com", "date": "2001-01-01T00:00:00Z"})
+    # commit: dd641d6c97b24778945a43a768b36c997610a8b6
