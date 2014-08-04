@@ -21,6 +21,7 @@ class PullRequest(_bgo.UpdatableGithubObject):
 
     Methods and attributes returning instances of this class:
       * :meth:`.Issue.create_pull`
+      * :attr:`.Issue.pull_request`
       * :meth:`.Repository.create_pull`
       * :meth:`.Repository.get_pull`
       * :meth:`.Repository.get_pulls`
@@ -189,19 +190,11 @@ class PullRequest(_bgo.UpdatableGithubObject):
         Methods accepting instances of this class as parameter: none.
         """
 
-        def _initAttributes(self, documentation_url=None, merged=None, message=None, sha=None, **kwds):
+        def _initAttributes(self, merged=None, message=None, sha=None, **kwds):
             super(PullRequest.MergeResult, self)._initAttributes(**kwds)
-            self.__documentation_url = _rcv.Attribute("PullRequest.MergeResult.documentation_url", _rcv.StringConverter, documentation_url)
             self.__merged = _rcv.Attribute("PullRequest.MergeResult.merged", _rcv.BoolConverter, merged)
             self.__message = _rcv.Attribute("PullRequest.MergeResult.message", _rcv.StringConverter, message)
             self.__sha = _rcv.Attribute("PullRequest.MergeResult.sha", _rcv.StringConverter, sha)
-
-        @property
-        def documentation_url(self):
-            """
-            :type: :class:`string`
-            """
-            return self.__documentation_url.value
 
         @property
         def merged(self):
@@ -224,10 +217,8 @@ class PullRequest(_bgo.UpdatableGithubObject):
             """
             return self.__sha.value
 
-    def _initAttributes(self, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, events_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, repository=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
-        import PyGithub.Blocking.Label
+    def _initAttributes(self, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
         import PyGithub.Blocking.Milestone
-        import PyGithub.Blocking.Repository
         import PyGithub.Blocking.User
         super(PullRequest, self)._initAttributes(**kwds)
         self.__additions = _rcv.Attribute("PullRequest.additions", _rcv.IntConverter, additions)
@@ -238,7 +229,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__body_text = _rcv.Attribute("PullRequest.body_text", _rcv.StringConverter, body_text)
         self.__changed_files = _rcv.Attribute("PullRequest.changed_files", _rcv.IntConverter, changed_files)
         self.__closed_at = _rcv.Attribute("PullRequest.closed_at", _rcv.DatetimeConverter, closed_at)
-        self.__closed_by = _rcv.Attribute("PullRequest.closed_by", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), closed_by)
         self.__comments = _rcv.Attribute("PullRequest.comments", _rcv.IntConverter, comments)
         self.__comments_url = _rcv.Attribute("PullRequest.comments_url", _rcv.StringConverter, comments_url)
         self.__commits = _rcv.Attribute("PullRequest.commits", _rcv.IntConverter, commits)
@@ -246,13 +236,10 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__created_at = _rcv.Attribute("PullRequest.created_at", _rcv.DatetimeConverter, created_at)
         self.__deletions = _rcv.Attribute("PullRequest.deletions", _rcv.IntConverter, deletions)
         self.__diff_url = _rcv.Attribute("PullRequest.diff_url", _rcv.StringConverter, diff_url)
-        self.__events_url = _rcv.Attribute("PullRequest.events_url", _rcv.StringConverter, events_url)
         self.__head = _rcv.Attribute("PullRequest.head", _rcv.StructureConverter(self.Session, PullRequest.End), head)
         self.__html_url = _rcv.Attribute("PullRequest.html_url", _rcv.StringConverter, html_url)
         self.__id = _rcv.Attribute("PullRequest.id", _rcv.IntConverter, id)
         self.__issue_url = _rcv.Attribute("PullRequest.issue_url", _rcv.StringConverter, issue_url)
-        self.__labels = _rcv.Attribute("PullRequest.labels", _rcv.ListConverter(_rcv.ClassConverter(self.Session, PyGithub.Blocking.Label.Label)), labels)
-        self.__labels_url = _rcv.Attribute("PullRequest.labels_url", _rcv.StringConverter, labels_url)
         self.__merge_commit_sha = _rcv.Attribute("PullRequest.merge_commit_sha", _rcv.StringConverter, merge_commit_sha)
         self.__mergeable = _rcv.Attribute("PullRequest.mergeable", _rcv.BoolConverter, mergeable)
         self.__mergeable_state = _rcv.Attribute("PullRequest.mergeable_state", _rcv.StringConverter, mergeable_state)
@@ -262,7 +249,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__milestone = _rcv.Attribute("PullRequest.milestone", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Milestone.Milestone), milestone)
         self.__number = _rcv.Attribute("PullRequest.number", _rcv.IntConverter, number)
         self.__patch_url = _rcv.Attribute("PullRequest.patch_url", _rcv.StringConverter, patch_url)
-        self.__repository = _rcv.Attribute("PullRequest.repository", _rcv.ClassConverter(self.Session, PyGithub.Blocking.Repository.Repository), repository)
         self.__review_comment_url = _rcv.Attribute("PullRequest.review_comment_url", _rcv.StringConverter, review_comment_url)
         self.__review_comments = _rcv.Attribute("PullRequest.review_comments", _rcv.IntConverter, review_comments)
         self.__review_comments_url = _rcv.Attribute("PullRequest.review_comments_url", _rcv.StringConverter, review_comments_url)
@@ -272,7 +258,7 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__updated_at = _rcv.Attribute("PullRequest.updated_at", _rcv.DatetimeConverter, updated_at)
         self.__user = _rcv.Attribute("PullRequest.user", _rcv.ClassConverter(self.Session, PyGithub.Blocking.User.User), user)
 
-    def _updateAttributes(self, eTag, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, closed_by=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, events_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, labels=_rcv.Absent, labels_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, repository=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
+    def _updateAttributes(self, eTag, additions=_rcv.Absent, assignee=_rcv.Absent, base=_rcv.Absent, body=_rcv.Absent, body_html=_rcv.Absent, body_text=_rcv.Absent, changed_files=_rcv.Absent, closed_at=_rcv.Absent, comments=_rcv.Absent, comments_url=_rcv.Absent, commits=_rcv.Absent, commits_url=_rcv.Absent, created_at=_rcv.Absent, deletions=_rcv.Absent, diff_url=_rcv.Absent, head=_rcv.Absent, html_url=_rcv.Absent, id=_rcv.Absent, issue_url=_rcv.Absent, merge_commit_sha=_rcv.Absent, mergeable=_rcv.Absent, mergeable_state=_rcv.Absent, merged=_rcv.Absent, merged_at=_rcv.Absent, merged_by=_rcv.Absent, milestone=_rcv.Absent, number=_rcv.Absent, patch_url=_rcv.Absent, review_comment_url=_rcv.Absent, review_comments=_rcv.Absent, review_comments_url=_rcv.Absent, state=_rcv.Absent, statuses_url=_rcv.Absent, title=_rcv.Absent, updated_at=_rcv.Absent, user=_rcv.Absent, _links=None, **kwds):
         super(PullRequest, self)._updateAttributes(eTag, **kwds)
         self.__additions.update(additions)
         self.__assignee.update(assignee)
@@ -282,7 +268,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__body_text.update(body_text)
         self.__changed_files.update(changed_files)
         self.__closed_at.update(closed_at)
-        self.__closed_by.update(closed_by)
         self.__comments.update(comments)
         self.__comments_url.update(comments_url)
         self.__commits.update(commits)
@@ -290,13 +275,10 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__created_at.update(created_at)
         self.__deletions.update(deletions)
         self.__diff_url.update(diff_url)
-        self.__events_url.update(events_url)
         self.__head.update(head)
         self.__html_url.update(html_url)
         self.__id.update(id)
         self.__issue_url.update(issue_url)
-        self.__labels.update(labels)
-        self.__labels_url.update(labels_url)
         self.__merge_commit_sha.update(merge_commit_sha)
         self.__mergeable.update(mergeable)
         self.__mergeable_state.update(mergeable_state)
@@ -306,7 +288,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         self.__milestone.update(milestone)
         self.__number.update(number)
         self.__patch_url.update(patch_url)
-        self.__repository.update(repository)
         self.__review_comment_url.update(review_comment_url)
         self.__review_comments.update(review_comments)
         self.__review_comments_url.update(review_comments_url)
@@ -381,14 +362,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         return self.__closed_at.value
 
     @property
-    def closed_by(self):
-        """
-        :type: :class:`.User`
-        """
-        self._completeLazily(self.__closed_by.needsLazyCompletion)
-        return self.__closed_by.value
-
-    @property
     def comments(self):
         """
         :type: :class:`int`
@@ -445,14 +418,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         return self.__diff_url.value
 
     @property
-    def events_url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__events_url.needsLazyCompletion)
-        return self.__events_url.value
-
-    @property
     def head(self):
         """
         :type: :class:`.PullRequest.End`
@@ -483,22 +448,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__issue_url.needsLazyCompletion)
         return self.__issue_url.value
-
-    @property
-    def labels(self):
-        """
-        :type: :class:`list` of :class:`.Label`
-        """
-        self._completeLazily(self.__labels.needsLazyCompletion)
-        return self.__labels.value
-
-    @property
-    def labels_url(self):
-        """
-        :type: :class:`string`
-        """
-        self._completeLazily(self.__labels_url.needsLazyCompletion)
-        return self.__labels_url.value
 
     @property
     def merge_commit_sha(self):
@@ -571,14 +520,6 @@ class PullRequest(_bgo.UpdatableGithubObject):
         """
         self._completeLazily(self.__patch_url.needsLazyCompletion)
         return self.__patch_url.value
-
-    @property
-    def repository(self):
-        """
-        :type: :class:`.Repository`
-        """
-        self._completeLazily(self.__repository.needsLazyCompletion)
-        return self.__repository.value
 
     @property
     def review_comment_url(self):
@@ -707,6 +648,21 @@ class PullRequest(_bgo.UpdatableGithubObject):
         url = uritemplate.expand("https://api.github.com/repos/{owner}/{repo}/pulls/{number}/merge", number=str(self.number), owner=self.base.repo.owner.login, repo=self.base.repo.name)
         r = self.Session._request("GET", url, accept404=True)
         return _rcv.BoolConverter(None, r.status_code == 204)
+
+    def get_issue(self):
+        """
+        Calls the `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues#get-a-single-issue>`__ end point.
+
+        The following methods also call this end point:
+          * :meth:`.Repository.get_issue`
+
+        :rtype: :class:`.Issue`
+        """
+        import PyGithub.Blocking.Issue
+
+        url = uritemplate.expand(self.issue_url)
+        r = self.Session._request("GET", url)
+        return _rcv.ClassConverter(self.Session, PyGithub.Blocking.Issue.Issue)(None, r.json(), r.headers.get("ETag"))
 
     def merge(self, commit_message=None):
         """

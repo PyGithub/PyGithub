@@ -39,7 +39,6 @@ class User(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.get_public_members`
       * :attr:`.PullRequest.End.user`
       * :attr:`.PullRequest.assignee`
-      * :attr:`.PullRequest.closed_by`
       * :attr:`.PullRequest.merged_by`
       * :attr:`.PullRequest.user`
       * :meth:`.Repository.get_assignees`

@@ -37,8 +37,6 @@ structures:
   - name: MergeResult
     updatable: false
     attributes:
-      - name: documentation_url
-        type: string
       - name: merged
         type: bool
       - name: message
@@ -62,8 +60,6 @@ attributes:
     type: int
   - name: closed_at
     type: datetime
-  - name: closed_by
-    type: User
   - name: comments
     type: int
   - name: comments_url
@@ -78,8 +74,6 @@ attributes:
     type: int
   - name: diff_url
     type: string
-  - name: events_url
-    type: string
   - name: head
     type: PullRequest.End
   - name: html_url
@@ -87,12 +81,6 @@ attributes:
   - name: id
     type: int
   - name: issue_url
-    type: string
-  - name: labels
-    type:
-      container: list
-      content: Label
-  - name: labels_url
     type: string
   - name: merge_commit_sha
     type: string
@@ -112,8 +100,6 @@ attributes:
     type: int
   - name: patch_url
     type: string
-  - name: repository
-    type: Repository
   - name: review_comment_url
     type: string
   - name: review_comments
@@ -186,6 +172,10 @@ methods:
         value: attribute base.repo.name
     return_from: status
     return_type: bool
+  - name: get_issue
+    end_point: GET /repos/:owner/:repo/issues/:number
+    url_template: attribute issue_url
+    return_type: Issue
   - name: merge
     end_point: PUT /repos/:owner/:repo/pulls/:number/merge
     optional_parameters:

@@ -25,6 +25,7 @@ class IssueAttributes(TestCase):
         self.assertEqual(i.labels_url, "http://github.home.jacquev6.net/api/v3/repos/electra/issues/issues/1/labels{/name}")
         self.assertEqual(i.milestone, None)
         self.assertEqual(i.number, 1)
+        self.assertEqual(i.pull_request, None)
         self.assertEqual(i.repository, None)
         self.assertEqual(i.state, "open")
         self.assertEqual(i.title, "Immutable issue")
@@ -47,6 +48,11 @@ class IssueAttributes(TestCase):
         self.assertEqual(i.state, "closed")
         self.assertEqual(i.milestone.number, 1)
 
+    @Enterprise("electra")
+    def testPullRequest(self):
+        i = self.g.get_repo(("electra", "pulls")).get_issue(1)
+        self.assertEqual(i.pull_request.url, "http://github.home.jacquev6.net/api/v3/repos/electra/pulls/pulls/1")
+
 
 class IssueEdit(TestCase):
     @Enterprise("electra")
@@ -64,6 +70,8 @@ class IssueEdit(TestCase):
         self.assertEqual(i.body, None)
         i.edit(body="Body of first issue")
         self.assertEqual(i.body, "Body of first issue")
+        self.assertEqual(i.body_text, "Body of first issue")
+        self.assertEqual(i.body_html, "<p>Body of first issue</p>")
         i.edit(body=PyGithub.Blocking.Reset)
         self.assertEqual(i.body, None)
 
@@ -138,3 +146,12 @@ class IssueLabels(TestCase):
         self.assertEqual([l.name for l in i.get_labels()], [])
         i.set_labels("enhancement", "question")
         self.assertEqual([l.name for l in i.get_labels()], ["enhancement", "question"])
+
+
+class IssuePullRequests(TestCase):
+    @Enterprise("electra")
+    def testCreatePullRequest(self):
+        i = self.g.get_repo(("electra", "pulls")).create_issue("This will be a pull")
+        p = i.create_pull("penelope:issue_to_pull", "master")
+        self.assertEqual(p.number, i.number)
+        i.edit(state="closed")

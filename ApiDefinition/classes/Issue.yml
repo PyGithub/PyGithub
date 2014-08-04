@@ -33,6 +33,8 @@ attributes:
     type: Milestone
   - name: number
     type: int
+  - name: pull_request
+    type: PullRequest
   - name: repository
     type: Repository
   - name: state
@@ -70,7 +72,7 @@ methods:
         reason: Taken from attribute number
       - name: title
         reason: Implemented in Repository.create_pull
-    url_template: attribute pulls_url
+    url_template: attribute url
     post_arguments:
       - name: base
         value: parameter base

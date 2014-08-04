@@ -23,7 +23,6 @@ class Label(_bgo.UpdatableGithubObject):
       * :meth:`.Issue.get_labels`
       * :attr:`.Issue.labels`
       * :meth:`.Milestone.get_labels`
-      * :attr:`.PullRequest.labels`
       * :meth:`.Repository.create_label`
       * :meth:`.Repository.get_label`
       * :meth:`.Repository.get_labels`

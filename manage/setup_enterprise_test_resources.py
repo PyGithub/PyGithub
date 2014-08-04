@@ -82,8 +82,8 @@ electra.add_to_following("poseidon")
 poseidon.add_to_following("zeus")
 
 
-# gElectra.get_repo(("electra", "issues")).delete()
 try:
+    # gElectra.get_repo(("electra", "issues")).delete()
     gElectra.get_repo(("electra", "issues"))
 except PyGithub.Blocking.ObjectNotFoundException:
     time.sleep(5)
@@ -97,3 +97,34 @@ except PyGithub.Blocking.ObjectNotFoundException:
     gPenelope.get_repo(("electra", "issues")).create_issue("Mutable issue")
     gElectra.get_repo(("electra", "issues")).get_issue(1).edit(assignee="electra", labels=["enhancement", "question"])
     gElectra.get_repo(("electra", "issues")).get_issue(2).edit(assignee="electra", labels=["enhancement", "question"], state="closed", milestone=1)
+
+try:
+    # gElectra.get_repo(("electra", "pulls")).delete()
+    # gPenelope.get_repo(("penelope", "pulls")).delete()
+    gElectra.get_repo(("electra", "pulls"))
+    gPenelope.get_repo(("penelope", "pulls"))
+except PyGithub.Blocking.ObjectNotFoundException:
+    time.sleep(5)
+    source = gElectra.get_authenticated_user().create_repo("pulls", auto_init=True)
+    time.sleep(5)
+    source.create_milestone("First milestone")
+    fork = gPenelope.get_authenticated_user().create_fork(("electra", "pulls"))
+    time.sleep(5)
+    source.create_file("conflict.md", "Create conflict.md", "Zm9v")
+    master = fork.get_git_ref("refs/heads/master").object.sha
+    fork.create_git_ref("refs/heads/merged", master)
+    fork.create_git_ref("refs/heads/mergeable", master)
+    fork.create_git_ref("refs/heads/issue_to_pull", master)
+    fork.create_git_ref("refs/heads/conflict", master)
+    fork.create_git_ref("refs/heads/mutable", master)
+    fork.create_file("merged.md", "Create merged.md", "bWVyZ2U=", branch="merged")
+    fork.create_file("mergeable.md", "Create mergeable.md", "bWVyZ2U=", branch="mergeable")
+    fork.create_file("issue_to_pull.md", "Create issue_to_pull.md", "bWVyZ2U=", branch="issue_to_pull")
+    fork.create_file("conflict.md", "Create conflict.md", "YmFy", branch="conflict")
+    fork.create_file("mutable.md", "Create mutable.md", "YmFy", branch="mutable")
+    sourceForPenelope = gPenelope.get_repo(("electra", "pulls"))
+    sourceForPenelope.create_pull("Merged pull", "penelope:merged", "master")
+    sourceForPenelope.create_pull("Mergeable pull", "penelope:mergeable", "master")
+    sourceForPenelope.create_pull("Conflict pull", "penelope:conflict", "master")
+    sourceForPenelope.create_pull("Mutable pull", "penelope:mutable", "master")
+    source.get_pull(1).merge()

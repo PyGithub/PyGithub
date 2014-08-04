@@ -34,7 +34,6 @@ class Repository(_bgo.UpdatableGithubObject):
       * :meth:`.Organization.get_repo`
       * :meth:`.Organization.get_repos`
       * :attr:`.PullRequest.End.repo`
-      * :attr:`.PullRequest.repository`
       * :meth:`.Repository.get_forks`
       * :attr:`.Repository.parent`
       * :attr:`.Repository.source`
@@ -1553,7 +1552,8 @@ class Repository(_bgo.UpdatableGithubObject):
         """
         Calls the `GET /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues#get-a-single-issue>`__ end point.
 
-        This is the only method calling this end point.
+        The following methods also call this end point:
+          * :meth:`.PullRequest.get_issue`
 
         :param number: mandatory :class:`int`
         :rtype: :class:`.Issue`

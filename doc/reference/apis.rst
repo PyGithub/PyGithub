@@ -997,6 +997,7 @@ GET /repos/:owner/:repo/issues/:number
 (`Reference documentation of Github API v3 <http://developer.github.com/v3/issues#get-a-single-issue>`__)
 
 Implemented in PyGithub by:
+  * :meth:`.PullRequest.get_issue`
   * :meth:`.Repository.get_issue`
 
 PATCH /repos/:owner/:repo/issues/:number
