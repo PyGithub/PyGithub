@@ -11,9 +11,10 @@ class GitBlobAttributes(TestCase):
         b = self.g.get_repo(("ghe-user-1", "repo-user-1-1")).get_git_blob("3daf0da6bca38181ab52610dd6af6e92f1a5469d")
         self.assertEqual(b.content, "VGhpcyBpcyBzb21lIGNvbnRlbnQ=\n")
         self.assertEqual(b.encoding, "base64")
-        self.assertIsNone(b.mode)
-        self.assertIsNone(b.path)
+        self.assertEqual(b.mode, None)  # @todoAlpha Find a test case where mode, path and type are not None
+        self.assertEqual(b.path, None)
         self.assertEqual(b.size, 20)
+        self.assertEqual(b.type, None)
 
 
 class GitBlobUpdate(TestCase):
