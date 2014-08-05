@@ -138,7 +138,9 @@ class RepositoryContributors(TestCase):
         self.assertIsInstance(contributors[0], PyGithub.Blocking.User.User)
         self.assertEqual(contributors[0].login, "electra")
         self.assertIsInstance(contributors[1], PyGithub.Blocking.Repository.Repository.AnonymousContributor)
+        self.assertEqual(contributors[1].contributions, 1)
         self.assertEqual(contributors[1].name, "Oedipus")
+        self.assertEqual(contributors[1].type, "Anonymous")
         self.assertIsInstance(contributors[2], PyGithub.Blocking.User.User)
         self.assertEqual(contributors[2].login, "penelope")
         self.assertIsInstance(contributors[3], PyGithub.Blocking.User.User)
@@ -571,6 +573,26 @@ class RepositoryIssues(TestCase):
         r = self.g.get_repo(("electra", "issues"))
         milestones = r.get_milestones(state="open", sort="due_date", direction="asc", per_page=1)
         self.assertEqual([m.title for m in milestones], ["Immutable milestone", "Mutable milestone"])
+
+    @Enterprise("electra")
+    def testCreatePull(self):
+        r = self.g.get_repo(("electra", "pulls"))
+        p = r.create_pull("Created by PyGithub", "penelope:issue_to_pull", "master")
+        self.assertEqual(p.title, "Created by PyGithub")
+        self.assertEqual(p.base.label, "electra:master")
+        self.assertEqual(p.head.label, "penelope:issue_to_pull")
+        self.assertEqual(p.body, None)
+        p.edit(state="closed")
+
+    @Enterprise("electra")
+    def testCreatePull_allParameters(self):
+        r = self.g.get_repo(("electra", "pulls"))
+        p = r.create_pull("Also created by PyGithub", "penelope:issue_to_pull", "master", "Body body body")
+        self.assertEqual(p.title, "Also created by PyGithub")
+        self.assertEqual(p.base.label, "electra:master")
+        self.assertEqual(p.head.label, "penelope:issue_to_pull")
+        self.assertEqual(p.body, "Body body body")
+        p.edit(state="closed")
 
     @Enterprise("electra")
     def testGetPulls(self):

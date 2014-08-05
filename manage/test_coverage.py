@@ -84,7 +84,7 @@ def main():
         families.append(TestFamily("PyGithub.Blocking.tests.topics.all", "Topics tests", None))
 
     if len(sys.argv) == 1 or "--old-classes" in sys.argv or "--all" in sys.argv:
-        families.append(TestFamily("PyGithub.Blocking.tests.old_classes.all", "Old classes tests", ["PyGithub/Blocking/*.py", "PyGithub/Blocking/tests/old_classes/*.py"], ["PyGithub/Blocking/tests/Framework.py", "PyGithub/Blocking/tests/__init__.py", "PyGithub/Blocking/_*.py"]))
+        families.append(TestFamily("PyGithub.Blocking.tests.old_classes.all", "Old classes tests", None))
 
     for f in glob.glob("PyGithub/Blocking/tests/classes/*TestCases.py"):
         n = f[32:-12]
@@ -99,7 +99,6 @@ def main():
             exit(1)
 
     for f in families:
-        # @todoAlpha Once we reach 100% coverage on all families, detect coverage < 100%. Maybe report only if coverage < 100% ?
         f.report()
 
     if len([f for f in families if f.include is not None]) > 1:
