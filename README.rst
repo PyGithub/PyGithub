@@ -14,16 +14,22 @@ Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#mig
 What's new?
 ===========
 
-Version 2.0.0-alpha.3 (Jully 12th, 2014)
+Version 2.0.0-alpha.4 (August 5th, 2014)
 ----------------------------------------
 
-What's now covered by v2:
+It's now quicker to list what's *not* covered by v2! So, this is not covered by v2:
 
-* Everything about Gists except comments. See `the cook-book <http://jacquev6.github.io/PyGithub/v2/cook_book.html#working-with-gists>`__.
-* Interaction between Repositories, Users, Organizations, Teams. Start with `the user guide <http://jacquev6.github.io/PyGithub/v2/user_guide.html#access-to-common-resources>`__.
-* Getting and modifiying repository contents. Start with `Repository.get_contents <http://jacquev6.github.io/PyGithub/v2/reference/classes/Repository.html#PyGithub.Blocking.Repository.Repository.get_contents>`__.
+* comments
+* events, hooks
+* GitHub Enterprise specific APIs
+* search
+* authorizations, applications
+* statuses, deployments, releases
+* stats
 
-Do not heasitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
+You can see what's not covered in details in the `unimplemented.*.yml <https://github.com/jacquev6/PyGithub/tree/develop_v2/ApiDefinition>`__ files, or in the `reference documentation <http://jacquev6.github.io/PyGithub/v2/reference/apis.html>`__.
+
+Do not hesitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
 
 `Version 1.25.0 <https://github.com/jacquev6/PyGithub/issues?milestone=38&state=closed>`_ (May 4th, 2014)
 ---------------------------------------------------------------------------------------------------------
