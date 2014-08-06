@@ -4,6 +4,8 @@
 
 # @todoAlpha In the doc of each method, link to the tests that use it (good examples for the doc)
 
+# The _templates/layout.html file has been copied from a part sphinx/themes/basic/layout.html and modified to include Disqus
+
 import sys
 import os
 import shutil
