@@ -109,7 +109,7 @@ class Dir(_bgo.UpdatableGithubObject):
         The following methods also call this end point:
           * :meth:`.Repository.get_contents`
 
-        :rtype: :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
+        :rtype: :class:`list` of :class:`~.File.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
         import PyGithub.Blocking.File
         import PyGithub.Blocking.Submodule

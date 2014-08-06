@@ -111,7 +111,7 @@ class Repository(_bgo.UpdatableGithubObject):
         @property
         def commit(self):
             """
-            :type: :class:`.Commit`
+            :type: :class:`~.Commit.Commit`
             """
             return self.__commit.value
 
@@ -147,7 +147,7 @@ class Repository(_bgo.UpdatableGithubObject):
         @property
         def content(self):
             """
-            :type: :class:`.File`
+            :type: :class:`~.File.File`
             """
             return self.__content.value
 
@@ -211,7 +211,7 @@ class Repository(_bgo.UpdatableGithubObject):
         @property
         def commit(self):
             """
-            :type: :class:`.Commit`
+            :type: :class:`~.Commit.Commit`
             """
             return self.__commit.value
 
@@ -1323,7 +1323,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param sha: mandatory :class:`string`
-        :rtype: :class:`.Commit`
+        :rtype: :class:`~.Commit.Commit`
         """
         import PyGithub.Blocking.Commit
 
@@ -1345,7 +1345,7 @@ class Repository(_bgo.UpdatableGithubObject):
         :param since: optional :class:`datetime`
         :param until: optional :class:`datetime`
         :param per_page: optional :class:`int`
-        :rtype: :class:`.PaginatedList` of :class:`.Commit`
+        :rtype: :class:`.PaginatedList` of :class:`~.Commit.Commit`
         """
         import PyGithub.Blocking.Commit
 
@@ -1378,7 +1378,7 @@ class Repository(_bgo.UpdatableGithubObject):
 
         :param path: mandatory :class:`string`
         :param ref: optional :class:`string`
-        :rtype: :class:`.File` or :class:`.Submodule` or :class:`.SymLink` or :class:`list` of :class:`.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
+        :rtype: :class:`~.File.File` or :class:`.Submodule` or :class:`.SymLink` or :class:`list` of :class:`~.File.File` or :class:`.Dir` or :class:`.Submodule` or :class:`.SymLink`
         """
         import PyGithub.Blocking.Dir
         import PyGithub.Blocking.File
@@ -1783,7 +1783,7 @@ class Repository(_bgo.UpdatableGithubObject):
         This is the only method calling this end point.
 
         :param ref: optional :class:`string`
-        :rtype: :class:`.File`
+        :rtype: :class:`~.File.File`
         """
         import PyGithub.Blocking.File
 

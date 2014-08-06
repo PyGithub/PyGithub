@@ -615,7 +615,7 @@ class PullRequest(_bgo.UpdatableGithubObject):
 
         This is the only method calling this end point.
 
-        :rtype: :class:`list` of :class:`.Commit`
+        :rtype: :class:`list` of :class:`~.Commit.Commit`
         """
         import PyGithub.Blocking.Commit
 
