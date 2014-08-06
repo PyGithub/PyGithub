@@ -5,7 +5,7 @@
 """
 """
 
-Version = "2.0.0-alpha.3"
+Version = "2.0.0-alpha.4"
 "A string representation of the version of PyGithub as described by `semantic versionning <http://semver.org>`_."
 
 import PyGithub.Blocking._builder
