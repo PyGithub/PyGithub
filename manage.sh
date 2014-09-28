@@ -6,9 +6,9 @@ function publish {
     test
     bump
     readme
-    doc
+    # doc
     push
-    twitt_release
+    # twitt_release
 }
 
 function check {

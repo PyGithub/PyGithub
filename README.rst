@@ -31,6 +31,11 @@ You can see what's not covered in details in the `unimplemented.*.yml <https://g
 
 Do not hesitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
 
+Version 1.25.1 (September 28th, 2014)
+-------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/275>`__ two-factor authentication header, hanks to `tradej <https://github.com/tradej>`__ for the pull request
+
 `Version 1.25.0 <https://github.com/jacquev6/PyGithub/issues?milestone=38&state=closed>`_ (May 4th, 2014)
 ---------------------------------------------------------------------------------------------------------
 
