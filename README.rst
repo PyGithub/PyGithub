@@ -17,7 +17,7 @@ What's new?
 Version 1.25.2 (October 7th, 2014)
 ----------------------------------
 
-* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the API v3 returning `null`s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
+* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the API v3 returning ``null`` in some paginated responses, thanks `erichaase <https://github.com/erichaase>`__ for the bug report
 
 Version 1.25.1 (September 28th, 2014)
 -------------------------------------
