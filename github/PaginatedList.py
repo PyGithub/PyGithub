@@ -174,7 +174,7 @@ class PaginatedList(PaginatedListBase):
 
         content = [
             self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data
+            for element in data if element is not None
         ]
         if self._reversed:
             return content[::-1]
