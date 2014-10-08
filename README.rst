@@ -14,6 +14,16 @@ Here is the `documentation <http://jacquev6.github.io/PyGithub/v2/index.html#mig
 What's new?
 ===========
 
+Version 1.25.2 (October 7th, 2014)
+----------------------------------
+
+* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the API v3 returning `null`s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
+
+Version 1.25.1 (September 28th, 2014)
+-------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/275>`__ two-factor authentication header, thanks to `tradej <https://github.com/tradej>`__ for the pull request
+
 Version 2.0.0-alpha.4 (August 5th, 2014)
 ----------------------------------------
 
@@ -30,11 +40,6 @@ It's now quicker to list what's *not* covered by v2! So, this is not covered by 
 You can see what's not covered in details in the `unimplemented.*.yml <https://github.com/jacquev6/PyGithub/tree/develop_v2/ApiDefinition>`__ files, or in the `reference documentation <http://jacquev6.github.io/PyGithub/v2/reference/apis.html>`__.
 
 Do not hesitate to `open an issue <https://github.com/jacquev6/PyGithub/issues>`_ to discuss anything.
-
-Version 1.25.1 (September 28th, 2014)
--------------------------------------
-
-* `Fix <https://github.com/jacquev6/PyGithub/pull/275>`__ two-factor authentication header, hanks to `tradej <https://github.com/tradej>`__ for the pull request
 
 `Version 1.25.0 <https://github.com/jacquev6/PyGithub/issues?milestone=38&state=closed>`_ (May 4th, 2014)
 ---------------------------------------------------------------------------------------------------------

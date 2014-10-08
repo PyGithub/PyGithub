@@ -6,7 +6,7 @@ function publish {
     test
     bump
     readme
-    # doc
+    doc
     push
     # twitt_release
 }
@@ -74,9 +74,7 @@ function push {
 }
 
 function sdist_upload {
-    cp COPYING* github
     python setup.py sdist upload
-    rm -rf github/COPYING*
 }
 
 function unmerged {
