@@ -296,7 +296,6 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.scheme == self.__scheme or o.scheme == "https" and self.__scheme == "http"  # Issue #80
             assert o.hostname == self.__hostname
             assert o.path.startswith(self.__prefix)
             assert o.port == self.__port
