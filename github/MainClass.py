@@ -54,7 +54,7 @@ class Github(object):
     This is the main class you instanciate to access the Github API v3. Optional parameters allow different authentication methods.
     """
 
-    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE):
+    def __init__(self, login_or_token=None, password=None, base_url=DEFAULT_BASE_URL, timeout=DEFAULT_TIMEOUT, client_id=None, client_secret=None, user_agent='PyGithub/Python', per_page=DEFAULT_PER_PAGE, api_preview=False):
         """
         :param login_or_token: string
         :param password: string
@@ -73,7 +73,8 @@ class Github(object):
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page)
+        assert isinstance(api_preview, (bool))
+        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
