@@ -70,11 +70,11 @@ if __name__ == "__main__":
 
             See http://jacquev6.github.com/PyGithub"""),
         packages=[
-            "github",
-            "github.tests",
+            "PyGithub",
+            "PyGithub.tests",
         ],
         package_data={
-            "github": ["tests/ReplayData/*.txt"]
+            "PyGithub": ["tests/ReplayData/*.txt"]
         },
         classifiers=[
             "Development Status :: 5 - Production/Stable",
