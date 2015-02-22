@@ -11,7 +11,7 @@ Looking for maintainers (February 22nd, 2015)
 =============================================
 
 My current priorities are not compatible with doing a good job maintaining PyGithub, so I'm looking for volunteers to take over.
-Please see #297.
+Please see `#297 <https://github.com/jacquev6/PyGithub/issues/297>`__.
 
 What's new?
 ===========
