@@ -4,7 +4,6 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -24,69 +23,20 @@
 #                                                                              #
 # ##############################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from OAuth import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
+import github.OAuth
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
-from ConditionalRequestUpdate import *
-from Persistence import *
-from ExposeAllAttributes import *
-from BadAttributes import *
-from Equality import *
-from Search import *
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
-from Issue214 import *
-from Issue216 import *
+class OAuth(Framework.BasicTestCase):
+
+    def setUp(self):
+        super(OAuth, self).setUp()
+        self.oauth = github.OAuth.OAuth(self.client_id, self.client_secret)
+
+    def testAuthorizeURL(self):
+        self.assertEqual(self.oauth.authorize_url(),
+            "https://github.com/login/oauth/authorize?client_id=%s" % self.client_id)
+
+    def testGetAccessToken(self):
+        self.assertEqual(self.oauth.get_access_token(12345),
+                         'e72e16c7e42f292c6912e7710c838347ae178b4a')
