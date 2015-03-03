@@ -157,6 +157,7 @@ class PaginatedList(PaginatedListBase):
             self.__nextUrl,
             parameters=self.__nextParams
         )
+        data = data if data else []
 
         self.__nextUrl = None
         if len(data) > 0:
