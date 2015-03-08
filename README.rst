@@ -1,7 +1,7 @@
 This is a Python (2 and 3) library to access the `Github API v3 <http://developer.github.com/v3>`_.
 With it, you can manage `Github <http://github.com>`_ resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
-It covers almost the full API (see "What's missing" bellow), and all methods are tested against the real Github site.
+It covers almost the full API (see "What's missing" below), and all methods are tested against the real Github site.
 
 Should you have any question, any remark, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
 
