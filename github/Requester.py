@@ -123,7 +123,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -164,6 +164,7 @@ class Requester:
         assert user_agent is not None, 'github now requires a user-agent. ' \
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
+        self.__apiPreview = api_preview
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
@@ -234,6 +235,8 @@ class Requester:
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiPreview:
+            requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
