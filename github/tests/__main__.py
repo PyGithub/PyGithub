@@ -35,6 +35,10 @@ def main(argv):
         github.tests.Framework.activateRecordMode()
         argv = [arg for arg in argv if arg != "--record"]
 
+    if "--auth_with_token" in argv:
+        github.tests.Framework.activateTokenAuthMode()
+        argv = [arg for arg in argv if arg != "--auth_with_token"]
+
     unittest.main(module=github.tests.AllTests, argv=argv)
 
 
