@@ -326,9 +326,7 @@ class Requester:
         ## set.
         ## http_proxy: http://user:password@proxy_host:proxy_port
         ##
-        proxy_uri = os.getenv('http_proxy')
-        if proxy_uri is None:
-            proxy_uri = os.getenv('HTTP_PROXY')
+        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)
             conn = self.__connectionClass(url.hostname, url.port, **kwds)
