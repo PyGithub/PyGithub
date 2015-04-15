@@ -40,6 +40,7 @@ import urlparse
 import sys
 import Consts
 import re
+import os
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -319,7 +320,29 @@ class Requester:
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
-        return self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        ##
+        ## Connect through a proxy server with authentication, if http_proxy
+        ## set.
+        ## http_proxy: http://user:password@proxy_host:proxy_port
+        ##
+        try:
+           proxy_uri = os.getenv('http_proxy')
+        except:
+           proxy_uri = None
+
+        if (proxy_uri != None):
+            url = urlparse.urlparse(proxy_uri)
+            conn = self.__connectionClass(url.hostname, url.port, **kwds)
+            headers = {}
+            if url.username and url.password:
+                auth = '%s:%s' % (url.username, url.password)
+                headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
+            conn.set_tunnel(self.__hostname, self.__port, headers)
+        else:
+            conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        return conn
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)
