@@ -24,6 +24,7 @@
 import Framework
 from pprint import pprint
 
+
 class Release(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
@@ -55,7 +56,6 @@ class Release(Framework.TestCase):
 
     def testCreateGitTagAndRelease(self):
         self.repo = self.g.get_user().get_repo("PyGithub")
-        #def create_git_tag_and_release(self, tag, tag_message, release_name, release_message, object, type, tagger=github.GithubObject.NotSet, draft=False, prerelease=False)
         self.release = self.repo.create_git_tag_and_release('v3.0.0', 'tag message', 'release title', 'release message', '5a05a5e58f682d315acd2447c87ac5b4d4fc55e8', 'commit')
         self.assertEqual(self.release.tag_name, "v3.0.0")
         self.assertEqual(self.release.body, "release message")
