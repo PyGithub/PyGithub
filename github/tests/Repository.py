@@ -492,3 +492,30 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+
+class LazyRepository(Framework.TestCase):
+
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.user = self.g.get_user()
+        self.repository_name = '%s/%s' % (self.user.login, "PyGithub")
+
+    def getLazyRepository(self):
+        return self.g.get_repo(self.repository_name, lazy=True)
+
+    def getEagerRepository(self):
+        return self.g.get_repo(self.repository_name, lazy=False)
+
+    def testGetIssues(self):
+        lazy_repo = self.getLazyRepository()
+        issues = lazy_repo.get_issues()
+        eager_repo = self.getEagerRepository()
+        issues2 = eager_repo.get_issues()
+        self.assertListKeyEqual(issues2, id, [x for x in issues])
+
+    def testOwner(self):
+        lazy_repo = self.getLazyRepository()
+        owner = lazy_repo.owner
+        eager_repo = self.getEagerRepository()
+        self.assertEqual(owner, eager_repo.owner)

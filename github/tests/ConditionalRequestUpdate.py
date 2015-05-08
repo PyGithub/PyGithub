@@ -31,14 +31,14 @@ import github
 class ConditionalRequestUpdate(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("akfish/PyGithub")
+        self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
 
     def testDidNotUpdate(self):
-        self.assertFalse(self.repo.update(), msg="The repo is not changes. But update() != False")
+        self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
 
     def testDidUpdate(self):
         self.assertTrue(self.repo.update(), msg="The repo should be changed by now. But update() != True")
 
     def testUpdateObjectWithoutEtag(self):
-        r = self.g.get_repo("jacquev6/PyGithub")
+        r = self.g.get_repo("jacquev6/PyGithub", lazy=False)
         self.assertTrue(r.update())

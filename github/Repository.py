@@ -42,6 +42,7 @@ import github.Label
 import github.GitBlob
 import github.Organization
 import github.GitRef
+import github.GitRelease
 import github.Issue
 import github.Repository
 import github.PullRequest
@@ -742,6 +743,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
+
+    def create_git_tag_and_release(self, tag, tag_message, release_name, release_message, object, type, tagger=github.GithubObject.NotSet, draft=False, prerelease=False):
+        self.create_git_tag(tag, tag_message, object, type, tagger)
+        return self.create_git_release(tag, release_name, release_message, draft, prerelease)
+
+    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+        assert isinstance(tag, (str, unicode)), tag
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(message, (str, unicode)), message
+        assert isinstance(draft, bool), draft
+        assert isinstance(prerelease, bool), prerelease
+        post_parameters = {
+            "tag_name": tag,
+            "name": name,
+            "body": message,
+            "draft": draft,
+            "prerelease": prerelease,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/releases",
+            input=post_parameters
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def create_git_tag(self, tag, message, object, type, tagger=github.GithubObject.NotSet):
         """
@@ -1815,6 +1840,37 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/tags",
             None
         )
+
+    def get_releases(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.GitRelease.GitRelease,
+            self._requester,
+            self.url + "/releases",
+            None
+        )
+
+    def get_release(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
+        :param id: int (release id), str (tag name)
+        :rtype: None or :class:`github.GitRelease.GitRelease`
+        """
+        if isinstance(id, int):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/releases/" + str(id)
+            )
+            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+        elif isinstance(id, str):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/releases/tags/" + id
+            )
+            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """

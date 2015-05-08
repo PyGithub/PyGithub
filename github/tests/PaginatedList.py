@@ -149,3 +149,6 @@ class PaginatedList(Framework.TestCase):
     def testCustomPerPageWithGetPage(self):
         self.g.per_page = 100
         self.assertEqual(len(self.repo.get_issues().get_page(2)), 100)
+
+    def testNoFirstPage(self):
+        self.assertFalse(next(iter(self.list), None))
