@@ -189,13 +189,16 @@ class Github(object):
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
 
-    def get_repo(self, full_name_or_id):
+    def get_repo(self, full_name_or_id, lazy=True):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(full_name_or_id, (str, unicode, int)), full_name_or_id
         url_base = "/repositories/" if isinstance(full_name_or_id, int) else "/repos/"
+        url = "%s%s" % (url_base, full_name_or_id)
+        if lazy:
+            return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             "%s%s" % (url_base, full_name_or_id)
