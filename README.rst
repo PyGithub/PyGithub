@@ -5,7 +5,7 @@ It covers almost the full API (see "What's missing" below), and all methods are 
 
 Should you have any question, any remark, or if you find a bug, or if there is something you can do with the API but not with PyGithub, please `open an issue <https://github.com/jacquev6/PyGithub/issues>`_.
 
-Here is the `references documentation <http://jacquev6.github.io/PyGithub/v1>`_.
+For further details, please refer to the `reference documentation <http://pygithub.readthedocs.org/en/stable/>`_ at ``readthedocs.org``.
 
 Looking for maintainers (February 22nd, 2015)
 =============================================
