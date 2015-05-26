@@ -1046,7 +1046,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._useAttributes(data)
 
     def update_content(self,path, message, content, committer=None ,sha=None, branch='master'):
-        """
+        """ 
         :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents/#update-a-file>`_
         :param path: string 
         :param message: string 
