@@ -1080,7 +1080,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/contents/" + path, 
             input=post_parameters
         )
-        return self.get_file_contents(path, branch)
+        #return self.get_file_contents(path, branch)
 
     def get_archive_link(self, archive_format, ref=github.GithubObject.NotSet):
         """
