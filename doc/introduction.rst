@@ -58,6 +58,7 @@ Projects using PyGithub
 * https://gist.github.com/3433798
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github
+* https://github.com/kokosing/git-gifi - Git and github enhancements to git.
 
 They talk about PyGithub
 ------------------------
