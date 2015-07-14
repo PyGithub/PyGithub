@@ -26,6 +26,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 # ##############################################################################
+import urllib
 
 import github.GithubObject
 import github.PaginatedList
@@ -354,10 +355,12 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(label, (github.Label.Label, str, unicode)), label
         if isinstance(label, github.Label.Label):
-            label = label._identity
+            label_name = label._identity
+        else:
+            label_name = urllib.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/labels/" + label
+            self.url + "/labels/" + label_name
         )
 
     def set_labels(self, *labels):
