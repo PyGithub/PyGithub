@@ -105,14 +105,14 @@ class Issue(Framework.TestCase):
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
 
     def testAddAndRemoveLabelsWithStringArguments(self):
-        bug = "Bug"
         question = "Question"
+        project_management = "Project management"
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
-        self.issue.remove_from_labels(bug)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management", "Question"])
+        self.issue.remove_from_labels(project_management)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
         self.issue.remove_from_labels(question)
-        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Project management"])
-        self.issue.add_to_labels(bug, question)
+        self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug"])
+        self.issue.add_to_labels(project_management, question)
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
 
     def testDeleteAndSetLabels(self):
