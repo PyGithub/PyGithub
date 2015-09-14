@@ -1856,10 +1856,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_release(self, id):
         """
         :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
-        :param id: int (release id), str (tag name or "latest")
+        :param id: int (release id), str (tag name)
         :rtype: None or :class:`github.GitRelease.GitRelease`
         """
-        if isinstance(id, int) or id == "latest":
+        if isinstance(id, int):
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
                 self.url + "/releases/" + str(id)
@@ -1871,6 +1871,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self.url + "/releases/tags/" + id
             )
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
+    def get_latest_release(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/latest"
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """

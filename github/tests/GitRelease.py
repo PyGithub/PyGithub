@@ -55,7 +55,7 @@ class Release(Framework.TestCase):
         self.assertEqual(release_by_id, release_by_tag)
 
     def testGetLatestRelease(self):
-        latest_release = self.g.get_user().get_repo("PyGithub").get_release("latest")
+        latest_release = self.g.get_user().get_repo("PyGithub").get_latest_release()
         self.assertEqual(latest_release.tag_name, "v1.25.2")
 
     def testCreateGitTagAndRelease(self):
