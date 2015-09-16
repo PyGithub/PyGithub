@@ -861,7 +861,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels), labels
+
         post_parameters = {
             "title": title,
         }
@@ -875,7 +876,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
-            post_parameters["labels"] = [element.name for element in labels]
+            post_parameters["labels"] = [element.name if isinstance(element, github.Label.Label) else element for element in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/issues",
