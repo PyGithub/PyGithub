@@ -160,7 +160,7 @@ class PaginatedList(PaginatedListBase):
         data = data if data else []
 
         self.__nextUrl = None
-        if len(data) > 0:
+        if data and len(data) > 0:
             links = self.__parseLinkHeader(headers)
             if self._reversed:
                 if "prev" in links:
@@ -169,14 +169,16 @@ class PaginatedList(PaginatedListBase):
                 self.__nextUrl = links["next"]
         self.__nextParams = None
 
-        if 'items' in data:
+        if data and 'items' in data:
             self.__totalCount = data['total_count']
             data = data["items"]
-
-        content = [
-            self.__contentClass(self.__requester, headers, element, completed=False)
-            for element in data if element is not None
-        ]
+        if data is None:
+          content = []
+        else:
+          content = [
+              self.__contentClass(self.__requester, headers, element, completed=False)
+              for element in data if element is not None
+          ]
         if self._reversed:
             return content[::-1]
         return content
