@@ -66,8 +66,6 @@ class Github(object):
         :param per_page: int
         """
 
-        self.testing = 'Hello World'
-        
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
         assert password is None or isinstance(password, (str, unicode)), password
         assert isinstance(base_url, (str, unicode)), base_url
