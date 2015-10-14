@@ -106,7 +106,7 @@ class PaginatedList(PaginatedListBase):
         some_other_repos = user.get_repos().get_page(3)
     """
 
-    def __init__(self, contentClass, requester, firstUrl, firstParams):
+    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None):
         PaginatedListBase.__init__(self)
         self.__requester = requester
         self.__contentClass = contentClass
@@ -114,6 +114,7 @@ class PaginatedList(PaginatedListBase):
         self.__firstParams = firstParams or ()
         self.__nextUrl = firstUrl
         self.__nextParams = firstParams or {}
+        self.__headers = headers
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
@@ -130,7 +131,8 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
-            parameters=self.__nextParams
+            parameters=self.__nextParams,
+            headers=self.__headers
         )
         links = self.__parseLinkHeader(headers)
         lastUrl = links.get("last")
@@ -155,7 +157,8 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__nextUrl,
-            parameters=self.__nextParams
+            parameters=self.__nextParams,
+            headers=self.__headers
         )
         data = data if data else []
 
@@ -201,7 +204,8 @@ class PaginatedList(PaginatedListBase):
         headers, data = self.__requester.requestJsonAndCheck(
             "GET",
             self.__firstUrl,
-            parameters=params
+            parameters=params,
+            headers=self.__headers
         )
 
         if 'items' in data:
