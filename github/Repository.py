@@ -67,6 +67,7 @@ import github.StatsCommitActivity
 import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
+import github.Stargazer
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -1737,6 +1738,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/stargazers",
             None
+        )
+
+    def get_stargazers_with_dates(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stargazers <http://developer.github.com/v3/activity/starring>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Stargazer.Stargazer`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Stargazer.Stargazer,
+            self._requester,
+            self.url + "/stargazers",
+            None,
+            headers={'Accept': 'application/vnd.github.v3.star+json'}
         )
 
     def get_stats_contributors(self):

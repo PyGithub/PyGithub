@@ -344,6 +344,21 @@ class Repository(Framework.TestCase):
     def testGetStargazers(self):
         self.assertListKeyEqual(self.repo.get_stargazers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca"])
 
+    def testGetStargazersWithDates(self):
+        repo = self.g.get_user("danvk").get_repo("comparea")
+        self.assertListKeyEqual(
+            repo.get_stargazers_with_dates(),
+            lambda stargazer: (stargazer.starred_at, stargazer.user.login),
+            [
+                (datetime.datetime(2014, 8, 13, 19, 22, 5), u'sAlexander'),
+                (datetime.datetime(2014, 10, 15, 5, 2, 30), u'ThomasG77'),
+                (datetime.datetime(2015, 4, 14, 15, 22, 40), u'therusek'),
+                (datetime.datetime(2015, 4, 29, 0, 9, 40), u'athomann'),
+                (datetime.datetime(2015, 4, 29, 14, 26, 46), u'jcapron'),
+                (datetime.datetime(2015, 5, 9, 19, 14, 45), u'JoePython1')
+            ]
+        )
+
     def testGetSubscribers(self):
         self.assertListKeyEqual(self.repo.get_subscribers(), lambda u: u.login, ["jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa"])
 
