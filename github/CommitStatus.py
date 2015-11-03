@@ -31,7 +31,7 @@ import github.NamedUser
 
 class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents CommitStatuss as returned for example by http://developer.github.com/v3/todo
+    This class represents CommitStatuss as returned for example by https://developer.github.com/v3/repos/statuses/
     """
 
     @property
