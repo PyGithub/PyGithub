@@ -1064,8 +1064,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(sha, (str, unicode)), sha 
         assert isinstance(branch, (str, unicode)), branch 
         if atLeastPython3:
-            content = bytearray(content, "utf-8")
-        encoded_content = base64.b64encode(content)
+            # convert str to bytes to base encode it and then convert bytes to str again
+            encoded_content = base64.b64encode(bytearray(content, "utf-8")).decode()
+        else:
+            encoded_content = base64.b64encode(content)
         post_parameters = {
             "message": message,
             "content": encoded_content,
