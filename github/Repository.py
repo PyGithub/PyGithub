@@ -68,7 +68,7 @@ import github.StatsCommitActivity
 import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
-
+from github.ContentFile import atLeastPython3
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
@@ -1063,6 +1063,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             sha = self.get_file_contents(path, branch).sha
         assert isinstance(sha, (str, unicode)), sha 
         assert isinstance(branch, (str, unicode)), branch 
+        if atLeastPython3:
+            content = bytearray(content, "utf-8")
         encoded_content = base64.b64encode(content)
         post_parameters = {
             "message": message,
