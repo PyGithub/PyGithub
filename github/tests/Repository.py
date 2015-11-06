@@ -34,7 +34,6 @@ class Repository(Framework.TestCase):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
-        self.maxDiff = None
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
