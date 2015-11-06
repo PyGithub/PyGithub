@@ -34,6 +34,7 @@ class Repository(Framework.TestCase):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
         self.repo = self.user.get_repo("PyGithub")
+        self.maxDiff = None
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
@@ -492,6 +493,16 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+    def testUpdateContent(self):
+        commit, new_file = self.repo.update_content(
+            path="README.md",
+            message="test-commit",
+            content="foo",
+            sha="63d2ba03e772769dcbed2095e696522569658159"
+        )
+        self.assertEqual(commit.sha, "60c82b8bca17ff3cbd261533e9ce03cf629c372e")
+        self.assertEqual(new_file.sha, "78c0b7dbd88feebd9a6803563f203175517c6917")
 
 
 class LazyRepository(Framework.TestCase):
