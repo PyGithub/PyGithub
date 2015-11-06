@@ -16,6 +16,27 @@ Please see `#297 <https://github.com/jacquev6/PyGithub/issues/297>`__.
 What's new?
 ===========
 
+Version 1.26.0 (November 5th, 2015)
+-----------------------------------
+
+* Added context parameter to Status API
+* Changed InputGitAuthor to reflect that time is an optional parameter
+* Added sort option to get_pulls
+* Added api_preview parameter to Requester class
+* Return empty list instead of None for pagination with no pages
+* Removed URL scheme validation that broke GitHub Enterprise
+* Added "add_membership" call to Teams
+* Added support to lazily load repositories
+* Updated test suite to record with oauth tokens
+* Added support for http_proxy
+* Add support for filter/role options in Organization.get_members()
+* Changed Organization.get_members's filter parameter to _filter
+* Fix escaping so that labels now support whitespaces
+* Updated create_issue to support taking a list of strings for labels
+* Added support for long integers in get_repo
+* Fixed pagination to thread headers between requests
+* Added repo.get_stargazers_with_dates()
+
 Version 1.25.2 (October 7th, 2014)
 ----------------------------------
 
