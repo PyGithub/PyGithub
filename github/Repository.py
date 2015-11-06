@@ -1054,7 +1054,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param sha: string The blob SHA of the file being replaced.
         :param committer: NamedUser or AuthenticatedUser
         :param branch: string master if not stated
-        :rtype: :class:`github.ContentFile.ContentFile`
+        :rtype: tuple containing :class:`github.Commit.Commit` and :class:`github.ContentFile.ContentFile`
         """
         assert isinstance(path, (str, unicode)), path
         assert isinstance(message, (str, unicode)), message
@@ -1084,7 +1084,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/contents/" + path, 
             input=post_parameters
         )
-        #return self.get_file_contents(path, branch)
+        return (
+            github.Commit.Commit(self._requester, headers, data["commit"], completed=True),
+            github.ContentFile.ContentFile(self._requester, headers, data["content"], completed=False)
+        )
 
     def get_archive_link(self, archive_format, ref=github.GithubObject.NotSet):
         """
