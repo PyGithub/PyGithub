@@ -42,6 +42,7 @@ import github.Label
 import github.GitBlob
 import github.Organization
 import github.GitRef
+import github.GitRelease
 import github.Issue
 import github.Repository
 import github.PullRequest
@@ -66,6 +67,7 @@ import github.StatsCommitActivity
 import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
+import github.Stargazer
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -743,6 +745,30 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
+    def create_git_tag_and_release(self, tag, tag_message, release_name, release_message, object, type, tagger=github.GithubObject.NotSet, draft=False, prerelease=False):
+        self.create_git_tag(tag, tag_message, object, type, tagger)
+        return self.create_git_release(tag, release_name, release_message, draft, prerelease)
+
+    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+        assert isinstance(tag, (str, unicode)), tag
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(message, (str, unicode)), message
+        assert isinstance(draft, bool), draft
+        assert isinstance(prerelease, bool), prerelease
+        post_parameters = {
+            "tag_name": tag,
+            "name": name,
+            "body": message,
+            "draft": draft,
+            "prerelease": prerelease,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/releases",
+            input=post_parameters
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
     def create_git_tag(self, tag, message, object, type, tagger=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/git/tags <http://developer.github.com/v3/git/tags>`_
@@ -836,7 +862,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels), labels
+
         post_parameters = {
             "title": title,
         }
@@ -850,7 +877,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
-            post_parameters["labels"] = [element.name for element in labels]
+            post_parameters["labels"] = [element.name if isinstance(element, github.Label.Label) else element for element in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/issues",
@@ -1629,16 +1656,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.PullRequest.PullRequest(self._requester, headers, data, completed=True)
 
-    def get_pulls(self, state=github.GithubObject.NotSet):
+    def get_pulls(self, state=github.GithubObject.NotSet, sort=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/pulls <http://developer.github.com/v3/pulls>`_
         :param state: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
         return github.PaginatedList.PaginatedList(
             github.PullRequest.PullRequest,
             self._requester,
@@ -1708,6 +1738,19 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/stargazers",
             None
+        )
+
+    def get_stargazers_with_dates(self):
+        """
+        :calls: `GET /repos/:owner/:repo/stargazers <http://developer.github.com/v3/activity/starring>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Stargazer.Stargazer`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Stargazer.Stargazer,
+            self._requester,
+            self.url + "/stargazers",
+            None,
+            headers={'Accept': 'application/vnd.github.v3.star+json'}
         )
 
     def get_stats_contributors(self):
@@ -1812,6 +1855,37 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/tags",
             None
         )
+
+    def get_releases(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.GitRelease.GitRelease,
+            self._requester,
+            self.url + "/releases",
+            None
+        )
+
+    def get_release(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
+        :param id: int (release id), str (tag name)
+        :rtype: None or :class:`github.GitRelease.GitRelease`
+        """
+        if isinstance(id, int):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/releases/" + str(id)
+            )
+            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+        elif isinstance(id, str):
+            headers, data = self._requester.requestJsonAndCheck(
+                "GET",
+                self.url + "/releases/tags/" + id
+            )
+            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """

@@ -185,6 +185,7 @@ def ReplayingHttpsConnection(testCase, file, *args, **kwds):
 
 class BasicTestCase(unittest.TestCase):
     recordMode = False
+    tokenAuthMode = False
 
     def setUp(self):
         unittest.TestCase.setUp(self)
@@ -263,8 +264,15 @@ class TestCase(BasicTestCase):
         github.Requester.Requester.setDebugFlag(True)
         github.Requester.Requester.setOnCheckMe(self.getFrameChecker())
 
-        self.g = github.Github(self.login, self.password)
+        if self.tokenAuthMode:
+            self.g = github.Github(self.oauth_token)
+        else:
+            self.g = github.Github(self.login, self.password)
 
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
+
+
+def activateTokenAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
+    BasicTestCase.tokenAuthMode = True

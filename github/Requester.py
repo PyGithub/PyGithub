@@ -40,6 +40,7 @@ import urlparse
 import sys
 import Consts
 import re
+import os
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -123,7 +124,7 @@ class Requester:
 
     #############################################################
 
-    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page):
+    def __init__(self, login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview):
         self._initializeDebugFeature()
 
         if password is not None:
@@ -164,6 +165,7 @@ class Requester:
         assert user_agent is not None, 'github now requires a user-agent. ' \
             'See http://developer.github.com/v3/#user-agent-required'
         self.__userAgent = user_agent
+        self.__apiPreview = api_preview
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
         return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
@@ -234,6 +236,8 @@ class Requester:
 
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
+        if self.__apiPreview:
+            requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
@@ -296,7 +300,6 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.scheme == self.__scheme or o.scheme == "https" and self.__scheme == "http"  # Issue #80
             assert o.hostname == self.__hostname
             assert o.path.startswith(self.__prefix)
             assert o.port == self.__port
@@ -317,7 +320,25 @@ class Requester:
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
-        return self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        ##
+        ## Connect through a proxy server with authentication, if http_proxy
+        ## set.
+        ## http_proxy: http://user:password@proxy_host:proxy_port
+        ##
+        proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
+        if proxy_uri is not None:
+            url = urlparse.urlparse(proxy_uri)
+            conn = self.__connectionClass(url.hostname, url.port, **kwds)
+            headers = {}
+            if url.username and url.password:
+                auth = '%s:%s' % (url.username, url.password)
+                headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
+            conn.set_tunnel(self.__hostname, self.__port, headers)
+        else:
+            conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        return conn
 
     def __log(self, verb, url, requestHeaders, input, status, responseHeaders, output):
         logger = logging.getLogger(__name__)

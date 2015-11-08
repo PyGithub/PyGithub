@@ -30,6 +30,7 @@
 /MANIFEST
 /PyGithub.egg-info/
 /.coverage
+/.idea
 /developer.github.com/
 /gh-pages/
 /doc/doctrees/

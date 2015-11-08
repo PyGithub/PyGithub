@@ -30,6 +30,8 @@ If you add a new test, for example ``Issue139.testCompletion``, you must add an 
 	password = "my_password"
 	oauth_token = "my_token"  # Can be left empty if not used
 
+If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail. You can use ``python -m github.tests Issue139.testCompletion --record --auth_with_token`` to use the oauth_token when recording a unit test interaction.
+
 Coding conventions
 ~~~~~~~~~~~~~~~~~~
 

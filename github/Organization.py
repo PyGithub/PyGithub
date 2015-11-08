@@ -469,16 +469,29 @@ class Organization(github.GithubObject.CompletableGithubObject):
             url_parameters
         )
 
-    def get_members(self):
+    def get_members(self, filter_=github.GithubObject.NotSet,
+                    role=github.GithubObject.NotSet):
         """
         :calls: `GET /orgs/:org/members <http://developer.github.com/v3/orgs/members>`_
+        :param filter_: string
+        :param role: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
+        assert (filter_ is github.GithubObject.NotSet or
+                isinstance(filter_, (str, unicode))), filter_
+        assert (role is github.GithubObject.NotSet or
+                isinstance(role, (str, unicode))), role
+
+        url_parameters = {}
+        if filter_ is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter_
+        if role is not github.GithubObject.NotSet:
+            url_parameters["role"] = role
         return github.PaginatedList.PaginatedList(
             github.NamedUser.NamedUser,
             self._requester,
             self.url + "/members",
-            None
+            url_parameters
         )
 
     def get_public_members(self):

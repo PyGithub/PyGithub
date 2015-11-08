@@ -2,8 +2,6 @@
 
 # ########################## Copyrights and license ############################
 #                                                                              #
-# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
-# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -23,24 +21,15 @@
 #                                                                              #
 # ##############################################################################
 
-import sys
-import unittest
-
-import github.tests.Framework
-import github.tests.AllTests
+import Framework
 
 
-def main(argv):
-    if "--record" in argv:
-        github.tests.Framework.activateRecordMode()
-        argv = [arg for arg in argv if arg != "--record"]
+# Replay data forged by adding nulls to PaginatedList.setUp.txt and PaginatedList.testIteration.txt
+class Issue278(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
+        self.list = self.repo.get_issues()
 
-    if "--auth_with_token" in argv:
-        github.tests.Framework.activateTokenAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_token"]
-
-    unittest.main(module=github.tests.AllTests, argv=argv)
-
-
-if __name__ == "__main__":
-    main(sys.argv)
+    def testIteration(self):
+        self.assertEqual(len(list(self.list)), 333)

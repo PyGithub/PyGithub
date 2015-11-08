@@ -23,12 +23,14 @@
 #                                                                              #
 # ##############################################################################
 
+import github.GithubObject
+
 
 class InputGitAuthor(object):
     """
     """
 
-    def __init__(self, name, email, date):
+    def __init__(self, name, email, date=github.GithubObject.NotSet):
         """
         :param name: string
         :param email: string
@@ -37,15 +39,18 @@ class InputGitAuthor(object):
 
         assert isinstance(name, (str, unicode)), name
         assert isinstance(email, (str, unicode)), email
-        assert isinstance(date, (str, unicode)), date  # @todo Datetime?
+        assert date is github.GithubObject.NotSet or isinstance(date, (str, unicode)), date  # @todo Datetime?
+
         self.__name = name
         self.__email = email
         self.__date = date
 
     @property
     def _identity(self):
-        return {
+        identity = {
             "name": self.__name,
             "email": self.__email,
-            "date": self.__date,
         }
+        if self.__date is not github.GithubObject.NotSet:
+            identity["date"] = self.__date
+        return identity

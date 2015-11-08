@@ -109,6 +109,12 @@ class Repository(Framework.TestCase):
         issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question])
         self.assertEqual(issue.number, 30)
 
+    def testCreateIssueWithAllArgumentsStringLabel(self):
+        user = self.g.get_user("jacquev6")
+        milestone = self.repo.get_milestone(2)
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ['Question'])
+        self.assertEqual(issue.number, 30)
+
     def testCreateLabel(self):
         label = self.repo.create_label("Label with silly name % * + created by PyGithub", "00ff00")
         self.assertEqual(label.color, "00ff00")
@@ -338,6 +344,21 @@ class Repository(Framework.TestCase):
     def testGetStargazers(self):
         self.assertListKeyEqual(self.repo.get_stargazers(), lambda u: u.login, ["Stals", "att14", "jardon-u", "huxley", "mikofski", "L42y", "fanzeyi", "abersager", "waylan", "adericbourg", "tallforasmurf", "pvicente", "roskakori", "michaelpedersen", "stefanfoulis", "equus12", "JuRogn", "joshmoore", "jsilter", "dasapich", "ritratt", "hcilab", "vxnick", "pmuilu", "herlo", "malexw", "ahmetvurgun", "PengGu", "cosmin", "Swop", "kennethreitz", "bryandyck", "jason2506", "zsiciarz", "waawal", "gregorynicholas", "sente", "richmiller55", "thouis", "mazubieta", "michaelhood", "engie", "jtriley", "oangeor", "coryking", "noddi", "alejo8591", "omab", "Carreau", "bilderbuchi", "schwa", "rlerallut", "PengHub", "zoek1", "xobb1t", "notgary", "hattya", "ZebtinRis", "aaronhall", "youngsterxyf", "ailling", "gregwjacobs", "n0rmrx", "awylie", "firstthumb", "joshbrand", "berndca"])
 
+    def testGetStargazersWithDates(self):
+        repo = self.g.get_user("danvk").get_repo("comparea")
+        self.assertListKeyEqual(
+            repo.get_stargazers_with_dates(),
+            lambda stargazer: (stargazer.starred_at, stargazer.user.login),
+            [
+                (datetime.datetime(2014, 8, 13, 19, 22, 5), u'sAlexander'),
+                (datetime.datetime(2014, 10, 15, 5, 2, 30), u'ThomasG77'),
+                (datetime.datetime(2015, 4, 14, 15, 22, 40), u'therusek'),
+                (datetime.datetime(2015, 4, 29, 0, 9, 40), u'athomann'),
+                (datetime.datetime(2015, 4, 29, 14, 26, 46), u'jcapron'),
+                (datetime.datetime(2015, 5, 9, 19, 14, 45), u'JoePython1')
+            ]
+        )
+
     def testGetSubscribers(self):
         self.assertListKeyEqual(self.repo.get_subscribers(), lambda u: u.login, ["jacquev6", "equus12", "bilderbuchi", "hcilab", "hattya", "firstthumb", "gregwjacobs", "sagarsane", "liang456", "berndca", "Lyloa"])
 
@@ -492,3 +513,30 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+
+class LazyRepository(Framework.TestCase):
+
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.user = self.g.get_user()
+        self.repository_name = '%s/%s' % (self.user.login, "PyGithub")
+
+    def getLazyRepository(self):
+        return self.g.get_repo(self.repository_name, lazy=True)
+
+    def getEagerRepository(self):
+        return self.g.get_repo(self.repository_name, lazy=False)
+
+    def testGetIssues(self):
+        lazy_repo = self.getLazyRepository()
+        issues = lazy_repo.get_issues()
+        eager_repo = self.getEagerRepository()
+        issues2 = eager_repo.get_issues()
+        self.assertListKeyEqual(issues2, id, [x for x in issues])
+
+    def testOwner(self):
+        lazy_repo = self.getLazyRepository()
+        owner = lazy_repo.owner
+        eager_repo = self.getEagerRepository()
+        self.assertEqual(owner, eager_repo.owner)

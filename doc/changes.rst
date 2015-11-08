@@ -4,6 +4,16 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.25.2 (October 7th, 2014)
+----------------------------------
+
+* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the GitHub API v3 returning `null`s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
+
+Version 1.25.1 (September 28th, 2014)
+-------------------------------------
+
+* `Fix <https://github.com/jacquev6/PyGithub/pull/275>`__ two-factor authentication header, thanks to `tradej <https://github.com/tradej>`__ for the pull request
+
 `Version 1.25.0 <https://github.com/jacquev6/PyGithub/issues?milestone=38&state=closed>`_ (May 4th, 2014)
 ---------------------------------------------------------------------------------------------------------
 

@@ -2,9 +2,16 @@
 
 # ########################## Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
+# Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
+# Copyright 2013 AKFish <akfish@gmail.com>                                     #
+# Copyright 2013 Adrian Petrescu <adrian.petrescu@maluuba.com>                 #
+# Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2015 Dan Vanderkam <danvdk@gmail.com>                              #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -23,24 +30,35 @@
 #                                                                              #
 # ##############################################################################
 
-import sys
-import unittest
-
-import github.tests.Framework
-import github.tests.AllTests
+import github
 
 
-def main(argv):
-    if "--record" in argv:
-        github.tests.Framework.activateRecordMode()
-        argv = [arg for arg in argv if arg != "--record"]
+class Stargazer(github.GithubObject.NonCompletableGithubObject):
+    """
+    This class represents Stargazers with the date of starring as returned by
+    https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps
+    """
+    @property
+    def starred_at(self):
+        """
+        :type: datetime.datetime
+        """
+        return self._starred_at.value
 
-    if "--auth_with_token" in argv:
-        github.tests.Framework.activateTokenAuthMode()
-        argv = [arg for arg in argv if arg != "--auth_with_token"]
+    @property
+    def user(self):
+        """
+        :type: :class:`github.NamedUser`
+        """
+        return self._user.value
 
-    unittest.main(module=github.tests.AllTests, argv=argv)
+    def _initAttributes(self):
+        self._starred_at = github.GithubObject.NotSet
+        self._user = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
 
-
-if __name__ == "__main__":
-    main(sys.argv)
+    def _useAttributes(self, attributes):
+        if 'starred_at' in attributes:
+            self._starred_at = self._makeDatetimeAttribute(attributes['starred_at'])
+        if 'user' in attributes:
+            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes['user'])

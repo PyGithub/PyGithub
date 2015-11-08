@@ -39,15 +39,16 @@ See files COPYING and COPYING.LESSER, as requested by `GNU <http://www.gnu.org/l
 What next?
 ----------
 
-You need to use a Github API and wonder which class implements it? `Reference of APIs <apis.html>`__
+You need to use a Github API and wonder which class implements it? [`Reference of APIs`](http://jacquev6.net/PyGithub/v1/apis.html) __
 
-You want all the details about PyGithub classes? `Reference of classes <github_objects.html>`__
+You want all the details about PyGithub classes? [`Reference of classes`](http://jacquev6.net/PyGithub/v1/github_objects.html) __
 
 Projects using PyGithub
 -----------------------
 
 (`Open an issue <https://github.com/jacquev6/PyGithub/issues>`__ if you want to be listed here, I'll be glad to add your project)
 
+* `Github-iCalendar <http://danielpocock.com/github-issues-as-an-icalendar-feed>`__ returns all of your Github issues and pull requests as a list of tasks / VTODO items in iCalendar format.
 * `DevAssistant <http://devassistant.org>`_
 * `Upverter <https://upverter.com>`__ is a web-based schematic capture and PCB layout tool for people who design electronics. Designers can attach a Github project to an Upverter project.
 * `Notifico <http://n.tkte.ch>`__ receives messages (such as commits and issues) from services and scripts and delivers them to IRC channels. It can import/sync from Github.
@@ -57,6 +58,7 @@ Projects using PyGithub
 * https://gist.github.com/3433798
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github
+* https://github.com/kokosing/git-gifi - Git and github enhancements to git.
 
 They talk about PyGithub
 ------------------------

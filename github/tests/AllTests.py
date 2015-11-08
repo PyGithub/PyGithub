@@ -40,6 +40,7 @@ from GitBlob import *
 from GitCommit import *
 from Github_ import *
 from GitRef import *
+from GitRelease import *
 from GitTag import *
 from GitTree import *
 from Hook import *
@@ -90,3 +91,4 @@ from Issue158 import *
 from Issue174 import *
 from Issue214 import *
 from Issue216 import *
+from Issue278 import *

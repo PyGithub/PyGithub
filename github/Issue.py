@@ -27,6 +27,7 @@
 #                                                                              #
 # ##############################################################################
 
+import urllib
 import github.GithubObject
 import github.PaginatedList
 
@@ -355,6 +356,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert isinstance(label, (github.Label.Label, str, unicode)), label
         if isinstance(label, github.Label.Label):
             label = label._identity
+        else:
+            label = urllib.quote(label)
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/labels/" + label
