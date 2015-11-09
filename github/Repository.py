@@ -11,6 +11,7 @@
 # Copyright 2013 Mark Roddy <markroddy@gmail.com>                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2015 Jannis Gebauer <ja.geb@me.com>                                #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
 #                                                                              #
@@ -1431,7 +1432,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def get_issues(self, milestone=github.GithubObject.NotSet, state=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, mentioned=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet):
+    def get_issues(self, milestone=github.GithubObject.NotSet, state=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, mentioned=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, sort=github.GithubObject.NotSet, direction=github.GithubObject.NotSet, since=github.GithubObject.NotSet, creator=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/issues <http://developer.github.com/v3/issues>`_
         :param milestone: :class:`github.Milestone.Milestone` or "none" or "*"
@@ -1442,6 +1443,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param sort: string
         :param direction: string
         :param since: datetime.datetime
+        :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
         assert milestone is github.GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(milestone, github.Milestone.Milestone), milestone
@@ -1452,6 +1454,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
         assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert creator is github.GithubObject.NotSet or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, (str, unicode)), creator
         url_parameters = dict()
         if milestone is not github.GithubObject.NotSet:
             if isinstance(milestone, str):
@@ -1475,6 +1478,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["direction"] = direction
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if creator is not github.GithubObject.NotSet:
+            if isinstance(creator, str):
+                url_parameters["creator"] = creator
+            else:
+                url_parameters["creator"] = creator._identity
         return github.PaginatedList.PaginatedList(
             github.Issue.Issue,
             self._requester,
