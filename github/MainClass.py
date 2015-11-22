@@ -42,6 +42,7 @@ import GitignoreTemplate
 import Status
 import StatusMessage
 import RateLimit
+import Event
 
 
 DEFAULT_BASE_URL = "https://api.github.com"
@@ -246,6 +247,24 @@ class Github(object):
             "/gists/public",
             None
         )
+
+    def get_events(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /events <http://developer.github.com/v3/events>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Event.Event`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Event.Event,
+            self.__requester,
+            "/events",
+            url_parameters
+        )
+
 
     def legacy_search_repos(self, keyword, language=github.GithubObject.NotSet):
         """
