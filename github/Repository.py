@@ -1783,7 +1783,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Release.Release(self._requester, headers, data, completed=True)
 
-
     def get_release_by_tag(self, name):
         """
         :calls: `GET /repos/:owner/:repo/releases/:tag <http://developer.github.com/v3/repos/releases>`_
@@ -1795,7 +1794,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/releases/tags/" + str(name)
         )
         return github.Release.Release(self._requester, headers, data, completed=True)
-
 
     def get_stargazers(self):
         """

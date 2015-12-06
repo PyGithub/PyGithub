@@ -131,6 +131,37 @@ class ReleaseAsset(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._uploader)
         return self._uploader.value
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/releases/assets/:id <http://developer.github.com/v3/repos/releases>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url
+        )
+
+    def edit(self, name, label=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:owner/:repo/releases/assets/:id <http://developer.github.com/v3/repos/releases>`_
+        :param name: string
+        :param label: string
+        :rtype: None
+        """
+        assert isinstance(name, (str, unicode)), name
+        assert description is github.GithubObject.NotSet or isinstance(label, (str, unicode)), label 
+        post_parameters = {
+            "name": name,
+        }
+        if label is not github.GithubObject.NotSet:
+            post_parameters["label"] = label
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
         self._browser_download_url = github.GithubObject.NotSet
@@ -138,7 +169,7 @@ class ReleaseAsset(github.GithubObject.CompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._label = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
-        self._content_type= github.GithubObject.NotSet
+        self._content_type = github.GithubObject.NotSet
         self._size = github.GithubObject.NotSet
         self._download_count = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
@@ -170,4 +201,3 @@ class ReleaseAsset(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "uploader" in attributes:  # pragma no branch
             self._uploader = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["uploader"])
-

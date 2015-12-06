@@ -25,6 +25,8 @@
 #                                                                              #
 # ##############################################################################
 
+#import uritemplate
+
 import github.GithubObject
 
 import github.NamedUser
@@ -172,6 +174,63 @@ class Release(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._assets)
         return self._assets.value
 
+    def delete(self):
+        """
+        :calls: `DELETE /repos/:owner/:repo/releases/:id <http://developer.github.com/v3/repos/releases>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url
+        )
+
+    def edit(self, name, message, draft=False, prerelease=False):
+        """
+        :calls: `PATCH /repos/:owner/:repo/releases/:id <http://developer.github.com/v3/repos/releases>`_
+        :param name: string
+        :param body: string
+        :param draft: bool 
+        :param prerelease: bool 
+        :rtype: None
+        """
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(message, (str, unicode)), message
+        assert isinstance(draft, bool), draft
+        assert isinstance(prerelease, bool), prerelease
+        post_parameters = {
+            "tag_name": self.tag_name,
+            "target_commitish": self.target_commitish,
+            "name": name,
+            "body": message,
+            "draft": draft,
+            "prerelease": prerelease,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url,
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
+#    def upload_asset(self, binary_data, name, label=github.GithubObject.NotSet):
+#        """
+#        :calls: `POST https://<upload_url>/repos/:owner/:repo/releases/:id/assets{?name,label} <http://developer.github.com/v3/repos/releases>`_
+#        :param binary_data: string 
+#        :param name: string
+#        :param label: string 
+#        :rtype: :class:`github.ReleaseAsset.ReleaseAsset`
+#        """
+#        assert isinstance(binary_data, str), binary_data 
+#        assert isinstance(name, (str, unicode)), name
+#        assert label is github.GithubObject.NotSet or isinstance(label, (str, unicode)), label
+#
+#        headers, data = self._requester.requestJsonAndCheck(
+#            "POST",
+#            uritemplate.expand(self.upload_url, {'name': name, 'label': label}),
+#            input=binary_data
+#        )
+#        return github.ReleaseAsset.ReleaseAsset(self._requester, headers, data, completed=True)
+
     def _initAttributes(self):
         self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
@@ -226,4 +285,3 @@ class Release(github.GithubObject.CompletableGithubObject):
             self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
         if "assets" in attributes:  # pragma no branch
             self._assets = self._makeListOfClassesAttribute(github.ReleaseAsset.ReleaseAsset, attributes["assets"])
-
