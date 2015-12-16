@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/PyGithub/PyGithub.svg?branch=master
+    :target: https://travis-ci.org/PyGithub/PyGithub
+
 This is a Python (2 and 3) library to access the `Github API v3 <http://developer.github.com/v3>`_.
 With it, you can manage `Github <http://github.com>`_ resources (repositories, user profiles, organizations, etc.) from Python scripts.
 
