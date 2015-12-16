@@ -128,7 +128,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
-        headers, data = self._requester.requestjsonandcheck(
+        headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/memberships/" + member._identity
         )
