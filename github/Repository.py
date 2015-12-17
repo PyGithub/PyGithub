@@ -32,6 +32,7 @@
 
 import urllib
 import datetime
+import base64
 
 import github.GithubObject
 import github.PaginatedList
@@ -1047,6 +1048,43 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def update_content(self,path, message, content, committer=None ,sha=None, branch='master'):
+        """ 
+        :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents/#update-a-file>`_
+        :param path: string 
+        :param message: string 
+        :param content: string The updated file content, Base64 encoded.
+        :param sha: string The blob SHA of the file being replaced.
+        :param committer: NamedUser or AuthenticatedUser
+        :param branch: string master if not stated
+        :rtype: :class:`github.ContentFile.ContentFile`
+        """
+        assert isinstance(path, (str, unicode)), path
+        assert isinstance(message, (str, unicode)), message
+        assert isinstance(content, (str, unicode)), content
+        if sha is None:
+            sha = self.get_file_contents(path, branch).sha
+        assert isinstance(sha, (str, unicode)), sha 
+        assert isinstance(branch, (str, unicode)), branch 
+        encoded_content = base64.b64encode(content)
+        post_parameters = {
+            "message": message,
+            "content": encoded_content,
+            "sha": sha,
+            "branch": branch ,
+        }
+        if committer is not None:
+            post_parameters["committer"] ={
+                "name": committer.name,
+                "email": committer.email
+            }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/contents/" + path, 
+            input=post_parameters
+        )
+        #return self.get_file_contents(path, branch)
+
     def get_archive_link(self, archive_format, ref=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/:archive_format/:ref <http://developer.github.com/v3/repos/contents>`_
@@ -1196,6 +1234,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.ContentFile.ContentFile`
         """
         return self.get_file_contents(path, ref)
+
 
     def get_file_contents(self, path, ref=github.GithubObject.NotSet):
         """
