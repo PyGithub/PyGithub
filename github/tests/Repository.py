@@ -412,6 +412,16 @@ class Repository(Framework.TestCase):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
         self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
 
+    def testCreateFile(self):
+        self.repo.create_file('', '', )
+
+    def testUpdateFile(self):
+        pass
+
+    def testDeleteFile(self):
+        pass
+
+
     def testGetArchiveLink(self):
         self.assertEqual(self.repo.get_archive_link("tarball"), "https://nodeload.github.com/jacquev6/PyGithub/tarball/master")
         self.assertEqual(self.repo.get_archive_link("zipball"), "https://nodeload.github.com/jacquev6/PyGithub/zipball/master")
