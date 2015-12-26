@@ -1249,7 +1249,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(content).decode('utf-8')
+        content = b64encode(content)
         put_parameters = {'message': message, 'content': content}
 
         if branch is not github.GithubObject.NotSet:
@@ -1262,7 +1262,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/contents" + path,
-            parameters=put_parameters
+            input=put_parameters
         )
 
         if headers.get('status') == '201 Created' \
@@ -1307,7 +1307,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(content).decode('utf-8')
+        content = b64encode(content)
         put_parameters = {'message': message, 'content': content,
                           'sha': sha}
 
@@ -1321,7 +1321,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/contents" + path,
-            parameters=put_parameters
+            input=put_parameters
         )
 
         if headers.get('status') == '200 OK' \
@@ -1360,7 +1360,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
             self.url + "/contents/" + path,
-            parameters=url_parameters
+            input=url_parameters
         )
 
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
