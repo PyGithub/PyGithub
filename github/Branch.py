@@ -49,6 +49,27 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
         """
         return self._name.value
 
+    @property
+    def protected(self):
+        """
+        :type: bool
+        """
+        return self._protected.value
+
+    @property
+    def enforcement_level(self):
+        """
+        :type: string
+        """
+        return self._enforcement_level.value
+
+    @property
+    def contexts(self):
+        """
+        :type: list of strings
+        """
+        return self._contexts.value
+
     def _initAttributes(self):
         self._commit = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
@@ -58,3 +79,7 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
             self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
+        if "protection" in attributes:
+            self._protected = self._makeBoolAttribute(attributes["protection"]["enabled"])
+            self._enforcement_level = self._makeStringAttribute(attributes["protection"]["required_status_checks"]["enforcement_level"])
+            self._contexts = self._makeListOfStringsAttribute(attributes["protection"]["required_status_checks"]["contexts"])
