@@ -30,6 +30,7 @@
 #                                                                              #
 # ##############################################################################
 
+import base64
 import urllib
 import datetime
 
@@ -69,6 +70,7 @@ import github.StatsCodeFrequency
 import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
+from github.ContentFile import atLeastPython3
 
 
 class Repository(github.GithubObject.CompletableGithubObject):
@@ -2061,6 +2063,50 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "POST",
             "/hub",
             input=post_parameters
+        )
+
+    def update_content(self, path, message, content, committer=None, sha=None, branch='master'):
+        """
+        :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents/#update-a-file>`_
+        :param path: string
+        :param message: string
+        :param content: string The updated file content, Base64 encoded.
+        :param sha: string The blob SHA of the file being replaced.
+        :param committer: NamedUser or AuthenticatedUser
+        :param branch: string master if not stated
+        :rtype: tuple containing :class:`github.Commit.Commit` and :class:`github.ContentFile.ContentFile`
+        """
+        assert isinstance(path, (str, unicode)), path
+        assert isinstance(message, (str, unicode)), message
+        assert isinstance(content, (str, unicode)), content
+        if sha is None:
+            sha = self.get_file_contents(path, branch).sha
+        assert isinstance(sha, (str, unicode)), sha
+        assert isinstance(branch, (str, unicode)), branch
+        if atLeastPython3:
+            # convert str to bytes to base encode it and then convert bytes to str again
+            encoded_content = base64.b64encode(bytearray(content, "utf-8")).decode()
+        else:
+            encoded_content = base64.b64encode(content)
+        post_parameters = {
+            "message": message,
+            "content": encoded_content,
+            "sha": sha,
+            "branch": branch,
+        }
+        if committer is not None:
+            post_parameters["committer"] = {
+                "name": committer.name,
+                "email": committer.email
+            }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/contents/" + path,
+            input=post_parameters
+        )
+        return (
+            github.Commit.Commit(self._requester, headers, data["commit"], completed=True),
+            github.ContentFile.ContentFile(self._requester, headers, data["content"], completed=False)
         )
 
     @property
