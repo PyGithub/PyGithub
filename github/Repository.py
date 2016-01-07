@@ -1090,6 +1090,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
+    def get_protected_branch(self, branch):
+        """
+        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
+        :param branch: string
+        :rtype: :class:`github.Branch.Branch`
+        """
+        assert isinstance(branch, (str, unicode)), branch
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/branches/" + branch,
+            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+        )
+        return github.Branch.Branch(self._requester, headers, data, completed=True)
+
     def get_branches(self):
         """
         :calls: `GET /repos/:owner/:repo/branches <http://developer.github.com/v3/repos>`_
@@ -2006,6 +2020,38 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return None
         else:
             return github.Commit.Commit(self._requester, headers, data, completed=True)
+
+    def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
+        :param branch: string
+        :param enabled: boolean
+        :param enforcement_level: string
+        :param contexts: list of strings
+        :rtype: None
+        """
+
+        assert isinstance(branch, (str, unicode))
+        assert isinstance(enabled, bool)
+        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
+        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, str) for element in contexts), contexts
+
+        post_parameters = {
+            "protection": {}
+        }
+        if enabled is not github.GithubObject.NotSet:
+            post_parameters["protection"]["enabled"] = enabled
+        if enforcement_level is not github.GithubObject.NotSet:
+            post_parameters["protection"]["required_status_checks"] = {}
+            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
+        if contexts is not github.GithubObject.NotSet:
+            post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/branches/" + branch,
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+        )
 
     def remove_from_collaborators(self, collaborator):
         """

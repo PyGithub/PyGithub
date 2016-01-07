@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # ########################## Copyrights and license ############################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -68,6 +66,102 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28))
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
+
+    def testProtectBranch(self):
+        self.repo.protect_branch("master", True, "everyone", ["test"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertTrue(branch.protected)
+        self.assertEqual(branch.enforcement_level, "everyone")
+        self.assertEqual(branch.contexts, ["test"])
+        # Remove Protection
+        self.repo.protect_branch("master", False)
+
+    def testRemoveBranchProtection(self):
+        self.repo.protect_branch("master", False)
+        branch = self.repo.get_protected_branch("master")
+        self.assertFalse(branch.protected)
+        self.assertEqual(branch.enforcement_level, "off")
+        self.assertEqual(branch.contexts, [])
+
+    def testChangeBranchProtectionContexts(self):
+        self.repo.protect_branch("master", True, "everyone", ["test"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertTrue(branch.protected)
+        self.assertEqual(branch.enforcement_level, "everyone")
+        self.assertEqual(branch.contexts, ["test"])
+        self.repo.protect_branch("master", True, "everyone", ["test", "default"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertEqual(branch.contexts, ["default", "test"])
+        self.repo.protect_branch("master", True, "everyone", ["default"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertEqual(branch.contexts, ["default"])
+        # Remove Protection
+        self.repo.protect_branch("master", False)
+
+    def testRaiseErrorWithOutBranch(self):
+        raised = False
+        try:
+            self.repo.protect_branch("", True, "everyone", ["test"])
+        except github.GithubException, exception:
+            raised = True
+            self.assertEqual(exception.status, 404)
+            self.assertEqual(
+                exception.data, {
+                    u'documentation_url': u'https://developer.github.com/v3/repos/#get-branch',
+                    u'message': u'Branch not found'
+                }
+            )
+            self.assertTrue(raised)
+
+    def testRaiseErrorWithBranchProtectionWithOutContext(self):
+        raised = False
+        try:
+            self.repo.protect_branch("master", True, "everyone")
+        except github.GithubException, exception:
+            raised = True
+            self.assertEqual(exception.status, 422)
+            self.assertEqual(
+                exception.data, {
+                    u'documentation_url': u'https://developer.github.com/v3',
+                    u'message': u'Invalid request.\n\n"contexts" wasn\'t supplied.'
+                }
+            )
+            self.assertTrue(raised)
+
+    def testRaiseErrorWithBranchProtectionWithInvalidEnforcementLevel(self):
+        raised = False
+        try:
+            self.repo.protect_branch("master", True, "", ["test"])
+        except github.GithubException, exception:
+            raised = True
+            self.assertEqual(exception.status, 422)
+            self.assertEqual(
+                exception.data, {
+                    u'documentation_url':
+                    u'https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection',
+                    u'message': u'Validation Failed',
+                    u'errors': [
+                        {
+                            u'field': u'required_status_checks_enforcement_level',
+                            u'message': u"required_status_checks_enforcement_level enforcement level '%s' is not valid",
+                            u'code': u'custom',
+                            u'resource': u'ProtectedBranch'
+                        }
+                    ]
+                }
+            )
+            self.assertTrue(raised)
+
+    def testChangeBranchProtectionEnforcementLevel(self):
+        self.repo.protect_branch("master", True, "everyone", ["test"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertTrue(branch.protected)
+        self.assertEqual(branch.enforcement_level, "everyone")
+        self.repo.protect_branch("master", True, "non_admins", ["test"])
+        branch = self.repo.get_protected_branch("master")
+        self.assertEqual(branch.enforcement_level, "non_admins")
+        # Remove Protection
+        self.repo.protect_branch("master", False)
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
