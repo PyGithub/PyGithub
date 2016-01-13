@@ -10,11 +10,11 @@ Should you have any question, any remark, or if you find a bug, or if there is s
 
 For further details, please refer to the `reference documentation <http://pygithub.readthedocs.org/en/stable/>`_ at ``readthedocs.org``.
 
-Looking for maintainers (February 22nd, 2015)
+Looking for maintainers
 =============================================
 
-My current priorities are not compatible with doing a good job maintaining PyGithub, so I'm looking for volunteers to take over.
-Please see `#297 <https://github.com/jacquev6/PyGithub/issues/297>`__.
+As of February 2015, the original author, jacquev6, is unable to devote much time to maintaining the project.
+If you are using the project at work and have a vested interest in keeping the code healthy, shoot him an email.
 
 What's new?
 ===========
