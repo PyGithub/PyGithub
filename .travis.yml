@@ -11,3 +11,6 @@ sudo: false
 
 script:
   - python setup.py test
+
+notifications:
+  email: false
