@@ -4,7 +4,6 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
@@ -24,71 +23,28 @@
 #                                                                              #
 # ##############################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitCombinedStatus import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitRelease import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
-from ConditionalRequestUpdate import *
-from Persistence import *
-from ExposeAllAttributes import *
-from BadAttributes import *
-from Equality import *
-from Search import *
+import datetime
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
-from Issue214 import *
-from Issue216 import *
-from Issue278 import *
+
+class CommitCombinedStatus(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.combined_status = self.g.get_repo("edx/edx-platform").get_commit("74e70119a23fa3ffb3db19d4590eccfebd72b659").get_combined_status()
+
+    def testAttributes(self):
+        self.assertEqual(self.combined_status.state, "success")
+        self.assertEqual(self.combined_status.statuses[0].url, "https://api.github.com/repos/edx/edx-platform/statuses/74e70119a23fa3ffb3db19d4590eccfebd72b659")
+        self.assertEqual(self.combined_status.statuses[1].id, 390603044)
+        self.assertEqual(self.combined_status.statuses[2].state, "success")
+        self.assertEqual(self.combined_status.statuses[3].description, "Build finished.")
+        self.assertEqual(self.combined_status.statuses[4].target_url, "https://build.testeng.edx.org/job/edx-platform-python-unittests-pr/10504/")
+        self.assertEqual(self.combined_status.statuses[4].created_at, datetime.datetime(2015, 12, 14, 13, 24, 18))
+        self.assertEqual(self.combined_status.statuses[3].updated_at, datetime.datetime(2015, 12, 14, 13, 23, 35))
+        self.assertEqual(self.combined_status.sha, "74e70119a23fa3ffb3db19d4590eccfebd72b659")
+        self.assertEqual(self.combined_status.total_count, 6)
+        self.assertEqual(self.combined_status.repository.id, 10391073)
+        self.assertEqual(self.combined_status.repository.full_name, "edx/edx-platform")
+        self.assertEqual(self.combined_status.commit_url, "https://api.github.com/repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659")
+        self.assertEqual(self.combined_status.url, "https://api.github.com/repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659/status")

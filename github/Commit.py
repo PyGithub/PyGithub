@@ -31,6 +31,7 @@ import github.PaginatedList
 import github.GitCommit
 import github.NamedUser
 import github.CommitStatus
+import github.CommitCombinedStatus
 import github.File
 import github.CommitStats
 import github.CommitComment
@@ -202,6 +203,17 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
             None
         )
+
+    def get_combined_status(self):
+        """
+        :calls: `GET /repos/:owner/:repo/commits/:ref/status/ <http://developer.github.com/v3/repos/statuses>`_
+        :rtype: :class:`github.CommitCombinedStatus.CommitCombinedStatus`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/status"
+        )
+        return github.CommitCombinedStatus.CommitCombinedStatus(self._requester, headers, data, completed=True)
 
     @property
     def _identity(self):
