@@ -73,8 +73,6 @@ class Repository(Framework.TestCase):
         self.assertTrue(branch.protected)
         self.assertEqual(branch.enforcement_level, "everyone")
         self.assertEqual(branch.contexts, ["test"])
-        # Remove Protection
-        self.repo.protect_branch("master", False)
 
     def testRemoveBranchProtection(self):
         self.repo.protect_branch("master", False)
@@ -95,8 +93,6 @@ class Repository(Framework.TestCase):
         self.repo.protect_branch("master", True, "everyone", ["default"])
         branch = self.repo.get_protected_branch("master")
         self.assertEqual(branch.contexts, ["default"])
-        # Remove Protection
-        self.repo.protect_branch("master", False)
 
     def testRaiseErrorWithOutBranch(self):
         raised = False
@@ -160,8 +156,6 @@ class Repository(Framework.TestCase):
         self.repo.protect_branch("master", True, "non_admins", ["test"])
         branch = self.repo.get_protected_branch("master")
         self.assertEqual(branch.enforcement_level, "non_admins")
-        # Remove Protection
-        self.repo.protect_branch("master", False)
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")

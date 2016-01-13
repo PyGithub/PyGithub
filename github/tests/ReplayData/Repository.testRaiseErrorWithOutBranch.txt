@@ -2,7 +2,7 @@ https
 PATCH
 api.github.com
 None
-/repos/khornberg/PyGithub/branches/
+/repos/jacquev6/PyGithub/branches/
 {'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
 {"protection": {"enabled": true, "required_status_checks": {"enforcement_level": "everyone", "contexts": ["test"]}}}
 404
