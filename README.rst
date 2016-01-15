@@ -75,8 +75,6 @@ A lot of things including the following URLs, and every new things published by 
 * ``/notifications/threads/:id/subscription`` (DELETE)
 * ``/notifications/threads/:id/subscription`` (GET)
 * ``/notifications/threads/:id/subscription`` (PUT)
-* ``/repos/:owner/:repo/contents/:path`` (DELETE)
-* ``/repos/:owner/:repo/contents/:path`` (PUT)
 * ``/repos/:owner/:repo/notifications`` (GET)
 * ``/repos/:owner/:repo/notifications`` (PUT)
 * ``/repos/:owner/:repo/releases/:id/assets`` (GET)
