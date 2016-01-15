@@ -1265,14 +1265,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        if headers.get('status') == '201 Created' \
-                and 'content' in data and 'commit' in data:
-            data['content'] = github.ContentFile.ContentFile(
-                self._requester, headers, data, completed=True)
-            data['commit'] = github.Commit.Commit(
-                self._requester, headers, data, completed=True)
-
-        return data
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def update_file(self, path, message, content, sha,
                     branch=github.GithubObject.NotSet,
@@ -1324,14 +1317,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        if headers.get('status') == '200 OK' \
-                and 'content' in data and 'commit' in data:
-            data['content'] = github.ContentFile.ContentFile(
-                self._requester, headers, data, completed=True)
-            data['commit'] = github.Commit.Commit(
-                self._requester, headers, data, completed=True)
-
-        return data
+        return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def delete_file(self, path, message, sha,
                     branch=github.GithubObject.NotSet):
@@ -1359,7 +1345,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents/" + path,
+            self.url + "/contents" + path,
             input=url_parameters
         )
 
