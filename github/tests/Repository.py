@@ -414,7 +414,7 @@ class Repository(Framework.TestCase):
 
     def testCreateFile(self):
         newFile = '/doc/testCreateUpdateDeleteFile.md'
-        content = bytes('Hello world')
+        content = bytes('Hello world'.encode('utf-8'))
         self.repo.create_file(
             path=newFile, message='Create file for testCreateFile', content=content,
             branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
@@ -422,7 +422,7 @@ class Repository(Framework.TestCase):
 
     def testUpdateFile(self):
         updateFile = '/doc/testCreateUpdateDeleteFile.md'
-        content = bytes('Hello World')
+        content = bytes('Hello World'.encode('utf-8'))
         sha = self.repo.get_contents(updateFile).sha
         self.repo.update_file(
             path=updateFile, message='Update file for testUpdateFile', content=content, sha=sha,
