@@ -41,6 +41,7 @@ import sys
 import Consts
 import re
 import os
+import time
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -168,7 +169,16 @@ class Requester:
         self.__apiPreview = api_preview
 
     def requestJsonAndCheck(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
-        return self.__check(*self.requestJson(verb, url, parameters, headers, input, cnx))
+        for i in range(3):
+            try:
+                (status, responseHeaders, output) = self.requestJson(verb, url, parameters, headers, input, cnx)
+                return self.__check(status, responseHeaders, output)
+            except GithubException.RateLimitExceededException:
+                delay = int(responseHeaders['x-ratelimit-reset']) - int(time.time())
+                logger = logging.getLogger(__name__)
+                logger.warning("rate limit reached, sleeping for %d seconds" % delay)
+                time.sleep(delay+1)
+        raise # couldn't get an answer after 3 attempts
 
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
