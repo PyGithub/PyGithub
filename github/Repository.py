@@ -746,11 +746,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRef.GitRef(self._requester, headers, data, completed=True)
 
-    def create_git_tag_and_release(self, tag, tag_message, release_name, release_message, object, type, tagger=github.GithubObject.NotSet, draft=False, prerelease=False):
+    def create_git_tag_and_release(self, tag, tag_message, release_name, release_message, object, type, tagger=github.GithubObject.NotSet, target_commitish=None, draft=False, prerelease=False):
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
-    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+    def create_git_release(self, tag, name, message, target_commitish=None, draft=False, prerelease=False):
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
@@ -763,6 +763,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
+        if target_commitish:
+            post_parameters["target_commitish"] = target_commitish
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/releases",
