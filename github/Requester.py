@@ -41,6 +41,7 @@ import sys
 import Consts
 import re
 import os
+import requests
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -263,24 +264,31 @@ class Requester:
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
-        if cnx is None:
-            cnx = self.__createConnection()
-        else:
-            assert cnx == "status"
-            cnx = self.__httpsConnectionClass("status.github.com", 443)
-        cnx.request(
-            verb,
-            url,
-            input,
-            requestHeaders
-        )
-        response = cnx.getresponse()
 
-        status = response.status
-        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
-        output = response.read()
+        r = getattr(requests,verb.lower())("https://api.github.com" + url, headers=requestHeaders, data=input)
 
-        cnx.close()
+        status = r.status_code
+        output = r.text
+        responseHeaders = r.headers
+
+        # if cnx is None:
+        #     cnx = self.__createConnection()
+        # else:
+        #     assert cnx == "status"
+        #     cnx = self.__httpsConnectionClass("status.github.com", 443)
+        # cnx.request(
+        #     verb,
+        #     url,
+        #     input,
+        #     requestHeaders
+        # )
+        # response = cnx.getresponse()
+
+        # status = response.status
+        # responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
+        # output = response.read()
+
+        # cnx.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
