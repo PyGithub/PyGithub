@@ -33,7 +33,6 @@
 # ##############################################################################
 
 import logging
-import httplib
 import base64
 import urllib
 import urlparse
@@ -53,10 +52,40 @@ else:  # pragma no cover (Covered by all tests with Python 2.5)
 
 import GithubException
 
+class RequestsResponse:
+    # mimic the httplib response object
+    def __init__(self, r):
+        self.status = r.status_code
+        self.headers = r.headers
+        self.text = r.text
+
+    def getheaders(self):
+        return self.headers.iteritems()
+
+    def read(self):
+        return self.text
+
+class RequestsConnectionClass:
+    # mimic the httplib connection object
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        r = getattr(requests,self.verb.lower())("https://api.github.com" + self.url, headers=self.headers, data=self.input)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
 
 class Requester:
-    __httpConnectionClass = httplib.HTTPConnection
-    __httpsConnectionClass = httplib.HTTPSConnection
+    __httpConnectionClass = RequestsConnectionClass
+    __httpsConnectionClass = RequestsConnectionClass
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -65,8 +94,8 @@ class Requester:
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = httplib.HTTPConnection
-        cls.__httpsConnectionClass = httplib.HTTPSConnection
+        cls.__httpConnectionClass = RequestsConnectionClass
+        cls.__httpsConnectionClass = RequestsConnectionClass
 
     #############################################################
     # For Debug
@@ -265,30 +294,30 @@ class Requester:
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
 
-        r = getattr(requests,verb.lower())("https://api.github.com" + url, headers=requestHeaders, data=input)
+        # r = getattr(requests,verb.lower())("https://api.github.com" + url, headers=requestHeaders, data=input)
 
-        status = r.status_code
-        output = r.text
-        responseHeaders = r.headers
+        # status = r.status_code
+        # output = r.text
+        # responseHeaders = r.headers
 
-        # if cnx is None:
-        #     cnx = self.__createConnection()
-        # else:
-        #     assert cnx == "status"
-        #     cnx = self.__httpsConnectionClass("status.github.com", 443)
-        # cnx.request(
-        #     verb,
-        #     url,
-        #     input,
-        #     requestHeaders
-        # )
-        # response = cnx.getresponse()
+        if cnx is None:
+            cnx = self.__createConnection()
+        else:
+            assert cnx == "status"
+            cnx = self.__httpsConnectionClass("status.github.com", 443)
+        cnx.request(
+            verb,
+            url,
+            input,
+            requestHeaders
+        )
+        response = cnx.getresponse()
 
-        # status = response.status
-        # responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
-        # output = response.read()
+        status = response.status
+        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
+        output = response.read()
 
-        # cnx.close()
+        cnx.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
