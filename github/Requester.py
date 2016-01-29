@@ -293,13 +293,6 @@ class Requester:
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
-
-        # r = getattr(requests,verb.lower())("https://api.github.com" + url, headers=requestHeaders, data=input)
-
-        # status = r.status_code
-        # output = r.text
-        # responseHeaders = r.headers
-
         if cnx is None:
             cnx = self.__createConnection()
         else:
