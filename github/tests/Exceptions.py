@@ -25,6 +25,7 @@
 
 import github
 import sys
+import pickle
 
 import Framework
 
@@ -113,6 +114,10 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             else:
                 self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
         self.assertTrue(raised)
+
+
+    def testExceptionPickling(self):
+        pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
 
 
 class SpecificExceptions(Framework.TestCase):

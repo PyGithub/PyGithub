@@ -36,6 +36,7 @@ class GithubException(Exception):
         Exception.__init__(self)
         self.__status = status
         self.__data = data
+        self.args = [status, data]
 
     @property
     def status(self):
