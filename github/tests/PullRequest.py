@@ -30,7 +30,7 @@ import datetime
 
 class PullRequest(Framework.TestCase):
     def setUp(self):
-        Framework.TestCase.setUp(self)
+        Framework.TestCase.setUp(self, True)
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.pull = self.repo.get_pull(31)
 
@@ -103,11 +103,11 @@ class PullRequest(Framework.TestCase):
 
     def testMerge(self):
         self.assertFalse(self.pull.is_merged())
-        status = self.pull.merge()
+        status = self.pull.merge(squash=True)
         self.assertEqual(status.sha, "688208b1a5a074871d0e9376119556897439697d")
         self.assertTrue(status.merged)
         self.assertEqual(status.message, "Pull Request successfully merged")
         self.assertTrue(self.pull.is_merged())
 
     def testMergeWithCommitMessage(self):
-        self.g.get_user().get_repo("PyGithub").get_pull(39).merge("Custom commit message created by PyGithub")
+        self.g.get_user().get_repo("PyGithub").get_pull(39).merge("Custom commit message created by PyGithub", True)

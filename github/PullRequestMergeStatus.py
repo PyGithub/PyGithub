@@ -54,10 +54,18 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
         """
         return self._sha.value
 
+    @property
+    def squash(self):
+        """
+        :type: bool
+        """
+        return self._squash.value
+
     def _initAttributes(self):
         self._merged = github.GithubObject.NotSet
         self._message = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
+        self._squash = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "merged" in attributes:  # pragma no branch
@@ -66,3 +74,5 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
             self._message = self._makeStringAttribute(attributes["message"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
+        if "squash" in attributes:  # pragma no branch
+            self._squash = self._makeBoolAttribute(attributes["squash"])
