@@ -51,6 +51,7 @@ else:  # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
 
 import GithubException
+from Utils import should_bypass_proxies
 
 
 class Requester:
@@ -327,7 +328,7 @@ class Requester:
         ## http_proxy: http://user:password@proxy_host:proxy_port
         ##
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
-        if proxy_uri is not None:
+        if not should_bypass_proxies(self.__base_url) and proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)
             conn = self.__connectionClass(url.hostname, url.port, **kwds)
             headers = {}
