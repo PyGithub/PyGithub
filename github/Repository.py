@@ -29,7 +29,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 # ##############################################################################
-
+import sys
 import urllib
 import datetime
 from base64 import b64encode
@@ -71,6 +71,8 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
+atLeastPython26 = sys.hexversion >= 0x02060000
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
@@ -1225,7 +1227,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#create-a-file>`_
         :param path: string, (required), path of the file in the repository
         :param message: string, (required), commit message
-        :param content: bytes, (required), the actual data in the file
+        :param content: string, (required), the actual data in the file
         :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
         :param committer: dict, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
         :param author: dict, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
@@ -1237,8 +1239,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, bytes),                         \
-            'content must be a byte object'
+        assert isinstance(content, (str, unicode)),                \
+            'content must be a str/unicode object'
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
             'branch must be a str/unicode object'
@@ -1249,7 +1251,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(content)
+        if atLeastPython3:
+            content = b64encode(content.encode('utf-8')).decode('utf-8')
+        else:
+            content = b64encode(content)
         put_parameters = {'message': message, 'content': content}
 
         if branch is not github.GithubObject.NotSet:
@@ -1287,8 +1292,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, bytes),                         \
-            'content must be a byte object'
+        assert isinstance(content, (str, unicode)),                \
+            'content must be a str/unicode object'
         assert isinstance(sha, (str, unicode)),                    \
             'sha must be a str/unicode object'
         assert branch is github.GithubObject.NotSet                \
@@ -1301,7 +1306,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             or isinstance(committer, github.InputGitAuthor),       \
             'committer must be a github.InputGitAuthor object'
 
-        content = b64encode(content)
+        if atLeastPython3:
+            content = b64encode(content.encode('utf-8')).decode('utf-8')
+        else:
+            content = b64encode(content)
+
         put_parameters = {'message': message, 'content': content,
                           'sha': sha}
 
