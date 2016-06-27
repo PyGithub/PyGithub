@@ -1270,8 +1270,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        return {'content': github.ContentFile.ContentFile(self._requester, headers, data['content'], completed=True),
-                'commit': github.Commit.Commit(self._requester, headers, data['commit'], completed=True)}
+        return {'content': github.ContentFile.ContentFile(self._requester, headers, data, completed=True),
+                'commit': github.Commit.Commit(self._requester, headers, data, completed=True)}
 
     def update_file(self, path, message, content, sha,
                     branch=github.GithubObject.NotSet,
@@ -1327,8 +1327,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        return {'commit': github.Commit.Commit(self._requester, headers, data['commit'], completed=True),
-                'content': github.ContentFile.ContentFile(self._requester, headers, data['content'], completed=True)}
+        return {'commit': github.Commit.Commit(self._requester, headers, data, completed=True),
+                'content': github.ContentFile.ContentFile(self._requester, headers, data, completed=True)}
 
     def delete_file(self, path, message, sha,
                     branch=github.GithubObject.NotSet):
@@ -1362,7 +1362,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=url_parameters
         )
 
-        return {'commit': github.Commit.Commit(self._requester, headers, data['commit'], completed=True),
+        return {'commit': github.Commit.Commit(self._requester, headers, data, completed=True),
                 'content': github.GithubObject.NotSet}
 
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
