@@ -1270,7 +1270,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        return {'content': github.ContentFile.ContentFile(self._requester, headers['content'], data, completed=True),
+        return {'content': github.ContentFile.ContentFile(self._requester, headers, data['content'], completed=True),
                 'commit': github.Commit.Commit(self._requester, headers, data['commit'], completed=True)}
 
     def update_file(self, path, message, content, sha,
