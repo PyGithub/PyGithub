@@ -82,6 +82,13 @@ class File(github.GithubObject.NonCompletableGithubObject):
         return self._patch.value
 
     @property
+    def previous_filename(self):
+        """
+        :type: string
+        """
+        return self._previous_filename.value
+
+    @property
     def raw_url(self):
         """
         :type: string
@@ -110,6 +117,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
         self._deletions = github.GithubObject.NotSet
         self._filename = github.GithubObject.NotSet
         self._patch = github.GithubObject.NotSet
+        self._previous_filename = github.GithubObject.NotSet
         self._raw_url = github.GithubObject.NotSet
         self._sha = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
@@ -129,6 +137,8 @@ class File(github.GithubObject.NonCompletableGithubObject):
             self._filename = self._makeStringAttribute(attributes["filename"])
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
+        if "previous_filename" in attributes: # pragma no branch
+            self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch
