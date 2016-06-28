@@ -263,6 +263,7 @@ class Requester:
         return status, responseHeaders, output
 
     def __requestRaw(self, cnx, verb, url, requestHeaders, input):
+        original_cnx = cnx
         if cnx is None:
             cnx = self.__createConnection()
         else:
@@ -283,6 +284,9 @@ class Requester:
         cnx.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+
+        if status is 301 and 'location' in responseHeaders:
+            return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
 
         return status, responseHeaders, output
 
