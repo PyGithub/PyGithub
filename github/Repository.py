@@ -1797,7 +1797,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/stats/contributors"
         )
-        if data == {}:
+        if not data:
             return None
         else:
             return [
@@ -1814,7 +1814,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/stats/commit_activity"
         )
-        if data == {}:
+        if not data:
             return None
         else:
             return [
@@ -1831,7 +1831,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/stats/code_frequency"
         )
-        if data == {}:
+        if not data:
             return None
         else:
             return [
@@ -1848,7 +1848,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/stats/participation"
         )
-        if data == {}:
+        if not data:
             return None
         else:
             return github.StatsParticipation.StatsParticipation(self._requester, headers, data, completed=True)
@@ -1862,7 +1862,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/stats/punch_card"
         )
-        if data == {}:
+        if not data:
             return None
         else:
             return github.StatsPunchCard.StatsPunchCard(self._requester, headers, data, completed=True)
