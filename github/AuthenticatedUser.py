@@ -45,6 +45,8 @@ import github.Notification
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents AuthenticatedUsers as returned for example by http://developer.github.com/v3/todo
+    
+    An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
     @property
