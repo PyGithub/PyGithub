@@ -69,6 +69,9 @@ if __name__ == "__main__":
             =======================
 
             See http://jacquev6.github.com/PyGithub"""),
+        install_requires=[
+          "requests==2.9.1"
+        ],
         packages=[
             "github",
             "github.tests",
