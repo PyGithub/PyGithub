@@ -5,7 +5,8 @@
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.github.io/PyGithub/v1/index.html                             #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -39,7 +40,8 @@ def generateLicenseSection(filename):
         line += (79 - len(line)) * " " + "#"
         yield line
     yield "#                                                                              #"
-    yield "# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #"
+    yield "# This file is part of PyGithub.                                               #"
+    yield "# http://pygithub.github.io/PyGithub/v1/index.html                             #"
     yield "#                                                                              #"
     yield "# PyGithub is free software: you can redistribute it and/or modify it under    #"
     yield "# the terms of the GNU Lesser General Public License as published by the Free  #"
