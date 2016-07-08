@@ -69,36 +69,36 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.watchers, 15)
 
     def testProtectBranch(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
+        self.repo.protect_branch("master", True, True, True, ["test"])
         branch = self.repo.get_protected_branch("master")
         self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
+        self.assertEqual(branch.include_admins, True)
         self.assertEqual(branch.contexts, ["test"])
 
     def testRemoveBranchProtection(self):
         self.repo.protect_branch("master", False)
         branch = self.repo.get_protected_branch("master")
         self.assertFalse(branch.protected)
-        self.assertEqual(branch.enforcement_level, "off")
+        self.assertEqual(branch.include_admins, "off")
         self.assertEqual(branch.contexts, [])
 
     def testChangeBranchProtectionContexts(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
+        self.repo.protect_branch("master", True, True, True, ["test"])
         branch = self.repo.get_protected_branch("master")
         self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
+        self.assertEqual(branch.include_admins, True)
         self.assertEqual(branch.contexts, ["test"])
-        self.repo.protect_branch("master", True, "everyone", ["test", "default"])
+        self.repo.protect_branch("master", True, True, True, ["test", "default"])
         branch = self.repo.get_protected_branch("master")
         self.assertEqual(branch.contexts, ["default", "test"])
-        self.repo.protect_branch("master", True, "everyone", ["default"])
+        self.repo.protect_branch("master", True, True, True, ["default"])
         branch = self.repo.get_protected_branch("master")
         self.assertEqual(branch.contexts, ["default"])
 
     def testRaiseErrorWithOutBranch(self):
         raised = False
         try:
-            self.repo.protect_branch("", True, "everyone", ["test"])
+            self.repo.protect_branch("", True, True, True, ["test"])
         except github.GithubException, exception:
             raised = True
             self.assertEqual(exception.status, 404)
@@ -113,7 +113,7 @@ class Repository(Framework.TestCase):
     def testRaiseErrorWithBranchProtectionWithOutContext(self):
         raised = False
         try:
-            self.repo.protect_branch("master", True, "everyone")
+            self.repo.protect_branch("master", True, True, True)
         except github.GithubException, exception:
             raised = True
             self.assertEqual(exception.status, 422)
@@ -128,7 +128,7 @@ class Repository(Framework.TestCase):
     def testRaiseErrorWithBranchProtectionWithInvalidEnforcementLevel(self):
         raised = False
         try:
-            self.repo.protect_branch("master", True, "", ["test"])
+            self.repo.protect_branch("master", True, "", True, ["test"])
         except github.GithubException, exception:
             raised = True
             self.assertEqual(exception.status, 422)
@@ -139,8 +139,8 @@ class Repository(Framework.TestCase):
                     u'message': u'Validation Failed',
                     u'errors': [
                         {
-                            u'field': u'required_status_checks_enforcement_level',
-                            u'message': u"required_status_checks_enforcement_level enforcement level '%s' is not valid",
+                            u'field': u'required_status_checks_include_admins',
+                            u'message': u"required_status_checks_include_admins enforcement level '%s' is not valid",
                             u'code': u'custom',
                             u'resource': u'ProtectedBranch'
                         }
@@ -150,13 +150,13 @@ class Repository(Framework.TestCase):
             self.assertTrue(raised)
 
     def testChangeBranchProtectionEnforcementLevel(self):
-        self.repo.protect_branch("master", True, "everyone", ["test"])
+        self.repo.protect_branch("master", True, True, True, ["test"])
         branch = self.repo.get_protected_branch("master")
         self.assertTrue(branch.protected)
-        self.assertEqual(branch.enforcement_level, "everyone")
-        self.repo.protect_branch("master", True, "non_admins", ["test"])
+        self.assertEqual(branch.include_admins, True)
+        self.repo.protect_branch("master", True, False, True, ["test"])
         branch = self.repo.get_protected_branch("master")
-        self.assertEqual(branch.enforcement_level, "non_admins")
+        self.assertEqual(branch.include_admins, False)
 
     def testEditWithoutArguments(self):
         self.repo.edit("PyGithub")
