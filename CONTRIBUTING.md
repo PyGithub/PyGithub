@@ -16,8 +16,12 @@ If for any reason you are not able to do that, open your issue anyway and a main
 
 ## Pull Requests
 
-Pull Requests should attempt clearly the problem they attempt to solve and how the author went about solving the problem.
-Ideally, changes should be made in logical commits and add tests to improve the project's coverage of the GitHub API.
+Pull Requests should clearly describe two things:
+
+1. The problem they attempt to solve
+2. How the author went about solving the problem
+
+Ideally, changes should be made in logical commits and tests added to improve the project's coverage of the GitHub API.
 
 ## Automated tests
 
@@ -36,7 +40,7 @@ oauth_token = "my_token"  # Can be left empty if not used
 ```
 
 If you use 2 factor authentication on your Github account, tests that require a login/password authentication will fail.
-You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GitHubCredentials.py` when recording a unit test interaction.
+You can use `python -m github.tests Issue139.testCompletion --record --auth_with_token` to use the `oauth_token` field specified in `GithubCredentials.py` when recording a unit test interaction. NB that the `password = ""` (empty string is ok) must still be present in `GithubCredentials.py` to run the tests even when the `--auth_with_token` arg is used.
 
 ## Coding conventions
 
