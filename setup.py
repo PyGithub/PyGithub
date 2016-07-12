@@ -7,7 +7,8 @@
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
-# This file is part of PyGithub. http://jacquev6.github.com/PyGithub/          #
+# This file is part of PyGithub.                                               #
+# http://pygithub.github.io/PyGithub/v1/index.html                             #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         description="Use the full Github API v3",
         author="Vincent Jacques",
         author_email="vincent@vincent-jacques.net",
-        url="http://jacquev6.github.com/PyGithub",
+        url="http://pygithub.github.io/PyGithub/v1/index.html",
         long_description=textwrap.dedent("""\
             (Very short) Tutorial
             =====================
@@ -68,7 +69,7 @@ if __name__ == "__main__":
             Reference documentation
             =======================
 
-            See http://jacquev6.github.com/PyGithub"""),
+            See http://pygithub.github.io/PyGithub/v1/index.html"""),
         packages=[
             "github",
             "github.tests",
