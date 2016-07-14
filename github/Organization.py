@@ -28,6 +28,7 @@
 # ##############################################################################
 
 import datetime
+import warnings
 
 import github.GithubObject
 import github.PaginatedList
@@ -358,22 +359,27 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_team(self, name, repo_names=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
+    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
+        :permission privacy: string
         :param privacy: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, (str, unicode)), name
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
+        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
         assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
         if repo_names is not github.GithubObject.NotSet:
             post_parameters["repo_names"] = [element._identity for element in repo_names]
+        if permission is not github.GithubObject.NotSet:
+            warnings.warn("The permission parameter is deprecated in the GitHub API", DeprecationWarning)
+            post_parameters["permission"] = permission
         if privacy is not github.GithubObject.NotSet:
             post_parameters["privacy"] = privacy
         headers, data = self._requester.requestJsonAndCheck(
