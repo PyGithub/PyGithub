@@ -91,6 +91,14 @@ class Organization(Framework.TestCase):
         self.org.remove_from_public_members(lyloa)
         self.assertFalse(self.org.has_in_public_members(lyloa))
 
+    def testAddMembers(self):
+        lyloa = self.g.get_user("Lyloa")
+        self.assertFalse(self.org.has_in_members(lyloa))
+        self.org.add_to_members(lyloa, role='member')
+        self.assertTrue(self.org.has_in_members(lyloa))
+        self.org.remove_from_members(lyloa)
+        self.assertFalse(self.org.has_in_members(lyloa))
+
     def testGetPublicMembers(self):
         self.assertListKeyEqual(self.org.get_public_members(), lambda u: u.login, ["jacquev6"])
 
