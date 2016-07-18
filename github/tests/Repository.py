@@ -495,11 +495,33 @@ class Repository(Framework.TestCase):
 
     def testGetContents(self):
         self.assertEqual(len(self.repo.get_readme().content), 10212)
-        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md").content), 38121)
+        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md").content), 38121)
 
     def testGetContentsWithRef(self):
         self.assertEqual(len(self.repo.get_readme(ref="refs/heads/topic/ExperimentOnDocumentation").content), 6747)
-        self.assertEqual(len(self.repo.get_contents("doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+        self.assertEqual(len(self.repo.get_contents("/doc/ReferenceOfClasses.md", ref="refs/heads/topic/ExperimentOnDocumentation").content), 43929)
+
+    def testCreateFile(self):
+        newFile = '/doc/testCreateUpdateDeleteFile.md'
+        content = 'Hello world'
+        self.repo.create_file(
+            path=newFile, message='Create file for testCreateFile', content=content,
+            branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
+            author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
+
+    def testUpdateFile(self):
+        updateFile = '/doc/testCreateUpdateDeleteFile.md'
+        content = 'Hello World'
+        sha = self.repo.get_contents(updateFile).sha
+        self.repo.update_file(
+            path=updateFile, message='Update file for testUpdateFile', content=content, sha=sha,
+            branch="master", committer=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"),
+            author=github.InputGitAuthor("Enix Yu", "enix223@163.com", "2016-01-15T16:13:30+12:00"))
+
+    def testDeleteFile(self):
+        deleteFile = '/doc/testCreateUpdateDeleteFile.md'
+        sha = self.repo.get_contents(deleteFile).sha
+        self.repo.delete_file(path=deleteFile, message='Delete file for testDeleteFile', sha=sha, branch="master")
 
     def testGetArchiveLink(self):
         self.assertEqual(self.repo.get_archive_link("tarball"), "https://nodeload.github.com/jacquev6/PyGithub/tarball/master")

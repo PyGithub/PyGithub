@@ -30,9 +30,10 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 # ##############################################################################
-
+import sys
 import urllib
 import datetime
+from base64 import b64encode
 
 import github.GithubObject
 import github.PaginatedList
@@ -71,6 +72,8 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
+atLeastPython26 = sys.hexversion >= 0x02060000
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
@@ -1230,6 +1233,152 @@ class Repository(github.GithubObject.CompletableGithubObject):
             parameters=url_parameters
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
+
+    def create_file(self, path, message, content,
+                    branch=github.GithubObject.NotSet,
+                    committer=github.GithubObject.NotSet,
+                    author=github.GithubObject.NotSet):
+        """Create a file in this repository.
+        :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#create-a-file>`_
+        :param path: string, (required), path of the file in the repository
+        :param message: string, (required), commit message
+        :param content: string, (required), the actual data in the file
+        :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
+        :param committer: dict, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: dict, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
+        :rtype: {
+            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
+            'commit': :class:`Commit <github.Commit.Commit>`}
+        """
+        assert isinstance(path, (str, unicode)),                   \
+            'path must be str/unicode object'
+        assert isinstance(message, (str, unicode)),                \
+            'message must be str/unicode object'
+        assert isinstance(content, (str, unicode)),                \
+            'content must be a str/unicode object'
+        assert branch is github.GithubObject.NotSet                \
+            or isinstance(branch, (str, unicode)),                 \
+            'branch must be a str/unicode object'
+        assert author is github.GithubObject.NotSet                \
+            or isinstance(author, github.InputGitAuthor),          \
+            'author must be a github.InputGitAuthor object'
+        assert committer is github.GithubObject.NotSet             \
+            or isinstance(committer, github.InputGitAuthor),       \
+            'committer must be a github.InputGitAuthor object'
+
+        if atLeastPython3:
+            content = b64encode(content.encode('utf-8')).decode('utf-8')
+        else:
+            content = b64encode(content)
+        put_parameters = {'message': message, 'content': content}
+
+        if branch is not github.GithubObject.NotSet:
+            put_parameters['branch'] = branch
+        if author is not github.GithubObject.NotSet:
+            put_parameters["author"] = author._identity
+        if committer is not github.GithubObject.NotSet:
+            put_parameters["committer"] = committer._identity
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/contents" + path,
+            input=put_parameters
+        )
+
+        return {'content': github.ContentFile.ContentFile(self._requester, headers, data, completed=True),
+                'commit': github.Commit.Commit(self._requester, headers, data, completed=True)}
+
+    def update_file(self, path, message, content, sha,
+                    branch=github.GithubObject.NotSet,
+                    committer=github.GithubObject.NotSet,
+                    author=github.GithubObject.NotSet):
+        """This method updates a file in a repository
+        :calls: `PUT /repos/:owner/:repo/contents/:path <http://developer.github.com/v3/repos/contents#update-a-file>`_
+        :param path: string, Required. The content path.
+        :param message: string, Required. The commit message.
+        :param content: string, Required. The updated file content, Base64 encoded.
+        :param sha: string, Required. The blob SHA of the file being replaced.
+        :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :rtype: {
+            'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
+            'commit': :class:`Commit <github.Commit.Commit>`}
+        """
+        assert isinstance(path, (str, unicode)),                   \
+            'path must be str/unicode object'
+        assert isinstance(message, (str, unicode)),                \
+            'message must be str/unicode object'
+        assert isinstance(content, (str, unicode)),                \
+            'content must be a str/unicode object'
+        assert isinstance(sha, (str, unicode)),                    \
+            'sha must be a str/unicode object'
+        assert branch is github.GithubObject.NotSet                \
+            or isinstance(branch, (str, unicode)),                 \
+            'branch must be a str/unicode object'
+        assert author is github.GithubObject.NotSet                \
+            or isinstance(author, github.InputGitAuthor),          \
+            'author must be a github.InputGitAuthor object'
+        assert committer is github.GithubObject.NotSet             \
+            or isinstance(committer, github.InputGitAuthor),       \
+            'committer must be a github.InputGitAuthor object'
+
+        if atLeastPython3:
+            content = b64encode(content.encode('utf-8')).decode('utf-8')
+        else:
+            content = b64encode(content)
+
+        put_parameters = {'message': message, 'content': content,
+                          'sha': sha}
+
+        if branch is not github.GithubObject.NotSet:
+            put_parameters['branch'] = branch
+        if author is not github.GithubObject.NotSet:
+            put_parameters["author"] = author._identity
+        if committer is not github.GithubObject.NotSet:
+            put_parameters["committer"] = committer._identity
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/contents" + path,
+            input=put_parameters
+        )
+
+        return {'commit': github.Commit.Commit(self._requester, headers, data, completed=True),
+                'content': github.ContentFile.ContentFile(self._requester, headers, data, completed=True)}
+
+    def delete_file(self, path, message, sha,
+                    branch=github.GithubObject.NotSet):
+        """This method delete a file in a repository
+        :calls: `DELETE /repos/:owner/:repo/contents/:path <https://developer.github.com/v3/repos/contents/#delete-a-file>`_
+        :param path: string, Required. The content path.
+        :param message: string, Required. The commit message.
+        :param sha: string, Required. The blob SHA of the file being replaced.
+        :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :rtype: {
+            'content': :class:`null <github.GithubObject.NotSet>`:,
+            'commit': :class:`Commit <github.Commit.Commit>`}
+        """
+        assert isinstance(path, (str, unicode)),                   \
+            'path must be str/unicode object'
+        assert isinstance(message, (str, unicode)),                \
+            'message must be str/unicode object'
+        assert isinstance(sha, (str, unicode)),                    \
+            'sha must be a str/unicode object'
+        assert branch is github.GithubObject.NotSet                \
+            or isinstance(branch, (str, unicode)),                 \
+            'branch must be a str/unicode object'
+
+        url_parameters = {'message': message, 'sha': sha}
+        if branch is not github.GithubObject.NotSet:
+            url_parameters['branch'] = branch
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/contents" + path,
+            input=url_parameters
+        )
+
+        return {'commit': github.Commit.Commit(self._requester, headers, data, completed=True),
+                'content': github.GithubObject.NotSet}
 
     def get_dir_contents(self, path, ref=github.GithubObject.NotSet):
         """
