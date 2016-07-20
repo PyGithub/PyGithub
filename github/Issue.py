@@ -29,6 +29,7 @@
 # ##############################################################################
 
 import urllib
+import datetime
 import github.GithubObject
 import github.PaginatedList
 
@@ -312,16 +313,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def get_comments(self):
+    def get_comments(self, since=github.GithubObject.NotSet):
         """
         :calls: `GET /repos/:owner/:repo/issues/:number/comments <http://developer.github.com/v3/issues/comments>`_
+        :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
+        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
             self.url + "/comments",
-            None
+            url_parameters
         )
 
     def get_events(self):
