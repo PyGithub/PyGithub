@@ -88,6 +88,9 @@ class Issue(Framework.TestCase):
     def testGetComments(self):
         self.assertListKeyEqual(self.issue.get_comments(), lambda c: c.user.login, ["jacquev6", "roskakori"])
 
+    def testGetCommentsSince(self):
+        self.assertListKeyEqual(self.issue.get_comments(datetime.datetime(2012, 5, 26, 13, 59, 33)), lambda c: c.user.login, ["jacquev6", "roskakori"])
+
     def testGetEvents(self):
         self.assertListKeyEqual(self.issue.get_events(), lambda e: e.id, [15819975, 15820048])
 
