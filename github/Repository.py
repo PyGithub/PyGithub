@@ -12,6 +12,7 @@
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
 # Copyright 2015 Jannis Gebauer <ja.geb@me.com>                                #
+# Copyright 2015 Brett Weir <brett@lamestation.com>                            #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.github.io/PyGithub/v1/index.html                             #
@@ -62,6 +63,7 @@ import github.Hook
 import github.Tag
 import github.GitTag
 import github.Download
+import github.Release
 import github.Permissions
 import github.Event
 import github.Legacy
@@ -1913,6 +1915,54 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
+    def get_release(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/:id <http://developer.github.com/v3/repos/releases>`_
+        :param id: integer
+        :rtype: :class:`github.Release.Release`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/" + str(id)
+        )
+        return github.Release.Release(self._requester, headers, data, completed=True)
+
+    def get_releases(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos/releases>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Release.Release`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.Release.Release,
+            self._requester,
+            self.url + "/releases",
+            None
+        )
+
+    def get_release_latest(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/latest <http://developer.github.com/v3/repos/releases>`_
+        :rtype: :class:`github.Release.Release`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/latest"
+        )
+        return github.Release.Release(self._requester, headers, data, completed=True)
+
+    def get_release_by_tag(self, name):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/:tag <http://developer.github.com/v3/repos/releases>`_
+        :rtype: :class:`github.Release.Release`
+        """
+        assert isinstance(name, (str, unicode)), name
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/tags/" + str(name)
+        )
+        return github.Release.Release(self._requester, headers, data, completed=True)
+
     def get_stargazers(self):
         """
         :calls: `GET /repos/:owner/:repo/stargazers <http://developer.github.com/v3/activity/starring>`_
@@ -2040,37 +2090,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/tags",
             None
         )
-
-    def get_releases(self):
-        """
-        :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
-        """
-        return github.PaginatedList.PaginatedList(
-            github.GitRelease.GitRelease,
-            self._requester,
-            self.url + "/releases",
-            None
-        )
-
-    def get_release(self, id):
-        """
-        :calls: `GET /repos/:owner/:repo/releases/:id https://developer.github.com/v3/repos/releases/#get-a-single-release
-        :param id: int (release id), str (tag name)
-        :rtype: None or :class:`github.GitRelease.GitRelease`
-        """
-        if isinstance(id, int):
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                self.url + "/releases/" + str(id)
-            )
-            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
-        elif isinstance(id, str):
-            headers, data = self._requester.requestJsonAndCheck(
-                "GET",
-                self.url + "/releases/tags/" + id
-            )
-            return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
     def get_teams(self):
         """

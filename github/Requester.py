@@ -326,11 +326,11 @@ class Requester:
         if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
 
-        ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
-        ##
+        #
+        # Connect through a proxy server with authentication, if http_proxy
+        # set.
+        # http_proxy: http://user:password@proxy_host:proxy_port
+        #
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)
