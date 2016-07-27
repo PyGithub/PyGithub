@@ -71,6 +71,13 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         return self._state.value
 
     @property
+    def context(self):
+        """
+        :type: string
+        """
+        return self._context.value
+
+    @property
     def target_url(self):
         """
         :type: string
@@ -97,6 +104,7 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
         self._description = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
+        self._context = github.GithubObject.NotSet
         self._target_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
@@ -112,6 +120,8 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
             self._id = self._makeIntAttribute(attributes["id"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "context" in attributes:  # pragma no branch
+            self._context = self._makeStringAttribute(attributes["context"])
         if "target_url" in attributes:  # pragma no branch
             self._target_url = self._makeStringAttribute(attributes["target_url"])
         if "updated_at" in attributes:  # pragma no branch

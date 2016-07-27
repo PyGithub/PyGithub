@@ -44,5 +44,6 @@ class CommitStatus(Framework.TestCase):
         self.assertEqual(self.statuses[0].id, 277040)
         self.assertEqual(self.statuses[0].state, "success")
         self.assertEqual(self.statuses[1].state, "pending")
+        self.assertEqual(self.statuses[0].context, "build")
         self.assertEqual(self.statuses[0].target_url, "https://github.com/jacquev6/PyGithub/issues/67")
         self.assertEqual(self.statuses[1].target_url, None)
