@@ -867,7 +867,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
         assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, str) for element in labels), labels
+        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, (str, unicode)) for element in labels), labels
 
         post_parameters = {
             "title": title,
@@ -1621,14 +1621,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert creator is github.GithubObject.NotSet or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, (str, unicode)), creator
         url_parameters = dict()
         if milestone is not github.GithubObject.NotSet:
-            if isinstance(milestone, str):
+            if isinstance(milestone, (str, unicode)):
                 url_parameters["milestone"] = milestone
             else:
                 url_parameters["milestone"] = milestone._identity
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
         if assignee is not github.GithubObject.NotSet:
-            if isinstance(assignee, str):
+            if isinstance(assignee, (str, unicode)):
                 url_parameters["assignee"] = assignee
             else:
                 url_parameters["assignee"] = assignee._identity
@@ -1643,7 +1643,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
         if creator is not github.GithubObject.NotSet:
-            if isinstance(creator, str):
+            if isinstance(creator, (str, unicode)):
                 url_parameters["creator"] = creator
             else:
                 url_parameters["creator"] = creator._identity
@@ -2065,7 +2065,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 self.url + "/releases/" + str(id)
             )
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
-        elif isinstance(id, str):
+        elif isinstance(id, (str, unicode)):
             headers, data = self._requester.requestJsonAndCheck(
                 "GET",
                 self.url + "/releases/tags/" + id
@@ -2188,7 +2188,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(branch, (str, unicode))
         assert isinstance(enabled, bool)
         assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, str) for element in contexts), contexts
+        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
 
         post_parameters = {
             "protection": {}
