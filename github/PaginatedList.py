@@ -51,6 +51,8 @@ class PaginatedListBase:
                 yield element
 
     def __len__(self):
+        while self._couldGrow():
+            self._grow()
         return len(self.__elements)
 
     def _isBiggerThan(self, index):
