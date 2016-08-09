@@ -461,7 +461,10 @@ class Repository(Framework.TestCase):
         self.assertEqual(pull.id, 1436310)
 
     def testGetPulls(self):
-        self.assertListKeyEqual(self.repo.get_pulls(), lambda p: p.id, [1436310])
+        pulls = self.repo.get_pulls()
+        self.assertEqual(1, len(pulls))
+        self.assertListKeyEqual(pulls, lambda p: p.id, [1436310])
+        # _PaginatedListBase__elements
 
     def testGetPullsWithArguments(self):
         self.assertListKeyEqual(self.repo.get_pulls("closed"), lambda p: p.id, [1448168, 1436310, 1436215])
