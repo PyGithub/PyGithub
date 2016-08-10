@@ -1269,6 +1269,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if atLeastPython3:
             content = b64encode(content.encode('utf-8')).decode('utf-8')
         else:
+            if isinstance(content, unicode):
+                content = content.encode('utf-8')
             content = b64encode(content)
         put_parameters = {'message': message, 'content': content}
 
@@ -1324,6 +1326,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if atLeastPython3:
             content = b64encode(content.encode('utf-8')).decode('utf-8')
         else:
+            if isinstance(content, unicode):
+                content = content.encode('utf-8')
             content = b64encode(content)
 
         put_parameters = {'message': message, 'content': content,
