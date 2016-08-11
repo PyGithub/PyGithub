@@ -1,16 +1,22 @@
 language: python
-
 python:
-  - "2.7"
-  - "2.6"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-
+- '2.7'
+- '2.6'
+- '3.2'
+- '3.3'
+- '3.4'
 sudo: false
-
 script:
-  - python setup.py test
-
+- python setup.py test
 notifications:
   email: false
+deploy:
+  provider: pypi
+  user: pygithubtravis
+  password:
+    secure: HXQWNJC6F6mkwfSHd8wbSJmAroYh/lNzF8rEyJ9MoWAQHWqFm395zMj7S4BB/Kn6y08zJGTzOcRwmm2zyMO4o+A0D3DI961T9HLJYRMB6y8xkGULWHxWgxRQByxefco+ftA02Pj6DtkThxONRmj5noUlU3rC14j2j4NQGcvPQhc=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: PyGithub/PyGithub
+    python: '2.7'
