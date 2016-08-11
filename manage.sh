@@ -4,7 +4,7 @@
 function publish {
     bump
     readme
-    doc
+    #doc
     push
 }
 
