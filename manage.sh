@@ -2,13 +2,10 @@
 # -*- coding: utf-8 -*-
 
 function publish {
-    check
-    test
     bump
     readme
     doc
     push
-    # twitt_release
 }
 
 function check {
@@ -41,10 +38,11 @@ function bump {
 }
 
 function readme {
-    git log v$previousVersion.. --oneline
-
-    echo "Edit README.rst and doc/changes.rst now, then press enter"
-    read foobar
+    # creates a changelog based on the commits from the previous version until now
+    changelog=$(tail -n +6 doc/changes.rst)
+    gitlog=$(git log v$previousVersion.. --oneline --pretty=format:'* %s (%h)' | grep -v "Merge")
+    today=$(date "+(%B %m, %Y)")
+    echo "Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion $version $today\n-----------------------------------\n\n$gitlog\n$changelog" > doc/changes.rst
 }
 
 function doc {
@@ -65,16 +63,10 @@ function push {
 
     git commit -am "Publish version $version"
 
-    sdist_upload
-
     git tag -m "Version $version" v$version
 
     git push github master master:develop gh-pages
     git push --tags
-}
-
-function sdist_upload {
-    python setup.py sdist upload
 }
 
 function unmerged {
@@ -102,10 +94,6 @@ function compare_to_api_ref_doc {
         git clone https://github.com/github/developer.github.com.git
     fi
     python scripts/compare_to_api_ref_doc.py
-}
-
-function twitt_release {
-    python scripts/twitt_release.py $version
 }
 
 $1
