@@ -4,6 +4,48 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.27.0 (August 08, 2016)
+-----------------------------------
+
+* leave out the doc part during publish (4c05e80)
+* upgrade release process based on travis (3c20a66)
+* change file content encoding to support unicode(like chinese), py2 (5404030)
+* adds missing testfile corrections (9134aa2)
+* fixed file API return values (0f29a53)
+* assert by str and unicode to make it more py3 friendly (7390827)
+* Patch issue 358 status context (#428) (70e30c5)
+* Adding "since" param to Issue.get_comments() (#426) (3c6f99f)
+* update doc url everywhere (#420) (cb0cf0a)
+* fix a couple typos to be clearer (#419) (23c0e75)
+* Document how one gets an AuthenticatedUser object (ba66862)
+* fix wrong expectance on requestJsonAndCheck() returning {} if no data (8985368)
+* Add previous_filename property to File (e1be1e6)
+* add changelog entry for 1.26.0 (a1f3de2)
+* update project files (be2e98b)
+* fix update/create/delete file api return value issue (8bb765a)
+* fix typo (a7929ac)
+* fix update/delete/create content return value invalid issue (a0a4511)
+* Follow redirects in the case of a 301 status code (c29f533)
+* Fix for pickling exception when deserializing GithubException. (8f8b455)
+* add support for the head parameter in Repository.get_pulls (397a74d)
+* Add:   - CommitCombinedStatus class   - get_combined_status() to Commit class to return combined status   - Add test for combined status. (5823ed7)
+* fix python3 compatibility issue for using json/base64 (5b7f0bb)
+* remove not covered API from readme (9c6f881)
+* change replay data for update file test case (46895df)
+* fix python3 compatability error in test case (00777db)
+* Add repo content create/update/delete testcase (4aaeb9e)
+* add MAINTAINERS file (a16b55b)
+* travis: disable email (6347157)
+* fix protect branch tests (65360b0)
+* Add branch protection endpoint (737f0c3)
+* fix request parameters issue (ae37d44)
+* add content file create/update/delete api (b83ffbf)
+* Add travis button on README. (a83649b)
+* fix misspelling: https://github.com/PyGithub/PyGithub/issues/363 (a06b5ec)
+* Adding base parameter to get_pulls() method. (71593a8)
+* add support for the direction parameter in Repository.get_pulls (70bcb6d)
+* added creator parameter (ca9af4f)
+
 Version 1.26.0 (November 5th, 2015)
 -----------------------------------
 
