@@ -4,10 +4,9 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.27.0 (August 08, 2016)
+Version 1.27.1 (August 12, 2016)
 -----------------------------------
 
-* leave out the doc part during publish (4c05e80)
 * upgrade release process based on travis (3c20a66)
 * change file content encoding to support unicode(like chinese), py2 (5404030)
 * adds missing testfile corrections (9134aa2)
@@ -45,6 +44,11 @@ Version 1.27.0 (August 08, 2016)
 * Adding base parameter to get_pulls() method. (71593a8)
 * add support for the direction parameter in Repository.get_pulls (70bcb6d)
 * added creator parameter (ca9af4f)
+
+Version 1.27.0 (August 12, 2016)
+-----------------------------------
+
+* this version was never released to PyPi due to a problem with the deployment
 
 Version 1.26.0 (November 5th, 2015)
 -----------------------------------
