@@ -14,7 +14,7 @@ deploy:
   provider: pypi
   user: pygithubtravis
   password:
-    secure: HXQWNJC6F6mkwfSHd8wbSJmAroYh/lNzF8rEyJ9MoWAQHWqFm395zMj7S4BB/Kn6y08zJGTzOcRwmm2zyMO4o+A0D3DI961T9HLJYRMB6y8xkGULWHxWgxRQByxefco+ftA02Pj6DtkThxONRmj5noUlU3rC14j2j4NQGcvPQhc=
+    secure: 4Sq7v7glMElq2zrZhvJ6QYr8tffl8UeVHKXipRFp3xZYMUOtCOewMFzbF+IKqx3VmgHKYaLwkN6+8w1xo/GsvBb4XM1ybb5aAYicuH7rLrA9uG9n+MEy3DTLbe0Z6U6z+9cTBvd8aDYZAvgz0nnH7qun+P7QMEJtziCSN24CK6k=
   on:
     tags: true
     distributions: sdist bdist_wheel
