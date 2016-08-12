@@ -65,7 +65,7 @@ function push {
 
     git tag -m "Version $version" v$version
 
-    git push github master master:develop gh-pages
+    git push origin master
     git push --tags
 }
 
