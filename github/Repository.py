@@ -77,7 +77,7 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Repositorys. The reference can be found here http://developer.github.com/v3/repos/
+    This class represents Repositories. The reference can be found here http://developer.github.com/v3/repos/
     """
 
     @property
