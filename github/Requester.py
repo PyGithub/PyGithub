@@ -338,7 +338,7 @@ class Requester:
             headers = {}
             if url.username and url.password:
                 auth = '%s:%s' % (url.username, url.password)
-                if atLeastPython3 and isinstance(auth,str):
+                if atLeastPython3 and isinstance(auth, str):
                     headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth.encode()).decode()
                 else:
                     headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
