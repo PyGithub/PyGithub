@@ -50,4 +50,4 @@ class CommitStatus(Framework.TestCase):
 
         # test __repr__() based on this attributes
         self.assertEqual(self.statuses[0].__repr__(),
-                         'CommitStatus(id=277040, context="build", state="success")')
+                         'CommitStatus(state="success", id=277040, context="build")')

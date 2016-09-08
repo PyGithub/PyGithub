@@ -42,7 +42,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.team.__repr__(), 'Team(id=189850, name="Team created by PyGithub")')
+        self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")

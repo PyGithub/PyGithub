@@ -59,7 +59,7 @@ class Issue(Framework.TestCase):
         self.assertEqual(self.issue.repository.name, "PyGithub")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.issue.__repr__(), 'Issue(number=28, title="Issue created by PyGithub")')
+        self.assertEqual(self.issue.__repr__(), 'Issue(title="Issue created by PyGithub", number=28)')
 
     def testEditWithoutParameters(self):
         self.issue.edit()

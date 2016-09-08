@@ -44,7 +44,7 @@ class IssueComment(Framework.TestCase):
         self.assertEqual(self.comment.html_url, "https://github.com/jacquev6/PyGithub/issues/28#issuecomment-5808311")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.comment.__repr__(), 'IssueComment(id=5808311, user=NamedUser(login="jacquev6"))')
+        self.assertEqual(self.comment.__repr__(), 'IssueComment(user=NamedUser(login="jacquev6"), id=5808311)')
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")

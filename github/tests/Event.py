@@ -45,4 +45,4 @@ class Event(Framework.TestCase):
         self.assertEqual(self.event.type, "PushEvent")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.event.__repr__(), 'Event(id="1556114751", type="PushEvent")')
+        self.assertEqual(self.event.__repr__(), 'Event(type="PushEvent", id="1556114751")')

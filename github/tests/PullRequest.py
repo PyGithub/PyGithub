@@ -69,7 +69,7 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.user.login, "jacquev6")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.pull.__repr__(), 'PullRequest(number=31, title="Title edited by PyGithub")')
+        self.assertEqual(self.pull.__repr__(), 'PullRequest(title="Title edited by PyGithub", number=31)')
 
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")

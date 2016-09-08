@@ -49,7 +49,7 @@ class CommitComment(Framework.TestCase):
 
         # test __repr__() based on this attributes
         self.assertEqual(self.comment.__repr__(),
-                         'CommitComment(id=1361949, user=NamedUser(login="jacquev6"))')
+                         'CommitComment(user=NamedUser(login="jacquev6"), id=1361949)')
 
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")

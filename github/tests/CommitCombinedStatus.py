@@ -52,4 +52,4 @@ class CommitCombinedStatus(Framework.TestCase):
 
         # test __repr__() based on this attributes
         self.assertEqual(self.combined_status.__repr__(),
-                         'CommitCombinedStatus(sha="74e70119a23fa3ffb3db19d4590eccfebd72b659", state="success")')
+                         'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")')

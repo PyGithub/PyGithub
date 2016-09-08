@@ -219,7 +219,7 @@ class GithubObject(object):
                 items = params.items()
             else:
                 items = list(params.items())
-            for k, v in sorted(items, key=itemgetter(1)):
+            for k, v in sorted(items, key=itemgetter(0), reverse=True):
                 yield '{k}="{v}"'.format(k=k, v=v) if isinstance(v, (str, unicode)) else '{k}={v}'.format(k=k, v=v)
         return '{class_name}({params})'.format(
             class_name=self.__class__.__name__,
