@@ -39,6 +39,10 @@ class GitRef(Framework.TestCase):
         self.assertEqual(self.ref.ref, "refs/heads/BranchCreatedByPyGithub")
         self.assertEqual(self.ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.ref.__repr__(),
+                         'GitRef(ref="refs/heads/BranchCreatedByPyGithub")')
+
     def testEdit(self):
         self.ref.edit("04cde900a0775b51f762735637bd30de392a2793")
 

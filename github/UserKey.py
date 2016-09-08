@@ -34,6 +34,9 @@ class UserKey(github.GithubObject.CompletableGithubObject):
     This class represents UserKeys. The reference can be found here http://developer.github.com/v3/users/keys/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "title": self._title.value})
+
     @property
     def id(self):
         """

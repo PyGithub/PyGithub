@@ -43,6 +43,9 @@ class Commit(github.GithubObject.CompletableGithubObject):
     This class represents Commits. The reference can be found here http://developer.github.com/v3/git/commits/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value})
+
     @property
     def author(self):
         """

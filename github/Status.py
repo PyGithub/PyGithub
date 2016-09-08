@@ -30,6 +30,9 @@ class Status(github.GithubObject.NonCompletableGithubObject):
     This class represents status as defined in https://status.github.com/api
     """
 
+    def __repr__(self):
+        return self.get__repr__({"status": self._status.value})
+
     @property
     def status(self):
         """

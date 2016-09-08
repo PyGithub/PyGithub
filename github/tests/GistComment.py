@@ -42,6 +42,9 @@ class GistComment(Framework.TestCase):
         self.assertEqual(self.comment.url, "https://api.github.com/gists/2729810/comments/323629")
         self.assertEqual(self.comment.user.login, "jacquev6")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.comment.__repr__(), 'GistComment(id=323629, user=NamedUser(login="jacquev6"))')
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")

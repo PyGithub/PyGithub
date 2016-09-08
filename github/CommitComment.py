@@ -35,6 +35,9 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
     This class represents CommitComments as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "user": self.user})
+
     @property
     def body(self):
         """

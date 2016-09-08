@@ -47,3 +47,7 @@ class CommitStatus(Framework.TestCase):
         self.assertEqual(self.statuses[0].context, "build")
         self.assertEqual(self.statuses[0].target_url, "https://github.com/jacquev6/PyGithub/issues/67")
         self.assertEqual(self.statuses[1].target_url, None)
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.statuses[0].__repr__(),
+                         'CommitStatus(id=277040, context="build", state="success")')

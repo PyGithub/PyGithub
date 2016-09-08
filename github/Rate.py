@@ -31,6 +31,9 @@ class Rate(github.GithubObject.NonCompletableGithubObject):
     This class represents rate limits as defined in http://developer.github.com/v3/rate_limit
     """
 
+    def __repr__(self):
+        return self.get__repr__({"limit": self._limit.value, "remaining": self._remaining.value})
+
     @property
     def limit(self):
         """

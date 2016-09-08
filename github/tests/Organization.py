@@ -62,6 +62,9 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.type, "Organization")
         self.assertEqual(self.org.url, "https://api.github.com/orgs/BeaverSoftware")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.org.__repr__(), 'Organization(name=None, id=1424031)')
+
     def testEditWithoutArguments(self):
         self.org.edit()
 

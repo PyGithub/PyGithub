@@ -40,6 +40,9 @@ class Milestone(github.GithubObject.CompletableGithubObject):
     This class represents Milestones. The reference can be found here http://developer.github.com/v3/issues/milestones/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"number": self._number.value})
+
     @property
     def closed_issues(self):
         """

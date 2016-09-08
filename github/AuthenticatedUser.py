@@ -50,6 +50,9 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
+    def __repr__(self):
+        return self.get__repr__({"login": self._login.value})
+
     @property
     def avatar_url(self):
         """

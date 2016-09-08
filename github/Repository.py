@@ -80,6 +80,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
     This class represents Repositories. The reference can be found here http://developer.github.com/v3/repos/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"full_name": self._full_name.value})
+
     @property
     def archive_url(self):
         """

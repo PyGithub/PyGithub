@@ -42,6 +42,9 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     This class represents NamedUsers as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"login": self._login.value})
+
     @property
     def avatar_url(self):
         """

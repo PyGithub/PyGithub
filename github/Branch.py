@@ -36,6 +36,9 @@ class Branch(github.GithubObject.NonCompletableGithubObject):
     This class represents Branchs. The reference can be found here http://developer.github.com/v3/repos/#list-branches
     """
 
+    def __repr__(self):
+        return self.get__repr__({"name": self._name.value})
+
     @property
     def commit(self):
         """

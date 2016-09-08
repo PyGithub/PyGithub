@@ -36,6 +36,9 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
     This class represents CommitCombinedStatus as returned for example by https://developer.github.com/v3/repos/statuses/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value, "state": self._state.value})
+
     @property
     def state(self):
         """

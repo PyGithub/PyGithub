@@ -40,6 +40,10 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
+
+
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
         self.assertTrue(self.release.delete_release())

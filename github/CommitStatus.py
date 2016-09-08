@@ -35,6 +35,13 @@ class CommitStatus(github.GithubObject.NonCompletableGithubObject):
     This class represents CommitStatuss as returned for example by https://developer.github.com/v3/repos/statuses/
     """
 
+    def __repr__(self):
+        return self.get__repr__({
+            "id": self._id.value,
+            "state": self._state.value,
+            "context": self._context.value
+        })
+
     @property
     def created_at(self):
         """

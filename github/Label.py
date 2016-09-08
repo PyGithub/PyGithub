@@ -36,6 +36,9 @@ class Label(github.GithubObject.CompletableGithubObject):
     This class represents Labels. The reference can be found here http://developer.github.com/v3/issues/labels/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"name": self._name.value})
+
     @property
     def color(self):
         """

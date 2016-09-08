@@ -48,3 +48,7 @@ class GitCommit(Framework.TestCase):
         self.assertEqual(self.commit.sha, "4303c5b90e2216d927155e9609436ccb8984c495")
         self.assertEqual(self.commit.tree.sha, "f492784d8ca837779650d1fb406a1a3587a764ad")
         self.assertEqual(self.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/4303c5b90e2216d927155e9609436ccb8984c495")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.commit.__repr__(),
+                         'GitCommit(sha="4303c5b90e2216d927155e9609436ccb8984c495")')

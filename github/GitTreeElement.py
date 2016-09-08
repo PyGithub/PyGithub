@@ -33,6 +33,9 @@ class GitTreeElement(github.GithubObject.NonCompletableGithubObject):
     This class represents GitTreeElements as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value, "path": self._path.value})
+
     @property
     def mode(self):
         """

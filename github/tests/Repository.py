@@ -68,6 +68,9 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.repo.__repr__(), 'Repository(full_name="jacquev6/PyGithub")')
+
     def testProtectBranch(self):
         self.repo.protect_branch("master", True, "everyone", ["test"])
         branch = self.repo.get_protected_branch("master")
