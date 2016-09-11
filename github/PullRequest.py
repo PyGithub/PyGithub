@@ -44,6 +44,9 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     This class represents PullRequests. The reference can be found here http://developer.github.com/v3/pulls/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"number": self._number.value, "title": self._title.value})
+
     @property
     def additions(self):
         """

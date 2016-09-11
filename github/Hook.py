@@ -35,6 +35,9 @@ class Hook(github.GithubObject.CompletableGithubObject):
     This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "url": self._url.value})
+
     @property
     def active(self):
         """

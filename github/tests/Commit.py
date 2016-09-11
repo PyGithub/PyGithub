@@ -55,6 +55,9 @@ class Commit(Framework.TestCase):
         self.assertEqual(self.commit.stats.total, 20)
         self.assertEqual(self.commit.url, "https://api.github.com/repos/jacquev6/PyGithub/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.commit.__repr__(), 'Commit(sha="1292bf0e22c796e91cc3d6e24b544aece8c21f2a")')
+
     def testGetComments(self):
         self.assertListKeyEqual(self.commit.get_comments(), lambda c: c.id, [1347033, 1347083, 1347397, 1349654])
 

@@ -63,6 +63,10 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/nvie")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.user.__repr__(), 'NamedUser(login="nvie")')
+
+
     def testAttributesOfSelf(self):
         self.assertEqual(self.user.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png")
         self.assertEqual(self.user.bio, "")
@@ -92,6 +96,9 @@ class NamedUser(Framework.TestCase):
         self.assertEqual(self.user.total_private_repos, 5)
         self.assertEqual(self.user.type, "User")
         self.assertEqual(self.user.url, "https://api.github.com/users/jacquev6")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.user.__repr__(), 'NamedUser(login="jacquev6")')
 
     def testGetGists(self):
         self.assertListKeyEqual(self.user.get_gists(), lambda g: g.description, ["Gist created by PyGithub", "FairThreadPoolPool.cpp", "How to error 500 Github API v3, as requested by Rick (GitHub Staff)", "Cadfael: order of episodes in French DVD edition"])

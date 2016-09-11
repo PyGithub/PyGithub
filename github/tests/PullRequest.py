@@ -68,6 +68,9 @@ class PullRequest(Framework.TestCase):
         self.assertEqual(self.pull.url, "https://api.github.com/repos/jacquev6/PyGithub/pulls/31")
         self.assertEqual(self.pull.user.login, "jacquev6")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.pull.__repr__(), 'PullRequest(title="Title edited by PyGithub", number=31)')
+
     def testCreateComment(self):
         commit = self.repo.get_commit("8a4f306d4b223682dd19410d4a9150636ebe4206")
         comment = self.pull.create_comment("Comment created by PyGithub", commit, "src/github/Issue.py", 5)

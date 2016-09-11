@@ -31,6 +31,9 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
     This class represents GitRelease as returned for example by https://developer.github.com/v3/repos/releases
     """
 
+    def __repr__(self):
+        return self.get__repr__({"title": self._title.value})
+
     @property
     def body(self):
         """

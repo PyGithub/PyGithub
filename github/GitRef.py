@@ -35,6 +35,9 @@ class GitRef(github.GithubObject.CompletableGithubObject):
     This class represents GitRefs as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"ref": self._ref.value})
+
     @property
     def object(self):
         """
@@ -89,6 +92,22 @@ class GitRef(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         self._useAttributes(data)
+
+    def get_statuses(self):
+        """
+        https://developer.github.com/v3/repos/statuses/#list-statuses-for-a-specific-ref
+        :calls: `GET /repos/:owner/:repo/commits/:ref/statuses`
+        :return:
+        """
+        pass
+
+    def get_status(self):
+        """
+        https://developer.github.com/v3/repos/statuses/#get-the-combined-status-for-a-specific-ref
+        :calls: `GET /repos/:owner/:repo/commits/:ref/status`
+        :return:
+        """
+        pass
 
     def _initAttributes(self):
         self._object = github.GithubObject.NotSet

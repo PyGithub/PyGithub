@@ -38,6 +38,9 @@ class Event(github.GithubObject.NonCompletableGithubObject):
     This class represents Events. The reference can be found here http://developer.github.com/v3/activity/events/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "type": self._type.value})
+
     @property
     def actor(self):
         """

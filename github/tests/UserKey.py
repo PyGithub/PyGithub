@@ -39,6 +39,9 @@ class UserKey(Framework.TestCase):
         self.assertEqual(self.key.url, "https://api.github.com/user/keys/2626650")
         self.assertTrue(self.key.verified)
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.key.__repr__(), 'UserKey(title="Key added through PyGithub", id=2626650)')
+
     def testEditWithoutArguments(self):
         self.key.edit()
 

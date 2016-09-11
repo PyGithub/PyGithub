@@ -33,6 +33,9 @@ class File(github.GithubObject.NonCompletableGithubObject):
     This class represents Files as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value, "filename": self._filename.value})
+
     @property
     def additions(self):
         """

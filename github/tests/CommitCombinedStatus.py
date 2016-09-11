@@ -49,3 +49,7 @@ class CommitCombinedStatus(Framework.TestCase):
         self.assertEqual(self.combined_status.repository.full_name, "edx/edx-platform")
         self.assertEqual(self.combined_status.commit_url, "https://api.github.com/repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659")
         self.assertEqual(self.combined_status.url, "https://api.github.com/repos/edx/edx-platform/commits/74e70119a23fa3ffb3db19d4590eccfebd72b659/status")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.combined_status.__repr__(),
+                         'CommitCombinedStatus(state="success", sha="74e70119a23fa3ffb3db19d4590eccfebd72b659")')

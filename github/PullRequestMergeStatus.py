@@ -34,6 +34,9 @@ class PullRequestMergeStatus(github.GithubObject.NonCompletableGithubObject):
     This class represents PullRequestMergeStatuss. The reference can be found here http://developer.github.com/v3/pulls/#get-if-a-pull-request-has-been-merged
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value, "merged": self._merged.value})
+
     @property
     def merged(self):
         """

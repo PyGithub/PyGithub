@@ -36,6 +36,9 @@ class GitCommit(github.GithubObject.CompletableGithubObject):
     This class represents GitCommits as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"sha": self._sha.value})
+
     @property
     def author(self):
         """

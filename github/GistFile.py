@@ -33,6 +33,9 @@ class GistFile(github.GithubObject.NonCompletableGithubObject):
     This class represents GistFiles as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"filename": self._filename.value})
+
     @property
     def content(self):
         """

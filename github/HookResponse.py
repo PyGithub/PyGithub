@@ -33,6 +33,9 @@ class HookResponse(github.GithubObject.NonCompletableGithubObject):
     This class represents HookResponses as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"status": self._status.value})
+
     @property
     def code(self):
         """

@@ -36,6 +36,12 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
     This class represents Tags. The reference can be found here http://developer.github.com/v3/git/tags/
     """
 
+    def __repr__(self):
+        return self.get__repr__({
+            "name": self._name.value,
+            "commit": self._commit.value
+        })
+
     @property
     def commit(self):
         """

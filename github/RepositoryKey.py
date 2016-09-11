@@ -39,6 +39,9 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         github.GithubObject.CompletableGithubObject.__init__(self, requester, headers, attributes, completed)
         self.__repoUrl = repoUrl
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value})
+
     @property
     def __customUrl(self):
         return self.__repoUrl + "/keys/" + str(self.id)

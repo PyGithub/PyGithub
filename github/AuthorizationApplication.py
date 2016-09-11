@@ -33,6 +33,9 @@ class AuthorizationApplication(github.GithubObject.CompletableGithubObject):
     This class represents AuthorizationApplications as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"name": self._name.value})
+
     @property
     def name(self):
         """

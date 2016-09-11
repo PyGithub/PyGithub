@@ -48,6 +48,10 @@ class PullRequestComment(Framework.TestCase):
         self.assertEqual(self.comment.user.login, "jacquev6")
         self.assertEqual(self.comment.html_url, "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.comment.__repr__(), 'PullRequestComment(user=NamedUser(login="jacquev6"), id=886298)')
+
+
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")

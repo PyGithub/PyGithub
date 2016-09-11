@@ -38,6 +38,9 @@ class Team(github.GithubObject.CompletableGithubObject):
     This class represents Teams. The reference can be found here http://developer.github.com/v3/orgs/teams/
     """
 
+    def __repr__(self):
+        return self.get__repr__({"id": self._id.value, "name": self._name.value})
+
     @property
     def id(self):
         """

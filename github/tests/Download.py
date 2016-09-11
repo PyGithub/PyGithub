@@ -56,5 +56,8 @@ class Download(Framework.TestCase):
         self.assertEqual(self.download.size, 1024)
         self.assertEqual(self.download.url, "https://api.github.com/repos/jacquev6/PyGithub/downloads/242550")
 
+        # test __repr__() based on this attributes
+        self.assertEqual(self.download.__repr__(), 'Download(id=242550)')
+
     def testDelete(self):
         self.download.delete()

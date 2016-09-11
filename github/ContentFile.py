@@ -40,6 +40,9 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
     """
 
+    def __repr__(self):
+        return self.get__repr__({"path": self._path.value})
+
     @property
     def content(self):
         """

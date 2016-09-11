@@ -30,6 +30,9 @@ class StatusMessage(github.GithubObject.NonCompletableGithubObject):
     This class represents status messages as defined in https://status.github.com/api
     """
 
+    def __repr__(self):
+        return self.get__repr__({"body": self._body.value})
+
     @property
     def body(self):
         """

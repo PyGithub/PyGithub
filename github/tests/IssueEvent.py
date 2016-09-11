@@ -42,3 +42,6 @@ class IssueEvent(Framework.TestCase):
         self.assertEqual(self.event.id, 16348656)
         self.assertEqual(self.event.issue.number, 30)
         self.assertEqual(self.event.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/events/16348656")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.event.__repr__(), 'IssueEvent(id=16348656)')

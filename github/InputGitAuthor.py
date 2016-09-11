@@ -46,6 +46,9 @@ class InputGitAuthor(object):
         self.__email = email
         self.__date = date
 
+    def __repr__(self):
+        return 'InputGitAuthor(name="{}")'.format(self.__name)
+
     @property
     def _identity(self):
         identity = {
