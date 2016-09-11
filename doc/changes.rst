@@ -4,6 +4,17 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.28 (September 09, 2016)
+-----------------------------------
+
+* test against python 3.5 (5d35284)
+* sort params and make them work on py3 (78374b9)
+* adds a nicer __repr__ (8571d87)
+* Add missing space (464259d)
+* Properly handle HTTP Proxy authentication with Python 3 (d015154)
+* Fix small typo (987bca0)
+* push to 'origin' instead of 'github' (d640666)
+
 Version 1.27.1 (August 12, 2016)
 -----------------------------------
 
