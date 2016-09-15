@@ -1235,6 +1235,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/contents" + path,
             parameters=url_parameters
         )
+        if isinstance(data, list):
+            return [
+                github.ContentFile.ContentFile(self._requester, headers, item, completed=False)
+                for item in data
+            ]
         return github.ContentFile.ContentFile(self._requester, headers, data, completed=True)
 
     def create_file(self, path, message, content,
