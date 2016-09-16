@@ -149,6 +149,22 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url + "/repos/" + repo._identity
         )
 
+    def set_repo_permission(self, repo, permission):
+        """
+        :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
+        :param repo: :class:`github.Repository.Repository`
+        :rtype: None
+        """
+        assert isinstance(repo, github.Repository.Repository), repo
+        put_parameters = {
+            "permission": permission,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/repos/" + repo._identity,
+            input=put_parameters
+        )
+
     def delete(self):
         """
         :calls: `DELETE /teams/:id <http://developer.github.com/v3/orgs/teams>`_

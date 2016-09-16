@@ -55,6 +55,10 @@ class Team(Framework.TestCase):
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
 
+    def testRepoPermission(self):
+        repo = self.org.get_repo("FatherBeaver")
+        self.team.set_repo_permission(repo, "admin")
+
     def testRepos(self):
         repo = self.org.get_repo("FatherBeaver")
         self.assertListKeyEqual(self.team.get_repos(), None, [])
