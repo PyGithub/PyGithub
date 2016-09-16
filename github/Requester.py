@@ -286,7 +286,7 @@ class Requester:
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
-        if status is 301 and 'location' in responseHeaders:
+        if status == 301 and 'location' in responseHeaders:
             return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
 
         return status, responseHeaders, output
