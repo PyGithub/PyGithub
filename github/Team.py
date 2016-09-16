@@ -153,6 +153,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         :calls: `PUT /teams/:id/repos/:org/:repo <http://developer.github.com/v3/orgs/teams>`_
         :param repo: :class:`github.Repository.Repository`
+        :param permission: string
         :rtype: None
         """
         assert isinstance(repo, github.Repository.Repository), repo
