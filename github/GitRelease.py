@@ -82,6 +82,22 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
 
+    @property
+    def created_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._created_at)
+        return self._created_at.value
+
+    @property
+    def published_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self._published_at)
+        return self._published_at.value
+
     def delete_release(self):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -115,6 +131,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
+        self._created_at = github.GithubObject.NotSet
+        self._published_at = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "body" in attributes:
@@ -129,3 +147,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+        if "created_at" in attributes:
+            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+        if "published_at" in attributes:
+            self._published_at = self._makeDatetimeAttribute(attributes["published_at"])
