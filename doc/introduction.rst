@@ -6,7 +6,7 @@ With it, you can manage your `Github <http://github.com>`__ resources (repositor
 
 Should you have any question, any remark, or if you find a bug,
 or if there is something you can do with the API but not with PyGithub,
-please `open an issue <https://github.com/jacquev6/PyGithub/issues>`__.
+please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 
 (Very short) tutorial
 ---------------------
@@ -26,9 +26,10 @@ Then play with your Github objects::
 Download and install
 --------------------
 
-This package is in the `Python Package Index <http://pypi.python.org/pypi/PyGithub>`__,
-so ``easy_install PyGithub`` or ``pip install PyGithub`` should be enough.
-You can also clone it on `Github <http://github.com/jacquev6/PyGithub>`__.
+This package is in the `Python Package Index
+<http://pypi.python.org/pypi/PyGithub>`__, so ``pip install PyGithub`` should
+be enough.  You can also clone it on `Github
+<http://github.com/PyGithub/PyGithub>`__.
 
 Licensing
 ---------
@@ -46,7 +47,7 @@ You want all the details about PyGithub classes? [`Reference of classes`](http:/
 Projects using PyGithub
 -----------------------
 
-(`Open an issue <https://github.com/jacquev6/PyGithub/issues>`__ if you want to be listed here, I'll be glad to add your project)
+(`Open an issue <https://github.com/PyGithub/PyGithub/issues>`__ if you want to be listed here, I'll be glad to add your project)
 
 * `Github-iCalendar <http://danielpocock.com/github-issues-as-an-icalendar-feed>`__ returns all of your Github issues and pull requests as a list of tasks / VTODO items in iCalendar format.
 * `DevAssistant <http://devassistant.org>`_
