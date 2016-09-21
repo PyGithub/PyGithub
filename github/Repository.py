@@ -1022,7 +1022,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
+    def edit(self, name=None, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, default_branch=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -1035,6 +1035,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param default_branch: string
         :rtype: None
         """
+        if name is None:
+            name = self.name
         assert isinstance(name, (str, unicode)), name
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
