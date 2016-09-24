@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -28,19 +28,23 @@ import Framework
 
 
 class Branch(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.branch = self.g.get_user().get_repo("PyGithub").get_branches()[0]
 
     def testAttributes(self):
         self.assertEqual(self.branch.name, "topic/RewriteWithGeneratedCode")
-        self.assertEqual(self.branch.commit.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+        self.assertEqual(self.branch.commit.sha,
+                         "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.branch.__repr__(), 'Branch(name="topic/RewriteWithGeneratedCode")')
+        self.assertEqual(self.branch.__repr__(),
+                         'Branch(name="topic/RewriteWithGeneratedCode")')
 
     def testProtectedAttributes(self):
-        self.branch = self.g.get_user().get_repo("PyGithub").get_protected_branch("master")
+        self.branch = self.g.get_user().get_repo(
+            "PyGithub").get_protected_branch("master")
         self.assertEqual(self.branch.name, "master")
         self.assertFalse(self.branch.protected)
         self.assertEqual(self.branch.enforcement_level, "off")

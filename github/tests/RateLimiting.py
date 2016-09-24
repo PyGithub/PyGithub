@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -31,6 +31,7 @@ import Framework
 
 
 class RateLimiting(Framework.TestCase):
+
     def testRateLimiting(self):
         self.assertEqual(self.g.rate_limiting, (5000, 5000))
         self.g.get_user("jacquev6")
@@ -44,4 +45,5 @@ class RateLimiting(Framework.TestCase):
         rateLimit = self.g.get_rate_limit()
         self.assertEqual(rateLimit.rate.limit, 5000)
         self.assertEqual(rateLimit.rate.remaining, 5000)
-        self.assertEqual(rateLimit.rate.reset, datetime.datetime(2013, 9, 6, 10, 29, 57))
+        self.assertEqual(rateLimit.rate.reset,
+                         datetime.datetime(2013, 9, 6, 10, 29, 57))

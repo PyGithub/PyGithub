@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -31,6 +31,7 @@ import github.GithubObject
 
 
 class PaginatedListBase:
+
     def __init__(self):
         self.__elements = list()
 
@@ -63,6 +64,7 @@ class PaginatedListBase:
         return newElements
 
     class _Slice:
+
         def __init__(self, theList, theSlice):
             self.__list = theList
             self.__start = theSlice.start or 0
@@ -141,7 +143,8 @@ class PaginatedList(PaginatedListBase):
 
     @property
     def reversed(self):
-        r = PaginatedList(self.__contentClass, self.__requester, self.__firstUrl, self.__firstParams)
+        r = PaginatedList(self.__contentClass, self.__requester,
+                          self.__firstUrl, self.__firstParams)
         r.__reverse()
         return r
 
@@ -178,7 +181,8 @@ class PaginatedList(PaginatedListBase):
             data = data["items"]
 
         content = [
-            self.__contentClass(self.__requester, headers, element, completed=False)
+            self.__contentClass(self.__requester, headers,
+                                element, completed=False)
             for element in data if element is not None
         ]
         if self._reversed:
@@ -214,6 +218,7 @@ class PaginatedList(PaginatedListBase):
             data = data["items"]
 
         return [
-            self.__contentClass(self.__requester, headers, element, completed=False)
+            self.__contentClass(self.__requester, headers,
+                                element, completed=False)
             for element in data
         ]

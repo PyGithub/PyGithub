@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -64,4 +64,5 @@ class StatusMessage(github.GithubObject.NonCompletableGithubObject):
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "created_on" in attributes:  # pragma no branch
-            self._created_on = self._makeDatetimeAttribute(attributes["created_on"])
+            self._created_on = self._makeDatetimeAttribute(
+                attributes["created_on"])

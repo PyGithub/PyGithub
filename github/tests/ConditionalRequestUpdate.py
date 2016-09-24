@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -30,15 +30,18 @@ import github
 
 
 class ConditionalRequestUpdate(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("akfish/PyGithub", lazy=False)
 
     def testDidNotUpdate(self):
-        self.assertFalse(self.repo.update(), msg="The repo is not changed. But update() != False")
+        self.assertFalse(self.repo.update(),
+                         msg="The repo is not changed. But update() != False")
 
     def testDidUpdate(self):
-        self.assertTrue(self.repo.update(), msg="The repo should be changed by now. But update() != True")
+        self.assertTrue(self.repo.update(
+        ), msg="The repo should be changed by now. But update() != True")
 
     def testUpdateObjectWithoutEtag(self):
         r = self.g.get_repo("jacquev6/PyGithub", lazy=False)

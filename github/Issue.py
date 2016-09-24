@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
 # Copyright 2012 Philip Kimmey <philip@rover.com>                              #
@@ -177,9 +177,11 @@ class Issue(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._repository)
         if self._repository is github.GithubObject.NotSet:
-            # The repository was not set automatically, so it must be looked up by url.
+            # The repository was not set automatically, so it must be looked up
+            # by url.
             repo_url = "/".join(self.url.split("/")[:-2])
-            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))
+            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(
+                self._requester, self._headers, {'url': repo_url}, completed=False))
         return self._repository.value
 
     @property
@@ -228,8 +230,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label` or string
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
-        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        assert all(isinstance(element, (github.Label.Label, str, unicode))
+                   for element in labels), labels
+        post_parameters = [label.name if isinstance(
+            label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/labels",
@@ -274,12 +278,18 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param labels: list of string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
+        assert title is github.GithubObject.NotSet or isinstance(
+            title, (str, unicode)), title
+        assert body is github.GithubObject.NotSet or isinstance(
+            body, (str, unicode)), body
+        assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(
+            assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(
+            milestone, github.Milestone.Milestone), milestone
+        assert labels is github.GithubObject.NotSet or all(
+            isinstance(element, (str, unicode)) for element in labels), labels
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -289,11 +299,13 @@ class Issue(github.GithubObject.CompletableGithubObject):
             if isinstance(assignee, (str, unicode)):
                 post_parameters["assignee"] = assignee
             else:
-                post_parameters["assignee"] = assignee._identity if assignee else ''
+                post_parameters[
+                    "assignee"] = assignee._identity if assignee else ''
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
         if milestone is not github.GithubObject.NotSet:
-            post_parameters["milestone"] = milestone._identity if milestone else ''
+            post_parameters[
+                "milestone"] = milestone._identity if milestone else ''
         if labels is not github.GithubObject.NotSet:
             post_parameters["labels"] = labels
         headers, data = self._requester.requestJsonAndCheck(
@@ -322,7 +334,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime format YYYY-MM-DDTHH:MM:SSZ
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -379,8 +392,10 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param label: :class:`github.Label.Label`
         :rtype: None
         """
-        assert all(isinstance(element, (github.Label.Label, str, unicode)) for element in labels), labels
-        post_parameters = [label.name if isinstance(label, github.Label.Label) else label for label in labels]
+        assert all(isinstance(element, (github.Label.Label, str, unicode))
+                   for element in labels), labels
+        post_parameters = [label.name if isinstance(
+            label, github.Label.Label) else label for label in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/labels",
@@ -416,44 +431,57 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+            self._assignee = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["assignee"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
-            self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
+            self._closed_at = self._makeDatetimeAttribute(
+                attributes["closed_at"])
         if "closed_by" in attributes:  # pragma no branch
-            self._closed_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["closed_by"])
+            self._closed_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["closed_by"])
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch
-            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(
+                attributes["comments_url"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "events_url" in attributes:  # pragma no branch
-            self._events_url = self._makeStringAttribute(attributes["events_url"])
+            self._events_url = self._makeStringAttribute(
+                attributes["events_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels" in attributes:  # pragma no branch
-            self._labels = self._makeListOfClassesAttribute(github.Label.Label, attributes["labels"])
+            self._labels = self._makeListOfClassesAttribute(
+                github.Label.Label, attributes["labels"])
         if "labels_url" in attributes:  # pragma no branch
-            self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+            self._labels_url = self._makeStringAttribute(
+                attributes["labels_url"])
         if "milestone" in attributes:  # pragma no branch
-            self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+            self._milestone = self._makeClassAttribute(
+                github.Milestone.Milestone, attributes["milestone"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "pull_request" in attributes:  # pragma no branch
-            self._pull_request = self._makeClassAttribute(github.IssuePullRequest.IssuePullRequest, attributes["pull_request"])
+            self._pull_request = self._makeClassAttribute(
+                github.IssuePullRequest.IssuePullRequest, attributes["pull_request"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"])

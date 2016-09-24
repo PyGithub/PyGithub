@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -134,15 +134,17 @@ class File(github.GithubObject.NonCompletableGithubObject):
         if "changes" in attributes:  # pragma no branch
             self._changes = self._makeIntAttribute(attributes["changes"])
         if "contents_url" in attributes:  # pragma no branch
-            self._contents_url = self._makeStringAttribute(attributes["contents_url"])
+            self._contents_url = self._makeStringAttribute(
+                attributes["contents_url"])
         if "deletions" in attributes:  # pragma no branch
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "filename" in attributes:  # pragma no branch
             self._filename = self._makeStringAttribute(attributes["filename"])
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
-        if "previous_filename" in attributes: # pragma no branch
-            self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
+        if "previous_filename" in attributes:  # pragma no branch
+            self._previous_filename = self._makeStringAttribute(
+                attributes["previous_filename"])
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
         if "sha" in attributes:  # pragma no branch

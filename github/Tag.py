@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -78,10 +78,13 @@ class Tag(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.Commit.Commit, attributes["commit"])
+            self._commit = self._makeClassAttribute(
+                github.Commit.Commit, attributes["commit"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "tarball_url" in attributes:  # pragma no branch
-            self._tarball_url = self._makeStringAttribute(attributes["tarball_url"])
+            self._tarball_url = self._makeStringAttribute(
+                attributes["tarball_url"])
         if "zipball_url" in attributes:  # pragma no branch
-            self._zipball_url = self._makeStringAttribute(attributes["zipball_url"])
+            self._zipball_url = self._makeStringAttribute(
+                attributes["zipball_url"])

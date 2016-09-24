@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -29,30 +29,43 @@ import github
 import Framework
 
 
-# Replay data for this test case is forged, because I don't have access to a real Github Enterprise install
+# Replay data for this test case is forged, because I don't have access to
+# a real Github Enterprise install
 class Enterprise(Framework.BasicTestCase):
+
     def testHttps(self):
-        g = github.Github(self.login, self.password, base_url="https://my.enterprise.com")
-        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
+        g = github.Github(self.login, self.password,
+                          base_url="https://my.enterprise.com")
+        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner",
+                                                                             "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
 
     def testHttp(self):
-        g = github.Github(self.login, self.password, base_url="http://my.enterprise.com")
-        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
+        g = github.Github(self.login, self.password,
+                          base_url="http://my.enterprise.com")
+        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner",
+                                                                             "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
 
-    def testUnknownUrlScheme(self):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
+    # To stay compatible with Python 2.6, we do not use self.assertRaises with
+    # only one argument
+    def testUnknownUrlScheme(self):
         try:
-            github.Github(self.login, self.password, base_url="foobar://my.enterprise.com")
+            github.Github(self.login, self.password,
+                          base_url="foobar://my.enterprise.com")
         except AssertionError, exception:
             raised = True
             self.assertEqual(exception.args[0], "Unknown URL scheme")
         self.assertTrue(raised)
 
     def testLongUrl(self):
-        g = github.Github(self.login, self.password, base_url="http://my.enterprise.com/path/to/github")
+        g = github.Github(self.login, self.password,
+                          base_url="http://my.enterprise.com/path/to/github")
         repos = g.get_user().get_repos()
-        self.assertListKeyEqual(repos, lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
+        self.assertListKeyEqual(repos, lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner",
+                                                          "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
         self.assertEqual(repos[0].owner.name, "Vincent Jacques")
 
     def testSpecificPort(self):
-        g = github.Github(self.login, self.password, base_url="http://my.enterprise.com:8080")
-        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner", "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])
+        g = github.Github(self.login, self.password,
+                          base_url="http://my.enterprise.com:8080")
+        self.assertListKeyEqual(g.get_user().get_repos(), lambda r: r.name, ["TestPyGithub", "django", "PyGithub", "developer.github.com", "acme-public-website", "C4Planner",
+                                                                             "Hacking", "vincent-jacques.net", "Contests", "Candidates", "Tests", "DrawTurksHead", "DrawSyntax", "QuadProgMm", "Boost.HierarchicalEnum", "ViDE"])

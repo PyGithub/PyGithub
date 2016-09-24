@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -38,7 +38,8 @@ class InputFileContent(object):
         """
 
         assert isinstance(content, (str, unicode)), content
-        assert new_name is github.GithubObject.NotSet or isinstance(new_name, (str, unicode)), new_name
+        assert new_name is github.GithubObject.NotSet or isinstance(
+            new_name, (str, unicode)), new_name
         self.__newName = new_name
         self.__content = content
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Michael Stead <michael.stead@gmail.com>                       #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -368,7 +368,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self._parentUrl(self._parentUrl(self.url)) +
+            "/issues/" + str(self.number) + "/comments",
             input=post_parameters
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
@@ -381,9 +382,12 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param state: string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert title is github.GithubObject.NotSet or isinstance(
+            title, (str, unicode)), title
+        assert body is github.GithubObject.NotSet or isinstance(
+            body, (str, unicode)), body
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -471,7 +475,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         assert isinstance(id, (int, long)), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id)
+            self._parentUrl(self._parentUrl(self.url)) +
+            "/issues/comments/" + str(id)
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
@@ -483,7 +488,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.IssueComment.IssueComment,
             self._requester,
-            self._parentUrl(self._parentUrl(self.url)) + "/issues/" + str(self.number) + "/comments",
+            self._parentUrl(self._parentUrl(self.url)) +
+            "/issues/" + str(self.number) + "/comments",
             None
         )
 
@@ -504,7 +510,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
-        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
+        assert commit_message is github.GithubObject.NotSet or isinstance(
+            commit_message, (str, unicode)), commit_message
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
@@ -555,68 +562,88 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         if "additions" in attributes:  # pragma no branch
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
-            self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+            self._assignee = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["assignee"])
         if "base" in attributes:  # pragma no branch
-            self._base = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["base"])
+            self._base = self._makeClassAttribute(
+                github.PullRequestPart.PullRequestPart, attributes["base"])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "changed_files" in attributes:  # pragma no branch
-            self._changed_files = self._makeIntAttribute(attributes["changed_files"])
+            self._changed_files = self._makeIntAttribute(
+                attributes["changed_files"])
         if "closed_at" in attributes:  # pragma no branch
-            self._closed_at = self._makeDatetimeAttribute(attributes["closed_at"])
+            self._closed_at = self._makeDatetimeAttribute(
+                attributes["closed_at"])
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch
-            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(
+                attributes["comments_url"])
         if "commits" in attributes:  # pragma no branch
             self._commits = self._makeIntAttribute(attributes["commits"])
         if "commits_url" in attributes:  # pragma no branch
-            self._commits_url = self._makeStringAttribute(attributes["commits_url"])
+            self._commits_url = self._makeStringAttribute(
+                attributes["commits_url"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "deletions" in attributes:  # pragma no branch
             self._deletions = self._makeIntAttribute(attributes["deletions"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "head" in attributes:  # pragma no branch
-            self._head = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["head"])
+            self._head = self._makeClassAttribute(
+                github.PullRequestPart.PullRequestPart, attributes["head"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_url" in attributes:  # pragma no branch
-            self._issue_url = self._makeStringAttribute(attributes["issue_url"])
+            self._issue_url = self._makeStringAttribute(
+                attributes["issue_url"])
         if "merge_commit_sha" in attributes:  # pragma no branch
-            self._merge_commit_sha = self._makeStringAttribute(attributes["merge_commit_sha"])
+            self._merge_commit_sha = self._makeStringAttribute(
+                attributes["merge_commit_sha"])
         if "mergeable" in attributes:  # pragma no branch
             self._mergeable = self._makeBoolAttribute(attributes["mergeable"])
         if "mergeable_state" in attributes:  # pragma no branch
-            self._mergeable_state = self._makeStringAttribute(attributes["mergeable_state"])
+            self._mergeable_state = self._makeStringAttribute(
+                attributes["mergeable_state"])
         if "merged" in attributes:  # pragma no branch
             self._merged = self._makeBoolAttribute(attributes["merged"])
         if "merged_at" in attributes:  # pragma no branch
-            self._merged_at = self._makeDatetimeAttribute(attributes["merged_at"])
+            self._merged_at = self._makeDatetimeAttribute(
+                attributes["merged_at"])
         if "merged_by" in attributes:  # pragma no branch
-            self._merged_by = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["merged_by"])
+            self._merged_by = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["merged_by"])
         if "milestone" in attributes:  # pragma no branch
-            self._milestone = self._makeClassAttribute(github.Milestone.Milestone, attributes["milestone"])
+            self._milestone = self._makeClassAttribute(
+                github.Milestone.Milestone, attributes["milestone"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "patch_url" in attributes:  # pragma no branch
-            self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+            self._patch_url = self._makeStringAttribute(
+                attributes["patch_url"])
         if "review_comment_url" in attributes:  # pragma no branch
-            self._review_comment_url = self._makeStringAttribute(attributes["review_comment_url"])
+            self._review_comment_url = self._makeStringAttribute(
+                attributes["review_comment_url"])
         if "review_comments" in attributes:  # pragma no branch
-            self._review_comments = self._makeIntAttribute(attributes["review_comments"])
+            self._review_comments = self._makeIntAttribute(
+                attributes["review_comments"])
         if "review_comments_url" in attributes:  # pragma no branch
-            self._review_comments_url = self._makeStringAttribute(attributes["review_comments_url"])
+            self._review_comments_url = self._makeStringAttribute(
+                attributes["review_comments_url"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"])

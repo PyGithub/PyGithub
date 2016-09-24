@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -32,6 +32,7 @@ import github.PaginatedList
 
 
 class PaginatedList(github.PaginatedList.PaginatedListBase):
+
     def __init__(self, url, args, requester, key, convert, contentClass):
         github.PaginatedList.PaginatedListBase.__init__(self)
         self.__url = url
@@ -64,7 +65,8 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
         self.__continue = len(data[self.__key]) > 0
 
         return [
-            self.__contentClass(self.__requester, headers, self.__convert(element), completed=False)
+            self.__contentClass(self.__requester, headers,
+                                self.__convert(element), completed=False)
             for element in data[self.__key]
         ]
 
@@ -134,7 +136,8 @@ def convertIssue(attributes):
         "user": {"login": attributes["user"], "url": "/users/" + attributes["user"]},
     }
     if "labels" in attributes:  # pragma no branch
-        convertedAttributes["labels"] = [{"name": label} for label in attributes["labels"]]
+        convertedAttributes["labels"] = [
+            {"name": label} for label in attributes["labels"]]
     if "title" in attributes:  # pragma no branch
         convertedAttributes["title"] = attributes["title"]
     if "created_at" in attributes:  # pragma no branch

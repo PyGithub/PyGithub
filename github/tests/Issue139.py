@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -27,6 +27,7 @@ import github
 
 
 class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/139
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user().get_repo("PyGithub").get_issue(139).user

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -28,6 +28,7 @@ import Framework
 
 
 class Label(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.label = self.g.get_user().get_repo("PyGithub").get_label("Bug")
@@ -35,7 +36,8 @@ class Label(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.label.color, "e10c02")
         self.assertEqual(self.label.name, "Bug")
-        self.assertEqual(self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug")
+        self.assertEqual(
+            self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/Bug")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.label.__repr__(), 'Label(name="Bug")')
@@ -44,7 +46,8 @@ class Label(Framework.TestCase):
         self.label.edit("LabelEditedByPyGithub", "0000ff")
         self.assertEqual(self.label.color, "0000ff")
         self.assertEqual(self.label.name, "LabelEditedByPyGithub")
-        self.assertEqual(self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/LabelEditedByPyGithub")
+        self.assertEqual(
+            self.label.url, "https://api.github.com/repos/jacquev6/PyGithub/labels/LabelEditedByPyGithub")
 
     def testDelete(self):
         self.label.delete()

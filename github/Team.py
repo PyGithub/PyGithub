@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -184,7 +184,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
-        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert permission is github.GithubObject.NotSet or isinstance(
+            permission, (str, unicode)), permission
         post_parameters = {
             "name": name,
         }
@@ -290,17 +291,22 @@ class Team(github.GithubObject.CompletableGithubObject):
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "members_count" in attributes:  # pragma no branch
-            self._members_count = self._makeIntAttribute(attributes["members_count"])
+            self._members_count = self._makeIntAttribute(
+                attributes["members_count"])
         if "members_url" in attributes:  # pragma no branch
-            self._members_url = self._makeStringAttribute(attributes["members_url"])
+            self._members_url = self._makeStringAttribute(
+                attributes["members_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "permission" in attributes:  # pragma no branch
-            self._permission = self._makeStringAttribute(attributes["permission"])
+            self._permission = self._makeStringAttribute(
+                attributes["permission"])
         if "repos_count" in attributes:  # pragma no branch
-            self._repos_count = self._makeIntAttribute(attributes["repos_count"])
+            self._repos_count = self._makeIntAttribute(
+                attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
-            self._repositories_url = self._makeStringAttribute(attributes["repositories_url"])
+            self._repositories_url = self._makeStringAttribute(
+                attributes["repositories_url"])
         if "slug" in attributes:  # pragma no branch
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch

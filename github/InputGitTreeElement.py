@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -43,8 +43,10 @@ class InputGitTreeElement(object):
         assert isinstance(path, (str, unicode)), path
         assert isinstance(mode, (str, unicode)), mode
         assert isinstance(type, (str, unicode)), type
-        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert content is github.GithubObject.NotSet or isinstance(
+            content, (str, unicode)), content
+        assert sha is github.GithubObject.NotSet or isinstance(
+            sha, (str, unicode)), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

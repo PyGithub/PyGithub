@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -130,11 +130,16 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         :param note_url: string
         :rtype: None
         """
-        assert scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in scopes), scopes
-        assert add_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_scopes), add_scopes
-        assert remove_scopes is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_scopes), remove_scopes
-        assert note is github.GithubObject.NotSet or isinstance(note, (str, unicode)), note
-        assert note_url is github.GithubObject.NotSet or isinstance(note_url, (str, unicode)), note_url
+        assert scopes is github.GithubObject.NotSet or all(
+            isinstance(element, (str, unicode)) for element in scopes), scopes
+        assert add_scopes is github.GithubObject.NotSet or all(isinstance(
+            element, (str, unicode)) for element in add_scopes), add_scopes
+        assert remove_scopes is github.GithubObject.NotSet or all(isinstance(
+            element, (str, unicode)) for element in remove_scopes), remove_scopes
+        assert note is github.GithubObject.NotSet or isinstance(
+            note, (str, unicode)), note
+        assert note_url is github.GithubObject.NotSet or isinstance(
+            note_url, (str, unicode)), note_url
         post_parameters = dict()
         if scopes is not github.GithubObject.NotSet:
             post_parameters["scopes"] = scopes
@@ -166,9 +171,11 @@ class Authorization(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "app" in attributes:  # pragma no branch
-            self._app = self._makeClassAttribute(github.AuthorizationApplication.AuthorizationApplication, attributes["app"])
+            self._app = self._makeClassAttribute(
+                github.AuthorizationApplication.AuthorizationApplication, attributes["app"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "note" in attributes:  # pragma no branch
@@ -176,10 +183,12 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         if "note_url" in attributes:  # pragma no branch
             self._note_url = self._makeStringAttribute(attributes["note_url"])
         if "scopes" in attributes:  # pragma no branch
-            self._scopes = self._makeListOfStringsAttribute(attributes["scopes"])
+            self._scopes = self._makeListOfStringsAttribute(attributes[
+                                                            "scopes"])
         if "token" in attributes:  # pragma no branch
             self._token = self._makeStringAttribute(attributes["token"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -72,10 +72,12 @@ class Plan(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "collaborators" in attributes:  # pragma no branch
-            self._collaborators = self._makeIntAttribute(attributes["collaborators"])
+            self._collaborators = self._makeIntAttribute(
+                attributes["collaborators"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "private_repos" in attributes:  # pragma no branch
-            self._private_repos = self._makeIntAttribute(attributes["private_repos"])
+            self._private_repos = self._makeIntAttribute(
+                attributes["private_repos"])
         if "space" in attributes:  # pragma no branch
             self._space = self._makeIntAttribute(attributes["space"])

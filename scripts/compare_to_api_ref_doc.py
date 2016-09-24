@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -40,20 +40,28 @@ def parseReference():
         ("/notifications/threads/1/subscription", "PUT"): ("/notifications/threads/:id/subscription", "PUT"),
     }
     undocumentedUrls = [
-        ("/hooks/:name", "GET"),  # Discovered in https://github.com/jacquev6/PyGithub/issues/196
-        ("/hooks", "GET"),  # Mentioned somewhere in http://developer.github.com/v3/repos/hooks/
+        # Discovered in https://github.com/jacquev6/PyGithub/issues/196
+        ("/hooks/:name", "GET"),
+        # Mentioned somewhere in http://developer.github.com/v3/repos/hooks/
+        ("/hooks", "GET"),
         ("/hub", "POST"),  # Described in content/v3/repos/hooks.md
         ("/api/status.json", "GET"),  # https://status.github.com/api
         ("/api/last-message.json", "GET"),  # https://status.github.com/api
         ("/api/messages.json", "GET"),  # https://status.github.com/api
     ]
     uninterestingUrls = [
-        ("/markdown/raw", "POST"),  # Job is done by /markdown => useless in PyGithub
-        ("/repos/octocat/Hello-World/git/refs/heads/feature-a", "DELETE"),  # Example of DELETE /repos/:owner/:repo/git/refs/:ref
-        ("/repos/octocat/Hello-World/git/refs/tags/v1.0", "DELETE"),  # Example of DELETE /repos/:owner/:repo/git/refs/:ref
-        ("/repos/:owner/:repo/git/trees/:sha?recursive=1", "GET"),  # Example of GET /repos/:owner/:repo/git/trees/:sha
-        ("/repos/:owner/:repo/git/refs/heads/skunkworkz/featureA", "GET"),  # Example of GET /repos/:owner/:repo/git/refs
-        ("/repos/:owner/:repo/git/refs/tags", "GET"),  # Example of GET /repos/:owner/:repo/git/refs
+        # Job is done by /markdown => useless in PyGithub
+        ("/markdown/raw", "POST"),
+        # Example of DELETE /repos/:owner/:repo/git/refs/:ref
+        ("/repos/octocat/Hello-World/git/refs/heads/feature-a", "DELETE"),
+        # Example of DELETE /repos/:owner/:repo/git/refs/:ref
+        ("/repos/octocat/Hello-World/git/refs/tags/v1.0", "DELETE"),
+        # Example of GET /repos/:owner/:repo/git/trees/:sha
+        ("/repos/:owner/:repo/git/trees/:sha?recursive=1", "GET"),
+        # Example of GET /repos/:owner/:repo/git/refs
+        ("/repos/:owner/:repo/git/refs/heads/skunkworkz/featureA", "GET"),
+        # Example of GET /repos/:owner/:repo/git/refs
+        ("/repos/:owner/:repo/git/refs/tags", "GET"),
     ]
 
     urls = dict()
@@ -64,7 +72,8 @@ def parseReference():
             with open(filename) as f:
                 for line in f:
                     if line.startswith("#"):
-                        section = ("-".join(line.rstrip().split(" ")[1:]))  # ## @todo anchor-ify (lowercase, only a-z, etc.)
+                        # ## @todo anchor-ify (lowercase, only a-z, etc.)
+                        section = ("-".join(line.rstrip().split(" ")[1:]))
                     if line.startswith("    "):
                         line = line[4:]
                     if line.startswith("\t"):
@@ -75,7 +84,8 @@ def parseReference():
                             url = (url, verb)
                             if url in badlyNamedUrls:
                                 url = badlyNamedUrls[url]
-                            docUrl = "http://developer.github.com/" + filename[29:-3]  # ## @todo + "#" + section
+                            docUrl = "http://developer.github.com/" + \
+                                filename[29:-3]  # ## @todo + "#" + section
                             urls[url] = docUrl
 
     for url in undocumentedUrls:
@@ -113,8 +123,10 @@ def printUrls(title, urls):
 def main():
     ref = parseReference()
     lib = parseLibrary()
-    printUrls("in Github API v3, but not implemented in PyGithub", set(ref) - set(lib))
-    printUrls("called by PyGithub but not existing in Github API v3", set(lib) - set(ref))
+    printUrls("in Github API v3, but not implemented in PyGithub",
+              set(ref) - set(lib))
+    printUrls("called by PyGithub but not existing in Github API v3",
+              set(lib) - set(ref))
     for key in set(lib) & set(ref):
         (url, verb) = key
         if ref[key] is not None and lib[key] != ref[key] and not lib[key].startswith(ref[key] + "/#"):

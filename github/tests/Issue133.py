@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -26,6 +26,7 @@ import Framework
 
 
 class Issue133(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()

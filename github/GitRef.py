@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -80,7 +80,8 @@ class GitRef(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(sha, (str, unicode)), sha
-        assert force is github.GithubObject.NotSet or isinstance(force, bool), force
+        assert force is github.GithubObject.NotSet or isinstance(
+            force, bool), force
         post_parameters = {
             "sha": sha,
         }
@@ -116,7 +117,8 @@ class GitRef(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "object" in attributes:  # pragma no branch
-            self._object = self._makeClassAttribute(github.GitObject.GitObject, attributes["object"])
+            self._object = self._makeClassAttribute(
+                github.GitObject.GitObject, attributes["object"])
         if "ref" in attributes:  # pragma no branch
             self._ref = self._makeStringAttribute(attributes["ref"])
         if "url" in attributes:  # pragma no branch

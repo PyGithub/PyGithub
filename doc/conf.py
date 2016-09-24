@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -45,14 +45,15 @@ import glob
 sys.path.insert(0, os.path.abspath('..'))
 from setup import version as setupVersion
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration -----------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
 # needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.mathjax']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.coverage', 'sphinx.ext.mathjax']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -114,7 +115,7 @@ pygments_style = 'sphinx'
 # modindex_common_prefix = []
 
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output ---------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -194,7 +195,7 @@ html_static_path = ['_static']
 htmlhelp_basename = 'PyGithubdoc'
 
 
-# -- Options for LaTeX output --------------------------------------------------
+# -- Options for LaTeX output --------------------------------------------
 
 # latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
@@ -235,7 +236,7 @@ latex_documents = [
 # latex_domain_indices = True
 
 
-# -- Options for manual page output --------------------------------------------
+# -- Options for manual page output --------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
@@ -248,7 +249,7 @@ man_pages = [
 # man_show_urls = False
 
 
-# -- Options for Texinfo output ------------------------------------------------
+# -- Options for Texinfo output ------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
@@ -304,7 +305,8 @@ for githubClass in githubClasses:
         f.write(githubClass + "\n")
         f.write("=" * len(githubClass) + "\n")
         f.write("\n")
-        f.write(".. autoclass:: github." + githubClass + "." + githubClass + "()\n")
+        f.write(".. autoclass:: github." +
+                githubClass + "." + githubClass + "()\n")
 
 methods = dict()
 for githubClass in githubClasses + ["MainClass"]:
@@ -321,7 +323,8 @@ for githubClass in githubClasses + ["MainClass"]:
                 isProperty = True
             if line.startswith("    def "):
                 if not isProperty:
-                    assert method is None or (githubClass, method) in [("github.StatsPunchCard.StatsPunchCard", "get")], githubClass + "." + method + " has no :calls: section"
+                    assert method is None or (githubClass, method) in [(
+                        "github.StatsPunchCard.StatsPunchCard", "get")], githubClass + "." + method + " has no :calls: section"
                     method = line.split("(")[0][8:]
                     if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
                         method = None
@@ -333,7 +336,8 @@ for githubClass in githubClasses + ["MainClass"]:
                         methods[url] = dict()
                     if verb not in methods[url]:
                         methods[url][verb] = set()
-                    methods[url][verb].add(":meth:`" + githubClass + "." + method + "`")
+                    methods[url][verb].add(
+                        ":meth:`" + githubClass + "." + method + "`")
                 method = None
 
 methods["/markdown/raw"] = dict()
@@ -350,7 +354,8 @@ with open("apis.rst", "w") as apis:
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
             if verb in verbs:
-                apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
+                apis.write("  * " + verb + ": " +
+                           " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
 
 shutil.copyfile("../Contributing.rst", "contributing.rst")

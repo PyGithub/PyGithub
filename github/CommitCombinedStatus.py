@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -103,12 +103,16 @@ class CommitCombinedStatus(github.GithubObject.NonCompletableGithubObject):
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "total_count" in attributes:  # pragma no branch
-            self._total_count = self._makeIntAttribute(attributes["total_count"])
+            self._total_count = self._makeIntAttribute(
+                attributes["total_count"])
         if "commit_url" in attributes:  # pragma no branch
-            self._commit_url = self._makeStringAttribute(attributes["commit_url"])
+            self._commit_url = self._makeStringAttribute(
+                attributes["commit_url"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"])
         if "statuses" in attributes:  # pragma no branch
-            self._statuses = self._makeListOfClassesAttribute(github.CommitStatus.CommitStatus, attributes["statuses"])
+            self._statuses = self._makeListOfClassesAttribute(
+                github.CommitStatus.CommitStatus, attributes["statuses"])

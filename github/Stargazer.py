@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -64,6 +64,8 @@ class Stargazer(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if 'starred_at' in attributes:
-            self._starred_at = self._makeDatetimeAttribute(attributes['starred_at'])
+            self._starred_at = self._makeDatetimeAttribute(
+                attributes['starred_at'])
         if 'user' in attributes:
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes['user'])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes['user'])

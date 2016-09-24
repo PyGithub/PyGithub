@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -35,6 +35,7 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class _NotSetType:
+
     def __repr__(self):
         return "NotSet"
 
@@ -43,11 +44,13 @@ NotSet = _NotSetType()
 
 
 class _ValuedAttribute:
+
     def __init__(self, value):
         self.value = value
 
 
 class _BadAttribute:
+
     def __init__(self, value, expectedType, exception=None):
         self.__value = value
         self.__expectedType = expectedType
@@ -55,7 +58,8 @@ class _BadAttribute:
 
     @property
     def value(self):
-        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
+        raise GithubException.BadAttributeException(
+            self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject(object):
@@ -79,7 +83,8 @@ class GithubObject(object):
 
         # Ask requester to do some checking, for debug and test purpose
         # Since it's most handy to access and kinda all-knowing
-        if self.CHECK_AFTER_INIT_FLAG:  # pragma no branch (Flag always set in tests)
+        # pragma no branch (Flag always set in tests)
+        if self.CHECK_AFTER_INIT_FLAG:
             requester.check_me(self)
 
     def _storeAndUseAttributes(self, headers, attributes):
@@ -161,7 +166,9 @@ class GithubObject(object):
             if len(s) == 24:  # pragma no branch (This branch was used only when creating a download)
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
+                # pragma no cover (This branch was used only when creating a
+                # download)
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")
             elif len(s) == 25:
                 return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
             else:
@@ -228,11 +235,13 @@ class GithubObject(object):
 
 
 class NonCompletableGithubObject(GithubObject):
+
     def _completeIfNeeded(self):
         pass
 
 
 class CompletableGithubObject(GithubObject):
+
     def __init__(self, requester, headers, attributes, completed):
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
@@ -268,7 +277,8 @@ class CompletableGithubObject(GithubObject):
         if self.etag is not None:
             conditionalRequestHeader[Consts.REQ_IF_NONE_MATCH] = self.etag
         if self.last_modified is not None:
-            conditionalRequestHeader[Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
+            conditionalRequestHeader[
+                Consts.REQ_IF_MODIFIED_SINCE] = self.last_modified
 
         status, responseHeaders, output = self._requester.requestJson(
             "GET",
@@ -278,7 +288,8 @@ class CompletableGithubObject(GithubObject):
         if status == 304:
             return False
         else:
-            headers, data = self._requester._Requester__check(status, responseHeaders, output)
+            headers, data = self._requester._Requester__check(
+                status, responseHeaders, output)
             self._storeAndUseAttributes(headers, data)
             self.__completed = True
             return True

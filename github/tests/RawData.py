@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -94,6 +94,7 @@ class RawData(Framework.TestCase):
         self.assertEqual(plan.raw_data, RawData.planRawData)
 
     def testCreateObjectFromRawData(self):
-        user = self.g.create_from_raw_data(github.NamedUser.NamedUser, RawData.jacquev6RawData)
+        user = self.g.create_from_raw_data(
+            github.NamedUser.NamedUser, RawData.jacquev6RawData)
         self.assertEqual(user._CompletableGithubObject__completed, True)
         self.assertEqual(user.name, "Vincent Jacques")

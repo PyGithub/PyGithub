@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
 #                                                                              #
@@ -27,22 +27,25 @@ from pprint import pprint
 
 
 class Release(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
-        # Do not get self.release here as it casues bad data to be saved in --record mode
+        # Do not get self.release here as it casues bad data to be saved in
+        # --record mode
 
     def testAttributes(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
         self.assertEqual(self.release.tag_name, "v1.25.2")
-        self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
+        self.assertEqual(self.release.upload_url,
+                         "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
         self.assertEqual(self.release.body, "Body")
         self.assertEqual(self.release.title, "Test")
-        self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
+        self.assertEqual(
+            self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
-
 
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
@@ -50,7 +53,8 @@ class Release(Framework.TestCase):
 
     def testUpdate(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
-        new_release = self.release.update_release("Updated Test", "Updated Body")
+        new_release = self.release.update_release(
+            "Updated Test", "Updated Body")
         self.assertEqual(new_release.body, "Updated Body")
         self.assertEqual(new_release.title, "Updated Test")
 
@@ -61,7 +65,8 @@ class Release(Framework.TestCase):
 
     def testCreateGitTagAndRelease(self):
         self.repo = self.g.get_user().get_repo("PyGithub")
-        self.release = self.repo.create_git_tag_and_release('v3.0.0', 'tag message', 'release title', 'release message', '5a05a5e58f682d315acd2447c87ac5b4d4fc55e8', 'commit')
+        self.release = self.repo.create_git_tag_and_release(
+            'v3.0.0', 'tag message', 'release title', 'release message', '5a05a5e58f682d315acd2447c87ac5b4d4fc55e8', 'commit')
         self.assertEqual(self.release.tag_name, "v3.0.0")
         self.assertEqual(self.release.body, "release message")
         self.assertEqual(self.release.title, "release title")

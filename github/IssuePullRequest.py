@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -65,4 +65,5 @@ class IssuePullRequest(github.GithubObject.NonCompletableGithubObject):
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "patch_url" in attributes:  # pragma no branch
-            self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+            self._patch_url = self._makeStringAttribute(
+                attributes["patch_url"])

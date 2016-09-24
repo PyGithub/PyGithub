@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -55,7 +55,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
     def decoded_content(self):
         assert self.encoding == "base64", "unsupported encoding: %s" % self.encoding
         if atLeastPython3:
-            content = bytearray(self.content, "utf-8")  # pragma no cover (covered by tests with Python 3.2)
+            # pragma no cover (covered by tests with Python 3.2)
+            content = bytearray(self.content, "utf-8")
         else:
             content = self.content
         return base64.b64decode(content)
@@ -106,9 +107,12 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         :type: :class:`github.Repository.Repository`
         """
         if self._repository is github.GithubObject.NotSet:
-            # The repository was not set automatically, so it must be looked up by url.
-            repo_url = "/".join(self.url.split("/")[:6])  # pragma no cover (Should be covered)
-            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(self._requester, self._headers, {'url': repo_url}, completed=False))  # pragma no cover (Should be covered)
+            # The repository was not set automatically, so it must be looked up
+            # by url.
+            # pragma no cover (Should be covered)
+            repo_url = "/".join(self.url.split("/")[:6])
+            self._repository = github.GithubObject._ValuedAttribute(github.Repository.Repository(
+                self._requester, self._headers, {'url': repo_url}, completed=False))  # pragma no cover (Should be covered)
         return self._repository.value
 
     @property
@@ -169,7 +173,8 @@ class ContentFile(github.GithubObject.CompletableGithubObject):
         if "path" in attributes:  # pragma no branch
             self._path = self._makeStringAttribute(attributes["path"])
         if "repository" in attributes:  # pragma no branch
-            self._repository = self._makeClassAttribute(github.Repository.Repository, attributes["repository"])
+            self._repository = self._makeClassAttribute(
+                github.Repository.Repository, attributes["repository"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "size" in attributes:  # pragma no branch

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
@@ -240,13 +240,16 @@ class Gist(github.GithubObject.CompletableGithubObject):
         :param files: dict of string to :class:`github.InputFileContent.InputFileContent`
         :rtype: None
         """
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert files is github.GithubObject.NotSet or all(element is None or isinstance(element, github.InputFileContent) for element in files.itervalues()), files
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, unicode)), description
+        assert files is github.GithubObject.NotSet or all(element is None or isinstance(
+            element, github.InputFileContent) for element in files.itervalues()), files
         post_parameters = dict()
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if files is not github.GithubObject.NotSet:
-            post_parameters["files"] = dict((key, None if value is None else value._identity) for key, value in files.iteritems())
+            post_parameters["files"] = dict(
+                (key, None if value is None else value._identity) for key, value in files.iteritems())
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -335,38 +338,52 @@ class Gist(github.GithubObject.CompletableGithubObject):
         if "comments" in attributes:  # pragma no branch
             self._comments = self._makeIntAttribute(attributes["comments"])
         if "comments_url" in attributes:  # pragma no branch
-            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(
+                attributes["comments_url"])
         if "commits_url" in attributes:  # pragma no branch
-            self._commits_url = self._makeStringAttribute(attributes["commits_url"])
+            self._commits_url = self._makeStringAttribute(
+                attributes["commits_url"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "description" in attributes:  # pragma no branch
-            self._description = self._makeStringAttribute(attributes["description"])
+            self._description = self._makeStringAttribute(
+                attributes["description"])
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeDictOfStringsToClassesAttribute(github.GistFile.GistFile, attributes["files"])
+            self._files = self._makeDictOfStringsToClassesAttribute(
+                github.GistFile.GistFile, attributes["files"])
         if "fork_of" in attributes:  # pragma no branch
-            self._fork_of = self._makeClassAttribute(Gist, attributes["fork_of"])
+            self._fork_of = self._makeClassAttribute(
+                Gist, attributes["fork_of"])
         if "forks" in attributes:  # pragma no branch
-            self._forks = self._makeListOfClassesAttribute(Gist, attributes["forks"])
+            self._forks = self._makeListOfClassesAttribute(
+                Gist, attributes["forks"])
         if "forks_url" in attributes:  # pragma no branch
-            self._forks_url = self._makeStringAttribute(attributes["forks_url"])
+            self._forks_url = self._makeStringAttribute(
+                attributes["forks_url"])
         if "git_pull_url" in attributes:  # pragma no branch
-            self._git_pull_url = self._makeStringAttribute(attributes["git_pull_url"])
+            self._git_pull_url = self._makeStringAttribute(
+                attributes["git_pull_url"])
         if "git_push_url" in attributes:  # pragma no branch
-            self._git_push_url = self._makeStringAttribute(attributes["git_push_url"])
+            self._git_push_url = self._makeStringAttribute(
+                attributes["git_push_url"])
         if "history" in attributes:  # pragma no branch
-            self._history = self._makeListOfClassesAttribute(github.GistHistoryState.GistHistoryState, attributes["history"])
+            self._history = self._makeListOfClassesAttribute(
+                github.GistHistoryState.GistHistoryState, attributes["history"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeStringAttribute(attributes["id"])
         if "owner" in attributes:  # pragma no branch
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["owner"])
         if "public" in attributes:  # pragma no branch
             self._public = self._makeBoolAttribute(attributes["public"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"])

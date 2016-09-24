@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -27,6 +27,7 @@ import github
 
 
 class Issue142(unittest.TestCase):  # https://github.com/jacquev6/PyGithub/issues/142
+
     def testDecodeJson(self):
         # This test has to hit GitHub for real, because the record-replay framework looses types
         # and python3 does not behave like python2 for strings and bytes
