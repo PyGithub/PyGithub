@@ -189,6 +189,7 @@ class Requester:
             cls = GithubException.BadUserAgentException
         elif status == 403 and output.get("message").startswith("API Rate Limit Exceeded"):
             cls = GithubException.RateLimitExceededException
+            output['headers'] = headers
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
         else:
