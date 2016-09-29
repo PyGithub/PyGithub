@@ -187,7 +187,7 @@ class Requester:
             cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
-        elif status == 403 and output.get("message").startswith("API Rate Limit Exceeded"):
+        elif status == 403 and output.get("message").lower().startswith("api rate limit exceeded"):
             cls = GithubException.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
             cls = GithubException.UnknownObjectException
