@@ -614,7 +614,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "/user",
             input=post_parameters
         )
-        self._useAttributes(data)
+        self._useattributes(data)
 
     def get_authorization(self, id):
         """
@@ -1134,7 +1134,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _useattributes(self, attributes):
         if "avatar_url" in attributes:  # pragma no branch
             self._avatar_url = self._makeStringAttribute(
                 attributes["avatar_url"])

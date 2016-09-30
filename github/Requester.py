@@ -42,6 +42,7 @@ import sys
 import Consts
 import re
 import os
+import GithubException
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -51,8 +52,6 @@ if atLeastPython26:
 else:  # pragma no cover (Covered by all tests with Python 2.5)
     # pragma no cover (Covered by all tests with Python 2.5)
     import simplejson as json
-
-import GithubException
 
 
 class Requester:
@@ -218,7 +217,7 @@ class Requester:
                 data = data.decode("utf-8")
             try:
                 return json.loads(data)
-            except ValueError, e:
+            except ValueError as e:
                 return {'data': data}
 
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):

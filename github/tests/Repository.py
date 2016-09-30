@@ -116,7 +116,7 @@ class Repository(Framework.TestCase):
         raised = False
         try:
             self.repo.protect_branch("", True, "everyone", ["test"])
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(
@@ -131,7 +131,7 @@ class Repository(Framework.TestCase):
         raised = False
         try:
             self.repo.protect_branch("master", True, "everyone")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 422)
             self.assertEqual(
@@ -146,7 +146,7 @@ class Repository(Framework.TestCase):
         raised = False
         try:
             self.repo.protect_branch("master", True, "", ["test"])
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 422)
             self.assertEqual(
@@ -665,7 +665,7 @@ class Repository(Framework.TestCase):
         raised = False
         try:
             commit = self.repo.merge("branchForBase", "branchForHead")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 409)
             self.assertEqual(exception.data, {"message": "Merge conflict"})
@@ -696,7 +696,7 @@ class Repository(Framework.TestCase):
         try:
             self.repo.subscribe_to_hub(
                 "non-existing-event", "http://requestb.in/1bc1sc61")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 422)
             self.assertEqual(exception.data, {

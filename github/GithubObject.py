@@ -135,7 +135,7 @@ class GithubObject(object):
         elif isinstance(value, type):
             try:
                 return _ValuedAttribute(transform(value))
-            except Exception, e:
+            except Exception as e:
                 return _BadAttribute(value, type, e)
         else:
             return _BadAttribute(value, type)

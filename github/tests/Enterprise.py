@@ -51,7 +51,7 @@ class Enterprise(Framework.BasicTestCase):
         try:
             github.Github(self.login, self.password,
                           base_url="foobar://my.enterprise.com")
-        except AssertionError, exception:
+        except AssertionError as exception:
             raised = True
             self.assertEqual(exception.args[0], "Unknown URL scheme")
         self.assertTrue(raised)

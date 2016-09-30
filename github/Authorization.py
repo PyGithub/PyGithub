@@ -158,7 +158,7 @@ class Authorization(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
-    def _initAttributes(self):
+    def _initattributes(self):
         self._app = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
