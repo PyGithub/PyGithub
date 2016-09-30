@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -167,9 +167,12 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(title, (str, unicode)), title
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, unicode)), description
+        assert due_on is github.GithubObject.NotSet or isinstance(
+            due_on, datetime.date), due_on
         post_parameters = {
             "title": title,
         }
@@ -219,28 +222,35 @@ class Milestone(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "closed_issues" in attributes:  # pragma no branch
-            self._closed_issues = self._makeIntAttribute(attributes["closed_issues"])
+            self._closed_issues = self._makeIntAttribute(
+                attributes["closed_issues"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "creator" in attributes:  # pragma no branch
-            self._creator = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["creator"])
+            self._creator = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["creator"])
         if "description" in attributes:  # pragma no branch
-            self._description = self._makeStringAttribute(attributes["description"])
+            self._description = self._makeStringAttribute(
+                attributes["description"])
         if "due_on" in attributes:  # pragma no branch
             self._due_on = self._makeDatetimeAttribute(attributes["due_on"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "labels_url" in attributes:  # pragma no branch
-            self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+            self._labels_url = self._makeStringAttribute(
+                attributes["labels_url"])
         if "number" in attributes:  # pragma no branch
             self._number = self._makeIntAttribute(attributes["number"])
         if "open_issues" in attributes:  # pragma no branch
-            self._open_issues = self._makeIntAttribute(attributes["open_issues"])
+            self._open_issues = self._makeIntAttribute(
+                attributes["open_issues"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
         if "title" in attributes:  # pragma no branch
             self._title = self._makeStringAttribute(attributes["title"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

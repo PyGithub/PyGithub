@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -30,6 +30,7 @@ import Framework
 
 
 class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/214
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_user().get_repo("PyGithub")
@@ -60,7 +61,8 @@ class Issue214(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issu
         self.assertEqual(self.issue.assignee, None)
 
     def testCreateIssue(self):
-        issue = self.repo.create_issue("Issue created by PyGithub", assignee='farrd')
+        issue = self.repo.create_issue(
+            "Issue created by PyGithub", assignee='farrd')
         self.assertEqual(issue.assignee.login, 'farrd')
 
     def testGetIssues(self):

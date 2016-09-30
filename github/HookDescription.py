@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -72,10 +72,13 @@ class HookDescription(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "events" in attributes:  # pragma no branch
-            self._events = self._makeListOfStringsAttribute(attributes["events"])
+            self._events = self._makeListOfStringsAttribute(attributes[
+                                                            "events"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "schema" in attributes:  # pragma no branch
-            self._schema = self._makeListOfListOfStringsAttribute(attributes["schema"])
+            self._schema = self._makeListOfListOfStringsAttribute(attributes[
+                                                                  "schema"])
         if "supported_events" in attributes:  # pragma no branch
-            self._supported_events = self._makeListOfStringsAttribute(attributes["supported_events"])
+            self._supported_events = self._makeListOfStringsAttribute(
+                attributes["supported_events"])

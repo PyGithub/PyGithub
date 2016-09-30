@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -38,7 +38,7 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"id": self._id.value})
-    
+
     @property
     def actor(self):
         """
@@ -106,16 +106,20 @@ class IssueEvent(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "actor" in attributes:  # pragma no branch
-            self._actor = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["actor"])
+            self._actor = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["actor"])
         if "commit_id" in attributes:  # pragma no branch
-            self._commit_id = self._makeStringAttribute(attributes["commit_id"])
+            self._commit_id = self._makeStringAttribute(
+                attributes["commit_id"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "event" in attributes:  # pragma no branch
             self._event = self._makeStringAttribute(attributes["event"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue" in attributes:  # pragma no branch
-            self._issue = self._makeClassAttribute(github.Issue.Issue, attributes["issue"])
+            self._issue = self._makeClassAttribute(
+                github.Issue.Issue, attributes["issue"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

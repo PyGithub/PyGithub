@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -94,8 +94,10 @@ class UserKey(github.GithubObject.CompletableGithubObject):
         :param key: string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert key is github.GithubObject.NotSet or isinstance(key, (str, unicode)), key
+        assert title is github.GithubObject.NotSet or isinstance(
+            title, (str, unicode)), title
+        assert key is github.GithubObject.NotSet or isinstance(
+            key, (str, unicode)), key
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title

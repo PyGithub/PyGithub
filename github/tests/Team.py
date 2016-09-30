@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -28,6 +28,7 @@ import Framework
 
 
 class Team(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.org = self.g.get_organization("BeaverSoftware")
@@ -42,14 +43,16 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')
+        self.assertEqual(self.team.__repr__(),
+                         'Team(name="Team created by PyGithub", id=189850)')
 
     def testMembers(self):
         user = self.g.get_user("jacquev6")
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
         self.team.add_to_members(user)
-        self.assertListKeyEqual(self.team.get_members(), lambda u: u.login, ["jacquev6"])
+        self.assertListKeyEqual(self.team.get_members(),
+                                lambda u: u.login, ["jacquev6"])
         self.assertTrue(self.team.has_in_members(user))
         self.team.remove_from_members(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
@@ -64,7 +67,8 @@ class Team(Framework.TestCase):
         self.assertListKeyEqual(self.team.get_repos(), None, [])
         self.assertFalse(self.team.has_in_repos(repo))
         self.team.add_to_repos(repo)
-        self.assertListKeyEqual(self.team.get_repos(), lambda r: r.name, ["FatherBeaver"])
+        self.assertListKeyEqual(self.team.get_repos(),
+                                lambda r: r.name, ["FatherBeaver"])
         self.assertTrue(self.team.has_in_repos(repo))
         self.team.remove_from_repos(repo)
         self.assertListKeyEqual(self.team.get_repos(), None, [])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -34,12 +34,15 @@ atLeastPython26 = sys.hexversion >= 0x02060000
 atMostPython2 = sys.hexversion < 0x03000000
 
 
-class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
+# To stay compatible with Python 2.6, we do not use self.assertRaises with
+# only one argument
+class Exceptions(Framework.TestCase):
+
     def testInvalidInput(self):
         raised = False
         try:
             self.g.get_user().create_key("Bad key", "xxx")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 422)
             self.assertEqual(
@@ -59,11 +62,12 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
         self.assertTrue(raised)
 
     def testNonJsonDataReturnedByGithub(self):
-        # Replay data was forged according to https://github.com/jacquev6/PyGithub/pull/182
+        # Replay data was forged according to
+        # https://github.com/jacquev6/PyGithub/pull/182
         raised = False
         try:
             self.g.get_user("jacquev6")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 503)
             self.assertEqual(
@@ -78,58 +82,70 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
         raised = False
         try:
             self.g.get_user().get_repo("Xxx")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
             if atLeastPython26 and atMostPython2:
-                self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
+                self.assertEqual(
+                    str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+                # pragma no cover (Covered with Python 3)
+                self.assertEqual(
+                    str(exception), "404 {'message': 'Not Found'}")
         self.assertTrue(raised)
 
     def testUnknownUser(self):
         raised = False
         try:
             self.g.get_user("ThisUserShouldReallyNotExist")
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
             if atLeastPython26 and atMostPython2:
-                self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
+                self.assertEqual(
+                    str(exception), "404 {u'message': u'Not Found'}")
             else:
-                self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
+                # pragma no cover (Covered with Python 3)
+                self.assertEqual(
+                    str(exception), "404 {'message': 'Not Found'}")
         self.assertTrue(raised)
 
     def testBadAuthentication(self):
         raised = False
         try:
             github.Github("BadUser", "BadPassword").get_user().login
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 401)
             self.assertEqual(exception.data, {"message": "Bad credentials"})
             if atLeastPython26 and atMostPython2:
-                self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
+                self.assertEqual(
+                    str(exception), "401 {u'message': u'Bad credentials'}")
             else:
-                self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)
+                # pragma no cover (Covered with Python 3)
+                self.assertEqual(
+                    str(exception), "401 {'message': 'Bad credentials'}")
         self.assertTrue(raised)
-
 
     def testExceptionPickling(self):
         pickle.loads(pickle.dumps(github.GithubException('foo', 'bar')))
 
 
 class SpecificExceptions(Framework.TestCase):
+
     def testBadCredentials(self):
-        self.assertRaises(github.BadCredentialsException, lambda: github.Github("BadUser", "BadPassword").get_user().login)
+        self.assertRaises(github.BadCredentialsException, lambda: github.Github(
+            "BadUser", "BadPassword").get_user().login)
 
     def testUnknownObject(self):
-        self.assertRaises(github.UnknownObjectException, lambda: self.g.get_user().get_repo("Xxx"))
+        self.assertRaises(github.UnknownObjectException,
+                          lambda: self.g.get_user().get_repo("Xxx"))
 
     def testBadUserAgent(self):
-        self.assertRaises(github.BadUserAgentException, lambda: github.Github(self.login, self.password, user_agent="").get_user().name)
+        self.assertRaises(github.BadUserAgentException, lambda: github.Github(
+            self.login, self.password, user_agent="").get_user().name)
 
     def testRateLimitExceeded(self):
         g = github.Github()

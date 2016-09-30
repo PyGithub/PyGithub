@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -28,13 +28,16 @@ import Framework
 
 
 class Markdown(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.text = "MyTitle\n=======\n\nIssue #1"
         self.repo = self.g.get_user().get_repo("PyGithub")
 
     def testRenderMarkdown(self):
-        self.assertEqual(self.g.render_markdown(self.text), '<h1><a name="mytitle" class="anchor" href="#mytitle"><span class="mini-icon mini-icon-link"></span></a>MyTitle</h1><p>Issue #1</p>')
+        self.assertEqual(self.g.render_markdown(
+            self.text), '<h1><a name="mytitle" class="anchor" href="#mytitle"><span class="mini-icon mini-icon-link"></span></a>MyTitle</h1><p>Issue #1</p>')
 
     def testRenderGithubFlavoredMarkdown(self):
-        self.assertEqual(self.g.render_markdown(self.text, self.repo), '<h1>MyTitle</h1><p>Issue <a href="https://github.com/jacquev6/PyGithub/issues/1" class="issue-link" title="Gitub -&gt; Github everywhere">#1</a></p>')
+        self.assertEqual(self.g.render_markdown(self.text, self.repo),
+                         '<h1>MyTitle</h1><p>Issue <a href="https://github.com/jacquev6/PyGithub/issues/1" class="issue-link" title="Gitub -&gt; Github everywhere">#1</a></p>')

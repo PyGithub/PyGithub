@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -26,11 +26,14 @@ import Framework
 import github
 
 
-# Replay data forged by capitalizing headers from PaginatedList.setUp.txt and PaginatedList.testIteration.txt
+# Replay data forged by capitalizing headers from PaginatedList.setUp.txt
+# and PaginatedList.testIteration.txt
 class Issue216(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_user("openframeworks").get_repo("openFrameworks")
+        self.repo = self.g.get_user(
+            "openframeworks").get_repo("openFrameworks")
         self.list = self.repo.get_issues()
 
     def testIteration(self):

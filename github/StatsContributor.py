@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -109,8 +109,10 @@ class StatsContributor(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["author"])
         if "total" in attributes:  # pragma no branch
             self._total = self._makeIntAttribute(attributes["total"])
         if "weeks" in attributes:  # pragma no branch
-            self._weeks = self._makeListOfClassesAttribute(self.Week, attributes["weeks"])
+            self._weeks = self._makeListOfClassesAttribute(
+                self.Week, attributes["weeks"])

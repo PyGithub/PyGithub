@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -55,4 +55,5 @@ class Status(github.GithubObject.NonCompletableGithubObject):
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "last_updated" in attributes:  # pragma no branch
-            self._last_updated = self._makeDatetimeAttribute(attributes["last_updated"])
+            self._last_updated = self._makeDatetimeAttribute(
+                attributes["last_updated"])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2015 Ed Holland <eholland@alertlogic.com>                          #
 #                                                                              #
@@ -124,8 +124,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
         if "author" in attributes:
-            self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.GitAuthor.GitAuthor, attributes["author"])
         if "url" in attributes:
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:
-            self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+            self._upload_url = self._makeStringAttribute(
+                attributes["upload_url"])

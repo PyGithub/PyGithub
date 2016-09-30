@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Christopher Gilbert <christopher.john.gilbert@gmail.com>      #
 # Copyright 2012 Steve English <steve.english@navetas.com>                     #
@@ -74,6 +74,7 @@ import github.Stargazer
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
+
 
 class Repository(github.GithubObject.CompletableGithubObject):
     """
@@ -552,8 +553,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         :type: integer
         """
-        self._completeIfNotSet(self._stargazers_count)  # pragma no cover (Should be covered)
-        return self._stargazers_count.value  # pragma no cover (Should be covered)
+        self._completeIfNotSet(
+            self._stargazers_count)  # pragma no cover (Should be covered)
+        # pragma no cover (Should be covered)
+        return self._stargazers_count.value
 
     @property
     def stargazers_url(self):
@@ -657,7 +660,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(
+            collaborator, (str, unicode)), collaborator
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
@@ -714,9 +718,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(message, (str, unicode)), message
         assert isinstance(tree, github.GitTree.GitTree), tree
-        assert all(isinstance(element, github.GitCommit.GitCommit) for element in parents), parents
-        assert author is github.GithubObject.NotSet or isinstance(author, github.InputGitAuthor), author
-        assert committer is github.GithubObject.NotSet or isinstance(committer, github.InputGitAuthor), committer
+        assert all(isinstance(element, github.GitCommit.GitCommit)
+                   for element in parents), parents
+        assert author is github.GithubObject.NotSet or isinstance(
+            author, github.InputGitAuthor), author
+        assert committer is github.GithubObject.NotSet or isinstance(
+            committer, github.InputGitAuthor), committer
         post_parameters = {
             "message": message,
             "tree": tree._identity,
@@ -791,7 +798,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(message, (str, unicode)), message
         assert isinstance(object, (str, unicode)), object
         assert isinstance(type, (str, unicode)), type
-        assert tagger is github.GithubObject.NotSet or isinstance(tagger, github.InputGitAuthor), tagger
+        assert tagger is github.GithubObject.NotSet or isinstance(
+            tagger, github.InputGitAuthor), tagger
         post_parameters = {
             "tag": tag,
             "message": message,
@@ -814,8 +822,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param base_tree: :class:`github.GitTree.GitTree`
         :rtype: :class:`github.GitTree.GitTree`
         """
-        assert all(isinstance(element, github.InputGitTreeElement) for element in tree), tree
-        assert base_tree is github.GithubObject.NotSet or isinstance(base_tree, github.GitTree.GitTree), base_tree
+        assert all(isinstance(element, github.InputGitTreeElement)
+                   for element in tree), tree
+        assert base_tree is github.GithubObject.NotSet or isinstance(
+            base_tree, github.GitTree.GitTree), base_tree
         post_parameters = {
             "tree": [element._identity for element in tree],
         }
@@ -839,8 +849,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
+        assert events is github.GithubObject.NotSet or all(
+            isinstance(element, (str, unicode)) for element in events), events
+        assert active is github.GithubObject.NotSet or isinstance(
+            active, bool), active
         post_parameters = {
             "name": name,
             "config": config,
@@ -867,10 +879,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Issue.Issue`
         """
         assert isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, (str, unicode)) for element in labels), labels
+        assert body is github.GithubObject.NotSet or isinstance(
+            body, (str, unicode)), body
+        assert assignee is github.GithubObject.NotSet or isinstance(
+            assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert milestone is github.GithubObject.NotSet or isinstance(
+            milestone, github.Milestone.Milestone), milestone
+        assert labels is github.GithubObject.NotSet or all(isinstance(
+            element, github.Label.Label) or isinstance(element, (str, unicode)) for element in labels), labels
 
         post_parameters = {
             "title": title,
@@ -885,7 +901,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
-            post_parameters["labels"] = [element.name if isinstance(element, github.Label.Label) else element for element in labels]
+            post_parameters["labels"] = [element.name if isinstance(
+                element, github.Label.Label) else element for element in labels]
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/issues",
@@ -943,9 +960,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, (str, unicode)), title
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, unicode)), description
+        assert due_on is github.GithubObject.NotSet or isinstance(
+            due_on, datetime.date), due_on
         post_parameters = {
             "title": title,
         }
@@ -1023,13 +1043,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
-        assert private is github.GithubObject.NotSet or isinstance(private, bool), private
-        assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
-        assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
-        assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
-        assert default_branch is github.GithubObject.NotSet or isinstance(default_branch, (str, unicode)), default_branch
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, unicode)), description
+        assert homepage is github.GithubObject.NotSet or isinstance(
+            homepage, (str, unicode)), homepage
+        assert private is github.GithubObject.NotSet or isinstance(
+            private, bool), private
+        assert has_issues is github.GithubObject.NotSet or isinstance(
+            has_issues, bool), has_issues
+        assert has_wiki is github.GithubObject.NotSet or isinstance(
+            has_wiki, bool), has_wiki
+        assert has_downloads is github.GithubObject.NotSet or isinstance(
+            has_downloads, bool), has_downloads
+        assert default_branch is github.GithubObject.NotSet or isinstance(
+            default_branch, (str, unicode)), default_branch
         post_parameters = {
             "name": name,
         }
@@ -1062,7 +1089,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: string
         """
         assert isinstance(archive_format, (str, unicode)), archive_format
-        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(
+            ref, (str, unicode)), ref
         url = self.url + "/" + archive_format
         if ref is not github.GithubObject.NotSet:
             url += "/" + ref
@@ -1183,11 +1211,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param author: string or :class:`github.NamedUser.NamedUser` or :class:`github.AuthenticatedUser.AuthenticatedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
         """
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
-        assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
-        assert until is github.GithubObject.NotSet or isinstance(until, datetime.datetime), until
-        assert author is github.GithubObject.NotSet or isinstance(author, (str, unicode, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)), author
+        assert sha is github.GithubObject.NotSet or isinstance(
+            sha, (str, unicode)), sha
+        assert path is github.GithubObject.NotSet or isinstance(
+            path, (str, unicode)), path
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime), since
+        assert until is github.GithubObject.NotSet or isinstance(
+            until, datetime.datetime), until
+        assert author is github.GithubObject.NotSet or isinstance(
+            author, (str, unicode, github.NamedUser.NamedUser, github.AuthenticatedUser.AuthenticatedUser)), author
         url_parameters = dict()
         if sha is not github.GithubObject.NotSet:
             url_parameters["sha"] = sha
@@ -1226,7 +1259,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.ContentFile.ContentFile`
         """
         assert isinstance(path, (str, unicode)), path
-        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(
+            ref, (str, unicode)), ref
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
@@ -1395,7 +1429,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: list of :class:`github.ContentFile.ContentFile`
         """
         assert isinstance(path, (str, unicode)), path
-        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(
+            ref, (str, unicode)), ref
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
@@ -1414,7 +1449,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
             )
 
         return [
-            github.ContentFile.ContentFile(self._requester, headers, attributes, completed=(attributes["type"] != "file"))  # Lazy completion only makes sense for files. See discussion here: https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            # Lazy completion only makes sense for files. See discussion here:
+            # https://github.com/jacquev6/PyGithub/issues/140#issuecomment-13481130
+            github.ContentFile.ContentFile(
+                self._requester, headers, attributes, completed=(attributes["type"] != "file"))
             for attributes in data
         ]
 
@@ -1554,7 +1592,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.GitTree.GitTree`
         """
         assert isinstance(sha, (str, unicode)), sha
-        assert recursive is github.GithubObject.NotSet or isinstance(recursive, bool), recursive
+        assert recursive is github.GithubObject.NotSet or isinstance(
+            recursive, bool), recursive
         url_parameters = dict()
         if recursive is not github.GithubObject.NotSet:
             url_parameters["recursive"] = recursive
@@ -1617,15 +1656,24 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param creator: string or :class:`github.NamedUser.NamedUser`
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert milestone is github.GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(milestone, github.Milestone.Milestone), milestone
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert mentioned is github.GithubObject.NotSet or isinstance(mentioned, github.NamedUser.NamedUser), mentioned
-        assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
-        assert creator is github.GithubObject.NotSet or isinstance(creator, github.NamedUser.NamedUser) or isinstance(creator, (str, unicode)), creator
+        assert milestone is github.GithubObject.NotSet or milestone == "*" or milestone == "none" or isinstance(
+            milestone, github.Milestone.Milestone), milestone
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert assignee is github.GithubObject.NotSet or isinstance(
+            assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert mentioned is github.GithubObject.NotSet or isinstance(
+            mentioned, github.NamedUser.NamedUser), mentioned
+        assert labels is github.GithubObject.NotSet or all(isinstance(
+            element, github.Label.Label) for element in labels), labels
+        assert sort is github.GithubObject.NotSet or isinstance(
+            sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime), since
+        assert creator is github.GithubObject.NotSet or isinstance(
+            creator, github.NamedUser.NamedUser) or isinstance(creator, (str, unicode)), creator
         url_parameters = dict()
         if milestone is not github.GithubObject.NotSet:
             if isinstance(milestone, (str, unicode)):
@@ -1669,9 +1717,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueComment.IssueComment`
         """
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert sort is github.GithubObject.NotSet or isinstance(
+            sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime), since
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
@@ -1730,7 +1781,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.RepositoryKey.RepositoryKey`
         """
         return github.PaginatedList.PaginatedList(
-            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(requester, headers, data, completed, repoUrl=self.url),
+            lambda requester, headers, data, completed: github.RepositoryKey.RepositoryKey(
+                requester, headers, data, completed, repoUrl=self.url),
             self._requester,
             self.url + "/keys",
             None
@@ -1793,9 +1845,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Milestone.Milestone`
         """
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert sort is github.GithubObject.NotSet or isinstance(
+            sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, (str, unicode)), direction
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
@@ -1845,11 +1900,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param head: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequest.PullRequest`
         """
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
-        assert base is github.GithubObject.NotSet or isinstance(base, (str, unicode)), base
-        assert head is github.GithubObject.NotSet or isinstance(head, (str, unicode)), head
+        assert state is github.GithubObject.NotSet or isinstance(
+            state, (str, unicode)), state
+        assert sort is github.GithubObject.NotSet or isinstance(
+            sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, (str, unicode)), direction
+        assert base is github.GithubObject.NotSet or isinstance(
+            base, (str, unicode)), base
+        assert head is github.GithubObject.NotSet or isinstance(
+            head, (str, unicode)), head
         url_parameters = dict()
         if state is not github.GithubObject.NotSet:
             url_parameters["state"] = state
@@ -1886,9 +1946,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
-        assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
+        assert sort is github.GithubObject.NotSet or isinstance(
+            sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(
+            direction, (str, unicode)), direction
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, datetime.datetime), since
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:
             url_parameters["sort"] = sort
@@ -1909,7 +1972,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param ref: string
         :rtype: :class:`github.ContentFile.ContentFile`
         """
-        assert ref is github.GithubObject.NotSet or isinstance(ref, (str, unicode)), ref
+        assert ref is github.GithubObject.NotSet or isinstance(
+            ref, (str, unicode)), ref
         url_parameters = dict()
         if ref is not github.GithubObject.NotSet:
             url_parameters["ref"] = ref
@@ -1958,7 +2022,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsContributor.StatsContributor(self._requester, headers, attributes, completed=True)
+                github.StatsContributor.StatsContributor(
+                    self._requester, headers, attributes, completed=True)
                 for attributes in data
             ]
 
@@ -1975,7 +2040,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsCommitActivity.StatsCommitActivity(self._requester, headers, attributes, completed=True)
+                github.StatsCommitActivity.StatsCommitActivity(
+                    self._requester, headers, attributes, completed=True)
                 for attributes in data
             ]
 
@@ -1992,7 +2058,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             return None
         else:
             return [
-                github.StatsCodeFrequency.StatsCodeFrequency(self._requester, headers, attributes, completed=True)
+                github.StatsCodeFrequency.StatsCodeFrequency(
+                    self._requester, headers, attributes, completed=True)
                 for attributes in data
             ]
 
@@ -2109,7 +2176,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param assignee: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
-        assert isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert isinstance(assignee, github.NamedUser.NamedUser) or isinstance(
+            assignee, (str, unicode)), assignee
 
         if isinstance(assignee, github.NamedUser.NamedUser):
             assignee = assignee._identity
@@ -2126,7 +2194,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: bool
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(
+            collaborator, (str, unicode)), collaborator
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
@@ -2148,10 +2217,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(keyword, (str, unicode)), keyword
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            "/legacy/issues/search/" + self.owner.login + "/" + self.name + "/" + state + "/" + urllib.quote(keyword)
+            "/legacy/issues/search/" + self.owner.login + "/" +
+            self.name + "/" + state + "/" + urllib.quote(keyword)
         )
         return [
-            github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(element), completed=False)
+            github.Issue.Issue(self._requester, headers, github.Legacy.convertIssue(
+                element), completed=False)
             for element in data["issues"]
         ]
 
@@ -2165,7 +2236,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
+        assert commit_message is github.GithubObject.NotSet or isinstance(
+            commit_message, (str, unicode)), commit_message
         post_parameters = {
             "base": base,
             "head": head,
@@ -2194,8 +2266,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         assert isinstance(branch, (str, unicode))
         assert isinstance(enabled, bool)
-        assert enforcement_level is github.GithubObject.NotSet or isinstance(enforcement_level, (str, unicode)), enforcement_level
-        assert contexts is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
+        assert enforcement_level is github.GithubObject.NotSet or isinstance(
+            enforcement_level, (str, unicode)), enforcement_level
+        assert contexts is github.GithubObject.NotSet or all(isinstance(
+            element, (str, unicode)) or isinstance(element, (str, unicode)) for element in contexts), contexts
 
         post_parameters = {
             "protection": {}
@@ -2204,9 +2278,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
             post_parameters["protection"]["enabled"] = enabled
         if enforcement_level is not github.GithubObject.NotSet:
             post_parameters["protection"]["required_status_checks"] = {}
-            post_parameters["protection"]["required_status_checks"]["enforcement_level"] = enforcement_level
+            post_parameters["protection"]["required_status_checks"][
+                "enforcement_level"] = enforcement_level
         if contexts is not github.GithubObject.NotSet:
-            post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
+            post_parameters["protection"][
+                "required_status_checks"]["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url + "/branches/" + branch,
@@ -2220,7 +2296,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
         :rtype: None
         """
-        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(
+            collaborator, (str, unicode)), collaborator
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
@@ -2254,7 +2331,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(mode, (str, unicode)), mode
         assert isinstance(event, (str, unicode)), event
         assert isinstance(callback, (str, unicode)), callback
-        assert secret is github.GithubObject.NotSet or isinstance(secret, (str, unicode)), secret
+        assert secret is github.GithubObject.NotSet or isinstance(
+            secret, (str, unicode)), secret
 
         post_parameters = {
             "hub.mode": mode,
@@ -2349,144 +2427,198 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "archive_url" in attributes:  # pragma no branch
-            self._archive_url = self._makeStringAttribute(attributes["archive_url"])
+            self._archive_url = self._makeStringAttribute(
+                attributes["archive_url"])
         if "assignees_url" in attributes:  # pragma no branch
-            self._assignees_url = self._makeStringAttribute(attributes["assignees_url"])
+            self._assignees_url = self._makeStringAttribute(
+                attributes["assignees_url"])
         if "blobs_url" in attributes:  # pragma no branch
-            self._blobs_url = self._makeStringAttribute(attributes["blobs_url"])
+            self._blobs_url = self._makeStringAttribute(
+                attributes["blobs_url"])
         if "branches_url" in attributes:  # pragma no branch
-            self._branches_url = self._makeStringAttribute(attributes["branches_url"])
+            self._branches_url = self._makeStringAttribute(
+                attributes["branches_url"])
         if "clone_url" in attributes:  # pragma no branch
-            self._clone_url = self._makeStringAttribute(attributes["clone_url"])
+            self._clone_url = self._makeStringAttribute(
+                attributes["clone_url"])
         if "collaborators_url" in attributes:  # pragma no branch
-            self._collaborators_url = self._makeStringAttribute(attributes["collaborators_url"])
+            self._collaborators_url = self._makeStringAttribute(
+                attributes["collaborators_url"])
         if "comments_url" in attributes:  # pragma no branch
-            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(
+                attributes["comments_url"])
         if "commits_url" in attributes:  # pragma no branch
-            self._commits_url = self._makeStringAttribute(attributes["commits_url"])
+            self._commits_url = self._makeStringAttribute(
+                attributes["commits_url"])
         if "compare_url" in attributes:  # pragma no branch
-            self._compare_url = self._makeStringAttribute(attributes["compare_url"])
+            self._compare_url = self._makeStringAttribute(
+                attributes["compare_url"])
         if "contents_url" in attributes:  # pragma no branch
-            self._contents_url = self._makeStringAttribute(attributes["contents_url"])
+            self._contents_url = self._makeStringAttribute(
+                attributes["contents_url"])
         if "contributors_url" in attributes:  # pragma no branch
-            self._contributors_url = self._makeStringAttribute(attributes["contributors_url"])
+            self._contributors_url = self._makeStringAttribute(
+                attributes["contributors_url"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "default_branch" in attributes:  # pragma no branch
-            self._default_branch = self._makeStringAttribute(attributes["default_branch"])
+            self._default_branch = self._makeStringAttribute(
+                attributes["default_branch"])
         if "description" in attributes:  # pragma no branch
-            self._description = self._makeStringAttribute(attributes["description"])
+            self._description = self._makeStringAttribute(
+                attributes["description"])
         if "downloads_url" in attributes:  # pragma no branch
-            self._downloads_url = self._makeStringAttribute(attributes["downloads_url"])
+            self._downloads_url = self._makeStringAttribute(
+                attributes["downloads_url"])
         if "events_url" in attributes:  # pragma no branch
-            self._events_url = self._makeStringAttribute(attributes["events_url"])
+            self._events_url = self._makeStringAttribute(
+                attributes["events_url"])
         if "fork" in attributes:  # pragma no branch
             self._fork = self._makeBoolAttribute(attributes["fork"])
         if "forks" in attributes:  # pragma no branch
             self._forks = self._makeIntAttribute(attributes["forks"])
         if "forks_count" in attributes:  # pragma no branch
-            self._forks_count = self._makeIntAttribute(attributes["forks_count"])
+            self._forks_count = self._makeIntAttribute(
+                attributes["forks_count"])
         if "forks_url" in attributes:  # pragma no branch
-            self._forks_url = self._makeStringAttribute(attributes["forks_url"])
+            self._forks_url = self._makeStringAttribute(
+                attributes["forks_url"])
         if "full_name" in attributes:  # pragma no branch
-            self._full_name = self._makeStringAttribute(attributes["full_name"])
+            self._full_name = self._makeStringAttribute(
+                attributes["full_name"])
         if "git_commits_url" in attributes:  # pragma no branch
-            self._git_commits_url = self._makeStringAttribute(attributes["git_commits_url"])
+            self._git_commits_url = self._makeStringAttribute(
+                attributes["git_commits_url"])
         if "git_refs_url" in attributes:  # pragma no branch
-            self._git_refs_url = self._makeStringAttribute(attributes["git_refs_url"])
+            self._git_refs_url = self._makeStringAttribute(
+                attributes["git_refs_url"])
         if "git_tags_url" in attributes:  # pragma no branch
-            self._git_tags_url = self._makeStringAttribute(attributes["git_tags_url"])
+            self._git_tags_url = self._makeStringAttribute(
+                attributes["git_tags_url"])
         if "git_url" in attributes:  # pragma no branch
             self._git_url = self._makeStringAttribute(attributes["git_url"])
         if "has_downloads" in attributes:  # pragma no branch
-            self._has_downloads = self._makeBoolAttribute(attributes["has_downloads"])
+            self._has_downloads = self._makeBoolAttribute(
+                attributes["has_downloads"])
         if "has_issues" in attributes:  # pragma no branch
-            self._has_issues = self._makeBoolAttribute(attributes["has_issues"])
+            self._has_issues = self._makeBoolAttribute(
+                attributes["has_issues"])
         if "has_wiki" in attributes:  # pragma no branch
             self._has_wiki = self._makeBoolAttribute(attributes["has_wiki"])
         if "homepage" in attributes:  # pragma no branch
             self._homepage = self._makeStringAttribute(attributes["homepage"])
         if "hooks_url" in attributes:  # pragma no branch
-            self._hooks_url = self._makeStringAttribute(attributes["hooks_url"])
+            self._hooks_url = self._makeStringAttribute(
+                attributes["hooks_url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_comment_url" in attributes:  # pragma no branch
-            self._issue_comment_url = self._makeStringAttribute(attributes["issue_comment_url"])
+            self._issue_comment_url = self._makeStringAttribute(
+                attributes["issue_comment_url"])
         if "issue_events_url" in attributes:  # pragma no branch
-            self._issue_events_url = self._makeStringAttribute(attributes["issue_events_url"])
+            self._issue_events_url = self._makeStringAttribute(
+                attributes["issue_events_url"])
         if "issues_url" in attributes:  # pragma no branch
-            self._issues_url = self._makeStringAttribute(attributes["issues_url"])
+            self._issues_url = self._makeStringAttribute(
+                attributes["issues_url"])
         if "keys_url" in attributes:  # pragma no branch
             self._keys_url = self._makeStringAttribute(attributes["keys_url"])
         if "labels_url" in attributes:  # pragma no branch
-            self._labels_url = self._makeStringAttribute(attributes["labels_url"])
+            self._labels_url = self._makeStringAttribute(
+                attributes["labels_url"])
         if "language" in attributes:  # pragma no branch
             self._language = self._makeStringAttribute(attributes["language"])
         if "languages_url" in attributes:  # pragma no branch
-            self._languages_url = self._makeStringAttribute(attributes["languages_url"])
+            self._languages_url = self._makeStringAttribute(
+                attributes["languages_url"])
         if "master_branch" in attributes:  # pragma no branch
-            self._master_branch = self._makeStringAttribute(attributes["master_branch"])
+            self._master_branch = self._makeStringAttribute(
+                attributes["master_branch"])
         if "merges_url" in attributes:  # pragma no branch
-            self._merges_url = self._makeStringAttribute(attributes["merges_url"])
+            self._merges_url = self._makeStringAttribute(
+                attributes["merges_url"])
         if "milestones_url" in attributes:  # pragma no branch
-            self._milestones_url = self._makeStringAttribute(attributes["milestones_url"])
+            self._milestones_url = self._makeStringAttribute(
+                attributes["milestones_url"])
         if "mirror_url" in attributes:  # pragma no branch
-            self._mirror_url = self._makeStringAttribute(attributes["mirror_url"])
+            self._mirror_url = self._makeStringAttribute(
+                attributes["mirror_url"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "network_count" in attributes:  # pragma no branch
-            self._network_count = self._makeIntAttribute(attributes["network_count"])
+            self._network_count = self._makeIntAttribute(
+                attributes["network_count"])
         if "notifications_url" in attributes:  # pragma no branch
-            self._notifications_url = self._makeStringAttribute(attributes["notifications_url"])
+            self._notifications_url = self._makeStringAttribute(
+                attributes["notifications_url"])
         if "open_issues" in attributes:  # pragma no branch
-            self._open_issues = self._makeIntAttribute(attributes["open_issues"])
+            self._open_issues = self._makeIntAttribute(
+                attributes["open_issues"])
         if "open_issues_count" in attributes:  # pragma no branch
-            self._open_issues_count = self._makeIntAttribute(attributes["open_issues_count"])
+            self._open_issues_count = self._makeIntAttribute(
+                attributes["open_issues_count"])
         if "organization" in attributes:  # pragma no branch
-            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
+            self._organization = self._makeClassAttribute(
+                github.Organization.Organization, attributes["organization"])
         if "owner" in attributes:  # pragma no branch
-            self._owner = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["owner"])
+            self._owner = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["owner"])
         if "parent" in attributes:  # pragma no branch
-            self._parent = self._makeClassAttribute(Repository, attributes["parent"])
+            self._parent = self._makeClassAttribute(
+                Repository, attributes["parent"])
         if "permissions" in attributes:  # pragma no branch
-            self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
+            self._permissions = self._makeClassAttribute(
+                github.Permissions.Permissions, attributes["permissions"])
         if "private" in attributes:  # pragma no branch
             self._private = self._makeBoolAttribute(attributes["private"])
         if "pulls_url" in attributes:  # pragma no branch
-            self._pulls_url = self._makeStringAttribute(attributes["pulls_url"])
+            self._pulls_url = self._makeStringAttribute(
+                attributes["pulls_url"])
         if "pushed_at" in attributes:  # pragma no branch
-            self._pushed_at = self._makeDatetimeAttribute(attributes["pushed_at"])
+            self._pushed_at = self._makeDatetimeAttribute(
+                attributes["pushed_at"])
         if "size" in attributes:  # pragma no branch
             self._size = self._makeIntAttribute(attributes["size"])
         if "source" in attributes:  # pragma no branch
-            self._source = self._makeClassAttribute(Repository, attributes["source"])
+            self._source = self._makeClassAttribute(
+                Repository, attributes["source"])
         if "ssh_url" in attributes:  # pragma no branch
             self._ssh_url = self._makeStringAttribute(attributes["ssh_url"])
         if "stargazers_count" in attributes:  # pragma no branch
-            self._stargazers_count = self._makeIntAttribute(attributes["stargazers_count"])
+            self._stargazers_count = self._makeIntAttribute(
+                attributes["stargazers_count"])
         if "stargazers_url" in attributes:  # pragma no branch
-            self._stargazers_url = self._makeStringAttribute(attributes["stargazers_url"])
+            self._stargazers_url = self._makeStringAttribute(
+                attributes["stargazers_url"])
         if "statuses_url" in attributes:  # pragma no branch
-            self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
+            self._statuses_url = self._makeStringAttribute(
+                attributes["statuses_url"])
         if "subscribers_url" in attributes:  # pragma no branch
-            self._subscribers_url = self._makeStringAttribute(attributes["subscribers_url"])
+            self._subscribers_url = self._makeStringAttribute(
+                attributes["subscribers_url"])
         if "subscription_url" in attributes:  # pragma no branch
-            self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
+            self._subscription_url = self._makeStringAttribute(
+                attributes["subscription_url"])
         if "svn_url" in attributes:  # pragma no branch
             self._svn_url = self._makeStringAttribute(attributes["svn_url"])
         if "tags_url" in attributes:  # pragma no branch
             self._tags_url = self._makeStringAttribute(attributes["tags_url"])
         if "teams_url" in attributes:  # pragma no branch
-            self._teams_url = self._makeStringAttribute(attributes["teams_url"])
+            self._teams_url = self._makeStringAttribute(
+                attributes["teams_url"])
         if "trees_url" in attributes:  # pragma no branch
-            self._trees_url = self._makeStringAttribute(attributes["trees_url"])
+            self._trees_url = self._makeStringAttribute(
+                attributes["trees_url"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "watchers" in attributes:  # pragma no branch
             self._watchers = self._makeIntAttribute(attributes["watchers"])
         if "watchers_count" in attributes:  # pragma no branch
-            self._watchers_count = self._makeIntAttribute(attributes["watchers_count"])
+            self._watchers_count = self._makeIntAttribute(
+                attributes["watchers_count"])

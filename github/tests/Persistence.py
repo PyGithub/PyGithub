@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -32,6 +32,7 @@ else:
 
 
 class Persistence(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("akfish/PyGithub")
@@ -49,7 +50,8 @@ class Persistence(Framework.TestCase):
         self.assertTrue(loadedRepo._requester is self.repo._requester)
         self.assertTrue(loadedRepo.owner._requester is self.repo._requester)
         self.assertEqual(loadedRepo.name, "PyGithub")
-        self.assertEqual(loadedRepo.url, "https://api.github.com/repos/akfish/PyGithub")
+        self.assertEqual(
+            loadedRepo.url, "https://api.github.com/repos/akfish/PyGithub")
 
     def testLoadAndUpdate(self):
         loadedRepo = self.g.load(self.dumpedRepo)

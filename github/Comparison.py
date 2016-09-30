@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -159,26 +159,33 @@ class Comparison(github.GithubObject.CompletableGithubObject):
         if "ahead_by" in attributes:  # pragma no branch
             self._ahead_by = self._makeIntAttribute(attributes["ahead_by"])
         if "base_commit" in attributes:  # pragma no branch
-            self._base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["base_commit"])
+            self._base_commit = self._makeClassAttribute(
+                github.Commit.Commit, attributes["base_commit"])
         if "behind_by" in attributes:  # pragma no branch
             self._behind_by = self._makeIntAttribute(attributes["behind_by"])
         if "commits" in attributes:  # pragma no branch
-            self._commits = self._makeListOfClassesAttribute(github.Commit.Commit, attributes["commits"])
+            self._commits = self._makeListOfClassesAttribute(
+                github.Commit.Commit, attributes["commits"])
         if "diff_url" in attributes:  # pragma no branch
             self._diff_url = self._makeStringAttribute(attributes["diff_url"])
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
+            self._files = self._makeListOfClassesAttribute(
+                github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "merge_base_commit" in attributes:  # pragma no branch
-            self._merge_base_commit = self._makeClassAttribute(github.Commit.Commit, attributes["merge_base_commit"])
+            self._merge_base_commit = self._makeClassAttribute(
+                github.Commit.Commit, attributes["merge_base_commit"])
         if "patch_url" in attributes:  # pragma no branch
-            self._patch_url = self._makeStringAttribute(attributes["patch_url"])
+            self._patch_url = self._makeStringAttribute(
+                attributes["patch_url"])
         if "permalink_url" in attributes:  # pragma no branch
-            self._permalink_url = self._makeStringAttribute(attributes["permalink_url"])
+            self._permalink_url = self._makeStringAttribute(
+                attributes["permalink_url"])
         if "status" in attributes:  # pragma no branch
             self._status = self._makeStringAttribute(attributes["status"])
         if "total_commits" in attributes:  # pragma no branch
-            self._total_commits = self._makeIntAttribute(attributes["total_commits"])
+            self._total_commits = self._makeIntAttribute(
+                attributes["total_commits"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

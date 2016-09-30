@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Ed Jackson <ed.jackson@gmail.com>                             #
@@ -67,15 +67,21 @@ class Github(object):
         :param per_page: int
         """
 
-        assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
-        assert password is None or isinstance(password, (str, unicode)), password
+        assert login_or_token is None or isinstance(
+            login_or_token, (str, unicode)), login_or_token
+        assert password is None or isinstance(
+            password, (str, unicode)), password
         assert isinstance(base_url, (str, unicode)), base_url
         assert isinstance(timeout, (int, long)), timeout
-        assert client_id is None or isinstance(client_id, (str, unicode)), client_id
-        assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
-        assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
+        assert client_id is None or isinstance(
+            client_id, (str, unicode)), client_id
+        assert client_secret is None or isinstance(
+            client_secret, (str, unicode)), client_secret
+        assert user_agent is None or isinstance(
+            user_agent, (str, unicode)), user_agent
         assert isinstance(api_preview, (bool))
-        self.__requester = Requester(login_or_token, password, base_url, timeout, client_id, client_secret, user_agent, per_page, api_preview)
+        self.__requester = Requester(login_or_token, password, base_url, timeout,
+                                     client_id, client_secret, user_agent, per_page, api_preview)
 
     def __get_FIX_REPO_GET_GIT_REF(self):
         """
@@ -86,7 +92,8 @@ class Github(object):
     def __set_FIX_REPO_GET_GIT_REF(self, value):
         self.__requester.FIX_REPO_GET_GIT_REF = value
 
-    FIX_REPO_GET_GIT_REF = property(__get_FIX_REPO_GET_GIT_REF, __set_FIX_REPO_GET_GIT_REF)
+    FIX_REPO_GET_GIT_REF = property(
+        __get_FIX_REPO_GET_GIT_REF, __set_FIX_REPO_GET_GIT_REF)
 
     def __get_per_page(self):
         """
@@ -97,12 +104,14 @@ class Github(object):
     def __set_per_page(self, value):
         self.__requester.per_page = value
 
-    # v2: Remove this property? Why should it be necessary to read/modify it after construction
+    # v2: Remove this property? Why should it be necessary to read/modify it
+    # after construction
     per_page = property(__get_per_page, __set_per_page)
 
     # v2: Provide a unified way to access values of headers of last response
     # v2: (and add/keep ad hoc properties for specific useful headers like rate limiting, oauth scopes, etc.)
-    # v2: Return an instance of a class: using a tuple did not allow to add a field "resettime"
+    # v2: Return an instance of a class: using a tuple did not allow to add a
+    # field "resettime"
     @property
     def rate_limiting(self):
         """
@@ -150,7 +159,8 @@ class Github(object):
         :param login: string
         :rtype: :class:`github.NamedUser.NamedUser`
         """
-        assert login is github.GithubObject.NotSet or isinstance(login, (str, unicode)), login
+        assert login is github.GithubObject.NotSet or isinstance(
+            login, (str, unicode)), login
         if login is github.GithubObject.NotSet:
             return AuthenticatedUser.AuthenticatedUser(self.__requester, {}, {"url": "/user"}, completed=False)
         else:
@@ -166,7 +176,8 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, (int, long)), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -195,8 +206,10 @@ class Github(object):
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_ or `GET /repositories/:id <http://developer.github.com/v3/repos>`_
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(full_name_or_id, (str, unicode, int, long)), full_name_or_id
-        url_base = "/repositories/" if isinstance(full_name_or_id, int) or isinstance(full_name_or_id, long) else "/repos/"
+        assert isinstance(full_name_or_id, (str, unicode,
+                                            int, long)), full_name_or_id
+        url_base = "/repositories/" if isinstance(
+            full_name_or_id, int) or isinstance(full_name_or_id, long) else "/repos/"
         url = "%s%s" % (url_base, full_name_or_id)
         if lazy:
             return Repository.Repository(self.__requester, {}, {"url": url}, completed=False)
@@ -212,7 +225,8 @@ class Github(object):
         :param since: integer
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        assert since is github.GithubObject.NotSet or isinstance(
+            since, (int, long)), since
         url_parameters = dict()
         if since is not github.GithubObject.NotSet:
             url_parameters["since"] = since
@@ -256,7 +270,8 @@ class Github(object):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert isinstance(keyword, (str, unicode)), keyword
-        assert language is github.GithubObject.NotSet or isinstance(language, (str, unicode)), language
+        assert language is github.GithubObject.NotSet or isinstance(
+            language, (str, unicode)), language
         args = {} if language is github.GithubObject.NotSet else {"language": language}
         return Legacy.PaginatedList(
             "/legacy/repos/search/" + urllib.quote_plus(keyword, safe='/%:><'),
@@ -307,10 +322,12 @@ class Github(object):
         """
         assert isinstance(query, (str, unicode)), query
         url_parameters = dict()
-        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+        # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:
             assert sort in ('stars', 'forks', 'updated'), sort
             url_parameters["sort"] = sort
-        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+        # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:
             assert order in ('asc', 'desc'), order
             url_parameters["order"] = order
 
@@ -412,10 +429,12 @@ class Github(object):
         """
         assert isinstance(query, (str, unicode)), query
         url_parameters = dict()
-        if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+        # pragma no branch (Should be covered)
+        if sort is not github.GithubObject.NotSet:
             assert sort in ('indexed',), sort
             url_parameters["sort"] = sort
-        if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
+        # pragma no branch (Should be covered)
+        if order is not github.GithubObject.NotSet:
             assert order in ('asc', 'desc'), order
             url_parameters["order"] = order
 
@@ -444,7 +463,8 @@ class Github(object):
         :rtype: string
         """
         assert isinstance(text, (str, unicode)), text
-        assert context is github.GithubObject.NotSet or isinstance(context, github.Repository.Repository), context
+        assert context is github.GithubObject.NotSet or isinstance(
+            context, github.Repository.Repository), context
         post_parameters = {
             "text": text
         }
@@ -538,7 +558,8 @@ class Github(object):
         :param file: the file-like object to pickle to
         :param protocol: the `pickling protocol <http://docs.python.org/2.7/library/pickle.html#data-stream-format>`_
         """
-        pickle.dump((obj.__class__, obj.raw_data, obj.raw_headers), file, protocol)
+        pickle.dump((obj.__class__, obj.raw_data,
+                     obj.raw_headers), file, protocol)
 
     def load(self, f):
         """

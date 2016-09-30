@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -40,7 +40,8 @@ class InputGitAuthor(object):
 
         assert isinstance(name, (str, unicode)), name
         assert isinstance(email, (str, unicode)), email
-        assert date is github.GithubObject.NotSet or isinstance(date, (str, unicode)), date  # @todo Datetime?
+        assert date is github.GithubObject.NotSet or isinstance(
+            date, (str, unicode)), date  # @todo Datetime?
 
         self.__name = name
         self.__email = email

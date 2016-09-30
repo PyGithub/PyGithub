@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -89,6 +89,7 @@ def extractBodyLines(lines):
 
 
 class PythonHeader:
+
     def fix(self, filename, lines):
         isExecutable = lines[0].startswith("#!")
         newLines = []
@@ -113,6 +114,7 @@ class PythonHeader:
 
 
 class StandardHeader:
+
     def fix(self, filename, lines):
         newLines = []
 

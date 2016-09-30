@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Andrew Bettison <andrewb@zip.com.au>                          #
 # Copyright 2012 Dima Kukushkin <dima@kukushkin.me>                            #
@@ -42,6 +42,7 @@ import sys
 import Consts
 import re
 import os
+import GithubException
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -49,9 +50,8 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 if atLeastPython26:
     import json
 else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
-
-import GithubException
+    # pragma no cover (Covered by all tests with Python 2.5)
+    import simplejson as json
 
 
 class Requester:
@@ -95,10 +95,12 @@ class Requester:
         '''
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             new_frame = [requestHeader, None, None, None]
-            if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)
+            # pragma no branch (Should be covered)
+            if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:
                 self._frameBuffer.append(new_frame)
             else:
-                self._frameBuffer[0] = new_frame  # pragma no cover (Should be covered)
+                # pragma no cover (Should be covered)
+                self._frameBuffer[0] = new_frame
 
             self._frameCount = len(self._frameBuffer) - 1
 
@@ -108,11 +110,13 @@ class Requester:
         Current frame index will be attached to responseHeader
         '''
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
-            self._frameBuffer[self._frameCount][1:4] = [statusCode, responseHeader, data]
+            self._frameBuffer[self._frameCount][1:4] = [
+                statusCode, responseHeader, data]
             responseHeader[self.DEBUG_HEADER_KEY] = self._frameCount
 
     def check_me(self, obj):
-        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:  # pragma no branch (Flag always set in tests)
+        # pragma no branch (Flag always set in tests)
+        if self.DEBUG_FLAG and self.ON_CHECK_ME is not None:
             frame = None
             if self.DEBUG_HEADER_KEY in obj._headers:
                 frame_index = obj._headers[self.DEBUG_HEADER_KEY]
@@ -131,9 +135,14 @@ class Requester:
         if password is not None:
             login = login_or_token
             if atLeastPython3:
-                self.__authorizationHeader = "Basic " + base64.b64encode((login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')  # pragma no cover (Covered by Authentication.testAuthorizationHeaderWithXxx with Python 3)
+                # pragma no cover (Covered by
+                # Authentication.testAuthorizationHeaderWithXxx with Python 3)
+                self.__authorizationHeader = "Basic " + \
+                    base64.b64encode(
+                        (login + ":" + password).encode("utf-8")).decode("utf-8").replace('\n', '')
             else:
-                self.__authorizationHeader = "Basic " + base64.b64encode(login + ":" + password).replace('\n', '')
+                self.__authorizationHeader = "Basic " + \
+                    base64.b64encode(login + ":" + password).replace('\n', '')
         elif login_or_token is not None:
             token = login_or_token
             self.__authorizationHeader = "token " + token
@@ -184,7 +193,8 @@ class Requester:
         if status == 401 and output.get("message") == "Bad credentials":
             cls = GithubException.BadCredentialsException
         elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
-            cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+            # pragma no cover (Should be covered)
+            cls = GithubException.TwoFactorException
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
             cls = GithubException.BadUserAgentException
         elif status == 403 and output.get("message").lower().startswith("api rate limit exceeded"):
@@ -199,11 +209,15 @@ class Requester:
         if len(data) == 0:
             return None
         else:
-            if atLeastPython3 and isinstance(data, bytes):  # pragma no branch (Covered by Issue142.testDecodeJson with Python 3)
-                data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
+            # pragma no branch (Covered by Issue142.testDecodeJson with Python
+            # 3)
+            if atLeastPython3 and isinstance(data, bytes):
+                # pragma no cover (Covered by Issue142.testDecodeJson with
+                # Python 3)
+                data = data.decode("utf-8")
             try:
                 return json.loads(data)
-            except ValueError, e:
+            except ValueError as e:
                 return {'data': data}
 
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
@@ -249,12 +263,15 @@ class Requester:
 
         self.NEW_DEBUG_FRAME(requestHeaders)
 
-        status, responseHeaders, output = self.__requestRaw(cnx, verb, url, requestHeaders, encoded_input)
+        status, responseHeaders, output = self.__requestRaw(
+            cnx, verb, url, requestHeaders, encoded_input)
 
         if "x-ratelimit-remaining" in responseHeaders and "x-ratelimit-limit" in responseHeaders:
-            self.rate_limiting = (int(responseHeaders["x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
+            self.rate_limiting = (int(responseHeaders[
+                                  "x-ratelimit-remaining"]), int(responseHeaders["x-ratelimit-limit"]))
         if "x-ratelimit-reset" in responseHeaders:
-            self.rate_limiting_resettime = int(responseHeaders["x-ratelimit-reset"])
+            self.rate_limiting_resettime = int(
+                responseHeaders["x-ratelimit-reset"])
 
         if "x-oauth-scopes" in responseHeaders:
             self.oauth_scopes = responseHeaders["x-oauth-scopes"].split(", ")
@@ -279,12 +296,14 @@ class Requester:
         response = cnx.getresponse()
 
         status = response.status
-        responseHeaders = dict((k.lower(), v) for k, v in response.getheaders())
+        responseHeaders = dict((k.lower(), v)
+                               for k, v in response.getheaders())
         output = response.read()
 
         cnx.close()
 
-        self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
+        self.__log(verb, url, requestHeaders, input,
+                   status, responseHeaders, output)
 
         if status == 301 and 'location' in responseHeaders:
             return self.__requestRaw(original_cnx, verb, responseHeaders['location'], requestHeaders, input)
@@ -321,15 +340,18 @@ class Requester:
 
     def __createConnection(self):
         kwds = {}
-        if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
-            kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
-        if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
+        # pragma no branch (Branch useful only with Python 3)
+        if not atLeastPython3:
+            # Useless in Python3, would generate a deprecation warning
+            kwds["strict"] = True
+        # pragma no branch (Branch useful only with Python 2.5)
+        if atLeastPython26:
             kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
 
         ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
+        # Connect through a proxy server with authentication, if http_proxy
+        # set.
+        # http_proxy: http://user:password@proxy_host:proxy_port
         ##
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
@@ -339,9 +361,11 @@ class Requester:
             if url.username and url.password:
                 auth = '%s:%s' % (url.username, url.password)
                 if atLeastPython3 and isinstance(auth, str):
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth.encode()).decode()
+                    headers['Proxy-Authorization'] = 'Basic ' + \
+                        base64.b64encode(auth.encode()).decode()
                 else:
-                    headers['Proxy-Authorization'] = 'Basic ' + base64.b64encode(auth)
+                    headers['Proxy-Authorization'] = 'Basic ' + \
+                        base64.b64encode(auth)
             conn.set_tunnel(self.__hostname, self.__port, headers)
         else:
             conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
@@ -353,9 +377,16 @@ class Requester:
         if logger.isEnabledFor(logging.DEBUG):
             if "Authorization" in requestHeaders:
                 if requestHeaders["Authorization"].startswith("Basic"):
-                    requestHeaders["Authorization"] = "Basic (login and password removed)"
+                    requestHeaders[
+                        "Authorization"] = "Basic (login and password removed)"
                 elif requestHeaders["Authorization"].startswith("token"):
-                    requestHeaders["Authorization"] = "token (oauth token removed)"
-                else:  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-                    requestHeaders["Authorization"] = "(unknown auth removed)"  # pragma no cover (Cannot happen, but could if we add an authentication method => be prepared)
-            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname, str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))
+                    requestHeaders[
+                        "Authorization"] = "token (oauth token removed)"
+                # pragma no cover (Cannot happen, but could if we add an
+                # authentication method => be prepared)
+                else:
+                    # pragma no cover (Cannot happen, but could if we add an
+                    # authentication method => be prepared)
+                    requestHeaders["Authorization"] = "(unknown auth removed)"
+            logger.debug("%s %s://%s%s %s %s ==> %i %s %s", str(verb), self.__scheme, self.__hostname,
+                         str(url), str(requestHeaders), str(input), status, str(responseHeaders), str(output))

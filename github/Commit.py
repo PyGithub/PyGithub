@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -136,9 +136,12 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CommitComment.CommitComment`
         """
         assert isinstance(body, (str, unicode)), body
-        assert line is github.GithubObject.NotSet or isinstance(line, (int, long)), line
-        assert path is github.GithubObject.NotSet or isinstance(path, (str, unicode)), path
-        assert position is github.GithubObject.NotSet or isinstance(position, (int, long)), position
+        assert line is github.GithubObject.NotSet or isinstance(
+            line, (int, long)), line
+        assert path is github.GithubObject.NotSet or isinstance(
+            path, (str, unicode)), path
+        assert position is github.GithubObject.NotSet or isinstance(
+            position, (int, long)), position
         post_parameters = {
             "body": body,
         }
@@ -165,9 +168,12 @@ class Commit(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.CommitStatus.CommitStatus`
         """
         assert isinstance(state, (str, unicode)), state
-        assert target_url is github.GithubObject.NotSet or isinstance(target_url, (str, unicode)), target_url
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert context is github.GithubObject.NotSet or isinstance(context, (str, unicode)), context
+        assert target_url is github.GithubObject.NotSet or isinstance(
+            target_url, (str, unicode)), target_url
+        assert description is github.GithubObject.NotSet or isinstance(
+            description, (str, unicode)), description
+        assert context is github.GithubObject.NotSet or isinstance(
+            context, (str, unicode)), context
         post_parameters = {
             "state": state,
         }
@@ -179,7 +185,8 @@ class Commit(github.GithubObject.CompletableGithubObject):
             post_parameters["context"] = context
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
-            self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
+            self._parentUrl(self._parentUrl(self.url)) +
+            "/statuses/" + self.sha,
             input=post_parameters
         )
         return github.CommitStatus.CommitStatus(self._requester, headers, data, completed=True)
@@ -204,7 +211,8 @@ class Commit(github.GithubObject.CompletableGithubObject):
         return github.PaginatedList.PaginatedList(
             github.CommitStatus.CommitStatus,
             self._requester,
-            self._parentUrl(self._parentUrl(self.url)) + "/statuses/" + self.sha,
+            self._parentUrl(self._parentUrl(self.url)) +
+            "/statuses/" + self.sha,
             None
         )
 
@@ -237,22 +245,29 @@ class Commit(github.GithubObject.CompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
-            self._author = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["author"])
+            self._author = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["author"])
         if "comments_url" in attributes:  # pragma no branch
-            self._comments_url = self._makeStringAttribute(attributes["comments_url"])
+            self._comments_url = self._makeStringAttribute(
+                attributes["comments_url"])
         if "commit" in attributes:  # pragma no branch
-            self._commit = self._makeClassAttribute(github.GitCommit.GitCommit, attributes["commit"])
+            self._commit = self._makeClassAttribute(
+                github.GitCommit.GitCommit, attributes["commit"])
         if "committer" in attributes:  # pragma no branch
-            self._committer = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["committer"])
+            self._committer = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["committer"])
         if "files" in attributes:  # pragma no branch
-            self._files = self._makeListOfClassesAttribute(github.File.File, attributes["files"])
+            self._files = self._makeListOfClassesAttribute(
+                github.File.File, attributes["files"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "parents" in attributes:  # pragma no branch
-            self._parents = self._makeListOfClassesAttribute(Commit, attributes["parents"])
+            self._parents = self._makeListOfClassesAttribute(
+                Commit, attributes["parents"])
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "stats" in attributes:  # pragma no branch
-            self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
+            self._stats = self._makeClassAttribute(
+                github.CommitStats.CommitStats, attributes["stats"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

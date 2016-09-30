@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -28,16 +28,21 @@ import Framework
 
 
 class GitRef(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.ref = self.g.get_user().get_repo("PyGithub").get_git_ref("heads/BranchCreatedByPyGithub")
+        self.ref = self.g.get_user().get_repo(
+            "PyGithub").get_git_ref("heads/BranchCreatedByPyGithub")
 
     def testAttributes(self):
-        self.assertEqual(self.ref.object.sha, "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+        self.assertEqual(self.ref.object.sha,
+                         "1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.ref.object.type, "commit")
-        self.assertEqual(self.ref.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
+        self.assertEqual(
+            self.ref.object.url, "https://api.github.com/repos/jacquev6/PyGithub/git/commits/1292bf0e22c796e91cc3d6e24b544aece8c21f2a")
         self.assertEqual(self.ref.ref, "refs/heads/BranchCreatedByPyGithub")
-        self.assertEqual(self.ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub")
+        self.assertEqual(
+            self.ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.ref.__repr__(),

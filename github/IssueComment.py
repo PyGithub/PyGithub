@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -144,16 +144,20 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "issue_url" in attributes:  # pragma no branch
-            self._issue_url = self._makeStringAttribute(attributes["issue_url"])
+            self._issue_url = self._makeStringAttribute(
+                attributes["issue_url"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "user" in attributes:  # pragma no branch
-            self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
+            self._user = self._makeClassAttribute(
+                github.NamedUser.NamedUser, attributes["user"])

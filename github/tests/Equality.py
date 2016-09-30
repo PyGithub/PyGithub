@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -26,6 +26,7 @@ import Framework
 
 
 class Equality(Framework.TestCase):
+
     def testUserEquality(self):
         u1 = self.g.get_user("jacquev6")
         u2 = self.g.get_user("jacquev6")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -75,6 +75,7 @@ class GitTree(github.GithubObject.CompletableGithubObject):
         if "sha" in attributes:  # pragma no branch
             self._sha = self._makeStringAttribute(attributes["sha"])
         if "tree" in attributes:  # pragma no branch
-            self._tree = self._makeListOfClassesAttribute(github.GitTreeElement.GitTreeElement, attributes["tree"])
+            self._tree = self._makeListOfClassesAttribute(
+                github.GitTreeElement.GitTreeElement, attributes["tree"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

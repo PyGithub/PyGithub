@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -40,7 +40,8 @@ atMostPython32 = sys.hexversion < 0x03030000
 if atLeastPython26:
     import json
 else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
+    # pragma no cover (Covered by all tests with Python 2.5)
+    import simplejson as json
 
 
 def readLine(file):
@@ -51,6 +52,7 @@ def readLine(file):
 
 
 class FakeHttpResponse:
+
     def __init__(self, status, headers, output):
         self.status = status
         self.__headers = headers
@@ -77,7 +79,10 @@ def fixAuthorizationHeader(headers):
             headers["Authorization"] = "Basic login_and_password_removed"
 
 
-class RecordingConnection:  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+# pragma no cover (Class useful only when recording new tests, not used
+# during automated tests)
+class RecordingConnection:
+
     def __init__(self, file, protocol, host, port, *args, **kwds):
         self.__file = file
         self.__protocol = protocol
@@ -119,14 +124,18 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__file.write(line + "\n")
 
 
-class RecordingHttpConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+# pragma no cover (Class useful only when recording new tests, not used
+# during automated tests)
+class RecordingHttpConnection(RecordingConnection):
     _realConnection = httplib.HTTPConnection
 
     def __init__(self, file, *args, **kwds):
         RecordingConnection.__init__(self, file, "http", *args, **kwds)
 
 
-class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class useful only when recording new tests, not used during automated tests)
+# pragma no cover (Class useful only when recording new tests, not used
+# during automated tests)
+class RecordingHttpsConnection(RecordingConnection):
     _realConnection = httplib.HTTPSConnection
 
     def __init__(self, file, *args, **kwds):
@@ -134,6 +143,7 @@ class RecordingHttpsConnection(RecordingConnection):  # pragma no cover (Class u
 
 
 class ReplayingConnection:
+
     def __init__(self, testCase, file, protocol, host, port, *args, **kwds):
         self.__testCase = testCase
         self.__file = file
@@ -147,15 +157,19 @@ class ReplayingConnection:
         self.__testCase.assertEqual(verb, readLine(self.__file))
         self.__testCase.assertEqual(self.__host, readLine(self.__file))
         self.__testCase.assertEqual(self.__port, readLine(self.__file))
-        self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
+        self.__testCase.assertEqual(self.__splitUrl(
+            url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
         if input.startswith("{"):
-            self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
+            self.__testCase.assertEqual(json.loads(input.replace(
+                '\n', '').replace('\r', '')), json.loads(expectedInput))
         elif atMostPython32:  # @todo Test in all cases, including Python 3.3
             # In Python 3.3, dicts are not output in the same order as in Python 2.5 -> 3.2.
-            # So, form-data encoding is not deterministic and is difficult to test.
-            self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+            # So, form-data encoding is not deterministic and is difficult to
+            # test.
+            self.__testCase.assertEqual(input.replace(
+                '\n', '').replace('\r', ''), expectedInput)
 
     def __splitUrl(self, url):
         splitedUrl = url.split("?")
@@ -192,10 +206,14 @@ class BasicTestCase(unittest.TestCase):
         unittest.TestCase.setUp(self)
         self.__fileName = ""
         self.__file = None
-        if self.recordMode:  # pragma no cover (Branch useful only when recording new tests, not used during automated tests)
+        # pragma no cover (Branch useful only when recording new tests, not
+        # used during automated tests)
+        if self.recordMode:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
-                lambda ignored, *args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
+                lambda ignored, *
+                args, **kwds: RecordingHttpConnection(self.__openFile("wb"), *args, **kwds),
+                lambda ignored, *
+                args, **kwds: RecordingHttpsConnection(self.__openFile("wb"), *args, **kwds)
             )
             import GithubCredentials
             self.login = GithubCredentials.login
@@ -206,8 +224,10 @@ class BasicTestCase(unittest.TestCase):
             # self.client_secret = GithubCredentials.client_secret
         else:
             github.Requester.Requester.injectConnectionClasses(
-                lambda ignored, *args, **kwds: ReplayingHttpConnection(self, self.__openFile("rb"), *args, **kwds),
-                lambda ignored, *args, **kwds: ReplayingHttpsConnection(self, self.__openFile("rb"), *args, **kwds)
+                lambda ignored, *
+                args, **kwds: ReplayingHttpConnection(self, self.__openFile("rb"), *args, **kwds),
+                lambda ignored, *
+                args, **kwds: ReplayingHttpsConnection(self, self.__openFile("rb"), *args, **kwds)
             )
             self.login = "login"
             self.password = "password"
@@ -223,8 +243,11 @@ class BasicTestCase(unittest.TestCase):
     def __openFile(self, mode):
         for (_, _, functionName, _) in traceback.extract_stack():
             if functionName.startswith("test") or functionName == "setUp" or functionName == "tearDown":
-                if functionName != "test":  # because in class Hook(Framework.TestCase), method testTest calls Hook.test
-                    fileName = os.path.join(os.path.dirname(__file__), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt")
+                # because in class Hook(Framework.TestCase), method testTest
+                # calls Hook.test
+                if functionName != "test":
+                    fileName = os.path.join(os.path.dirname(
+                        __file__), "ReplayData", self.__class__.__name__ + "." + functionName + ".txt")
         if fileName != self.__fileName:
             self.__closeReplayFileIfNeeded()
             self.__fileName = fileName
@@ -233,7 +256,9 @@ class BasicTestCase(unittest.TestCase):
 
     def __closeReplayFileIfNeeded(self):
         if self.__file is not None:
-            if not self.recordMode:  # pragma no branch (Branch useful only when recording new tests, not used during automated tests)
+            # pragma no branch (Branch useful only when recording new tests,
+            # not used during automated tests)
+            if not self.recordMode:
                 self.assertEqual(readLine(self.__file), "")
             self.__file.close()
 
@@ -247,6 +272,7 @@ class BasicTestCase(unittest.TestCase):
 
 
 class TestCase(BasicTestCase):
+
     def doCheckFrame(self, obj, frame):
         if obj._headers == {} and frame is None:
             return

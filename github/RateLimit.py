@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -46,4 +46,5 @@ class RateLimit(github.GithubObject.NonCompletableGithubObject):
 
     def _useAttributes(self, attributes):
         if "rate" in attributes:  # pragma no branch
-            self._rate = self._makeClassAttribute(github.Rate.Rate, attributes["rate"])
+            self._rate = self._makeClassAttribute(
+                github.Rate.Rate, attributes["rate"])

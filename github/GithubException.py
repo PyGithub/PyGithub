@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -85,6 +85,7 @@ class BadAttributeException(Exception):
     """
     Exception raised when Github returns an attribute with the wrong type.
     """
+
     def __init__(self, actualValue, expectedType, transformationException):
         self.__actualValue = actualValue
         self.__expectedType = expectedType

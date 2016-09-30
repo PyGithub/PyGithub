@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -26,16 +26,19 @@ import Framework
 
 
 class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull/133
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.user = self.g.get_user()
-        self.repo = self.g.get_user("openmicroscopy").get_repo("ome-documentation")
+        self.repo = self.g.get_user(
+            "openmicroscopy").get_repo("ome-documentation")
 
     def testGetPullWithOrgHeadUser(self):
         user = self.repo.get_pull(204).head.user
         self.assertEqual(user.login, 'imcf')
         self.assertEqual(user.type, 'Organization')
-        self.assertEqual(user.__class__.__name__, 'NamedUser')  # Should be Organization
+        # Should be Organization
+        self.assertEqual(user.__class__.__name__, 'NamedUser')
 
     def testGetPullsWithOrgHeadUser(self):
         for pull in self.repo.get_pulls('closed'):
@@ -45,7 +48,8 @@ class Issue131(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/pull
                 # Should be:
                 # self.assertEqual(user.login, 'imcf')
                 # self.assertEqual(user.type, 'Organization')
-                # self.assertEqual(user.__class__.__name__, 'NamedUser')  # Should be Organization
+                # self.assertEqual(user.__class__.__name__, 'NamedUser')  #
+                # Should be Organization
                 break
         else:
             self.assertTrue(False)

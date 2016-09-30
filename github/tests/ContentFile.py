@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -31,6 +31,7 @@ import datetime
 
 
 class ContentFile(Framework.TestCase):
+
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.file = self.g.get_user().get_repo("PyGithub").get_readme()
@@ -43,7 +44,8 @@ class ContentFile(Framework.TestCase):
         self.assertEqual(self.file.path, "ReadMe.md")
         self.assertEqual(len(self.file.content), 10212)
         self.assertEqual(len(self.file.decoded_content), 7531)
-        self.assertEqual(self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
+        self.assertEqual(
+            self.file.sha, "5628799a7d517a4aaa0c1a7004d07569cd154df0")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.file.__repr__(), 'ContentFile(path="ReadMe.md")')

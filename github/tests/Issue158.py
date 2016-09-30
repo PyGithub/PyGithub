@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -27,7 +27,11 @@ import github
 
 
 class Issue158(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/158
-    # Warning: I don't have a scret key, so the requests for this test are forged
+    # Warning: I don't have a scret key, so the requests for this test are
+    # forged
+
     def testPaginationWithSecretKeyAuthentication(self):
-        g = github.Github(client_id=self.client_id, client_secret=self.client_secret)
-        self.assertListKeyEqual(g.get_organization("BeaverSoftware").get_repos("public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])
+        g = github.Github(client_id=self.client_id,
+                          client_secret=self.client_secret)
+        self.assertListKeyEqual(g.get_organization("BeaverSoftware").get_repos(
+            "public"), lambda r: r.name, ["FatherBeaver", "PyGithub"])

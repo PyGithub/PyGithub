@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
@@ -141,10 +141,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(name, (str, unicode)), name
         assert isinstance(config, dict), config
-        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
-        assert add_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in add_events), add_events
-        assert remove_events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in remove_events), remove_events
-        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
+        assert events is github.GithubObject.NotSet or all(
+            isinstance(element, (str, unicode)) for element in events), events
+        assert add_events is github.GithubObject.NotSet or all(isinstance(
+            element, (str, unicode)) for element in add_events), add_events
+        assert remove_events is github.GithubObject.NotSet or all(isinstance(
+            element, (str, unicode)) for element in remove_events), remove_events
+        assert active is github.GithubObject.NotSet or isinstance(
+            active, bool), active
         post_parameters = {
             "name": name,
             "config": config,
@@ -192,18 +196,22 @@ class Hook(github.GithubObject.CompletableGithubObject):
         if "config" in attributes:  # pragma no branch
             self._config = self._makeDictAttribute(attributes["config"])
         if "created_at" in attributes:  # pragma no branch
-            self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
+            self._created_at = self._makeDatetimeAttribute(
+                attributes["created_at"])
         if "events" in attributes:  # pragma no branch
-            self._events = self._makeListOfStringsAttribute(attributes["events"])
+            self._events = self._makeListOfStringsAttribute(attributes[
+                                                            "events"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "last_response" in attributes:  # pragma no branch
-            self._last_response = self._makeClassAttribute(github.HookResponse.HookResponse, attributes["last_response"])
+            self._last_response = self._makeClassAttribute(
+                github.HookResponse.HookResponse, attributes["last_response"])
         if "name" in attributes:  # pragma no branch
             self._name = self._makeStringAttribute(attributes["name"])
         if "test_url" in attributes:  # pragma no branch
             self._test_url = self._makeStringAttribute(attributes["test_url"])
         if "updated_at" in attributes:  # pragma no branch
-            self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
+            self._updated_at = self._makeDatetimeAttribute(
+                attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])

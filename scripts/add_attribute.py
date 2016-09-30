@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ########################## Copyrights and license ############################
+# ########################## Copyrights and license ######################
 #                                                                              #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
@@ -68,8 +68,10 @@ while not added:
                 newLines.append("        \"\"\"")
                 newLines.append("        :type: " + attributeDocType)
                 newLines.append("        \"\"\"")
-                newLines.append("        self._completeIfNotSet(self._" + attributeName + ")")
-                newLines.append("        return self._NoneIfNotSet(self._" + attributeName + ")")
+                newLines.append(
+                    "        self._completeIfNotSet(self._" + attributeName + ")")
+                newLines.append(
+                    "        return self._NoneIfNotSet(self._" + attributeName + ")")
                 newLines.append("")
                 newLines.append("    @property")
                 added = True
@@ -89,7 +91,8 @@ while not added:
             if line:
                 attrName = line[14:-29]
             if not line or attrName > attributeName:
-                newLines.append("        self._" + attributeName + " = github.GithubObject.NotSet")
+                newLines.append("        self._" + attributeName +
+                                " = github.GithubObject.NotSet")
                 added = True
     newLines.append(line)
 
@@ -106,9 +109,12 @@ while not added:
             if line:
                 attrName = line[12:-36]
             if not line or attrName > attributeName:
-                newLines.append("        if \"" + attributeName + "\" in attributes:  # pragma no branch")
-                newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" + attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
-                newLines.append("            self._" + attributeName + " = " + attributeValue)
+                newLines.append("        if \"" + attributeName +
+                                "\" in attributes:  # pragma no branch")
+                newLines.append("            assert attributes[\"" + attributeName + "\"] is None or isinstance(attributes[\"" +
+                                attributeName + "\"], " + attributeAssertType + "), attributes[\"" + attributeName + "\"]")
+                newLines.append("            self._" +
+                                attributeName + " = " + attributeValue)
                 added = True
     newLines.append(line)
 
