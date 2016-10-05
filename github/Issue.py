@@ -263,12 +263,13 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self.url + "/labels"
         )
 
-    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
+    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, state=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, assignees=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/issues/:number <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser` or None
+        :param assignee: list of string
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string
@@ -277,6 +278,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert assignees is github.GithubObject.NotSet or isinstance(assignees, list)
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
         assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
@@ -290,6 +292,8 @@ class Issue(github.GithubObject.CompletableGithubObject):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ''
+        if assignees is not github.GithubObject.NotSet:
+            post_parameters["assignees"] = assignees
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
         if milestone is not github.GithubObject.NotSet:
