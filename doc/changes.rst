@@ -4,6 +4,17 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.29 (October 10, 2016)
+-----------------------------------
+
+* add issue assignee param (3a8edc7)
+* Fix diffrerent case (fcf6cfb)
+* DOC: remove easy_install suggestion; update links (45e76d9)
+* Add permission param documentation (9347345)
+* Add ability to set permission for team repo (5dddea7)
+* Fix status check (073bb44)
+* adds support for content dirs (0799753)
+
 Version 1.28 (September 09, 2016)
 -----------------------------------
 
