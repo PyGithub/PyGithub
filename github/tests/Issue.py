@@ -38,6 +38,7 @@ class Issue(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.closed_at, datetime.datetime(2012, 5, 26, 14, 59, 33))
         self.assertEqual(self.issue.closed_by.login, "jacquev6")

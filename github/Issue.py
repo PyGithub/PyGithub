@@ -59,6 +59,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._assignee.value
 
     @property
+    def assignees(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._assignees)
+        return self._assignees.value
+
+    @property
     def body(self):
         """
         :type: string
@@ -397,6 +405,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._assignee = github.GithubObject.NotSet
+        self._assignees = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._closed_at = github.GithubObject.NotSet
         self._closed_by = github.GithubObject.NotSet
@@ -421,6 +430,13 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
+        elif "assignee" in attributes:
+            if attributes["assignee"] is not None:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
+            else:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch
