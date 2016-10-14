@@ -4,7 +4,6 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -25,72 +24,30 @@
 #                                                                              #
 # ##############################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitCombinedStatus import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitRelease import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
-from ConditionalRequestUpdate import *
-from Persistence import *
-from ExposeAllAttributes import *
-from BadAttributes import *
-from Equality import *
-from Search import *
+import github
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
-from Issue214 import *
-from Issue216 import *
-from Issue278 import *
-from Issue380 import *
+
+class Issue380(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issues/380
+
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.user = self.g.get_user()
+        self.repo = self.user.get_repo("PyGithub")
+
+    def testCreateGitRelease(self):
+        release = self.repo.create_git_release("TaggedByPyGithub", "ReleasedByPyGithub", "Release created by PyGithub")
+        self.assertEqual(release.title, "ReleasedByPyGithub")
+
+    def testCreateGitReleaseWithAllArguments(self):
+        release = self.repo.create_git_release("TaggedByPyGithub1", "ReleasedByPyGithub", "Release created by PyGithub", target_commitish="43f61f9471cc4c1aab69524ba53bb11d6597d0bf", draft=True, prerelease=True)
+        self.assertEqual(release.title, "ReleasedByPyGithub")
+
+    def testCreateGitTagAndRelease(self):
+        release = self.repo.create_git_tag_and_release("TaggedByPyGithub2", "Tag created by PyGithub", "ReleasedByPyGitHub", "Release created by PyGitHub", "43f61f9471cc4c1aab69524ba53bb11d6597d0bf", "commit")
+        self.assertEqual(release.title, "ReleasedByPyGitHub")
+
+    def testCreateGitTagAndReleaseWithAllArguments(self):
+        release = self.repo.create_git_tag_and_release("TaggedByPyGithub3", "Tag created by PyGithub", "ReleasedByPyGitHub", "Release created by PyGitHub", "43f61f9471cc4c1aab69524ba53bb11d6597d0bf", "commit", tagger=github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), target_commitish="43f61f9471cc4c1aab69524ba53bb11d6597d0bf", draft=True, prerelease=True)
+        self.assertEqual(release.title, "ReleasedByPyGitHub")
