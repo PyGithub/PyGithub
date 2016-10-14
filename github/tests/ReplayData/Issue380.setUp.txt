@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('content-length', '1139'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '9000e9eef7bb1e89f22030c676da140e'), ('x-oauth-scopes', 'repo'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"079a0d22c49c9d03511ca67168521658"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4928'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '431768FA:6FF5:6E5D9F0:58005702'), ('last-modified', 'Wed, 12 Oct 2016 23:23:09 GMT'), ('date', 'Fri, 14 Oct 2016 03:54:42 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1476417411')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/ben-whitney/PyGithub
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 200
 [('content-length', '14107'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'edf23fdc48375d9066b698b8d98062e9'), ('x-oauth-scopes', 'repo'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', 'repo'), ('etag', '"081fb7c160732bcf6b96a5da48fa5615"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4927'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '431768FA:6FF5:6E5D9FB:58005702'), ('last-modified', 'Thu, 13 Oct 2016 23:46:26 GMT'), ('date', 'Fri, 14 Oct 2016 03:54:42 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1476417411')]

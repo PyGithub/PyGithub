@@ -3,7 +3,7 @@ POST
 api.github.com
 None
 /repos/ben-whitney/PyGithub/git/tags
-{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 {"message": "Tag created by PyGithub", "tag": "TaggedByPyGithub2", "type": "commit", "object": "43f61f9471cc4c1aab69524ba53bb11d6597d0bf"}
 201
 [('content-length', '521'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'a30e6f9aa7cf5731b87dfb3b9992202d'), ('x-oauth-scopes', 'repo'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"32bb4289409daacce79f780523003273"'), ('location', 'https://api.github.com/repos/ben-whitney/PyGithub/git/tags/1d049e471d5539e1fcc4611d77b4b4f1c04e93d3'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '201 Created'), ('x-ratelimit-remaining', '4937'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '431768FA:6FED:D370775:580056DA'), ('date', 'Fri, 14 Oct 2016 03:54:02 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1476417411')]
@@ -14,7 +14,7 @@ POST
 api.github.com
 None
 /repos/ben-whitney/PyGithub/releases
-{'Content-Type': 'application/json', 'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 {"body": "Release created by PyGitHub", "prerelease": false, "tag_name": "TaggedByPyGithub2", "draft": false, "name": "ReleasedByPyGitHub"}
 201
 [('content-length', '1715'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'bae57931a6fe678a3dffe9be8e7819c8'), ('x-oauth-scopes', 'repo'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"abb647c3f0602fd560e43b38d7d532c7"'), ('location', 'https://api.github.com/repos/ben-whitney/PyGithub/releases/4386766'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '201 Created'), ('x-ratelimit-remaining', '4936'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '431768FA:6FF5:6E5CECD:580056DA'), ('date', 'Fri, 14 Oct 2016 03:54:02 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1476417411')]
