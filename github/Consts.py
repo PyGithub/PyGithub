@@ -42,4 +42,4 @@ REQ_IF_MODIFIED_SINCE = "If-Modified-Since"
 # (Lower Case)                                                                 #
 # ##############################################################################
 RES_ETAG = "etag"
-RES_LAST_MODIFED = "last-modified"
+RES_LAST_MODIFIED = "last-modified"

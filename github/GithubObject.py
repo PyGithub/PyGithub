@@ -208,7 +208,7 @@ class GithubObject(object):
         '''
         :type: str
         '''
-        return self._headers.get(Consts.RES_LAST_MODIFED)
+        return self._headers.get(Consts.RES_LAST_MODIFIED)
 
     def get__repr__(self, params):
         """
