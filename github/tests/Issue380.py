@@ -39,15 +39,39 @@ class Issue380(Framework.TestCase):  # https://github.com/PyGithub/PyGithub/issu
     def testCreateGitRelease(self):
         release = self.repo.create_git_release("TaggedByPyGithub", "ReleasedByPyGithub", "Release created by PyGithub")
         self.assertEqual(release.title, "ReleasedByPyGithub")
+        self.assertEquals(release.tag_name, "TaggedByPyGithub")
+        self.assertEquals(release.upload_url, "https://uploads.github.com/repos/ben-whitney/PyGithub/releases/4386771/assets{?name,label}")
+        self.assertEquals(release.body, "Release created by PyGithub")
+        self.assertEquals(release.url, "https://api.github.com/repos/ben-whitney/PyGithub/releases/4386771")
+        self.assertEquals(release.author._rawData['login'], 'ben-whitney')
+        self.assertEqual(release.__repr__(), 'GitRelease(title="ReleasedByPyGithub")')
 
     def testCreateGitReleaseWithAllArguments(self):
         release = self.repo.create_git_release("TaggedByPyGithub1", "ReleasedByPyGithub", "Release created by PyGithub", target_commitish="43f61f9471cc4c1aab69524ba53bb11d6597d0bf", draft=True, prerelease=True)
         self.assertEqual(release.title, "ReleasedByPyGithub")
+        self.assertEquals(release.tag_name, "TaggedByPyGithub1")
+        self.assertEquals(release.upload_url, "https://uploads.github.com/repos/ben-whitney/PyGithub/releases/4386769/assets{?name,label}")
+        self.assertEquals(release.body, "Release created by PyGithub")
+        self.assertEquals(release.url, "https://api.github.com/repos/ben-whitney/PyGithub/releases/4386769")
+        self.assertEquals(release.author._rawData['login'], 'ben-whitney')
+        self.assertEqual(release.__repr__(), 'GitRelease(title="ReleasedByPyGithub")')
 
     def testCreateGitTagAndRelease(self):
         release = self.repo.create_git_tag_and_release("TaggedByPyGithub2", "Tag created by PyGithub", "ReleasedByPyGitHub", "Release created by PyGitHub", "43f61f9471cc4c1aab69524ba53bb11d6597d0bf", "commit")
         self.assertEqual(release.title, "ReleasedByPyGitHub")
+        self.assertEquals(release.tag_name, "TaggedByPyGithub2")
+        self.assertEquals(release.upload_url, "https://uploads.github.com/repos/ben-whitney/PyGithub/releases/4386766/assets{?name,label}")
+        self.assertEquals(release.body, "Release created by PyGitHub")
+        self.assertEquals(release.url, "https://api.github.com/repos/ben-whitney/PyGithub/releases/4386766")
+        self.assertEquals(release.author._rawData['login'], 'ben-whitney')
+        self.assertEqual(release.__repr__(), 'GitRelease(title="ReleasedByPyGitHub")')
 
     def testCreateGitTagAndReleaseWithAllArguments(self):
         release = self.repo.create_git_tag_and_release("TaggedByPyGithub3", "Tag created by PyGithub", "ReleasedByPyGitHub", "Release created by PyGitHub", "43f61f9471cc4c1aab69524ba53bb11d6597d0bf", "commit", tagger=github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), target_commitish="43f61f9471cc4c1aab69524ba53bb11d6597d0bf", draft=True, prerelease=True)
         self.assertEqual(release.title, "ReleasedByPyGitHub")
+        self.assertEquals(release.tag_name, "TaggedByPyGithub3")
+        self.assertEquals(release.upload_url, "https://uploads.github.com/repos/ben-whitney/PyGithub/releases/4386768/assets{?name,label}")
+        self.assertEquals(release.body, "Release created by PyGitHub")
+        self.assertEquals(release.url, "https://api.github.com/repos/ben-whitney/PyGithub/releases/4386768")
+        self.assertEquals(release.author._rawData['login'], 'ben-whitney')
+        self.assertEqual(release.__repr__(), 'GitRelease(title="ReleasedByPyGitHub")')
