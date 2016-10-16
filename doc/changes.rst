@@ -96,7 +96,7 @@ Version 1.26.0 (November 5th, 2015)
 Version 1.25.2 (October 7th, 2014)
 ----------------------------------
 
-* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the GitHub API v3 returning `null`s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
+* `Work around <https://github.com/jacquev6/PyGithub/issues/278>`__ the GitHub API v3 returning `null`\s in some paginated responses, `erichaase <https://github.com/erichaase>`__ for the bug report
 
 Version 1.25.1 (September 28th, 2014)
 -------------------------------------
