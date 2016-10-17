@@ -27,9 +27,6 @@
 
 import setuptools
 import textwrap
-import subprocess
-import shutil
-import os.path
 
 version = "1.29"
 
