@@ -82,6 +82,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._upload_url)
         return self._upload_url.value
 
+    @property
+    def html_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._html_url)
+        return self._html_url.value
+
     def delete_release(self):
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -115,6 +123,7 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
+        self._html_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "body" in attributes:
@@ -129,3 +138,5 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "upload_url" in attributes:
             self._upload_url = self._makeStringAttribute(attributes["upload_url"])
+        if "html_url" in attributes:
+            self._html_url = self._makeStringAttribute(attributes["html_url"])
