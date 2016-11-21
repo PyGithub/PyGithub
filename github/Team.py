@@ -90,6 +90,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self._permission.value
 
     @property
+    def privacy(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._privacy)
+        return self._privacy.value
+
+    @property
     def repos_count(self):
         """
         :type: integer
@@ -184,17 +192,19 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, permission=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
+    def edit(self, name, permission=github.GithubObject.NotSet, description=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param permission: string
         :param description: string
+        :param privacy: string
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
@@ -202,6 +212,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             post_parameters["permission"] = permission
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters["privacy"] = privacy
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -294,6 +306,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._members_url = github.GithubObject.NotSet
         self._name = github.GithubObject.NotSet
         self._permission = github.GithubObject.NotSet
+        self._privacy = github.GithubObject.NotSet
         self._repos_count = github.GithubObject.NotSet
         self._repositories_url = github.GithubObject.NotSet
         self._slug = github.GithubObject.NotSet
@@ -312,6 +325,8 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "permission" in attributes:  # pragma no branch
             self._permission = self._makeStringAttribute(attributes["permission"])
+        if "privacy" in attributes:  # pragma no branch
+            self._privacy = self._makeStringAttribute(attributes["privacy"])
         if "repos_count" in attributes:  # pragma no branch
             self._repos_count = self._makeIntAttribute(attributes["repos_count"])
         if "repositories_url" in attributes:  # pragma no branch
