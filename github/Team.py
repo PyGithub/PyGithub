@@ -42,6 +42,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"id": self._id.value, "name": self._name.value})
 
     @property
+    def description(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._description)
+        return self._description.value
+
+    @property
     def id(self):
         """
         :type: integer
@@ -176,20 +184,24 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url
         )
 
-    def edit(self, name, permission=github.GithubObject.NotSet):
+    def edit(self, name, permission=github.GithubObject.NotSet, description=github.GithubObject.NotSet):
         """
         :calls: `PATCH /teams/:id <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param permission: string
+        :param description: string
         :rtype: None
         """
         assert isinstance(name, (str, unicode)), name
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
         post_parameters = {
             "name": name,
         }
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if description is not github.GithubObject.NotSet:
+            post_parameters["description"] = description
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -276,6 +288,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         return self.id
 
     def _initAttributes(self):
+        self._description = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
         self._members_count = github.GithubObject.NotSet
         self._members_url = github.GithubObject.NotSet
@@ -287,6 +300,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "description" in attributes:  # pragma no branch
+            self._name = self._makeStringAttribute(attributes["description"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
         if "members_count" in attributes:  # pragma no branch
