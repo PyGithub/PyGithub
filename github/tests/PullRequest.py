@@ -38,6 +38,7 @@ class PullRequest(Framework.TestCase):
     def testAttributes(self):
         self.assertEqual(self.pull.additions, 511)
         self.assertEqual(self.pull.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.pull.assignees, lambda a: a.login, ["stuglaser", "jacquev6"])
         self.assertEqual(self.pull.base.label, "jacquev6:topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.base.sha, "ed866fc43833802ab553e5ff8581c81bb00dd433")
         self.assertEqual(self.pull.base.user.login, "jacquev6")
