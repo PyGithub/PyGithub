@@ -102,6 +102,15 @@ class Issue(Framework.TestCase):
     def testGetLabels(self):
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
 
+    def testAddAndRemoveAssignees(self):
+        user1 = "jayfk"
+        user2 = self.g.get_user("jzelinskie")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.issue.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
+        self.issue.remove_from_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+
     def testAddAndRemoveLabels(self):
         bug = self.repo.get_label("Bug")
         question = self.repo.get_label("Question")

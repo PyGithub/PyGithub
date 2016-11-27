@@ -230,6 +230,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def add_to_assignees(self, *assignees):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignee: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
     def add_to_labels(self, *labels):
         """
         :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
@@ -368,6 +383,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
             self.url + "/labels",
             None
         )
+
+    def remove_from_assignees(self, *assignees):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignee: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
 
     def remove_from_labels(self, label):
         """
