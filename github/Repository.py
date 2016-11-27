@@ -582,7 +582,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def subscribers_count(self):
         """
-        :type: string
+        :type: integer
         """
         self._completeIfNotSet(self._subscribers_count)
         return self._subscribers_count.value
