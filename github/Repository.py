@@ -578,6 +578,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
+    
+    @property
+    def subscribers_count(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._subscribers_count)
+        return self._subscribers_count.value
 
     @property
     def subscription_url(self):
@@ -2342,6 +2350,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._stargazers_url = github.GithubObject.NotSet
         self._statuses_url = github.GithubObject.NotSet
         self._subscribers_url = github.GithubObject.NotSet
+        self._subscribers_count = github.GithubObject.NotSet
         self._subscription_url = github.GithubObject.NotSet
         self._svn_url = github.GithubObject.NotSet
         self._tags_url = github.GithubObject.NotSet
@@ -2477,6 +2486,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self._statuses_url = self._makeStringAttribute(attributes["statuses_url"])
         if "subscribers_url" in attributes:  # pragma no branch
             self._subscribers_url = self._makeStringAttribute(attributes["subscribers_url"])
+        if "subscribers_count" in attributes:  # pragma no branch
+            self._subscribers_count = self._makeIntAttribute(attributes["subscribers_count"])
         if "subscription_url" in attributes:  # pragma no branch
             self._subscription_url = self._makeStringAttribute(attributes["subscription_url"])
         if "svn_url" in attributes:  # pragma no branch
