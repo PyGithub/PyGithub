@@ -659,10 +659,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
 
-    def add_to_collaborators(self, collaborator):
+    def add_to_collaborators(self, collaborator, permission=None):
         """
         :calls: `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string. only supported on organization repositories
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
@@ -670,9 +671,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
 
+        put_parameters = None
+        if permission is not None:
+            put_parameters = {
+                "permission": permission,
+            }
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/collaborators/" + collaborator
+            self.url + "/collaborators/" + collaborator,
+            input=put_parameters
         )
 
     def compare(self, base, head):
