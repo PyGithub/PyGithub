@@ -25,6 +25,10 @@ for repo in g.get_user().get_repos():
     repo.edit(has_wiki=False)
 ```
 
+## Documentation
+
+More information can be found on the [PyGitHub documentation site.](http://pygithub.readthedocs.io/en/latest/introduction.html)
+
 ## Development
 
 ### Contributing
