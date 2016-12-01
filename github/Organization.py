@@ -576,6 +576,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
             "GET",
             self.url + "/members/" + member._identity
         )
+        if status == 302:
+            status, headers, data = self._requester.requestJson(
+                "GET",
+                headers['location']
+            )
         return status == 204
 
     def has_in_public_members(self, public_member):
