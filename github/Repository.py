@@ -675,6 +675,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
             self.url + "/collaborators/" + collaborator
         )
 
+    def import_source(self, vcs, vcs_username, vcs_password, vcs_url):
+        """
+        :calls: `PUT /repos/:owner/:repo/import <http://developer.github.com/v3/repos/import>`_
+        :param vcs: string 
+        :param vcs_username: string 
+        :param vcs_password: string 
+        :param vcs_url: string 
+        :rtype: None
+        """
+        put_parameters = {
+                "vcs": vcs,
+                "vcs_username": vcs_username,
+                "vcs_password": vcs_password,
+                "vcs_url": vcs_url
+        }
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/import",
+            input=put_parameters
+        )
+
     def compare(self, base, head):
         """
         :calls: `GET /repos/:owner/:repo/compare/:base...:head <http://developer.github.com/v3/repos/commits>`_
