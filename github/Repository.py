@@ -684,6 +684,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param vcs_url: string 
         :rtype: None
         """
+        import_header = { "Accept": "application/vnd.github.barred-rock-preview" }
         put_parameters = {
                 "vcs": vcs,
                 "vcs_username": vcs_username,
@@ -694,6 +695,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/import",
+            headers=import_header,
             input=put_parameters
         )
 
