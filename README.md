@@ -24,6 +24,10 @@ for repo in g.get_user().get_repos():
     print repo.name
 ```
 
+## Documentation
+
+More information can be found on the [PyGitHub documentation site.](http://pygithub.readthedocs.io/en/latest/introduction.html)
+
 ## Development
 
 ### Contributing
