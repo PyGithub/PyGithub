@@ -864,12 +864,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Hook.Hook(self._requester, headers, data, completed=True)
 
-    def create_issue(self, title, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet):
+    def create_issue(self, title, body=github.GithubObject.NotSet, assignee=github.GithubObject.NotSet, milestone=github.GithubObject.NotSet, labels=github.GithubObject.NotSet, assignees=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/issues <http://developer.github.com/v3/issues>`_
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser`
+        :param assignees: list of strings or :class:`github.NamedUser.NamedUser`
         :param milestone: :class:`github.Milestone.Milestone`
         :param labels: list of :class:`github.Label.Label`
         :rtype: :class:`github.Issue.Issue`
@@ -877,6 +878,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
+        assert assignees is github.GithubObject.NotSet or all(isinstance(assignees, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)) for assignee in assignees),assignees 
         assert milestone is github.GithubObject.NotSet or isinstance(milestone, github.Milestone.Milestone), milestone
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) or isinstance(element, (str, unicode)) for element in labels), labels
 
@@ -890,6 +892,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 post_parameters["assignee"] = assignee
             else:
                 post_parameters["assignee"] = assignee._identity
+        if assignees is not github.GithubObject.NotSet:
+            post_parameters["assignees"] = [assignee if isinstance(assignee, (str, unicode)) else assignee._identity for assignee in assignees]
         if milestone is not github.GithubObject.NotSet:
             post_parameters["milestone"] = milestone._identity
         if labels is not github.GithubObject.NotSet:
