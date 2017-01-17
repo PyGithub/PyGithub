@@ -53,6 +53,7 @@ from Label import *
 from Milestone import *
 from NamedUser import *
 from Markdown import *
+from OAuth import *
 from Organization import *
 from PullRequest import *
 from PullRequestComment import *
