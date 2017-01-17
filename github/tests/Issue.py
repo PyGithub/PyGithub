@@ -38,6 +38,7 @@ class Issue(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.issue.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.closed_at, datetime.datetime(2012, 5, 26, 14, 59, 33))
         self.assertEqual(self.issue.closed_by.login, "jacquev6")
@@ -67,8 +68,9 @@ class Issue(Framework.TestCase):
     def testEditWithAllParameters(self):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
-        self.issue.edit("Title edited by PyGithub", "Body edited by PyGithub", user, "open", milestone, ["Bug"], ["assigned1", "assigned2"])
+        self.issue.edit("Title edited by PyGithub", "Body edited by PyGithub", user, "open", milestone, ["Bug"], ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.assignee.login, "jacquev6")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
         self.assertEqual(self.issue.body, "Body edited by PyGithub")
         self.assertEqual(self.issue.state, "open")
         self.assertEqual(self.issue.title, "Title edited by PyGithub")
@@ -99,6 +101,15 @@ class Issue(Framework.TestCase):
 
     def testGetLabels(self):
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Project management", "Question"])
+
+    def testAddAndRemoveAssignees(self):
+        user1 = "jayfk"
+        user2 = self.g.get_user("jzelinskie")
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
+        self.issue.add_to_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser", "jayfk", "jzelinskie"])
+        self.issue.remove_from_assignees(user1, user2)
+        self.assertListKeyEqual(self.issue.assignees, lambda a: a.login, ["jacquev6", "stuglaser"])
 
     def testAddAndRemoveLabels(self):
         bug = self.repo.get_label("Bug")

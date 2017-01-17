@@ -64,6 +64,14 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         return self._assignee.value
 
     @property
+    def assignees(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._assignees)
+        return self._assignees.value
+
+    @property
     def base(self):
         """
         :type: :class:`github.PullRequestPart.PullRequestPart`
@@ -518,6 +526,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._additions = github.GithubObject.NotSet
         self._assignee = github.GithubObject.NotSet
+        self._assignees = github.GithubObject.NotSet
         self._base = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._changed_files = github.GithubObject.NotSet
@@ -556,6 +565,13 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._additions = self._makeIntAttribute(attributes["additions"])
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
+        elif "assignee" in attributes:
+            if attributes["assignee"] is not None:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
+            else:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
         if "base" in attributes:  # pragma no branch
             self._base = self._makeClassAttribute(github.PullRequestPart.PullRequestPart, attributes["base"])
         if "body" in attributes:  # pragma no branch

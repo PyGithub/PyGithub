@@ -59,6 +59,14 @@ class Issue(github.GithubObject.CompletableGithubObject):
         return self._assignee.value
 
     @property
+    def assignees(self):
+        """
+        :type: list of :class:`github.NamedUser.NamedUser`
+        """
+        self._completeIfNotSet(self._assignees)
+        return self._assignees.value
+
+    @property
     def body(self):
         """
         :type: string
@@ -222,6 +230,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def add_to_assignees(self, *assignees):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignee: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
     def add_to_labels(self, *labels):
         """
         :calls: `POST /repos/:owner/:repo/issues/:number/labels <http://developer.github.com/v3/issues/labels>`_
@@ -269,7 +292,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param body: string
         :param assignee: string or :class:`github.NamedUser.NamedUser` or None
-        :param assignee: list of string
+        :param assignees: list (of string or :class:`github.NamedUser.NamedUser`)
         :param state: string
         :param milestone: :class:`github.Milestone.Milestone` or None
         :param labels: list of string
@@ -278,7 +301,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert assignee is github.GithubObject.NotSet or assignee is None or isinstance(assignee, github.NamedUser.NamedUser) or isinstance(assignee, (str, unicode)), assignee
-        assert assignees is github.GithubObject.NotSet or isinstance(assignees, list)
+        assert assignees is github.GithubObject.NotSet or all(isinstance(element, github.NamedUser.NamedUser) or isinstance(element, (str, unicode)) for element in assignees), assignees
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert milestone is github.GithubObject.NotSet or milestone is None or isinstance(milestone, github.Milestone.Milestone), milestone
         assert labels is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in labels), labels
@@ -293,7 +316,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
             else:
                 post_parameters["assignee"] = assignee._identity if assignee else ''
         if assignees is not github.GithubObject.NotSet:
-            post_parameters["assignees"] = assignees
+            post_parameters["assignees"] = [element._identity if isinstance(element, github.NamedUser.NamedUser) else element for element in assignees]
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
         if milestone is not github.GithubObject.NotSet:
@@ -361,6 +384,21 @@ class Issue(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def remove_from_assignees(self, *assignees):
+        """
+        :calls: `DELETE /repos/:owner/:repo/issues/:number/assignees <https://developer.github.com/v3/issues/assignees>`_
+        :param assignee: :class:`github.NamedUser.NamedUser` or string
+        :rtype: None
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in assignees), assignees
+        post_parameters = {"assignees": [assignee.login if isinstance(assignee, github.NamedUser.NamedUser) else assignee for assignee in assignees]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/assignees",
+            input=post_parameters
+        )
+        self._useAttributes(data)
+
     def remove_from_labels(self, label):
         """
         :calls: `DELETE /repos/:owner/:repo/issues/:number/labels/:name <http://developer.github.com/v3/issues/labels>`_
@@ -397,6 +435,7 @@ class Issue(github.GithubObject.CompletableGithubObject):
 
     def _initAttributes(self):
         self._assignee = github.GithubObject.NotSet
+        self._assignees = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._closed_at = github.GithubObject.NotSet
         self._closed_by = github.GithubObject.NotSet
@@ -421,6 +460,13 @@ class Issue(github.GithubObject.CompletableGithubObject):
     def _useAttributes(self, attributes):
         if "assignee" in attributes:  # pragma no branch
             self._assignee = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["assignee"])
+        if "assignees" in attributes:  # pragma no branch
+            self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, attributes["assignees"])
+        elif "assignee" in attributes:
+            if attributes["assignee"] is not None:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [attributes["assignee"]])
+            else:
+                self._assignees = self._makeListOfClassesAttribute(github.NamedUser.NamedUser, [])
         if "body" in attributes:  # pragma no branch
             self._body = self._makeStringAttribute(attributes["body"])
         if "closed_at" in attributes:  # pragma no branch

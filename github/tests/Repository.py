@@ -198,13 +198,13 @@ class Repository(Framework.TestCase):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
         question = self.repo.get_label("Question")
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, [question], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateIssueWithAllArgumentsStringLabel(self):
         user = self.g.get_user("jacquev6")
         milestone = self.repo.get_milestone(2)
-        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ['Question'])
+        issue = self.repo.create_issue("Issue also created by PyGithub", "Body created by PyGithub", user, milestone, ["Question"], ["jacquev6", "stuglaser"])
         self.assertEqual(issue.number, 30)
 
     def testCreateLabel(self):
