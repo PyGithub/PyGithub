@@ -93,5 +93,8 @@ if __name__ == "__main__":
             "Topic :: Software Development",
         ],
         test_suite="github.tests.AllTests",
-        use_2to3=True
+        use_2to3=True,
+        install_requires=[
+            "python-jose"
+        ]
     )
