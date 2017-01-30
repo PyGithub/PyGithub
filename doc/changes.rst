@@ -4,6 +4,32 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.30 (January 30, 2017)
+-----------------------------------
+
+* Support HTTP 302 redirect in Organization.has_in_members (0154c6b)
+* Add details of repo type for get_repos documentation (f119147)
+* Note explicit support for Python 3.5 (3ae55f0)
+* Fix README instructions (5b0224e)
+* An easier to see link to the documentation in response to issue #480. (6039a4b)
+* Encode GithubObject repr values in utf-8 when using Python2 (8ab9082)
+* Updated documentation (4304ccd)
+* Added a subscribers count field (a2da7f9)
+* Added "add_to_assignees" & "remove_from_assignees" method to Issue object. (66430d7)
+* Added "assignees" attribute to PullRequest object. (c0de6be)
+* add html_url to GitRelease (ec633aa)
+* Removed unused imports (65afc3f)
+* Fix typo in a constant (10a28e0)
+* Fix changelog formatting glitch (03a9227)
+* Added "assignees" argument in Repository.create_issue() (ba007dc)
+* Enhance support of "assignees" argument in Issue.edit() (14dd9f0)
+* Added "assignees" attribute to Issue object. (e0e5fdf)
+
+Version 1.30 (January 30, 2017)
+-----------------------------------
+
+* adds GitHub integrations (d60943d)
+
 Version 1.29 (October 10, 2016)
 -----------------------------------
 
