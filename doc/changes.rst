@@ -4,6 +4,14 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.30 (January 30, 2017)
+-----------------------------------
+
+* added experimental Github Integrations support
+* support 302 redirect in Organization.has_in_members
+* support multiple assignees
+* doc fixes
+
 Version 1.29 (October 10, 2016)
 -----------------------------------
 
