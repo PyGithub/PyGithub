@@ -29,6 +29,7 @@
 import urllib
 import pickle
 import time
+import sys
 from httplib import HTTPSConnection
 from jose import jwt
 
@@ -39,6 +40,7 @@ import Organization
 import Gist
 import github.PaginatedList
 import Repository
+import Installation
 import Legacy
 import github.GithubObject
 import HookDescription
@@ -49,6 +51,7 @@ import RateLimit
 import InstallationAuthorization
 import GithubException
 
+atLeastPython3 = sys.hexversion >= 0x03000000
 
 DEFAULT_BASE_URL = "https://api.github.com"
 DEFAULT_TIMEOUT = 10
@@ -596,6 +599,14 @@ class Github(object):
         )
         return [StatusMessage.StatusMessage(self.__requester, headers, attributes, completed=True) for attributes in data]
 
+    def get_installation(self, id):
+        """
+
+        :param id:
+        :return:
+        """
+        return Installation.Installation(self.__requester, headers={}, attributes={"id": id}, completed=True)
+
 
 class GithubIntegration(object):
     """
@@ -651,6 +662,10 @@ class GithubIntegration(object):
         )
         response = conn.getresponse()
         response_text = response.read()
+
+        if atLeastPython3:
+            response_text = response_text.decode('utf-8')
+
         conn.close()
         if response.status == 201:
             data = json.loads(response_text)
@@ -674,5 +689,3 @@ class GithubIntegration(object):
             status=response.status,
             data=response_text
         )
-
-
