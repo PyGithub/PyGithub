@@ -4,7 +4,7 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
-Version 1.30 (January 30, 2017)
+Version 1.31 (January 30, 2017)
 -----------------------------------
 
 * Support HTTP 302 redirect in Organization.has_in_members (0154c6b)
