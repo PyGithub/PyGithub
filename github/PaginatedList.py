@@ -107,7 +107,7 @@ class PaginatedList(PaginatedListBase):
         some_other_repos = user.get_repos().get_page(3)
     """
 
-    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None):
+    def __init__(self, contentClass, requester, firstUrl, firstParams, headers=None, list_item="items"):
         PaginatedListBase.__init__(self)
         self.__requester = requester
         self.__contentClass = contentClass
@@ -116,6 +116,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextUrl = firstUrl
         self.__nextParams = firstParams or {}
         self.__headers = headers
+        self.__list_item = list_item
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
@@ -173,9 +174,9 @@ class PaginatedList(PaginatedListBase):
                 self.__nextUrl = links["next"]
         self.__nextParams = None
 
-        if 'items' in data:
+        if self.__list_item in data:
             self.__totalCount = data['total_count']
-            data = data["items"]
+            data = data[self.__list_item]
 
         content = [
             self.__contentClass(self.__requester, headers, element, completed=False)
@@ -209,9 +210,9 @@ class PaginatedList(PaginatedListBase):
             headers=self.__headers
         )
 
-        if 'items' in data:
+        if self.__list_item in data:
             self.__totalCount = data['total_count']
-            data = data["items"]
+            data = data[self.__list_item]
 
         return [
             self.__contentClass(self.__requester, headers, element, completed=False)
