@@ -1,0 +1,9 @@
+https
+DELETE
+api.github.com
+None
+/repos/jacquev6/PyGithub/branches/master/protection
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+null
+200
+[]

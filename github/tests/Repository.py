@@ -78,12 +78,45 @@ class Repository(Framework.TestCase):
         self.assertEqual(branch.enforcement_level, "everyone")
         self.assertEqual(branch.contexts, ["test"])
 
+    def test_should_add_basic_branch_protection(self):
+        self.repo.set_branch_protection("master")
+
+    def test_should_add_requirement_for_reviews_on_branch_protection(self):
+        self.repo.set_branch_protection("master",
+                                        require_review=True)
+
+    def test_should_add_user_and_team_restrictions_to_branch_protection(self):
+        self.repo.set_branch_protection("master",
+                                        restrictions={'teams': [], 
+                                                        'users': ['Al Bundy']})
+
+    def test_should_add_required_status_checks_to_branch_protection(self):
+        self.repo.set_branch_protection("master",
+                                        include_admins=True,
+                                        strict=True,
+                                        contexts=['default', 'some context'])
+
+    def test_should_add_some_default_required_status_checks_to_branch_protection(self):
+        self.repo.set_branch_protection("master", strict=True)
+
+    def test_should_add_full_branch_protection(self):
+        self.repo.set_branch_protection("master",
+                                        require_review_all=True,
+                                        restrictions={'users': [], 'teams': []},
+                                        include_admins=True,
+                                        strict=True,
+                                        contexts=['default', 'some context'])
+
+
     def testRemoveBranchProtection(self):
         self.repo.protect_branch("master", False)
         branch = self.repo.get_protected_branch("master")
         self.assertFalse(branch.protected)
         self.assertEqual(branch.enforcement_level, "off")
         self.assertEqual(branch.contexts, [])
+
+    def test_should_remove_branch_protection(self):
+        self.repo.remove_branch_protection('master')
 
     def testChangeBranchProtectionContexts(self):
         self.repo.protect_branch("master", True, "everyone", ["test"])

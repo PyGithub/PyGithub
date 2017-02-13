@@ -2234,6 +2234,54 @@ class Repository(github.GithubObject.CompletableGithubObject):
             headers={'Accept': 'application/vnd.github.loki-preview+json'}
         )
 
+    def remove_branch_protection(self, branch):
+        """
+        :calls: `DELETE /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches/#remove-branch-protection>`_
+        """
+        return self._requester.requestJsonAndCheck(
+            'DELETE',
+            "{base_url}/branches/{branch}/protection".format(base_url=self.url,
+                                                                branch=branch),
+            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+        )
+
+    def set_branch_protection(self, branch, require_review_all=False, require_review=None, restrictions=None, **required_status_checks):
+        """
+        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches/#update-branch-protection>`_
+        :param branch: string
+        :param require_review_all: boolean
+        :param require_review: boolean
+        :param restrictions: dict with lists as values and keys 'users' and 'teams'
+        :param include_admins: boolean defaults to False
+        :param strict: boolean defaults to False
+        :param contexts: list defaults to empty lists
+        """
+        if require_review_all or require_review:
+            require_review = {'include_admins': require_review_all}
+
+        required_status_checks = self._build_required_status_checks(
+                                                                required_status_checks)
+
+        return self._requester.requestJsonAndCheck(
+            'PUT',
+            "{base_url}/branches/{branch}/protection".format(base_url=self.url,
+                                                                branch=branch),
+            input={
+                'required_status_checks': required_status_checks,
+                'required_pull_request_reviews': require_review,
+                'restrictions' : restrictions
+            },
+            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+        )
+
+    @staticmethod
+    def _build_required_status_checks(requested_checks):
+        if requested_checks:
+            default_checks = {"strict": False,
+                                "include_admins": False,
+                                "contexts": []}
+            return dict(default_checks, **requested_checks)
+
     def remove_from_collaborators(self, collaborator):
         """
         :calls: `DELETE /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
