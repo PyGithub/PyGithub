@@ -22,6 +22,7 @@
 #                                                                              #
 # ##############################################################################
 
+from os.path import basename
 import github.GithubObject
 import github.GitAuthor
 import github.GitReleaseAsset
@@ -129,7 +130,6 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         assert isinstance(path, (str, unicode)), path
         assert isinstance(label, (str, unicode)), label
 
-        from os.path import basename
         post_parameters = {
             "name": basename(path),
             "label": label

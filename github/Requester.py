@@ -42,6 +42,7 @@ import sys
 import Consts
 import re
 import os
+import mimetypes
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -233,7 +234,6 @@ class Requester:
             if "Content-Type" in headers:
                 mime_type = headers["Content-Type"]
             else:
-                import mimetypes
                 guessed_type = mimetypes.guess_type(input)
                 mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
             f = open(local_path)

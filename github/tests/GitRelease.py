@@ -22,6 +22,8 @@
 #                                                                              #
 # ##############################################################################
 
+import os
+import zipfile
 import Framework
 from pprint import pprint
 
@@ -30,7 +32,6 @@ class Release(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         # Do not get self.release here as it casues bad data to be saved in --record mode
-        import zipfile
         self.content_path = "content.txt"
         self.artifact_path = "archive.zip"
 
@@ -42,7 +43,6 @@ class Release(Framework.TestCase):
         artifact.close()
 
     def tearDown(self):
-        import os
         if os.path.exists(self.content_path):
             os.remove(self.content_path)
         if os.path.exists(self.artifact_path):
@@ -123,6 +123,3 @@ class Release(Framework.TestCase):
         the_release.upload_asset(self.artifact_path,
                                  "unit test artifact",
                                  "application/zip")
-
-
-        
