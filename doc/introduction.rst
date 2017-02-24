@@ -8,6 +8,10 @@ Should you have any question, any remark, or if you find a bug,
 or if there is something you can do with the API but not with PyGithub,
 please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 
+.. warning::
+
+   PyGithub is **not** thread-safe, please ensure that you serialize your calls to this API.
+
 (Very short) tutorial
 ---------------------
 
