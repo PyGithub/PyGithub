@@ -240,6 +240,9 @@ class CompletableGithubObject(GithubObject):
         GithubObject.__init__(self, requester, headers, attributes, completed)
         self.__completed = completed
 
+    def __hash__(self):
+        return hash(self._url.value)
+
     def __eq__(self, other):
         return other.__class__ is self.__class__ and other._url.value == self._url.value
 
