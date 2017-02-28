@@ -108,6 +108,9 @@ class Organization(Framework.TestCase):
     def testGetMembers(self):
         self.assertListKeyEqual(self.org.get_members(), lambda u: u.login, ["cjuniet", "jacquev6", "Lyloa"])
 
+    def testGetOutsideCollaborators(self):
+        self.assertListKeyEqual(self.org.get_outside_collaborators(), lambda u: u.login, ["octocat"])
+
     def testMembers(self):
         lyloa = self.g.get_user("Lyloa")
         self.assertTrue(self.org.has_in_members(lyloa))

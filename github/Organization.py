@@ -510,6 +510,25 @@ class Organization(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_outside_collaborators(self, filter_=github.GithubObject.NotSet):
+        """
+        :calls: `GET /orgs/:org/outside_collaborators <http://developer.github.com/v3/orgs/outside_collaborators>`_
+        :param filter_: string
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        assert (filter_ is github.GithubObject.NotSet or
+                isinstance(filter_, (str, unicode))), filter_
+
+        url_parameters = {}
+        if filter_ is not github.GithubObject.NotSet:
+            url_parameters["filter"] = filter_
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/outside_collaborators",
+            url_parameters
+        )
+
     def get_repo(self, name):
         """
         :calls: `GET /repos/:owner/:repo <http://developer.github.com/v3/repos>`_
