@@ -668,21 +668,28 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._watchers_count)
         return self._watchers_count.value
 
-    def add_to_collaborators(self, collaborator):
+    def add_to_collaborators(self, collaborator, permission=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/collaborators/:user <http://developer.github.com/v3/repos/collaborators>`_
         :param collaborator: string or :class:`github.NamedUser.NamedUser`
+        :param permission: string 'pull', 'push' or 'admin'
         :rtype: None
         """
         assert isinstance(collaborator, github.NamedUser.NamedUser) or isinstance(collaborator, (str, unicode)), collaborator
+        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
 
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
 
+        put_parameters = {}
+        if permission is not github.GithubObject.NotSet:
+            put_parameters['permission'] = permission
+
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/collaborators/" + collaborator,
-            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'}
+            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
+            input=put_parameters
         )
         # return an invitation object if there's data returned by the API. If data is empty
         # there's a pending invitation for the given user.
