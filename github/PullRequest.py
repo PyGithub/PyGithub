@@ -37,6 +37,8 @@ import github.PullRequestComment
 import github.File
 import github.IssueComment
 import github.Commit
+import github.PullRequestReview
+import github.PullRequestReviewerRequests
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
@@ -495,6 +497,46 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_review(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/reviews/:id <https://developer.github.com/v3/pulls/reviews>`_
+        :param id: integer
+        :rtype: :class:`github.PullRequestReview.PullRequestReview`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/reviews/" + str(id),
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+        )
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def get_reviews(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/reviews <https://developer.github.com/v3/pulls/reviews/>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestReview.PullRequestReview`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestReview.PullRequestReview,
+            self._requester,
+            self.url + "/reviews",
+            None,
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+        )
+
+    def get_review_requests(self):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.InspectionReviewers.InspectionReviewers`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestReviewerRequests.PullRequestReviewerRequests,
+            self._requester,
+            self.url + "/requested_reviewers",
+            None,
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+        )
+        
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
