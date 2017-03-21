@@ -58,8 +58,6 @@ class PullRequestReviewerRequests(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._login = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
-#        self._url = github.GithubObject.NotSet
-#        self._html_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "login" in attributes:  # pragma no branch
