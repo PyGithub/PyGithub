@@ -26,19 +26,21 @@
 
 import Framework
 
-import datetime
-
-
-class PullRequestReviewRequests(Framework.TestCase):
+class PullRequestReviewerRequests(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.pullreviewrequest = self.g.get_user().get_repo("PyGithub").get_pull(538).get_review_requests()
-        print("* Inspection #{0}, Requested from User {1}".format(self.pullreviewrequest.id, self.pullreviewrequest.login))
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.pull = self.repo.get_pull(538)
+        
+        self.pullreviewerrequests = self.pull.get_reviewer_requests()
+        self.pullreviewerrequest = self.pullreviewerrequests[0]
+
 
     def testAttributes(self):
-        self.assertEqual(self.pullreviewrequest.id, 886298)
-        self.assertEqual(self.pullreviewrequest.login, "jacquev6")
 
+        self.assertEqual(self.pullreviewerrequest.id, 2930472)
+        self.assertEqual(self.pullreviewerrequest.login, "jayfk")
+ 
         # test __repr__() based on this attributes
-        self.assertEqual(self.comment.__repr__(), 'PullRequestReviewRequest(id=886298, user="jacquev6"')
+        self.assertEqual(self.pullreviewerrequest.__repr__(), 'PullRequestReviewerRequest(login="jayfk", id=2930472)')
 

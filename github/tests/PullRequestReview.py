@@ -26,29 +26,26 @@
 
 import Framework
 
-import datetime
-
-
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-#        self.pullreview = self.g.get_user().get_repo("PyGithub").get_pull(538).get_review(1):
-        self.pullreview = self.g.get_user().get_repo("PyGithub").get_pull(538).get_reviews(self)
-        for ireview in self.pullreview.get_reviews():
-            iuser     = xstr(ireview.user.login) + " (" + xstr(ireview.user.name) + ")"
-            istate    = xstr(ireview.state)
-            print("* Review #{0} was {1} by User: {2}; For Commit {3}: Comment = {4}".format(ireview.id, istate, iuser, ireview.commit_id, ireview.body))
-            print("*   HTML_URL = {0}".format(ireview.html_url))
-            print("*   Pull Request URL = {0}".format(ireview.pull_request_url))
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.pull = self.repo.get_pull(538)
+        
+        # Test ability to get all reviews
+        self.pullreviews = self.pull.get_reviews()
+
+        # Test ability to get a single review
+        self.pullreview = self.pull.get_review(28482091)
 
     def testAttributes(self):
-        self.assertEqual(self.pullreview.body, "Comment created by PyGithub")
-        self.assertEqual(self.pullreview.commit_id, "8a4f306d4b223682dd19410d4a9150636ebe4206")
-        self.assertEqual(self.pullreview.id, 886298)
-        self.assertEqual(self.pullreview.state, "src/github/Issue.py")
-        self.assertEqual(self.pullreview.user.login, "jacquev6")
-        self.assertEqual(self.pullreview.html_url, "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907")
-        self.assertEqual(self.pullreview.pull_request_url, "https://github.com/jacquev6/PyGithub/pull/170#issuecomment-18637907")
+        self.assertEqual(self.pullreview.id, 28482091)
+        self.assertEqual(self.pullreview.user.login, "jzelinskie")
+        self.assertEqual(self.pullreview.body, "")
+        self.assertEqual(self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc")
+        self.assertEqual(self.pullreview.state, "APPROVED")
+        self.assertEqual(self.pullreview.html_url, "https://github.com/PyGithub/PyGithub/pull/538#pullrequestreview-28482091")
+        self.assertEqual(self.pullreview.pull_request_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/538")
 
         # test __repr__() based on this attributes
-        self.assertEqual(self.comment.__repr__(), 'PullRequestReview(id=886298, user=NamedUser(login="jacquev6"))')
+        self.assertEqual(self.pullreview.__repr__(), 'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)')

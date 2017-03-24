@@ -38,7 +38,7 @@ import github.File
 import github.IssueComment
 import github.Commit
 import github.PullRequestReview
-import github.PullRequestReviewerRequests
+import github.PullRequestReviewerRequest
 
 
 class PullRequest(github.GithubObject.CompletableGithubObject):
@@ -524,13 +524,13 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
 
-    def get_review_requests(self):
+    def get_reviewer_requests(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/requested_reviewers <https://developer.github.com/v3/pulls/review_requests/>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.InspectionReviewers.InspectionReviewers`
         """
         return github.PaginatedList.PaginatedList(
-            github.PullRequestReviewerRequests.PullRequestReviewerRequests,
+            github.PullRequestReviewerRequest.PullRequestReviewerRequest,
             self._requester,
             self.url + "/requested_reviewers",
             None,

@@ -58,7 +58,7 @@ from Organization import *
 from PullRequest import *
 from PullRequestComment import *
 from PullRequestReview import *
-from PullRequestReviewRequests import *
+from PullRequestReviewerRequests import *
 from PullRequestFile import *
 from RateLimiting import *
 from Repository import *

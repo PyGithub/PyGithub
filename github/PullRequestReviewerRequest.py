@@ -31,7 +31,7 @@ import github.GithubObject
 import github.NamedUser
 
 
-class PullRequestReviewerRequests(github.GithubObject.CompletableGithubObject):
+class PullRequestReviewerRequest(github.GithubObject.CompletableGithubObject):
     """
     This class represents Pull Request Reviewer Requests as returned for example by https://developer.github.com/v3/pulls/review_requests/
     """
