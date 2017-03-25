@@ -4,7 +4,6 @@
 #                                                                              #
 # Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2012 Zearin <zearin@gonk.net>                                      #
-# Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -25,75 +24,28 @@
 #                                                                              #
 # ##############################################################################
 
-from AuthenticatedUser import *
-from Authentication import *
-from Authorization import *
-from Branch import *
-from Commit import *
-from CommitCombinedStatus import *
-from CommitComment import *
-from CommitStatus import *
-from ContentFile import *
-from Download import *
-from Event import *
-from Gist import *
-from GistComment import *
-from GitBlob import *
-from GitCommit import *
-from Github_ import *
-from GitRef import *
-from GitRelease import *
-from GitTag import *
-from GitTree import *
-from Hook import *
-from Issue import *
-from IssueComment import *
-from IssueEvent import *
-from Label import *
-from Milestone import *
-from NamedUser import *
-from Markdown import *
-from OrganizationHasInMembers import *
-from Organization import *
-from PullRequest import *
-from PullRequestComment import *
-from PullRequestReview import *
-from PullRequestReviewerRequests import *
-from PullRequestFile import *
-from RateLimiting import *
-from Repository import *
-from RepositoryKey import *
-from Status import *
-from Tag import *
-from Team import *
-from UserKey import *
+import Framework
 
-from PaginatedList import *
-from Exceptions import *
-from Enterprise import *
-from Logging_ import *
-from RawData import *
-from ConditionalRequestUpdate import *
-from Persistence import *
-from ExposeAllAttributes import *
-from BadAttributes import *
-from Equality import *
-from Search import *
+class PullRequestReview(Framework.TestCase):
+    def setUp(self):
+        Framework.TestCase.setUp(self)
+        self.repo = self.g.get_repo("PyGithub/PyGithub")
+        self.pull = self.repo.get_pull(538)
+        
+        # Test ability to get all reviews
+        self.pullreviews = self.pull.get_reviews()
 
-from Issue33 import *
-from Issue50 import *
-from Issue54 import *
-from Issue80 import *
-from Issue87 import *
-from Issue131 import *
-from Issue133 import *
-from Issue134 import *
-from Issue139 import *
-from Issue140 import *
-from Issue142 import *
-from Issue158 import *
-from Issue174 import *
-from Issue214 import *
-from Issue216 import *
-from Issue278 import *
-from Issue494 import *
+        # Test ability to get a single review
+        self.pullreview = self.pull.get_review(28482091)
+
+    def testAttributes(self):
+        self.assertEqual(self.pullreview.id, 28482091)
+        self.assertEqual(self.pullreview.user.login, "jzelinskie")
+        self.assertEqual(self.pullreview.body, "")
+        self.assertEqual(self.pullreview.commit_id, "7a0fcb27b7cd6c346fc3f76216ccb6e0f4ca3bcc")
+        self.assertEqual(self.pullreview.state, "APPROVED")
+        self.assertEqual(self.pullreview.html_url, "https://github.com/PyGithub/PyGithub/pull/538#pullrequestreview-28482091")
+        self.assertEqual(self.pullreview.pull_request_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/538")
+
+        # test __repr__() based on this attributes
+        self.assertEqual(self.pullreview.__repr__(), 'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)')
