@@ -4,6 +4,12 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.33 (March 27, 2017)
+-----------------------------------
+
+* Removed dependency on python-jose (insecure transitive dependency PyCrypto) and switched to pyjwt.
+* Add Support for Pull Request Reviews feature.
+
 Version 1.32 (February 1, 2017)
 -----------------------------------
 
