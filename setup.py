@@ -95,6 +95,6 @@ if __name__ == "__main__":
         test_suite="github.tests.AllTests",
         use_2to3=True,
         install_requires=[
-            "python-jose"
+            "pyjwt"
         ]
     )
