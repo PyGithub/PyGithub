@@ -1,9 +1,4 @@
-Change log
-==========
-
-Stable versions
-~~~~~~~~~~~~~~~
-
+Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion  (abril 04, 2017)\n-----------------------------------\n\n* Update requirements to match the latest pyjwt switch (e5458fa)\n
 Version 1.33 (March 27, 2017)
 -----------------------------------
 
