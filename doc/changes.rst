@@ -1,9 +1,4 @@
-Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion  (abril 04, 2017)\n-----------------------------------\n\n* Update requirements to match the latest pyjwt switch (e5458fa)\n
-Version 1.33 (March 27, 2017)
------------------------------------
-
-* Removed dependency on python-jose (insecure transitive dependency PyCrypto) and switched to pyjwt.
-* Add Support for Pull Request Reviews feature.
+Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion 1.34 (abril 04, 2017)\n-----------------------------------\n\n\n* Add Support for Pull Request Reviews feature.
 
 Version 1.32 (February 1, 2017)
 -----------------------------------
