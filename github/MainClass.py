@@ -230,7 +230,24 @@ class Github(object):
             "/repositories",
             url_parameters
         )
-
+        
+    def get_starred(self, since=github.GithubObject.NotSet):
+        """
+        :calls: `GET /user/starred <http://developer.github.com/v3/activity/starring>`_
+        :param since: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Repository.Repository,
+            self.__requester,
+            "/user/starred",
+            url_parameters
+        )
+            
     def get_gist(self, id):
         """
         :calls: `GET /gists/:id <http://developer.github.com/v3/gists>`_
