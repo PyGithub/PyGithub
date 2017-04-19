@@ -228,6 +228,22 @@ class Requester:
 
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
+    def requestBlob(self, verb, url, parameters={}, headers={}, input=None):
+        def encode(local_path):
+            if "Content-Type" in headers:
+                mime_type = headers["Content-Type"]
+            else:
+                import mimetypes
+                guessed_type = mimetypes.guess_type(input)
+                mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
+            f = open(local_path)
+            return mime_type, f
+
+        #todo: determine how to add in requestBlobAndCheck feature
+        status, responseHeaders, output = self.__requestEncode(None, verb, url, parameters, headers, input, encode)
+
+        return status, responseHeaders, json.loads(output)
+
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
         assert verb in ["HEAD", "GET", "POST", "PATCH", "PUT", "DELETE"]
         if parameters is None:
@@ -305,8 +321,8 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.hostname == self.__hostname
-            assert o.path.startswith(self.__prefix)
+            assert o.hostname in [self.__hostname, "uploads.github.com"], o.hostname
+            assert o.path.startswith((self.__prefix, "/api/uploads"))
             assert o.port == self.__port
             url = o.path
             if o.query != "":
