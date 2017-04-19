@@ -24,6 +24,7 @@
 
 import github.GithubObject
 import github.GitAuthor
+import github.GitReleaseAsset
 
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
@@ -33,6 +34,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"title": self._title.value})
+
+    @property
+    def id(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._id)
+        return self._id.value
 
     @property
     def body(self):
@@ -116,7 +125,37 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         )
         return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
+    def upload_asset(self, path, label="", content_type=""):
+        assert isinstance(path, (str, unicode)), path
+        assert isinstance(label, (str, unicode)), label
+
+        from os.path import basename
+        post_parameters = {
+            "name": basename(path),
+            "label": label
+        }
+        headers = {}
+        if len(content_type) > 0:
+            headers["Content-Type"] = content_type
+        status, resp_headers, data = self._requester.requestBlob(
+            "POST",
+            self.upload_url.split("{?")[0],
+            parameters=post_parameters,
+            headers=headers,
+            input=path
+        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, headers, data, completed=True) if status == 201 else None
+
+    def get_assets(self):
+        return github.PaginatedList.PaginatedList( 
+            github.GitReleaseAsset.GitReleaseAsset, 
+            self._requester, 
+            self.url + "/assets", 
+            None 
+        )
+
     def _initAttributes(self):
+        self._id = github.GithubObject.NotSet
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._tag_name = github.GithubObject.NotSet
@@ -126,6 +165,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._html_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "id" in attributes:
+            self._id = self._makeIntAttribute(attributes["id"])
         if "body" in attributes:
             self._body = self._makeStringAttribute(attributes["body"])
         if "name" in attributes:
