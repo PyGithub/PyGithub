@@ -238,6 +238,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._owned_private_repos.value
 
     @property
+    def permissions(self):
+        """
+        :type: list
+        """
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
+
+    @property
     def plan(self):
         """
         :type: :class:`github.Plan.Plan`
@@ -611,6 +619,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
             self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeDictAttribute(attributes["permissions"])
         if "plan" in attributes:  # pragma no branch
             self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch
