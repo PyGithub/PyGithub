@@ -30,6 +30,7 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 # ##############################################################################
+import re   #imported for replacing the spaces in path of create_file method
 import sys
 import urllib
 import datetime
@@ -1303,7 +1304,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             put_parameters["author"] = author._identity
         if committer is not github.GithubObject.NotSet:
             put_parameters["committer"] = committer._identity
-
+        
+        #for replacing one or more spaces in directory names specified in  path with  '-' 
+        path =  '/'.join([re.sub(' +','-',directory) for directory in path.split('/')[0:-1]]+[path.split('/')[-1]])
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/contents" + path,
