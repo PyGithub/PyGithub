@@ -579,7 +579,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
-    
+
     @property
     def subscribers_count(self):
         """
@@ -906,18 +906,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_key(self, title, key):
+    def create_key(self, title, key, read_only=False):
         """
         :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
         :param title: string
         :param key: string
+        :param read_only: bool
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
         assert isinstance(title, (str, unicode)), title
         assert isinstance(key, (str, unicode)), key
+        assert isinstance(read_only, bool), read_only
         post_parameters = {
             "title": title,
             "key": key,
+            "read_only": read_only,
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
