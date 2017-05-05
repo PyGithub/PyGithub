@@ -32,8 +32,8 @@ class OrganizationInviteToOrganization(Framework.TestCase):
         self.user = self.g.get_user('benjaminwhicks')
         self.org = self.g.get_organization('AardvarkInc')
 
-    def testInvitetoOrganization(self):
+    def testInviteToOrganization(self):
         self.assertTrue(self.org.invite_to_organization(self.user))
 
-    def testInvitetoOrganizationAdmin(self):
+    def testInviteToOrganizationAdmin(self):
         self.assertTrue(self.org.invite_to_organization(self.user, admin=True))
