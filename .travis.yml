@@ -19,4 +19,5 @@ deploy:
   on:
     tags: true
     distributions: sdist bdist_wheel
+    repo: PyGithub/PyGithub
     python: '2.7'
