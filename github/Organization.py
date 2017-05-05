@@ -593,7 +593,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         status, headers, data = self._requester.requestJson(
             "GET",
-            (self.url + "/public_members/" + public_member._identity)
+            self.url + "/public_members/" + public_member._identity
         )
         return status == 204
 
