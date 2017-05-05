@@ -8,6 +8,7 @@
 # Copyright 2013 AKFish <akfish@gmail.com>                                     #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 # Copyright 2013 martinqt <m.ki2@laposte.net>                                  #
+# Copyright 2016 Benjamin Hicks <benjamin.w.hicks@gmail.com                    #
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.github.io/PyGithub/v1/index.html                             #
@@ -612,9 +613,8 @@ class Organization(github.GithubObject.CompletableGithubObject):
                 (self.url + '/memberships/' + user._identity),
                 input=parameters
         )
-
         if admin:
-            # If the return is right AND the admin flag was respected return True
+            # If the status is right AND the admin flag was respected return True
             if status == 200 and '"role":"admin"' in data:
                 return True
             else:
