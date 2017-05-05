@@ -592,9 +592,35 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(public_member, github.NamedUser.NamedUser), public_member
         status, headers, data = self._requester.requestJson(
             "GET",
-            self.url + "/public_members/" + public_member._identity
+            (self.url + "/public_members/" + public_member._identity)
         )
         return status == 204
+
+    def invite_to_organization(self, user, admin=None):
+        """
+        :calls: `PUT /orgs/:org/memberships/:username`_
+        :param user: :class: `github.NamedUser.NamedUser`
+        :param admin: bool
+        :rtype: bool, bool
+        """
+        assert isinstance(user, github.NamedUser.NamedUser), user
+        parameters = None
+        if admin:
+            parameters = {'role': 'admin'}
+        status, headers, data = self._requester.requestJson(
+                "PUT",
+                (self.url + '/memberships/' + user._identity),
+                input=parameters
+        )
+
+        if admin:
+            # If the return is right AND the admin flag was respected return True
+            if status == 200 and '"role":"admin"' in data:
+                return True
+            else:
+                return False
+        # Catch all return for status errors
+        return status == 200
 
     def remove_from_members(self, member):
         """

@@ -54,6 +54,7 @@ from Milestone import *
 from NamedUser import *
 from Markdown import *
 from OrganizationHasInMembers import *
+from OrganizationInviteToOrganization import *
 from Organization import *
 from PullRequest import *
 from PullRequestComment import *
