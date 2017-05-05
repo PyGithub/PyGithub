@@ -21,3 +21,4 @@ deploy:
     distributions: sdist bdist_wheel
     repo: PyGithub/PyGithub
     python: '2.7'
+    
