@@ -610,7 +610,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             parameters = {'role': 'admin'}
         status, headers, data = self._requester.requestJson(
                 "PUT",
-                (self.url + '/memberships/' + user._identity),
+                self.url + '/memberships/' + user._identity,
                 input=parameters
         )
         if admin:
