@@ -239,7 +239,7 @@ class Requester:
             else:
                 guessed_type = mimetypes.guess_type(input)
                 mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
-            f = open(local_path)
+            f = open(local_path, 'rb')
             return mime_type, f
 
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
