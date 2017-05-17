@@ -2298,11 +2298,11 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_release_asset(self, id):
         assert isinstance(id, (int)), id
         
-        status, resp_headers, data = self._requester.requestBlob(
+        resp_headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/releases/assets/" + str(id)
         )
-        return github.GitReleaseAsset.GitReleaseAsset(self._requester, {}, data, completed=True)
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
         self._archive_url = github.GithubObject.NotSet
