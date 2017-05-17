@@ -137,14 +137,14 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         headers = {}
         if len(content_type) > 0:
             headers["Content-Type"] = content_type
-        status, resp_headers, data = self._requester.requestBlob(
+        _, data = self._requester.requestBlobAndCheck(
             "POST",
             self.upload_url.split("{?")[0],
             parameters=post_parameters,
             headers=headers,
             input=path
         )
-        return github.GitReleaseAsset.GitReleaseAsset(self._requester, headers, data, completed=True) if status == 201 else None
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, headers, data, completed=True)
 
     def get_assets(self):
         return github.PaginatedList.PaginatedList( 
