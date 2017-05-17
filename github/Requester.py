@@ -176,6 +176,8 @@ class Requester:
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        o = urlparse.urlparse(url)
+        self.__hostname = o.hostname
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input))
 
     def __check(self, status, responseHeaders, output):
@@ -241,7 +243,7 @@ class Requester:
                 mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
             f = open(local_path, 'rb')
             return mime_type, f
-
+        
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
