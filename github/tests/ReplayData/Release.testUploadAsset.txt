@@ -36,7 +36,7 @@ POST
 uploads.github.com
 None
 /repos/edhollandAL/PyGithub/releases/1210837/assets?label=unit+test+artifact&name=archive.zip
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/zip'}
+{'Authorization': 'Basic login_and_password_removed', 'Content-Length': 140, 'User-Agent': 'PyGithub/Python', 'Content-Type': 'application/zip'}
 null
 204
 [('content-length', '150'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '139317cebd6caf9cd03889139437f00b'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"26708914904a29b8c9fd2ac006beb9db"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4942'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:5677:5265FA1:553A03F5'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Fri, 24 Apr 2015 08:43:32 GMT'), ('date', 'Fri, 24 Apr 2015 08:51:01 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/zip'), ('x-ratelimit-reset', '1429867683')]
