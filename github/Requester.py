@@ -43,6 +43,7 @@ import Consts
 import re
 import os
 import mimetypes
+from io import IOBase
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -303,6 +304,9 @@ class Requester:
         output = response.read()
 
         cnx.close()
+        if input:
+            if isinstance(input, IOBase):
+                input.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
