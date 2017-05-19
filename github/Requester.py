@@ -243,7 +243,9 @@ class Requester:
                 mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
             f = open(local_path, 'rb')
             return mime_type, f
-        
+
+        if input:
+            headers["Content-Length"] = os.path.getsize(input)
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
