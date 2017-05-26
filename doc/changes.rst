@@ -1,8 +1,4 @@
-Change log
-==========
-
-Stable versions
-~~~~~~~~~~~~~~~
+Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion 1.34 (abril 04, 2017)\n-----------------------------------\n\n\n* Add Support for Pull Request Reviews feature.
 
 Version 1.32 (February 1, 2017)
 -----------------------------------
