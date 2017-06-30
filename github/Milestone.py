@@ -44,6 +44,14 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"number": self._number.value})
 
     @property
+    def closed_at(self):
+        """
+        :type: datetime.datetime
+        """
+        self._completeIfNotSet(self.closed_at)
+        return self.closed_at.value
+
+    @property
     def closed_issues(self):
         """
         :type: integer

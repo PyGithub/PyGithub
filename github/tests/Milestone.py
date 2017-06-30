@@ -35,6 +35,7 @@ class Milestone(Framework.TestCase):
         self.milestone = self.g.get_user().get_repo("PyGithub").get_milestone(1)
 
     def testAttributes(self):
+        self.assertEqual(self.milestone.closed_at, datetime.datetime(2017, 6, 30, 11, 42, 00))
         self.assertEqual(self.milestone.closed_issues, 2)
         self.assertEqual(self.milestone.created_at, datetime.datetime(2012, 3, 8, 12, 22, 10))
         self.assertEqual(self.milestone.description, "")
