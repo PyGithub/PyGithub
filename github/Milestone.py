@@ -48,8 +48,8 @@ class Milestone(github.GithubObject.CompletableGithubObject):
         """
         :type: datetime.datetime
         """
-        self._completeIfNotSet(self.closed_at)
-        return self.closed_at.value
+        self._completeIfNotSet(self._closed_at)
+        return self._closed_at.value
 
     @property
     def closed_issues(self):
