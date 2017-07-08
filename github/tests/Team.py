@@ -40,6 +40,7 @@ class Team(Framework.TestCase):
         self.assertEqual(self.team.permission, "pull")
         self.assertEqual(self.team.repos_count, 0)
         self.assertEqual(self.team.url, "https://api.github.com/teams/189850")
+        self.assertEqual(self.team.organization, self.org)
 
         # test __repr__() based on this attributes
         self.assertEqual(self.team.__repr__(), 'Team(name="Team created by PyGithub", id=189850)')

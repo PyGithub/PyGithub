@@ -31,6 +31,7 @@ import github.PaginatedList
 
 import github.Repository
 import github.NamedUser
+import github.Organization
 
 
 class Team(github.GithubObject.CompletableGithubObject):
@@ -112,6 +113,14 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._url)
         return self._url.value
+
+    @property
+    def organization(self):
+        """
+        :type: :class:`github.Organization.Organization`
+        """
+        self._completeIfNotSet(self._organization)
+        return self._organization.value
 
     def add_to_members(self, member):
         """
@@ -285,6 +294,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         self._repositories_url = github.GithubObject.NotSet
         self._slug = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._organization = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -305,3 +315,5 @@ class Team(github.GithubObject.CompletableGithubObject):
             self._slug = self._makeStringAttribute(attributes["slug"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "organization" in attributes:  # pragma no branch
+            self._organization = self._makeClassAttribute(github.Organization.Organization, attributes["organization"])
