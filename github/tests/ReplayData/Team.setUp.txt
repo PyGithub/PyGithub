@@ -18,5 +18,5 @@ None
 null
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4975'), ('content-length', '145'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"03555a65309084f36bcf959063a39d35"'), ('date', 'Sat, 26 May 2012 21:09:52 GMT'), ('content-type', 'application/json; charset=utf-8')]
-{"repos_count":0,"url":"https://api.github.com/teams/189850","members_count":0,"name":"Team created by PyGithub","permission":"pull","id":189850}
+{"repos_count":0,"url":"https://api.github.com/teams/189850","members_count":0,"name":"Team created by PyGithub","permission":"pull","id":189850,"organization":{"login":"BeaverSoftware","id":1424031,"url":"https://api.github.com/orgs/BeaverSoftware"}}
 
