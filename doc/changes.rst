@@ -4,6 +4,11 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.35 (July 10, 2017)
+-----------------------------------
+
+* Add Support for repository collaborator invitations.
+
 Version 1.34 (abril 04, 2017)
 -----------------------------------
 
