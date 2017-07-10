@@ -1051,6 +1051,24 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
             "/user/watched/" + watched._identity
         )
 
+    def accept_invitation(self, invitation):
+        """
+        :calls: `PATCH /user/repository_invitations/:invitation_id <https://developer.github.com/v3/repos/invitations/>`
+        :param invitation: :class:`github.Invitation.Invitation` or int
+        :rtype: None
+        """
+        assert isinstance(invitation, github.Invitation.Invitation) or isinstance(invitation, int)
+
+        if isinstance(invitation, github.Invitation.Invitation):
+            invitation = invitation.id
+
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            "/user/repository_invitations/" + str(invitation),
+            headers={'Accept': 'application/vnd.github.swamp-thing-preview+json'},
+            input={}
+        )
+
     def _initAttributes(self):
         self._avatar_url = github.GithubObject.NotSet
         self._bio = github.GithubObject.NotSet

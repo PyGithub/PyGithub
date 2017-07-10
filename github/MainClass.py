@@ -50,6 +50,7 @@ import StatusMessage
 import RateLimit
 import InstallationAuthorization
 import GithubException
+import Invitation
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 

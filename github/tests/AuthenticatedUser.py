@@ -234,3 +234,6 @@ class AuthenticatedUser(Framework.TestCase):
 
     def testGetTeams(self):
         self.assertListKeyEqual(self.user.get_teams(), lambda t: t.name, ["Owners", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries", "Honoraries"])
+
+    def testAcceptInvitation(self):
+        self.assertIsNone(self.user.accept_invitation(4294886))

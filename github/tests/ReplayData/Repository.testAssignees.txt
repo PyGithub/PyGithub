@@ -47,7 +47,7 @@ PUT
 api.github.com
 None
 /repos/jacquev6/PyGithub/collaborators/Lyloa
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Accept': 'application/vnd.github.swamp-thing-preview+json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
 null
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4993'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('cache-control', ''), ('date', 'Fri, 07 Sep 2012 23:12:27 GMT')]
