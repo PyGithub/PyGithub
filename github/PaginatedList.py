@@ -29,6 +29,9 @@
 
 import github.GithubObject
 
+import sys
+if sys.version_info > (3,):
+    long = int
 
 class PaginatedListBase:
     def __init__(self):
