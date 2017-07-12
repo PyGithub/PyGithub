@@ -60,6 +60,8 @@ class PaginatedListBase:
     def _grow(self):
         newElements = self._fetchNextPage()
         self.__elements += newElements
+        if not self._couldGrow():
+            self._totalCount = len(self.__elements)
         return newElements
 
     class _Slice:
@@ -120,14 +122,14 @@ class PaginatedList(PaginatedListBase):
         if self.__requester.per_page != 30:
             self.__nextParams["per_page"] = self.__requester.per_page
         self._reversed = False
-        self.__totalCount = None
+        self._totalCount = None
 
     @property
     def totalCount(self):
-        if not self.__totalCount:
+        while not self._totalCount and self._couldGrow():
             self._grow()
 
-        return self.__totalCount
+        return self._totalCount
 
     def _getLastPageUrl(self):
         headers, data = self.__requester.requestJsonAndCheck(
@@ -175,7 +177,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self._totalCount = data['total_count']
             data = data[self.__list_item]
 
         content = [
@@ -211,7 +213,7 @@ class PaginatedList(PaginatedListBase):
         )
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self._totalCount = data['total_count']
             data = data[self.__list_item]
 
         return [
