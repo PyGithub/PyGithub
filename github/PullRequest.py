@@ -383,6 +383,33 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
+    def create_reviewer_requests(self, *reviewers):
+        """
+        :calls `POST /repos/:owner/:repo/pulls/:number/requested_reviewers`
+        :param reviewers: list (of string or :class:`github.NamedUser.NamedUser`)
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in reviewers), reviewers
+        post_parameters = {"reviewers": [reviewer.login if isinstance(reviewer, github.NamedUser.NamedUser) else reviewer for reviewer in reviewers]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
+        return github.PullRequestReview.PullRequestReview(self._requester, headers, data, completed=True)
+
+    def delete_reviewer_requests(self, *reviewers):
+        """
+        :calls: `DELETE /repos/:owner/:repo/pulls/:number/requested_reviewers`
+        :param reviewers: list (of string or :class:`github.NamedUser.NamedUser`)
+        """
+        assert all(isinstance(element, (github.NamedUser.NamedUser, str, unicode)) for element in reviewers), reviewers
+        post_parameters = {"reviewers": [reviewer.login if isinstance(reviewer, github.NamedUser.NamedUser) else reviewer for reviewer in reviewers]}
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/requested_reviewers",
+            input=post_parameters
+        )
+
     def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
@@ -536,7 +563,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
-        
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
