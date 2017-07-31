@@ -37,6 +37,7 @@ from Requester import Requester, json
 import AuthenticatedUser
 import github.PaginatedList
 import Repository
+import Project
 import Installation
 import Legacy
 import github.GithubObject
