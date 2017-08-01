@@ -23,7 +23,7 @@ class GithubObjectMixin(object):
 
         t_obj = str(type(obj)).split("'>")[0].split("'")[-1]
         t_obj = self._obj_transformations.get(t_obj, t_obj)
-        if t_obj == 'string' and len(obj) > 24 and '-' in obj and ':' in obj:
+        if t_obj == 'string' and len(obj) > 23 and '-' in obj and ':' in obj:
             t_obj = 'datetime'
         return t_obj.title()
 
