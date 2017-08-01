@@ -1,4 +1,3 @@
-import github
 from github import GithubObject
 
 
