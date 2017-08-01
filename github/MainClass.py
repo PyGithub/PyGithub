@@ -229,16 +229,15 @@ class Github(object):
             url_parameters
         )
 
-    def get_projects(self):
+    def get_projects(self, owner, repo):
         '''
         :calls: 'GET /repos/:owner/:repo/projects
         :return: :class github.Project.Project
         '''
-        preview_headers = {'Accept': 'application/vnd.github.inertia-preview+json'}
-        uri = "/repos/{0}/{1}/projects".format('SUSE', 'spacewalk')
+        uri = "/repos/{0}/{1}/projects".format(owner, repo)
         return github.PaginatedList.PaginatedList(github.Project.Project,
                                                   self.__requester, uri, dict(),
-                                                  headers=preview_headers)
+                                                  headers=github.Project.Project._preview_headers)
 
     def get_gist(self, id):
         """
