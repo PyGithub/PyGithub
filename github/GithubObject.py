@@ -148,7 +148,7 @@ class GithubObject(OldStyleMigration):
             try:
                 return _ValuedAttribute(transform(value))
             except Exception, e:
-                return _BadAttribute(value, type, e)
+                return GithubObject.__makeSimpleAttribute(value, (unicode, str))
         else:
             return _BadAttribute(value, type)
 
