@@ -1,7 +1,12 @@
-from github import GithubObject
+import github
+from github import GithubObject, PaginatedList
 
 
-class ProjectMixin(object):
+class GithubObjectMixin(object):
+    '''
+    Create github objects on the fly
+    '''
+    _object_attributes = []
     _preview_headers = {'Accept': 'application/vnd.github.inertia-preview+json'}
     _obj_transformations = {
         'unicode': 'string',
@@ -22,21 +27,13 @@ class ProjectMixin(object):
             t_obj = 'datetime'
         return t_obj.title()
 
-
-class Project(ProjectMixin, GithubObject.CompletableGithubObject):
-    '''
-    Class represents Project.
-    '''
-
     def _init_attributes(self):
-        for attr in ['body', 'name', 'creator', 'url', 'created_at', 'html_url',
-                     'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id']:
+        '''
+        Set empty attributes
+        :return:
+        '''
+        for attr in self._object_attributes:
             self.__dict__['_{}'.format(attr)] = GithubObject.NotSet
-
-    def _use_attributes(self, attributes):
-        for attr_k, attr_v in attributes.items():
-            mtd = "_make{0}Attribute".format(self._get_type(attr_v))
-            self.__dict__['_{}'.format(attr_k)] = getattr(self, mtd)(attributes[attr_k])
 
     def __getattr__(self, item):
         _item = '_{}'.format(item)
@@ -45,11 +42,38 @@ class Project(ProjectMixin, GithubObject.CompletableGithubObject):
         item = self.__dict__.get(_item)
         return item and item.value or item
 
+    def _use_attributes(self, attributes):
+        for attr_k, attr_v in attributes.items():
+            mtd = "_make{0}Attribute".format(self._get_type(attr_v))
+            self.__dict__['_{}'.format(attr_k)] = getattr(self, mtd)(attributes[attr_k])
+
+
+class Card(GithubObjectMixin, GithubObject.CompletableGithubObject):
+    '''
+    Class represents Card in the Column of the Project.
+    '''
+
+
+class Column(GithubObjectMixin, GithubObject.CompletableGithubObject):
+    '''
+    Class represents column in the Project.
+    '''
+    _object_attributes = ['name', 'url', 'created_at', 'updated_at',
+                          'project_url', 'cards_url', 'id']
+
+
+class Project(GithubObjectMixin, GithubObject.CompletableGithubObject):
+    '''
+    Class represents Project.
+    '''
+    _object_attributes = ['body', 'name', 'creator', 'url', 'created_at', 'html_url',
+                          'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id']
+
     def get_columns(self):
         '''
         Returns columns of the project.
         :return:
         '''
-        headers, data = self._requester.requestJsonAndCheck("GET", '/projects/{0}/columns'.format(self.id),
-                                                            headers=self.__preview_headers)
-        print data
+        return github.PaginatedList.PaginatedList(Column, self._requester,
+                                                  '/projects/{0}/columns'.format(self.id), None,
+                                                  headers=self._preview_headers)
