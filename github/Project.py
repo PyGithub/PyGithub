@@ -1,16 +1,32 @@
 from github import GithubObject
 
 
-class Project(GithubObject.CompletableGithubObject):
-    __preview_headers = {'Accept': 'application/vnd.github.inertia-preview+json'}
-    __OBJ_TRANSFORMATIONS = {
+class ProjectMixin(object):
+    _preview_headers = {'Accept': 'application/vnd.github.inertia-preview+json'}
+    _obj_transformations = {
         'unicode': 'string',
         'str': 'string',
     }
 
-    def __get_type(self, obj):
+    def _get_type(self, obj):
+        '''
+        Get type of the Github entity.
+
+        :param obj:
+        :return:
+        '''
+
         t_obj = str(type(obj)).split("'>")[0].split("'")[-1]
-        return self.__OBJ_TRANSFORMATIONS.get(t_obj, t_obj).title()
+        t_obj = self._obj_transformations.get(t_obj, t_obj)
+        if t_obj == 'string' and len(obj) > 24 and '-' in obj and ':' in obj:
+            t_obj = 'datetime'
+        return t_obj.title()
+
+
+class Project(ProjectMixin, GithubObject.CompletableGithubObject):
+    '''
+    Class represents Project.
+    '''
 
     def _init_attributes(self):
         for attr in ['body', 'name', 'creator', 'url', 'created_at', 'html_url',
