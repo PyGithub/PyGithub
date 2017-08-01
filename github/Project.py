@@ -12,14 +12,14 @@ class Project(GithubObject.CompletableGithubObject):
         t_obj = str(type(obj)).split("'>")[0].split("'")[-1]
         return self.__OBJ_TRANSFORMATIONS.get(t_obj, t_obj).title()
 
-    def _initAttributes(self):
+    def _init_attributes(self):
         for attr in ['body', 'name', 'creator', 'url', 'created_at', 'html_url',
                      'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id']:
             self.__dict__['_{}'.format(attr)] = GithubObject.NotSet
 
-    def _useAttributes(self, attributes):
+    def _use_attributes(self, attributes):
         for attr_k, attr_v in attributes.items():
-            mtd = "_make{0}Attribute".format(self.__get_type(attr_v))
+            mtd = "_make{0}Attribute".format(self._get_type(attr_v))
             self.__dict__['_{}'.format(attr_k)] = getattr(self, mtd)(attributes[attr_k])
 
     def __getattr__(self, item):
