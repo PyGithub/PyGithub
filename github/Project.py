@@ -65,14 +65,16 @@ class GithubObjectMixin(object):
         :return:
         '''
 
+        ref = None
         v_obj = obj or ''
         if o_type is None:
             t_obj = str(type(v_obj)).split("'>")[0].split("'")[-1]
             t_obj = self._obj_transformations.get(t_obj, t_obj)
+        elif type(o_type) != str:
+            ref = self._makeClassAttribute(o_type, obj)
         else:
             t_obj = o_type
-
-        return getattr(self, "_make{0}Attribute".format(t_obj.title()))(obj)
+        return ref or getattr(self, "_make{0}Attribute".format(t_obj.title()))(obj)
 
     def _init_attributes(self):
         '''
