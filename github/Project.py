@@ -93,7 +93,8 @@ class GithubObjectMixin(object):
 
     def _use_attributes(self, attributes):
         for attr_k, attr_v in attributes.items():
-            self.__dict__['_{}'.format(attr_k)] = self._set_attribute(attr_v or '', o_type=self._object_attributes[attr_k])
+            self.__dict__['_{}'.format(attr_k)] = self._set_attribute(attr_v or '',
+                                                                      o_type=self._object_attributes[attr_k])
 
 
 class CardCreator(GithubObjectMixin, GithubObject.CompletableGithubObject):
