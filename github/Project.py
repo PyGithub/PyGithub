@@ -14,6 +14,9 @@ class OptKeyMap(dict):
             self.append(item)
         self.update(kwargs)
 
+    def __getitem__(self, item):
+        return item in self and dict.__getitem__(self, item) or None
+
     def append(self, element):
         self[element] = None
 
@@ -63,7 +66,7 @@ class GithubObjectMixin(object):
 
     def _use_attributes(self, attributes):
         for attr_k, attr_v in attributes.items():
-            self.__dict__['_{}'.format(attr_k)] = self._set_attribute(attr_v or '')
+            self.__dict__['_{}'.format(attr_k)] = self._set_attribute(attr_v or '', o_type=self._object_attributes[attr_k])
 
 
 class CardCreator(GithubObjectMixin, GithubObject.CompletableGithubObject):
