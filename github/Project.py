@@ -83,16 +83,16 @@ class Card(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Card in the Column of the Project.
     '''
-    _object_attributes = OptKeyMap('column_url', 'creator', 'url', 'created_at',
-                                   'updated_at', 'content_url', 'note', 'id')
+    _object_attributes = OptKeyMap('column_url', 'creator', 'url', 'content_url', 'note', 'id',
+                                   created_at='datetime', updated_at='datetime')
 
 
 class Column(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents column in the Project.
     '''
-    _object_attributes = OptKeyMap('name', 'url', 'created_at', 'updated_at',
-                                   'project_url', 'cards_url', 'id', 'creator')
+    _object_attributes = OptKeyMap('name', 'url', 'project_url', 'cards_url', 'id', 'creator',
+                                   created_at='datetime', updated_at='datetime')
 
     def get_cards(self, column_id=None):
         '''
@@ -108,8 +108,9 @@ class Project(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Project.
     '''
-    _object_attributes = OptKeyMap('body', 'name', 'creator', 'url', 'created_at', 'html_url',
-                                   'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id')
+    _object_attributes = OptKeyMap('body', 'name', 'creator', 'url', 'html_url',
+                                   'number', 'state', 'owner_url', 'columns_url', 'id',
+                                   created_at='datetime', updated_at='datetime')
 
     def get_columns(self, project_id=None):
         '''
