@@ -41,8 +41,6 @@ class GithubObjectMixin(object):
         if o_type is None:
             t_obj = str(type(v_obj)).split("'>")[0].split("'")[-1]
             t_obj = self._obj_transformations.get(t_obj, t_obj)
-            if t_obj == 'string' and len(obj) > 23 and '-' in v_obj and ':' in v_obj:
-                t_obj = 'datetime'
         else:
             t_obj = o_type
 
