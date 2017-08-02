@@ -2,30 +2,51 @@ import github
 from github import GithubObject, PaginatedList
 
 
+class OptKeyMap(dict):
+    '''
+    Optional values map. That is, acts like an array,
+    but can provide alternative value to the key, if any.
+    Otherwise returns the key as a value.
+    '''
+    def __init__(self, *elements, **kwargs):
+        dict.__init__(self)
+        for item in elements:
+            self.append(item)
+        self.update(kwargs)
+
+    def append(self, element):
+        self[element] = None
+
+
 class GithubObjectMixin(object):
     '''
     Create github objects on the fly
     '''
-    _object_attributes = []
+    _object_attributes = OptKeyMap()
     _preview_headers = {'Accept': 'application/vnd.github.inertia-preview+json'}
     _obj_transformations = {
         'unicode': 'string',
         'str': 'string',
     }
 
-    def _get_type(self, obj):
+    def _set_attribute(self, obj, o_type=None):
         '''
-        Get type of the Github entity.
+        Get type of the Github entity and set it.
 
         :param obj:
         :return:
         '''
 
-        t_obj = str(type(obj)).split("'>")[0].split("'")[-1]
-        t_obj = self._obj_transformations.get(t_obj, t_obj)
-        if t_obj == 'string' and len(obj) > 23 and '-' in obj and ':' in obj:
-            t_obj = 'datetime'
-        return t_obj.title()
+        v_obj = obj or ''
+        if o_type is None:
+            t_obj = str(type(v_obj)).split("'>")[0].split("'")[-1]
+            t_obj = self._obj_transformations.get(t_obj, t_obj)
+            if t_obj == 'string' and len(obj) > 23 and '-' in v_obj and ':' in v_obj:
+                t_obj = 'datetime'
+        else:
+            t_obj = o_type
+
+        return getattr(self, "_make{0}Attribute".format(t_obj.title()))(obj)
 
     def _init_attributes(self):
         '''
@@ -44,36 +65,56 @@ class GithubObjectMixin(object):
 
     def _use_attributes(self, attributes):
         for attr_k, attr_v in attributes.items():
-            mtd = "_make{0}Attribute".format(self._get_type(attr_v))
-            self.__dict__['_{}'.format(attr_k)] = getattr(self, mtd)(attributes[attr_k])
+            self.__dict__['_{}'.format(attr_k)] = self._set_attribute(attr_v or '')
+
+
+class CardCreator(GithubObjectMixin, GithubObject.CompletableGithubObject):
+    '''
+    Class represents creator for Card
+    '''
+    _object_attributes = OptKeyMap('login', 'id', 'avatar_url', 'gravatar_id', 'url', 'html_url',
+                                   'followers_url', 'following_url', 'gists_url', 'starred_url',
+                                   'subscriptions_url', 'organizations_url', 'repos_url', 'events_url',
+                                   'received_events_url', 'type', 'site_admin')
 
 
 class Card(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Card in the Column of the Project.
     '''
+    _object_attributes = OptKeyMap('column_url', 'creator', 'url', 'created_at',
+                                   'updated_at', 'content_url', 'note', 'id')
 
 
 class Column(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents column in the Project.
     '''
-    _object_attributes = ['name', 'url', 'created_at', 'updated_at',
-                          'project_url', 'cards_url', 'id']
+    _object_attributes = OptKeyMap('name', 'url', 'created_at', 'updated_at',
+                                   'project_url', 'cards_url', 'id', 'creator')
+
+    def get_cards(self, column_id=None):
+        '''
+        Returns cards of the column.
+        :return:
+        '''
+        return github.PaginatedList.PaginatedList(Card, self._requester,
+                                                  "/projects/columns/{0}/cards".format(column_id or self.id),
+                                                  None, headers=self._preview_headers)
 
 
 class Project(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Project.
     '''
-    _object_attributes = ['body', 'name', 'creator', 'url', 'created_at', 'html_url',
-                          'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id']
+    _object_attributes = OptKeyMap('body', 'name', 'creator', 'url', 'created_at', 'html_url',
+                                   'number', 'updated_at', 'state', 'owner_url', 'columns_url', 'id')
 
-    def get_columns(self):
+    def get_columns(self, project_id=None):
         '''
         Returns columns of the project.
         :return:
         '''
         return github.PaginatedList.PaginatedList(Column, self._requester,
-                                                  '/projects/{0}/columns'.format(self.id), None,
+                                                  '/projects/{0}/columns'.format(project_id or self.id), None,
                                                   headers=self._preview_headers)
