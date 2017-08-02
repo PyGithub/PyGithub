@@ -110,8 +110,8 @@ class Card(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Card in the Column of the Project.
     '''
-    _object_attributes = OptKeyMap('column_url', 'creator', 'url', 'content_url', 'note', 'id',
-                                   created_at='datetime', updated_at='datetime')
+    _object_attributes = OptKeyMap('column_url', 'url', 'content_url', 'note', 'id',
+                                   created_at='datetime', updated_at='datetime', creator=CardCreator)
 
 
 class Column(GithubObjectMixin, GithubObject.CompletableGithubObject):
