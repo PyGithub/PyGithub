@@ -99,7 +99,9 @@ class GithubObjectMixin(object):
         if self.__dict__.get(_item) is not None:
             self._completeIfNotSet(item)
         item = self.__dict__.get(_item)
-        return item and item.value or item
+        if item and hasattr(item, 'value'):
+            item = item.value or item
+        return item or EmptyObject()
 
     def _use_attributes(self, attributes):
         for attr_k, attr_v in attributes.items():
