@@ -125,6 +125,18 @@ class Card(GithubObjectMixin, GithubObject.CompletableGithubObject):
     '''
     Class represents Card in the Column of the Project.
     '''
+
+    def _get_issue_by_uri(self, uri, attribute):
+        '''
+        Get an issue by passed uri
+        :param uri:
+        :return:
+        '''
+        uri = '/repos/{0}'.format(uri.split('/repos/')[-1])
+        headers, data = self._requester.requestJsonAndCheck("GET", uri)
+        self.__dict__['_' + attribute] = github.Issue.Issue(self._requester, headers, data, completed=True)
+        return 'string'
+
     _object_attributes = OptKeyMap('column_url', 'url', 'content_url', 'note', 'id',
                                    created_at='datetime', updated_at='datetime', creator=CardCreator,
                                    content_url=(_get_issue_by_uri, 'issue',))
