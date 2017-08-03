@@ -76,7 +76,7 @@ class Github(object):
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
         assert password is None or isinstance(password, (str, unicode)), password
         assert isinstance(base_url, (str, unicode)), base_url
-        assert isinstance(timeout, (int, long)), timeout
+        assert isinstance(timeout, (int, long, object)), timeout
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
