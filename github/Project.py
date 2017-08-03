@@ -24,7 +24,9 @@
 # IN THE SOFTWARE.
 
 import github
-from github import GithubObject, PaginatedList
+from github import GithubObject, PaginatedList, Issue
+import types
+
 
 class EmptyObject(object):
     '''
