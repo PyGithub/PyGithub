@@ -26,6 +26,16 @@
 import github
 from github import GithubObject, PaginatedList
 
+class EmptyObject(object):
+    '''
+    Dummy object, in case no structure returned.
+    '''
+    def __getattr__(self, item):
+        return self.__dict__.get(item, self)
+
+    def __str__(self):
+        return ''
+
 
 class OptKeyMap(dict):
     '''
