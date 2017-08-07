@@ -68,3 +68,8 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.title, "release title")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v3.0.0")
+
+    def testGetLatestRelease(self):
+        self.repo = self.g.get_user().get_repo('PyGithub')
+        latest_release = self.repo.get_latest_release()
+        self.assertEqual(latest_release.tag_name, "v1.25.2")
