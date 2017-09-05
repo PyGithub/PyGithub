@@ -325,7 +325,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param has_wiki: bool
         :param has_downloads: bool
         :param has_projects: bool
-        :param team_id: :class:`github.Team.Team`
+        :param team_id: : int
         :param auto_init: bool
         :param license_template: string
         :param gitignore_template: string

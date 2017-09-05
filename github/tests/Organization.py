@@ -137,7 +137,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.org.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
+        repo = self.org.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateFork(self):
