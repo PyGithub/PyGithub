@@ -771,12 +771,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self.create_git_tag(tag, tag_message, object, type, tagger)
         return self.create_git_release(tag, release_name, release_message, draft, prerelease)
 
-    def create_git_release(self, tag, name, message, draft=False, prerelease=False):
+    def create_git_release(self, tag, name, message, draft=False, prerelease=False, target_commitish=github.GithubObject.NotSet):
         assert isinstance(tag, (str, unicode)), tag
         assert isinstance(name, (str, unicode)), name
         assert isinstance(message, (str, unicode)), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
+        assert target_commitish is github.GithubObject.NotSet or isinstance(target_commitish, (str, unicode, github.Branch.Branch, github.Commit.Commit, github.GitCommit.GitCommit)), target_commitish
         post_parameters = {
             "tag_name": tag,
             "name": name,
@@ -784,6 +785,12 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "draft": draft,
             "prerelease": prerelease,
         }
+        if isinstance(target_commitish, (str, unicode)):
+            post_parameters["target_commitish"] = target_commitish
+        elif isinstance(target_commitish, github.Branch.Branch):
+            post_parameters["target_commitish"] = target_commitish.name
+        elif isinstance(target_commitish, (github.Commit.Commit, github.GitCommit.GitCommit)):
+            post_parameters["target_commitish"] = target_commitish.sha
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/releases",
