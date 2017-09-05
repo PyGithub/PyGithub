@@ -59,6 +59,22 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return self._tag_name.value
 
     @property
+    def is_draft(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_draft)
+        return self._is_draft.value
+
+    @property
+    def is_prerelease(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._is_prerelease)
+        return self._is_prerelease.value
+
+    @property
     def author(self):
         """
         :type: :class:`github.GitAuthor.GitAuthor`
@@ -120,6 +136,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._title = github.GithubObject.NotSet
         self._tag_name = github.GithubObject.NotSet
+        self._is_draft = github.GithubObject.NotSet
+        self._is_prerelease = github.GithubObject.NotSet
         self._author = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._upload_url = github.GithubObject.NotSet
@@ -132,6 +150,10 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self._title = self._makeStringAttribute(attributes["name"])
         if "tag_name" in attributes:
             self._tag_name = self._makeStringAttribute(attributes["tag_name"])
+        if "draft" in attributes:
+            self._is_draft = self._makeBoolAttribute(attributes["draft"])
+        if "prerelease" in attributes:
+            self._is_prerelease = self._makeBoolAttribute(attributes["prerelease"])
         if "author" in attributes:
             self._author = self._makeClassAttribute(github.GitAuthor.GitAuthor, attributes["author"])
         if "url" in attributes:

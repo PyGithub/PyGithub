@@ -37,6 +37,8 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
         self.assertEqual(self.release.body, "Body")
         self.assertEqual(self.release.title, "Test")
+        self.assertEqual(self.release.is_draft, False)
+        self.assertEqual(self.release.is_prerelease, False)
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
