@@ -129,15 +129,16 @@ class AuthenticatedUser(Framework.TestCase):
         self.assertListKeyEqual(self.user.get_authorizations(), lambda a: a.id, [372294])
 
     def testCreateRepository(self):
-        repo = self.user.create_repo("TestPyGithub")
+        repo = self.user.create_repo(name="TestPyGithub")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateRepositoryWithAllArguments(self):
-        repo = self.user.create_repo("TestPyGithub", "Repo created by PyGithub", "http://foobar.com", private=False, has_issues=False, has_wiki=False, has_downloads=False)
+        repo = self.user.create_repo(name="TestPyGithub", description="Repo created by PyGithub", homepage="http://foobar.com",
+                                     private=False, has_issues=False, has_wiki=False, has_downloads=False)
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.user.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
+        repo = self.user.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/jacquev6/TestPyGithub")
 
     def testCreateAuthorizationWithoutArguments(self):
