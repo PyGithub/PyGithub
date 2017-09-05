@@ -342,7 +342,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
-        assert team_id is github.GithubObject.NotSet or isinstance(team_id, github.Team.Team), team_id
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, (int, long)), team_id
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
         assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
