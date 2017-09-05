@@ -367,7 +367,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         if has_projects is not github.GithubObject.NotSet:
             post_parameters["has_projects"] = has_projects
         if team_id is not github.GithubObject.NotSet:
-            post_parameters["team_id"] = team_id._identity
+            post_parameters["team_id"] = team_id
         if auto_init is not github.GithubObject.NotSet:
             post_parameters["auto_init"] = auto_init
         if license_template is not github.GithubObject.NotSet:
