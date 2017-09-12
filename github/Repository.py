@@ -579,7 +579,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
-    
+
     @property
     def subscribers_count(self):
         """
@@ -1119,7 +1119,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_protected_branch(self, branch):
         """
-        :calls: `GET /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#response-10>`_
+        :calls: `GET /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/#response-10>`_
         :param branch: string
         :rtype: :class:`github.Branch.Branch`
         """
@@ -1127,7 +1127,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/branches/" + branch,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            headers={'Accept': 'application/vnd.github.v3+json'}
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -2209,7 +2209,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def protect_branch(self, branch, enabled, enforcement_level=github.GithubObject.NotSet, contexts=github.GithubObject.NotSet):
         """
-        :calls: `PATCH /repos/:owner/:repo/branches/:branch <https://developer.github.com/v3/repos/#enabling-and-disabling-branch-protection>`_
+        :calls: `PUT /repos/:owner/:repo/branches/:branch/protection <https://developer.github.com/v3/repos/branches/#get-branch-protection>`_
         :param branch: string
         :param enabled: boolean
         :param enforcement_level: string
@@ -2236,7 +2236,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             "PATCH",
             self.url + "/branches/" + branch,
             input=post_parameters,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            headers={'Accept': 'application/vnd.github.v3+json'}
         )
 
     def remove_from_collaborators(self, collaborator):
