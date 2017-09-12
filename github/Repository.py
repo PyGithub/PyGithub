@@ -1126,7 +1126,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(branch, (str, unicode)), branch
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/branches/" + branch,
+            self.url + "/branches/" + branch + "/protection",
             headers={'Accept': 'application/vnd.github.v3+json'}
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
@@ -2233,8 +2233,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if contexts is not github.GithubObject.NotSet:
             post_parameters["protection"]["required_status_checks"]["contexts"] = contexts
         headers, data = self._requester.requestJsonAndCheck(
-            "PATCH",
-            self.url + "/branches/" + branch,
+            "PUT",
+            self.url + "/branches/" + branch + "/protection",
             input=post_parameters,
             headers={'Accept': 'application/vnd.github.v3+json'}
         )
