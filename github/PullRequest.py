@@ -383,17 +383,19 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
+    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
         :param title: string
         :param body: string
         :param state: string
+        :param base: string
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert base is github.GithubObject.NotSet or isinstance(base, (str, unicode)), base
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -401,6 +403,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["body"] = body
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
+        if base is not github.GithubObject.NotSet:
+            post_parameters["base"] = base
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
