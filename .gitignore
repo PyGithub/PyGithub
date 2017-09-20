@@ -23,6 +23,8 @@
 ################################################################################
 
 *.pyc
+.eggs/
+.python-version
 
 /GithubCredentials.py
 /scripts/TwitterCredentials.py
