@@ -2261,7 +2261,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def replace_topics(self, topics):
         """
-        :calls: `GET /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
+        :calls: `PUT /repos/:owner/:repo/topics <http://developer.github.com/v3/repos>`_
         :param topics: list of unicode strings`
         :rtype: None
         """
