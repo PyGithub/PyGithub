@@ -623,7 +623,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def topics(self):
         """
-        :type: list
+        :type: list 
         """
         self._completeIfNotSet(self._topics)
         return self._topics.value
