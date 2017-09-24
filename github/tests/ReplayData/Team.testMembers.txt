@@ -102,8 +102,8 @@ PUT
 api.github.com
 None
 /teams/189850/memberships/jacquev6
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
-null
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{"role": "member"}
 200
-[('status', '200 No Content'), ('x-ratelimit-remaining', '4971'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"d41d8cd98f00b204e9800998ecf8427e"'), ('date', 'Sat, 26 May 2012 21:09:55 GMT')]
+[('status', '200 OK'), ('x-ratelimit-remaining', '4949'), ('content-length', '151'), ('server', 'nginx/1.0.13'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"8856425cedbdf3075576e823f39fc3d6"'), ('date', 'Sat, 26 May 2012 21:14:46 GMT'), ('content-type', 'application/json; charset=utf-8')]
 []

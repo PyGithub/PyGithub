@@ -54,7 +54,7 @@ class Team(Framework.TestCase):
         self.team.remove_from_members(user)
         self.assertListKeyEqual(self.team.get_members(), None, [])
         self.assertFalse(self.team.has_in_members(user))
-        self.team.add_membership(user)
+        self.team.add_membership(user, "member")
 
     def testRepoPermission(self):
         repo = self.org.get_repo("FatherBeaver")
