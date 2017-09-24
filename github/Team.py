@@ -125,7 +125,7 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url + "/members/" + member._identity
         )
 
-    def add_membership(self, member, role):
+    def add_membership(self, member, role=github.GithubObject.NotSet):
         """
         :calls: `PUT /teams/:id/memberships/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.Nameduser.NamedUser`
@@ -140,16 +140,15 @@ class Team(github.GithubObject.CompletableGithubObject):
             put_parameters = {
                 "role": role,
             }
-            headers, data = self._requester.requestJsonAndCheck(
-                "PUT",
-                self.url + "/memberships/" + member._identity,
-                input=put_parameters
-            )
         else:
-            headers, data = self._requester.requestJsonAndCheck(
-                "PUT",
-                self.url + "/memberships/" + member._identity
-            )
+            put_parameters = {
+                "role": "member",
+            }
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity,
+            input=put_parameters
+        )
 
     def add_to_repos(self, repo):
         """
