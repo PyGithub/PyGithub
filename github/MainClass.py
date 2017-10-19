@@ -633,11 +633,15 @@ class GithubIntegration(object):
             "exp": now + 60,
             "iss": self.integration_id
         }
-        return jwt.encode(
+        auth = jwt.encode(
             payload,
             key=self.private_key,
             algorithm="RS256"
         )
+
+        if not atLeastPython3:
+            return auth
+        return auth.decode('utf-8')
 
     def get_access_token(self, installation_id, user_id=None):
         """
