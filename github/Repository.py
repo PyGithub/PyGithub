@@ -1126,8 +1126,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert isinstance(branch, (str, unicode)), branch
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/branches/" + branch,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            self.url + "/branches/" + branch
         )
         return github.Branch.Branch(self._requester, headers, data, completed=True)
 
@@ -2235,8 +2234,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url + "/branches/" + branch,
-            input=post_parameters,
-            headers={'Accept': 'application/vnd.github.loki-preview+json'}
+            input=post_parameters
         )
 
     def remove_from_collaborators(self, collaborator):
