@@ -43,9 +43,9 @@ See files COPYING and COPYING.LESSER, as requested by `GNU <http://www.gnu.org/l
 What next?
 ----------
 
-You need to use a Github API and wonder which class implements it? [`Reference of APIs`](http://jacquev6.net/PyGithub/v1/apis.html) __
+You need to use a Github API and wonder which class implements it? `Reference of APIs <https://pygithub.readthedocs.io/en/latest/apis.html>`__.
 
-You want all the details about PyGithub classes? [`Reference of classes`](http://jacquev6.net/PyGithub/v1/github_objects.html) __
+You want all the details about PyGithub classes? `Reference of Classes <https://pygithub.readthedocs.io/en/latest/github_objects.html>`__.
 
 Projects using PyGithub
 -----------------------
