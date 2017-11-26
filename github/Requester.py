@@ -66,10 +66,13 @@ class RequestsResponse:
     def read(self):
         return self.text
 
-class RequestsConnectionClass:
+class HTTPSRequestsConnectionClass(object):
     # mimic the httplib connection object
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+        self.port = port if port else 443
+        self.host = host
+        self.protocol = "https"
+        self.timeout = timeout
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -78,15 +81,38 @@ class RequestsConnectionClass:
         self.headers = headers
 
     def getresponse(self):
-        r = getattr(requests,self.verb.lower())("https://api.github.com" + self.url, headers=self.headers, data=self.input)
+        r = getattr(requests,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
         return RequestsResponse(r)
 
     def close(self):
         return
 
+
+class HTTPRequestsConnectionClass(object):
+    # mimic the httplib connection object
+    def __init__(self, host, port=None, strict=False, timeout=None, **kwargs):
+        self.port = port if port else 80
+        self.host = host
+        self.protocol = "http"
+        self.timeout = timeout
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        r = getattr(requests,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
+
+
 class Requester:
-    __httpConnectionClass = RequestsConnectionClass
-    __httpsConnectionClass = RequestsConnectionClass
+    __httpConnectionClass = HTTPRequestsConnectionClass
+    __httpsConnectionClass = HTTPSRequestsConnectionClass
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -95,8 +121,8 @@ class Requester:
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = RequestsConnectionClass
-        cls.__httpsConnectionClass = RequestsConnectionClass
+        cls.__httpConnectionClass = HTTPRequestsConnectionClass
+        cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
     #############################################################
     # For Debug
