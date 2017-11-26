@@ -73,6 +73,7 @@ class HTTPSRequestsConnectionClass(object):
         self.host = host
         self.protocol = "https"
         self.timeout = timeout
+        self.session = requests.Session()
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -81,7 +82,7 @@ class HTTPSRequestsConnectionClass(object):
         self.headers = headers
 
     def getresponse(self):
-        r = getattr(requests,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
+        r = getattr(self.session,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
         return RequestsResponse(r)
 
     def close(self):
@@ -95,6 +96,7 @@ class HTTPRequestsConnectionClass(object):
         self.host = host
         self.protocol = "http"
         self.timeout = timeout
+        self.session = requests.Session()
 
     def request(self, verb, url, input, headers):
         self.verb = verb
@@ -103,7 +105,7 @@ class HTTPRequestsConnectionClass(object):
         self.headers = headers
 
     def getresponse(self):
-        r = getattr(requests,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
+        r = getattr(self.session,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
         return RequestsResponse(r)
 
     def close(self):
@@ -113,6 +115,7 @@ class HTTPRequestsConnectionClass(object):
 class Requester:
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
+    __connection = None
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -387,6 +390,9 @@ class Requester:
         ## set.
         ## http_proxy: http://user:password@proxy_host:proxy_port
         ##
+        if self.__connection is not None:
+            return self.__connection
+
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)
@@ -401,6 +407,8 @@ class Requester:
             conn.set_tunnel(self.__hostname, self.__port, headers)
         else:
             conn = self.__connectionClass(self.__hostname, self.__port, **kwds)
+
+        self.__connection = conn
 
         return conn
 
