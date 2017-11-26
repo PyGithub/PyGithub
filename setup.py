@@ -96,6 +96,7 @@ if __name__ == "__main__":
         test_suite="github.tests.AllTests",
         use_2to3=True,
         install_requires=[
+            "requests>=2.9.1",
             "pyjwt"
         ],
         extras_require = {

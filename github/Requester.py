@@ -34,7 +34,6 @@
 # ##############################################################################
 
 import logging
-import httplib
 import base64
 import urllib
 import urlparse
@@ -42,6 +41,7 @@ import sys
 import Consts
 import re
 import os
+import requests
 
 atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
@@ -53,10 +53,40 @@ else:  # pragma no cover (Covered by all tests with Python 2.5)
 
 import GithubException
 
+class RequestsResponse:
+    # mimic the httplib response object
+    def __init__(self, r):
+        self.status = r.status_code
+        self.headers = r.headers
+        self.text = r.text
+
+    def getheaders(self):
+        return self.headers.iteritems()
+
+    def read(self):
+        return self.text
+
+class RequestsConnectionClass:
+    # mimic the httplib connection object
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def request(self, verb, url, input, headers):
+        self.verb = verb
+        self.url = url
+        self.input = input
+        self.headers = headers
+
+    def getresponse(self):
+        r = getattr(requests,self.verb.lower())("https://api.github.com" + self.url, headers=self.headers, data=self.input)
+        return RequestsResponse(r)
+
+    def close(self):
+        return
 
 class Requester:
-    __httpConnectionClass = httplib.HTTPConnection
-    __httpsConnectionClass = httplib.HTTPSConnection
+    __httpConnectionClass = RequestsConnectionClass
+    __httpsConnectionClass = RequestsConnectionClass
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -65,8 +95,8 @@ class Requester:
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = httplib.HTTPConnection
-        cls.__httpsConnectionClass = httplib.HTTPSConnection
+        cls.__httpConnectionClass = RequestsConnectionClass
+        cls.__httpsConnectionClass = RequestsConnectionClass
 
     #############################################################
     # For Debug
