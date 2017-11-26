@@ -116,14 +116,17 @@ class Requester:
     __httpConnectionClass = HTTPRequestsConnectionClass
     __httpsConnectionClass = HTTPSRequestsConnectionClass
     __connection = None
+    __persist = True
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
+        cls.__persist = False
         cls.__httpConnectionClass = httpConnectionClass
         cls.__httpsConnectionClass = httpsConnectionClass
 
     @classmethod
     def resetConnectionClasses(cls):
+        cls.__persist = True
         cls.__httpConnectionClass = HTTPRequestsConnectionClass
         cls.__httpsConnectionClass = HTTPSRequestsConnectionClass
 
@@ -390,7 +393,7 @@ class Requester:
         ## set.
         ## http_proxy: http://user:password@proxy_host:proxy_port
         ##
-        if self.__connection is not None:
+        if self.__persist and self.__connection is not None:
             return self.__connection
 
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
