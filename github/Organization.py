@@ -308,7 +308,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet, private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet, has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, gitignore_template=github.GithubObject.NotSet):
+    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet,
+                    private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet,
+                    has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet,
+                    has_projects=github.GithubObject.NotSet, team_id=github.GithubObject.NotSet,
+                    auto_init=github.GithubObject.NotSet, license_template=github.GithubObject.NotSet,
+                    gitignore_template=github.GithubObject.NotSet, allow_squash_merge=github.GithubObject.NotSet,
+                    allow_merge_commit=github.GithubObject.NotSet, allow_rebase_merge=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/repos <http://developer.github.com/v3/repos>`_
         :param name: string
@@ -318,9 +324,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param has_issues: bool
         :param has_wiki: bool
         :param has_downloads: bool
-        :param team_id: :class:`github.Team.Team`
+        :param has_projects: bool
+        :param team_id: : int
         :param auto_init: bool
+        :param license_template: string
         :param gitignore_template: string
+        :param allow_squash_merge: bool
+        :param allow_merge_commit: bool
+        :param allow_rebase_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
         assert isinstance(name, (str, unicode)), name
@@ -330,9 +341,14 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
-        assert team_id is github.GithubObject.NotSet or isinstance(team_id, github.Team.Team), team_id
+        assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, (int, long)), team_id
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
         assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
+        assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
+        assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
+        assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
         post_parameters = {
             "name": name,
         }
@@ -348,12 +364,22 @@ class Organization(github.GithubObject.CompletableGithubObject):
             post_parameters["has_wiki"] = has_wiki
         if has_downloads is not github.GithubObject.NotSet:
             post_parameters["has_downloads"] = has_downloads
+        if has_projects is not github.GithubObject.NotSet:
+            post_parameters["has_projects"] = has_projects
         if team_id is not github.GithubObject.NotSet:
-            post_parameters["team_id"] = team_id._identity
+            post_parameters["team_id"] = team_id
         if auto_init is not github.GithubObject.NotSet:
             post_parameters["auto_init"] = auto_init
+        if license_template is not github.GithubObject.NotSet:
+            post_parameters["license_template"] = license_template
         if gitignore_template is not github.GithubObject.NotSet:
             post_parameters["gitignore_template"] = gitignore_template
+        if allow_squash_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_squash_merge"] = allow_squash_merge
+        if allow_merge_commit is not github.GithubObject.NotSet:
+            post_parameters["allow_merge_commit"] = allow_merge_commit
+        if allow_rebase_merge is not github.GithubObject.NotSet:
+            post_parameters["allow_rebase_merge"] = allow_rebase_merge
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/repos",
