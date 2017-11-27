@@ -46,6 +46,7 @@ import github.GitBlob
 import github.Organization
 import github.GitRef
 import github.GitRelease
+import github.GitReleaseAsset
 import github.Issue
 import github.Repository
 import github.PullRequest
@@ -2298,6 +2299,15 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def _identity(self):
         return self.owner.login + "/" + self.name
+
+    def get_release_asset(self, id):
+        assert isinstance(id, (int)), id
+        
+        resp_headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/assets/" + str(id)
+        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
         self._archive_url = github.GithubObject.NotSet

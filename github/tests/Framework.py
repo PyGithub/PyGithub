@@ -150,12 +150,16 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
-        if input.startswith("{"):
-            self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
-        elif atMostPython32:  # @todo Test in all cases, including Python 3.3
-            # In Python 3.3, dicts are not output in the same order as in Python 2.5 -> 3.2.
-            # So, form-data encoding is not deterministic and is difficult to test.
-            self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+        if isinstance(input, (str, unicode)):
+            if input.startswith("{"):
+                self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
+            elif atMostPython32:  # @todo Test in all cases, including Python 3.3
+                # In Python 3.3, dicts are not output in the same order as in Python 2.5 -> 3.2.
+                # So, form-data encoding is not deterministic and is difficult to test.
+                self.__testCase.assertEqual(input.replace('\n', '').replace('\r', ''), expectedInput)
+        else:
+            # for non-string input (e.g. upload asset), let it pass.
+            pass
 
     def __splitUrl(self, url):
         splitedUrl = url.split("?")
