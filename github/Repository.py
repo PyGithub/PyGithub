@@ -1283,7 +1283,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
@@ -1296,7 +1296,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -1338,7 +1340,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert isinstance(sha, (str, unicode)),                    \
             'sha must be a str/unicode object'
@@ -1353,7 +1355,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
