@@ -27,6 +27,7 @@
 
 import setuptools
 import textwrap
+import sys
 
 version = "1.35"
 
@@ -96,7 +97,7 @@ if __name__ == "__main__":
         test_suite="github.tests.AllTests",
         use_2to3=True,
         install_requires=[
-            "requests>=2.9.1",
+            "requests==2.9.1" if sys.version_info[0:2] == (3, 2) else "requests",  # Environment markers (https://www.python.org/dev/peps/pep-0508/#environment-markers) are not supported in python 3.2 and 3.3, so we have to do it this way
             "pyjwt"
         ],
         extras_require = {
