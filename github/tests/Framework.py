@@ -261,7 +261,7 @@ class TestCase(BasicTestCase):
     def getFrameChecker(self):
         return lambda requester, obj, frame: self.doCheckFrame(obj, frame)
 
-    def setUp(self):
+    def setUp(self, apiPreview=False):
         BasicTestCase.setUp(self)
 
         # Set up frame debugging
@@ -271,9 +271,10 @@ class TestCase(BasicTestCase):
 
         if self.tokenAuthMode:
             self.g = github.Github(self.oauth_token)
+        elif apiPreview:
+            self.g = github.Github(self.login, self.password, api_preview=apiPreview)
         else:
             self.g = github.Github(self.login, self.password)
-
 
 def activateRecordMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.recordMode = True
