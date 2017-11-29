@@ -1,7 +1,6 @@
 # PyGitHub
 
 [![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
-[![PyPi](https://img.shields.io/pypi/dm/pygithub.svg)](https://pypi.python.org/pypi?%3Aaction=search&term=pygithub&submit=search)
 [![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.org/en/stable)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
 
