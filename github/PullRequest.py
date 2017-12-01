@@ -448,6 +448,20 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def get_single_review_comments(self, id):
+        """
+        :calls: `GET /repos/:owner/:repo/pulls/:number/review/:id/comments <https://developer.github.com/v3/pulls/reviews/>`_
+        :param id: integer
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.PullRequestComment.PullRequestComment`
+        """
+        assert isinstance(id, (int, long)), id
+        return github.PaginatedList.PaginatedList(
+            github.PullRequestComment.PullRequestComment,
+            self._requester,
+            self.url + "/reviews/" + str(id) + "/comments",
+            None
+        )
+
     def get_commits(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/commits <http://developer.github.com/v3/pulls>`_
@@ -536,7 +550,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
-        
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
