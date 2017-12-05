@@ -154,3 +154,9 @@ class Issue(Framework.TestCase):
     def testGetReactions(self):
         reactions = self.issue.get_reactions()
         self.assertEqual(reactions[0].content, "+1")
+
+    def testCreateReaction(self):
+        reaction = self.issue.create_reaction("hooray")
+
+        self.assertEqual(reaction.id, 16917472)
+        self.assertEqual(reaction.content, "hooray")
