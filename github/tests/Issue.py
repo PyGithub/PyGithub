@@ -150,3 +150,7 @@ class Issue(Framework.TestCase):
         self.assertListKeyEqual(self.issue.get_labels(), None, [])
         self.issue.set_labels(bug, question)
         self.assertListKeyEqual(self.issue.get_labels(), lambda l: l.name, ["Bug", "Question"])
+
+    def testGetReactions(self):
+        reactions = self.issue.get_reactions()
+        self.assertEqual(reactions[0].content, "+1")

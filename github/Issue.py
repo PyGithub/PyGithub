@@ -40,7 +40,7 @@ import github.NamedUser
 import github.Milestone
 import github.IssueComment
 import github.IssuePullRequest
-
+import github.IssueReaction
 
 class Issue(github.GithubObject.CompletableGithubObject):
     """
@@ -427,6 +427,19 @@ class Issue(github.GithubObject.CompletableGithubObject):
             "PUT",
             self.url + "/labels",
             input=post_parameters
+        )
+
+    def get_reactions(self):
+        """
+        :calls: `GET /repos/:owner/:repo/issues/:number/reactions <https://developer.github.com/v3/reactions/#list-reactions-for-an-issue>`
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueReaction.IssueReaction`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.IssueReaction.IssueReaction,
+            self._requester,
+            self.url + "/reactions",
+            None,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
         )
 
     @property
