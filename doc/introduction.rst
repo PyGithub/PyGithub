@@ -19,7 +19,7 @@ First create a Github instance::
     g = Github("user", "password")
     
     # or using an access token
-    g = Github(token)
+    g = Github("access_token")
 
 Then play with your Github objects::
 
