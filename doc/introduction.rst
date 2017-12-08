@@ -14,8 +14,12 @@ please `open an issue <https://github.com/PyGithub/PyGithub/issues>`__.
 First create a Github instance::
 
     from github import Github
-
+    
+    # using username and password
     g = Github("user", "password")
+    
+    # or using an access token
+    g = Github(token)
 
 Then play with your Github objects::
 
