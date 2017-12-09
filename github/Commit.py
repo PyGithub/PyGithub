@@ -126,14 +126,6 @@ class Commit(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-    @property
-    def tree(self):
-        """
-        :type: :class:`github.GitTree.GitTree`
-        """
-        self._completeIfNotSet(self._tree)
-        return self._tree.value
-
     def create_comment(self, body, line=github.GithubObject.NotSet, path=github.GithubObject.NotSet, position=github.GithubObject.NotSet):
         """
         :calls: `POST /repos/:owner/:repo/commits/:sha/comments <http://developer.github.com/v3/repos/comments>`_
@@ -242,7 +234,6 @@ class Commit(github.GithubObject.CompletableGithubObject):
         self._sha = github.GithubObject.NotSet
         self._stats = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
-        self._tree = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "author" in attributes:  # pragma no branch
@@ -265,5 +256,3 @@ class Commit(github.GithubObject.CompletableGithubObject):
             self._stats = self._makeClassAttribute(github.CommitStats.CommitStats, attributes["stats"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "tree" in attributes:  # pragma no branch
-            self._tree = self._makeClassAttribute(Commit, attributes["tree"])
