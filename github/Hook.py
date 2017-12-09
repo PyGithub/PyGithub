@@ -118,6 +118,14 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    @property
+    def ping_url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._ping_url)
+        return self._ping_url.value
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo/hooks/:id <http://developer.github.com/v3/repos/hooks>`_
@@ -174,6 +182,16 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self.url + "/tests"
         )
 
+    def ping(self):
+        """
+        :calls: `POST /repos/:owner/:repo/hooks/:id/pings <http://developer.github.com/v3/repos/hooks>`_
+        :rtype: None
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/pings"
+        )
+
     def _initAttributes(self):
         self._active = github.GithubObject.NotSet
         self._config = github.GithubObject.NotSet
@@ -185,6 +203,7 @@ class Hook(github.GithubObject.CompletableGithubObject):
         self._test_url = github.GithubObject.NotSet
         self._updated_at = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
+        self._ping_url = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "active" in attributes:  # pragma no branch
@@ -207,3 +226,5 @@ class Hook(github.GithubObject.CompletableGithubObject):
             self._updated_at = self._makeDatetimeAttribute(attributes["updated_at"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
+        if "ping_url" in attributes:  # pragma no branch
+            self._ping_url = self._makeStringAttribute(attributes["ping_url"])
