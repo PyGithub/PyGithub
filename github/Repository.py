@@ -86,6 +86,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return self.get__repr__({"full_name": self._full_name.value})
 
     @property
+    def archived(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._archived)
+        return self._archived.value
+
+    @property
     def archive_url(self):
         """
         :type: string
@@ -2317,6 +2325,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
+        self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
         self._blobs_url = github.GithubObject.NotSet
@@ -2391,6 +2400,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "archived" in attributes:  # pragma no branch
+            self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
             self._archive_url = self._makeStringAttribute(attributes["archive_url"])
         if "assignees_url" in attributes:  # pragma no branch
