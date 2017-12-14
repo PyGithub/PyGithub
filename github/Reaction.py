@@ -64,14 +64,6 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
-    def issue_url(self):
-        """
-        :type: string
-        """
-        self._completeIfNotSet(self._issue_url)
-        return self._issue_url.value
-
-    @property
     def user(self):
         """
         :type: :class:`github.NamedUser.NamedUser`
@@ -94,7 +86,6 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         self._content = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
-        self._issue_url = github.GithubObject.NotSet
         self._user = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
@@ -104,7 +95,5 @@ class Reaction(github.GithubObject.CompletableGithubObject):
             self._created_at = self._makeDatetimeAttribute(attributes["created_at"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
-        if "issue_url" in attributes:  # pragma no branch
-            self._issue_url = self._makeStringAttribute(attributes["issue_url"])
         if "user" in attributes:  # pragma no branch
             self._user = self._makeClassAttribute(github.NamedUser.NamedUser, attributes["user"])
