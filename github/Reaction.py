@@ -31,7 +31,7 @@ import github.GithubObject
 import github.NamedUser
 
 
-class IssueReaction(github.GithubObject.CompletableGithubObject):
+class Reaction(github.GithubObject.CompletableGithubObject):
     """
     This class represents IssueComments as returned for example by http://developer.github.com/v3/todo
     """

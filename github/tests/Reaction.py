@@ -29,7 +29,7 @@ import Framework
 import datetime
 
 
-class IssueReaction(Framework.TestCase):
+class Reaction(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.reactions = self.g.get_user('PyGithub').get_repo("PyGithub").get_issue(28).get_reactions()
@@ -40,7 +40,7 @@ class IssueReaction(Framework.TestCase):
         self.assertEqual(self.reactions[0].id, 16916340)
         self.assertEqual(self.reactions[0].user.login, "nicolastrres")
 
-        self.assertEqual(self.reactions[0].__repr__(), 'IssueReaction(user=NamedUser(login="nicolastrres"), id=16916340)')
+        self.assertEqual(self.reactions[0].__repr__(), 'Reaction(user=NamedUser(login="nicolastrres"), id=16916340)')
 
     def testDelete(self):
         self.reactions[0].delete()

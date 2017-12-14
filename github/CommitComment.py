@@ -157,10 +157,10 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         """
         :calls: `GET /repos/:owner/:repo/comments/:id/reactions
                 <https://developer.github.com/v3/reactions/#list-reactions-for-a-commit-comment>`
-        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueReaction.IssueReaction`
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.Reaction.Reaction`
         """
         return github.PaginatedList.PaginatedList(
-            github.IssueReaction.IssueReaction,
+            github.Reaction.Reaction,
             self._requester,
             self.url + "/reactions",
             None,
@@ -172,7 +172,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
         :calls: `POST /repos/:owner/:repo/comments/:id/reactions
                 <https://developer.github.com/v3/reactions/#create-reaction-for-a-commit-comment>`_
         :param reaction_type: string
-        :rtype: :class:`github.IssueReaction.IssueReaction`
+        :rtype: :class:`github.Reaction.Reaction`
         """
         assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
         assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
@@ -187,7 +187,7 @@ class CommitComment(github.GithubObject.CompletableGithubObject):
             input=post_parameters,
             headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
         )
-        return github.IssueReaction.IssueReaction(self._requester, headers, data, completed=True)
+        return github.Reaction.Reaction(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
