@@ -179,6 +179,20 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def get_reactions(self):
+        """
+        :calls: `GET repos/:owner/:repo/pulls/comments/:number/reactions
+                <https://developer.github.com/v3/reactions/#list-reactions-for-a-pull-request-review-comment>`
+        :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueReaction.IssueReaction`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.IssueReaction.IssueReaction,
+            self._requester,
+            self.url + "/reactions",
+            None,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet

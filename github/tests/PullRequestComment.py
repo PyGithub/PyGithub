@@ -51,10 +51,13 @@ class PullRequestComment(Framework.TestCase):
         # test __repr__() based on this attributes
         self.assertEqual(self.comment.__repr__(), 'PullRequestComment(user=NamedUser(login="jacquev6"), id=886298)')
 
-
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")
 
     def testDelete(self):
         self.comment.delete()
+
+    def testGetReactions(self):
+        reactions = self.comment.get_reactions()
+        self.assertEqual(reactions[0].content, "+1")
