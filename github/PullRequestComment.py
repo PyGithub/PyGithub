@@ -181,7 +181,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
 
     def get_reactions(self):
         """
-        :calls: `GET repos/:owner/:repo/pulls/comments/:number/reactions
+        :calls: `GET /repos/:owner/:repo/pulls/comments/:number/reactions
                 <https://developer.github.com/v3/reactions/#list-reactions-for-a-pull-request-review-comment>`
         :return: :class: :class:`github.PaginatedList.PaginatedList` of :class:`github.IssueReaction.IssueReaction`
         """
@@ -192,6 +192,28 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             None,
             headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
         )
+
+    def create_reaction(self, reaction_type):
+        """
+        :calls: `POST /repos/:owner/:repo/pulls/comments/:number/reactions
+                <https://developer.github.com/v3/reactions/#create-reaction-for-a-pull-request-review-comment>`_
+        :param reaction_type: string
+        :rtype: :class:`github.IssueReaction.IssueReaction`
+        """
+        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
+            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+
+        post_parameters = {
+            "content": reaction_type,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reactions",
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+        return github.IssueReaction.IssueReaction(self._requester, headers, data, completed=True)
 
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
