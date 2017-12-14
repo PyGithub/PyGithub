@@ -79,6 +79,17 @@ class IssueReaction(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._user)
         return self._user.value
 
+    def delete(self):
+        """
+        :calls: `DELETE /reactions/:id <https://developer.github.com/v3/reactions/#delete-a-reaction>`_
+        :rtype: None
+        """
+        self._requester.requestJsonAndCheck(
+            "DELETE",
+            "{}/reactions/{}".format(self._parentUrl(""), self.id),
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+
     def _initAttributes(self):
         self._content = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet

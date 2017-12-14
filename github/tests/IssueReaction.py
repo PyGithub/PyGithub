@@ -41,3 +41,6 @@ class IssueReaction(Framework.TestCase):
         self.assertEqual(self.reactions[0].user.login, "nicolastrres")
 
         self.assertEqual(self.reactions[0].__repr__(), 'IssueReaction(user=NamedUser(login="nicolastrres"), id=16916340)')
+
+    def testDelete(self):
+        self.reactions[0].delete()
