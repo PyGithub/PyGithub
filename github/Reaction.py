@@ -78,7 +78,7 @@ class Reaction(github.GithubObject.CompletableGithubObject):
         """
         self._requester.requestJsonAndCheck(
             "DELETE",
-            "{}/reactions/{}".format(self._parentUrl(""), self.id),
+            self._parentUrl("") + "/reactions/" + str(self.id),
             headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
         )
 
