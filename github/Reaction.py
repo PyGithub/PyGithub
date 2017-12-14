@@ -33,7 +33,7 @@ import github.NamedUser
 
 class Reaction(github.GithubObject.CompletableGithubObject):
     """
-    This class represents IssueComments as returned for example by http://developer.github.com/v3/todo
+    This class represents Reaction
     """
 
     def __repr__(self):
