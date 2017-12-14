@@ -57,3 +57,9 @@ class IssueComment(Framework.TestCase):
     def testGetReactions(self):
         reactions = self.comment.get_reactions()
         self.assertEqual(reactions[0].content, "+1")
+
+    def testCreateReaction(self):
+        reaction = self.comment.create_reaction("hooray")
+
+        self.assertEqual(reaction.id, 17282654)
+        self.assertEqual(reaction.content, "hooray")

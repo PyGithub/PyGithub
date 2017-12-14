@@ -144,6 +144,28 @@ class IssueComment(github.GithubObject.CompletableGithubObject):
             headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
         )
 
+    def create_reaction(self, reaction_type):
+        """
+        :calls: `POST /repos/:owner/:repo/issues/comments/:id/reactions
+                <https://developer.github.com/v3/reactions/#create-reaction-for-an-issue-comment>`_
+        :param reaction_type: string
+        :rtype: :class:`github.IssueReaction.IssueReaction`
+        """
+        assert isinstance(reaction_type, (str, unicode)), "reaction type should be a string"
+        assert reaction_type in ["+1", "-1", "laugh", "confused", "heart", "hooray"], \
+            "Invalid reaction type (https://developer.github.com/v3/reactions/#reaction-types)"
+
+        post_parameters = {
+            "content": reaction_type,
+        }
+        headers, data = self._requester.requestJsonAndCheck(
+            "POST",
+            self.url + "/reactions",
+            input=post_parameters,
+            headers={'Accept': 'application/vnd.github.squirrel-girl-preview'}
+        )
+        return github.IssueReaction.IssueReaction(self._requester, headers, data, completed=True)
+
     def _initAttributes(self):
         self._body = github.GithubObject.NotSet
         self._created_at = github.GithubObject.NotSet
