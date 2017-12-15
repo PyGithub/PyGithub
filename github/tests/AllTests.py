@@ -48,6 +48,7 @@ from GitTree import *
 from Hook import *
 from Issue import *
 from IssueComment import *
+from Reaction import *
 from IssueEvent import *
 from Label import *
 from Milestone import *

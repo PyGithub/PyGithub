@@ -56,3 +56,13 @@ class CommitComment(Framework.TestCase):
 
     def testDelete(self):
         self.comment.delete()
+
+    def testGetReactions(self):
+        reactions = self.comment.get_reactions()
+        self.assertEqual(reactions[0].content, "+1")
+
+    def testCreateReaction(self):
+        reaction = self.comment.create_reaction("hooray")
+
+        self.assertEqual(reaction.id, 17283092)
+        self.assertEqual(reaction.content, "hooray")
