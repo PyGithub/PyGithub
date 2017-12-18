@@ -114,7 +114,7 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
     @property
     def use_lfs(self):
         """
-        :type: bool
+        :type: string
         """
         self._completeIfNotSet(self._use_lfs)
         return self._use_lfs.value
@@ -177,8 +177,8 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
             self._status_text = self._makeStringAttribute(attributes["status_text"])
         if "url" in attributes:  # pragma no branch
             self._url = self._makeStringAttribute(attributes["url"])
-        if "use_lsf" in attributes:  # pragma no branch
-            self._use_lsf = self._makeBoolAttribute(attributes["use_lsf"])
+        if "use_lfs" in attributes:  # pragma no branch
+            self._use_lfs = self._makeStringAttribute(attributes["use_lfs"])
         if "vcs" in attributes:  # pragma no branch
             self._vcs = self._makeStringAttribute(attributes["vcs"])
         if "vcs_url" in attributes:  # pragma no branch

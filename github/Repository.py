@@ -1058,7 +1058,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             input=put_parameters
         )
 
-        return github.SourceImport.SourceImport(self._requester, headers, data, completed=True)
+        return github.SourceImport.SourceImport(self._requester, headers, data, completed=False)
 
     def delete(self):
         """
