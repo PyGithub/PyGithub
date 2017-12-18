@@ -64,6 +64,7 @@ from PullRequestFile import *
 from RateLimiting import *
 from Repository import *
 from RepositoryKey import *
+from SourceImport import *
 from Status import *
 from Tag import *
 from Team import *

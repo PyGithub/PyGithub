@@ -32,14 +32,6 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         return self._authors_url.value
 
     @property
-    def commit_count(self):
-        """
-        :type: integer
-        """
-        self._completeIfNotSet(self._commit_count)
-        return self._commit_count.value
-
-    @property
     def has_large_files(self):
         """
         :type: bool
@@ -70,14 +62,6 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._large_files_size)
         return self._large_files_size.value
-
-    @property
-    def percent(self):
-        """
-        :type: integer
-        """
-        self._completeIfNotSet(self._percent)
-        return self._percent.value
 
     @property
     def repository_url(self):
@@ -138,12 +122,10 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
     def _initAttributes(self):
         self._authors_count = github.GithubObject.NotSet
         self._authors_url = github.GithubObject.NotSet
-        self._commit_count = github.GithubObject.NotSet
         self._has_large_files = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._large_files_count = github.GithubObject.NotSet
         self._large_files_size = github.GithubObject.NotSet
-        self._percent = github.GithubObject.NotSet
         self._repository_url = github.GithubObject.NotSet
         self._status = github.GithubObject.NotSet
         self._status_text = github.GithubObject.NotSet
@@ -157,8 +139,6 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
             self._authors_count = self._makeIntAttribute(attributes["authors_count"])
         if "authors_url" in attributes:  # pragma no branch
             self._authors_url = self._makeStringAttribute(attributes["authors_url"])
-        if "commit_count" in attributes:  # pragma no branch
-            self._commit_count = self._makeIntAttribute(attributes["commit_count"])
         if "has_large_files" in attributes:  # pragma no branch
             self._has_large_files = self._makeBoolAttribute(attributes["has_large_files"])
         if "html_url" in attributes:  # pragma no branch
@@ -167,8 +147,6 @@ class SourceImport(github.GithubObject.CompletableGithubObject):
             self._large_files_count = self._makeIntAttribute(attributes["large_files_count"])
         if "large_files_size" in attributes:  # pragma no branch
             self._large_files_size = self._makeIntAttribute(attributes["large_files_size"])
-        if "percent" in attributes:  # pragma no branch
-            self._percent = self._makeIntAttribute(attributes["percent"])
         if "repository_url" in attributes:  # pragma no branch
             self._repository_url = self._makeStringAttribute(attributes["repository_url"])
         if "status" in attributes:  # pragma no branch
