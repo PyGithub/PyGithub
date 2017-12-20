@@ -25,10 +25,7 @@
 import Framework
 import github
 
-if Framework.atLeastPython26:
-    from io import BytesIO as IO
-else:
-    from StringIO import StringIO as IO
+from io import BytesIO as IO
 
 
 class Persistence(Framework.TestCase):

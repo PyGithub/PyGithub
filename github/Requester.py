@@ -33,27 +33,23 @@
 #                                                                              #
 # ##############################################################################
 
-import logging
-import httplib
 import base64
+import httplib
+import json
+import logging
+import mimetypes
+import os
+import re
+import sys
 import urllib
 import urlparse
-import sys
-import Consts
-import re
-import os
-import mimetypes
 from io import IOBase
 
-atLeastPython26 = sys.hexversion >= 0x02060000
+import Consts
+import GithubException
+
 atLeastPython3 = sys.hexversion >= 0x03000000
 
-if atLeastPython26:
-    import json
-else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
-
-import GithubException
 
 
 class Requester:
@@ -347,8 +343,7 @@ class Requester:
         kwds = {}
         if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
-        if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
-            kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
+        kwds["timeout"] = self.__timeout
 
         ##
         ## Connect through a proxy server with authentication, if http_proxy

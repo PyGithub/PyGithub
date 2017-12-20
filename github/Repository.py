@@ -73,7 +73,6 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
