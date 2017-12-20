@@ -93,6 +93,7 @@ if __name__ == "__main__":
         ],
         test_suite="github.tests.AllTests",
         use_2to3=True,
+        python_requires=">=2.7, !=3.0.*, !=3.1.*",
         install_requires=[
             "pyjwt"
         ],
