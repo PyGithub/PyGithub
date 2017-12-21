@@ -56,10 +56,7 @@ class BadAttributes(Framework.TestCase):
             self.assertEqual(e.actual_value, "foobar")
             self.assertEqual(e.expected_type, (str, unicode))
             self.assertEqual(e.transformation_exception.__class__, ValueError)
-            if Framework.atLeastPython26:
-                self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
-            else:
-                self.assertEqual(e.transformation_exception.args, ('time data did not match format:  data=foobar  fmt=%Y-%m-%dT%H:%M:%SZ',))
+            self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
         self.assertTrue(raised)
 
     def testBadTransformedAttribute(self):
