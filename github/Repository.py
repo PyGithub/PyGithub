@@ -73,7 +73,6 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
@@ -84,6 +83,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def archived(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._archived)
+        return self._archived.value
 
     @property
     def archive_url(self):
@@ -580,7 +587,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
-    
+
     @property
     def subscribers_count(self):
         """
@@ -912,18 +919,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_key(self, title, key):
+    def create_key(self, title, key, read_only=False):
         """
         :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
         :param title: string
         :param key: string
+        :param read_only: bool
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
         assert isinstance(title, (str, unicode)), title
         assert isinstance(key, (str, unicode)), key
+        assert isinstance(read_only, bool), read_only
         post_parameters = {
             "title": title,
             "key": key,
+            "read_only": read_only,
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -2314,6 +2324,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def _initAttributes(self):
+        self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
         self._blobs_url = github.GithubObject.NotSet
@@ -2388,6 +2399,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "archived" in attributes:  # pragma no branch
+            self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
             self._archive_url = self._makeStringAttribute(attributes["archive_url"])
         if "assignees_url" in attributes:  # pragma no branch
