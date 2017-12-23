@@ -307,8 +307,9 @@ class Repository(Framework.TestCase):
         self.assertFalse(self.repo.has_in_collaborators(lyloa))
         self.repo.add_to_collaborators(lyloa)
         self.assertTrue(self.repo.has_in_collaborators(lyloa))
-        self.assertListKeyEqual(self.repo.get_collaborators(), lambda u: u.login, ["jacquev6", "Lyloa"])
-        jacquev6 = [u for u in self.repo.get_collaborators() if u.login == "jacquev6"][0]
+        collaborators = self.repo.get_collaborators()
+        self.assertListKeyEqual(collaborators, lambda u: u.login, ["jacquev6", "Lyloa"])
+        jacquev6 = [u for u in collaborators if u.login == "jacquev6"][0]
         self.assertTrue(jacquev6.permissions.admin, True)
         self.assertTrue(jacquev6.permissions.pull, True)
         self.assertTrue(jacquev6.permissions.push, True)
