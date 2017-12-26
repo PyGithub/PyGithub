@@ -454,16 +454,25 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet):
+    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet,
+                  direction=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user/repos <http://developer.github.com/v3/repos>`_
         :param type: string
+        :param sort: string
+        :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
