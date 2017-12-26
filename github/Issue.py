@@ -42,6 +42,7 @@ import github.IssueComment
 import github.IssuePullRequest
 import github.Reaction
 
+
 class Issue(github.GithubObject.CompletableGithubObject):
     """
     This class represents Issues as returned for example by http://developer.github.com/v3/todo

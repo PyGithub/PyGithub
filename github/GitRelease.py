@@ -147,11 +147,11 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
 
     def get_assets(self):
-        return github.PaginatedList.PaginatedList( 
-            github.GitReleaseAsset.GitReleaseAsset, 
-            self._requester, 
-            self.url + "/assets", 
-            None 
+        return github.PaginatedList.PaginatedList(
+            github.GitReleaseAsset.GitReleaseAsset,
+            self._requester,
+            self.url + "/assets",
+            None
         )
 
     def _initAttributes(self):

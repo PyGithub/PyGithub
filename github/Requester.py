@@ -51,7 +51,6 @@ import GithubException
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
-
 class Requester:
     __httpConnectionClass = httplib.HTTPConnection
     __httpsConnectionClass = httplib.HTTPSConnection
@@ -85,12 +84,12 @@ class Requester:
     ON_CHECK_ME = None
 
     def NEW_DEBUG_FRAME(self, requestHeader):
-        '''
+        """
         Initialize a debug frame with requestHeader
         Frame count is updated and will be attached to respond header
         The structure of a frame: [requestHeader, statusCode, responseHeader, raw_data]
         Some of them may be None
-        '''
+        """
         if self.DEBUG_FLAG:  # pragma no branch (Flag always set in tests)
             new_frame = [requestHeader, None, None, None]
             if self._frameCount < self.DEBUG_FRAME_BUFFER_SIZE - 1:  # pragma no branch (Should be covered)

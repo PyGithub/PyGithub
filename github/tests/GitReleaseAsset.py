@@ -46,8 +46,7 @@ class ReleaseAsset(Framework.TestCase):
 
         asset = release.get_assets()[0]
         self.assertEqual(asset.id, 16)
-        self.assertEqual(asset.url, \
-            "https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")
+        self.assertEqual(asset.url, "https://api.github.com/api/v3/repos/edhollandAL/PyGithub/releases/assets/16")
         self.assertEqual(asset.name, "Archive.zip")
         self.assertEqual(asset.label, "Installation msi & runbook zipped")
         self.assertEqual(asset.content_type, "application/zip")

@@ -2316,7 +2316,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_release_asset(self, id):
         assert isinstance(id, (int)), id
-        
+
         resp_headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/releases/assets/" + str(id)
