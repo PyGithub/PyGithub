@@ -66,7 +66,6 @@ class NamedUser(Framework.TestCase):
         # test __repr__() based on this attributes
         self.assertEqual(self.user.__repr__(), 'NamedUser(login="nvie")')
 
-
     def testAttributesOfSelf(self):
         self.assertEqual(self.user.avatar_url, "https://secure.gravatar.com/avatar/b68de5ae38616c296fa345d2b9df2225?d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png")
         self.assertEqual(self.user.bio, "")

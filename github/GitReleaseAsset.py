@@ -204,9 +204,8 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
             self._name = self._makeStringAttribute(attributes["name"])
         if "label" in attributes:  # pragma no branch
             self._label = self._makeStringAttribute(attributes["label"])
-        if "uploader" in attributes: # pragma no branch
-            self._uploader = github.NamedUser.NamedUser(self._requester, {}, \
-                attributes["uploader"], completed=True)
+        if "uploader" in attributes:  # pragma no branch
+            self._uploader = github.NamedUser.NamedUser(self._requester, {}, attributes["uploader"], completed=True)
         if "content_type" in attributes:  # pragma no branch
             self._content_type = self._makeStringAttribute(attributes["content_type"])
         if "state" in attributes:  # pragma no branch

@@ -144,5 +144,5 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
-        if "read_only" in attributes: # pragma no branch
+        if "read_only" in attributes:  # pragma no branch
             self._read_only = self._makeBoolAttribute(attributes["read_only"])

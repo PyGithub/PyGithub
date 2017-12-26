@@ -46,7 +46,7 @@ import github.Notification
 class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
     """
     This class represents AuthenticatedUsers as returned for example by http://developer.github.com/v3/todo
-    
+
     An AuthenticatedUser object can be created by calling ``get_user()`` on a Github object.
     """
 
@@ -500,7 +500,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.UserKey.UserKey(self._requester, headers, data, completed=True)
 
-    def create_repo(self, name, description=github.GithubObject.NotSet,homepage=github.GithubObject.NotSet,
+    def create_repo(self, name, description=github.GithubObject.NotSet, homepage=github.GithubObject.NotSet,
                     private=github.GithubObject.NotSet, has_issues=github.GithubObject.NotSet,
                     has_wiki=github.GithubObject.NotSet, has_downloads=github.GithubObject.NotSet,
                     has_projects=github.GithubObject.NotSet, auto_init=github.GithubObject.NotSet, license_template=github.GithubObject.NotSet,

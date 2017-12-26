@@ -540,7 +540,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             None,
             headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
         )
-        
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_

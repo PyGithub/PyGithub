@@ -141,7 +141,7 @@ class File(github.GithubObject.NonCompletableGithubObject):
             self._filename = self._makeStringAttribute(attributes["filename"])
         if "patch" in attributes:  # pragma no branch
             self._patch = self._makeStringAttribute(attributes["patch"])
-        if "previous_filename" in attributes: # pragma no branch
+        if "previous_filename" in attributes:  # pragma no branch
             self._previous_filename = self._makeStringAttribute(attributes["previous_filename"])
         if "raw_url" in attributes:  # pragma no branch
             self._raw_url = self._makeStringAttribute(attributes["raw_url"])
