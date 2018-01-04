@@ -10,6 +10,14 @@ This library enables you to manage [GitHub] resources such as repositories, user
 [GitHub API v3]: https://developer.github.com/v3
 [GitHub]: https://github.com
 
+## Install
+
+It's on PyPi so use pip:
+
+```bash
+$ pip install pygithub
+```
+
 ## Simple Demo
 
 ```python
