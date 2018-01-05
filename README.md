@@ -1,5 +1,6 @@
 # PyGitHub
 
+[![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
 [![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
 [![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.org/en/stable)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
@@ -11,8 +12,6 @@ This library enables you to manage [GitHub] resources such as repositories, user
 [GitHub]: https://github.com
 
 ## Install
-
-It's on PyPi so use pip:
 
 ```bash
 $ pip install pygithub
