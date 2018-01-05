@@ -30,7 +30,6 @@ import pickle
 
 import Framework
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atMostPython2 = sys.hexversion < 0x03000000
 
 
@@ -82,7 +81,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
@@ -96,7 +95,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 404)
             self.assertEqual(exception.data, {"message": "Not Found"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "404 {u'message': u'Not Found'}")
             else:
                 self.assertEqual(str(exception), "404 {'message': 'Not Found'}")  # pragma no cover (Covered with Python 3)
@@ -110,7 +109,7 @@ class Exceptions(Framework.TestCase):  # To stay compatible with Python 2.6, we 
             raised = True
             self.assertEqual(exception.status, 401)
             self.assertEqual(exception.data, {"message": "Bad credentials"})
-            if atLeastPython26 and atMostPython2:
+            if atMostPython2:
                 self.assertEqual(str(exception), "401 {u'message': u'Bad credentials'}")
             else:
                 self.assertEqual(str(exception), "401 {'message': 'Bad credentials'}")  # pragma no cover (Covered with Python 3)

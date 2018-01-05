@@ -46,6 +46,7 @@ import github.GitBlob
 import github.Organization
 import github.GitRef
 import github.GitRelease
+import github.GitReleaseAsset
 import github.Issue
 import github.Repository
 import github.PullRequest
@@ -72,7 +73,6 @@ import github.StatsParticipation
 import github.StatsPunchCard
 import github.Stargazer
 
-atLeastPython26 = sys.hexversion >= 0x02060000
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
@@ -83,6 +83,14 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def __repr__(self):
         return self.get__repr__({"full_name": self._full_name.value})
+
+    @property
+    def archived(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._archived)
+        return self._archived.value
 
     @property
     def archive_url(self):
@@ -911,18 +919,21 @@ class Repository(github.GithubObject.CompletableGithubObject):
         )
         return github.Issue.Issue(self._requester, headers, data, completed=True)
 
-    def create_key(self, title, key):
+    def create_key(self, title, key, read_only=False):
         """
         :calls: `POST /repos/:owner/:repo/keys <http://developer.github.com/v3/repos/keys>`_
         :param title: string
         :param key: string
+        :param read_only: bool
         :rtype: :class:`github.RepositoryKey.RepositoryKey`
         """
         assert isinstance(title, (str, unicode)), title
         assert isinstance(key, (str, unicode)), key
+        assert isinstance(read_only, bool), read_only
         post_parameters = {
             "title": title,
             "key": key,
+            "read_only": read_only,
         }
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
@@ -1252,7 +1263,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             parameters=url_parameters
         )
         if isinstance(data, list):
@@ -1282,7 +1293,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
@@ -1295,7 +1306,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -1311,7 +1324,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1337,7 +1350,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'path must be str/unicode object'
         assert isinstance(message, (str, unicode)),                \
             'message must be str/unicode object'
-        assert isinstance(content, (str, unicode)),                \
+        assert isinstance(content, (str, unicode, bytes)),         \
             'content must be a str/unicode object'
         assert isinstance(sha, (str, unicode)),                    \
             'sha must be a str/unicode object'
@@ -1352,7 +1365,9 @@ class Repository(github.GithubObject.CompletableGithubObject):
             'committer must be a github.InputGitAuthor object'
 
         if atLeastPython3:
-            content = b64encode(content.encode('utf-8')).decode('utf-8')
+            if isinstance(content, str):
+                content = content.encode('utf-8')
+            content = b64encode(content).decode('utf-8')
         else:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -1370,7 +1385,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=put_parameters
         )
 
@@ -1405,7 +1420,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             input=url_parameters
         )
 
@@ -1426,7 +1441,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
             url_parameters["ref"] = ref
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
-            self.url + "/contents" + path,
+            self.url + "/contents" + urllib.quote(path),
             parameters=url_parameters
         )
 
@@ -2310,7 +2325,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def _identity(self):
         return self.owner.login + "/" + self.name
 
+    def get_release_asset(self, id):
+        assert isinstance(id, (int)), id
+        
+        resp_headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/assets/" + str(id)
+        )
+        return github.GitReleaseAsset.GitReleaseAsset(self._requester, resp_headers, data, completed=True)
+
     def _initAttributes(self):
+        self._archived = github.GithubObject.NotSet
         self._archive_url = github.GithubObject.NotSet
         self._assignees_url = github.GithubObject.NotSet
         self._blobs_url = github.GithubObject.NotSet
@@ -2385,6 +2410,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         self._watchers_count = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
+        if "archived" in attributes:  # pragma no branch
+            self._archived = self._makeBoolAttribute(attributes["archived"])
         if "archive_url" in attributes:  # pragma no branch
             self._archive_url = self._makeStringAttribute(attributes["archive_url"])
         if "assignees_url" in attributes:  # pragma no branch

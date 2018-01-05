@@ -46,6 +46,8 @@ class Hook(Framework.TestCase):
         self.assertEqual(self.hook.name, "web")
         self.assertEqual(self.hook.updated_at, datetime.datetime(2012, 5, 29, 18, 49, 47))
         self.assertEqual(self.hook.url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993")
+        self.assertEqual(self.hook.test_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/tests")
+        self.assertEqual(self.hook.ping_url, "https://api.github.com/repos/jacquev6/PyGithub/hooks/257993/pings")
 
         # test __repr__() based on this attributes
         self.assertEqual(self.hook.__repr__(), 'Hook(url="https://api.github.com/repos/jacquev6/PyGithub/hooks/257993", id=257993)')
@@ -60,6 +62,9 @@ class Hook(Framework.TestCase):
 
     def testTest(self):
         self.hook.test()  # This does not update attributes of hook
+
+    def testPing(self):
+        self.hook.ping()  # This does not update attributes of hook
 
     def testEditWithAllParameters(self):
         self.hook.edit("web", {"url": "http://foobar.com"}, events=["fork", "push"])

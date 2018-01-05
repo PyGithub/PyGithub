@@ -33,25 +33,23 @@
 #                                                                              #
 # ##############################################################################
 
-import logging
-import httplib
 import base64
+import httplib
+import json
+import logging
+import mimetypes
+import os
+import re
+import sys
 import urllib
 import urlparse
-import sys
-import Consts
-import re
-import os
+from io import IOBase
 
-atLeastPython26 = sys.hexversion >= 0x02060000
+import Consts
+import GithubException
+
 atLeastPython3 = sys.hexversion >= 0x03000000
 
-if atLeastPython26:
-    import json
-else:  # pragma no cover (Covered by all tests with Python 2.5)
-    import simplejson as json  # pragma no cover (Covered by all tests with Python 2.5)
-
-import GithubException
 
 
 class Requester:
@@ -174,6 +172,11 @@ class Requester:
     def requestMultipartAndCheck(self, verb, url, parameters=None, headers=None, input=None):
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
+    def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
+        o = urlparse.urlparse(url)
+        self.__hostname = o.hostname
+        return self.__check(*self.requestBlob(verb, url, parameters, headers, input))
+
     def __check(self, status, responseHeaders, output):
         output = self.__structuredFromJson(output)
         if status >= 400:
@@ -226,6 +229,20 @@ class Requester:
             encoded_input += "--" + boundary + "--" + eol
             return "multipart/form-data; boundary=" + boundary, encoded_input
 
+        return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
+
+    def requestBlob(self, verb, url, parameters={}, headers={}, input=None):
+        def encode(local_path):
+            if "Content-Type" in headers:
+                mime_type = headers["Content-Type"]
+            else:
+                guessed_type = mimetypes.guess_type(input)
+                mime_type = guessed_type[0] if guessed_type[0] is not None else "application/octet-stream"
+            f = open(local_path, 'rb')
+            return mime_type, f
+
+        if input:
+            headers["Content-Length"] = os.path.getsize(input)
         return self.__requestEncode(None, verb, url, parameters, headers, input, encode)
 
     def __requestEncode(self, cnx, verb, url, parameters, requestHeaders, input, encode):
@@ -283,6 +300,9 @@ class Requester:
         output = response.read()
 
         cnx.close()
+        if input:
+            if isinstance(input, IOBase):
+                input.close()
 
         self.__log(verb, url, requestHeaders, input, status, responseHeaders, output)
 
@@ -305,8 +325,8 @@ class Requester:
             url = self.__prefix + url
         else:
             o = urlparse.urlparse(url)
-            assert o.hostname == self.__hostname
-            assert o.path.startswith(self.__prefix)
+            assert o.hostname in [self.__hostname, "uploads.github.com"], o.hostname
+            assert o.path.startswith((self.__prefix, "/api/uploads"))
             assert o.port == self.__port
             url = o.path
             if o.query != "":
@@ -323,8 +343,7 @@ class Requester:
         kwds = {}
         if not atLeastPython3:  # pragma no branch (Branch useful only with Python 3)
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
-        if atLeastPython26:  # pragma no branch (Branch useful only with Python 2.5)
-            kwds["timeout"] = self.__timeout  # Did not exist before Python2.6
+        kwds["timeout"] = self.__timeout
 
         ##
         ## Connect through a proxy server with authentication, if http_proxy

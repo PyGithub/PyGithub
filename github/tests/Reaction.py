@@ -2,6 +2,8 @@
 
 # ########################## Copyrights and license ############################
 #                                                                              #
+# Copyright 2012 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2012 Zearin <zearin@gonk.net>                                      #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
@@ -23,31 +25,22 @@
 # ##############################################################################
 
 import Framework
-import github
 
-from io import BytesIO as IO
+import datetime
 
 
-class Persistence(Framework.TestCase):
+class Reaction(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
-        self.repo = self.g.get_repo("akfish/PyGithub")
+        self.reactions = self.g.get_user('PyGithub').get_repo("PyGithub").get_issue(28).get_reactions()
 
-        self.dumpedRepo = IO()
-        self.g.dump(self.repo, self.dumpedRepo)
-        self.dumpedRepo.seek(0)
+    def testAttributes(self):
+        self.assertEqual(self.reactions[0].content, "+1")
+        self.assertEqual(self.reactions[0].created_at, datetime.datetime(2017, 12, 5, 1, 59, 33))
+        self.assertEqual(self.reactions[0].id, 16916340)
+        self.assertEqual(self.reactions[0].user.login, "nicolastrres")
 
-    def tearDown(self):
-        self.dumpedRepo.close()
+        self.assertEqual(self.reactions[0].__repr__(), 'Reaction(user=NamedUser(login="nicolastrres"), id=16916340)')
 
-    def testLoad(self):
-        loadedRepo = self.g.load(self.dumpedRepo)
-        self.assertTrue(isinstance(loadedRepo, github.Repository.Repository))
-        self.assertTrue(loadedRepo._requester is self.repo._requester)
-        self.assertTrue(loadedRepo.owner._requester is self.repo._requester)
-        self.assertEqual(loadedRepo.name, "PyGithub")
-        self.assertEqual(loadedRepo.url, "https://api.github.com/repos/akfish/PyGithub")
-
-    def testLoadAndUpdate(self):
-        loadedRepo = self.g.load(self.dumpedRepo)
-        self.assertTrue(loadedRepo.update())
+    def testDelete(self):
+        self.reactions[0].delete()
