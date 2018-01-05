@@ -95,10 +95,11 @@ class PullRequest(Framework.TestCase):
         self.pull.edit()
 
     def testEditWithAllArguments(self):
-        self.pull.edit("Title edited by PyGithub", "Body edited by PyGithub", "open")
+        self.pull.edit("Title edited by PyGithub", "Body edited by PyGithub", "open", "topic/RewriteWithGeneratedCode")
         self.assertEqual(self.pull.title, "Title edited by PyGithub")
         self.assertEqual(self.pull.body, "Body edited by PyGithub")
         self.assertEqual(self.pull.state, "open")
+        self.assertEqual(self.pull.base.ref, "topic/RewriteWithGeneratedCode")
 
     def testGetCommits(self):
         self.assertListKeyEqual(self.pull.get_commits(), lambda c: c.sha, ["4aadfff21cdd2d2566b0e4bd7309c233b5f4ae23", "93dcae5cf207de376c91d0599226e7c7563e1d16", "8a4f306d4b223682dd19410d4a9150636ebe4206"])
