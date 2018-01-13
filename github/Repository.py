@@ -579,7 +579,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._subscribers_url)
         return self._subscribers_url.value
-    
+
     @property
     def subscribers_count(self):
         """
@@ -623,7 +623,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     @property
     def topics(self):
         """
-        :type: list 
+        :type: list
         """
         self._completeIfNotSet(self._topics)
         return self._topics.value
@@ -2132,7 +2132,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'}
         )
         return data
 
@@ -2268,7 +2267,6 @@ class Repository(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/topics",
-            headers={'Accept': 'application/vnd.github.mercy-preview+json'},
             input=topics
         )
 
