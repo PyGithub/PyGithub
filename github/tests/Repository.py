@@ -64,6 +64,7 @@ class Repository(Framework.TestCase):
         self.assertEqual(self.repo.source, None)
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
+        self.assertEqual(self.repo.topics, None)
         self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28))
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
@@ -633,6 +634,10 @@ class Repository(Framework.TestCase):
         stats = self.repo.get_stats_punch_card()
         self.assertEqual(stats.get(4, 12), 7)
         self.assertEqual(stats.get(6, 18), 2)
+
+    def testGetTopics(self):
+        self.assertEqual(self.repo.get_topics()['topics'], u'github')
+
 
 
 class LazyRepository(Framework.TestCase):
