@@ -238,7 +238,7 @@ class Requester:
         self.__authenticate(url, requestHeaders, parameters)
         requestHeaders["User-Agent"] = self.__userAgent
         if self.__apiPreview:
-            requestHeaders["Accept"] = "application/vnd.github.mercy-preview+json"
+            requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
