@@ -77,6 +77,10 @@ class Release(Framework.TestCase):
         release_by_tag = self.g.get_user().get_repo("PyGithub").get_release(1210837)
         self.assertEqual(release_by_id, release_by_tag)
 
+    def testGetLatestRelease(self):
+        latest_release = self.g.get_user().get_repo("PyGithub").get_latest_release()
+        self.assertEqual(latest_release.tag_name, "v1.25.2")
+
     def testCreateGitTagAndRelease(self):
         self.repo = self.g.get_user().get_repo("PyGithub")
         self.release = self.repo.create_git_tag_and_release('v3.0.0', 'tag message', 'release title', 'release message', '5a05a5e58f682d315acd2447c87ac5b4d4fc55e8', 'commit')
