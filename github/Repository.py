@@ -2119,6 +2119,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             )
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
+    def get_latest_release(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/latest"
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
     def get_teams(self):
         """
         :calls: `GET /repos/:owner/:repo/teams <http://developer.github.com/v3/repos>`_
