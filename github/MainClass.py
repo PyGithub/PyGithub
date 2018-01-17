@@ -7,6 +7,7 @@
 # Copyright 2013 Jonathan J Hunt <hunt@braincorporation.com>                   #
 # Copyright 2013 Peter Golm <golm.peter@gmail.com>                             #
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
+# Copyright 2016 Eli Most <eamost@gmail.com>
 #                                                                              #
 # This file is part of PyGithub.                                               #
 # http://pygithub.github.io/PyGithub/v1/index.html                             #
@@ -198,6 +199,23 @@ class Github(object):
             "/orgs/" + login
         )
         return github.Organization.Organization(self.__requester, headers, data, completed=True)
+
+    def get_orgs(self, since=github.GithubObject.NotSet): 
+        """
+        :calls: 'GET /organizations <https://developer.github.com/v3/orgs/>'_
+        :param since: integer
+        :rtype: :class:'github.Organization.Organization'
+        """
+        assert since is github.GithubObject.NotSet or isinstance(since, (int, long)), since
+        url_parameters = dict()
+        if since is not github.GithubObject.NotSet:
+            url_parameters["since"] = since
+        return github.PaginatedList.PaginatedList(
+            github.Organization.Organization,
+            self.__requester,
+            "/organizations",
+            url_parameters
+        )
 
     def get_repo(self, full_name_or_id, lazy=True):
         """
