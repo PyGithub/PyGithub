@@ -538,7 +538,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/requested_reviewers",
             None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'},
+            list_item='users'
         )
 
     def is_merged(self):
