@@ -259,7 +259,7 @@ class Requester:
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
-        encoded_input = "null"
+        encoded_input = None
         if input is not None:
             requestHeaders["Content-Type"], encoded_input = encode(input)
 
