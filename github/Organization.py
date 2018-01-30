@@ -291,6 +291,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/public_members/" + public_member._identity
         )
 
+    def add_member(self, member):
+        """
+        :calls: `PUT /org/:org/memberships/:username <https://developer.github.com/v3/orgs/members/#add-or-update-organization-membership>`_
+        :param member: :class:`github.NamedUser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity
+        )
+
     def create_fork(self, repo):
         """
         :calls: `POST /repos/:owner/:repo/forks <http://developer.github.com/v3/repos/forks>`_
