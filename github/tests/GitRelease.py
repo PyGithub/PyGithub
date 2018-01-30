@@ -24,6 +24,7 @@
 
 import os
 import zipfile
+import datetime
 import Framework
 from pprint import pprint
 
@@ -58,10 +59,11 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
+        self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
+        self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
-
 
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
@@ -86,6 +88,11 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.title, "release title")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v3.0.0")
+
+    def testGetLatestRelease(self):
+        self.repo = self.g.get_user().get_repo('PyGithub')
+        latest_release = self.repo.get_latest_release()
+        self.assertEqual(latest_release.tag_name, "v1.25.2")
 
     def testGetAsset(self):
         """

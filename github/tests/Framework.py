@@ -37,7 +37,6 @@ python2 = sys.hexversion < 0x03000000
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
-
 def readLine(file):
     if atLeastPython3:
         return file.readline().decode("utf-8").strip()

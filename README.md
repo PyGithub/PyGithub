@@ -1,5 +1,6 @@
 # PyGitHub
 
+[![PyPI](https://img.shields.io/pypi/v/PyGithub.svg)](https://pypi.python.org/pypi/PyGithub)
 [![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
 [![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.org/en/stable)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
@@ -9,6 +10,12 @@ This library enables you to manage [GitHub] resources such as repositories, user
 
 [GitHub API v3]: https://developer.github.com/v3
 [GitHub]: https://github.com
+
+## Install
+
+```bash
+$ pip install pygithub
+```
 
 ## Simple Demo
 
@@ -25,7 +32,7 @@ g = Github("access_token")
 
 # Then play with your Github objects:
 for repo in g.get_user().get_repos():
-    print repo.name
+    print(repo.name)
 ```
 
 ## Documentation

@@ -32,6 +32,7 @@ import github.PaginatedList
 import github.Gist
 import github.Repository
 import github.NamedUser
+import github.Permissions
 import github.Plan
 import github.Organization
 import github.Event
@@ -236,6 +237,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         """
         self._completeIfNotSet(self._owned_private_repos)
         return self._owned_private_repos.value
+
+    @property
+    def permissions(self):
+        """
+        :type: :class:`github.Permissions.Permissions`
+        """
+        self._completeIfNotSet(self._permissions)
+        return self._permissions.value
 
     @property
     def plan(self):
@@ -454,16 +463,25 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def get_repos(self, type=github.GithubObject.NotSet):
+    def get_repos(self, type=github.GithubObject.NotSet, sort=github.GithubObject.NotSet,
+                  direction=github.GithubObject.NotSet):
         """
         :calls: `GET /users/:user/repos <http://developer.github.com/v3/repos>`_
         :param type: string
+        :param sort: string
+        :param direction: string
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
+        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
+        if sort is not github.GithubObject.NotSet:
+            url_parameters["sort"] = sort
+        if direction is not github.GithubObject.NotSet:
+            url_parameters["direction"] = direction
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
@@ -549,6 +567,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._name = github.GithubObject.NotSet
         self._organizations_url = github.GithubObject.NotSet
         self._owned_private_repos = github.GithubObject.NotSet
+        self._permissions = github.GithubObject.NotSet
         self._plan = github.GithubObject.NotSet
         self._private_gists = github.GithubObject.NotSet
         self._public_gists = github.GithubObject.NotSet
@@ -611,6 +630,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._organizations_url = self._makeStringAttribute(attributes["organizations_url"])
         if "owned_private_repos" in attributes:  # pragma no branch
             self._owned_private_repos = self._makeIntAttribute(attributes["owned_private_repos"])
+        if "permissions" in attributes:  # pragma no branch
+            self._permissions = self._makeClassAttribute(github.Permissions.Permissions, attributes["permissions"])
         if "plan" in attributes:  # pragma no branch
             self._plan = self._makeClassAttribute(github.Plan.Plan, attributes["plan"])
         if "private_gists" in attributes:  # pragma no branch

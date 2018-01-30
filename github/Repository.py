@@ -1283,8 +1283,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param message: string, (required), commit message
         :param content: string, (required), the actual data in the file
         :param branch: string, (optional), branch to create the commit on. Defaults to the default branch of the repository
-        :param committer: dict, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
-        :param author: dict, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1342,6 +1342,8 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param content: string, Required. The updated file content, Base64 encoded.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`ContentFile <github.ContentFile.ContentFile>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1393,13 +1395,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
                 'content': github.ContentFile.ContentFile(self._requester, headers, data["content"], completed=False)}
 
     def delete_file(self, path, message, sha,
-                    branch=github.GithubObject.NotSet):
+                    branch=github.GithubObject.NotSet,
+                    committer=github.GithubObject.NotSet,
+                    author=github.GithubObject.NotSet):
         """This method delete a file in a repository
         :calls: `DELETE /repos/:owner/:repo/contents/:path <https://developer.github.com/v3/repos/contents/#delete-a-file>`_
         :param path: string, Required. The content path.
         :param message: string, Required. The commit message.
         :param sha: string, Required. The blob SHA of the file being replaced.
         :param branch: string. The branch name. Default: the repository’s default branch (usually master)
+        :param committer: InputGitAuthor, (optional), if no information is given the authenticated user's information will be used. You must specify both a name and email.
+        :param author: InputGitAuthor, (optional), if omitted this will be filled in with committer information. If passed, you must specify both a name and email.
         :rtype: {
             'content': :class:`null <github.GithubObject.NotSet>`:,
             'commit': :class:`Commit <github.Commit.Commit>`}
@@ -1413,10 +1419,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
         assert branch is github.GithubObject.NotSet                \
             or isinstance(branch, (str, unicode)),                 \
             'branch must be a str/unicode object'
+        assert author is github.GithubObject.NotSet                \
+            or isinstance(author, github.InputGitAuthor),          \
+            'author must be a github.InputGitAuthor object'
+        assert committer is github.GithubObject.NotSet             \
+            or isinstance(committer, github.InputGitAuthor),       \
+            'committer must be a github.InputGitAuthor object'
 
         url_parameters = {'message': message, 'sha': sha}
         if branch is not github.GithubObject.NotSet:
             url_parameters['branch'] = branch
+        if author is not github.GithubObject.NotSet:
+            url_parameters["author"] = author._identity
+        if committer is not github.GithubObject.NotSet:
+            url_parameters["committer"] = committer._identity
 
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
@@ -2119,6 +2135,17 @@ class Repository(github.GithubObject.CompletableGithubObject):
             )
             return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
 
+    def get_latest_release(self):
+        """
+        :calls: `GET /repos/:owner/:repo/releases/latest https://developer.github.com/v3/repos/releases/#get-the-latest-release
+        :rtype: :class:`github.GitRelease.GitRelease`
+        """
+        headers, data = self._requester.requestJsonAndCheck(
+            "GET",
+            self.url + "/releases/latest"
+        )
+        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+
     def get_teams(self):
         """
         :calls: `GET /repos/:owner/:repo/teams <http://developer.github.com/v3/repos>`_
@@ -2316,7 +2343,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
 
     def get_release_asset(self, id):
         assert isinstance(id, (int)), id
-        
+
         resp_headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/releases/assets/" + str(id)
