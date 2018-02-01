@@ -291,7 +291,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self.url + "/public_members/" + public_member._identity
         )
 
-    def add_member(self, member):
+    def add_membership(self, member):
         """
         :calls: `PUT /org/:org/memberships/:username <https://developer.github.com/v3/orgs/members/#add-or-update-organization-membership>`_
         :param member: :class:`github.NamedUser.NamedUser`
