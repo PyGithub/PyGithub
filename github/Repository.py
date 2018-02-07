@@ -681,9 +681,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if isinstance(collaborator, github.NamedUser.NamedUser):
             collaborator = collaborator._identity
 
-        put_parameters = {}
         if permission is not github.GithubObject.NotSet:
-            put_parameters['permission'] = permission
+            put_parameters = {'permission': permission}
+        else:
+            put_parameters = None
 
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
