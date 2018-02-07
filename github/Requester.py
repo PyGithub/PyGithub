@@ -80,7 +80,9 @@ class HTTPSRequestsConnectionClass(object):
         self.headers = headers
 
     def getresponse(self):
-        r = getattr(self.session,self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout)
         return RequestsResponse(r)
 
     def close(self):
@@ -103,7 +105,9 @@ class HTTPRequestsConnectionClass(object):
         self.headers = headers
 
     def getresponse(self):
-        r = getattr(self.session, self.verb.lower())("%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url), headers=self.headers, data=self.input, timeout=self.timeout)
+        verb = getattr(self.session, self.verb.lower())
+        url = "%s://%s:%s%s" % (self.protocol, self.host, self.port, self.url)
+        r = verb(url, headers=self.headers, data=self.input, timeout=self.timeout)
         return RequestsResponse(r)
 
     def close(self):
