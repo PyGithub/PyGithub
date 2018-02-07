@@ -22,6 +22,9 @@
 #                                                                              #
 # ##############################################################################
 
+import os
+import zipfile
+import datetime
 import Framework
 from pprint import pprint
 
@@ -30,9 +33,25 @@ class Release(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         # Do not get self.release here as it casues bad data to be saved in --record mode
+        self.content_path = "content.txt"
+        self.artifact_path = "archive.zip"
+
+        with open(self.content_path, "w") as zip_content:
+            zip_content.write("Pedro for president.")
+
+        artifact = zipfile.ZipFile(self.artifact_path, "w")
+        artifact.write(self.content_path)
+        artifact.close()
+
+    def tearDown(self):
+        if os.path.exists(self.content_path):
+            os.remove(self.content_path)
+        if os.path.exists(self.artifact_path):
+            os.remove(self.artifact_path)
 
     def testAttributes(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
+        self.assertEqual(self.release.id, 1210814)
         self.assertEqual(self.release.tag_name, "v1.25.2")
         self.assertEqual(self.release.upload_url, "https://uploads.github.com/repos/edhollandAL/PyGithub/releases/1210814/assets{?name}")
         self.assertEqual(self.release.body, "Body")
@@ -40,10 +59,11 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.url, "https://api.github.com/repos/edhollandAL/PyGithub/releases/1210814")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v1.25.2")
+        self.assertEqual(self.release.created_at, datetime.datetime(2014, 10, 8, 1, 54))
+        self.assertEqual(self.release.published_at, datetime.datetime(2015, 4, 24, 8, 36, 51))
 
         # test __repr__() based on this attributes
         self.assertEqual(self.release.__repr__(), 'GitRelease(title="Test")')
-
 
     def testDelete(self):
         self.release = self.g.get_user().get_repo("PyGithub").get_releases()[0]
@@ -68,3 +88,45 @@ class Release(Framework.TestCase):
         self.assertEqual(self.release.title, "release title")
         self.assertEqual(self.release.author._rawData['login'], "edhollandAL")
         self.assertEqual(self.release.html_url, "https://github.com/edhollandAL/PyGithub/releases/tag/v3.0.0")
+
+    def testGetLatestRelease(self):
+        self.repo = self.g.get_user().get_repo('PyGithub')
+        latest_release = self.repo.get_latest_release()
+        self.assertEqual(latest_release.tag_name, "v1.25.2")
+
+    def testGetAsset(self):
+        """
+        Test retrieving a release asset directly by its ID.
+        """
+        the_repo = self.g.get_user().get_repo("PyGithub")
+
+        asset_id = 16
+        the_asset = the_repo.get_release_asset(asset_id)
+        self.assertTrue(the_asset is not None)
+        self.assertEqual(the_asset.id, asset_id)
+
+    def testGetAssets(self):
+        """
+        Test retrieving the set of assets for the current release.
+        """
+        release_id = 1210837
+        the_repo = self.g.get_user().get_repo("PyGithub")
+        the_release = the_repo.get_release(release_id)
+        self.assertEqual(the_release.id, release_id)
+
+        asset_list = [x for x in the_release.get_assets()]
+        self.assertTrue(asset_list is not None)
+        self.assertEqual(len(asset_list), 1)
+
+    def testUploadAsset(self):
+        """
+        Test uploading a new asset to the release.
+        """
+        release_id = 1210837
+        the_repo = self.g.get_user().get_repo("PyGithub")
+        the_release = the_repo.get_release(release_id)
+        self.assertEqual(the_release.id, release_id)
+
+        the_release.upload_asset(self.artifact_path,
+                                 "unit test artifact",
+                                 "application/zip")

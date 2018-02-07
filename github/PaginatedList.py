@@ -175,7 +175,7 @@ class PaginatedList(PaginatedListBase):
         self.__nextParams = None
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self.__totalCount = data.get('total_count')
             data = data[self.__list_item]
 
         content = [
@@ -211,7 +211,7 @@ class PaginatedList(PaginatedListBase):
         )
 
         if self.__list_item in data:
-            self.__totalCount = data['total_count']
+            self.__totalCount = data.get('total_count')
             data = data[self.__list_item]
 
         return [

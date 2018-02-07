@@ -383,17 +383,19 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return github.IssueComment.IssueComment(self._requester, headers, data, completed=True)
 
-    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet):
+    def edit(self, title=github.GithubObject.NotSet, body=github.GithubObject.NotSet, state=github.GithubObject.NotSet, base=github.GithubObject.NotSet):
         """
         :calls: `PATCH /repos/:owner/:repo/pulls/:number <http://developer.github.com/v3/pulls>`_
         :param title: string
         :param body: string
         :param state: string
+        :param base: string
         :rtype: None
         """
         assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
         assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert base is github.GithubObject.NotSet or isinstance(base, (str, unicode)), base
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -401,6 +403,8 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             post_parameters["body"] = body
         if state is not github.GithubObject.NotSet:
             post_parameters["state"] = state
+        if base is not github.GithubObject.NotSet:
+            post_parameters["base"] = base
         headers, data = self._requester.requestJsonAndCheck(
             "PATCH",
             self.url,
@@ -534,9 +538,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/requested_reviewers",
             None,
-            headers={'Accept': 'application/vnd.github.black-cat-preview+json'}
+            headers={'Accept': 'application/vnd.github.black-cat-preview+json'},
+            list_item='users'
         )
-        
+
     def is_merged(self):
         """
         :calls: `GET /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
@@ -548,16 +553,25 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         )
         return status == 204
 
-    def merge(self, commit_message=github.GithubObject.NotSet):
+    def merge(self, commit_message=github.GithubObject.NotSet, commit_title=github.GithubObject.NotSet, merge_method=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):
         """
         :calls: `PUT /repos/:owner/:repo/pulls/:number/merge <http://developer.github.com/v3/pulls>`_
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
         assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
+        assert commit_title is github.GithubObject.NotSet or isinstance(commit_title, (str, unicode)), commit_title
+        assert merge_method is github.GithubObject.NotSet or isinstance(merge_method, (str, unicode)), merge_method
+        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message
+        if commit_title is not github.GithubObject.NotSet:
+            post_parameters["commit_title"] = commit_title
+        if merge_method is not github.GithubObject.NotSet:
+            post_parameters["merge_method"] = merge_method
+        if sha is not github.GithubObject.NotSet:
+            post_parameters["sha"] = sha
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             self.url + "/merge",

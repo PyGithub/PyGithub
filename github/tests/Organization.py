@@ -127,16 +127,17 @@ class Organization(Framework.TestCase):
         self.assertListKeyEqual(self.org.get_teams(), lambda t: t.name, ["Members", "Owners"])
 
     def testCreateRepoWithMinimalArguments(self):
-        repo = self.org.create_repo("TestPyGithub")
+        repo = self.org.create_repo(name="TestPyGithub")
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateRepoWithAllArguments(self):
         team = self.org.get_team(141496)
-        repo = self.org.create_repo("TestPyGithub2", "Repo created by PyGithub", "http://foobar.com", False, False, False, False, team)
+        repo = self.org.create_repo(name="TestPyGithub2", description="Repo created by PyGithub", homepage="http://foobar.com",
+                                    private=False, has_issues=False, has_wiki=False, has_downloads=False, team_id=team.id)
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub2")
 
     def testCreateRepositoryWithAutoInit(self):
-        repo = self.org.create_repo("TestPyGithub", auto_init=True, gitignore_template="Python")
+        repo = self.org.create_repo(name="TestPyGithub", auto_init=True, gitignore_template="Python")
         self.assertEqual(repo.url, "https://api.github.com/repos/BeaverSoftware/TestPyGithub")
 
     def testCreateFork(self):

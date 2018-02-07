@@ -86,6 +86,14 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._verified)
         return self._verified.value
 
+    @property
+    def read_only(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._read_only)
+        return self._read_only.value
+
     def delete(self):
         """
         :calls: `DELETE /repos/:owner/:repo/keys/:id <http://developer.github.com/v3/repos/keys>`_
@@ -123,6 +131,7 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
         self._title = github.GithubObject.NotSet
         self._url = github.GithubObject.NotSet
         self._verified = github.GithubObject.NotSet
+        self._read_only = github.GithubObject.NotSet
 
     def _useAttributes(self, attributes):
         if "id" in attributes:  # pragma no branch
@@ -135,3 +144,5 @@ class RepositoryKey(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "verified" in attributes:  # pragma no branch
             self._verified = self._makeBoolAttribute(attributes["verified"])
+        if "read_only" in attributes:  # pragma no branch
+            self._read_only = self._makeBoolAttribute(attributes["read_only"])

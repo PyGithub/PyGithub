@@ -67,7 +67,6 @@ class Invitation(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
-
     @property
     def html_url(self):
         """
@@ -106,4 +105,3 @@ class Invitation(github.GithubObject.CompletableGithubObject):
             self._url = self._makeStringAttribute(attributes["url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
-

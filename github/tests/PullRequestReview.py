@@ -26,12 +26,15 @@
 
 import Framework
 
+import datetime
+
+
 class PullRequestReview(Framework.TestCase):
     def setUp(self):
         Framework.TestCase.setUp(self)
         self.repo = self.g.get_repo("PyGithub/PyGithub")
         self.pull = self.repo.get_pull(538)
-        
+
         # Test ability to get all reviews
         self.pullreviews = self.pull.get_reviews()
 
@@ -46,6 +49,7 @@ class PullRequestReview(Framework.TestCase):
         self.assertEqual(self.pullreview.state, "APPROVED")
         self.assertEqual(self.pullreview.html_url, "https://github.com/PyGithub/PyGithub/pull/538#pullrequestreview-28482091")
         self.assertEqual(self.pullreview.pull_request_url, "https://api.github.com/repos/PyGithub/PyGithub/pulls/538")
+        self.assertEqual(self.pullreview.submitted_at, datetime.datetime(2017, 3, 22, 19, 6, 59))
 
         # test __repr__() based on this attributes
         self.assertEqual(self.pullreview.__repr__(), 'PullRequestReview(user=NamedUser(login="jzelinskie"), id=28482091)')
