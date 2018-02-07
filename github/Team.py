@@ -125,16 +125,29 @@ class Team(github.GithubObject.CompletableGithubObject):
             self.url + "/members/" + member._identity
         )
 
-    def add_membership(self, member):
+    def add_membership(self, member, role=github.GithubObject.NotSet):
         """
         :calls: `PUT /teams/:id/memberships/:user <http://developer.github.com/v3/orgs/teams>`_
         :param member: :class:`github.Nameduser.NamedUser`
+        :param role: string
         :rtype: None
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
+        assert role is github.GithubObject.NotSet or isinstance(
+            role, (str, unicode)), role
+        if role is not github.GithubObject.NotSet:
+            assert role in ['member', 'maintainer']
+            put_parameters = {
+                "role": role,
+            }
+        else:
+            put_parameters = {
+                "role": "member",
+            }
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            self.url + "/memberships/" + member._identity
+            self.url + "/memberships/" + member._identity,
+            input=put_parameters
         )
 
     def add_to_repos(self, repo):
