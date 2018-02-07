@@ -968,13 +968,13 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param title: string
         :param state: string
         :param description: string
-        :param due_on: date
+        :param due_on: datetime
         :rtype: :class:`github.Milestone.Milestone`
         """
         assert isinstance(title, (str, unicode)), title
         assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
         assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert due_on is github.GithubObject.NotSet or isinstance(due_on, datetime.date), due_on
+        assert due_on is github.GithubObject.NotSet or isinstance(due_on, (datetime.datetime, datetime.date)), due_on
         post_parameters = {
             "title": title,
         }
@@ -983,7 +983,10 @@ class Repository(github.GithubObject.CompletableGithubObject):
         if description is not github.GithubObject.NotSet:
             post_parameters["description"] = description
         if due_on is not github.GithubObject.NotSet:
-            post_parameters["due_on"] = due_on.strftime("%Y-%m-%dT%H:%M:%SZ")
+            if isinstance(due_on, datetime.date):
+                post_parameters["due_on"] = due_on.strftime("%Y-%m-%dT%H:%M:%SZ")
+            else:
+                post_parameters["due_on"] = due_on.isoformat()
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/milestones",
