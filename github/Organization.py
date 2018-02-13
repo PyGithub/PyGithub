@@ -387,13 +387,13 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Repository.Repository(self._requester, headers, data, completed=True)
 
-    def create_team(self, name, repo_names=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet, permission=github.GithubObject.NotSet):
+    def create_team(self, name, repo_names=github.GithubObject.NotSet, permission=github.GithubObject.NotSet, privacy=github.GithubObject.NotSet):
         """
         :calls: `POST /orgs/:org/teams <http://developer.github.com/v3/orgs/teams>`_
         :param name: string
         :param repo_names: list of :class:`github.Repository.Repository`
-        :param privacy: string
         :param permission: string
+        :param privacy: string
         :rtype: :class:`github.Team.Team`
         """
         assert isinstance(name, (str, unicode)), name
@@ -405,10 +405,10 @@ class Organization(github.GithubObject.CompletableGithubObject):
         }
         if repo_names is not github.GithubObject.NotSet:
             post_parameters["repo_names"] = [element._identity for element in repo_names]
-        if privacy is not github.GithubObject.NotSet:
-            post_parameters['privacy'] = privacy
         if permission is not github.GithubObject.NotSet:
             post_parameters["permission"] = permission
+        if privacy is not github.GithubObject.NotSet:
+            post_parameters['privacy'] = privacy
         headers, data = self._requester.requestJsonAndCheck(
             "POST",
             self.url + "/teams",
