@@ -1010,6 +1010,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
         :param issue: :class:`github.Issue.Issue`
         :param base: string
         :param head: string
+        :param maintainer_can_modify: bool
         :rtype: :class:`github.PullRequest.PullRequest`
         """
         if len(args) + len(kwds) >= 4:
