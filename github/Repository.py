@@ -1017,13 +1017,16 @@ class Repository(github.GithubObject.CompletableGithubObject):
         else:
             return self.__create_pull_2(*args, **kwds)
 
-    def __create_pull_1(self, title, body, base, head, maintainer_can_modify=False):
+    def __create_pull_1(self, title, body, base, head, maintainer_can_modify=None):
         assert isinstance(title, (str, unicode)), title
         assert isinstance(body, (str, unicode)), body
         assert isinstance(base, (str, unicode)), base
         assert isinstance(head, (str, unicode)), head
-        assert isinstance(maintainer_can_modify, bool), maintainer_can_modify
-        return self.__create_pull(title=title, body=body, base=base, head=head, maintainer_can_modify=maintainer_can_modify)
+        assert isinstance(maintainer_can_modify, (bool, type(None))), maintainer_can_modify
+        if maintainer_can_modify is None:
+            return self.__create_pull(title=title, body=body, base=base, head=head)
+        else:
+            return self.__create_pull(title=title, body=body, base=base, head=head, maintainer_can_modify=maintainer_can_modify)
 
     def __create_pull_2(self, issue, base, head):
         assert isinstance(issue, github.Issue.Issue), issue
