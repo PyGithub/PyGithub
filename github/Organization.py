@@ -399,7 +399,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         assert isinstance(name, (str, unicode)), name
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
         assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
-        assert privacy    is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
+        assert privacy is github.GithubObject.NotSet or isinstance(privacy, (str, unicode)), privacy
         post_parameters = {
             "name": name,
         }
