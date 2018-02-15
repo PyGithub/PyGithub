@@ -32,6 +32,7 @@ import sys
 import traceback
 import unittest
 from datetime import timedelta, tzinfo
+import datetime
 
 import github
 
@@ -295,6 +296,6 @@ class UTC(tzinfo):
 def getUTCtzinfo():
     if python2:
         utc = UTC()
-        return utc
     else:
-        return datetime.timezone.utc
+        utc = datetime.timezone.utc
+    return utc
