@@ -344,11 +344,11 @@ class Requester:
             kwds["strict"] = True  # Useless in Python3, would generate a deprecation warning
         kwds["timeout"] = self.__timeout
 
-        ##
-        ## Connect through a proxy server with authentication, if http_proxy
-        ## set.
-        ## http_proxy: http://user:password@proxy_host:proxy_port
-        ##
+        #
+        # Connect through a proxy server with authentication, if http_proxy
+        # set.
+        # http_proxy: http://user:password@proxy_host:proxy_port
+        #
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
             url = urlparse.urlparse(proxy_uri)

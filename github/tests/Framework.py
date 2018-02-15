@@ -31,11 +31,13 @@ import os
 import sys
 import traceback
 import unittest
+from datetime import timedelta, tzinfo
 
 import github
 
 python2 = sys.hexversion < 0x03000000
 atLeastPython3 = sys.hexversion >= 0x03000000
+tdzero = timedelta(0)
 
 
 def readLine(file):
@@ -276,3 +278,23 @@ def activateRecordMode():  # pragma no cover (Function useful only when recordin
 
 def activateTokenAuthMode():  # pragma no cover (Function useful only when recording new tests, not used during automated tests)
     BasicTestCase.tokenAuthMode = True
+
+
+class UTC(tzinfo):
+    """UTC helper class"""
+    def utcoffset(self, dt):
+        return tdzero
+
+    def tzname(self, dt):
+        return "UTC"
+
+    def dst(self, dt):
+        return tdzero
+
+
+def getUTCtzinfo():
+    if python2:
+        utc = UTC()
+        return utc
+    else:
+        return datetime.timezone.utc

@@ -36,9 +36,9 @@ class IssueComment(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.comment.body, "Comment created by PyGithub")
-        self.assertEqual(self.comment.created_at, datetime.datetime(2012, 5, 20, 11, 46, 42))
+        self.assertEqual(self.comment.created_at, datetime.datetime(2012, 5, 20, 11, 46, 42).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.comment.id, 5808311)
-        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 46, 42))
+        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 46, 42).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.comment.url, "https://api.github.com/repos/jacquev6/PyGithub/issues/comments/5808311")
         self.assertEqual(self.comment.user.login, "jacquev6")
         self.assertEqual(self.comment.html_url, "https://github.com/jacquev6/PyGithub/issues/28#issuecomment-5808311")
@@ -49,7 +49,7 @@ class IssueComment(Framework.TestCase):
     def testEdit(self):
         self.comment.edit("Comment edited by PyGithub")
         self.assertEqual(self.comment.body, "Comment edited by PyGithub")
-        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 53, 59))
+        self.assertEqual(self.comment.updated_at, datetime.datetime(2012, 5, 20, 11, 53, 59).replace(tzinfo=Framework.getUTCtzinfo()))
 
     def testDelete(self):
         self.comment.delete()
