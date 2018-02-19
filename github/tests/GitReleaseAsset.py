@@ -24,8 +24,8 @@
 # ##############################################################################
 
 import datetime
-import Framework
-from pprint import pprint
+
+from . import Framework
 
 
 class ReleaseAsset(Framework.TestCase):

@@ -24,7 +24,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from . import Framework
 
 
 class Team(Framework.TestCase):

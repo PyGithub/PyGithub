@@ -23,8 +23,8 @@
 #                                                                              #
 # ##############################################################################
 
-import sys
 import os.path
+import sys
 
 # This script is unable to add an attribute after all the existing ones
 # but, well, I'll do it manually in that case.

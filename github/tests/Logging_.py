@@ -28,8 +28,7 @@ import logging
 import sys
 
 import github
-
-import Framework
+from . import Framework
 
 python2 = sys.hexversion < 0x03000000
 

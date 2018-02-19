@@ -26,7 +26,7 @@
 
 import github
 
-import Framework
+from . import Framework
 
 
 # Replay data for this test case is forged, because I don't have access to a real Github Enterprise install
@@ -42,7 +42,7 @@ class Enterprise(Framework.BasicTestCase):
     def testUnknownUrlScheme(self):  # To stay compatible with Python 2.6, we do not use self.assertRaises with only one argument
         try:
             github.Github(self.login, self.password, base_url="foobar://my.enterprise.com")
-        except AssertionError, exception:
+        except AssertionError as exception:
             raised = True
             self.assertEqual(exception.args[0], "Unknown URL scheme")
         self.assertTrue(raised)

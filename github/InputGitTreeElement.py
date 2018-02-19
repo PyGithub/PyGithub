@@ -24,6 +24,8 @@
 #                                                                              #
 # ##############################################################################
 
+from six import string_types
+
 import github.GithubObject
 
 
@@ -40,11 +42,11 @@ class InputGitTreeElement(object):
         :param sha: string
         """
 
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(mode, (str, unicode)), mode
-        assert isinstance(type, (str, unicode)), type
-        assert content is github.GithubObject.NotSet or isinstance(content, (str, unicode)), content
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert isinstance(path, string_types), path
+        assert isinstance(mode, string_types), mode
+        assert isinstance(type, string_types), type
+        assert content is github.GithubObject.NotSet or isinstance(content, string_types), content
+        assert sha is github.GithubObject.NotSet or isinstance(sha, string_types), sha
         self.__path = path
         self.__mode = mode
         self.__type = type

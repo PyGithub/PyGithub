@@ -23,7 +23,6 @@
 # ##############################################################################
 
 import github.GithubObject
-import datetime
 
 
 class Rate(github.GithubObject.NonCompletableGithubObject):

@@ -24,6 +24,8 @@
 #                                                                              #
 # ##############################################################################
 
+from six import string_types
+
 import github.GithubObject
 
 
@@ -37,8 +39,8 @@ class InputFileContent(object):
         :param new_name: string
         """
 
-        assert isinstance(content, (str, unicode)), content
-        assert new_name is github.GithubObject.NotSet or isinstance(new_name, (str, unicode)), new_name
+        assert isinstance(content, string_types), content
+        assert new_name is github.GithubObject.NotSet or isinstance(new_name, string_types), new_name
         self.__newName = new_name
         self.__content = content
 

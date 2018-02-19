@@ -23,9 +23,13 @@
 # ##############################################################################
 
 from os.path import basename
-import github.GithubObject
+
+from six import string_types
+
 import github.GitAuthor
 import github.GitReleaseAsset
+import github.GithubObject
+import github.PaginatedList
 
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
@@ -124,8 +128,8 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
         return True
 
     def update_release(self, name, message, draft=False, prerelease=False):
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(message, (str, unicode)), message
+        assert isinstance(name, string_types), name
+        assert isinstance(message, string_types), message
         assert isinstance(draft, bool), draft
         assert isinstance(prerelease, bool), prerelease
         post_parameters = {
@@ -140,11 +144,11 @@ class GitRelease(github.GithubObject.CompletableGithubObject):
             self.url,
             input=post_parameters
         )
-        return github.GitRelease.GitRelease(self._requester, headers, data, completed=True)
+        return GitRelease(self._requester, headers, data, completed=True)
 
     def upload_asset(self, path, label="", content_type=""):
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(label, (str, unicode)), label
+        assert isinstance(path, string_types), path
+        assert isinstance(label, string_types), label
 
         post_parameters = {
             "name": basename(path),

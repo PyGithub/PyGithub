@@ -26,9 +26,8 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-
 import github.Commit
+import github.GithubObject
 
 
 class Branch(github.GithubObject.NonCompletableGithubObject):

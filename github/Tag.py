@@ -26,9 +26,8 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-
 import github.Commit
+import github.GithubObject
 
 
 class Tag(github.GithubObject.NonCompletableGithubObject):

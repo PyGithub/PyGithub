@@ -22,8 +22,8 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
 import github
+from . import Framework
 
 
 class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub/pull/134
@@ -32,7 +32,7 @@ class Issue134(Framework.BasicTestCase):  # https://github.com/jacquev6/PyGithub
         raised = False
         try:
             list(g.get_user().get_authorizations())
-        except github.GithubException, exception:
+        except github.GithubException as exception:
             raised = True
             self.assertEqual(exception.status, 404)
         self.assertTrue(raised)

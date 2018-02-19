@@ -23,7 +23,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from . import Framework
 
 
 class Issue494(Framework.TestCase):

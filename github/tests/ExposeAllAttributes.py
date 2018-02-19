@@ -22,7 +22,11 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from __future__ import print_function
+
+from six import iteritems
+
+from . import Framework
 
 
 class ExposeAllAttributes(Framework.TestCase):
@@ -131,9 +135,9 @@ class ExposeAllAttributes(Framework.TestCase):
             # userKey,  # Security issue if put as-is in ReplayData
         ])
 
-        for className, attributesMissingInClass in sorted(missingAttributes.iteritems()):
-            for attrName, value in sorted(attributesMissingInClass.iteritems()):
-                print className, attrName, "->", repr(value)
+        for className, attributesMissingInClass in sorted(iteritems(missingAttributes)):
+            for attrName, value in sorted(iteritems(attributesMissingInClass)):
+                print(className, attrName, "->", repr(value))
 
         self.assertEqual(sum(len(attrs) for attrs in missingAttributes.values()), 0)
 

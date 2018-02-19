@@ -22,9 +22,8 @@
 #                                                                              #
 # ##############################################################################
 
-import urllib
-
 import github.GithubObject
+import github.Repository
 
 
 class Invitation(github.GithubObject.CompletableGithubObject):

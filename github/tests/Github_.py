@@ -26,9 +26,8 @@
 
 import datetime
 
-import Framework
-
-import github
+import github.GithubObject
+from . import Framework
 
 
 class Github(Framework.TestCase):

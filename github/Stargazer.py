@@ -31,7 +31,8 @@
 #                                                                              #
 # ##############################################################################
 
-import github
+import github.GithubObject
+import github.NamedUser
 
 
 class Stargazer(github.GithubObject.NonCompletableGithubObject):

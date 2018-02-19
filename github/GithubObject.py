@@ -24,12 +24,15 @@
 # along with PyGithub. If not, see <http://www.gnu.org/licenses/>.             #
 #                                                                              #
 # ##############################################################################
-import sys
+
 import datetime
+import sys
 from operator import itemgetter
 
-import GithubException
-import Consts
+from six import integer_types, iteritems, string_types
+
+import github
+from github import Consts
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -55,7 +58,7 @@ class _BadAttribute:
 
     @property
     def value(self):
-        raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
+        raise github.BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
 class GithubObject(object):
@@ -130,18 +133,18 @@ class GithubObject(object):
         elif isinstance(value, type):
             try:
                 return _ValuedAttribute(transform(value))
-            except Exception, e:
+            except Exception as e:
                 return _BadAttribute(value, type, e)
         else:
             return _BadAttribute(value, type)
 
     @staticmethod
     def _makeStringAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, (str, unicode))
+        return GithubObject.__makeSimpleAttribute(value, string_types)
 
     @staticmethod
     def _makeIntAttribute(value):
-        return GithubObject.__makeSimpleAttribute(value, (int, long))
+        return GithubObject.__makeSimpleAttribute(value, integer_types)
 
     @staticmethod
     def _makeBoolAttribute(value):
@@ -153,7 +156,7 @@ class GithubObject(object):
 
     @staticmethod
     def _makeTimestampAttribute(value):
-        return GithubObject.__makeTransformedAttribute(value, (int, long), datetime.datetime.utcfromtimestamp)
+        return GithubObject.__makeTransformedAttribute(value, integer_types, datetime.datetime.utcfromtimestamp)
 
     @staticmethod
     def _makeDatetimeAttribute(value):
@@ -167,14 +170,14 @@ class GithubObject(object):
             else:
                 return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
 
-        return GithubObject.__makeTransformedAttribute(value, (str, unicode), parseDatetime)
+        return GithubObject.__makeTransformedAttribute(value, string_types, parseDatetime)
 
     def _makeClassAttribute(self, klass, value):
         return GithubObject.__makeTransformedAttribute(value, dict, lambda value: klass(self._requester, self._headers, value, completed=False))
 
     @staticmethod
     def _makeListOfStringsAttribute(value):
-        return GithubObject.__makeSimpleListAttribute(value, (str, unicode))
+        return GithubObject.__makeSimpleListAttribute(value, string_types)
 
     @staticmethod
     def _makeListOfIntsAttribute(value):
@@ -191,10 +194,10 @@ class GithubObject(object):
             return _BadAttribute(value, [dict])
 
     def _makeDictOfStringsToClassesAttribute(self, klass, value):
-        if isinstance(value, dict) and all(isinstance(key, (str, unicode)) and isinstance(element, dict) for key, element in value.iteritems()):
-            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in value.iteritems()))
+        if isinstance(value, dict) and all(isinstance(key, string_types) and isinstance(element, dict) for key, element in iteritems(value)):
+            return _ValuedAttribute(dict((key, klass(self._requester, self._headers, element, completed=False)) for key, element in iteritems(value)))
         else:
-            return _BadAttribute(value, {(str, unicode): dict})
+            return _BadAttribute(value, {string_types: dict})
 
     @property
     def etag(self):
@@ -220,7 +223,7 @@ class GithubObject(object):
             else:
                 items = list(params.items())
             for k, v in sorted(items, key=itemgetter(0), reverse=True):
-                isText = isinstance(v, (str, unicode))
+                isText = isinstance(v, string_types)
                 if isText and not atLeastPython3:
                     v = v.encode('utf-8')
                 yield '{k}="{v}"'.format(k=k, v=v) if isText else '{k}={v}'.format(k=k, v=v)

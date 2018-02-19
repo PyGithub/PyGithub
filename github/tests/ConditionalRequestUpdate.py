@@ -25,8 +25,7 @@
 
 # #193: Line endings should be linux style
 
-import Framework
-import github
+from . import Framework
 
 
 class ConditionalRequestUpdate(Framework.TestCase):

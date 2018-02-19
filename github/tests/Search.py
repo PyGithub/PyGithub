@@ -22,8 +22,9 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
 import sys
+
+from . import Framework
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 

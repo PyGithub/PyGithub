@@ -26,7 +26,8 @@
 #                                                                              #
 # ##############################################################################
 
-import urllib
+from six import string_types
+from six.moves.urllib.parse import quote
 
 import github.GithubObject
 
@@ -80,8 +81,8 @@ class Label(github.GithubObject.CompletableGithubObject):
         :param color: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(color, (str, unicode)), color
+        assert isinstance(name, string_types), name
+        assert isinstance(color, string_types), color
         post_parameters = {
             "name": name,
             "color": color,
@@ -95,7 +96,7 @@ class Label(github.GithubObject.CompletableGithubObject):
 
     @property
     def _identity(self):
-        return urllib.quote(self.name)
+        return quote(self.name)
 
     def _initAttributes(self):
         self._color = github.GithubObject.NotSet

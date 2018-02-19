@@ -23,7 +23,6 @@
 # ##############################################################################
 
 import github.GithubObject
-
 import github.NamedUser
 
 

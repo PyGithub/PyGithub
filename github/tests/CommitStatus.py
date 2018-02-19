@@ -24,10 +24,9 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-
-import github
 import datetime
+
+from . import Framework
 
 
 class CommitStatus(Framework.TestCase):

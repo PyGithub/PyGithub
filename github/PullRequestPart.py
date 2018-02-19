@@ -26,9 +26,8 @@
 # ##############################################################################
 
 import github.GithubObject
-
-import github.Repository
 import github.NamedUser
+import github.Repository
 
 
 class PullRequestPart(github.GithubObject.NonCompletableGithubObject):

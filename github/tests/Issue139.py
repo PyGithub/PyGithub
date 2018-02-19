@@ -22,8 +22,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-import github
+from . import Framework
 
 
 class Issue139(Framework.TestCase):  # https://github.com/jacquev6/PyGithub/issues/139

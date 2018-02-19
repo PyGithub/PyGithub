@@ -25,9 +25,9 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-
 import datetime
+
+from . import Framework
 
 
 class Issue(Framework.TestCase):

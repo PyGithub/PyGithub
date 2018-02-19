@@ -24,10 +24,10 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+import datetime
 
 import github
-import datetime
+from . import Framework
 
 
 class AuthenticatedUser(Framework.TestCase):

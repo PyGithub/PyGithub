@@ -31,7 +31,6 @@ import sys
 import github.GithubObject
 import github.Repository
 
-
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 

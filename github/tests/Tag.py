@@ -24,7 +24,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from . import Framework
 
 
 class Tag(Framework.TestCase):

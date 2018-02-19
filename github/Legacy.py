@@ -26,7 +26,8 @@
 #                                                                              #
 # ##############################################################################
 
-import urlparse
+from six import integer_types
+from six.moves.urllib.parse import urlparse
 
 import github.PaginatedList
 
@@ -52,7 +53,7 @@ class PaginatedList(github.PaginatedList.PaginatedListBase):
         return self.get_page(page)
 
     def get_page(self, page):
-        assert isinstance(page, (int, long)), page
+        assert isinstance(page, integer_types), page
         args = dict(self.__args)
         if page != 0:
             args["start_page"] = page + 1
@@ -130,7 +131,7 @@ def convertRepo(attributes):
 def convertIssue(attributes):
     convertedAttributes = {
         "number": attributes["number"],
-        "url": "/repos" + urlparse.urlparse(attributes["html_url"]).path,
+        "url": "/repos" + urlparse(attributes["html_url"]).path,
         "user": {"login": attributes["user"], "url": "/users/" + attributes["user"]},
     }
     if "labels" in attributes:  # pragma no branch

@@ -22,11 +22,9 @@
 #                                                                              #
 # ##############################################################################
 
-import datetime
-
 import github.GithubObject
-import github.PaginatedList
 import github.NamedUser
+import github.PaginatedList
 
 
 class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):

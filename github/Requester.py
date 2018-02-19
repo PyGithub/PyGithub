@@ -34,26 +34,26 @@
 # ##############################################################################
 
 import base64
-import httplib
 import json
 import logging
 import mimetypes
 import os
 import re
 import sys
-import urllib
-import urlparse
 from io import IOBase
 
-import Consts
-import GithubException
+from six import iteritems
+from six.moves import http_client
+from six.moves.urllib.parse import urlencode, urlparse
+
+import github
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
 
 class Requester:
-    __httpConnectionClass = httplib.HTTPConnection
-    __httpsConnectionClass = httplib.HTTPSConnection
+    __httpConnectionClass = http_client.HTTPConnection
+    __httpsConnectionClass = http_client.HTTPSConnection
 
     @classmethod
     def injectConnectionClasses(cls, httpConnectionClass, httpsConnectionClass):
@@ -62,8 +62,8 @@ class Requester:
 
     @classmethod
     def resetConnectionClasses(cls):
-        cls.__httpConnectionClass = httplib.HTTPConnection
-        cls.__httpsConnectionClass = httplib.HTTPSConnection
+        cls.__httpConnectionClass = http_client.HTTPConnection
+        cls.__httpsConnectionClass = http_client.HTTPSConnection
 
     #############################################################
     # For Debug
@@ -138,7 +138,7 @@ class Requester:
             self.__authorizationHeader = None
 
         self.__base_url = base_url
-        o = urlparse.urlparse(base_url)
+        o = urlparse(base_url)
         self.__hostname = o.hostname
         self.__port = o.port
         self.__prefix = o.path
@@ -172,7 +172,7 @@ class Requester:
         return self.__check(*self.requestMultipart(verb, url, parameters, headers, input))
 
     def requestBlobAndCheck(self, verb, url, parameters=None, headers=None, input=None):
-        o = urlparse.urlparse(url)
+        o = urlparse(url)
         self.__hostname = o.hostname
         return self.__check(*self.requestBlob(verb, url, parameters, headers, input))
 
@@ -184,17 +184,17 @@ class Requester:
 
     def __createException(self, status, headers, output):
         if status == 401 and output.get("message") == "Bad credentials":
-            cls = GithubException.BadCredentialsException
+            cls = github.BadCredentialsException
         elif status == 401 and 'x-github-otp' in headers and re.match(r'.*required.*', headers['x-github-otp']):
-            cls = GithubException.TwoFactorException  # pragma no cover (Should be covered)
+            cls = github.TwoFactorException  # pragma no cover (Should be covered)
         elif status == 403 and output.get("message").startswith("Missing or invalid User Agent string"):
-            cls = GithubException.BadUserAgentException
+            cls = github.BadUserAgentException
         elif status == 403 and output.get("message").lower().startswith("api rate limit exceeded"):
-            cls = GithubException.RateLimitExceededException
+            cls = github.RateLimitExceededException
         elif status == 404 and output.get("message") == "Not Found":
-            cls = GithubException.UnknownObjectException
+            cls = github.UnknownObjectException
         else:
-            cls = GithubException.GithubException
+            cls = github.GithubException
         return cls(status, output)
 
     def __structuredFromJson(self, data):
@@ -205,7 +205,7 @@ class Requester:
                 data = data.decode("utf-8")  # pragma no cover (Covered by Issue142.testDecodeJson with Python 3)
             try:
                 return json.loads(data)
-            except ValueError, e:
+            except ValueError:
                 return {'data': data}
 
     def requestJson(self, verb, url, parameters=None, headers=None, input=None, cnx=None):
@@ -220,7 +220,7 @@ class Requester:
             eol = "\r\n"
 
             encoded_input = ""
-            for name, value in input.iteritems():
+            for name, value in iteritems(input):
                 encoded_input += "--" + boundary + eol
                 encoded_input += "Content-Disposition: form-data; name=\"" + name + "\"" + eol
                 encoded_input += eol
@@ -323,7 +323,7 @@ class Requester:
         if url.startswith("/"):
             url = self.__prefix + url
         else:
-            o = urlparse.urlparse(url)
+            o = urlparse(url)
             assert o.hostname in [self.__hostname, "uploads.github.com"], o.hostname
             assert o.path.startswith((self.__prefix, "/api/uploads"))
             assert o.port == self.__port
@@ -336,7 +336,7 @@ class Requester:
         if len(parameters) == 0:
             return url
         else:
-            return url + "?" + urllib.urlencode(parameters)
+            return url + "?" + urlencode(parameters)
 
     def __createConnection(self):
         kwds = {}
@@ -351,7 +351,7 @@ class Requester:
         ##
         proxy_uri = os.getenv('http_proxy') or os.getenv('HTTP_PROXY')
         if proxy_uri is not None:
-            url = urlparse.urlparse(proxy_uri)
+            url = urlparse(proxy_uri)
             conn = self.__connectionClass(url.hostname, url.port, **kwds)
             headers = {}
             if url.username and url.password:

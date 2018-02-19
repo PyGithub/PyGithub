@@ -29,14 +29,17 @@
 
 import datetime
 
-import github.GithubObject
-import github.PaginatedList
+from six import integer_types, string_types
 
-import github.Plan
-import github.Team
 import github.Event
-import github.Repository
+import github.GithubObject
+import github.Issue
+import github.Label
 import github.NamedUser
+import github.PaginatedList
+import github.Plan
+import github.Repository
+import github.Team
 
 
 class Organization(github.GithubObject.CompletableGithubObject):
@@ -334,18 +337,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param allow_rebase_merge: bool
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, unicode)), name
-        assert description is github.GithubObject.NotSet or isinstance(description, (str, unicode)), description
-        assert homepage is github.GithubObject.NotSet or isinstance(homepage, (str, unicode)), homepage
+        assert isinstance(name, string_types), name
+        assert description is github.GithubObject.NotSet or isinstance(description, string_types), description
+        assert homepage is github.GithubObject.NotSet or isinstance(homepage, string_types), homepage
         assert private is github.GithubObject.NotSet or isinstance(private, bool), private
         assert has_issues is github.GithubObject.NotSet or isinstance(has_issues, bool), has_issues
         assert has_wiki is github.GithubObject.NotSet or isinstance(has_wiki, bool), has_wiki
         assert has_downloads is github.GithubObject.NotSet or isinstance(has_downloads, bool), has_downloads
         assert has_projects is github.GithubObject.NotSet or isinstance(has_projects, bool), has_projects
-        assert team_id is github.GithubObject.NotSet or isinstance(team_id, (int, long)), team_id
+        assert team_id is github.GithubObject.NotSet or isinstance(team_id, integer_types), team_id
         assert auto_init is github.GithubObject.NotSet or isinstance(auto_init, bool), auto_init
-        assert license_template is github.GithubObject.NotSet or isinstance(license_template, (str, unicode)), license_template
-        assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, (str, unicode)), gitignore_template
+        assert license_template is github.GithubObject.NotSet or isinstance(license_template, string_types), license_template
+        assert gitignore_template is github.GithubObject.NotSet or isinstance(gitignore_template, string_types), gitignore_template
         assert allow_squash_merge is github.GithubObject.NotSet or isinstance(allow_squash_merge, bool), allow_squash_merge
         assert allow_merge_commit is github.GithubObject.NotSet or isinstance(allow_merge_commit, bool), allow_merge_commit
         assert allow_rebase_merge is github.GithubObject.NotSet or isinstance(allow_rebase_merge, bool), allow_rebase_merge
@@ -395,9 +398,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :rtype: :class:`github.Team.Team`
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, string_types), name
         assert repo_names is github.GithubObject.NotSet or all(isinstance(element, github.Repository.Repository) for element in repo_names), repo_names
-        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert permission is github.GithubObject.NotSet or isinstance(permission, string_types), permission
         post_parameters = {
             "name": name,
         }
@@ -423,12 +426,12 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: None
         """
-        assert billing_email is github.GithubObject.NotSet or isinstance(billing_email, (str, unicode)), billing_email
-        assert blog is github.GithubObject.NotSet or isinstance(blog, (str, unicode)), blog
-        assert company is github.GithubObject.NotSet or isinstance(company, (str, unicode)), company
-        assert email is github.GithubObject.NotSet or isinstance(email, (str, unicode)), email
-        assert location is github.GithubObject.NotSet or isinstance(location, (str, unicode)), location
-        assert name is github.GithubObject.NotSet or isinstance(name, (str, unicode)), name
+        assert billing_email is github.GithubObject.NotSet or isinstance(billing_email, string_types), billing_email
+        assert blog is github.GithubObject.NotSet or isinstance(blog, string_types), blog
+        assert company is github.GithubObject.NotSet or isinstance(company, string_types), company
+        assert email is github.GithubObject.NotSet or isinstance(email, string_types), email
+        assert location is github.GithubObject.NotSet or isinstance(location, string_types), location
+        assert name is github.GithubObject.NotSet or isinstance(name, string_types), name
         post_parameters = dict()
         if billing_email is not github.GithubObject.NotSet:
             post_parameters["billing_email"] = billing_email
@@ -473,11 +476,11 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param since: datetime.datetime
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Issue.Issue`
         """
-        assert filter is github.GithubObject.NotSet or isinstance(filter, (str, unicode)), filter
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
+        assert filter is github.GithubObject.NotSet or isinstance(filter, string_types), filter
+        assert state is github.GithubObject.NotSet or isinstance(state, string_types), state
         assert labels is github.GithubObject.NotSet or all(isinstance(element, github.Label.Label) for element in labels), labels
-        assert sort is github.GithubObject.NotSet or isinstance(sort, (str, unicode)), sort
-        assert direction is github.GithubObject.NotSet or isinstance(direction, (str, unicode)), direction
+        assert sort is github.GithubObject.NotSet or isinstance(sort, string_types), sort
+        assert direction is github.GithubObject.NotSet or isinstance(direction, string_types), direction
         assert since is github.GithubObject.NotSet or isinstance(since, datetime.datetime), since
         url_parameters = dict()
         if filter is not github.GithubObject.NotSet:
@@ -508,9 +511,9 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
         """
         assert (filter_ is github.GithubObject.NotSet or
-                isinstance(filter_, (str, unicode))), filter_
+                isinstance(filter_, string_types)), filter_
         assert (role is github.GithubObject.NotSet or
-                isinstance(role, (str, unicode))), role
+                isinstance(role, string_types)), role
 
         url_parameters = {}
         if filter_ is not github.GithubObject.NotSet:
@@ -542,7 +545,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param name: string
         :rtype: :class:`github.Repository.Repository`
         """
-        assert isinstance(name, (str, unicode)), name
+        assert isinstance(name, string_types), name
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/repos/" + self.login + "/" + name
@@ -555,7 +558,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param type: string ('all', 'public', 'private', 'forks', 'sources', 'member')
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
-        assert type is github.GithubObject.NotSet or isinstance(type, (str, unicode)), type
+        assert type is github.GithubObject.NotSet or isinstance(type, string_types), type
         url_parameters = dict()
         if type is not github.GithubObject.NotSet:
             url_parameters["type"] = type
@@ -572,7 +575,7 @@ class Organization(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.Team.Team`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             "/teams/" + str(id)
