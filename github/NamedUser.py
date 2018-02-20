@@ -46,6 +46,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
     def __repr__(self):
         return self.get__repr__({"login": self._login.value})
 
+    def __hash__(self):
+        return hash((self.id, self.login))
+
+    def __eq__(self, other):
+        return (isinstance(other, type(self))
+                and (self.login == other.login)
+                and (self.id == other.id))
+
     @property
     def avatar_url(self):
         """
