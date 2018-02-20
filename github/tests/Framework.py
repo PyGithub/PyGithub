@@ -33,6 +33,7 @@ import sys
 import traceback
 import unittest
 
+from six import string_types
 from six.moves import http_client
 
 import github.GithubObject
@@ -149,7 +150,7 @@ class ReplayingConnection:
         self.__testCase.assertEqual(self.__splitUrl(url), self.__splitUrl(readLine(self.__file)))
         self.__testCase.assertEqual(headers, eval(readLine(self.__file)))
         expectedInput = readLine(self.__file)
-        if isinstance(input, (str, unicode)):
+        if isinstance(input, string_types):
             if input.startswith("{"):
                 self.__testCase.assertEqual(json.loads(input.replace('\n', '').replace('\r', '')), json.loads(expectedInput))
             elif python2:  # @todo Test in all cases, including Python 3.4+
