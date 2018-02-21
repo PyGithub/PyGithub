@@ -147,3 +147,10 @@ class NamedUser(Framework.TestCase):
 
     def testGetKeys(self):
         self.assertListKeyEqual(self.user.get_keys(), lambda k: k.id, [3557894, 3791954, 3937333, 4051357, 4051492])
+
+    def testUserEquality(self):
+        u1 = self.g.get_user("nvie")
+        u2 = self.g.get_user("nvie")
+        self.assertTrue(u1 == u2)
+        self.assertEqual(u1, u2)
+        self.assertEqual(u1.__hash__(), u2.__hash__())    
