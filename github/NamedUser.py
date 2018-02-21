@@ -51,8 +51,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
 
     def __eq__(self, other):
         return (isinstance(other, type(self))
-                and (self.login == other.login)
-                and (self.id == other.id))
+                and self.login == other.login
+                and self.id == other.id)
 
     @property
     def avatar_url(self):
