@@ -50,9 +50,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return hash((self.id, self.login))
 
     def __eq__(self, other):
-        return (isinstance(other, type(self))
-                and self.login == other.login
-                and self.id == other.id)
+        return isinstance(other, type(self)) and self.login == other.login and self.id == other.id
 
     @property
     def avatar_url(self):
