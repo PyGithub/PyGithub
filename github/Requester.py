@@ -256,6 +256,8 @@ class Requester:
         if self.__apiPreview:
             requestHeaders["Accept"] = "application/vnd.github.moondragon+json"
 
+        requestHeaders["Host"] = self.__hostname
+
         url = self.__makeAbsoluteUrl(url)
         url = self.__addParametersToUrl(url, parameters)
 
