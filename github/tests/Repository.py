@@ -232,6 +232,10 @@ class Repository(Framework.TestCase):
         ref = self.repo.create_git_ref("refs/heads/BranchCreatedByPyGithub", "4303c5b90e2216d927155e9609436ccb8984c495")
         self.assertEqual(ref.url, "https://api.github.com/repos/jacquev6/PyGithub/git/refs/heads/BranchCreatedByPyGithub")
 
+    def testDeleteGitRef(self):
+        self.repo.create_git_ref("refs/heads/BranchToDelete", "4303c5b90e2216d927155e9609436ccb8984c495")
+        self.repo.delete_git_ref("refs/heads/BranchToDelete", "4303c5b90e2216d927155e9609436ccb8984c495")
+
     def testCreateGitBlob(self):
         blob = self.repo.create_git_blob("Blob created by PyGithub", "latin1")
         self.assertEqual(blob.sha, "5dd930f591cd5188e9ea7200e308ad355182a1d8")
