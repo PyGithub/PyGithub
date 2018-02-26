@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'token private_token_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4992'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept, Authorization, Cookie'), ('content-length', '1464'), ('server', 'GitHub.com'), ('last-modified', 'Tue, 05 Feb 2013 18:44:48 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"9257360a3470aac247f722352581abb1"'), ('cache-control', 'private, s-maxage=60, max-age=60'), ('date', 'Tue, 05 Feb 2013 22:57:03 GMT'), ('x-oauth-scopes', 'repo, user, gist'), ('content-type', 'application/json; charset=utf-8'), ('x-accepted-oauth-scopes', 'user:follow, user:email, user')]

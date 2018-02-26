@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /user
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '1220'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '07ff1c8a09e44b62e277fae50a1b1dc4'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"a692daa1e912efb3a9048cdbae74bf02"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4963'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:70D3:6F67E9F:553A0175'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Thu, 23 Apr 2015 15:34:48 GMT'), ('date', 'Fri, 24 Apr 2015 08:40:21 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1429867683')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/edhollandAL/PyGithub
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '13980'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'b0ef53392caa42315c6206737946d931'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"354bfbe5bc3193b117028111f8d7bf5d"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4962'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:70D2:628E79F:553A0175'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('last-modified', 'Thu, 23 Apr 2015 10:29:48 GMT'), ('date', 'Fri, 24 Apr 2015 08:40:21 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1429867683')]
@@ -25,7 +25,7 @@ GET
 api.github.com
 None
 /repos/edhollandAL/PyGithub/releases
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '1650'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '474556b853193c38f1b14328ce2d1b7d'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"85682be7a53801f67365f6afab9101cd"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4961'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:70D2:628E883:553A0176'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Fri, 24 Apr 2015 08:40:22 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1429867683')]
@@ -36,7 +36,7 @@ DELETE
 api.github.com
 None
 /repos/edhollandAL/PyGithub/releases/1210814
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 204
 [('status', '204 No Content'), ('x-ratelimit-remaining', '4960'), ('x-github-media-type', 'github.v3; format=json'), ('x-content-type-options', 'nosniff'), ('content-security-policy', "default-src 'none'"), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '56BCFFD3:70D2:628E96C:553A0176'), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('vary', 'Accept-Encoding'), ('server', 'GitHub.com'), ('access-control-allow-origin', '*'), ('x-ratelimit-limit', '5000'), ('x-served-by', 'a6882e5cd2513376cb9481dbcd83f3a2'), ('access-control-allow-credentials', 'true'), ('date', 'Fri, 24 Apr 2015 08:40:23 GMT'), ('x-frame-options', 'deny'), ('x-xss-protection', '1; mode=block'), ('x-ratelimit-reset', '1429867683')]
