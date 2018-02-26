@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/538
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '14726'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'a474937f3b2fa272558fa6dc951018ad'), ('x-oauth-scopes', 'gist, repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"f375b2b7b6eb9081788c5e3b1dedba0e"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4952'), ('x-github-media-type', 'github.v3; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'C19A:69E1:10370BA:13FF894:58D559AE'), ('last-modified', 'Wed, 22 Mar 2017 19:07:28 GMT'), ('date', 'Fri, 24 Mar 2017 17:38:54 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1490379624')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/PyGithub/PyGithub/pulls/538/requested_reviewers
-{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.black-cat-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.black-cat-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '839'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '07ff1c8a09e44b62e277fae50a1b1dc4'), ('x-oauth-scopes', 'gist, repo, user'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('x-accepted-oauth-scopes', ''), ('etag', '"bc596203c153ef71a3f3e99a908de946"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('status', '200 OK'), ('x-ratelimit-remaining', '4951'), ('x-github-media-type', 'github.black-cat-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', 'C19B:69EB:2590DF2:2ECC945:58D559AE'), ('date', 'Fri, 24 Mar 2017 17:38:55 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1490379624')]

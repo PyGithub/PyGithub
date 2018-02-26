@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /repos/twitter/bootstrap/contents/js/
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 302
 [('status', '302 Found'), ('x-ratelimit-remaining', '4998'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('vary', 'Accept-Encoding'), ('content-length', '0'), ('server', 'GitHub.com'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('location', 'https://api.github.com/repositories/2126244/contents/js'), ('access-control-allow-credentials', 'true'), ('date', 'Tue, 18 Jun 2013 20:10:18 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'text/html;charset=utf-8')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repositories/2126244/contents/js
-{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('status', '200 OK'), ('x-ratelimit-remaining', '4997'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('access-control-expose-headers', 'ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-OAuth-Scopes, X-Accepted-OAuth-Scopes'), ('access-control-allow-credentials', 'true'), ('vary', 'Accept, Authorization, Cookie, Accept-Encoding'), ('content-length', '10844'), ('server', 'GitHub.com'), ('last-modified', 'Tue, 18 Jun 2013 19:52:37 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '5000'), ('etag', '"525271e07b1b6c94fd4a0633d61cd3c6"'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Tue, 18 Jun 2013 20:10:19 GMT'), ('access-control-allow-origin', '*'), ('content-type', 'application/json; charset=utf-8')]

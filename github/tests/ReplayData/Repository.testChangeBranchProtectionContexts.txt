@@ -3,7 +3,7 @@ PATCH
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 {"protection": {"enabled": true, "required_status_checks": {"enforcement_level": "everyone", "contexts": ["test"]}}}
 200
 [('content-length', '3599'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '76d9828c7e4f1d910f7ba069e90ce976'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"23247e636875225f1e2d6b49e3ed8fb5"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4983'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D25A:7429E1A:568D31F4'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:40 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]
@@ -14,7 +14,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '3599'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'bae57931a6fe678a3dffe9be8e7819c8'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"23247e636875225f1e2d6b49e3ed8fb5"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4982'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D262:27FA573A:568D31F4'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:40 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]
@@ -25,7 +25,7 @@ PATCH
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 {"protection": {"enabled": true, "required_status_checks": {"enforcement_level": "everyone", "contexts": ["test", "default"]}}}
 200
 [('content-length', '3609'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '318e55760cf7cdb40e61175a4d36cd32'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"db7b04fd5e1b51731388d165caa9c4aa"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4981'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D262:27FA5773:568D31F4'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:41 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]
@@ -36,7 +36,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '3609'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'a241e1a8264a6ace03db946c85b92db3'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"db7b04fd5e1b51731388d165caa9c4aa"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4980'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D260:22667B15:568D31F5'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:41 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]
@@ -47,7 +47,7 @@ PATCH
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Content-Type': 'application/json', 'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 {"protection": {"enabled": true, "required_status_checks": {"enforcement_level": "everyone", "contexts": ["default"]}}}
 200
 [('content-length', '3602'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', '593010132f82159af0ded24b4932e109'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"9ec429649fdda2858153edc42ff3f579"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4979'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D25F:1A8AB79A:568D31F5'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:41 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]
@@ -58,7 +58,7 @@ GET
 api.github.com
 None
 /repos/jacquev6/PyGithub/branches/master
-{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python'}
+{'Authorization': 'Basic login_and_password_removed', 'Accept': 'application/vnd.github.loki-preview+json', 'User-Agent': 'PyGithub/Python', 'Host': 'api.github.com'}
 None
 200
 [('content-length', '3602'), ('vary', 'Accept, Authorization, Cookie, X-GitHub-OTP, Accept-Encoding'), ('x-served-by', 'ef96c2e493b28ffea49b891b085ed2dd'), ('x-xss-protection', '1; mode=block'), ('x-content-type-options', 'nosniff'), ('etag', '"9ec429649fdda2858153edc42ff3f579"'), ('access-control-allow-credentials', 'true'), ('status', '200 OK'), ('x-ratelimit-remaining', '4978'), ('x-github-media-type', 'github.loki-preview; format=json'), ('access-control-expose-headers', 'ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval'), ('x-github-request-id', '417D879D:1D262:27FA5800:568D31F5'), ('cache-control', 'private, max-age=60, s-maxage=60'), ('date', 'Wed, 06 Jan 2016 15:25:41 GMT'), ('access-control-allow-origin', '*'), ('content-security-policy', "default-src 'none'"), ('strict-transport-security', 'max-age=31536000; includeSubdomains; preload'), ('server', 'GitHub.com'), ('x-ratelimit-limit', '5000'), ('x-frame-options', 'deny'), ('content-type', 'application/json; charset=utf-8'), ('x-ratelimit-reset', '1452096288')]

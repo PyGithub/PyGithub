@@ -3,7 +3,7 @@ GET
 api.github.com
 None
 /users/jacquev6
-{'User-Agent': 'PyGithubTester', 'User-Agent': 'PyGithubTester'}
+{'User-Agent': 'PyGithubTester', 'User-Agent': 'PyGithubTester', 'Host': 'api.github.com'}
 None
 200
 [('status', '200 OK'), ('content-length', '1250'), ('x-github-media-type', 'github.beta; format=json'), ('x-content-type-options', 'nosniff'), ('vary', 'Accept'), ('x-ratelimit-remaining', '57'), ('server', 'nginx'), ('last-modified', 'Mon, 19 Nov 2012 19:05:48 GMT'), ('connection', 'keep-alive'), ('x-ratelimit-limit', '60'), ('etag', '"20bb1bc354d1c62d7c5e8b918cdbe6a1"'), ('cache-control', 'public, s-maxage=60, max-age=60'), ('date', 'Mon, 19 Nov 2012 20:14:08 GMT'), ('content-type', 'application/json; charset=utf-8')]
