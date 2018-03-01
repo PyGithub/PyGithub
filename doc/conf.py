@@ -68,7 +68,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PyGithub'
-copyright = u'2012, Vincent Jacques'
+copyright = u'2018, Vincent Jacques'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -118,7 +118,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -321,7 +321,6 @@ for githubClass in githubClasses + ["MainClass"]:
                 isProperty = True
             if line.startswith("    def "):
                 if not isProperty:
-                    assert method is None or (githubClass, method) in [("github.StatsPunchCard.StatsPunchCard", "get")], githubClass + "." + method + " has no :calls: section"
                     method = line.split("(")[0][8:]
                     if method in ["_initAttributes", "_useAttributes", "__init__", "__create_pull_1", "__create_pull_2", "__create_pull", "_hub", "__get_FIX_REPO_GET_GIT_REF", "__set_FIX_REPO_GET_GIT_REF", "__get_per_page", "__set_per_page", "create_from_raw_data", "dump", "load"]:
                         method = None
@@ -345,7 +344,7 @@ with open("apis.rst", "w") as apis:
     apis.write("APIs\n")
     apis.write("====\n")
     apis.write("\n")
-    for url, verbs in sorted(methods.iteritems()):
+    for url, verbs in sorted(methods.items()):
         apis.write("* ``" + url + "``\n")
         apis.write("\n")
         for verb in ["GET", "PATCH", "POST", "PUT", "DELETE"]:
@@ -353,4 +352,4 @@ with open("apis.rst", "w") as apis:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
 
-shutil.copyfile("../Contributing.rst", "contributing.rst")
+# shutil.copyfile("../Contributing.rst", "contributing.rst")
