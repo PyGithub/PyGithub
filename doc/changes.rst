@@ -4,6 +4,15 @@ Change log
 Stable versions
 ~~~~~~~~~~~~~~~
 
+Version 1.37 (March 03, 2018)
+-----------------------------------
+
+* Add __eq__ and __hash__ to NamedUser (#706) (8a13b274)
+* Add maintainer can modify flag to create pull request (#703) (0e5a1d1d)
+* Fix typo in Design.md (#701) (98d32af4)
+* Add role parameter to Team.add_membership method (#638) (01ab4cc6)
+* Add add_membership testcase (#637) (5a1424bb)
+
 Version 1.36 (February 02, 2018)
 -----------------------------------
 
