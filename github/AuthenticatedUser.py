@@ -393,14 +393,15 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def add_to_watched(self, watched):
         """
-        :calls: `PUT /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `PUT /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription",
+            input = { "subscribed": True }
         )
 
     def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet, onetime_password=None):
@@ -952,13 +953,13 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def get_watched(self):
         """
-        :calls: `GET /user/watched <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /user/subscriptions <http://developer.github.com/v3/activity/watching>`_
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Repository.Repository`
         """
         return github.PaginatedList.PaginatedList(
             github.Repository.Repository,
             self._requester,
-            "/user/watched",
+            "/user/subscriptions",
             None
         )
 
@@ -1066,14 +1067,14 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def remove_from_watched(self, watched):
         """
-        :calls: `DELETE /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `DELETE /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: None
         """
         assert isinstance(watched, github.Repository.Repository), watched
         headers, data = self._requester.requestJsonAndCheck(
             "DELETE",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
 
     def accept_invitation(self, invitation):
