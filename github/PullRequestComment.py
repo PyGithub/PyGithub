@@ -81,6 +81,14 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         return self._id.value
 
     @property
+    def in_reply_to_id(self):
+        """
+        :type: integer
+        """
+        self._completeIfNotSet(self._in_reply_to_id)
+        return self._in_reply_to_id.value
+
+    @property
     def original_commit_id(self):
         """
         :type: string
@@ -221,6 +229,7 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
         self._created_at = github.GithubObject.NotSet
         self._diff_hunk = github.GithubObject.NotSet
         self._id = github.GithubObject.NotSet
+        self._in_reply_to_id = github.GithubObject.NotSet
         self._original_commit_id = github.GithubObject.NotSet
         self._original_position = github.GithubObject.NotSet
         self._path = github.GithubObject.NotSet
@@ -242,6 +251,8 @@ class PullRequestComment(github.GithubObject.CompletableGithubObject):
             self._diff_hunk = self._makeStringAttribute(attributes["diff_hunk"])
         if "id" in attributes:  # pragma no branch
             self._id = self._makeIntAttribute(attributes["id"])
+        if "in_reply_to_id" in attributes:  # pragma no branch
+            self._in_reply_to_id = self._makeIntAttribute(attributes["in_reply_to_id"])
         if "original_commit_id" in attributes:  # pragma no branch
             self._original_commit_id = self._makeStringAttribute(attributes["original_commit_id"])
         if "original_position" in attributes:  # pragma no branch
