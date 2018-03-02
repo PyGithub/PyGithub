@@ -660,7 +660,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
         if "site_admin" in attributes:  # pragma no branch
-            self._site_admin = self._makeStringAttribute(attributes["site_admin"])
+            self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_url" in attributes:  # pragma no branch
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
