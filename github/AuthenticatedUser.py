@@ -401,7 +401,7 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
         headers, data = self._requester.requestJsonAndCheck(
             "PUT",
             "/repos/" + watched._identity + "/subscription",
-            input = { "subscribed": True }
+            input={"subscribed": True}
         )
 
     def create_authorization(self, scopes=github.GithubObject.NotSet, note=github.GithubObject.NotSet, note_url=github.GithubObject.NotSet, client_id=github.GithubObject.NotSet, client_secret=github.GithubObject.NotSet, onetime_password=None):
@@ -1004,16 +1004,16 @@ class AuthenticatedUser(github.GithubObject.CompletableGithubObject):
 
     def has_in_watched(self, watched):
         """
-        :calls: `GET /user/watched/:owner/:repo <http://developer.github.com/v3/activity/starring>`_
+        :calls: `GET /repos/:owner/:repo/subscription <http://developer.github.com/v3/activity/watching>`_
         :param watched: :class:`github.Repository.Repository`
         :rtype: bool
         """
         assert isinstance(watched, github.Repository.Repository), watched
         status, headers, data = self._requester.requestJson(
             "GET",
-            "/user/watched/" + watched._identity
+            "/repos/" + watched._identity + "/subscription"
         )
-        return status == 204
+        return status == 200
 
     def remove_from_emails(self, *emails):
         """
