@@ -89,7 +89,7 @@ class PaginatedList(PaginatedListBase):
     You can simply enumerate through instances of this class::
 
         for repo in user.get_repos():
-            print repo.name
+            print(repo.name)
 
     You can also index them or take slices::
 
@@ -99,7 +99,7 @@ class PaginatedList(PaginatedListBase):
     If you want to iterate in reversed order, just do::
 
         for repo in user.get_repos().reversed:
-            print repo.name
+            print(repo.name)
 
     And if you really need it, you can explicitely access a specific page::
 
