@@ -301,6 +301,14 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         return self._repos_url.value
 
     @property
+    def site_admin(self):
+        """
+        :type: bool
+        """
+        self._completeIfNotSet(self._site_admin)
+        return self._site_admin.value
+
+    @property
     def starred_url(self):
         """
         :type: string
@@ -580,6 +588,7 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
         self._public_repos = github.GithubObject.NotSet
         self._received_events_url = github.GithubObject.NotSet
         self._repos_url = github.GithubObject.NotSet
+        self._site_admin = github.GithubObject.NotSet
         self._starred_url = github.GithubObject.NotSet
         self._subscriptions_url = github.GithubObject.NotSet
         self._total_private_repos = github.GithubObject.NotSet
@@ -650,6 +659,8 @@ class NamedUser(github.GithubObject.CompletableGithubObject):
             self._received_events_url = self._makeStringAttribute(attributes["received_events_url"])
         if "repos_url" in attributes:  # pragma no branch
             self._repos_url = self._makeStringAttribute(attributes["repos_url"])
+        if "site_admin" in attributes:  # pragma no branch
+            self._site_admin = self._makeBoolAttribute(attributes["site_admin"])
         if "starred_url" in attributes:  # pragma no branch
             self._starred_url = self._makeStringAttribute(attributes["starred_url"])
         if "subscriptions_url" in attributes:  # pragma no branch
