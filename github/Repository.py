@@ -1605,6 +1605,20 @@ class Repository(github.GithubObject.CompletableGithubObject):
             None
         )
 
+    def delete_git_ref(self, ref):
+        """
+        :calls: `DELETE /repos/:owner/:repo/git/ref <http://developer.github.com/v3/git/refs>`_
+        :rtype: :none
+        """
+        prefix = "/git/refs/"
+        if not self._requester.FIX_REPO_GET_GIT_REF:
+            prefix = "/git/"
+
+        self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + prefix + ref
+        )
+
     def get_git_tag(self, sha):
         """
         :calls: `GET /repos/:owner/:repo/git/tags/:sha <http://developer.github.com/v3/git/tags>`_
