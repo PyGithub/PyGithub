@@ -450,7 +450,7 @@ class Github(object):
         """
         :calls: `GET /search/commits <http://developer.github.com/v3/search>`_
         :param query: string
-        :param sort: string ('indexed')
+        :param sort: string ('author-date', 'committer-date')
         :param order: string ('asc', 'desc')
         :param qualifiers: keyword dict query qualifiers
         :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Commit.Commit`
@@ -458,7 +458,7 @@ class Github(object):
         assert isinstance(query, (str, unicode)), query
         url_parameters = dict()
         if sort is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
-            assert sort in ('indexed',), sort
+            assert sort in ('author-date', 'committer-date'), sort
             url_parameters["sort"] = sort
         if order is not github.GithubObject.NotSet:  # pragma no branch (Should be covered)
             assert order in ('asc', 'desc'), order
