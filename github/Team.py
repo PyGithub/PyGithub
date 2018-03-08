@@ -210,6 +210,19 @@ class Team(github.GithubObject.CompletableGithubObject):
         )
         self._useAttributes(data)
 
+    def get_invitations(self):
+        """
+        :calls: `GET /teams/:org/invitations <https://developer.github.com/v3/orgs/teams/members`_
+        :param member: :class:`github.Nameduser.NamedUser`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/invitations",
+            None,
+        )
+
     def get_members(self):
         """
         :calls: `GET /teams/:id/members <http://developer.github.com/v3/orgs/teams>`_
