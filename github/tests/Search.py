@@ -55,6 +55,10 @@ class Search(Framework.TestCase):
         issues = self.g.search_issues("compile", sort="comments", order="desc", language="C++")
         self.assertListKeyBegin(issues, lambda i: i.id, [12068673, 23250111, 14371957, 9423897, 24277400, 2408877, 11338741, 13980502, 27697165, 23102422])
 
+    def testPaginateSearchCommits(self):
+        commits = self.g.search_commits(query="hash:5b0224e868cc9242c9450ef02efbe3097abd7ba2")
+        self.assertEqual(commits.totalCount, 3)
+
     def testSearchCode(self):
         files = self.g.search_code("toto", sort="indexed", order="asc", user="jacquev6")
         self.assertListKeyEqual(files, lambda f: f.name, [u'Commit.setUp.txt', u'PullRequest.testGetFiles.txt', u'NamedUser.testGetEvents.txt', u'PullRequest.testCreateComment.txt', u'PullRequestFile.setUp.txt', u'Repository.testGetIssuesWithWildcards.txt', u'Repository.testGetIssuesWithArguments.txt', u'test_ebnf.cpp', u'test_abnf.cpp', u'PullRequestFile.py', u'SystemCalls.py', u'tests.py', u'LexerTestCase.py', u'ParserTestCase.py'])
