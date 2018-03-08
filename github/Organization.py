@@ -279,6 +279,30 @@ class Organization(github.GithubObject.CompletableGithubObject):
         self._completeIfNotSet(self._url)
         return self._url.value
 
+    def add_membership(self, member):
+        """
+        :calls: `PUT /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members`_
+        :param member: :class:`github.Nameduser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "PUT",
+            self.url + "/memberships/" + member._identity
+        )
+
+    def remove_membership(self, member):
+        """
+        :calls: `DELETE /orgs/:org/memberships/:user <https://developer.github.com/v3/orgs/members`_
+        :param member: :class:`github.Nameduser.NamedUser`
+        :rtype: None
+        """
+        assert isinstance(member, github.NamedUser.NamedUser), member
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/memberships/" + member._identity
+        )
+
     def add_to_public_members(self, public_member):
         """
         :calls: `PUT /orgs/:org/public_members/:user <http://developer.github.com/v3/orgs/members>`_
@@ -497,6 +521,19 @@ class Organization(github.GithubObject.CompletableGithubObject):
             self._requester,
             self.url + "/issues",
             url_parameters
+        )
+
+    def get_invitations(self):
+        """
+        :calls: `GET /orgs/:org/invitations <https://developer.github.com/v3/orgs/members`_
+        :param member: :class:`github.Nameduser.NamedUser`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.NamedUser.NamedUser`
+        """
+        return github.PaginatedList.PaginatedList(
+            github.NamedUser.NamedUser,
+            self._requester,
+            self.url + "/invitations",
+            None,
         )
 
     def get_members(self, filter_=github.GithubObject.NotSet,
