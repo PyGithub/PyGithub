@@ -4,6 +4,7 @@
 [![Build Status](https://travis-ci.org/PyGithub/PyGithub.svg?branch=master)](https://travis-ci.org/PyGithub/PyGithub)
 [![readthedocs](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](http://pygithub.readthedocs.io/en/latest/?badge=latest)
 [![License](https://img.shields.io/badge/license-LGPL-blue.svg)](https://en.wikipedia.org/wiki/GNU_Lesser_General_Public_License)
+[![Join the chat at https://gitter.im/PyGithub/PyGithub](https://badges.gitter.im/PyGithub/PyGithub.svg)](https://gitter.im/PyGithub/PyGithub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Open Source Helpers](https://www.codetriage.com/pygithub/pygithub/badges/users.svg)](https://www.codetriage.com/pygithub/pygithub)
 
 PyGitHub is a Python (2 and 3) library to access the [GitHub API v3].
