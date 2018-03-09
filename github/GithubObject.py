@@ -27,7 +27,6 @@
 import sys
 import datetime
 from operator import itemgetter
-from past.builtins import long
 
 import GithubException
 import Consts
