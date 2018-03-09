@@ -25,9 +25,8 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-
 import github.GitTreeElement
+import github.GithubObject
 
 
 class GitTree(github.GithubObject.CompletableGithubObject):

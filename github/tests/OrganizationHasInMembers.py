@@ -23,7 +23,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from . import Framework
 
 
 class OrganizationHasInMembers(Framework.TestCase):

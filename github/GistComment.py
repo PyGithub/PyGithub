@@ -25,8 +25,9 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
+from six import string_types
 
+import github.GithubObject
 import github.NamedUser
 
 
@@ -102,7 +103,7 @@ class GistComment(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: None
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, string_types), body
         post_parameters = {
             "body": body,
         }

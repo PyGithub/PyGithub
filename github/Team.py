@@ -26,11 +26,12 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-import github.PaginatedList
+from six import string_types
 
-import github.Repository
+import github.GithubObject
 import github.NamedUser
+import github.PaginatedList
+import github.Repository
 
 
 class Team(github.GithubObject.CompletableGithubObject):
@@ -134,7 +135,7 @@ class Team(github.GithubObject.CompletableGithubObject):
         """
         assert isinstance(member, github.NamedUser.NamedUser), member
         assert role is github.GithubObject.NotSet or isinstance(
-            role, (str, unicode)), role
+            role, string_types), role
         if role is not github.GithubObject.NotSet:
             assert role in ['member', 'maintainer']
             put_parameters = {
@@ -196,8 +197,8 @@ class Team(github.GithubObject.CompletableGithubObject):
         :param permission: string
         :rtype: None
         """
-        assert isinstance(name, (str, unicode)), name
-        assert permission is github.GithubObject.NotSet or isinstance(permission, (str, unicode)), permission
+        assert isinstance(name, string_types), name
+        assert permission is github.GithubObject.NotSet or isinstance(permission, string_types), permission
         post_parameters = {
             "name": name,
         }

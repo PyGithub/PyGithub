@@ -24,10 +24,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-
-import github
-import datetime
+from . import Framework
 
 
 class ContentFile(Framework.TestCase):

@@ -22,8 +22,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-import github
+from . import Framework
 
 
 class Issue174(Framework.TestCase):

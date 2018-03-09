@@ -22,9 +22,8 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-
 import github.NamedUser
+from . import Framework
 
 
 class RawData(Framework.TestCase):

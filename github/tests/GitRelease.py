@@ -22,11 +22,11 @@
 #                                                                              #
 # ##############################################################################
 
+import datetime
 import os
 import zipfile
-import datetime
-import Framework
-from pprint import pprint
+
+from . import Framework
 
 
 class Release(Framework.TestCase):

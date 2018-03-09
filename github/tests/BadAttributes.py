@@ -24,8 +24,10 @@
 
 import datetime
 
-import Framework
+from six import string_types
+
 import github
+from . import Framework
 
 
 # Replay data is forged to simulate bad things returned by Github
@@ -37,10 +39,10 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             user.name
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, 42)
-            self.assertEqual(e.expected_type, (str, unicode))
+            self.assertEqual(e.expected_type, string_types)
             self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
@@ -51,10 +53,10 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             user.created_at
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, "foobar")
-            self.assertEqual(e.expected_type, (str, unicode))
+            self.assertEqual(e.expected_type, string_types)
             self.assertEqual(e.transformation_exception.__class__, ValueError)
             self.assertEqual(e.transformation_exception.args, ("time data 'foobar' does not match format '%Y-%m-%dT%H:%M:%SZ'",))
         self.assertTrue(raised)
@@ -66,10 +68,10 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             user.updated_at
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, 42)
-            self.assertEqual(e.expected_type, (str, unicode))
+            self.assertEqual(e.expected_type, string_types)
             self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
@@ -80,10 +82,10 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             hook.events
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, ["push", 42])
-            self.assertEqual(e.expected_type, [(str, unicode)])
+            self.assertEqual(e.expected_type, [string_types])
             self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
@@ -95,7 +97,7 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             owner.avatar_url
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, 42)
         self.assertTrue(raised)
@@ -106,7 +108,7 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             commit.files
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, [42])
             self.assertEqual(e.expected_type, [dict])
@@ -119,10 +121,10 @@ class BadAttributes(Framework.TestCase):
         raised = False
         try:
             gist.files
-        except github.BadAttributeException, e:
+        except github.BadAttributeException as e:
             raised = True
             self.assertEqual(e.actual_value, {"test.py": 42})
-            self.assertEqual(e.expected_type, {(str, unicode): dict})
+            self.assertEqual(e.expected_type, {string_types: dict})
             self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)
 
@@ -139,9 +141,9 @@ class BadAttributes(Framework.TestCase):
             if hook.name == "circleci":
                 try:
                     hook.events
-                except github.BadAttributeException, e:
+                except github.BadAttributeException as e:
                     raised = True
                     self.assertEqual(e.actual_value, [["commit_comment", "create", "delete", "download", "follow", "fork", "fork_apply", "gist", "gollum", "issue_comment", "issues", "member", "public", "pull_request", "pull_request_review_comment", "push", "status", "team_add", "watch"]])
-                    self.assertEqual(e.expected_type, [(str, unicode)])
+                    self.assertEqual(e.expected_type, [string_types])
                     self.assertEqual(e.transformation_exception, None)
         self.assertTrue(raised)

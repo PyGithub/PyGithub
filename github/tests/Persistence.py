@@ -22,10 +22,10 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-import github
-
 from io import BytesIO as IO
+
+import github.Repository
+from . import Framework
 
 
 class Persistence(Framework.TestCase):

@@ -25,10 +25,9 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-
 import github.Commit
 import github.File
+import github.GithubObject
 
 
 class Comparison(github.GithubObject.CompletableGithubObject):

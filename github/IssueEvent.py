@@ -26,7 +26,6 @@
 # ##############################################################################
 
 import github.GithubObject
-
 import github.Issue
 import github.NamedUser
 

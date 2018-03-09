@@ -25,9 +25,8 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-
 import github.CommitStatus
+import github.GithubObject
 import github.Repository
 
 

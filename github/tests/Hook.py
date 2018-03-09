@@ -24,9 +24,9 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
-
 import datetime
+
+from . import Framework
 
 
 class Hook(Framework.TestCase):

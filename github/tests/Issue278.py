@@ -22,7 +22,7 @@
 #                                                                              #
 # ##############################################################################
 
-import Framework
+from . import Framework
 
 
 # Replay data forged by adding nulls to PaginatedList.setUp.txt and PaginatedList.testIteration.txt

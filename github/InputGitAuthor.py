@@ -24,6 +24,8 @@
 #                                                                              #
 # ##############################################################################
 
+from six import string_types
+
 import github.GithubObject
 
 
@@ -38,9 +40,9 @@ class InputGitAuthor(object):
         :param date: string
         """
 
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(email, (str, unicode)), email
-        assert date is github.GithubObject.NotSet or isinstance(date, (str, unicode)), date  # @todo Datetime?
+        assert isinstance(name, string_types), name
+        assert isinstance(email, string_types), email
+        assert date is github.GithubObject.NotSet or isinstance(date, string_types), date  # @todo Datetime?
 
         self.__name = name
         self.__email = email

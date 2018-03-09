@@ -22,19 +22,18 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-import github.PaginatedList
-
-import github.Gist
-import github.Repository
-import github.NamedUser
-import github.Plan
-import github.Organization
-import github.UserKey
-import github.Issue
-import github.Event
 import github.Authorization
+import github.Event
+import github.Gist
+import github.GithubObject
+import github.Issue
+import github.NamedUser
 import github.Notification
+import github.Organization
+import github.PaginatedList
+import github.Plan
+import github.Repository
+import github.UserKey
 
 INTEGRATION_PREVIEW_HEADERS = {"Accept": "application/vnd.github.machine-man-preview+json"}
 

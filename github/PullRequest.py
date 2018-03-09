@@ -27,16 +27,18 @@
 #                                                                              #
 # ##############################################################################
 
-import github.GithubObject
-import github.PaginatedList
+from six import integer_types, string_types
 
-import github.PullRequestMergeStatus
-import github.NamedUser
-import github.PullRequestPart
-import github.PullRequestComment
-import github.File
-import github.IssueComment
 import github.Commit
+import github.File
+import github.GithubObject
+import github.IssueComment
+import github.Milestone
+import github.NamedUser
+import github.PaginatedList
+import github.PullRequestComment
+import github.PullRequestMergeStatus
+import github.PullRequestPart
 import github.PullRequestReview
 import github.PullRequestReviewerRequest
 
@@ -349,10 +351,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param position: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, string_types), body
         assert isinstance(commit_id, github.Commit.Commit), commit_id
-        assert isinstance(path, (str, unicode)), path
-        assert isinstance(position, (int, long)), position
+        assert isinstance(path, string_types), path
+        assert isinstance(position, integer_types), position
         post_parameters = {
             "body": body,
             "commit_id": commit_id._identity,
@@ -372,7 +374,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param body: string
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(body, (str, unicode)), body
+        assert isinstance(body, string_types), body
         post_parameters = {
             "body": body,
         }
@@ -392,10 +394,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param base: string
         :rtype: None
         """
-        assert title is github.GithubObject.NotSet or isinstance(title, (str, unicode)), title
-        assert body is github.GithubObject.NotSet or isinstance(body, (str, unicode)), body
-        assert state is github.GithubObject.NotSet or isinstance(state, (str, unicode)), state
-        assert base is github.GithubObject.NotSet or isinstance(base, (str, unicode)), base
+        assert title is github.GithubObject.NotSet or isinstance(title, string_types), title
+        assert body is github.GithubObject.NotSet or isinstance(body, string_types), body
+        assert state is github.GithubObject.NotSet or isinstance(state, string_types), state
+        assert base is github.GithubObject.NotSet or isinstance(base, string_types), base
         post_parameters = dict()
         if title is not github.GithubObject.NotSet:
             post_parameters["title"] = title
@@ -426,7 +428,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.PullRequestComment.PullRequestComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self.url) + "/comments/" + str(id)
@@ -482,7 +484,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.IssueComment.IssueComment`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self._parentUrl(self._parentUrl(self.url)) + "/issues/comments/" + str(id)
@@ -507,7 +509,7 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param id: integer
         :rtype: :class:`github.PullRequestReview.PullRequestReview`
         """
-        assert isinstance(id, (int, long)), id
+        assert isinstance(id, integer_types), id
         headers, data = self._requester.requestJsonAndCheck(
             "GET",
             self.url + "/reviews/" + str(id),
@@ -559,10 +561,10 @@ class PullRequest(github.GithubObject.CompletableGithubObject):
         :param commit_message: string
         :rtype: :class:`github.PullRequestMergeStatus.PullRequestMergeStatus`
         """
-        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, (str, unicode)), commit_message
-        assert commit_title is github.GithubObject.NotSet or isinstance(commit_title, (str, unicode)), commit_title
-        assert merge_method is github.GithubObject.NotSet or isinstance(merge_method, (str, unicode)), merge_method
-        assert sha is github.GithubObject.NotSet or isinstance(sha, (str, unicode)), sha
+        assert commit_message is github.GithubObject.NotSet or isinstance(commit_message, string_types), commit_message
+        assert commit_title is github.GithubObject.NotSet or isinstance(commit_title, string_types), commit_title
+        assert merge_method is github.GithubObject.NotSet or isinstance(merge_method, string_types), merge_method
+        assert sha is github.GithubObject.NotSet or isinstance(sha, string_types), sha
         post_parameters = dict()
         if commit_message is not github.GithubObject.NotSet:
             post_parameters["commit_message"] = commit_message

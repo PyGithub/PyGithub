@@ -26,9 +26,8 @@
 # ##############################################################################
 
 import github.GithubObject
-
-import github.Repository
 import github.NotificationSubject
+import github.Repository
 
 
 class Notification(github.GithubObject.CompletableGithubObject):

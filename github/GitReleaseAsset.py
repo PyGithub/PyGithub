@@ -26,7 +26,10 @@
 #                                                                              #
 # ##############################################################################
 
+from six import string_types
+
 import github.GithubObject
+import github.NamedUser
 
 
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
@@ -168,8 +171,8 @@ class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
         Update asset metadata.
         :rtype: github.GitReleaseAsset.GitReleaseAsset
         """
-        assert isinstance(name, (str, unicode)), name
-        assert isinstance(label, (str, unicode)), label
+        assert isinstance(name, string_types), name
+        assert isinstance(label, string_types), label
         post_parameters = {
             "name": name,
             "label": label
