@@ -351,5 +351,3 @@ with open("apis.rst", "w") as apis:
             if verb in verbs:
                 apis.write("  * " + verb + ": " + " or ".join(sorted(verbs[verb])) + "\n")
         apis.write("\n")
-
-# shutil.copyfile("../Contributing.rst", "contributing.rst")
