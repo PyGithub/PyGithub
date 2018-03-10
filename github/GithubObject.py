@@ -58,7 +58,23 @@ class _BadAttribute:
         raise GithubException.BadAttributeException(self.__value, self.__expectedType, self.__exception)
 
 
-class GithubObject(object):
+class OldStyleMigration(object):
+    '''
+    This class is a patching migration from old-timers
+    camel style to a default PEP8 Python style.
+    It allows to continue develop in a new style, slowly
+    moving away from the old style.
+    '''
+    __migrate_methods = {'_initAttributes': '_init_attributes',
+                         '_useAttributes': '_use_attributes'}
+
+    def migrate_old_style(self):
+        for mtd, mtd_alias in self.__migrate_methods.items():
+            if hasattr(self, mtd_alias):
+                setattr(self, mtd, getattr(self, mtd_alias))
+
+
+class GithubObject(OldStyleMigration):
     """
     Base class for all classes representing objects returned by the API.
     """
@@ -73,6 +89,7 @@ class GithubObject(object):
         cls.CHECK_AFTER_INIT_FLAG = flag
 
     def __init__(self, requester, headers, attributes, completed):
+        self.migrate_old_style()
         self._requester = requester
         self._initAttributes()
         self._storeAndUseAttributes(headers, attributes)
@@ -131,7 +148,7 @@ class GithubObject(object):
             try:
                 return _ValuedAttribute(transform(value))
             except Exception, e:
-                return _BadAttribute(value, type, e)
+                return GithubObject.__makeSimpleAttribute(value, (unicode, str))
         else:
             return _BadAttribute(value, type)
 

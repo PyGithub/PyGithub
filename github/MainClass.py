@@ -35,11 +35,9 @@ import jwt
 
 from Requester import Requester, json
 import AuthenticatedUser
-import NamedUser
-import Organization
-import Gist
 import github.PaginatedList
 import Repository
+import Project
 import Installation
 import Legacy
 import github.GithubObject
@@ -50,7 +48,6 @@ import StatusMessage
 import RateLimit
 import InstallationAuthorization
 import GithubException
-import Invitation
 
 atLeastPython3 = sys.hexversion >= 0x03000000
 
@@ -79,7 +76,7 @@ class Github(object):
         assert login_or_token is None or isinstance(login_or_token, (str, unicode)), login_or_token
         assert password is None or isinstance(password, (str, unicode)), password
         assert isinstance(base_url, (str, unicode)), base_url
-        assert isinstance(timeout, (int, long)), timeout
+        assert isinstance(timeout, (int, long, object)), timeout
         assert client_id is None or isinstance(client_id, (str, unicode)), client_id
         assert client_secret is None or isinstance(client_secret, (str, unicode)), client_secret
         assert user_agent is None or isinstance(user_agent, (str, unicode)), user_agent
@@ -231,6 +228,16 @@ class Github(object):
             "/repositories",
             url_parameters
         )
+
+    def get_projects(self, owner, repo):
+        '''
+        :calls: 'GET /repos/:owner/:repo/projects
+        :return: :class github.Project.Project
+        '''
+        uri = "/repos/{0}/{1}/projects".format(owner, repo)
+        return github.PaginatedList.PaginatedList(github.Project.Project,
+                                                  self.__requester, uri, dict(),
+                                                  headers=github.Project.Project._preview_headers)
 
     def get_gist(self, id):
         """
