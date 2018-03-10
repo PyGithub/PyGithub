@@ -97,6 +97,9 @@ class Organization(Framework.TestCase):
     def testGetPublicMembers(self):
         self.assertListKeyEqual(self.org.get_public_members(), lambda u: u.login, ["jacquev6"])
 
+    def testGetHooks(self):
+        self.assertListKeyEqual(self.org.get_hooks(), lambda h: h.id, [257993])
+
     def testGetIssues(self):
         self.assertListKeyEqual(self.org.get_issues(), lambda i: i.id, [])
 
@@ -125,6 +128,15 @@ class Organization(Framework.TestCase):
 
     def testGetTeams(self):
         self.assertListKeyEqual(self.org.get_teams(), lambda t: t.name, ["Members", "Owners"])
+
+    def testCreateHookWithMinimalParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"})
+        self.assertEqual(hook.id, 257967)
+
+    def testCreateHookWithAllParameters(self):
+        hook = self.org.create_hook("web", {"url": "http://foobar.com"}, ["fork"], False)
+        self.assertTrue(hook.active)  # WTF
+        self.assertEqual(hook.id, 257993)
 
     def testCreateRepoWithMinimalArguments(self):
         repo = self.org.create_repo(name="TestPyGithub")
