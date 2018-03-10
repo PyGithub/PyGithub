@@ -67,6 +67,7 @@ Projects using PyGithub
 * https://github.com/zsiciarz/aquila-dsp.org
 * https://github.com/robcowie/virtualenvwrapper.github
 * https://github.com/kokosing/git-gifi - Git and github enhancements to git.
+* https://github.com/csurfer/gitsuggest - A tool to suggest github repositories based on the repositories you have shown interest in
 
 They talk about PyGithub
 ------------------------
