@@ -440,6 +440,18 @@ class Organization(github.GithubObject.CompletableGithubObject):
         )
         return github.Team.Team(self._requester, headers, data, completed=True)
 
+    def delete_hook(self, id):
+        """
+        :calls: `DELETE /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
+        :param id: integer
+        :rtype: None`
+        """
+        assert isinstance(id, (int, long)), id
+        headers, data = self._requester.requestJsonAndCheck(
+            "DELETE",
+            self.url + "/hooks/" + str(id)
+        )
+
     def edit(self, billing_email=github.GithubObject.NotSet, blog=github.GithubObject.NotSet, company=github.GithubObject.NotSet, email=github.GithubObject.NotSet, location=github.GithubObject.NotSet, name=github.GithubObject.NotSet):
         """
         :calls: `PATCH /orgs/:org <http://developer.github.com/v3/orgs>`_
@@ -476,6 +488,36 @@ class Organization(github.GithubObject.CompletableGithubObject):
             input=post_parameters
         )
         self._useAttributes(data)
+
+    def edit_hook(self, id, name, config, events=github.GithubObject.NotSet, active=github.GithubObject.NotSet):
+        """
+        :calls: `PATCH /orgs/:owner/hooks/:id <http://developer.github.com/v3/orgs/hooks>`_
+        :param id: integer
+        :param name: string
+        :param config: dict
+        :param events: list of string
+        :param active: bool
+        :rtype: :class:`github.Hook.Hook`
+        """
+        assert isinstance(id, (int, long)), id
+        assert isinstance(name, (str, unicode)), name
+        assert isinstance(config, dict), config
+        assert events is github.GithubObject.NotSet or all(isinstance(element, (str, unicode)) for element in events), events
+        assert active is github.GithubObject.NotSet or isinstance(active, bool), active
+        post_parameters = {
+            "name": name,
+            "config": config,
+        }
+        if events is not github.GithubObject.NotSet:
+            post_parameters["events"] = events
+        if active is not github.GithubObject.NotSet:
+            post_parameters["active"] = active
+        headers, data = self._requester.requestJsonAndCheck(
+            "PATCH",
+            self.url + "/hooks/" + str(id),
+            input=post_parameters
+        )
+        return github.Hook.Hook(self._requester, headers, data, completed=True)
 
     def get_events(self):
         """
