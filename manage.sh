@@ -4,7 +4,6 @@
 function publish {
     bump
     readme
-    #doc
     push
 }
 
@@ -43,18 +42,6 @@ function readme {
     gitlog=$(git log v$previousVersion.. --oneline --pretty=format:'* %s (%h)' | grep -v "Merge")
     today=$(date "+(%B %m, %Y)")
     echo -e "Change log\n==========\n\nStable versions\n~~~~~~~~~~~~~~~\n\nVersion $version $today\n-----------------------------------\n\n$gitlog\n$changelog" > doc/changes.rst
-}
-
-function doc {
-    rm -rf gh-pages
-    git clone . gh-pages -b gh-pages || exit
-    sphinx-build -b html -d doc/doctrees doc gh-pages/v1 || exit
-
-    cd gh-pages
-    git add . --all || exit
-    git commit --message "Generate doc of v1" || exit
-    git push origin gh-pages || exit
-    cd ..
 }
 
 function push {
