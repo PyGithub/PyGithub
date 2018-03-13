@@ -6,7 +6,7 @@
 # Copyright 2013 Vincent Jacques <vincent@vincent-jacques.net>                 #
 #                                                                              #
 # This file is part of PyGithub.                                               #
-# http://pygithub.readthedocs.io/                            #
+# http://pygithub.readthedocs.io/                                              #
 #                                                                              #
 # PyGithub is free software: you can redistribute it and/or modify it under    #
 # the terms of the GNU Lesser General Public License as published by the Free  #
@@ -41,7 +41,7 @@ def generateLicenseSection(filename):
         yield line
     yield "#                                                                              #"
     yield "# This file is part of PyGithub.                                               #"
-    yield "# http://pygithub.readthedocs.io/                            #"
+    yield "# http://pygithub.readthedocs.io/                                              #"
     yield "#                                                                              #"
     yield "# PyGithub is free software: you can redistribute it and/or modify it under    #"
     yield "# the terms of the GNU Lesser General Public License as published by the Free  #"
