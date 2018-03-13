@@ -30,7 +30,7 @@ import github.GithubObject
 
 class Permissions(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Permissionss as returned for example by http://developer.github.com/v3/todo
+    This class represents Permissions
     """
 
     def __repr__(self):

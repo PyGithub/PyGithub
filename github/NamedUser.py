@@ -40,7 +40,7 @@ import github.Event
 
 class NamedUser(github.GithubObject.CompletableGithubObject):
     """
-    This class represents NamedUsers as returned for example by http://developer.github.com/v3/todo
+    This class represents NamedUsers. The reference can be found here https://developer.github.com/v3/users/#get-a-single-user
     """
 
     def __repr__(self):

@@ -36,8 +36,7 @@ import github
 
 class Stargazer(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Stargazers with the date of starring as returned by
-    https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps
+    This class represents Stargazers. The reference can be found here https://developer.github.com/v3/activity/starring/#alternative-response-with-star-creation-timestamps
     """
 
     def __repr__(self):

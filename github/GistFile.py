@@ -30,7 +30,7 @@ import github.GithubObject
 
 class GistFile(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents GistFiles as returned for example by http://developer.github.com/v3/todo
+    This class represents GistFiles
     """
 
     def __repr__(self):

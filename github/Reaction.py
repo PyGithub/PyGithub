@@ -33,7 +33,7 @@ import github.NamedUser
 
 class Reaction(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Reaction
+    This class represents Reactions. The reference can be found here https://developer.github.com/v3/reactions/
     """
 
     def __repr__(self):

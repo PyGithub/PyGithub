@@ -33,7 +33,7 @@ import github.NamedUser
 
 class IssueEvent(github.GithubObject.CompletableGithubObject):
     """
-    This class represents IssueEvents as returned for example by http://developer.github.com/v3/todo
+    This class represents IssueEvents. The reference can be found here https://developer.github.com/v3/issues/events/
     """
 
     def __repr__(self):

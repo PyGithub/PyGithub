@@ -33,7 +33,7 @@ import github.NamedUser
 
 class IssueComment(github.GithubObject.CompletableGithubObject):
     """
-    This class represents IssueComments as returned for example by http://developer.github.com/v3/todo
+    This class represents IssueComments. The reference can be found here https://developer.github.com/v3/issues/comments/
     """
 
     def __repr__(self):

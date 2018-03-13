@@ -30,7 +30,7 @@ import github.GithubObject
 
 class Download(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Downloads as returned for example by http://developer.github.com/v3/todo
+    This class represents Downloads. The reference can be found here https://developer.github.com/v3/repos/downloads/
     """
 
     def __repr__(self):

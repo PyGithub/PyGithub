@@ -29,7 +29,7 @@ import github.GithubObject
 
 class GitignoreTemplate(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents GitignoreTemplates as returned for example by http://developer.github.com/v3/todo
+    This class represents GitignoreTemplates. The reference can be found here https://developer.github.com/v3/gitignore/
     """
 
     def __repr__(self):

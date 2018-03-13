@@ -37,7 +37,7 @@ atLeastPython3 = sys.hexversion >= 0x03000000
 
 class ContentFile(github.GithubObject.CompletableGithubObject):
     """
-    This class represents ContentFiles as returned for example by http://developer.github.com/v3/todo
+    This class represents ContentFiles. The reference can be found here https://developer.github.com/v3/repos/contents/#get-contents
     """
 
     def __repr__(self):

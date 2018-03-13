@@ -32,7 +32,7 @@ import github.NamedUser
 
 class GistComment(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GistComments as returned for example by http://developer.github.com/v3/todo
+    This class represents GistComments. The reference can be found here https://developer.github.com/v3/gists/comments/
     """
 
     def __repr__(self):

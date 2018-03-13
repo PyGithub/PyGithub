@@ -33,7 +33,7 @@ import github.GitObject
 
 class GitTag(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitTags as returned for example by http://developer.github.com/v3/todo
+    This class represents GitTags. The reference can be found here https://developer.github.com/v3/git/tags/
     """
 
     def __repr__(self):

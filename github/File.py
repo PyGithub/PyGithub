@@ -30,7 +30,7 @@ import github.GithubObject
 
 class File(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Files as returned for example by http://developer.github.com/v3/todo
+    This class represents Files
     """
 
     def __repr__(self):

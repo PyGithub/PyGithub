@@ -30,7 +30,7 @@ import github.GithubObject
 
 class GitObject(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents GitObjects as returned for example by http://developer.github.com/v3/todo
+    This class represents GitObjects
     """
 
     def __repr__(self):

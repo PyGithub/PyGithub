@@ -31,7 +31,7 @@ import github.NamedUser
 
 class InstallationAuthorization(github.GithubObject.NonCompletableGithubObject):
     """
-    InstallationAuthorization as obtained from a GitHub integration.
+    This class represents InstallationAuthorizations
     """
 
     def __repr__(self):

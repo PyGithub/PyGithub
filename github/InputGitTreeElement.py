@@ -29,6 +29,7 @@ import github.GithubObject
 
 class InputGitTreeElement(object):
     """
+    This class represents InputGitTreeElements
     """
 
     def __init__(self, path, mode, type, content=github.GithubObject.NotSet, sha=github.GithubObject.NotSet):

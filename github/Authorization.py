@@ -32,7 +32,7 @@ import github.AuthorizationApplication
 
 class Authorization(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Authorizations as returned for example by http://developer.github.com/v3/todo
+    This class represents Authorizations. The reference can be found here https://developer.github.com/v3/oauth_authorizations/
     """
 
     def __repr__(self):

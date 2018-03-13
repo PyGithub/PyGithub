@@ -41,7 +41,7 @@ INTEGRATION_PREVIEW_HEADERS = {"Accept": "application/vnd.github.machine-man-pre
 
 class Installation(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Installations as in https://developer.github.com/v3/integrations/installations
+    This class represents Installations. The reference can be found here https://developer.github.com/v3/apps/installations/
     """
 
     def __repr__(self):

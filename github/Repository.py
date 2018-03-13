@@ -2123,7 +2123,7 @@ class Repository(github.GithubObject.CompletableGithubObject):
     def get_releases(self):
         """
         :calls: `GET /repos/:owner/:repo/releases <http://developer.github.com/v3/repos>`_
-        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.Tag.Tag`
+        :rtype: :class:`github.PaginatedList.PaginatedList` of :class:`github.GitRelease.GitRelease`
         """
         return github.PaginatedList.PaginatedList(
             github.GitRelease.GitRelease,

@@ -29,6 +29,7 @@ import github.GithubObject
 
 class InputFileContent(object):
     """
+    This class represents InputFileContents
     """
 
     def __init__(self, content, new_name=github.GithubObject.NotSet):

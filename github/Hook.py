@@ -32,7 +32,7 @@ import github.HookResponse
 
 class Hook(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Hooks as returned for example by http://developer.github.com/v3/repos/hooks
+    This class represents Hooks. The reference can be found here http://developer.github.com/v3/repos/hooks
     """
 
     def __repr__(self):

@@ -30,7 +30,7 @@ import github.GitReleaseAsset
 
 class GitRelease(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitRelease as returned for example by https://developer.github.com/v3/repos/releases
+    This class represents GitReleases. The reference can be found here https://developer.github.com/v3/repos/releases
     """
 
     def __repr__(self):

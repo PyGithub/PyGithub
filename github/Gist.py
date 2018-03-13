@@ -37,7 +37,7 @@ import github.GistHistoryState
 
 class Gist(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Gists as returned for example by http://developer.github.com/v3/todo
+    This class represents Gists. The reference can be found here https://developer.github.com/v3/gists/
     """
 
     def __repr__(self):

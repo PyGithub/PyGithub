@@ -27,7 +27,7 @@ import github.GithubObject
 
 class StatsCodeFrequency(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents statistics of code frequency. The reference can be found here http://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
+    This class represents statistics of StatsCodeFrequencies. The reference can be found here http://developer.github.com/v3/repos/statistics/#get-the-number-of-additions-and-deletions-per-week
     """
 
     @property

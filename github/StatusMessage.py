@@ -27,7 +27,7 @@ import github.GithubObject
 
 class StatusMessage(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents status messages as defined in https://status.github.com/api
+    This class represents StatusMessages. The reference can be found here https://status.github.com/api
     """
 
     def __repr__(self):

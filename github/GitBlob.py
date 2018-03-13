@@ -30,7 +30,7 @@ import github.GithubObject
 
 class GitBlob(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitBlobs as returned for example by http://developer.github.com/v3/todo
+    This class represents GitBlobs. The reference can be found here https://developer.github.com/v3/git/blobs/
     """
 
     def __repr__(self):

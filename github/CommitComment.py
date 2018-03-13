@@ -32,7 +32,7 @@ import github.NamedUser
 
 class CommitComment(github.GithubObject.CompletableGithubObject):
     """
-    This class represents CommitComments as returned for example by http://developer.github.com/v3/todo
+    This class represents CommitComments. The reference can be found here https://developer.github.com/v3/repos/comments/
     """
 
     def __repr__(self):

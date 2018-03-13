@@ -29,6 +29,7 @@ import github.GithubObject
 
 class InputGitAuthor(object):
     """
+    This class represents InputGitAuthors
     """
 
     def __init__(self, name, email, date=github.GithubObject.NotSet):

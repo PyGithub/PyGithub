@@ -29,7 +29,7 @@ import github.NamedUser
 
 class StatsContributor(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents statistics of a contibutor. The reference can be found here http://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts
+    This class represents StatsContributors. The reference can be found here http://developer.github.com/v3/repos/statistics/#get-contributors-list-with-additions-deletions-and-commit-counts
     """
 
     class Week(github.GithubObject.NonCompletableGithubObject):

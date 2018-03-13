@@ -34,7 +34,7 @@ import github.Gist
 
 class GistHistoryState(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GistHistoryStates as returned for example by http://developer.github.com/v3/todo
+    This class represents GistHistoryStates
     """
 
     @property

@@ -33,7 +33,7 @@ import github.Commit
 
 class Tag(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents Tags. The reference can be found here http://developer.github.com/v3/git/tags/
+    This class represents Tags. The reference can be found here https://developer.github.com/v3/repos/#list-tags
     """
 
     def __repr__(self):

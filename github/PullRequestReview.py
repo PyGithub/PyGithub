@@ -33,7 +33,7 @@ import github.NamedUser
 
 class PullRequestReview(github.GithubObject.CompletableGithubObject):
     """
-    This class represents Pull Request Reviews as returned for example by https://developer.github.com/v3/pulls/reviews/
+    This class represents PullRequestReviews. The reference can be found here https://developer.github.com/v3/pulls/reviews/
     """
 
     def __repr__(self):

@@ -28,7 +28,7 @@ import datetime
 
 class Rate(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents rate limits as defined in http://developer.github.com/v3/rate_limit
+    This class represents Rates. The reference can be found here http://developer.github.com/v3/rate_limit
     """
 
     def __repr__(self):

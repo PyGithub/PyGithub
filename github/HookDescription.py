@@ -30,7 +30,7 @@ import github.GithubObject
 
 class HookDescription(github.GithubObject.NonCompletableGithubObject):
     """
-    This class represents HookDescriptions as returned for example by http://developer.github.com/v3/todo
+    This class represents HookDescriptions
     """
 
     def __repr__(self):

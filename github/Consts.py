@@ -23,13 +23,6 @@
 #                                                                              #
 # ##############################################################################
 
-# #193: Line endings should be linux style
-
-# TODO: As of Thu Aug 21 22:40:13 (BJT) Chinese Standard Time 2013
-# lots of consts in this project are explict
-# should realy round them up and reference them by consts
-# EDIT: well, maybe :-)
-
 # ##############################################################################
 # Request Header                                                               #
 # (Case sensitive)                                                             #

@@ -33,7 +33,7 @@ import github.GitTree
 
 class GitCommit(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitCommits as returned for example by http://developer.github.com/v3/todo
+    This class represents GitCommits. The reference can be found here https://developer.github.com/v3/git/commits/
     """
 
     def __repr__(self):

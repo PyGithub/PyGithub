@@ -31,10 +31,7 @@ import github.GithubObject
 
 class GitReleaseAsset(github.GithubObject.CompletableGithubObject):
     """
-    This class represents GitReleaseAssets as returned by
-        GET /repos/:owner/:repo/releases/assets/:id
-    See:
-    https://developer.github.com/v3/repos/releases/#get-a-single-release-asset
+    This class represents GitReleaseAssets. The reference can be found here https://developer.github.com/v3/repos/releases/#get-a-single-release-asset
     """
 
     def __repr__(self):
