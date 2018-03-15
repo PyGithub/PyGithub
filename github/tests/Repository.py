@@ -36,7 +36,7 @@ class Repository(Framework.TestCase):
 
     def testAttributes(self):
         self.assertEqual(self.repo.clone_url, "https://github.com/jacquev6/PyGithub.git")
-        self.assertEqual(self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47))
+        self.assertEqual(self.repo.created_at, datetime.datetime(2012, 2, 25, 12, 53, 47).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.repo.description, "Python library implementing the full Github API v3")
         self.assertFalse(self.repo.fork)
         self.assertEqual(self.repo.forks, 3)
@@ -59,12 +59,12 @@ class Repository(Framework.TestCase):
         self.assertTrue(self.repo.permissions.pull)
         self.assertTrue(self.repo.permissions.push)
         self.assertFalse(self.repo.private)
-        self.assertEqual(self.repo.pushed_at, datetime.datetime(2012, 5, 27, 6, 0, 28))
+        self.assertEqual(self.repo.pushed_at, datetime.datetime(2012, 5, 27, 6, 0, 28).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.repo.size, 308)
         self.assertEqual(self.repo.source, None)
         self.assertEqual(self.repo.ssh_url, "git@github.com:jacquev6/PyGithub.git")
         self.assertEqual(self.repo.svn_url, "https://github.com/jacquev6/PyGithub")
-        self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28))
+        self.assertEqual(self.repo.updated_at, datetime.datetime(2012, 5, 27, 6, 55, 28).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.repo.url, "https://api.github.com/repos/jacquev6/PyGithub")
         self.assertEqual(self.repo.watchers, 15)
 
@@ -477,12 +477,12 @@ class Repository(Framework.TestCase):
             repo.get_stargazers_with_dates(),
             lambda stargazer: (stargazer.starred_at, stargazer.user.login),
             [
-                (datetime.datetime(2014, 8, 13, 19, 22, 5), u'sAlexander'),
-                (datetime.datetime(2014, 10, 15, 5, 2, 30), u'ThomasG77'),
-                (datetime.datetime(2015, 4, 14, 15, 22, 40), u'therusek'),
-                (datetime.datetime(2015, 4, 29, 0, 9, 40), u'athomann'),
-                (datetime.datetime(2015, 4, 29, 14, 26, 46), u'jcapron'),
-                (datetime.datetime(2015, 5, 9, 19, 14, 45), u'JoePython1')
+                (datetime.datetime(2014, 8, 13, 19, 22, 5).replace(tzinfo=Framework.getUTCtzinfo()), u'sAlexander'),
+                (datetime.datetime(2014, 10, 15, 5, 2, 30).replace(tzinfo=Framework.getUTCtzinfo()), u'ThomasG77'),
+                (datetime.datetime(2015, 4, 14, 15, 22, 40).replace(tzinfo=Framework.getUTCtzinfo()), u'therusek'),
+                (datetime.datetime(2015, 4, 29, 0, 9, 40).replace(tzinfo=Framework.getUTCtzinfo()), u'athomann'),
+                (datetime.datetime(2015, 4, 29, 14, 26, 46).replace(tzinfo=Framework.getUTCtzinfo()), u'jcapron'),
+                (datetime.datetime(2015, 5, 9, 19, 14, 45).replace(tzinfo=Framework.getUTCtzinfo()), u'JoePython1')
             ]
         )
 
@@ -510,11 +510,11 @@ class Repository(Framework.TestCase):
 
         # Attributes retrieved from legacy API without lazy completion call
         self.assertEqual(issues[0].number, 49)
-        self.assertEqual(issues[0].created_at, datetime.datetime(2012, 6, 21, 12, 27, 38))
+        self.assertEqual(issues[0].created_at, datetime.datetime(2012, 6, 21, 12, 27, 38).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(issues[0].comments, 4)
         self.assertEqual(issues[0].body[: 20], "New API ported from ")
         self.assertEqual(issues[0].title, "Support new Search API")
-        self.assertEqual(issues[0].updated_at, datetime.datetime(2012, 6, 28, 21, 13, 25))
+        self.assertEqual(issues[0].updated_at, datetime.datetime(2012, 6, 28, 21, 13, 25).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(issues[0].user.login, "kukuts")
         self.assertEqual(issues[0].user.url, "/users/kukuts")
         self.assertListKeyEqual(issues[0].labels, lambda l: l.name, ["Functionalities", "RequestedByUser"])

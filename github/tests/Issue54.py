@@ -37,4 +37,4 @@ class Issue54(Framework.TestCase):
     def testConversion(self):
         commit = self.repo.get_git_commit("73f320ae06cd565cf38faca34b6a482addfc721b")
         self.assertEqual(commit.message, "Test commit created around Fri, 13 Jul 2012 18:43:21 GMT, that is vendredi 13 juillet 2012 20:43:21 GMT+2\n")
-        self.assertEqual(commit.author.date, datetime.datetime(2012, 7, 13, 18, 47, 10))
+        self.assertEqual(commit.author.date, datetime.datetime(2012, 7, 13, 18, 47, 10).replace(tzinfo=Framework.getUTCtzinfo()))

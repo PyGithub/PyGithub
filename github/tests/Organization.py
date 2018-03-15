@@ -40,7 +40,7 @@ class Organization(Framework.TestCase):
         self.assertEqual(self.org.blog, None)
         self.assertEqual(self.org.collaborators, 0)
         self.assertEqual(self.org.company, None)
-        self.assertEqual(self.org.created_at, datetime.datetime(2012, 2, 9, 19, 20, 12))
+        self.assertEqual(self.org.created_at, datetime.datetime(2012, 2, 9, 19, 20, 12).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(self.org.disk_usage, 112)
         self.assertEqual(self.org.email, None)
         self.assertEqual(self.org.followers, 0)
@@ -121,7 +121,7 @@ class Organization(Framework.TestCase):
 
     def testGetIssuesWithAllArguments(self):
         requestedByUser = self.g.get_user().get_repo("PyGithub").get_label("Requested by user")
-        issues = self.org.get_issues("assigned", "closed", [requestedByUser], "comments", "asc", datetime.datetime(2012, 5, 28, 23, 0, 0))
+        issues = self.org.get_issues("assigned", "closed", [requestedByUser], "comments", "asc", datetime.datetime(2012, 5, 28, 23, 0, 0).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertListKeyEqual(issues, lambda i: i.id, [])
 
     def testGetMembers(self):

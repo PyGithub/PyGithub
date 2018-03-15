@@ -41,7 +41,7 @@ class Github(Framework.TestCase):
         self.assertEqual(repos[0].full_name, "peter-murach/github")
 
         # Attributes retrieved from legacy API without lazy completion call
-        self.assertEqual(repos[2].created_at, datetime.datetime(2012, 2, 25, 12, 53, 47))
+        self.assertEqual(repos[2].created_at, datetime.datetime(2012, 2, 25, 12, 53, 47).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(repos[2].name, "PyGithub")
         self.assertEqual(repos[2].watchers, 365)
         self.assertTrue(repos[2].has_downloads)
@@ -54,7 +54,7 @@ class Github(Framework.TestCase):
         self.assertEqual(repos[2].size, 11373)
         self.assertFalse(repos[2].private)
         self.assertEqual(repos[2].open_issues, 14)
-        self.assertEqual(repos[2].pushed_at, datetime.datetime(2014, 3, 16, 17, 1, 56))
+        self.assertEqual(repos[2].pushed_at, datetime.datetime(2014, 3, 16, 17, 1, 56).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(repos[2].description, "Python library implementing the full Github API v3")
         self.assertEqual(repos[2].language, "Python")
         self.assertEqual(repos[2].owner.login, "jacquev6")
@@ -80,7 +80,7 @@ class Github(Framework.TestCase):
         # Attributes retrieved from legacy API without lazy completion call
         self.assertEqual(users[0].gravatar_id, "c5a7f21b46df698f3db31c37ed0cf55a")
         self.assertEqual(users[0].name, "Vincent Driessen")
-        self.assertEqual(users[0].created_at, datetime.datetime(2009, 5, 12, 21, 19, 38))
+        self.assertEqual(users[0].created_at, datetime.datetime(2009, 5, 12, 21, 19, 38).replace(tzinfo=Framework.getUTCtzinfo()))
         self.assertEqual(users[0].location, "Netherlands")
         self.assertEqual(users[0].followers, 310)
         self.assertEqual(users[0].public_repos, 63)

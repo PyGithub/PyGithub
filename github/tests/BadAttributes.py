@@ -32,7 +32,7 @@ import github
 class BadAttributes(Framework.TestCase):
     def testBadSimpleAttribute(self):
         user = self.g.get_user("klmitch")
-        self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9))
+        self.assertEqual(user.created_at, datetime.datetime(2011, 3, 23, 15, 42, 9).replace(tzinfo=Framework.getUTCtzinfo()))
 
         raised = False
         try:

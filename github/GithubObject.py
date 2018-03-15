@@ -158,14 +158,34 @@ class GithubObject(object):
     @staticmethod
     def _makeDatetimeAttribute(value):
         def parseDatetime(s):
+            # try to coerce a UTC tzinfo object for both python 2 and 3
+            # found from https://stackoverflow.com/a/41624199
+            # modified a bit to work with PyGithub imported libs
+            try:
+                # easy for python3!
+                utc = datetime.timezone.utc
+            except AttributeError:
+                # for python2 users, make a very simple hardcoded UTC tzinfo class
+                class UTC(datetime.tzinfo):
+                    def utcoffset(self, dt):
+                        return datetime.timedelta(0)
+
+                    def tzname(self, dt):
+                        return "UTC"
+
+                    def dst(self, dt):
+                        return datetime.timedelta(0)
+                utc = UTC()
+
             if len(s) == 24:  # pragma no branch (This branch was used only when creating a download)
                 # The Downloads API has been removed. I'm keeping this branch because I have no mean
                 # to check if it's really useless now.
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z")  # pragma no cover (This branch was used only when creating a download)
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S.000Z").replace(tzinfo=utc)  # pragma no cover (This branch was used only when creating a download)
             elif len(s) == 25:
-                return datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+                tempdatetime = datetime.datetime.strptime(s[:19], "%Y-%m-%dT%H:%M:%S") + (1 if s[19] == '-' else -1) * datetime.timedelta(hours=int(s[20:22]), minutes=int(s[23:25]))
+                return tempdatetime.replace(tzinfo=utc)
             else:
-                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ")
+                return datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=utc)
 
         return GithubObject.__makeTransformedAttribute(value, (str, unicode), parseDatetime)
 
