@@ -290,6 +290,35 @@ class Repository(Framework.TestCase):
         commit = self.repo.create_git_commit("Commit created by PyGithub", tree, [], github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"), github.InputGitAuthor("John Doe", "j.doe@vincent-jacques.net", "2008-07-09T16:13:30+12:00"))
         self.assertEqual(commit.sha, "526946197ae9da59c6507cacd13ad6f1cfb686ea")
 
+    def testCreateGitRelease(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest",
+            "vX.Y.Z: PyGithub acctest",
+            "This release is created by PyGithub",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest")
+        self.assertEqual(release.body, "This release is created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, False)
+
+    def testCreateGitReleaseWithAllArguments(self):
+        release = self.repo.create_git_release(
+            "vX.Y.Z-by-PyGithub-acctest2",
+            "vX.Y.Z: PyGithub acctest2",
+            "This release is also created by PyGithub",
+            False,
+            True,
+            "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc",
+        )
+        self.assertEqual(release.tag_name, "vX.Y.Z-by-PyGithub-acctest2")
+        self.assertEqual(release.title, "vX.Y.Z: PyGithub acctest2")
+        self.assertEqual(release.body, "This release is also created by PyGithub")
+        self.assertEqual(release.draft, False)
+        self.assertEqual(release.prerelease, True)
+        tag = [tag for tag in self.repo.get_tags() if tag.name == "vX.Y.Z-by-PyGithub-acctest2"].pop()
+        self.assertEqual(tag.commit.sha, "da9a285fd8b782461e56cba39ae8d2fa41ca7cdc")
+
     def testCreateGitTag(self):
         tag = self.repo.create_git_tag("TaggedByPyGithub", "Tag created by PyGithub", "0b820628236ab8bab3890860fc414fa757ca15f4", "commit")
         self.assertEqual(tag.sha, "5ba561eaa2b7ca9015662510157b15d8f3b0232a")
