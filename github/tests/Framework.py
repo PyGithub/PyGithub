@@ -86,11 +86,17 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         fixAuthorizationHeader(headers)
         self.__writeLine(self.__protocol)
         self.__writeLine(verb)
-        self.__writeLine(self.__host)
-        self.__writeLine(self.__port)
+        if self.__cnx._tunnel_host:
+            self.__writeLine(self.__cnx._tunnel_host)
+            # Force None to match other test replay data when recording
+            # via a proxy connection.
+            self.__writeLine(str(self.__cnx._tunnel_port))
+        else:
+            self.__writeLine(self.__host)
+            self.__writeLine(self.__port)
         self.__writeLine(url)
         self.__writeLine(str(headers))
-        self.__writeLine(input.replace('\n', '').replace('\r', ''))
+        self.__writeLine(str(input).replace('\n', '').replace('\r', ''))
 
     def getresponse(self):
         res = self.__cnx.getresponse()
@@ -105,6 +111,9 @@ class RecordingConnection:  # pragma no cover (Class useful only when recording 
         self.__writeLine(str(output))
 
         return FakeHttpResponse(status, headers, output)
+
+    def set_tunnel(self, host, port=None, headers=None):
+        self.__cnx.set_tunnel(host, port, headers)
 
     def close(self):
         self.__writeLine("")
