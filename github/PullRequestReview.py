@@ -80,6 +80,14 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
         return self._state.value
 
     @property
+    def url(self):
+        """
+        :type: string
+        """
+        self._completeIfNotSet(self._url)
+        return self._url.value
+
+    @property
     def html_url(self):
         """
         :type: string
@@ -109,6 +117,7 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
         self._body = github.GithubObject.NotSet
         self._commit_id = github.GithubObject.NotSet
         self._state = github.GithubObject.NotSet
+        self._url = github.GithubObject.NotSet
         self._html_url = github.GithubObject.NotSet
         self._pull_request_url = github.GithubObject.NotSet
         self._submitted_at = github.GithubObject.NotSet
@@ -124,6 +133,8 @@ class PullRequestReview(github.GithubObject.CompletableGithubObject):
             self._commit_id = self._makeStringAttribute(attributes["commit_id"])
         if "state" in attributes:  # pragma no branch
             self._state = self._makeStringAttribute(attributes["state"])
+        if "url" in attributes:  # pragma no branch
+            self._url = self._makeStringAttribute(attributes["url"])
         if "html_url" in attributes:  # pragma no branch
             self._html_url = self._makeStringAttribute(attributes["html_url"])
         if "pull_request_url" in attributes:  # pragma no branch
